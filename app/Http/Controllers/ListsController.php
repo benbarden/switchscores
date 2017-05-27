@@ -15,7 +15,7 @@ class ListsController extends BaseController
 
         $bindings['GamesList'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Nintendo Switch released games | Nintendo Switch charts and stats';
+        $bindings['TopTitle'] = 'Nintendo Switch released games';
         return view('lists.releasedGames', $bindings);
     }
 
@@ -30,7 +30,7 @@ class ListsController extends BaseController
 
         $bindings['GamesList'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Nintendo Switch upcoming games | Nintendo Switch charts and stats';
+        $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         return view('lists.upcomingGames', $bindings);
     }
 }

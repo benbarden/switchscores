@@ -14,7 +14,7 @@ class ChartsController extends BaseController
 
         $gamesList = \App\ChartsRanking::where('chart_date', $date)->orderBy('position', 'asc')->get();
 
-        $bindings['TopTitle'] = 'Charts | Nintendo Switch charts and stats';
+        $bindings['TopTitle'] = 'Charts';
         $bindings['ChartDate'] = $date;
         $bindings['GamesList'] = $gamesList;
 

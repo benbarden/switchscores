@@ -13,7 +13,8 @@
 
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
-Route::get('/games/{id}', 'GamesController@show')->name('game.show');
+Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
+Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 
 Route::get('/charts/{date?}', 'ChartsController@show')->name('charts.date');
 

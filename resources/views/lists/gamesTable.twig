@@ -12,7 +12,7 @@
             {% for item in GamesList %}
                 <tr>
                     <td style="text-align: left;">
-                        <a href="{{ route('game.show', {'id': item.id}) }}">
+                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
                             {{ item.title }}
                         </a>
                     </td>

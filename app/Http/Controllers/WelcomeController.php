@@ -10,7 +10,7 @@ class WelcomeController extends BaseController
 
         $chartDates = \DB::table('charts_rankings')->groupBy('chart_date')->orderBy('chart_date', 'DESC')->get();
 
-        $bindings['TopTitle'] = 'Welcome | Nintendo Switch charts and stats';
+        $bindings['TopTitle'] = 'Welcome';
         $bindings['ChartDates'] = $chartDates;
 
         return view('welcome', $bindings);
