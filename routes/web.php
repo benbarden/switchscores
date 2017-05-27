@@ -19,3 +19,6 @@ Route::get('/charts/{date?}', 'ChartsController@show')->name('charts.date');
 
 Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
 Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
+
+/* Blog redirects */
+Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirection')->name('blog.redirection');
