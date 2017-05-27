@@ -1,0 +1,40 @@
+{% if GamesList %}
+    <table class="fancy-table" cellspacing="0">
+        <thead>
+            <tr>
+                <th style="text-align: left;">Title</th>
+                <th style="text-align: left;">Release date</th>
+                <th style="text-align: center;">Players</th>
+                <th style="text-align: right;">eShop price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GamesList %}
+                <tr>
+                    <td style="text-align: left;">
+                        <a href="{{ route('game.show', {'id': item.id}) }}">
+                            {{ item.title }}
+                        </a>
+                    </td>
+                    <td style="text-align: left;">
+                        {% if item.upcoming == 1 %}
+                            {{ item.upcoming_date }}
+                        {% else %}
+                            {{ item.release_date }}
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        {{ item.players }}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if item.price_eshop %}
+                            &pound;{{ item.price_eshop }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games to display!</p>
+{% endif %}

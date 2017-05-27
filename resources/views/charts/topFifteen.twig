@@ -1,0 +1,34 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>eShop Charts: {{ ChartDate }}</h1>
+
+{% if GamesList.count > 0 %}
+    <table class="fancy-table" cellspacing="1">
+        <tr>
+            <th style="text-align: center;">Position</th>
+            <th style="text-align: left;">Title</th>
+            <th style="text-align: left;">Movement</th>
+        </tr>
+        {% for item in GamesList %}
+            <tr>
+                <td style="text-align: center;">
+                    {{ item.position }}
+                </td>
+                <td style="text-align: left;">
+                    <a href="{{ route('game.show', {'id': item.game.id}) }}">{{ item.game.title }}</a>
+                </td>
+                <td style="text-align: left;">
+                    {% set movementItem = item.getMovement() %}
+                    {% set currentPosition = item.position %}
+                    {% include 'charts/chartMovement.twig' with {'movementItem': movementItem, 'currentPosition': currentPosition} %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No charts recorded on this date.</p>
+{% endif %}
+
+{% endblock page_body %}

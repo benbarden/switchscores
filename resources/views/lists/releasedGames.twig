@@ -1,0 +1,16 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Nintendo Switch games available in Europe</h1>
+
+<p>A list of Nintendo Switch games currently available to buy from the European Nintendo eShop.</p>
+
+<p>All prices correct at time of publication. Any changes may not be reflected immediately.
+    Check prices prior to purchase.</p>
+
+<p>For upcoming games, go to the <a href="/lists/upcoming-nintendo-switch-games">upcoming games index</a>.</p>
+
+{% include 'lists/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

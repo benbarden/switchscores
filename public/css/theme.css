@@ -1,0 +1,85 @@
+.fancy-table tr th {background: #9cf; color: #000;}
+.fancy-table tr td {background: #ededed; color: #000; border-bottom: 1px solid #999;}
+.fancy-table tr th, .fancy-table tr td {font-size: 100%; padding: 6px;}
+
+body {
+    background: #ffffff;
+    color: #000000;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    line-height: 20px;
+    margin: 0;
+}
+
+nav {
+    background: #000;
+    color: #fff;
+    line-height: 1.6em;
+    padding: 8px;
+}
+
+nav a {
+    color: #fff;
+    font-weight: bold;
+    margin: 2px 8px;
+}
+
+ol li, ul li {
+    line-height: 1.6em;
+}
+
+.wrapper {
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.table {
+    margin: 0 0 40px 0;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: table;
+}
+@media screen and (max-width: 580px) {
+    .table {
+        display: block;
+    }
+}
+
+.row {
+    display: table-row;
+    background: #f6f6f6;
+}
+.row:nth-of-type(odd) {
+    background: #e9e9e9;
+}
+.row.header {
+    font-weight: 900;
+    color: #ffffff;
+    background: #ea6153;
+}
+.row.green {
+    background: #27ae60;
+}
+.row.blue {
+    background: #2980b9;
+}
+@media screen and (max-width: 580px) {
+    .row {
+        padding: 8px 0;
+        display: block;
+    }
+}
+
+.cell {
+    padding: 6px 12px;
+    display: table-cell;
+}
+@media screen and (max-width: 580px) {
+    .cell {
+        padding: 2px 12px;
+        display: block;
+    }
+}

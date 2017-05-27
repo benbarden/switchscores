@@ -1,0 +1,13 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Upcoming Nintendo Switch games</h1>
+
+<p>The table shown below lists as-yet-unreleased Switch games.</p>
+
+<p>As games are released, they’ll be moved to the <a href="/lists/released-nintendo-switch-games">released Switch games index</a>.</p>
+
+{% include 'lists/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

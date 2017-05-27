@@ -1,0 +1,75 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>{{ GameData.title }}</h1>
+
+<table class="fancy-table" cellspacing="1">
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Title</span>
+        </td>
+        <td>{{ GameData.title }}</td>
+    </tr>
+    {% if GameData.upcoming == 1 %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Expected release date</span>
+            </td>
+            <td>{{ GameData.upcoming_date }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Release date</span>
+            </td>
+            <td>{{ GameData.release_date }}</td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">eShop price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                &pound;{{ GameData.price_eshop }}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+</table>
+
+{% if GameData.upcoming == 0 %}
+<h2>Appearance in the charts</h2>
+{% if GameRanking.count > 0 %}
+    <table class="fancy-table" cellspacing="0">
+        <tr>
+            <th>Date</th>
+            <th style="text-align: center;">Position</th>
+            <th style="text-align: left;">Movement</th>
+        </tr>
+        {% for Rank in GameRanking %}
+        <tr>
+            <td>
+                <a href="{{ route('charts.date', {'date': Rank.chart_date}) }}">{{ Rank.chart_date }}</a>
+            </td>
+            <td style="text-align: center;">{{ Rank.position }}</td>
+            <td style="text-align: left;">
+                {% set movementItem = Rank.getMovement() %}
+                {% set currentPosition = Rank.position %}
+                {% include 'charts/chartMovement.twig' with {'movementItem': movementItem, 'currentPosition': currentPosition} %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>This game has not appeared in the eShop charts.</p>
+{% endif %}
+{% endif %}
+
+{% endblock page_body %}

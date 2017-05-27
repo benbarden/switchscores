@@ -1,0 +1,20 @@
+{% if movementItem.position == 'N/A' %}
+    {# No previous dates #}
+    <span style="color: #999; font-weight: bold;">N/A</span>
+{% elseif movementItem.position == '0' %}
+    {# New entry #}
+    <span style="color: #00f; font-weight: bold;">NEW</span>
+{% elseif movementItem.position == currentPosition %}
+    {# Grey - Non mover #}
+    <span style="color: #999; font-weight: bold;">-</span>
+{% elseif movementItem.position < currentPosition %}
+    {# Red - Moving down #}
+    {% set movementValue = currentPosition - movementItem.position %}
+    <span style="color: #f00; font-weight: bold;">-{{ movementValue }}</span>
+{% elseif movementItem.position > currentPosition %}
+    {# Green - Moving up #}
+    {% set movementValue = movementItem.position - currentPosition %}
+    <span style="color: #090; font-weight: bold;">+{{ movementValue }}</span>
+{% else %}
+    <span style="color: #999; font-weight: bold;">???</span>
+{% endif %}
