@@ -26,3 +26,6 @@ INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('201
 UPDATE `games` SET `upcoming_date`='2017-11-?? (Autumn)' WHERE `id`='58';
 UPDATE `games` SET `upcoming_date`='2017-XX (TBD)' WHERE `id`='49';
 INSERT INTO `games` (`title`, `upcoming`, `upcoming_date`) VALUES ('Fire Emblem for Nintendo Switch (tbc)', '1', '2018-XX (TBD)');
+
+
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `upcoming`, `upcoming_date`) VALUES ('NBA 2K18 Legend Edition', 'nba-2k18-legend-edition', '2017-09-15', '1', '2017-09-15');
