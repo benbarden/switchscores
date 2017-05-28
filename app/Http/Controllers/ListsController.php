@@ -25,7 +25,7 @@ class ListsController extends BaseController
 
         $gamesList = \App\Game::where('upcoming', 1)
             ->orderBy('upcoming_date', 'asc')
-            ->orderBy('id', 'asc')
+            ->orderBy('title', 'asc')
             ->get();
 
         $bindings['GamesList'] = $gamesList;
