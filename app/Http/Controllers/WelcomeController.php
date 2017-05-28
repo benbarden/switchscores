@@ -8,10 +8,7 @@ class WelcomeController extends BaseController
     {
         $bindings = array();
 
-        $chartDates = \DB::table('charts_rankings')->groupBy('chart_date')->orderBy('chart_date', 'DESC')->get();
-
         $bindings['TopTitle'] = 'Welcome';
-        $bindings['ChartDates'] = $chartDates;
 
         return view('welcome', $bindings);
     }

@@ -1,0 +1,25 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Charts</h1>
+
+<h2>Insights</h2>
+<ul>
+    <li><a href="{{ route('charts.mostAppearances') }}">Most appearances</a> of games in the Top 15</li>
+    <li><a href="{{ route('charts.gamesAtPosition') }}">Games at position</a> - which games have been in each position</li>
+</ul>
+
+<h2>By date</h2>
+<p>Historical eShop charts for the Nintendo Switch.</p>
+{% if ChartDates.count > 0 %}
+    <ul>
+        {% for item in ChartDates %}
+            <li><a href="{{ route('charts.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No charts found!</p>
+{% endif %}
+
+{% endblock page_body %}

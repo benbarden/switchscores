@@ -5,16 +5,9 @@
 <h1>Welcome</h1>
 
 <h2>Recent eShop charts</h2>
-<p>Browse historical eShop charts for the Nintendo Switch.</p>
-{% if ChartDates.count > 0 %}
-    <ul>
-        {% for item in ChartDates %}
-            <li><a href="{{ route('charts.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No charts found!</p>
-{% endif %}
+<ul>
+    <li><a href="{{ route('charts.landing') }}">Charts</a></li>
+</ul>
 
 <h2>List of Nintendo Switch games</h2>
 <ul>
