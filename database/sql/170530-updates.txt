@@ -1,0 +1,6 @@
+UPDATE `games` SET `upcoming`='0' WHERE `id`='85';
+UPDATE `games` SET `release_date`='2017-06-08', `price_eshop`='15.99', `upcoming_date`='2017-06-08' WHERE `id`='105';
+UPDATE `games` SET `players`='1' WHERE `id`='105';
+UPDATE `games` SET `release_date`='2017-11-14', `upcoming_date`='2017-11-14' WHERE `id`='110';
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Lost Sphear', 'lost-sphear', '1', '2018-Q1');
+UPDATE `games` SET `release_date`='2017-08-15', `upcoming_date`='2017-08-15' WHERE `id`='60';
