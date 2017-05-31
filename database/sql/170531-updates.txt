@@ -1,0 +1,2 @@
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `upcoming`, `upcoming_date`) VALUES ('Last Resort', 'last-resort', '2017-06-01', '6.29', '1', '2017-06-01');
+UPDATE `games` SET `players`='1-2' WHERE `id`='133';
