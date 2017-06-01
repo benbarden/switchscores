@@ -1,0 +1,2 @@
+UPDATE `games` SET `release_date`='2017-06-08', `upcoming_date`='2017-06-08' WHERE `id`='52';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='133';
