@@ -1,0 +1,27 @@
+CREATE TABLE `charts_rankings_us` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `chart_date` date NOT NULL,
+  `position` tinyint(2) unsigned NOT NULL,
+  `game_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `chart_date` (`chart_date`),
+  KEY `game_id` (`game_id`)
+) ENGINE=InnoDB;
+
+DELETE FROM `games` WHERE `id`='81';
+
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '1', '46');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '2', '51');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '3', '43');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '4', '40');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '5', '8');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '6', '50');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '7', '28');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '8', '5');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '9', '48');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '10', '1');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '11', '37');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '12', '39');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '13', '35');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '14', '33');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-03', '15', '90');

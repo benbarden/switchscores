@@ -4,14 +4,13 @@
 
 <h1>Charts</h1>
 
-<h2>Insights</h2>
+<h2>Insights (currently European charts only)</h2>
 <ul>
     <li><a href="{{ route('charts.mostAppearances') }}">Most appearances</a> of games in the Top 15</li>
     <li><a href="{{ route('charts.gamesAtPosition') }}">Games at position</a> - which games have been in each position</li>
 </ul>
 
-<h2>By date</h2>
-<p>Historical eShop charts for the Nintendo Switch.</p>
+<h2>European charts - by date</h2>
 {% if ChartDates.count > 0 %}
     <ul>
         {% for item in ChartDates %}
@@ -21,5 +20,10 @@
 {% else %}
     <p>No charts found!</p>
 {% endif %}
+
+<h2>US charts - by date</h2>
+<ul>
+    <li><a href="{{ route('charts.us.date', {'date': '2017-06-03'}) }}">2017-06-03</a></li>
+</ul>
 
 {% endblock page_body %}

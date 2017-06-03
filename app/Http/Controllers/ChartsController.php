@@ -15,7 +15,7 @@ class ChartsController extends BaseController
         return view('charts.landing', $bindings);
     }
 
-    public function show($date = null)
+    private function show($date = null, $region = '')
     {
         if (!$date) {
             abort(404);
@@ -23,16 +23,37 @@ class ChartsController extends BaseController
 
         $bindings = array();
 
-        $gamesList = \App\ChartsRanking::where('chart_date', $date)->orderBy('position', 'asc')->get();
+        if ($region == 'US') {
+            $gamesList = \App\ChartsRankingUs::where('chart_date', $date)->orderBy('position', 'asc')->get();
+            $title = 'Charts - US';
+            $regionText = 'US';
+        } else {
+            $gamesList = \App\ChartsRanking::where('chart_date', $date)->orderBy('position', 'asc')->get();
+            $title = 'Charts - Europe';
+            $regionText = 'European';
+        }
 
         if (count($gamesList) == 0) {
             abort(404);
         }
 
-        $bindings['TopTitle'] = 'Charts';
+        $bindings['TopTitle'] = $title;
+        $bindings['RegionText'] = $regionText;
         $bindings['ChartDate'] = $date;
         $bindings['GamesList'] = $gamesList;
 
+        return $bindings;
+    }
+
+    public function showEu($date = null)
+    {
+        $bindings = $this->show($date, 'EU');
+        return view('charts.topFifteen', $bindings);
+    }
+
+    public function showUs($date = null)
+    {
+        $bindings = $this->show($date, 'US');
         return view('charts.topFifteen', $bindings);
     }
 

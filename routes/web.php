@@ -24,7 +24,9 @@ Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
 Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name('charts.mostAppearances');
 Route::get('/charts/games-at-position', 'ChartsController@gamesAtPositionLanding')->name('charts.gamesAtPositionLanding');
 Route::get('/charts/games-at-position/{position?}', 'ChartsController@gamesAtPosition')->name('charts.gamesAtPosition');
-Route::get('/charts/{date?}', 'ChartsController@show')->name('charts.date');
+Route::get('/charts/{date?}', 'ChartsController@showEu')->name('charts.date');
+
+Route::get('/charts-us/{date?}', 'ChartsController@showUs')->name('charts.us.date');
 
 /* Blog redirects */
 Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirection')->name('blog.redirection');
