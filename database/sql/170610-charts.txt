@@ -1,0 +1,33 @@
+INSERT INTO `charts_dates` (`chart_date`) VALUES ('2017-06-10');
+
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '1', '46');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '2', '51');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '3', '40');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '4', '5');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '5', '105');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '6', '43');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '7', '48');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '8', '39');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '9', '8');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '10', '50');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '11', '6');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '12', '35');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '13', '1');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '14', '26');
+INSERT INTO `charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '15', '37');
+
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '1', '46');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '2', '51');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '3', '43');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '4', '40');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '5', '8');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '6', '105');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '7', '5');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '8', '28');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '9', '50');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '10', '37');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '11', '39');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '12', '1');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '13', '48');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '14', '35');
+INSERT INTO `charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-10', '15', '33');

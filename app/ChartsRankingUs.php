@@ -28,7 +28,7 @@ class ChartsRankingUs extends Model
 
         $previousChartsDate = ChartsDate::
             where('chart_date', '<', $chartDate)
-            ->where('chart_date', '>', '2017-06-03')
+            ->where('chart_date', '>=', '2017-06-03')
             ->orderBy('chart_date', 'DESC')->limit(1)->get();
 
         if (count($previousChartsDate) == 0) {

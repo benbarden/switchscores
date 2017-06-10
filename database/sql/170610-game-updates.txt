@@ -1,0 +1,6 @@
+UPDATE `games` SET `release_date`='2017-06-08', `price_eshop`='6.29', `players`='1-2', `upcoming`='0', `upcoming_date`='2017-06-08' WHERE `id`='123';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='105';
+UPDATE `games` SET `price_eshop`='8.99', `players`='1' WHERE `id`='88';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Sengoku', 'sengoku', '2017-06-15', '6.29', '1-2', '1', '2017-06-15');
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Bulb Boy', 'bulb-boy', '2017-06-20', '7.19', '1', '1', '2017-06-20');
+UPDATE `games` SET `release_date`=NULL, `upcoming_date`='2017-XX' WHERE `id`='52';
