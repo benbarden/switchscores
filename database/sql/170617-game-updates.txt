@@ -1,0 +1,9 @@
+UPDATE `games` SET `upcoming`='0' WHERE `id`='134';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='88';
+UPDATE `games` SET `players`='1-4', `upcoming`='0' WHERE `id`='53';
+
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Fatal Fury 2', 'fatal-fury-2', '2017-06-22', '6.29', '1-2', '1', '2017-06-22');
+UPDATE `games` SET `release_date`='2017-06-22', `price_eshop`='13.49', `players`='1', `upcoming_date`='2017-06-22' WHERE `id`='94';
+UPDATE `games` SET `price_eshop`='49.99', `players`='1' WHERE `id`='55';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `players`, `upcoming`, `upcoming_date`) VALUES ('Mario + Rabbids Kingdom Battle', 'mario-and-rabbids-kingdom-battle', '2017-08-29', '1-2', '1', '2017-08-29');
+UPDATE `games` SET `release_date`='2017-10-27', `players`='1-2', `upcoming_date`='2017-10-27' WHERE `id`='66';
