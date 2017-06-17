@@ -8,9 +8,12 @@ class ChartsController extends BaseController
     {
         $bindings = array();
 
-        $chartDates = \DB::table('charts_rankings')->groupBy('chart_date')->orderBy('chart_date', 'DESC')->get();
+        $chartDatesEu = \App\ChartsDate::where('stats_europe', 'Y')->orderBy('chart_date', 'DESC')->get();
+        $chartDatesUs = \App\ChartsDate::where('stats_us', 'Y')->orderBy('chart_date', 'DESC')->get();
+
         $bindings['TopTitle'] = 'Charts';
-        $bindings['ChartDates'] = $chartDates;
+        $bindings['ChartDatesEu'] = $chartDatesEu;
+        $bindings['ChartDatesUs'] = $chartDatesUs;
 
         return view('charts.landing', $bindings);
     }

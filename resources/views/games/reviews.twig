@@ -4,15 +4,21 @@
         <table class="fancy-table" cellspacing="0">
             <tr>
                 <th>Site</th>
-                <th>Score</th>
+                <th>Rating (out of 10)</th>
                 <th>Link</th>
             </tr>
             {% for Review in GameReviews %}
                 <tr>
                     <td>{{ Review.site.name }}</td>
                     <td>
-                        {% if Review.rating %}
-                            {{ Review.rating }}/{{ Review.rating_scale }}
+                        {% if Review.rating_normalised %}
+                            {{ Review.rating_normalised }}
+                            {% if Review.site.rating_scale != 10 %}
+                            <br>
+                            <small>
+                                Actual: {{ Review.rating_original }}/{{ Review.site.rating_scale }}
+                            </small>
+                            {% endif %}
                         {% else %}
                             N/A
                         {% endif %}

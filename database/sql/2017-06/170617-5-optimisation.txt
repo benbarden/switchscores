@@ -1,0 +1,28 @@
+ALTER TABLE `review_sites`
+ADD COLUMN `rating_scale` TINYINT(2) NULL AFTER `active`;
+
+UPDATE `review_sites` SET `rating_scale`='10' WHERE `id`='1';
+UPDATE `review_sites` SET `rating_scale`='5' WHERE `id`='2';
+UPDATE `review_sites` SET `rating_scale`='10' WHERE `id`='3';
+
+ALTER TABLE `review_links`
+DROP COLUMN `rating_scale`,
+CHANGE COLUMN `rating` `rating_original` DECIMAL(4,1) NULL DEFAULT NULL ,
+ADD COLUMN `rating_normalised` DECIMAL(4,1) NULL AFTER `rating_original`;
+
+UPDATE review_links SET rating_normalised = rating_original WHERE site_id = 1;
+
+UPDATE review_links SET rating_normalised = (rating_original * 2) WHERE site_id = 2;
+
+UPDATE review_links SET rating_normalised = rating_original WHERE site_id = 3;
+
+ALTER TABLE `charts_dates`
+ADD COLUMN `stats_europe` CHAR(1) NOT NULL AFTER `chart_date`,
+ADD COLUMN `stats_us` CHAR(1) NOT NULL AFTER `stats_europe`,
+ADD INDEX `stats_europe` (`stats_europe` ASC),
+ADD INDEX `stats_us` (`stats_us` ASC);
+
+UPDATE charts_dates SET stats_europe = 'Y', stats_us = 'N';
+
+UPDATE charts_dates SET stats_us = 'Y' WHERE chart_date IN ('2017-06-03', '2017-06-10', '2017-06-17');
+

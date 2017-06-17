@@ -11,9 +11,9 @@
 </ul>
 
 <h2>European charts - by date</h2>
-{% if ChartDates.count > 0 %}
+{% if ChartDatesEu.count > 0 %}
     <ul>
-        {% for item in ChartDates %}
+        {% for item in ChartDatesEu %}
             <li><a href="{{ route('charts.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
         {% endfor %}
     </ul>
@@ -22,10 +22,14 @@
 {% endif %}
 
 <h2>US charts - by date</h2>
-<ul>
-    <li><a href="{{ route('charts.us.date', {'date': '2017-06-17'}) }}">2017-06-17</a></li>
-    <li><a href="{{ route('charts.us.date', {'date': '2017-06-10'}) }}">2017-06-10</a></li>
-    <li><a href="{{ route('charts.us.date', {'date': '2017-06-03'}) }}">2017-06-03</a></li>
-</ul>
+{% if ChartDatesUs.count > 0 %}
+    <ul>
+        {% for item in ChartDatesUs %}
+            <li><a href="{{ route('charts.us.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No charts found!</p>
+{% endif %}
 
 {% endblock page_body %}
