@@ -1,0 +1,26 @@
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Golf Story', 'golf-story', '1', '2017-Q2');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Ironcast', 'ironcast', '1', '2017-Q2');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Phantom Trigger', 'phantom-trigger', '1', '2017-Q2');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Picontier', 'picontier', '1', '2017-Q2');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Axiom Verge: Multiverse Edition', 'axiom-verge-multiverse-edition', '1', '2017-08-XX');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('The Mummy Demastered', 'the-mummy-demastered', '1', '2017-08-XX');
+UPDATE `games` SET `title`='NBA 2K18', `link_title`='nba-2k18', `release_date`='2017-09-19', `upcoming_date`='2017-09-19' WHERE `id`='87';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `upcoming`, `upcoming_date`) VALUES ('Pokken Tournament DX', 'pokken-tournament-dx', '2017-09-22', '1', '2017-09-22');
+UPDATE `games` SET `release_date`='2017-09-29', `upcoming_date`='2017-09-29' WHERE `id`='72';
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Syberia', 'syberia', '1', '2017-Q3');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Soldam: Drop, Connect, Erase', 'soldam-drop-connect-erase', '1', '2017-Q3/Q4');
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `upcoming`, `upcoming_date`) VALUES ('Just Dance 2018', 'just-dance-2018', '2017-10-26', '1', '2017-10-26');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Blacksad', 'blacksad', '1', '2017-Q4');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Blade Strangers', 'blade-strangers', '1', '2017-Q4');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Flashback - Remastered Edition', 'flashback-remastered-edition', '1', '2017-Q4');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Gear.Club', 'gear-club', '1', '2017-Q4');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Rocket League', 'rocket-league', '1', '2017-Q4');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Syberia II', 'syberia-ii', '1', '2017-Q4');
+UPDATE `games` SET `upcoming_date`='2017-Q4' WHERE `id`='80';
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Duck Game', 'duck-game', '1', '2017-XX');
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('The End is Nigh', 'the-end-is-nigh', '1', '2017-XX');
+UPDATE `games` SET `upcoming_date`='2017-XX' WHERE `id`='64';
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Rogue Trooper Redux', 'rogue-trooper-redux', '1', '2017-XX');
+UPDATE `games` SET `upcoming_date`='2018-Q1' WHERE `id`='127';
+INSERT INTO `games` (`title`, `link_title`, `upcoming`, `upcoming_date`) VALUES ('Unruly Heroes', 'unruly-heroes', '1', '2018-Q1');
+
