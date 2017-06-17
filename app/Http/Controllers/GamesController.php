@@ -31,9 +31,15 @@ class GamesController extends BaseController
             ->orderBy('chart_date', 'desc')
             ->get();
 
+        // Get reviews
+        $gameReviews = \App\ReviewLink::where('game_id', $gameData->id)
+            ->orderBy('site_id', 'asc')
+            ->get();
+
         $bindings['TopTitle'] = $gameData->title;
         $bindings['GameData'] = $gameData;
         $bindings['GameRanking'] = $gameRanking;
+        $bindings['GameReviews'] = $gameReviews;
 
         return view('games.show', $bindings);
     }

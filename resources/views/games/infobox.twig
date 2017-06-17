@@ -1,0 +1,40 @@
+<h2>Game info</h2>
+<table class="fancy-table" cellspacing="1">
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Title</span>
+        </td>
+        <td>{{ GameData.title }}</td>
+    </tr>
+    {% if GameData.upcoming == 1 %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Expected release date (Europe)</span>
+            </td>
+            <td>{{ GameData.upcoming_date }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Release date</span>
+            </td>
+            <td>{{ GameData.release_date }}</td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">eShop price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                &pound;{{ GameData.price_eshop }}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+</table>

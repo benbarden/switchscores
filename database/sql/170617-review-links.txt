@@ -1,0 +1,44 @@
+CREATE TABLE `review_sites` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  `url` TEXT NOT NULL,
+  `active` CHAR(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `active` (`active` ASC));
+
+INSERT INTO `review_sites` (`name`, `url`, `active`) VALUES ('World of Switch', 'http://www.worldofswitch.com', 'Y');
+INSERT INTO `review_sites` (`name`, `url`, `active`) VALUES ('Switch Player', 'http://switchplayer.net/', 'Y');
+INSERT INTO `review_sites` (`name`, `url`, `active`) VALUES ('IGN', 'http://uk.ign.com/', 'Y');
+
+CREATE TABLE `review_links` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `game_id` INT(10) UNSIGNED NOT NULL,
+  `site_id` INT(10) UNSIGNED NOT NULL,
+  `url` TEXT NOT NULL,
+  `rating` DECIMAL(4,1) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `game_id` (`game_id` ASC),
+  INDEX `site_id` (`site_id` ASC));
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`) VALUES ('19', '1', 'https://worldofswitch.wordpress.com/2017/04/06/review-blaster-master-zero/', '8');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`) VALUES ('30', '1', 'https://worldofswitch.wordpress.com/2017/04/07/review-graceful-explosion-machine/', '8');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`) VALUES ('3', '1', 'https://worldofswitch.wordpress.com/2017/04/08/review-super-bomberman-r/', '5');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`) VALUES ('31', '1', 'https://worldofswitch.wordpress.com/2017/04/25/review-lego-city-undercover/', '8');
+
+ALTER TABLE `review_links`
+ADD COLUMN `rating_scale` TINYINT(2) NULL AFTER `rating`;
+
+UPDATE `review_links` SET `rating_scale`='10' WHERE `id`='1';
+UPDATE `review_links` SET `rating_scale`='10' WHERE `id`='2';
+UPDATE `review_links` SET `rating_scale`='10' WHERE `id`='3';
+UPDATE `review_links` SET `rating_scale`='10' WHERE `id`='4';
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('19', '2', 'http://switchplayer.net/2017/03/29/blaster-master-zero-review/', '3.6', '5');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('30', '2', 'http://switchplayer.net/2017/04/18/graceful-explosion-machine-review/', '4.1', '5');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('3', '2', 'http://switchplayer.net/2017/03/13/super-bomberman-r-review/', '3.5', '5');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('31', '2', 'http://switchplayer.net/2017/04/25/lego-city-undercover-review/', '3.8', '5');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('19', '3', 'http://uk.ign.com/articles/2017/03/15/blaster-master-zero-review', '7.0', '10');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('30', '3', 'http://uk.ign.com/articles/2017/04/11/graceful-explosion-machine-review', '8.0', '10');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('31', '3', 'http://uk.ign.com/articles/2017/04/05/lego-city-undercover-review-2', '8.0', '10');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating`, `rating_scale`) VALUES ('3', '3', 'http://uk.ign.com/articles/2017/03/07/super-bomberman-r-review', '6.2', '10');

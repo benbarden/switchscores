@@ -1,0 +1,27 @@
+{% if GameReviews %}
+    <h2>Reviews</h2>
+    {% if GameReviews.count > 0 %}
+        <table class="fancy-table" cellspacing="0">
+            <tr>
+                <th>Site</th>
+                <th>Score</th>
+                <th>Link</th>
+            </tr>
+            {% for Review in GameReviews %}
+                <tr>
+                    <td>{{ Review.site.name }}</td>
+                    <td>
+                        {% if Review.rating %}
+                            {{ Review.rating }}/{{ Review.rating_scale }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ Review.url }}" target="_blank">Read review</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endif %}
