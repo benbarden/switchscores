@@ -29,4 +29,6 @@ Route::get('/charts/{date?}', 'ChartsController@showEu')->name('charts.date');
 Route::get('/charts-us/{date?}', 'ChartsController@showUs')->name('charts.us.date');
 
 /* Blog redirects */
-Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirection')->name('blog.redirection');
+Route::get('/tag/{tag}/', 'BlogController@redirectTag')->name('blog.redirectTag');
+Route::get('/category/{tag}/', 'BlogController@redirectCategory')->name('blog.redirectCategory');
+Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->name('blog.redirectPost');
