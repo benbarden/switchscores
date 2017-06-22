@@ -1,0 +1,9 @@
+UPDATE `games` SET `upcoming`='0' WHERE `id`='136';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='94';
+
+INSERT INTO `game_genres` (`game_id`, `genre_id`) VALUES ('136', '12');
+INSERT INTO `game_genres` (`game_id`, `genre_id`) VALUES ('136', '8');
+
+INSERT INTO `game_genres` (`game_id`, `genre_id`) VALUES ('94', '1');
+INSERT INTO `game_genres` (`game_id`, `genre_id`) VALUES ('94', '3');
+INSERT INTO `game_genres` (`game_id`, `genre_id`) VALUES ('94', '6');
