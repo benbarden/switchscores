@@ -1,0 +1,9 @@
+INSERT INTO `games` (`title`, `link_title`, `upcoming`) VALUES ('Cave Story+', 'cave-story', '1');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('158', '2', 'http://switchplayer.net/2017/06/20/cave-story-review/', '4.6', '9.2');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('23', '2', 'http://switchplayer.net/2017/06/20/world-of-goo-review/', '3.1', '6.2');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('158', '4', 'http://www.nintendolife.com/reviews/nintendo-switch/cave_storyplus', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('94', '4', 'http://www.nintendolife.com/reviews/switch-eshop/oceanhorn_monster_of_uncharted_seas', '6.0', '6.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('134', '4', 'http://www.nintendolife.com/reviews/switch-eshop/sengoku_neogeo', '6.0', '6.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('133', '4', 'http://www.nintendolife.com/reviews/switch-eshop/last_resort_neogeo', '8.0', '8.0');
