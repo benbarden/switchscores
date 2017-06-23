@@ -1,0 +1,2 @@
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('94', '2', 'http://switchplayer.net/2017/06/23/oceanhorn-monster-of-uncharted-seas/', '3.3', '6.6');
+UPDATE `games` SET `upcoming_date`='2017-XX' WHERE `id`='158';
