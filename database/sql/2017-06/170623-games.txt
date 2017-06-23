@@ -1,0 +1,6 @@
+UPDATE `games` SET `release_date`='2017-06-29', `upcoming_date`='2017-06-29' WHERE `id`='52';
+UPDATE `games` SET `release_date`='2017-06-29', `upcoming_date`='2017-06-29' WHERE `id`='135';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Magical Drop II', 'magical-drop-ii', '2017-06-29', '6.29', '1-2', '1', '2017-06-29');
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Rocket Fist', 'rocket-fist', '2017-07-13', '8.99', '1-4', '1', '2017-07-13');
+UPDATE `games` SET `release_date`='2017-07-13', `price_eshop`='8.99', `players`='1-4', `upcoming_date`='2017-07-13' WHERE `id`='92';
+UPDATE `games` SET `players`='1-2' WHERE `id`='144';
