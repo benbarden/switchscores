@@ -1,0 +1,15 @@
+INSERT INTO `review_sites` (`id`, `name`, `url`, `active`, `rating_scale`) VALUES ('5', 'GameSpew', 'http://www.gamespew.com/', 'Y', '10');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('9', '5', 'http://www.gamespew.com/2017/03/shovel-knight-specter-of-torment-review/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('6', '5', 'http://www.gamespew.com/2017/03/fast-rmx-review/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('10', '5', 'http://www.gamespew.com/2017/03/voez-review/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('1', '5', 'http://www.gamespew.com/2017/03/the-legend-of-zelda-breath-of-the-wild-review/', '10.0', '10.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('24', '5', 'http://www.gamespew.com/2017/03/little-inferno-review/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('25', '5', 'http://www.gamespew.com/2017/03/human-resource-machine-review/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('26', '5', 'http://www.gamespew.com/2017/04/snake-pass-review/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('78', '5', 'http://www.gamespew.com/2017/04/yooka-laylee-review/', '6.0', '6.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('31', '5', 'http://www.gamespew.com/2017/04/lego-city-undercover-review/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('37', '5', 'http://www.gamespew.com/2017/04/puyo-puyo-tetris-review/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('35', '5', 'http://www.gamespew.com/2017/04/wonder-boy-the-dragons-trap-review/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('49', '5', 'http://www.gamespew.com/2017/05/rime-review/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('43', '5', 'http://www.gamespew.com/2017/06/nba-playgrounds-review/', '6.0', '6.0');
