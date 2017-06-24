@@ -1,0 +1,33 @@
+INSERT INTO `wos_games`.`charts_dates` (`chart_date`, `stats_europe`, `stats_us`) VALUES ('2017-06-24', 'Y', 'Y');
+
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '1', '53');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '2', '46');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '3', '105');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '4', '88');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '5', '94');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '6', '40');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '7', '5');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '8', '43');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '9', '8');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '10', '39');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '11', '51');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '12', '35');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '13', '48');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '14', '6');
+INSERT INTO `wos_games`.`charts_rankings` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '15', '26');
+
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '1', '53');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '2', '46');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '3', '88');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '4', '105');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '5', '40');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '6', '5');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '7', '43');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '8', '8');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '9', '94');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '10', '1');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '11', '39');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '12', '158');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '13', '51');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '14', '28');
+INSERT INTO `wos_games`.`charts_rankings_us` (`chart_date`, `position`, `game_id`) VALUES ('2017-06-24', '15', '37');
