@@ -1,0 +1,21 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Top Rated Nintendo Switch games</h1>
+
+<p>
+    A list of Nintendo Switch games released in Europe, sorted to show the highest
+    average rating across the reviews we've collated at World of Switch.
+</p>
+
+<p>
+    Games with fewer than 2 reviews are not listed below; these can be found on the
+    Games needing more reviews page.
+</p>
+
+{% include 'games/list/moreLists.twig' with {'thisPage': 'topRated'} %}
+
+{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

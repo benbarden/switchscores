@@ -9,8 +9,8 @@
 <p>All prices correct at time of publication. Any changes may not be reflected immediately.
     Check prices prior to purchase.</p>
 
-<p>For upcoming games, go to the <a href="/lists/upcoming-nintendo-switch-games">upcoming games index</a>.</p>
+{% include 'games/list/moreLists.twig' with {'thisPage': 'released'} %}
 
-{% include 'lists/gamesTable.twig' with {'GamesList': GamesList} %}
+{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
 
 {% endblock page_body %}

@@ -1,0 +1,15 @@
+<h2>More lists</h2>
+<ul>
+    {% if thisPage != 'topRated' %}
+        <li><a href="{{ route('games.list.topRated') }}">Top Rated</a></li>
+    {% endif %}
+    {% if thisPage != 'released' %}
+        <li><a href="{{ route('games.list.released') }}">Released titles</a></li>
+    {% endif %}
+    {% if thisPage != 'upcoming' %}
+        <li><a href="{{ route('games.list.upcoming') }}">Upcoming releases</a></li>
+    {% endif %}
+    {% if thisPage != 'reviewsNeeded' %}
+        <li><a href="{{ route('games.list.reviewsNeeded') }}">Games needing more reviews</a></li>
+    {% endif %}
+</ul>

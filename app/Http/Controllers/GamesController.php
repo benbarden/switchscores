@@ -4,6 +4,66 @@ namespace App\Http\Controllers;
 
 class GamesController extends BaseController
 {
+    public function listReleased()
+    {
+        $bindings = array();
+
+        $gamesList = \App\Game::where('upcoming', 0)
+            ->orderBy('release_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $bindings['GamesList'] = $gamesList;
+
+        $bindings['TopTitle'] = 'Nintendo Switch released games';
+        return view('games.list.releasedGames', $bindings);
+    }
+
+    public function listUpcoming()
+    {
+        $bindings = array();
+
+        $gamesList = \App\Game::where('upcoming', 1)
+            ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+
+        $bindings['GamesList'] = $gamesList;
+
+        $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
+        return view('games.list.upcomingGames', $bindings);
+    }
+
+    public function listTopRated()
+    {
+        $bindings = array();
+
+        $gamesList = \App\Game::where('upcoming', 0)
+            ->where('review_count', '>', '1')
+            ->orderBy('rating_avg', 'desc')
+            ->get();
+
+        $bindings['GamesList'] = $gamesList;
+
+        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
+        return view('games.list.topRated', $bindings);
+    }
+
+    public function listReviewsNeeded()
+    {
+        $bindings = array();
+
+        $gamesList = \App\Game::where('upcoming', 0)
+            ->where('review_count', '<', '2')
+            ->orderBy('release_date', 'desc')
+            ->get();
+
+        $bindings['GamesList'] = $gamesList;
+
+        $bindings['TopTitle'] = 'Nintendo Switch - Games needing more reviews';
+        return view('games.list.reviewsNeeded', $bindings);
+    }
+
     /**
      * @param $id
      * @param $linkTitle
@@ -62,4 +122,5 @@ class GamesController extends BaseController
         $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
         return redirect($redirUrl, 301);
     }
+
 }

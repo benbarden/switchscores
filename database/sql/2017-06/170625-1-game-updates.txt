@@ -1,0 +1,5 @@
+ALTER TABLE `games` DROP COLUMN `price_amazonuk`;
+
+ALTER TABLE `games`
+ADD COLUMN `rating_avg` DECIMAL(4,1) NULL AFTER `upcoming_date`,
+ADD COLUMN `review_count` INT(10) NULL AFTER `rating_avg`;

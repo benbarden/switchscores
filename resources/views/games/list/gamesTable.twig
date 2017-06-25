@@ -3,9 +3,11 @@
         <thead>
             <tr>
                 <th style="text-align: left;">Title</th>
-                <th style="text-align: left;">Release date</th>
+                <th style="text-align: left;">Release date<br>(Europe)</th>
                 <th style="text-align: center;">Players</th>
                 <th style="text-align: right;">eShop price</th>
+                <th style="text-align: right;">Avg rating</th>
+                <th style="text-align: right;">Total reviews</th>
             </tr>
         </thead>
         <tbody>
@@ -31,10 +33,17 @@
                             &pound;{{ item.price_eshop }}
                         {% endif %}
                     </td>
+                    <td style="text-align: right;">
+                        {{ item.rating_avg }}
+                    </td>
+                    <td style="text-align: right;">
+                        {{ item.review_count }}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <p><em>{{ GamesList.count }} games.</em></p>
 {% else %}
     <p>No games to display!</p>
 {% endif %}

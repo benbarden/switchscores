@@ -1,0 +1,23 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Upcoming Nintendo Switch games</h1>
+
+<p>The table shown below lists Switch games that haven't been released in Europe yet.</p>
+
+<p>
+    As games are released, they’ll be moved to the
+    <a href="{{ route('games.list.released') }}">released Switch games index</a>.
+</p>
+
+<p>
+    Note: If a game listed below has a rating, it may have been released in another
+    region.
+</p>
+
+{% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
+
+{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

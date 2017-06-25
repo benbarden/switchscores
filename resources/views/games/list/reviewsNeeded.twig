@@ -1,0 +1,21 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>Nintendo Switch Games needing more reviews</h1>
+
+<p>
+    A list of Nintendo Switch games currently available in Europe, where we don't have enough
+    reviews to include them in our Top Rated list.
+</p>
+
+<p>
+    The Top Rated list only includes games with 2 or more reviews - otherwise, we can't give
+    a good enough average. (2 reviews is possibly still too few, but 2 is better than 1!)
+</p>
+
+{% include 'games/list/moreLists.twig' with {'thisPage': 'reviewsNeeded'} %}
+
+{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

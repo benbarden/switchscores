@@ -6,31 +6,11 @@ class ListsController extends BaseController
 {
     public function releasedGames()
     {
-        $bindings = array();
-
-        $gamesList = \App\Game::where('upcoming', 0)
-            ->orderBy('release_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
-
-        $bindings['GamesList'] = $gamesList;
-
-        $bindings['TopTitle'] = 'Nintendo Switch released games';
-        return view('lists.releasedGames', $bindings);
+        return redirect(route('games.list.released'), 301);
     }
 
     public function upcomingGames()
     {
-        $bindings = array();
-
-        $gamesList = \App\Game::where('upcoming', 1)
-            ->orderBy('upcoming_date', 'asc')
-            ->orderBy('title', 'asc')
-            ->get();
-
-        $bindings['GamesList'] = $gamesList;
-
-        $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
-        return view('lists.upcomingGames', $bindings);
+        return redirect(route('games.list.upcoming'), 301);
     }
 }
