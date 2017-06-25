@@ -1,0 +1,33 @@
+CREATE TABLE `game_images` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `game_id` INT(10) UNSIGNED NOT NULL,
+  `url` TEXT NOT NULL,
+  `image_order` INT(10) UNSIGNED NOT NULL,
+  `caption` VARCHAR(50) NULL,
+  `desc` TEXT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `game_id` (`game_id` ASC));
+
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/000-zelda.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/001-zelda.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/002-zelda.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/003-zelda.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/004-zelda.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/005-zelda.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/006-zelda.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/007-zelda.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/008-zelda.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/009-zelda.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/010-zelda.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/011-zelda.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `url`, `image_order`) VALUES ('1', '/img/media/zelda-botw/012-zelda.jpg', '13');
+
+ALTER TABLE `game_images`
+ADD COLUMN `cover_image` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `game_id`,
+ADD INDEX `cover_image` (`cover_image` ASC);
+
+UPDATE `game_images` SET `cover_image`='1' WHERE `id`='1';
+
+ALTER TABLE `games` ADD COLUMN `overview` TEXT NULL AFTER `review_count`;
+
+UPDATE `games` SET `overview`='After a 100-year slumber, Link wakes up alone in a world he no longer remembers. Now the legendary hero must explore a vast and dangerous land and regain his memories before Hyrule is lost forever. Armed only with what he can scavenge, Link sets out to find answers and the resources needed to survive.' WHERE `id`='1';

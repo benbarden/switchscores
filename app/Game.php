@@ -20,4 +20,14 @@ class Game extends Model
     {
         return $this->hasMany('App\ChartsRanking', 'game_id', 'id');
     }
+
+    public function images()
+    {
+        return $this->hasMany('App\GameImage', 'game_id', 'id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany('App\GameReview', 'game_id', 'id');
+    }
 }

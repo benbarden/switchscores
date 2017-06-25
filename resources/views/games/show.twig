@@ -6,14 +6,19 @@
 
 <table>
     <tr>
-        <td style="padding: 0 8px 0 0; width: 33%; vertical-align: top;">
+        <td style="padding: 0 8px 0 0; width: 30%; vertical-align: top;">
             {% include 'games/infobox.twig' with {'GameData': GameData} %}
-        </td>
-        <td style="padding: 0 8px 0 0; width: 33%; vertical-align: top;">
             {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
-        </td>
-        <td style="padding: 0 8px 0 0; width: 33%; vertical-align: top;">
             {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
+        </td>
+        <td style="padding: 0 8px; width: 65%; vertical-align: top;">
+            {% include 'games/images.twig' with {'GameImages': GameData.images} %}
+            <h2>Overview</h2>
+            {% if GameData.overview %}
+            <p>{{ GameData.overview }}</p>
+            {% else %}
+            <p><em>Coming soon!</em></p>
+            {% endif %}
         </td>
     </tr>
 </table>
