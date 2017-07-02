@@ -1,0 +1,23 @@
+INSERT INTO `review_sites` (`name`, `url`, `active`, `rating_scale`) VALUES ('Gamespot', 'https://www.gamespot.com/', 'Y', '10');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('1', '6', 'https://www.gamespot.com/reviews/the-legend-of-zelda-breath-of-the-wild-review/1900-6416626/', '10.0', '10.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('2', '6', 'https://www.gamespot.com/reviews/1-2-switch-review/1900-6416627/', '6.0', '6.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('3', '6', 'https://www.gamespot.com/reviews/super-bomberman-r-review/1900-6416629/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('5', '6', 'https://www.gamespot.com/reviews/snipperclips-review/1900-6416632/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('6', '6', 'https://www.gamespot.com/reviews/fast-rmx-review/1900-6416634/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('9', '6', 'https://www.gamespot.com/reviews/shovel-knight-specter-of-torment-review/1900-6416636/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('26', '6', 'https://www.gamespot.com/reviews/snake-pass-review/1900-6416646/', '7.0', '7.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('28', '6', 'https://www.gamespot.com/reviews/has-been-heroes-review/1900-6416651/', '5.0', '5.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('34', '6', 'https://www.gamespot.com/reviews/mr-shifty-review/1900-6416657/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('40', '6', 'https://www.gamespot.com/reviews/mario-kart-8-deluxe-review/1900-6416660/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('37', '6', 'https://www.gamespot.com/reviews/puyo-puyo-tetris-review/1900-6416665/', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('41', '6', 'https://www.gamespot.com/reviews/tumbleseed-review/1900-6416673/', '6.0', '6.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('48', '6', 'https://www.gamespot.com/reviews/thumper-review/1900-6416533/', '9.0', '9.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('53', '6', 'https://www.gamespot.com/reviews/arms-review/1900-6416696/', '7.0', '7.0');
+
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `upcoming`, `upcoming_date`) VALUES ('Skylanders Imaginators', 'skylanders-imaginators', '2017-03-03', '0', '2017-03-03');
+
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('167', '2', 'http://switchplayer.net/2017/04/25/skylanders-imaginators-review/', '2.0', '4.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('167', '3', 'http://uk.ign.com/articles/2016/10/15/skylanders-imaginators-review', '6.8', '6.8');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('167', '4', 'http://www.nintendolife.com/reviews/nintendo-switch/skylanders_imaginators', '8.0', '8.0');
+INSERT INTO `review_links` (`game_id`, `site_id`, `url`, `rating_original`, `rating_normalised`) VALUES ('167', '6', 'https://www.gamespot.com/reviews/skylanders-imaginators-review/1900-6416545/', '7.0', '7.0');
