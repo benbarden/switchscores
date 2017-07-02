@@ -38,8 +38,7 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = \App\Game::where('upcoming', 0)
-            ->where('review_count', '>', '1')
+        $gamesList = \App\Game::where('review_count', '>', '1')
             ->orderBy('rating_avg', 'desc')
             ->get();
 
