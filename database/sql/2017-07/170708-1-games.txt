@@ -1,0 +1,11 @@
+UPDATE `games` SET `upcoming`='0' WHERE `id`='161';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='164';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='165';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='163';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='162';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`) VALUES ('Flip Wars', 'flip-wars', '2017-07-06', '8.99', '1-4', '0');
+UPDATE `games` SET `release_date`='2017-07-13', `upcoming_date`='2017-07-13' WHERE `id`='89';
+UPDATE `games` SET `release_date`='2017-07-13', `upcoming_date`='2017-07-13' WHERE `id`='135';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Fatal Fury Special', 'fatal-fury-special', '2017-07-13', '6.29', '1-2', '1', '2017-07-13');
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Levels+', 'levels-plus', '2017-07-13', NULL, '1', '1', '2017-07-13');
+UPDATE `games` SET `release_date`='2017-07-21', `players`='1', `upcoming_date`='2017-07-21' WHERE `id`='99';
