@@ -30,6 +30,30 @@ Route::get('/charts/games-at-position/{position?}', 'ChartsController@gamesAtPos
 Route::get('/charts/{date?}', 'ChartsController@showEu')->name('charts.date');
 Route::get('/charts-us/{date?}', 'ChartsController@showUs')->name('charts.us.date');
 
+/* Admin */
+Route::group(['middleware' => ['auth.admin:admin']], function() {
+
+    // Index
+    Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
+
+    // Charts: Dates
+    Route::get('/admin/charts/date', 'Admin\ChartsDateController@showList')->name('admin.charts.date.list');
+    Route::get('/admin/charts/date/add', 'Admin\ChartsDateController@add')->name('admin.charts.date.add');
+    Route::post('/admin/charts/date/add', 'Admin\ChartsDateController@add')->name('admin.charts.date.add.submit');
+
+    // Charts: Rankings
+    Route::get('/admin/charts/ranking/{country}/{date}', 'Admin\ChartsRankingController@showList')->name('admin.charts.ranking.list');
+    Route::get('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
+    Route::post('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add.submit');
+
+});
+
+Auth::routes();
+
+
+
+// **** NOTE: THESE NEED TO BE LAST! **** //
+
 /* Blog redirects */
 Route::get('/tag/{tag}/', 'BlogController@redirectTag')->name('blog.redirectTag');
 Route::get('/category/{tag}/', 'BlogController@redirectCategory')->name('blog.redirectCategory');
@@ -39,9 +63,3 @@ Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->nam
 Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
 Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
 
-/* Admin */
-Route::group(['middleware' => ['auth.admin:admin']], function() {
-    Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
-});
-
-Auth::routes();

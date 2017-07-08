@@ -16,4 +16,11 @@ class ChartsDate extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'chart_date', 'stats_europe', 'stats_us',
+    ];
+
 }

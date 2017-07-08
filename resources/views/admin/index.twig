@@ -1,13 +1,20 @@
-{% extends 'theme/wos/base.twig' %}
+{% extends 'theme/wos/admin.twig' %}
 
 {% block page_body %}
 
-<h1>Admin index</h1>
-
-<ul>
-    <li>Charts: add a date</li>
-    <li>Charts: European</li>
-    <li>Charts: US</li>
-</ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Admin index</div>
+                <div class="panel-body">
+                <ul>
+                    <li><a href="{{ route('admin.charts.date.list') }}">eShop charts</a></li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock page_body %}

@@ -16,6 +16,13 @@ class ChartsRankingUs extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'chart_date', 'position', 'game_id',
+    ];
+
     public function game()
     {
         return $this->hasOne('App\Game', 'id', 'game_id');

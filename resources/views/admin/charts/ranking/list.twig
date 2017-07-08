@@ -1,0 +1,50 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Charts - Rankings ({{ CountryDesc }})</div>
+                <div class="panel-body">
+                    <p>Date: {{ ChartDate }}</p>
+                    {% if ChartRankings.count > 0 %}
+                        <p>As this date already has rankings, you cannot add a new set.</p>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Game</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in ChartRankings %}
+                                    <tr>
+                                        <td>
+                                            {{ item.position }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No rankings found!</p>
+                        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add rankings">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('admin.charts.ranking.add', {'country': CountryCode, 'date': ChartDate}) }}';
+    });
+</script>
+
+{% endblock page_body %}

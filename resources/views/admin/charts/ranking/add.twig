@@ -1,0 +1,47 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add rankings</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.charts.ranking.add', {'country': CountryCode, 'date': ChartDate}) }}">
+                        {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <label for="chart_date" class="col-md-4 control-label">Date</label>
+                            <div class="col-md-6">
+                                {{ ChartDate }}
+                            </div>
+                        </div>
+                        {% for counter in 1..MaxRankCount %}
+                            <div class="form-group">
+                                <label for="ranking_games_{{ counter }}" class="col-md-4 control-label">Game {{ counter }}</label>
+                                <div class="col-md-6">
+                                    <select id="ranking_games_{{ counter }}" class="form-control" name="ranking_games[]" required>
+                                        <option value="">&nbsp;</option>
+                                        {% for item in GamesList %}
+                                        <option value="{{ item.id }}">{{ item.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn outline btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock page_body %}

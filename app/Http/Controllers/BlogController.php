@@ -18,6 +18,9 @@ class BlogController extends BaseController
 
     public function redirectPost($year, $month, $day, $title)
     {
+        if ($year == 'admin') {
+            abort(500);
+        }
         $url = sprintf('https://worldofswitch.wordpress.com/%s/%s/%s/%s', $year, $month, $day, $title);
         return redirect($url, 301);
     }
