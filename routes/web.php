@@ -38,3 +38,10 @@ Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->nam
 /* Misc redirects */
 Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
 Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
+
+/* Admin */
+Route::group(['middleware' => ['auth.admin:admin']], function() {
+    Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
+});
+
+Auth::routes();
