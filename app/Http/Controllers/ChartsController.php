@@ -8,8 +8,9 @@ class ChartsController extends BaseController
     {
         $bindings = array();
 
-        $chartDatesEu = \App\ChartsDate::where('stats_europe', 'Y')->orderBy('chart_date', 'DESC')->get();
-        $chartDatesUs = \App\ChartsDate::where('stats_us', 'Y')->orderBy('chart_date', 'DESC')->get();
+        $chartsDateService = resolve('Services\ChartsDateService');
+        $chartDatesEu = $chartsDateService->getDateList('eu');
+        $chartDatesUs = $chartsDateService->getDateList('us');
 
         $bindings['TopTitle'] = 'Charts';
         $bindings['ChartDatesEu'] = $chartDatesEu;

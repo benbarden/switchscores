@@ -177,6 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // WOS
+        App\Providers\ChartsDateServiceProvider::class,
+
         TwigBridge\ServiceProvider::class,
 
     ],
