@@ -14,8 +14,6 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('auth');
-
         \View::share('env', \App::environment());
 
         $currentUser = Auth::user();

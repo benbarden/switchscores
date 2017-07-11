@@ -179,6 +179,9 @@ return [
 
         // WOS
         App\Providers\ChartsDateServiceProvider::class,
+        App\Providers\GameServiceProvider::class,
+        App\Providers\ReviewLinkServiceProvider::class,
+        App\Providers\ReviewSiteServiceProvider::class,
 
         TwigBridge\ServiceProvider::class,
 

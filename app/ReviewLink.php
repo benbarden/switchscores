@@ -16,6 +16,13 @@ class ReviewLink extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised'
+    ];
+
     public function site()
     {
         return $this->hasOne('App\ReviewSite', 'id', 'site_id');
@@ -23,6 +30,6 @@ class ReviewLink extends Model
 
     public function game()
     {
-        return $this->hasOne('App\Game', 'game_id', 'id');
+        return $this->hasOne('App\Game', 'id', 'game_id');
     }
 }

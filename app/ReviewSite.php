@@ -16,6 +16,13 @@ class ReviewSite extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'url', 'active', 'rating_scale'
+    ];
+
     public function links()
     {
         return $this->hasMany('App\ReviewLink', 'id', 'site_id');

@@ -1,0 +1,71 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add review link</div>
+                <div class="panel-body">
+                    {% include 'common/form-errors.twig' %}
+                    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.reviews.link.add') }}">
+                        {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <label for="game_id" class="col-md-4 control-label">Game</label>
+                            <div class="col-md-6">
+                                <select id="game_id" class="form-control" name="game_id" required>
+                                    <option value="">&nbsp;</option>
+                                    {% for item in GamesList %}
+                                        <option value="{{ item.id }}">{{ item.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="site_id" class="col-md-4 control-label">Site</label>
+                            <div class="col-md-6">
+                                <select id="site_id" class="form-control" name="site_id" required>
+                                    <option value="">&nbsp;</option>
+                                    {% for item in ReviewSites %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="url" class="col-md-4 control-label">Url (include http://)</label>
+                            <div class="col-md-6">
+                                <input id="url" type="text" class="form-control" name="url" value="{{ old('url') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rating_original" class="col-md-4 control-label">Rating</label>
+                            <div class="col-md-6">
+                                <input id="rating_original" type="text" class="form-control" name="rating_original" value="{{ old('rating_original') }}" required>
+                                <p>
+                                    <em>If the reviewing site has a scale other than x/10, enter the actual score here.
+                                    It will be converted to x/10.</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn outline btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock page_body %}

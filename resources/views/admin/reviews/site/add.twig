@@ -1,0 +1,53 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add site</div>
+                <div class="panel-body">
+                    {% include 'common/form-errors.twig' %}
+                    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.reviews.site.add') }}">
+                        {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <label for="name" class="col-md-4 control-label">Name</label>
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" maxlength="50" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="url" class="col-md-4 control-label">Url (include http://)</label>
+                            <div class="col-md-6">
+                                <input id="url" type="text" class="form-control" name="url" value="{{ old('url') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="active" class="col-md-4 control-label">Active</label>
+                            <div class="col-md-6">
+                                <input id="active" type="checkbox" name="active" checked>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating_scale" class="col-md-4 control-label">Rating scale</label>
+                            <div class="col-md-6">
+                                <input id="rating_scale" type="text" class="form-control" name="rating_scale" value="{{ old('rating_scale') }}" size="5" maxlength="2" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn outline btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock page_body %}

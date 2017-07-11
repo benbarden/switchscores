@@ -46,6 +46,16 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
     Route::post('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add.submit');
 
+    // Reviews: Sites
+    Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
+    Route::get('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
+    Route::post('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add.submit');
+
+    // Reviews: Links
+    Route::get('/admin/reviews/link', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
+    Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
+    Route::post('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add.submit');
+
 });
 
 Auth::routes();
