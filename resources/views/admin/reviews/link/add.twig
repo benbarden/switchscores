@@ -15,7 +15,7 @@
                         <div class="form-group">
                             <label for="game_id" class="col-md-4 control-label">Game</label>
                             <div class="col-md-6">
-                                <select id="game_id" class="form-control" name="game_id" required>
+                                <select id="game_id" class="form-control" name="game_id" required autofocus>
                                     <option value="">&nbsp;</option>
                                     {% for item in GamesList %}
                                         <option value="{{ item.id }}">{{ item.title }}</option>
@@ -67,5 +67,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('#game_id').select2();
+</script>
 
 {% endblock page_body %}
