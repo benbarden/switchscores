@@ -37,7 +37,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
 
     // Games
-    Route::get('/admin/games/list', 'Admin\GamesController@showList')->name('admin.games.list');
+    Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
     Route::get('/admin/games/add', 'Admin\GamesController@add')->name('admin.games.add');
     Route::post('/admin/games/add', 'Admin\GamesController@add')->name('admin.games.add');
     Route::get('/admin/games/edit/{gameId}', 'Admin\GamesController@edit')->name('admin.games.edit');

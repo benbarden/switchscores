@@ -6,9 +6,18 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Games</div>
+                <div class="panel-heading">
+                    Games :
+                    <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
+                    <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
+                    <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">Upcoming</a>
+                    <a id="admin-nav-upcoming-q" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-q'}) }}">Qn</a>
+                    <a id="admin-nav-upcoming-x" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-x'}) }}">XX</a>
+                    <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
+                </div>
                 <div class="panel-body">
                     <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+                    <hr>
                     {% if GameList.count > 0 %}
                         <table class="table table-striped data-sortable">
                             <thead>
@@ -65,8 +74,24 @@
         top.location.href = '{{ route('admin.games.add') }}';
     });
     $(document).ready(function() {
+        var activeNav = '{{ ActiveNav }}';
+        $('#admin-nav-' + activeNav).addClass('btn-primary');
+        switch (activeNav) {
+            case 'released':
+                sortOrder = [ 2, "desc"];
+                break;
+            case 'upcoming':
+            case 'upcoming-q':
+            case 'upcoming-x':
+            case 'upcoming-tba':
+                sortOrder = [ 2, "asc"];
+                break;
+            default:
+                sortOrder = [ 0, "desc"];
+                break;
+        }
         $('.data-sortable').DataTable({
-            "order": [[ 0, "desc" ]],
+            "order": [sortOrder],
             "pageLength": 25,
             "columns": [
                 null,

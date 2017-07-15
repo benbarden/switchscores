@@ -26,13 +26,37 @@ class GamesController extends \App\Http\Controllers\BaseController
         parent::__construct();
     }
 
-    public function showList()
+    public function showList($report = null)
     {
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Games';
 
-        $gameList = $this->serviceClass->getAll();
+        if ($report == null) {
+            $gameList = $this->serviceClass->getAll();
+            $bindings['ActiveNav'] = 'all';
+        } else {
+            $bindings['ActiveNav'] = $report;
+            switch ($report) {
+                case 'released':
+                    $gameList = $this->serviceClass->getAllReleased();
+                    break;
+                case 'upcoming':
+                    $gameList = $this->serviceClass->getAllUpcoming();
+                    break;
+                case 'upcoming-tba':
+                    $gameList = $this->serviceClass->getAllUpcomingTBA();
+                    break;
+                case 'upcoming-q':
+                    $gameList = $this->serviceClass->getAllUpcomingQs();
+                    break;
+                case 'upcoming-x':
+                    $gameList = $this->serviceClass->getAllUpcomingXs();
+                    break;
+                default:
+                    abort(404);
+            }
+        }
 
         $bindings['GameList'] = $gameList;
 
