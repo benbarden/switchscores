@@ -1,0 +1,10 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+{% set formSubmitAction = route('admin.games.edit', {'gameId': GameId}) %}
+{% include 'admin/games/form.twig' with {'formTitle': 'Edit game', 'formSubmitAction': formSubmitAction} %}
+
+{% include 'admin/games/scripts.twig' %}
+
+{% endblock page_body %}

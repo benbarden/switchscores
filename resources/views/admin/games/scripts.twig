@@ -1,0 +1,43 @@
+<script>
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing games.
+        formVals['title'] = "{{ GameData.title }}";
+        formVals['link_title'] = "{{ GameData.link_title }}";
+        formVals['release_date'] = "{{ GameData.release_date }}";
+        formVals['price_eshop'] = "{{ GameData.price_eshop }}";
+        formVals['players'] = "{{ GameData.players }}";
+        formVals['upcoming_date'] = "{{ GameData.upcoming_date }}";
+        formVals['overview'] = "{{ GameData.overview }}";
+        formVals['upcoming'] = "{{ GameData.upcoming }}";
+
+    } else {
+
+        // This is used for new games.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['title'] = "{{ old('title') }}";
+        formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['release_date'] = "{{ old('release_date') }}";
+        formVals['price_eshop'] = "{{ old('price_eshop') }}";
+        formVals['players'] = "{{ old('players') }}";
+        formVals['upcoming_date'] = "{{ old('upcoming_date') }}";
+        formVals['overview'] = "{{ old('overview') }}";
+        formVals['upcoming'] = "{{ old('upcoming') }}";
+
+    }
+
+    $('#title').val(formVals['title']);
+    $('#link_title').val(formVals['link_title']);
+    $('#release_date').val(formVals['release_date']);
+    $('#price_eshop').val(formVals['price_eshop']);
+    $('#players').val(formVals['players']);
+    $('#upcoming_date').val(formVals['upcoming_date']);
+    $('#overview').val(formVals['overview']);
+    if (formVals['upcoming'] == 1) {
+        $('#upcoming').attr('checked', true);
+    }
+
+</script>

@@ -8,9 +8,72 @@ use App\Game;
 
 class GameService
 {
-    public function getAll()
+    const ORDER_TITLE = 0;
+    const ORDER_NEWEST = 1;
+    const ORDER_OLDEST = 2;
+
+    public function create(
+        $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate, $overview
+    )
     {
-        $gamesList = Game::orderBy('title', 'asc')->get();
+        $isUpcoming = $upcoming == 'on' ? 1 : 0;
+
+        Game::create([
+            'title' => $title,
+            'link_title' => $linkTitle,
+            'release_date' => $releaseDate,
+            'price_eshop' => $priceEshop,
+            'players' => $players,
+            'upcoming' => $isUpcoming,
+            'upcoming_date' => $upcomingDate,
+            'overview' => $overview,
+        ]);
+    }
+
+    public function edit(
+        Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate, $overview
+    )
+    {
+        $isUpcoming = $upcoming == 'on' ? 1 : 0;
+
+        $values = [
+            'title' => $title,
+            'link_title' => $linkTitle,
+            'release_date' => $releaseDate,
+            'price_eshop' => $priceEshop,
+            'players' => $players,
+            'upcoming' => $isUpcoming,
+            'upcoming_date' => $upcomingDate,
+            'overview' => $overview,
+        ];
+
+        $game->fill($values);
+        $game->save();
+    }
+
+    public function find($id)
+    {
+        return Game::find($id);
+    }
+
+    public function getAll($orderBy = self::ORDER_TITLE)
+    {
+        switch ($orderBy) {
+            case self::ORDER_NEWEST:
+                $orderField = 'id';
+                $orderDir = 'desc';
+                break;
+            case self::ORDER_OLDEST:
+                $orderField = 'id';
+                $orderDir = 'asc';
+                break;
+            case self::ORDER_TITLE:
+            default:
+                $orderField = 'title';
+                $orderDir = 'asc';
+                break;
+        }
+        $gamesList = Game::orderBy($orderField, $orderDir)->get();
         return $gamesList;
     }
 

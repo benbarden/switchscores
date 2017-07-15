@@ -1,0 +1,52 @@
+{% extends 'theme/wos/admin.twig' %}
+
+{% block page_body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Games</div>
+                <div class="panel-body">
+                    <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+                    {% if GameList.count > 0 %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in GameList %}
+                                    <tr>
+                                        <td>
+                                            {{ item.id }}
+                                        </td>
+                                        <td>
+                                            {{ item.title }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No games found!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('admin.games.add') }}';
+    });
+</script>
+
+{% endblock page_body %}
