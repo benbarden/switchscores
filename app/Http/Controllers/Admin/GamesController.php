@@ -33,25 +33,31 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['TopTitle'] = 'Admin - Games';
 
         if ($report == null) {
-            $gameList = $this->serviceClass->getAll();
             $bindings['ActiveNav'] = 'all';
+            $gameList = $this->serviceClass->getAll();
+            $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
                     $gameList = $this->serviceClass->getAllReleased();
+                    $jsInitialSort = "[ 2, 'desc']";
                     break;
                 case 'upcoming':
                     $gameList = $this->serviceClass->getAllUpcoming();
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-tba':
                     $gameList = $this->serviceClass->getAllUpcomingTBA();
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-q':
                     $gameList = $this->serviceClass->getAllUpcomingQs();
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-x':
                     $gameList = $this->serviceClass->getAllUpcomingXs();
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 default:
                     abort(404);
@@ -59,6 +65,7 @@ class GamesController extends \App\Http\Controllers\BaseController
         }
 
         $bindings['GameList'] = $gameList;
+        $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('admin.games.list', $bindings);
     }

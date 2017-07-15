@@ -76,22 +76,8 @@
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';
         $('#admin-nav-' + activeNav).addClass('btn-primary');
-        switch (activeNav) {
-            case 'released':
-                sortOrder = [ 2, "desc"];
-                break;
-            case 'upcoming':
-            case 'upcoming-q':
-            case 'upcoming-x':
-            case 'upcoming-tba':
-                sortOrder = [ 2, "asc"];
-                break;
-            default:
-                sortOrder = [ 0, "desc"];
-                break;
-        }
         $('.data-sortable').DataTable({
-            "order": [sortOrder],
+            "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,
             "columns": [
                 null,
