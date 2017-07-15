@@ -1,0 +1,12 @@
+UPDATE `games` SET `upcoming`='0' WHERE `id`='185';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='89';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='186';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='92';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='135';
+UPDATE `games` SET `upcoming`='0' WHERE `id`='54';
+
+UPDATE `games` SET `release_date`='2017-07-20', `price_eshop`='26.99', `upcoming_date`='2017-07-20' WHERE `id`='158';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Samurai Shodown', 'samurai-shodown', '2017-07-20', '6.29', '1-2', '1', '2017-07-20');
+UPDATE `games` SET `price_eshop`='49.99', `players`='1-8' WHERE `id`='56';
+INSERT INTO `games` (`title`, `link_title`, `release_date`, `price_eshop`, `players`, `upcoming`, `upcoming_date`) VALUES ('Use Your Words', 'use-your-words', '2017-08-03', '11.79', '3-6', '1', '2017-08-03');
+UPDATE `games` SET `release_date`=NULL, `upcoming_date`='TBA' WHERE `id`='160';
