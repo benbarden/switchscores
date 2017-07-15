@@ -15,7 +15,9 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Title</th>
-                                    <th>Options</th>
+                                    <th>Release date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -25,9 +27,23 @@
                                             {{ item.id }}
                                         </td>
                                         <td>
-                                            {{ item.title }}
+                                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
                                         </td>
                                         <td>
+                                            {% if item.release_date %}
+                                            {{ item.release_date }}
+                                            {% else %}
+                                            {{ item.upcoming_date }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if item.upcoming == 0 %}
+                                            Released
+                                            {% else %}
+                                            Upcoming
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
                                             <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
                                         </td>
                                     </tr>
