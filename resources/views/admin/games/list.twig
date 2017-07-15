@@ -10,10 +10,10 @@
                 <div class="panel-body">
                     <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
                     {% if GameList.count > 0 %}
-                        <table class="table table-striped">
+                        <table class="table table-striped data-sortable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th class="text-right">#</th>
                                     <th>Title</th>
                                     <th>Release date</th>
                                     <th class="text-center">Status</th>
@@ -23,7 +23,7 @@
                             <tbody>
                                 {% for item in GameList %}
                                     <tr>
-                                        <td>
+                                        <td class="text-right">
                                             {{ item.id }}
                                         </td>
                                         <td>
@@ -59,9 +59,23 @@
     </div>
 </div>
 
+{% include 'common/table-sorting.twig' %}
 <script>
     $('#js-btn-add').on('click', function() {
         top.location.href = '{{ route('admin.games.add') }}';
+    });
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [[ 0, "desc" ]],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
     });
 </script>
 

@@ -32,7 +32,7 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         $bindings['TopTitle'] = 'Admin - Games';
 
-        $gameList = $this->serviceClass->getAll(GameService::ORDER_NEWEST);
+        $gameList = $this->serviceClass->getAll();
 
         $bindings['GameList'] = $gameList;
 
