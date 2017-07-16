@@ -6,12 +6,12 @@
 
 <table>
     <tr>
-        <td style="padding: 0 8px 0 0; width: 30%; vertical-align: top;">
+        <td style="padding: 0 8px 0 0; width: 40%; vertical-align: top;">
             {% include 'games/infobox.twig' with {'GameData': GameData} %}
             {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
             {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
         </td>
-        <td style="padding: 0 8px; width: 65%; vertical-align: top;">
+        <td style="padding: 0 8px; width: 50%; vertical-align: top;">
             {% include 'games/images.twig' with {'GameImages': GameData.images} %}
             <h2>Overview</h2>
             {% if GameData.overview %}
