@@ -2,7 +2,14 @@
 
 {% block page_body %}
 
-<h1>{{ GameData.title }}</h1>
+<div class="row">
+    <div class="col-xs-9">
+        <h1>{{ GameData.title }}</h1>
+    </div>
+    <div class="game-rating col-xs-3">
+        <p class="h1"><span>Rating</span> {{ GameData.rating_avg }}</p>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-sm-12 col-md-5">
