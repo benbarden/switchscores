@@ -13,5 +13,5 @@ h6,.h6{font-size:12px}
 /* Game page */
 .fotorama {margin-top:21px;}
 .game-rating {text-align:right;}
-.game-rating p {margin-top:5px;display:inline-block;padding:0 5px;border:1px solid #ddd;}
-.game-rating span {display:block;font-size:12px;text-align:center;text-transform:uppercase;padding:5px;margin:0 -5px;background:#f5f5f5;}
+.game-rating p {margin-top:5px;display:inline-block;text-align:center;padding:0 5px;border:1px solid #ddd;}
+.game-rating span {display:block;font-size:12px;text-transform:uppercase;padding:5px;margin:0 -5px;background:#f5f5f5;}
