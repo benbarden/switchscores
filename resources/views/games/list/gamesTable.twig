@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th style="text-align: left;">Title</th>
+                <th class="text-left">Features</th>
                 <th style="text-align: left;">Release date<br>(Europe)</th>
                 <th style="text-align: center;">Players</th>
                 <th style="text-align: right;">eShop price</th>
@@ -17,6 +18,15 @@
                         <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
                             {{ item.title }}
                         </a>
+                    </td>
+                    <td class="text-left">
+                        {% if item.image_count > 0 %}
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
+                        {% endif %}
+                        &nbsp;
+                        {% if item.overview %}
+                            <span class="glyphicon glyphicon-align-left" aria-hidden="true" title="Game has an overview"></span>
+                        {% endif %}
                     </td>
                     <td style="text-align: left;">
                         {% if item.upcoming == 1 %}
