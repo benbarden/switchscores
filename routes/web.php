@@ -13,6 +13,8 @@
 
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
+Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
+
 Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
