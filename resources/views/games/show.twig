@@ -4,23 +4,27 @@
 
 <h1>{{ GameData.title }}</h1>
 
-<table>
-    <tr>
-        <td style="padding: 0 8px 0 0; width: 40%; vertical-align: top;">
-            {% include 'games/infobox.twig' with {'GameData': GameData} %}
-            {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
-            {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
-        </td>
-        <td style="padding: 0 8px; width: 50%; vertical-align: top;">
-            {% include 'games/images.twig' with {'GameImages': GameData.images} %}
-            <h2>Overview</h2>
-            {% if GameData.overview %}
-            <p>{{ GameData.overview }}</p>
-            {% else %}
-            <p><em>Coming soon!</em></p>
-            {% endif %}
-        </td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <h2>Overview</h2>
+        {% if GameData.overview %}
+        <p>{{ GameData.overview }}</p>
+        {% else %}
+        <p><em>Coming soon!</em></p>
+        {% endif %}
+        {% include 'games/infobox.twig' with {'GameData': GameData} %}
+    </div>
+    <div class="col-sm-12 col-md-7">
+        {% include 'games/images.twig' with {'GameImages': GameData.images} %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
+    </div>
+    <div class="col-sm-12 col-md-6">
+        {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
+    </div>
+</div>
 
 {% endblock page_body %}
