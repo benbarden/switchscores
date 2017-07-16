@@ -2,17 +2,23 @@
 
 {% block page_body %}
 
-<h1>Welcome</h1>
 
-<h2>Recent eShop charts</h2>
-<ul>
-    <li><a href="{{ route('charts.landing') }}">Charts</a></li>
-</ul>
-
-<h2>List of Nintendo Switch games</h2>
-<ul>
-    <li><a href="{{ route('games.list.released') }}">Released games</a></li>
-    <li><a href="{{ route('games.list.upcoming') }}">Upcoming games</a></li>
-</ul>
+<div class="row">
+	<div class="pull-right col-xs-12 col-sm-3">
+		<img class="img-responsive" src="/img/logo.png" alt="" />
+	</div>
+	<div class="col-xs-12 col-sm-9">
+		<h1>Welcome</h1>
+		<h2>Recent eShop charts</h2>
+		<ul>
+		    <li><a href="{{ route('charts.landing') }}">Charts</a></li>
+		</ul>
+		<h2>List of Nintendo Switch games</h2>
+		<ul>
+		    <li><a href="{{ route('games.list.released') }}">Released games</a></li>
+		    <li><a href="{{ route('games.list.upcoming') }}">Upcoming games</a></li>
+		</ul>
+	</div>
+</div>
 
 {% endblock page_body %}
