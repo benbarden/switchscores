@@ -6,9 +6,9 @@
 
 <p>See which games have been at each of the numbered positions in the Top 15.</p>
 
-<table class="fancy-table" cellspacing="1">
+<table class="table table-striped table-condensed table-responsive">
     <tr>
-        <th style="text-align: left;">Position</th>
+        <th style="text-align: center;">Position</th>
         <th style="text-align: center;">View list</th>
     </tr>
     {% for pos in PositionList %}
@@ -16,7 +16,7 @@
             <td style="text-align: center;">
                 {{ pos }}
             </td>
-            <td style="text-align: left;">
+            <td style="text-align: center;">
                 <a href="{{ route('charts.gamesAtPosition', {'position': pos}) }}">View games</a>
             </td>
         </tr>
