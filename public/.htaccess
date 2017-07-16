@@ -11,6 +11,11 @@ Redirect 301 /about-world-of-switch /about
 
     RewriteEngine On
 
+    # Redirect non-www to www
+    RewriteCond %{HTTP_HOST} !worldofswitch.local
+    RewriteCond %{HTTP_HOST} !^(.+)\.(.+)\.(.+)
+    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
