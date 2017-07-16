@@ -86,3 +86,12 @@ INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUE
 INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('8', '0', '/img/media/shovel-knight/013-shovel-knight.jpg', '13');
 INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('8', '0', '/img/media/shovel-knight/014-shovel-knight.jpg', '14');
 
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '1', '/img/media/cave-story/000-cave-story.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/001-cave-story.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/002-cave-story.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/003-cave-story.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/004-cave-story.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/005-cave-story.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/006-cave-story.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/007-cave-story.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('158', '0', '/img/media/cave-story/008-cave-story.jpg', '9');
