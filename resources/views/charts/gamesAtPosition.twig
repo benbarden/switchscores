@@ -6,21 +6,25 @@
 
 <p>The following games have been at No {{ PositionNo }} at some point since we started recording the eShop Charts.</p>
 
-<table class="table table-striped table-condensed table-responsive">
-    <tr>
-        <th style="text-align: left;">Title</th>
-        <th style="text-align: center;">Times at No {{ PositionNo }}</th>
-    </tr>
-    {% for item in GamesList %}
-        <tr>
-            <td style="text-align: left;">
-                <a href="{{ route('game.show', {'id': item.game_id, 'title': item.link_title}) }}">{{ item.title }}</a>
-            </td>
-            <td style="text-align: center;">
-                {{ item.count }}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <table class="table table-striped table-condensed table-responsive">
+            <tr>
+                <th style="text-align: left;">Title</th>
+                <th style="text-align: center;">Times at No {{ PositionNo }}</th>
+            </tr>
+            {% for item in GamesList %}
+                <tr>
+                    <td style="text-align: left;">
+                        <a href="{{ route('game.show', {'id': item.game_id, 'title': item.link_title}) }}">{{ item.title }}</a>
+                    </td>
+                    <td style="text-align: center;">
+                        {{ item.count }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 {% endblock page_body %}
