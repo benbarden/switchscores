@@ -20,7 +20,8 @@ class Game extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'link_title', 'release_date', 'price_eshop', 'players', 'upcoming', 'upcoming_date', 'overview'
+        'title', 'link_title', 'release_date', 'price_eshop', 'players', 'upcoming', 'upcoming_date',
+        'overview', 'publisher', 'developer',
     ];
 
     public function charts()

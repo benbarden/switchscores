@@ -13,6 +13,8 @@
         formVals['upcoming_date'] = "{{ GameData.upcoming_date }}";
         formVals['overview'] = "{{ GameData.overview }}";
         formVals['upcoming'] = "{{ GameData.upcoming }}";
+        formVals['developer'] = "{{ GameData.developer }}";
+        formVals['publisher'] = "{{ GameData.publisher }}";
 
     } else {
 
@@ -26,6 +28,8 @@
         formVals['upcoming_date'] = "{{ old('upcoming_date') }}";
         formVals['overview'] = "{{ old('overview') }}";
         formVals['upcoming'] = "{{ old('upcoming') }}";
+        formVals['developer'] = "{{ old('developer') }}";
+        formVals['publisher'] = "{{ old('publisher') }}";
 
     }
 
@@ -36,6 +40,8 @@
     $('#players').val(formVals['players']);
     $('#upcoming_date').val(formVals['upcoming_date']);
     $('#overview').val(formVals['overview']);
+    $('#developer').val(formVals['developer']);
+    $('#publisher').val(formVals['publisher']);
     if (formVals['upcoming'] == 1) {
         $('#upcoming').attr('checked', true);
     }

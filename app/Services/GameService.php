@@ -13,7 +13,8 @@ class GameService
     const ORDER_OLDEST = 2;
 
     public function create(
-        $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate, $overview
+        $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
+        $overview, $developer, $publisher
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -27,11 +28,14 @@ class GameService
             'upcoming' => $isUpcoming,
             'upcoming_date' => $upcomingDate,
             'overview' => $overview,
+            'publisher' => $publisher,
+            'developer' => $developer,
         ]);
     }
 
     public function edit(
-        Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate, $overview
+        Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
+        $overview, $developer, $publisher
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -45,6 +49,8 @@ class GameService
             'upcoming' => $isUpcoming,
             'upcoming_date' => $upcomingDate,
             'overview' => $overview,
+            'publisher' => $publisher,
+            'developer' => $developer,
         ];
 
         $game->fill($values);
