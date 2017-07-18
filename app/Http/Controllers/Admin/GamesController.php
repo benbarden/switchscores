@@ -64,6 +64,10 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $gameList = $this->serviceClass->getAllUpcomingXs();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
+                case 'no-dev-or-pub':
+                    $gameList = $this->serviceClass->getWithoutDevOrPub();
+                    $jsInitialSort = "[ 0, 'asc']";
+                    break;
                 default:
                     abort(404);
             }

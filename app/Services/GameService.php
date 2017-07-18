@@ -112,4 +112,10 @@ class GameService
         $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'like', '%-XX')->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
+
+    public function getWithoutDevOrPub()
+    {
+        $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('id', 'asc')->get();
+        return $gamesList;
+    }
 }
