@@ -115,7 +115,7 @@ class GameService
 
     public function getWithoutDevOrPub()
     {
-        $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('id', 'asc')->get();
+        $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
 }

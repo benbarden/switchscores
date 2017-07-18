@@ -66,7 +66,7 @@ class GamesController extends \App\Http\Controllers\BaseController
                     break;
                 case 'no-dev-or-pub':
                     $gameList = $this->serviceClass->getWithoutDevOrPub();
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 default:
                     abort(404);
