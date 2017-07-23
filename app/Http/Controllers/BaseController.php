@@ -8,12 +8,21 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\GameService;
+
 class BaseController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @var GameService
+     */
+    protected $serviceGame;
+
     public function __construct()
     {
+        $this->serviceGame = resolve('Services\GameService');
+
         \View::share('env', \App::environment());
 
         $currentUser = Auth::user();

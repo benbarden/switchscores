@@ -83,36 +83,111 @@ class GameService
         return $gamesList;
     }
 
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
+    public function getListReleased()
+    {
+        $gamesList = Game::where('upcoming', 0)
+            ->orderBy('release_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
+    public function getListUpcoming()
+    {
+        $gamesList = Game::where('upcoming', 1)
+            ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
+    public function getListTopRated()
+    {
+        $gamesList = Game::where('review_count', '>', '2')
+            ->orderBy('rating_avg', 'desc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
+    public function getListReviewsNeeded()
+    {
+        $gamesList = Game::where('upcoming', 0)
+            ->where('review_count', '<', '3')
+            ->orderBy('release_date', 'desc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getAllReleased()
     {
         $gamesList = Game::where('upcoming', 0)->orderBy('title', 'asc')->get();
         return $gamesList;
     }
 
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getAllUpcoming()
     {
         $gamesList = Game::where('upcoming', 1)->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
 
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getAllUpcomingTBA()
     {
         $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'TBA')->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
 
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getAllUpcomingQs()
     {
         $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'like', '%Q%')->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
 
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getAllUpcomingXs()
     {
         $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'like', '%-XX')->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
 
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
     public function getWithoutDevOrPub()
     {
         $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('upcoming_date', 'asc')->get();

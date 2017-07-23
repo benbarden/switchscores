@@ -8,10 +8,7 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = \App\Game::where('upcoming', 0)
-            ->orderBy('release_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+        $gamesList = $this->serviceGame->getListReleased();
 
         $bindings['GamesList'] = $gamesList;
 
@@ -23,10 +20,7 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = \App\Game::where('upcoming', 1)
-            ->orderBy('upcoming_date', 'asc')
-            ->orderBy('title', 'asc')
-            ->get();
+        $gamesList = $this->serviceGame->getListUpcoming();
 
         $bindings['GamesList'] = $gamesList;
 
@@ -38,9 +32,7 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = \App\Game::where('review_count', '>', '1')
-            ->orderBy('rating_avg', 'desc')
-            ->get();
+        $gamesList = $this->serviceGame->getListTopRated();
 
         $bindings['GamesList'] = $gamesList;
 
@@ -52,10 +44,7 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = \App\Game::where('upcoming', 0)
-            ->where('review_count', '<', '2')
-            ->orderBy('release_date', 'desc')
-            ->get();
+        $gamesList = $this->serviceGame->getListReviewsNeeded();
 
         $bindings['GamesList'] = $gamesList;
 

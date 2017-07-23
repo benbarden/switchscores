@@ -8,11 +8,6 @@ use App\Services\GameService;
 class GamesController extends \App\Http\Controllers\BaseController
 {
     /**
-     * @var \App\Services\GameService
-     */
-    private $serviceClass;
-
-    /**
      * @var array
      */
     private $validationRules = [
@@ -25,12 +20,6 @@ class GamesController extends \App\Http\Controllers\BaseController
         'publisher' => 'max:100',
     ];
 
-    public function __construct()
-    {
-        $this->serviceClass = resolve('Services\GameService');
-        parent::__construct();
-    }
-
     public function showList($report = null)
     {
         $bindings = array();
@@ -39,33 +28,33 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $this->serviceClass->getAll();
+            $gameList = $this->serviceGame->getAll();
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
-                    $gameList = $this->serviceClass->getAllReleased();
+                    $gameList = $this->serviceGame->getAllReleased();
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 case 'upcoming':
-                    $gameList = $this->serviceClass->getAllUpcoming();
+                    $gameList = $this->serviceGame->getAllUpcoming();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-tba':
-                    $gameList = $this->serviceClass->getAllUpcomingTBA();
+                    $gameList = $this->serviceGame->getAllUpcomingTBA();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-q':
-                    $gameList = $this->serviceClass->getAllUpcomingQs();
+                    $gameList = $this->serviceGame->getAllUpcomingQs();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-x':
-                    $gameList = $this->serviceClass->getAllUpcomingXs();
+                    $gameList = $this->serviceGame->getAllUpcomingXs();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'no-dev-or-pub':
-                    $gameList = $this->serviceClass->getWithoutDevOrPub();
+                    $gameList = $this->serviceGame->getWithoutDevOrPub();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 default:
@@ -87,7 +76,7 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             $this->validate($request, $this->validationRules);
 
-            $this->serviceClass->create(
+            $this->serviceGame->create(
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
                 $request->developer, $request->publisher
@@ -109,7 +98,7 @@ class GamesController extends \App\Http\Controllers\BaseController
     {
         $bindings = array();
 
-        $gameData = $this->serviceClass->find($gameId);
+        $gameData = $this->serviceGame->find($gameId);
         if (!$gameData) abort(404);
 
         $request = request();
@@ -120,7 +109,7 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             $this->validate($request, $this->validationRules);
 
-            $this->serviceClass->edit(
+            $this->serviceGame->edit(
                 $gameData,
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,

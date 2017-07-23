@@ -10,26 +10,31 @@
     <li><a href="{{ route('charts.gamesAtPosition') }}">Games at position</a> - which games have been in each position</li>
 </ul>
 
-<h2>European charts - by date</h2>
-{% if ChartDatesEu.count > 0 %}
-    <ul>
-        {% for item in ChartDatesEu %}
-            <li><a href="{{ route('charts.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No charts found!</p>
-{% endif %}
-
-<h2>US charts - by date</h2>
-{% if ChartDatesUs.count > 0 %}
-    <ul>
-        {% for item in ChartDatesUs %}
-            <li><a href="{{ route('charts.us.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No charts found!</p>
-{% endif %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <h2>European charts - by date</h2>
+        {% if ChartDatesEu.count > 0 %}
+            <ul>
+                {% for item in ChartDatesEu %}
+                    <li><a href="{{ route('charts.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No charts found!</p>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <h2>US charts - by date</h2>
+        {% if ChartDatesUs.count > 0 %}
+            <ul>
+                {% for item in ChartDatesUs %}
+                    <li><a href="{{ route('charts.us.date', {'date': item.chart_date}) }}">{{ item.chart_date }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No charts found!</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock page_body %}
