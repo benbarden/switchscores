@@ -1,0 +1,7 @@
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-1.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-2.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-3.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-4.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-5.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-6.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('139', '0', '/img/media/ironcast/ironcast-ripstone-7.jpg', '7');
