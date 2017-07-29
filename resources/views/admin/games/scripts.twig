@@ -5,13 +5,13 @@
     if (formMode == 'edit') {
 
         // This is used when editing existing games.
-        formVals['title'] = "{{ GameData.title }}";
+        formVals['title'] = "{{ GameData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ GameData.link_title }}";
         formVals['release_date'] = "{{ GameData.release_date }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
         formVals['upcoming_date'] = "{{ GameData.upcoming_date }}";
-        formVals['overview'] = "{{ GameData.overview }}";
+        formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['upcoming'] = "{{ GameData.upcoming }}";
         formVals['developer'] = "{{ GameData.developer }}";
         formVals['publisher'] = "{{ GameData.publisher }}";
@@ -20,13 +20,13 @@
 
         // This is used for new games.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
-        formVals['title'] = "{{ old('title') }}";
+        formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['release_date'] = "{{ old('release_date') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
         formVals['upcoming_date'] = "{{ old('upcoming_date') }}";
-        formVals['overview'] = "{{ old('overview') }}";
+        formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['upcoming'] = "{{ old('upcoming') }}";
         formVals['developer'] = "{{ old('developer') }}";
         formVals['publisher'] = "{{ old('publisher') }}";
