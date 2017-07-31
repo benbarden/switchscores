@@ -9,6 +9,7 @@ class WelcomeController extends BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Welcome';
+        $bindings['PageTitle'] = 'World of Switch - Homepage';
 
         return view('welcome', $bindings);
     }

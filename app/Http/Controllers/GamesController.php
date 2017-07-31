@@ -13,6 +13,8 @@ class GamesController extends BaseController
         $bindings['GamesList'] = $gamesList;
 
         $bindings['TopTitle'] = 'Nintendo Switch released games';
+        $bindings['PageTitle'] = 'Nintendo Switch games available in Europe';
+
         return view('games.list.releasedGames', $bindings);
     }
 
@@ -25,6 +27,8 @@ class GamesController extends BaseController
         $bindings['GamesList'] = $gamesList;
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
+        $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
+
         return view('games.list.upcomingGames', $bindings);
     }
 
@@ -37,6 +41,8 @@ class GamesController extends BaseController
         $bindings['GamesList'] = $gamesList;
 
         $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
+        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
+
         return view('games.list.topRated', $bindings);
     }
 
@@ -49,6 +55,8 @@ class GamesController extends BaseController
         $bindings['GamesList'] = $gamesList;
 
         $bindings['TopTitle'] = 'Nintendo Switch - Games needing more reviews';
+        $bindings['PageTitle'] = 'Nintendo Switch games needing more reviews';
+
         return view('games.list.reviewsNeeded', $bindings);
     }
 
@@ -69,6 +77,10 @@ class GamesController extends BaseController
 
         $gameData = $gameData->first();
 
+        if (!$gameData) {
+            abort(404);
+        }
+
         if ($gameData->link_title != $linkTitle) {
             $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
             return redirect($redirUrl, 301);
@@ -85,6 +97,7 @@ class GamesController extends BaseController
             ->get();
 
         $bindings['TopTitle'] = $gameData->title;
+        $bindings['PageTitle'] = $gameData->title.' - Nintendo Switch game details';
         $bindings['GameData'] = $gameData;
         $bindings['GameRanking'] = $gameRanking;
         $bindings['GameReviews'] = $gameReviews;

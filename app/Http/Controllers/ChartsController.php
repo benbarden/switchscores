@@ -13,6 +13,7 @@ class ChartsController extends BaseController
         $chartDatesUs = $chartsDateService->getDateList('us');
 
         $bindings['TopTitle'] = 'Charts';
+        $bindings['PageTitle'] = 'Charts';
         $bindings['ChartDatesEu'] = $chartDatesEu;
         $bindings['ChartDatesUs'] = $chartDatesUs;
 
@@ -41,7 +42,13 @@ class ChartsController extends BaseController
             abort(404);
         }
 
+        $chartDate = new \DateTime($date);
+        $chartDateDesc = $chartDate->format('jS M Y');
+
+        $pageTitle = $regionText.' eShop Charts: '.$chartDateDesc;
+
         $bindings['TopTitle'] = $title;
+        $bindings['PageTitle'] = $pageTitle;
         $bindings['RegionText'] = $regionText;
         $bindings['ChartDate'] = $date;
         $bindings['GamesList'] = $gamesList;
@@ -73,6 +80,7 @@ class ChartsController extends BaseController
         ");
 
         $bindings['TopTitle'] = 'Charts - Most appearances';
+        $bindings['PageTitle'] = 'Most appearances in the eShop Top 15';
 
         return view('charts.mostAppearances', $bindings);
     }
@@ -81,6 +89,7 @@ class ChartsController extends BaseController
     {
         $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position';
+        $bindings['PageTitle'] = 'Games at position X in the eShop Top 15';
 
         $fifteenList = array();
         for ($i=1; $i<=15; $i++) {
@@ -96,6 +105,7 @@ class ChartsController extends BaseController
     {
         $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position '.$position;
+        $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Top 15';
         $bindings['PositionNo'] = $position;
 
         $bindings['GamesList'] = \DB::select("
