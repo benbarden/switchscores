@@ -180,6 +180,8 @@ return [
         // WOS
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\GameServiceProvider::class,
+        App\Providers\GenreServiceProvider::class,
+        App\Providers\GameGenreServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
 

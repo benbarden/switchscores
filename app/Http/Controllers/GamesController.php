@@ -60,6 +60,42 @@ class GamesController extends BaseController
         return view('games.list.reviewsNeeded', $bindings);
     }
 
+    public function genresLanding()
+    {
+        $bindings = array();
+
+        $serviceGenre = resolve('Services\GenreService');
+        $genreList = $serviceGenre->getAll();
+
+        $bindings['GenreList'] = $genreList;
+
+        $bindings['TopTitle'] = 'Nintendo Switch - Game genres';
+        $bindings['PageTitle'] = 'Nintendo Switch game genres';
+
+        return view('games.genres.landing', $bindings);
+    }
+
+    public function genreByName($linkTitle)
+    {
+        $bindings = array();
+
+        $serviceGenre = resolve('Services\GenreService');
+        $genreData = $serviceGenre->getByLinkTitle($linkTitle);
+
+        if (!$genreData) {
+            abort(404);
+        }
+
+        $bindings['GenreData'] = $genreData;
+
+        $bindings['GamesList'] = $this->serviceGame->getGamesByGenre($genreData->id);
+
+        $bindings['TopTitle'] = 'Nintendo Switch games in genre: '.$genreData->genre;
+        $bindings['PageTitle'] = 'Nintendo Switch games in genre: '.$genreData->genre;
+
+        return view('games.genres.item', $bindings);
+    }
+
     /**
      * @param $id
      * @param $linkTitle

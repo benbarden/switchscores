@@ -1,0 +1,15 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>{{ PageTitle }}</h1>
+
+<p>
+    Browse Nintendo Switch games by genre.
+</p>
+
+{% include 'games/list/moreLists.twig' with {'thisPage': 'topRated'} %}
+
+{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

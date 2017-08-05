@@ -20,6 +20,9 @@ Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.
 Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
 Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('games.list.reviewsNeeded');
 
+Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
+Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
+
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 

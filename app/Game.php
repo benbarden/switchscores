@@ -38,4 +38,9 @@ class Game extends Model
     {
         return $this->hasMany('App\GameReview', 'game_id', 'id');
     }
+
+    public function gameGenres()
+    {
+        return $this->hasMany('App\GameGenre', 'game_id', 'id');
+    }
 }

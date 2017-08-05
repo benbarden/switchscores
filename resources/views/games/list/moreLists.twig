@@ -12,4 +12,7 @@
     {% if thisPage != 'reviewsNeeded' %}
         <li><a href="{{ route('games.list.reviewsNeeded') }}">Games needing more reviews</a></li>
     {% endif %}
+    {% if thisPage != 'genresLanding' %}
+        <li><a href="{{ route('games.genres.landing') }}">Released games by genre</a></li>
+    {% endif %}
 </ul>

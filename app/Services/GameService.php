@@ -193,4 +193,19 @@ class GameService
         $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('upcoming_date', 'asc')->get();
         return $gamesList;
     }
+
+    /**
+     * Used for genre list pages
+     * @return mixed
+     */
+    public function getGamesByGenre($genreId)
+    {
+        $gameList = Game::whereHas('gameGenres', function($query) use ($genreId) {
+            $query->where('genre_id', '=', $genreId);
+        })
+            ->orderBy('title', 'asc')
+            ->get();
+
+        return $gameList;
+    }
 }
