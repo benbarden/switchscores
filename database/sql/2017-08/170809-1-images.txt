@@ -1,0 +1,126 @@
+UPDATE `games` SET `media_folder`='/img/media/alpha-mission-ii/' WHERE `id`='29';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '1', '001-alpha-mission-ii.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '002-alpha-mission-ii.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '003-alpha-mission-ii.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '004-alpha-mission-ii.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '005-alpha-mission-ii.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '006-alpha-mission-ii.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('29', '0', '007-alpha-mission-ii.jpg', '7');
+
+UPDATE `games` SET `media_folder`='/img/media/human-resource-machine/' WHERE `id`='25';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '1', '001-human-resource-machine.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '002-human-resource-machine.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '003-human-resource-machine.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '004-human-resource-machine.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '005-human-resource-machine.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '006-human-resource-machine.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '007-human-resource-machine.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('25', '0', '008-human-resource-machine.jpg', '8');
+
+UPDATE `games` SET `media_folder`='/img/media/i-am-setsuna/' WHERE `id`='7';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('7', '0', '001-i-am-setsuna.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('7', '0', '002-i-am-setsuna.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('7', '0', '003-i-am-setsuna.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('7', '0', '004-i-am-setsuna.jpg', '4');
+
+UPDATE `games` SET `media_folder`='/img/media/implosion/' WHERE `id`='161';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '001-implosion.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '002-implosion.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '003-implosion.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '004-implosion.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '005-implosion.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '006-implosion.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '007-implosion.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '008-implosion.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '009-implosion.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '010-implosion.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '011-implosion.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '012-implosion.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '013-implosion.jpg', '13');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '014-implosion.jpg', '14');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('161', '0', '015-implosion.jpg', '15');
+
+UPDATE `games` SET `media_folder`='/img/media/kamiko/' WHERE `id`='39';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '001-kamiko.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '002-kamiko.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '003-kamiko.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '004-kamiko.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '005-kamiko.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '006-kamiko.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '007-kamiko.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '008-kamiko.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '009-kamiko.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '010-kamiko.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '011-kamiko.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '012-kamiko.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('39', '0', '013-kamiko.jpg', '13');
+
+UPDATE `games` SET `media_folder`='/img/media/mario-kart-8-deluxe/' WHERE `id`='40';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '001-mario-kart-8-deluxe.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '002-mario-kart-8-deluxe.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '003-mario-kart-8-deluxe.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '004-mario-kart-8-deluxe.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '005-mario-kart-8-deluxe.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '006-mario-kart-8-deluxe.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '007-mario-kart-8-deluxe.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '008-mario-kart-8-deluxe.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '009-mario-kart-8-deluxe.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '010-mario-kart-8-deluxe.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '011-mario-kart-8-deluxe.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '012-mario-kart-8-deluxe.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '013-mario-kart-8-deluxe.jpg', '13');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('40', '0', '014-mario-kart-8-deluxe.jpg', '14');
+
+UPDATE `games` SET `media_folder`='/img/media/mighty-gunvolt-burst/' WHERE `id`='88';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '001-mighty-gunvolt-burst.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '002-mighty-gunvolt-burst.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '003-mighty-gunvolt-burst.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '004-mighty-gunvolt-burst.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '005-mighty-gunvolt-burst.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '006-mighty-gunvolt-burst.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '007-mighty-gunvolt-burst.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '008-mighty-gunvolt-burst.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '009-mighty-gunvolt-burst.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '010-mighty-gunvolt-burst.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '011-mighty-gunvolt-burst.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '012-mighty-gunvolt-burst.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '013-mighty-gunvolt-burst.jpg', '13');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('88', '0', '014-mighty-gunvolt-burst.jpg', '14');
+
+UPDATE `games` SET `media_folder`='/img/media/overcooked/' WHERE `id`='82';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '001-overcooked.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '002-overcooked.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '003-overcooked.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '004-overcooked.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '005-overcooked.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '006-overcooked.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('82', '0', '007-overcooked.jpg', '7');
+
+UPDATE `games` SET `media_folder`='/img/media/puyo-puyo-tetris/' WHERE `id`='37';
+
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '001-puyo-puyo-tetris.jpg', '1');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '002-puyo-puyo-tetris.jpg', '2');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '003-puyo-puyo-tetris.jpg', '3');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '004-puyo-puyo-tetris.jpg', '4');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '005-puyo-puyo-tetris.jpg', '5');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '006-puyo-puyo-tetris.jpg', '6');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '007-puyo-puyo-tetris.jpg', '7');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '008-puyo-puyo-tetris.jpg', '8');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '009-puyo-puyo-tetris.jpg', '9');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '010-puyo-puyo-tetris.jpg', '10');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '011-puyo-puyo-tetris.jpg', '11');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '012-puyo-puyo-tetris.jpg', '12');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '013-puyo-puyo-tetris.jpg', '13');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '014-puyo-puyo-tetris.jpg', '14');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '015-puyo-puyo-tetris.jpg', '15');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '016-puyo-puyo-tetris.jpg', '16');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '017-puyo-puyo-tetris.jpg', '17');
+INSERT INTO `game_images` (`game_id`, `cover_image`, `url`, `image_order`) VALUES ('37', '0', '018-puyo-puyo-tetris.jpg', '18');
