@@ -4,6 +4,8 @@ Redirect 301 /upcoming-nintendo-switch-games-index /lists/upcoming-nintendo-swit
 Redirect 301 /eshop-charts-updates /charts
 Redirect 301 /about-world-of-switch /about
 
+Redirect 301 /games/57/battle-sports-mekuru /games/184/flip-wars
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
