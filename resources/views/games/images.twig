@@ -11,7 +11,7 @@
          data-maxheight="100%"
          data-nav="thumbs">
         {% for image in GameImages %}
-            <img src="{{ image.url }}" width="150" height="125">
+            <img src="{{ MediaFolder }}{{ image.url }}" width="150" height="125">
         {% endfor %}
     </div>
 {% endif %}

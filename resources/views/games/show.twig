@@ -27,7 +27,7 @@
         {% include 'games/infobox.twig' with {'GameData': GameData} %}
     </div>
     <div class="col-sm-12 col-md-7">
-        {% include 'games/images.twig' with {'GameImages': GameData.images} %}
+        {% include 'games/images.twig' with {'MediaFolder': GameData.media_folder, 'GameImages': GameData.images} %}
     </div>
 </div>
 <div class="row">
