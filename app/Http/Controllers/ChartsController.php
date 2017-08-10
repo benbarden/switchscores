@@ -28,12 +28,15 @@ class ChartsController extends BaseController
 
         $bindings = array();
 
+        $chartsRankingService = resolve('Services\ChartsRankingService');
+        $chartsRankingUsService = resolve('Services\ChartsRankingUsService');
+
         if ($region == 'US') {
-            $gamesList = \App\ChartsRankingUs::where('chart_date', $date)->orderBy('position', 'asc')->get();
+            $gamesList = $chartsRankingUsService->getByDate($date);
             $title = 'Charts - US';
             $regionText = 'US';
         } else {
-            $gamesList = \App\ChartsRanking::where('chart_date', $date)->orderBy('position', 'asc')->get();
+            $gamesList = $chartsRankingService->getByDate($date);
             $title = 'Charts - Europe';
             $regionText = 'European';
         }

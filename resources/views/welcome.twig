@@ -3,21 +3,71 @@
 {% block page_body %}
 
 <div class="row">
+    {#
     <div class="pull-right col-xs-12 col-sm-3">
         <img class="img-responsive" src="/img/logo.png" alt="" />
     </div>
-    <div class="col-xs-12 col-sm-9">
-        <h1>Welcome</h1>
-        <h2>Recent eShop charts</h2>
-        <ul>
-            <li><a href="{{ route('charts.landing') }}">Charts</a></li>
-        </ul>
-        <h2>Nintendo Switch games</h2>
-        <ul>
-            <li><a href="{{ route('games.list.topRated') }}">Top Rated</a></li>
-            <li><a href="{{ route('games.list.released') }}">Released titles</a></li>
-            <li><a href="{{ route('games.list.upcoming') }}">Upcoming releases</a></li>
-        </ul>
+    #}
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>
+            Recent eShop charts
+            <span class="h4">(<a href="{{ route('charts.landing') }}">view all</a>)</span>
+        </h2>
+        {% if ChartsLatestEu %}
+            <p>
+                <a href="{{ route('charts.date', {'date': ChartsLatestEu.chart_date}) }}">
+                    European charts: {{ ChartsLatestEu.chart_date|date('jS M') }}
+                </a>
+            </p>
+        {% else %}
+            <p>Could not display latest European data.</p>
+        {% endif %}
+        {% if ChartsLatestUs %}
+            <p>
+                <a href="{{ route('charts.us.date', {'date': ChartsLatestUs.chart_date}) }}">
+                    US charts: {{ ChartsLatestUs.chart_date|date('jS M') }}
+                </a>
+            </p>
+        {% else %}
+            <p>Could not display latest European data.</p>
+        {% endif %}
+
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>
+            New releases
+            <span class="h4">(<a href="{{ route('games.list.released') }}">view all</a>)</span>
+        </h2>
+        {% if NewReleases %}
+            {% for item in NewReleases %}
+                <p>
+                    <strong>{{ item.release_date|date('jS M') }}</strong>:
+                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                        {{ item.title }}
+                    </a>
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No games within this timeframe.</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>
+            Upcoming releases
+            <span class="h4">(<a href="{{ route('games.list.upcoming') }}">view all</a>)</span>
+        </h2>
+        {% if UpcomingReleases %}
+            {% for item in UpcomingReleases %}
+                <p>
+                    <strong>{{ item.release_date|date('jS M') }}</strong>:
+                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                    {{ item.title }}
+                    </a>
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No games within this timeframe.</p>
+        {% endif %}
     </div>
 </div>
 

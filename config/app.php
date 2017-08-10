@@ -179,6 +179,8 @@ return [
 
         // WOS
         App\Providers\ChartsDateServiceProvider::class,
+        App\Providers\ChartsRankingServiceProvider::class,
+        App\Providers\ChartsRankingUsServiceProvider::class,
         App\Providers\GameServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,

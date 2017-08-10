@@ -8,7 +8,7 @@ use App\ChartsDate;
 
 class ChartsDateService
 {
-    public function getDateList($country)
+    public function getDateList($country, $limit = null)
     {
         switch ($country) {
             case 'eu':
@@ -21,7 +21,17 @@ class ChartsDateService
                 throw new \Exception('Unknown country code: '.$country);
         }
 
-        $dateList = ChartsDate::where($countryField, 'Y')->orderBy('chart_date', 'DESC')->get();
+        $dateList = ChartsDate::where($countryField, 'Y')
+            ->orderBy('chart_date', 'DESC');
+
+        if ($limit == 1) {
+            $dateList = $dateList->first();
+        } elseif ($limit) {
+            $dateList = $dateList->limit($limit);
+            $dateList = $dateList->get();
+        } else {
+            $dateList = $dateList->get();
+        }
 
         return $dateList;
     }

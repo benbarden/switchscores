@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Game;
+use Carbon\Carbon;
 
 
 class GameService
@@ -100,10 +101,74 @@ class GameService
      * Used for public game lists
      * @return mixed
      */
+    public function getListReleasedByMonth($month)
+    {
+        $gamesList = Game::where('upcoming', 0)
+            ->whereMonth('release_date', '=', $month)
+            ->orderBy('release_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListReleasedLastXDays($days, $limit = 10)
+    {
+        $days = (int) $days;
+
+        // Note - Had to add a day or the current day won't show up
+        // It seemed to work here without that extra day, but not in upcoming
+        // Adding here just in case.
+        $gamesList = Game::where('upcoming', 0)
+            ->whereBetween('release_date', array(Carbon::now()->subDays($days), Carbon::now()->addDay()))
+            ->orderBy('release_date', 'desc')
+            ->orderBy('title', 'asc')
+            ->limit($limit)
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListUpcomingNextXDays($days, $limit = 10)
+    {
+        $days = (int) $days;
+
+        // Note - Had to sub a day or the current day won't show up
+        $gamesList = Game::where('upcoming', 1)
+            ->whereBetween('release_date', array(Carbon::now()->subDay(), Carbon::now()->addDays($days)))
+            ->orderBy('release_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->limit($limit)
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
     public function getListUpcoming()
     {
         $gamesList = Game::where('upcoming', 1)
             ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for public game lists
+     * @return mixed
+     */
+    public function getListUpcomingByMonth($month)
+    {
+        $gamesList = Game::where('upcoming', 1)
+            ->whereMonth('release_date', '=', $month)
+            ->orderBy('release_date', 'asc')
             ->orderBy('title', 'asc')
             ->get();
         return $gamesList;
