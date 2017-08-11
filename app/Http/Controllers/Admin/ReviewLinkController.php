@@ -7,6 +7,16 @@ use Illuminate\Http\Request;
 class ReviewLinkController extends \App\Http\Controllers\BaseController
 {
     /**
+     * @var array
+     */
+    private $validationRules = [
+        'game_id' => 'required|exists:games,id',
+        'site_id' => 'required|exists:review_sites,id',
+        'url' => 'required',
+        'rating_original' => 'required'
+    ];
+
+    /**
      * @var \App\Services\ReviewLinkService
      */
     private $serviceClass;
@@ -39,30 +49,17 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, [
-                'game_id' => 'required|exists:games,id',
-                'site_id' => 'required|exists:review_sites,id',
-                'url' => 'required',
-                'rating_original' => 'required'
-            ]);
+            $this->validate($request, $this->validationRules);
 
-            $gameId = $request->game_id;
             $siteId = $request->site_id;
-            $url = $request->url;
             $ratingOriginal = $request->rating_original;
 
-            $normalisedScaleLimit = 10;
-
             $reviewSite = $reviewSiteService->find($siteId);
-            if ($reviewSite->rating_scale != $normalisedScaleLimit) {
-                $scaleMultiple = $normalisedScaleLimit / $reviewSite->rating_scale;
-                $ratingNormalised = round($ratingOriginal * $scaleMultiple, 2);
-            } else {
-                $ratingNormalised = $ratingOriginal;
-            }
+
+            $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
 
             $this->serviceClass->create(
-                $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised
+                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised
             );
 
             return redirect(route('admin.reviews.link.list'));
@@ -71,12 +68,61 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         $bindings = array();
 
-        $bindings['TopTitle'] = 'Admin - Add review link';
+        $bindings['TopTitle'] = 'Admin - Reviews - Add link';
+        $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll();
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 
         return view('admin.reviews.link.add', $bindings);
+    }
+
+    public function edit($linkId)
+    {
+        $reviewLinkData = $this->serviceClass->find($linkId);
+        if (!$reviewLinkData) abort(404);
+
+        $gameService = resolve('Services\GameService');
+        $reviewSiteService = resolve('Services\ReviewSiteService');
+
+        $request = request();
+        $bindings = array();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+            $this->validate($request, $this->validationRules);
+
+            $siteId = $request->site_id;
+            $ratingOriginal = $request->rating_original;
+
+            $reviewSite = $reviewSiteService->find($siteId);
+
+            $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
+
+            $this->serviceClass->edit(
+                $reviewLinkData,
+                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised
+            );
+
+            return redirect(route('admin.reviews.link.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
+        }
+
+        $bindings['TopTitle'] = 'Admin - Reviews - Edit link';
+        $bindings['ReviewLinkData'] = $reviewLinkData;
+        $bindings['LinkId'] = $linkId;
+
+        $bindings['GamesList'] = $gameService->getAll();
+
+        $bindings['ReviewSites'] = $reviewSiteService->getAll();
+
+        return view('admin.reviews.link.edit', $bindings);
     }
 }

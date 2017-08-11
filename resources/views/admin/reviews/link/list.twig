@@ -20,6 +20,7 @@
                                     <th>Link</th>
                                     <th>Rating</th>
                                     <th>Original</th>
+                                    <th class="text-center">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,9 @@
                                             {% else %}
                                                 -
                                             {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('admin.reviews.link.edit', {'linkId': item.id}) }}">Edit</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -77,6 +81,7 @@
                 { "orderable": false },
                 { "orderable": false },
                 null,
+                { "orderable": false },
                 { "orderable": false }
             ]
         });
