@@ -1,47 +1,42 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Add rankings</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.charts.ranking.add', {'country': CountryCode, 'date': ChartDate}) }}">
-                        {{ csrf_field() }}
+<form class="form-horizontal" role="form" method="post" action="{{ route('admin.charts.ranking.add', {'country': CountryCode, 'date': ChartDate}) }}">
+    {{ csrf_field() }}
 
-                        <div class="form-group">
-                            <label for="chart_date" class="col-md-4 control-label">Date</label>
-                            <div class="col-md-6">
-                                {{ ChartDate }}
-                            </div>
-                        </div>
-                        {% for counter in 1..MaxRankCount %}
-                            <div class="form-group">
-                                <label for="ranking_games_{{ counter }}" class="col-md-4 control-label">Game {{ counter }}</label>
-                                <div class="col-md-6">
-                                    <select id="ranking_games_{{ counter }}" class="form-control" name="ranking_games[]" required>
-                                        <option value="">&nbsp;</option>
-                                        {% for item in GamesList %}
-                                        <option value="{{ item.id }}">{{ item.title }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn outline btn-primary">
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="form-group">
+        <label for="chart_date" class="col-md-4 control-label">Date</label>
+        <div class="col-md-6">
+            {{ ChartDate }}
         </div>
     </div>
-</div>
+    {% for counter in 1..MaxRankCount %}
+        <div class="form-group">
+            <label for="ranking_games_{{ counter }}" class="col-md-4 control-label">Game {{ counter }}</label>
+            <div class="col-md-6">
+                <select id="ranking_games_{{ counter }}" class="form-control" name="ranking_games[]" required>
+                    <option value="">&nbsp;</option>
+                    {% for item in GamesList %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>
 
-{% endblock page_body %}
+<script>
+    {% for counter in 1..MaxRankCount %}
+    $('#ranking_games_{{ counter }}').select2();
+    {% endfor %}
+</script>
+
+{% endblock page_inner %}

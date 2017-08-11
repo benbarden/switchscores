@@ -1,73 +1,64 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Games :
-                    <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
-                    <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
-                    <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">Upcoming</a>
-                    <a id="admin-nav-upcoming-q" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-q'}) }}">Qn</a>
-                    <a id="admin-nav-upcoming-x" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-x'}) }}">XX</a>
-                    <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
-                    <a id="admin-nav-no-dev-or-pub" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-dev-or-pub'}) }}">No Dev/Pub</a>
-                </div>
-                <div class="panel-body">
-                    <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
-                    <hr>
-                    {% if GameList.count > 0 %}
-                        <table class="table table-striped data-sortable">
-                            <thead>
-                                <tr>
-                                    <th class="text-right">#</th>
-                                    <th>Title</th>
-                                    <th>Release date</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Options</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in GameList %}
-                                    <tr>
-                                        <td class="text-right">
-                                            {{ item.id }}
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
-                                        </td>
-                                        <td>
-                                            {% if item.release_date %}
-                                            {{ item.release_date }}
-                                            {% else %}
-                                            {{ item.upcoming_date }}
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            {% if item.upcoming == 0 %}
-                                            Released
-                                            {% else %}
-                                            Upcoming
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No games found!</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+<div class="pull-right">
+    <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
+    <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
+    <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">Upcoming</a>
+    <a id="admin-nav-upcoming-q" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-q'}) }}">Qn</a>
+    <a id="admin-nav-upcoming-x" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-x'}) }}">XX</a>
+    <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
+    <a id="admin-nav-no-dev-or-pub" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-dev-or-pub'}) }}">No Dev/Pub</a>
 </div>
+
+<hr>
+
+{% if GameList.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Title</th>
+                <th>Release date</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
+                    </td>
+                    <td>
+                        {% if item.release_date %}
+                        {{ item.release_date }}
+                        {% else %}
+                        {{ item.upcoming_date }}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.upcoming == 0 %}
+                        Released
+                        {% else %}
+                        Upcoming
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
 
 {% include 'common/table-sorting.twig' %}
 <script>
@@ -91,4 +82,4 @@
     });
 </script>
 
-{% endblock page_body %}
+{% endblock page_inner %}

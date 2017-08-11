@@ -1,53 +1,42 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">eShop charts</div>
-                <div class="panel-body">
-                    <p>
-                        To add a new date to the table, click "Add a date".
-                    </p>
-                    <p>
-                        Click "View" to enter rankings for a date.
-                    </p>
-                    <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a date">
-                    {% if ChartDates.count > 0 %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Rankings (EU)</th>
-                                    <th>Rankings (US)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in ChartDates %}
-                                    <tr>
-                                        <td>
-                                            {{ item.chart_date }}
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('admin.charts.ranking.list', {'country': 'eu', 'date': item.chart_date}) }}">View</a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('admin.charts.ranking.list', {'country': 'us', 'date': item.chart_date}) }}">View</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No charts found!</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<p>
+    To add a new date to the table, click "Add a date".
+</p>
+<p>
+    Click "View" to enter rankings for a date.
+</p>
+<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a date">
+{% if ChartDates.count > 0 %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Rankings (EU)</th>
+                <th>Rankings (US)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ChartDates %}
+                <tr>
+                    <td>
+                        {{ item.chart_date }}
+                    </td>
+                    <td>
+                        <a href="{{ route('admin.charts.ranking.list', {'country': 'eu', 'date': item.chart_date}) }}">View</a>
+                    </td>
+                    <td>
+                        <a href="{{ route('admin.charts.ranking.list', {'country': 'us', 'date': item.chart_date}) }}">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No charts found!</p>
+{% endif %}
 
 <script>
     $('#js-btn-add').on('click', function() {
@@ -55,4 +44,4 @@
     });
 </script>
 
-{% endblock page_body %}
+{% endblock page_inner %}

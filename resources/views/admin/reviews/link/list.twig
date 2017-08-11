@@ -1,68 +1,57 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reviews: Links</div>
-                <div class="panel-body">
-                    <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review link">
-                    <hr>
-                    {% if ReviewLinks.count > 0 %}
-                        <table class="table table-striped data-sortable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Game</th>
-                                    <th>Site</th>
-                                    <th>Link</th>
-                                    <th>Rating</th>
-                                    <th>Original</th>
-                                    <th class="text-center">Options</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in ReviewLinks %}
-                                    <tr>
-                                        <td>
-                                            {{ item.id }}
-                                        </td>
-                                        <td>
-                                            {{ item.game.title }}
-                                        </td>
-                                        <td>
-                                            {{ item.site.name }}
-                                        </td>
-                                        <td>
-                                            <a href="{{ item.url }}" target="_blank">View</a>
-                                        </td>
-                                        <td style="text-align: center;">
-                                            {{ item.rating_normalised }}
-                                        </td>
-                                        <td style="text-align: center;">
-                                            {% if item.rating_original != item.rating_normalised %}
-                                                {{ item.rating_original }}
-                                            {% else %}
-                                                -
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.reviews.link.edit', {'linkId': item.id}) }}">Edit</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No review links found!</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review link">
+<hr>
+{% if ReviewLinks.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Game</th>
+                <th>Site</th>
+                <th>Link</th>
+                <th>Rating</th>
+                <th>Original</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReviewLinks %}
+                <tr>
+                    <td>
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.game.title }}
+                    </td>
+                    <td>
+                        {{ item.site.name }}
+                    </td>
+                    <td>
+                        <a href="{{ item.url }}" target="_blank">View</a>
+                    </td>
+                    <td style="text-align: center;">
+                        {{ item.rating_normalised }}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if item.rating_original != item.rating_normalised %}
+                            {{ item.rating_original }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.reviews.link.edit', {'linkId': item.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No review links found!</p>
+{% endif %}
 
 {% include 'common/table-sorting.twig' %}
 <script>
@@ -88,4 +77,4 @@
     });
 </script>
 
-{% endblock page_body %}
+{% endblock page_inner %}

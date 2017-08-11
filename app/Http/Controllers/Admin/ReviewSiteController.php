@@ -22,6 +22,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites';
+        $bindings['PanelTitle'] = 'Reviews: Sites';
 
         $reviewSites = $this->serviceClass->getAll();
 
@@ -61,6 +62,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites - Add site';
+        $bindings['PanelTitle'] = 'Add site';
 
         return view('admin.reviews.site.add', $bindings);
     }

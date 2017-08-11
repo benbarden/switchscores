@@ -1,10 +1,10 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
 {% set formSubmitAction = route('admin.reviews.link.add') %}
-{% include 'admin/reviews/link/form.twig' with {'formTitle': 'Add review link', 'formSubmitAction': formSubmitAction} %}
+{% include 'admin/reviews/link/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
 {% include 'admin/reviews/link/scripts.twig' %}
 
-{% endblock page_body %}
+{% endblock page_inner %}

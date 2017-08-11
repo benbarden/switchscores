@@ -24,6 +24,7 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Games';
+        $bindings['PanelTitle'] = 'Games';
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
@@ -88,6 +89,7 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Games - Add game';
+        $bindings['PanelTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
         return view('admin.games.add', $bindings);
@@ -124,6 +126,7 @@ class GamesController extends \App\Http\Controllers\BaseController
         }
 
         $bindings['TopTitle'] = 'Admin - Games - Edit game';
+        $bindings['PanelTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 

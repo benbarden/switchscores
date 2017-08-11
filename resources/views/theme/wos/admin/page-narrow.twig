@@ -1,0 +1,16 @@
+{% extends 'theme/wos/admin/base.twig' %}
+
+{% block page_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ PanelTitle }}</div>
+                <div class="panel-body">
+                    {% block page_inner %}{% endblock page_inner %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_body %}

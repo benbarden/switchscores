@@ -30,6 +30,8 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
                 abort(404);
         }
 
+        $bindings['PanelTitle'] = 'Charts: Rankings for '.$date.' - '.$countryDesc;
+
         $bindings['CountryCode'] = $country;
         $bindings['CountryDesc'] = $countryDesc;
         $bindings['ChartDate'] = $date;
@@ -85,9 +87,9 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
 
             return redirect(route('admin.charts.ranking.list', ['country' => $country, 'date' => $date]));
         }
+
         $bindings = array();
 
-        $bindings['TopTitle'] = 'Admin - Charts - Add ranking (Europe)';
         $bindings['ChartDate'] = $date;
 
         $bindings['CountryCode'] = $country;
@@ -105,6 +107,9 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
             default:
                 abort(404);
         }
+
+        $bindings['TopTitle'] = 'Admin - Charts - Add ranking ('.$countryDesc.')';
+        $bindings['PanelTitle'] = 'Add rankings - '.$date.' - '.$countryDesc;
 
         $bindings['GamesList'] = $gamesList;
 

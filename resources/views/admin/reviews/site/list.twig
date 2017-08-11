@@ -1,51 +1,40 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reviews: Sites</div>
-                <div class="panel-body">
-                    <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a site">
-                    {% if ReviewSites.count > 0 %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Url</th>
-                                    <th>Active</th>
-                                    <th>Rating scale</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in ReviewSites %}
-                                    <tr>
-                                        <td>
-                                            {{ item.name }}
-                                        </td>
-                                        <td>
-                                            {{ item.url }}
-                                        </td>
-                                        <td>
-                                            {{ item.active }}
-                                        </td>
-                                        <td>
-                                            {{ item.rating_scale }}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No sites found!</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a site">
+{% if ReviewSites.count > 0 %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Url</th>
+                <th>Active</th>
+                <th>Rating scale</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReviewSites %}
+                <tr>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td>
+                        {{ item.url }}
+                    </td>
+                    <td>
+                        {{ item.active }}
+                    </td>
+                    <td>
+                        {{ item.rating_scale }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No sites found!</p>
+{% endif %}
 
 <script>
     $('#js-btn-add').on('click', function() {
@@ -53,4 +42,4 @@
     });
 </script>
 
-{% endblock page_body %}
+{% endblock page_inner %}

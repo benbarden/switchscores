@@ -8,7 +8,8 @@ class IndexController extends \App\Http\Controllers\BaseController
     {
         $bindings = array();
 
-        $bindings['TopTitle'] = 'Admin - Index';
+        $bindings['TopTitle'] = 'Admin index';
+        $bindings['PanelTitle'] = 'Admin index';
 
         return view('admin.index', $bindings);
     }

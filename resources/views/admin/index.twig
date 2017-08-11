@@ -1,23 +1,12 @@
-{% extends 'theme/wos/admin.twig' %}
+{% extends 'theme/wos/admin/page-narrow.twig' %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Admin index</div>
-                <div class="panel-body">
-                <ul>
-                    <li><a href="{{ route('admin.games.list') }}">Games</a></li>
-                    <li><a href="{{ route('admin.charts.date.list') }}">eShop charts</a></li>
-                    <li><a href="{{ route('admin.reviews.site.list') }}">Reviews: Sites</a></li>
-                    <li><a href="{{ route('admin.reviews.link.list') }}">Reviews: Links</a></li>
-                </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<ul>
+    <li><a href="{{ route('admin.games.list') }}">Games</a></li>
+    <li><a href="{{ route('admin.charts.date.list') }}">eShop charts</a></li>
+    <li><a href="{{ route('admin.reviews.site.list') }}">Reviews: Sites</a></li>
+    <li><a href="{{ route('admin.reviews.link.list') }}">Reviews: Links</a></li>
+</ul>
 
-{% endblock page_body %}
+{% endblock page_inner %}

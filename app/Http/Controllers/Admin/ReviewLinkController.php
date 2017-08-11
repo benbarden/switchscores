@@ -32,6 +32,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Links';
+        $bindings['PanelTitle'] = 'Reviews: Links';
 
         $reviewLinks = $this->serviceClass->getAll();
 
@@ -69,6 +70,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Add link';
+        $bindings['PanelTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll();
@@ -116,6 +118,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         }
 
         $bindings['TopTitle'] = 'Admin - Reviews - Edit link';
+        $bindings['PanelTitle'] = 'Edit review link';
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
