@@ -49,6 +49,14 @@ class ReviewLinkService
         return $reviewSites;
     }
 
+    public function getAllWithoutDate()
+    {
+        $reviewSites = ReviewLink::whereNull('review_date')
+            ->orderBy('id', 'desc')
+            ->get();
+        return $reviewSites;
+    }
+
     public function getByGame($gameId)
     {
         $gameReviews = ReviewLink::select('review_links.*', 'review_sites.name')

@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
 
     // Reviews: Links
-    Route::get('/admin/reviews/link', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
+    Route::get('/admin/reviews/link/{report?}', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
     Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
     Route::post('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
     Route::get('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');

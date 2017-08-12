@@ -27,16 +27,31 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         parent::__construct();
     }
 
-    public function showList()
+    public function showList($report = null)
     {
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Links';
         $bindings['PanelTitle'] = 'Reviews: Links';
 
-        $reviewLinks = $this->serviceClass->getAll();
+        $jsInitialSort = "[ 0, 'desc']";
+
+        if ($report == null) {
+            $bindings['ActiveNav'] = 'all';
+            $reviewLinks = $this->serviceClass->getAll();
+        } else {
+            $bindings['ActiveNav'] = $report;
+            switch ($report) {
+                case 'no-date':
+                    $reviewLinks = $this->serviceClass->getAllWithoutDate();
+                    break;
+                default:
+                    abort(404);
+            }
+        }
 
         $bindings['ReviewLinks'] = $reviewLinks;
+        $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('admin.reviews.link.list', $bindings);
     }
