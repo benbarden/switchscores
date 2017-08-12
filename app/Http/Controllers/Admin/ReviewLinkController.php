@@ -60,7 +60,8 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
 
             $this->serviceClass->create(
-                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised
+                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
+                $request->review_date
             );
 
             return redirect(route('admin.reviews.link.list'));
@@ -106,7 +107,8 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             $this->serviceClass->edit(
                 $reviewLinkData,
-                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised
+                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
+                $request->review_date
             );
 
             return redirect(route('admin.reviews.link.list'));

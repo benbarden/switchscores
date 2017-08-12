@@ -8,34 +8,38 @@
     <table class="table table-striped data-sortable">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Game</th>
-                <th>Site</th>
-                <th>Link</th>
-                <th>Rating</th>
-                <th>Original</th>
+                <th class="text-right">#</th>
+                <th class="text-left">Game</th>
+                <th class="text-left">Site</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Link</th>
+                <th class="text-center">Rating</th>
+                <th class="text-center">Original</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
         <tbody>
             {% for item in ReviewLinks %}
                 <tr>
-                    <td>
+                    <td class="text-right">
                         {{ item.id }}
                     </td>
-                    <td>
+                    <td class="text-left">
                         {{ item.game.title }}
                     </td>
-                    <td>
+                    <td class="text-left">
                         {{ item.site.name }}
                     </td>
-                    <td>
+                    <td class="text-center">
+                        {{ item.review_date }}
+                    </td>
+                    <td class="text-center">
                         <a href="{{ item.url }}" target="_blank">View</a>
                     </td>
-                    <td style="text-align: center;">
+                    <td class="text-center">
                         {{ item.rating_normalised }}
                     </td>
-                    <td style="text-align: center;">
+                    <td class="text-center">
                         {% if item.rating_original != item.rating_normalised %}
                             {{ item.rating_original }}
                         {% else %}

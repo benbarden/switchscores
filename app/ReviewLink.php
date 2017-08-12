@@ -20,7 +20,7 @@ class ReviewLink extends Model
      * @var array
      */
     protected $fillable = [
-        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised'
+        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised', 'review_date'
     ];
 
     public function site()

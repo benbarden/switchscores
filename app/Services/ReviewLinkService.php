@@ -8,7 +8,7 @@ use App\ReviewSite;
 
 class ReviewLinkService
 {
-    public function create($gameId, $siteId, $url, $ratingOriginal, $ratingNormalised)
+    public function create($gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate)
     {
         ReviewLink::create([
             'game_id' => $gameId,
@@ -16,12 +16,13 @@ class ReviewLinkService
             'url' => $url,
             'rating_original' => $ratingOriginal,
             'rating_normalised' => $ratingNormalised,
+            'review_date' => $reviewDate,
         ]);
     }
 
     public function edit(
         ReviewLink $reviewLinkData,
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised
+        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate
     )
     {
         $values = [
@@ -30,6 +31,7 @@ class ReviewLinkService
             'url' => $url,
             'rating_original' => $ratingOriginal,
             'rating_normalised' => $ratingNormalised,
+            'review_date' => $reviewDate,
         ];
 
         $reviewLinkData->fill($values);
