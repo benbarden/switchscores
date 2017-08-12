@@ -34,7 +34,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['TopTitle'] = 'Admin - Reviews - Links';
         $bindings['PanelTitle'] = 'Reviews: Links';
 
-        $jsInitialSort = "[ 0, 'desc']";
+        $jsInitialSort = "[ 3, 'desc']";
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
