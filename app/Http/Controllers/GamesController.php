@@ -128,9 +128,8 @@ class GamesController extends BaseController
             ->get();
 
         // Get reviews
-        $gameReviews = \App\ReviewLink::where('game_id', $gameData->id)
-            ->orderBy('site_id', 'asc')
-            ->get();
+        $reviewLinkService = resolve('Services\ReviewLinkService');
+        $gameReviews = $reviewLinkService->getByGame($gameData->id);
 
         $bindings['TopTitle'] = $gameData->title;
         $bindings['PageTitle'] = $gameData->title.' - Nintendo Switch game details';

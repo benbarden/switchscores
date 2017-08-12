@@ -1,5 +1,5 @@
 {% if GameData.upcoming == 0 %}
-    <h2>Appearance in the charts</h2>
+    <h2>European eShop charts</h2>
     {% if GameRanking.count > 0 %}
         <table class="table table-striped table-condensed table-responsive">
             <tr>
@@ -10,7 +10,7 @@
             {% for Rank in GameRanking %}
                 <tr>
                     <td>
-                        <a href="{{ route('charts.date', {'date': Rank.chart_date}) }}">{{ Rank.chart_date }}</a>
+                        <a href="{{ route('charts.date', {'date': Rank.chart_date}) }}">{{ Rank.chart_date|date('jS M Y') }}</a>
                     </td>
                     <td style="text-align: center;">{{ Rank.position }}</td>
                     <td style="text-align: left;">

@@ -18,7 +18,7 @@
             <td>
                 <span style="font-weight: bold;">Release date</span>
             </td>
-            <td>{{ GameData.release_date }}</td>
+            <td>{{ GameData.release_date|date('jS M Y') }}</td>
         </tr>
     {% endif %}
     <tr>
