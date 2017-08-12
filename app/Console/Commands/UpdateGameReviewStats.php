@@ -44,6 +44,8 @@ class UpdateGameReviewStats extends Command
             SELECT g.id AS game_id, g.title, count(rl.game_id) AS review_count
             FROM games g
             LEFT JOIN review_links rl ON g.id = rl.game_id
+            LEFT JOIN review_sites rs ON rl.site_id = rs.id
+            WHERE rs.active = 'Y'
             GROUP BY g.id;
         ");
 
@@ -67,6 +69,8 @@ class UpdateGameReviewStats extends Command
             avg(rl.rating_normalised) AS rating_avg
             FROM games g
             LEFT JOIN review_links rl ON g.id = rl.game_id
+            LEFT JOIN review_sites rs ON rl.site_id = rs.id
+            WHERE rs.active = 'Y'
             GROUP BY g.id;
         ");
 
