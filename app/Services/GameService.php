@@ -176,11 +176,44 @@ class GameService
 
     /**
      * Used for public game lists
+     * Top Rated - All-time
      * @return mixed
      */
     public function getListTopRated()
     {
         $gamesList = Game::where('review_count', '>', '2')
+            ->orderBy('rating_avg', 'desc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Top Rated - Last X days
+     * @param integer $days
+     * @param integer $limit
+     * @return mixed
+     */
+    public function getListTopRatedLastXDays($days, $limit = 10)
+    {
+        $days = (int) $days;
+
+        $gamesList = Game::where('review_count', '>', '2')
+            ->whereBetween('release_date', array(Carbon::now()->subDays($days), Carbon::now()->addDay()))
+            ->orderBy('rating_avg', 'desc')
+            ->limit($limit)
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Top Rated - By month
+     * @param integer $month
+     * @return mixed
+     */
+    public function getListTopRatedByMonth($month)
+    {
+        $gamesList = Game::where('review_count', '>', '2')
+            ->whereMonth('release_date', '=', $month)
             ->orderBy('rating_avg', 'desc')
             ->get();
         return $gamesList;

@@ -20,7 +20,7 @@
                 </a>
             </p>
         {% else %}
-            <p>Could not display latest European data.</p>
+            <p>Could not display latest European charts data.</p>
         {% endif %}
         {% if ChartsLatestUs %}
             <p>
@@ -29,9 +29,24 @@
                 </a>
             </p>
         {% else %}
-            <p>Could not display latest European data.</p>
+            <p>Could not display latest US charts data.</p>
         {% endif %}
-
+        <h2>
+            Top Rated - New releases
+        </h2>
+        {% if TopRatedNewReleases %}
+            {% for item in TopRatedNewReleases %}
+                <p>
+                    <strong>{{ item.rating_avg }}</strong> :
+                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                        {{ item.title }}
+                    </a>
+                    <em>({{ item.review_count }} ratings)</em>
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>Could not display Top Rated New releases.</p>
+        {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>

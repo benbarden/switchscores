@@ -15,8 +15,9 @@ class WelcomeController extends BaseController
 
         $bindings = array();
 
-        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(14);
-        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45);
+        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(14, 10);
+        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 10);
+        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 7);
 
         $chartsDateService = resolve('Services\ChartsDateService');
         $bindings['ChartsLatestEu'] = $chartsDateService->getDateList('eu', 1);
