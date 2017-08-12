@@ -4,13 +4,14 @@
         <table class="table table-striped table-condensed table-responsive">
             <tr>
                 <th>Site</th>
-                <th>Rating (out of 10)</th>
-                <th>Link</th>
+                <th class="text-center">Rating<br>(out of 10)</th>
+                <th class="text-center">Review date</th>
+                <th class="text-center">Link</th>
             </tr>
             {% for Review in GameReviews %}
                 <tr>
                     <td>{{ Review.site.name }}</td>
-                    <td>
+                    <td class="text-center">
                         {% if Review.rating_normalised %}
                             {{ Review.rating_normalised }}
                             {% if Review.site.rating_scale != 10 %}
@@ -23,7 +24,10 @@
                             N/A
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="text-center">
+                        {{ Review.review_date|date('jS M Y') }}
+                    </td>
+                    <td class="text-center">
                         <a href="{{ Review.url }}" target="_blank">Read review</a>
                     </td>
                 </tr>

@@ -62,6 +62,7 @@ class ReviewLinkService
         $gameReviews = ReviewLink::select('review_links.*', 'review_sites.name')
             ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
             ->where('game_id', $gameId)
+            ->orderBy('review_links.review_date', 'desc')
             ->orderBy('review_sites.name', 'asc')
             ->get();
         return $gameReviews;
