@@ -186,6 +186,7 @@ return [
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
+        App\Providers\Review\StatsServiceProvider::class,
 
         TwigBridge\ServiceProvider::class,
 

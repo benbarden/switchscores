@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Game;
 
 class ReviewLinkController extends \App\Http\Controllers\BaseController
 {
@@ -56,6 +57,18 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         return view('admin.reviews.link.list', $bindings);
     }
 
+    private function updateGameReviewStats(Game $game)
+    {
+        $gameService = resolve('Services\GameService');
+        $serviceReviewStats = resolve('Services\Review\StatsService');
+
+        $gameReviews = $game->reviews()->get();
+
+        $reviewCount = $serviceReviewStats->calculateReviewCount($gameReviews);
+        $reviewAverage = $serviceReviewStats->calculateReviewAverage($gameReviews);
+        $gameService->updateReviewStats($game, $reviewCount, $reviewAverage);
+    }
+
     public function add()
     {
         $request = request();
@@ -79,6 +92,11 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
                 $request->review_date
             );
 
+            // Update game review stats
+            $game = $gameService->find($request->game_id);
+            $this->updateGameReviewStats($game);
+
+            // All done; send us back
             return redirect(route('admin.reviews.link.list'));
 
         }
@@ -126,6 +144,11 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
                 $request->review_date
             );
 
+            // Update game review stats
+            $game = $gameService->find($request->game_id);
+            $this->updateGameReviewStats($game);
+
+            // All done; send us back
             return redirect(route('admin.reviews.link.list'));
 
         } else {

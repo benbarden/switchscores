@@ -21,7 +21,7 @@ class Game extends Model
      */
     protected $fillable = [
         'title', 'link_title', 'release_date', 'price_eshop', 'players', 'upcoming', 'upcoming_date',
-        'overview', 'publisher', 'developer',
+        'overview', 'publisher', 'developer', 'review_count', 'rating_avg'
     ];
 
     public function charts()
@@ -36,7 +36,7 @@ class Game extends Model
 
     public function reviews()
     {
-        return $this->hasMany('App\GameReview', 'game_id', 'id');
+        return $this->hasMany('App\ReviewLink', 'game_id', 'id');
     }
 
     public function gameGenres()
