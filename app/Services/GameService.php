@@ -31,6 +31,7 @@ class GameService
             'overview' => $overview,
             'publisher' => $publisher,
             'developer' => $developer,
+            'review_count' => 0,
         ]);
     }
 
