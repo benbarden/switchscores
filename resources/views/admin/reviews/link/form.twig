@@ -34,23 +34,23 @@
     </div>
 
     <div class="form-group">
-        <label for="rating_original" class="col-md-4 control-label">Rating</label>
+        <label for="review_date" class="col-md-4 control-label">Review date</label>
         <div class="col-md-6">
-            <input id="rating_original" type="text" class="form-control" name="rating_original" value="{{ old('rating_original') }}" required>
-            <p>
-                <em>
-                    Enter the actual score here.
-                    If the reviewing site has a scale other than 1-10,
-                    the score will be converted.
-                </em>
-            </p>
+            <input id="review_date" type="date" class="form-control" name="review_date">
         </div>
     </div>
 
     <div class="form-group">
-        <label for="review_date" class="col-md-4 control-label">Review date</label>
+        <label for="rating_original" class="col-md-4 control-label">Rating</label>
         <div class="col-md-6">
-            <input id="review_date" type="date" class="form-control" name="review_date">
+            <input id="rating_original" type="text" class="form-control" name="rating_original" value="{{ old('rating_original') }}" required>
+            <p>
+                <small>
+                    Enter the actual score here.
+                    If the reviewing site has a scale other than 1-10,
+                    the score will be converted.
+                </small>
+            </p>
         </div>
     </div>
 
