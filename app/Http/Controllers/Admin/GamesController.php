@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\GameCreated;
 use Illuminate\Http\Request;
 
 class GamesController extends \App\Http\Controllers\BaseController
@@ -76,11 +77,14 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             $this->validate($request, $this->validationRules);
 
-            $this->serviceGame->create(
+            $game = $this->serviceGame->create(
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
                 $request->developer, $request->publisher
             );
+
+            // Trigger event
+            event(new GameCreated($game));
 
             return redirect(route('admin.games.list'));
 

@@ -10,7 +10,7 @@ class ReviewLinkService
 {
     public function create($gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate)
     {
-        ReviewLink::create([
+        return ReviewLink::create([
             'game_id' => $gameId,
             'site_id' => $siteId,
             'url' => $url,

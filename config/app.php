@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // WOS
+        App\Providers\ActivityFeedProvider::class,
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\ChartsRankingServiceProvider::class,
         App\Providers\ChartsRankingUsServiceProvider::class,

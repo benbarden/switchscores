@@ -20,7 +20,7 @@ class GameService
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
 
-        Game::create([
+        return Game::create([
             'title' => $title,
             'link_title' => $linkTitle,
             'release_date' => $releaseDate,

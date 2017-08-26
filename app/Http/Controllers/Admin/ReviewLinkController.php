@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ReviewLinkCreated;
 use Illuminate\Http\Request;
 use App\Game;
 
@@ -87,7 +88,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $this->serviceClass->create(
+            $reviewLink = $this->serviceClass->create(
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date
             );
@@ -95,6 +96,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             // Update game review stats
             $game = $gameService->find($request->game_id);
             $this->updateGameReviewStats($game);
+
+            // Trigger event
+            event(new ReviewLinkCreated($reviewLink));
 
             // All done; send us back
             return redirect(route('admin.reviews.link.list'));

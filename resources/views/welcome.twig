@@ -9,6 +9,17 @@
     </div>
     #}
     <div class="col-xs-12 col-sm-4 col-md-4">
+        {% if ActivityFeedList.count %}
+            <h2>
+                Latest updates
+            </h2>
+            {% for item in ActivityFeedList %}
+                <p>
+                    <strong>{{ item.created_at|date('jS M') }}</strong>:
+                    {{ item.getMessageWithValues()|raw }}
+                </p>
+            {% endfor %}
+        {% endif %}
         <h2>
             Recent eShop charts
             <span class="h4">(<a href="{{ route('charts.landing') }}">view all</a>)</span>
@@ -31,29 +42,13 @@
         {% else %}
             <p>Could not display latest US charts data.</p>
         {% endif %}
-        <h2>
-            Top Rated - New releases
-        </h2>
-        {% if TopRatedNewReleases %}
-            {% for item in TopRatedNewReleases %}
-                <p>
-                    <strong>{{ item.rating_avg }}</strong> :
-                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
-                        {{ item.title }}
-                    </a>
-                    <em>({{ item.review_count }} ratings)</em>
-                </p>
-            {% endfor %}
-        {% else %}
-            <p>Could not display Top Rated New releases.</p>
-        {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             New releases
             <span class="h4">(<a href="{{ route('games.list.released') }}">view all</a>)</span>
         </h2>
-        {% if NewReleases %}
+        {% if NewReleases.count %}
             {% for item in NewReleases %}
                 <p>
                     <strong>{{ item.release_date|date('jS M') }}</strong>:
@@ -65,23 +60,43 @@
         {% else %}
             <p>No games within this timeframe.</p>
         {% endif %}
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Upcoming releases
             <span class="h4">(<a href="{{ route('games.list.upcoming') }}">view all</a>)</span>
         </h2>
-        {% if UpcomingReleases %}
+        {% if UpcomingReleases.count %}
             {% for item in UpcomingReleases %}
                 <p>
                     <strong>{{ item.release_date|date('jS M') }}</strong>:
                     <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
-                    {{ item.title }}
+                        {{ item.title }}
                     </a>
                 </p>
             {% endfor %}
         {% else %}
             <p>No games within this timeframe.</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>
+            Top Rated
+            <span class="h4">(<a href="{{ route('games.list.topRated') }}">view all</a>)</span>
+        </h2>
+        {% if TopRatedNewReleases %}
+            <p>
+                Top Rated games released in the last 30 days.
+            </p>
+            {% for item in TopRatedNewReleases %}
+                <p>
+                    <strong>{{ item.rating_avg }}</strong> :
+                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                        {{ item.title }}
+                    </a>
+                    <em>({{ item.review_count }} ratings)</em>
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>Could not display Top Rated - New releases.</p>
         {% endif %}
     </div>
 </div>

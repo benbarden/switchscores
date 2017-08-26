@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityFeedService;
 use Carbon\Carbon;
 
 class WelcomeController extends BaseController
 {
     public function show()
     {
+        $bindings = array();
+
         // Homepage content
         //$now = Carbon::now();
         //$newReleases = $this->serviceGame->getListReleasedByMonth($now->month);
         //$upcomingReleases = $this->serviceGame->getListUpcomingByMonth($now->month);
 
-        $bindings = array();
+        $serviceActivityFeed = resolve('Services\ActivityFeedService');
+        /* @var $serviceActivityFeed ActivityFeedService */
+        $bindings['ActivityFeedList'] = $serviceActivityFeed->getAll();
 
-        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(14, 10);
-        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 10);
-        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 7);
+        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 8);
+        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 8);
+        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 10);
 
         $chartsDateService = resolve('Services\ChartsDateService');
         $bindings['ChartsLatestEu'] = $chartsDateService->getDateList('eu', 1);
