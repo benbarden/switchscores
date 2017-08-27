@@ -15,7 +15,7 @@ class GameService
 
     public function create(
         $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher
+        $overview, $developer, $publisher, $amazonUkLink
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -32,12 +32,13 @@ class GameService
             'publisher' => $publisher,
             'developer' => $developer,
             'review_count' => 0,
+            'amazon_uk_link' => $amazonUkLink,
         ]);
     }
 
     public function edit(
         Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher
+        $overview, $developer, $publisher, $amazonUkLink
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -53,6 +54,7 @@ class GameService
             'overview' => $overview,
             'publisher' => $publisher,
             'developer' => $developer,
+            'amazon_uk_link' => $amazonUkLink,
         ];
 
         $game->fill($values);
@@ -306,6 +308,16 @@ class GameService
     public function getWithoutDevOrPub()
     {
         $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('upcoming_date', 'asc')->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
+    public function getWithoutAmazonUkLink()
+    {
+        $gamesList = Game::where('amazon_uk_link', null)->orderBy('id', 'desc')->get();
         return $gamesList;
     }
 

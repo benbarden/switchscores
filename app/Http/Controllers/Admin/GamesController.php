@@ -58,6 +58,10 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $gameList = $this->serviceGame->getWithoutDevOrPub();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
+                case 'no-amazon-uk-link':
+                    $gameList = $this->serviceGame->getWithoutAmazonUkLink();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
                 default:
                     abort(404);
             }
@@ -80,7 +84,7 @@ class GamesController extends \App\Http\Controllers\BaseController
             $game = $this->serviceGame->create(
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher
+                $request->developer, $request->publisher, $request->amazon_uk_link
             );
 
             // Trigger event
@@ -118,7 +122,7 @@ class GamesController extends \App\Http\Controllers\BaseController
                 $gameData,
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher
+                $request->developer, $request->publisher, $request->amazon_uk_link
             );
 
             return redirect(route('admin.games.list'));

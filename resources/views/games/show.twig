@@ -18,13 +18,21 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-5">
+        {#
         <h2>Overview</h2>
         {% if GameData.overview %}
         <p>{{ GameData.overview }}</p>
         {% else %}
         <p><em>Coming soon!</em></p>
         {% endif %}
+        #}
         {% include 'games/infobox.twig' with {'GameData': GameData} %}
+        {% if GameData.amazon_uk_link %}
+        <h2>Buying options</h2>
+        <ul>
+            <li><a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a></li>
+        </ul>
+        {% endif %}
     </div>
     <div class="col-sm-12 col-md-7">
         {% include 'games/images.twig' with {'MediaFolder': GameData.media_folder, 'GameImages': GameData.images} %}

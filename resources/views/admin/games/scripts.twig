@@ -13,8 +13,9 @@
         formVals['upcoming_date'] = "{{ GameData.upcoming_date }}";
         formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['upcoming'] = "{{ GameData.upcoming }}";
-        formVals['developer'] = "{{ GameData.developer }}";
-        formVals['publisher'] = "{{ GameData.publisher }}";
+        formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
 
     } else {
 
@@ -28,8 +29,9 @@
         formVals['upcoming_date'] = "{{ old('upcoming_date') }}";
         formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['upcoming'] = "{{ old('upcoming') }}";
-        formVals['developer'] = "{{ old('developer') }}";
-        formVals['publisher'] = "{{ old('publisher') }}";
+        formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
 
     }
 
@@ -45,5 +47,6 @@
     if (formVals['upcoming'] == 1) {
         $('#upcoming').attr('checked', true);
     }
+    $('#amazon_uk_link').val(formVals['amazon_uk_link']);
 
 </script>
