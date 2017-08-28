@@ -76,8 +76,8 @@ class ActivityFeed extends Model
 
     public function getMessageForNewReview()
     {
-        $message = 'Added a new review to %s. Source: %s; Rating: %s. '.
-            '%s is now rated %s.';
+        $message = 'Added a new review to %s. Source: %s; Rating: %s.';
+        //'%s is now rated %s.';
         $feedProperties = json_decode($this->properties, true);
 
         $reviewId = $feedProperties['review_id'];
@@ -93,8 +93,8 @@ class ActivityFeed extends Model
         $reviewRating = $reviewLink->rating_normalised;
         $reviewSite = $reviewLink->site->name;
 
-        $gameRating = $game->rating_avg;
+        //$gameRating = $game->rating_avg;
 
-        return sprintf($message, $gameHtml, $reviewSite, $reviewRating, $gameTitle, $gameRating);
+        return sprintf($message, $gameHtml, $reviewSite, $reviewRating); //, $gameTitle, $gameRating);
     }
 }
