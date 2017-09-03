@@ -45,16 +45,24 @@ class ReviewLinkService
 
     public function getAll()
     {
-        $reviewSites = ReviewLink::orderBy('id', 'desc')->get();
-        return $reviewSites;
+        $reviewLinks = ReviewLink::orderBy('id', 'desc')->get();
+        return $reviewLinks;
+    }
+
+    public function getLatestNaturalOrder($limit = 10)
+    {
+        $reviewLinks = ReviewLink::orderBy('review_date', 'desc')
+            ->limit($limit)
+            ->get();
+        return $reviewLinks;
     }
 
     public function getAllWithoutDate()
     {
-        $reviewSites = ReviewLink::whereNull('review_date')
+        $reviewLinks = ReviewLink::whereNull('review_date')
             ->orderBy('id', 'desc')
             ->get();
-        return $reviewSites;
+        return $reviewLinks;
     }
 
     public function getByGame($gameId)

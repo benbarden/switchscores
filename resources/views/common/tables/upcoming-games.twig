@@ -5,8 +5,6 @@
                 <th style="text-align: left;">Title</th>
                 <th style="text-align: left;">Release date<br>(Europe)</th>
                 <th style="text-align: right;">eShop price</th>
-                <th style="text-align: right;">Avg rating</th>
-                <th style="text-align: right;">Total reviews</th>
             </tr>
         </thead>
         <tbody>
@@ -21,30 +19,14 @@
                             <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
                             &nbsp;
                         {% endif %}
-                        {#
-                        {% if item.overview %}
-                            <span class="glyphicon glyphicon-align-left" aria-hidden="true" title="Game has an overview"></span>
-                            &nbsp;
-                        {% endif %}
-                        #}
                     </td>
                     <td style="text-align: left;">
-                        {% if item.upcoming == 1 %}
-                            {{ item.upcoming_date }}
-                        {% else %}
-                            {{ item.release_date }}
-                        {% endif %}
+                        {{ item.upcoming_date }}
                     </td>
                     <td style="text-align: right;">
                         {% if item.price_eshop %}
                             &pound;{{ item.price_eshop }}
                         {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {{ item.rating_avg }}
-                    </td>
-                    <td style="text-align: right;">
-                        {{ item.review_count }}
                     </td>
                 </tr>
             {% endfor %}

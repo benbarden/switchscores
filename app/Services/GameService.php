@@ -198,11 +198,19 @@ class GameService
      * Top Rated - All-time
      * @return mixed
      */
-    public function getListTopRated()
+    public function getListTopRated($limit = null)
     {
-        $gamesList = Game::where('review_count', '>', '2')
-            ->orderBy('rating_avg', 'desc')
-            ->get();
+        if ($limit == null) {
+            $gamesList = Game::where('review_count', '>', '2')
+                ->orderBy('rating_avg', 'desc')
+                ->get();
+        } else {
+            $gamesList = Game::where('review_count', '>', '2')
+                ->orderBy('rating_avg', 'desc')
+                ->orderBy('review_count', 'desc')
+                ->limit($limit)
+                ->get();
+        }
         return $gamesList;
     }
 
@@ -298,6 +306,78 @@ class GameService
     public function getAllUpcomingXs()
     {
         $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'like', '%-XX')->orderBy('upcoming_date', 'asc')->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Upcoming Games
+     * @param $year
+     * @return \Illuminate\Support\Collection
+     * @throws \Exception
+     */
+    public function getAllUpcomingYearWithDates($year)
+    {
+        $year = (int) $year;
+        if (!$year) throw new \Exception('No year specified');
+        $gamesList = Game::where('upcoming', 1)
+            ->whereNotNull('release_date')
+            ->where('upcoming_date', 'like', $year.'-%')
+            ->orderBy('upcoming_date', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Upcoming Games
+     * @param $year
+     * @return \Illuminate\Support\Collection
+     * @throws \Exception
+     */
+    public function getAllUpcomingYearQuarters($year)
+    {
+        $year = (int) $year;
+        if (!$year) throw new \Exception('No year specified');
+        $gamesList = Game::where('upcoming', 1)
+            ->where('upcoming_date', 'like', $year.'-Q%')
+            ->orderBy('upcoming_date', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Upcoming Games
+     * @param $year
+     * @return \Illuminate\Support\Collection
+     * @throws \Exception
+     */
+    public function getAllUpcomingYearXs($year)
+    {
+        $year = (int) $year;
+        if (!$year) throw new \Exception('No year specified');
+        $gamesList = Game::where('upcoming', 1)
+            ->where('upcoming_date', 'like', $year.'%-XX')
+            ->orderBy('upcoming_date', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Used for Upcoming Games
+     * @param $currentYear
+     * @return \Illuminate\Support\Collection
+     * @throws \Exception
+     */
+    public function getAllUpcomingFuture($currentYear)
+    {
+        $currentYear = (int) $currentYear;
+        if (!$currentYear) throw new \Exception('No year specified');
+
+        $gamesList = Game::where('upcoming', 1)
+            //->whereNull('release_date')
+            ->where('upcoming_date', 'not like', $currentYear.'%')
+            ->where('upcoming_date', 'not like', 'TBA')
+            ->orderBy('upcoming_date', 'asc')
+            ->get();
         return $gamesList;
     }
 

@@ -1,0 +1,16 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>{{ PageTitle }}</h1>
+
+<p>
+    Our <a href="{{ route('reviews.topRatedAllTime') }}">Top Rated</a> list only includes games
+    with 3 or more reviews. Otherwise, we can't give a good enough average. The games listed below
+    have fewer than 3 reviews. Where applicable, they are shown with their current ratings; these should
+    be taken with some caution until we have more reviews recorded for these games.
+</p>
+
+{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

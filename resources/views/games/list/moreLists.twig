@@ -1,18 +1,12 @@
 <h2>More lists</h2>
 <ul>
-    {% if thisPage != 'topRated' %}
-        <li><a href="{{ route('games.list.topRated') }}">Top Rated</a></li>
-    {% endif %}
     {% if thisPage != 'released' %}
-        <li><a href="{{ route('games.list.released') }}">Released titles</a></li>
+        <li><a href="{{ route('games.list.released') }}">All released Switch titles</a></li>
     {% endif %}
     {% if thisPage != 'upcoming' %}
-        <li><a href="{{ route('games.list.upcoming') }}">Upcoming releases</a></li>
-    {% endif %}
-    {% if thisPage != 'reviewsNeeded' %}
-        <li><a href="{{ route('games.list.reviewsNeeded') }}">Games needing more reviews</a></li>
+        <li><a href="{{ route('games.list.upcoming') }}">Upcoming Switch releases</a></li>
     {% endif %}
     {% if thisPage != 'genresLanding' %}
-        <li><a href="{{ route('games.genres.landing') }}">Released games by genre</a></li>
+        <li><a href="{{ route('games.genres.landing') }}">Released Switch games by genre</a></li>
     {% endif %}
 </ul>

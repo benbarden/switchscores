@@ -11,11 +11,9 @@
 
 <p>
     Games with fewer than 2 reviews are not listed below; these can be found on the
-    Games needing more reviews page.
+    <a href="{{ route('reviews.gamesNeedingReviews') }}">Games needing more reviews</a> page.
 </p>
 
-{% include 'games/list/moreLists.twig' with {'thisPage': 'topRated'} %}
-
-{% include 'games/list/gamesTable.twig' with {'GamesList': GamesList} %}
+{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
 
 {% endblock page_body %}

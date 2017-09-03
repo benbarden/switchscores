@@ -1,0 +1,50 @@
+{% if GamesList %}
+    <table class="table table-striped table-condensed table-responsive">
+        <thead>
+            <tr>
+                <th style="text-align: left;">Title</th>
+                <th style="text-align: left;">Release date<br>(Europe)</th>
+                <th style="text-align: right;">eShop price</th>
+                <th style="text-align: right;">Avg rating</th>
+                <th style="text-align: right;">Total reviews</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GamesList %}
+                <tr>
+                    <td style="text-align: left;">
+                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                            {{ item.title }}
+                        </a>
+                        &nbsp;
+                        {% if item.image_count > 0 %}
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
+                            &nbsp;
+                        {% endif %}
+                    </td>
+                    <td style="text-align: left;">
+                        {% if item.release_date is not null %}
+                            {{ item.release_date|date('jS M Y') }}
+                        {% else %}
+                            {{ item.upcoming_date }}
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if item.price_eshop %}
+                            &pound;{{ item.price_eshop }}
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {{ item.rating_avg }}
+                    </td>
+                    <td style="text-align: right;">
+                        {{ item.review_count }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><em>{{ GamesList.count }} games.</em></p>
+{% else %}
+    <p>No games to display!</p>
+{% endif %}

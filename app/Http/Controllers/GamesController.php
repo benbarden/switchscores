@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Collection;
+
 class GamesController extends BaseController
 {
     public function listReleased()
@@ -22,9 +24,27 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $gamesList = $this->serviceGame->getListUpcoming();
+        $upcoming2017WithDates = $this->serviceGame->getAllUpcomingYearWithDates(2017);
+        $upcoming2017WithQuarter = $this->serviceGame->getAllUpcomingYearQuarters(2017);
+        $upcoming2017NoInfo = $this->serviceGame->getAllUpcomingYearXs(2017);
+        $upcomingTBA = $this->serviceGame->getAllUpcomingTBA();
+        $upcomingFuture = $this->serviceGame->getAllUpcomingFuture(2017);
 
-        $bindings['GamesList'] = $gamesList;
+        // Get anything not already displayed
+        /* @var $upcomingFuture Collection */
+        /*
+        $upcomingFuture = $this->serviceGame->getListUpcoming();
+        $upcomingFuture = $upcomingFuture->whereNotIn(
+            'upcoming_date', ['TBA', '2017-XX', '2017-Q3', '2017-Q3/Q4', '2017-Q4']
+        );
+        */
+
+        $bindings['Upcoming2017WithDates'] = $upcoming2017WithDates;
+        $bindings['Upcoming2017WithQuarter'] = $upcoming2017WithQuarter;
+        $bindings['Upcoming2017NoInfo'] = $upcoming2017NoInfo;
+        $bindings['UpcomingTBA'] = $upcomingTBA;
+        $bindings['UpcomingFuture'] = $upcomingFuture;
+        $bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
@@ -34,30 +54,12 @@ class GamesController extends BaseController
 
     public function listTopRated()
     {
-        $bindings = array();
-
-        $gamesList = $this->serviceGame->getListTopRated();
-
-        $bindings['GamesList'] = $gamesList;
-
-        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
-
-        return view('games.list.topRated', $bindings);
+        return redirect(route('reviews.topRatedAllTime'), 301);
     }
 
     public function listReviewsNeeded()
     {
-        $bindings = array();
-
-        $gamesList = $this->serviceGame->getListReviewsNeeded();
-
-        $bindings['GamesList'] = $gamesList;
-
-        $bindings['TopTitle'] = 'Nintendo Switch - Games needing more reviews';
-        $bindings['PageTitle'] = 'Nintendo Switch games needing more reviews';
-
-        return view('games.list.reviewsNeeded', $bindings);
+        return redirect(route('reviews.gamesNeedingReviews'), 301);
     }
 
     public function genresLanding()
