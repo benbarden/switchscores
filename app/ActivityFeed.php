@@ -46,16 +46,27 @@ class ActivityFeed extends Model
     {
         if ($this->isTypeNewGame()) {
             return $this->getMessageForNewGame();
-        } elseif ($this->isTypeNewChart()) {
-            return $this->getMessageForNewChart();
+        //} elseif ($this->isTypeNewChart()) {
+        //    return $this->getMessageForNewChart();
         } elseif ($this->isTypeNewReview()) {
             return $this->getMessageForNewReview();
         }
     }
 
+    public function getSmallPrint()
+    {
+        if ($this->isTypeNewGame()) {
+            return $this->getSmallPrintForNewGame();
+            //} elseif ($this->isTypeNewChart()) {
+            //    return $this->getMessageForNewChart();
+        } elseif ($this->isTypeNewReview()) {
+            return $this->getSmallPrintForNewReview();
+        }
+    }
+
     public function getMessageForNewGame()
     {
-        $message = 'Added a new game: %s.';
+        $message = 'New game added: %s.';
         $feedProperties = json_decode($this->properties, true);
 
         $gameId = $feedProperties['game_id'];
@@ -69,6 +80,11 @@ class ActivityFeed extends Model
         return sprintf($message, $gameHtml);
     }
 
+    public function getSmallPrintForNewGame()
+    {
+        return '';
+    }
+
     public function getMessageForNewChart()
     {
 
@@ -76,8 +92,7 @@ class ActivityFeed extends Model
 
     public function getMessageForNewReview()
     {
-        $message = 'Added a new review to %s. Source: %s; Rating: %s.';
-        //'%s is now rated %s.';
+        $message = 'New review added to %s.';
         $feedProperties = json_decode($this->properties, true);
 
         $reviewId = $feedProperties['review_id'];
@@ -90,11 +105,21 @@ class ActivityFeed extends Model
         $gameLink = route('game.show', ['game_id' => $game->id, 'title' => $game->link_title]);
         $gameHtml = '<a href="'.$gameLink.'">'.$gameTitle.'</a>';
 
+        return sprintf($message, $gameHtml);
+    }
+
+    public function getSmallPrintForNewReview()
+    {
+        $message = 'Source: %s; Rating: %s';
+        $feedProperties = json_decode($this->properties, true);
+
+        $reviewId = $feedProperties['review_id'];
+        $serviceReviewLink = resolve('Services\ReviewLinkService');
+        $reviewLink = $serviceReviewLink->find($reviewId);
+
         $reviewRating = $reviewLink->rating_normalised;
         $reviewSite = $reviewLink->site->name;
 
-        //$gameRating = $game->rating_avg;
-
-        return sprintf($message, $gameHtml, $reviewSite, $reviewRating); //, $gameTitle, $gameRating);
+        return sprintf($message, $reviewSite, $reviewRating);
     }
 }
