@@ -20,8 +20,8 @@ class WelcomeController extends BaseController
         /* @var $serviceActivityFeed ActivityFeedService */
         $bindings['ActivityFeedList'] = $serviceActivityFeed->getAll();
 
-        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 8);
-        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 8);
+        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 10);
+        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 10);
         $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 10);
 
         $chartsDateService = resolve('Services\ChartsDateService');
