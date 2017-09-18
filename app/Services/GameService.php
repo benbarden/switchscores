@@ -285,7 +285,11 @@ class GameService
      */
     public function getAllUpcomingTBA()
     {
-        $gamesList = Game::where('upcoming', 1)->where('upcoming_date', 'TBA')->orderBy('upcoming_date', 'asc')->get();
+        $gamesList = Game::where('upcoming', 1)
+            ->where('upcoming_date', 'TBA')
+            ->orderBy('title', 'asc')
+            ->orderBy('upcoming_date', 'asc')
+            ->get();
         return $gamesList;
     }
 
@@ -323,6 +327,7 @@ class GameService
             ->whereNotNull('release_date')
             ->where('upcoming_date', 'like', $year.'-%')
             ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
             ->get();
         return $gamesList;
     }
@@ -340,6 +345,7 @@ class GameService
         $gamesList = Game::where('upcoming', 1)
             ->where('upcoming_date', 'like', $year.'-Q%')
             ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
             ->get();
         return $gamesList;
     }
@@ -357,6 +363,7 @@ class GameService
         $gamesList = Game::where('upcoming', 1)
             ->where('upcoming_date', 'like', $year.'%-XX')
             ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
             ->get();
         return $gamesList;
     }
@@ -377,6 +384,7 @@ class GameService
             ->where('upcoming_date', 'not like', $currentYear.'%')
             ->where('upcoming_date', 'not like', 'TBA')
             ->orderBy('upcoming_date', 'asc')
+            ->orderBy('title', 'asc')
             ->get();
         return $gamesList;
     }
