@@ -44,6 +44,9 @@ Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
 Route::get('/reviews/top-rated/all-time', 'ReviewsController@topRatedAllTime')->name('reviews.topRatedAllTime');
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
 
+/* News - static for now */
+Route::get('/news/{category}/{title}', 'NewsController@newsStatic')->name('news.static');
+
 /* Admin */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
