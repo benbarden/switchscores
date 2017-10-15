@@ -1,0 +1,3 @@
+{% if NewsItem.game_id %}
+    {% include 'games/infobox.twig' with {'GameData': NewsItem.game, 'NewsInfoBox': 'Y'} %}
+{% endif %}

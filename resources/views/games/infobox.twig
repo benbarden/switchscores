@@ -1,5 +1,13 @@
-<h2>Game info</h2>
 <table class="table table-striped table-condensed table-responsive">
+    {% if NewsInfoBox == 'Y' %}
+        <tr>
+            <td class="text-center" colspan="2">
+                <strong>
+                    Infobox
+                </strong>
+            </td>
+        </tr>
+    {% endif %}
     <tr>
         <td>
             <span style="font-weight: bold;">Title</span>
@@ -61,4 +69,14 @@
         </td>
         <td>{{ GameData.publisher }}</td>
     </tr>
+    {% if NewsInfoBox == 'Y' %}
+        {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
+        <tr>
+            <td class="text-center" colspan="2">
+                <strong>
+                    <a href="{{ GameShowUrl }}">View more details about {{ GameData.title }} &gt;&gt;</a>
+                </strong>
+            </td>
+        </tr>
+    {% endif %}
 </table>
