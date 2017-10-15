@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\GameService;
+use App\Services\NewsService;
 
 class SitemapController extends BaseController
 {
@@ -15,11 +16,13 @@ class SitemapController extends BaseController
         $bindings['TimestampNow'] = $timestamp;
 
         $sitePages = array();
-        $sitePages[] = array('url' => route('welcome'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '1.0');
+        $sitePages[] = array('url' => route('welcome'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '1.0');
         $sitePages[] = array('url' => route('games.list.released'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         $sitePages[] = array('url' => route('games.list.upcoming'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('games.list.topRated'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('games.list.reviewsNeeded'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+
+        $sitePages[] = array('url' => route('reviews.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.8');
+        $sitePages[] = array('url' => route('reviews.topRatedAllTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitePages[] = array('url' => route('reviews.gamesNeedingReviews'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
 
         $sitePages[] = array('url' => route('charts.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
 
@@ -56,6 +59,12 @@ class SitemapController extends BaseController
         $gameList = $gameService->getAll();
 
         $bindings['GameList'] = $gameList;
+
+        $newsService = resolve('Services\NewsService');
+        /* @var $newsService NewsService */
+        $newsList = $newsService->getAll();
+
+        $bindings['NewsList'] = $newsList;
 
         return response()->view('sitemap.index', $bindings)->header('Content-Type', 'text/xml');
     }

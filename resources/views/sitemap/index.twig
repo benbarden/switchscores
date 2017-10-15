@@ -16,4 +16,12 @@
         <priority>0.6</priority>
     </url>
     {% endfor %}
+    {% for item in NewsList %}
+        <url>
+            <loc>{{ url('/') }}{{ item.url }}</loc>
+            <lastmod>{{ item.updated_at|date('c') }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
+        </url>
+    {% endfor %}
 </urlset>
