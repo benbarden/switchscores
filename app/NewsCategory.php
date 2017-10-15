@@ -9,6 +9,8 @@ class NewsCategory extends Model
     const CAT_SITE_UPDATES = 1;
     const CAT_TOP_RATED_NEW_RELEASES = 2;
     const CAT_GAME_UPDATES = 3;
+    const CAT_RANK_UPDATES = 4;
+    const CAT_UPCOMING_GAMES = 5;
 
     /**
      * @var string

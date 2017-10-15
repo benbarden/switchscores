@@ -38,6 +38,9 @@ class NewsController extends BaseController
         $bindings['TopTitle'] = $newsItem->title;
         $bindings['NewsItem'] = $newsItem;
 
+        // Total rank count
+        $bindings['RankMaximum'] = $this->serviceGame->getListTopRatedCount();
+
         return view('news.content.default', $bindings);
     }
 }
