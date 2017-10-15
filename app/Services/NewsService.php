@@ -9,6 +9,37 @@ use Carbon\Carbon;
 
 class NewsService
 {
+    public function create(
+        $title, $categoryId, $url, $contentHtml, $gameId
+    )
+    {
+        return News::create([
+            'title' => $title,
+            'category_id' => $categoryId,
+            'url' => $url,
+            'content_html' => $contentHtml,
+            'game_id' => $gameId,
+        ]);
+    }
+
+    public function edit(
+        News $news, $title, $categoryId, $url, $contentHtml, $gameId
+    )
+    {
+        $values = [
+            'title' => $title,
+            'category_id' => $categoryId,
+            'url' => $url,
+            'content_html' => $contentHtml,
+            'game_id' => $gameId,
+        ];
+
+        $news->fill($values);
+        $news->save();
+    }
+
+    // ********************************************************** //
+
     public function find($id)
     {
         return News::find($id);

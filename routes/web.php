@@ -83,6 +83,13 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
     Route::get('/admin/reviews/link/{report?}', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
 
+    // News
+    Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');
+    Route::get('/admin/news/add', 'Admin\NewsController@add')->name('admin.news.add');
+    Route::post('/admin/news/add', 'Admin\NewsController@add')->name('admin.news.add');
+    Route::get('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
+    Route::post('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
+
 });
 
 Auth::routes();
