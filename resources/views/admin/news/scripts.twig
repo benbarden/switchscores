@@ -28,6 +28,32 @@
 
     $('#game_id').select2();
 
+    $('#url').on('focus', function() {
+        useAutoUrl('url');
+    });
+    $('#url').on('blur', function() {
+        useAutoUrl('url');
+    });
+
+    function useAutoUrl(elem) {
+        if ($('#' + elem).val() == '') {
+            var date = new Date();
+            dateString = date.yyyymmdd();
+            $('#' + elem).val('/news/' + dateString + '/');
+        }
+    }
+
+    // Date formatting
+    Date.prototype.yyyymmdd = function() {
+        var mm = this.getMonth() + 1;
+        var dd = this.getDate();
+
+        return [this.getFullYear(),
+            (mm > 9 ? '' : '0') + mm,
+            (dd > 9 ? '' : '0') + dd
+        ].join('');
+    };
+
     // CKEditor setup
     var ckEditorElem = 'content_html';
 
