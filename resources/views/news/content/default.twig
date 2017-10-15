@@ -1,0 +1,19 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <h2>{{ NewsItem.title }}</h2>
+        {{ NewsItem.content_html|raw }}
+        <p>
+            <small>Published: {{ NewsItem.created_at }}</small>
+        </p>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        {% include 'news/sidebar/news-landing.twig' %}
+        {% include 'news/sidebar/more-links.twig' %}
+    </div>
+</div>
+
+{% endblock page_body %}

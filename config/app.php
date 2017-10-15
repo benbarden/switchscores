@@ -185,6 +185,7 @@ return [
         App\Providers\GameServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,
+        App\Providers\NewsServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
         App\Providers\Review\StatsServiceProvider::class,

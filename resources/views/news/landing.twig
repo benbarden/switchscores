@@ -5,10 +5,15 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-8">
         <h2>{{ PageTitle }}</h2>
+        {% if NewsList %}
         <ul>
-            <li><a href="{{ route('news.static', {'category': 'site-updates', 'title': '171015'}) }}">Site update - 15th October, 2017</a></li>
-            <li><a href="{{ route('news.static', {'category': 'top-rated-new-releases', 'title': '171012'}) }}">Top Rated: New Releases - 12th October, 2017</a></li>
+            {% for item in NewsList %}
+                <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+            {% endfor %}
         </ul>
+        {% else %}
+        <p>No news items found!</p>
+        {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         {% include 'news/sidebar/more-links.twig' %}
