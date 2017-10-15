@@ -215,6 +215,19 @@ class GameService
     }
 
     /**
+     * Top Rated - All-time
+     * Just a counter. Used on Game pages
+     * @return integer
+     */
+    public function getListTopRatedCount()
+    {
+        $topRatedCounter = Game::where('review_count', '>', '2')
+            ->orderBy('rating_avg', 'desc')
+            ->get()->count();
+        return $topRatedCounter;
+    }
+
+    /**
      * Top Rated - Last X days
      * @param integer $days
      * @param integer $limit

@@ -139,6 +139,9 @@ class GamesController extends BaseController
         $bindings['GameRanking'] = $gameRanking;
         $bindings['GameReviews'] = $gameReviews;
 
+        // Total rank count
+        $bindings['RankMaximum'] = $this->serviceGame->getListTopRatedCount();
+
         return view('games.show', $bindings);
     }
 

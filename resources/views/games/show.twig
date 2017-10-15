@@ -3,15 +3,21 @@
 {% block page_body %}
 
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-8">
         <h1>{{ GameData.title }}</h1>
     </div>
-    <div class="game-rating col-xs-3">
+    <div class="game-rating col-xs-4">
+        {% if GameData.game_rank %}
+            <p class="h1">
+                <span>Rank</span>
+                <strong>{{ GameData.game_rank }}<small>/{{ RankMaximum }}</small></strong>
+            </p>
+        {% endif %}
         {% if GameData.rating_avg %}
-        <p class="h1">
-            <span>Average rating</span>
-            <strong>{{ GameData.rating_avg }}</strong>
-        </p>
+            <p class="h1">
+                <span>Average rating</span>
+                <strong>{{ GameData.rating_avg }}</strong>
+            </p>
         {% endif %}
     </div>
 </div>

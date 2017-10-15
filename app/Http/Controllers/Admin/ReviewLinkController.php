@@ -97,6 +97,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             $game = $gameService->find($request->game_id);
             $this->updateGameReviewStats($game);
 
+            // Update ranks
+            \Artisan::call('UpdateGameRanks');
+
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
 
@@ -151,6 +154,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             // Update game review stats
             $game = $gameService->find($request->game_id);
             $this->updateGameReviewStats($game);
+
+            // Update ranks
+            \Artisan::call('UpdateGameRanks');
 
             // All done; send us back
             return redirect(route('admin.reviews.link.list'));
