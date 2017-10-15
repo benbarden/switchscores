@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsCategory extends Model
 {
+    const CAT_SITE_UPDATES = 1;
+    const CAT_TOP_RATED_NEW_RELEASES = 2;
+    const CAT_GAME_UPDATES = 3;
+
     /**
      * @var string
      */
