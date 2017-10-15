@@ -1,0 +1,37 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <h2>{{ PageTitle }}</h2>
+        <p>
+            We've just added a new feature to World of Switch: <strong>Ranking</strong>. This will show up
+            in the following places:
+        </p>
+        <ol>
+            <li>
+                <a href="{{ route('reviews.topRatedAllTime') }}">Top Rated - All-time</a>: look for the
+                number on the left-hand side.
+            </li>
+            <li>
+                <a href="{{ route('game.show', {'id': 53, 'title': 'arms'}) }}">Game pages</a>: look for the
+                new "Rank" box in the top-right corner.
+            </li>
+        </ol>
+        <p>
+            This makes it easy to understand where a game fits into the overall ranking of all Switch games
+            listed at World of Switch.
+        </p>
+        <p>
+            Games with fewer than 3 reviews are not ranked; they will be included if and when more reviews
+            of these titles are available.
+        </p>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        {% include 'news/sidebar/news-landing.twig' %}
+        {% include 'news/sidebar/more-links.twig' %}
+    </div>
+</div>
+
+{% endblock page_body %}

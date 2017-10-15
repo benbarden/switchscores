@@ -45,6 +45,7 @@ Route::get('/reviews/top-rated/all-time', 'ReviewsController@topRatedAllTime')->
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
 
 /* News - static for now */
+Route::get('/news', 'NewsController@landing')->name('news.landing');
 Route::get('/news/{category}/{title}', 'NewsController@newsStatic')->name('news.static');
 
 /* Admin */
