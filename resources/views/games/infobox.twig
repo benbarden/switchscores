@@ -39,12 +39,14 @@
             {% endif %}
         </td>
     </tr>
+    {% if GameData.game_rank %}
     <tr>
         <td>
             <span style="font-weight: bold;">Rank</span>
         </td>
         <td>{{ GameData.game_rank }}/{{ RankMaximum }}</td>
     </tr>
+    {% endif %}
     <tr>
         <td>
             <span style="font-weight: bold;">Average rating</span>
