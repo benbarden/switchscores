@@ -15,7 +15,8 @@ class NewsController extends BaseController
 
         $serviceNews = resolve('Services\NewsService');
         /* @var $serviceNews \App\Services\NewsService */
-        $bindings['NewsList'] = $serviceNews->getAllWithLimit(10);
+        //$bindings['NewsList'] = $serviceNews->getAllWithLimit(10);
+        $bindings['NewsList'] = $serviceNews->getAll();
 
         return view('news.landing', $bindings);
     }
