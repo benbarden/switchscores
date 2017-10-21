@@ -32,6 +32,7 @@ class ReviewsController extends BaseController
         $gamesList = $this->serviceGame->getListTopRated();
 
         $bindings['GamesList'] = $gamesList;
+        $bindings['GamesTableSort'] = "[4, 'desc']";
 
         $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
@@ -46,6 +47,7 @@ class ReviewsController extends BaseController
         $gamesList = $this->serviceGame->getListReviewsNeeded();
 
         $bindings['GamesList'] = $gamesList;
+        $bindings['GamesTableSort'] = "[[5, 'desc'], [2, 'desc']]";
 
         $bindings['TopTitle'] = 'Nintendo Switch - Games needing more reviews';
         $bindings['PageTitle'] = 'Nintendo Switch games needing more reviews';

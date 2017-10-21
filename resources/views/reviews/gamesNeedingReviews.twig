@@ -7,8 +7,18 @@
 <p>
     Our <a href="{{ route('reviews.topRatedAllTime') }}">Top Rated</a> list only includes games
     with 3 or more reviews. Otherwise, we can't give a good enough average. The games listed below
-    have fewer than 3 reviews. Where applicable, they are shown with their current ratings; these should
-    be taken with some caution until we have more reviews recorded for these games.
+    are those with fewer than 3 reviews in our database.
+</p>
+
+<p>
+    The games listed first are the ones that have the most reviews, and would therefore take the least
+    effort to get onto our Top Rated page. If you've got a review to submit, let us know on Twitter:
+    <a href="https://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
+</p>
+
+<p>
+    Where applicable, they are shown with their current ratings; these should
+    be taken with some caution until we have more reviews recorded.
 </p>
 
 {% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}

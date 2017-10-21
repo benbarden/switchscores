@@ -13,6 +13,7 @@ class GamesController extends BaseController
         $gamesList = $this->serviceGame->getListReleased();
 
         $bindings['GamesList'] = $gamesList;
+        $bindings['GamesTableSort'] = "[[2, 'desc'], [0, 'desc']]";
 
         $bindings['TopTitle'] = 'Nintendo Switch released games';
         $bindings['PageTitle'] = 'Nintendo Switch games available in Europe';
@@ -91,6 +92,7 @@ class GamesController extends BaseController
         $bindings['GenreData'] = $genreData;
 
         $bindings['GamesList'] = $this->serviceGame->getGamesByGenre($genreData->id);
+        $bindings['GamesTableSort'] = "[1, 'asc']";
 
         $bindings['TopTitle'] = 'Nintendo Switch games in genre: '.$genreData->genre;
         $bindings['PageTitle'] = 'Nintendo Switch games in genre: '.$genreData->genre;

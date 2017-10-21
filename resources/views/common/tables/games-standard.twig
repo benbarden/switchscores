@@ -1,5 +1,5 @@
 {% if GamesList %}
-    <table class="table table-striped table-condensed table-responsive">
+    <table class="table table-striped table-condensed table-responsive data-sortable">
         <thead>
             <tr>
                 <th class="text-center">Rank</th>
@@ -26,7 +26,7 @@
                     </td>
                     <td style="text-align: left;">
                         {% if item.release_date is not null %}
-                            {{ item.release_date|date('jS M Y') }}
+                            {{ item.release_date }}
                         {% else %}
                             {{ item.upcoming_date }}
                         {% endif %}
@@ -46,7 +46,29 @@
             {% endfor %}
         </tbody>
     </table>
-    <p><em>{{ GamesList.count }} games.</em></p>
+    {#<p><em>{{ GamesList.count }} games.</em></p>#}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    {% if GamesTableSort is not defined %}
+    {% set GamesTableSort = "[2, 'desc']" %}
+    {% endif %}
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": {{ GamesTableSort|raw }},
+            "paging": false,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>
+
 {% else %}
     <p>No games to display!</p>
 {% endif %}
