@@ -6,11 +6,16 @@
     <div class="col-xs-12 col-sm-8 col-md-8">
         <h2>{{ PageTitle }}</h2>
         {% if NewsList %}
-        <ul>
             {% for item in NewsList %}
-                <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                <p>
+                    <small>
+                    Published: {{ item.created_at|date('jS M Y H:i') }} |
+                    Category: {{ item.category.name }}
+                    </small>
+                </p>
             {% endfor %}
-        </ul>
+            {{ NewsList.links|raw }}
         {% else %}
         <p>No news items found!</p>
         {% endif %}

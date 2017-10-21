@@ -50,6 +50,11 @@ class NewsService
         return News::orderBy('created_at', 'desc')->get();
     }
 
+    public function getPaginated($limit)
+    {
+        return News::orderBy('created_at', 'desc')->simplePaginate($limit);
+    }
+
     /**
      * @return mixed
      */

@@ -7,7 +7,7 @@
         <h2>{{ NewsItem.title }}</h2>
         {{ NewsItem.content_html|raw }}
         <p>
-            <small>Published: {{ NewsItem.created_at }}</small>
+            <small>Published: {{ NewsItem.created_at|date('jS M Y H:i') }}</small>
         </p>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">

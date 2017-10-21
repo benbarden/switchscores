@@ -10,13 +10,13 @@ class NewsController extends BaseController
     {
         $bindings = array();
 
-        $bindings['TopTitle'] = 'News';
-        $bindings['PageTitle'] = 'News';
-
         $serviceNews = resolve('Services\NewsService');
         /* @var $serviceNews \App\Services\NewsService */
-        //$bindings['NewsList'] = $serviceNews->getAllWithLimit(10);
-        $bindings['NewsList'] = $serviceNews->getAll();
+        $newsList = $serviceNews->getPaginated(10);
+
+        $bindings['NewsList'] = $newsList;
+        $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
+        $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
 
         return view('news.landing', $bindings);
     }

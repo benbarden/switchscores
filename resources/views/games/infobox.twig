@@ -47,12 +47,14 @@
         <td>{{ GameData.game_rank }}/{{ RankMaximum }}</td>
     </tr>
     {% endif %}
+    {% if GameData.rating_avg %}
     <tr>
         <td>
             <span style="font-weight: bold;">Average rating</span>
         </td>
         <td>{{ GameData.rating_avg }}</td>
     </tr>
+    {% endif %}
     <tr>
         <td>
             <span style="font-weight: bold;">Total reviews</span>
@@ -82,7 +84,7 @@
         <tr>
             <td class="text-center" colspan="2">
                 <strong>
-                    <a href="{{ GameShowUrl }}">View more details about {{ GameData.title }} &gt;&gt;</a>
+                    <a href="{{ GameShowUrl }}">More details: {{ GameData.title }} &gt;&gt;</a>
                 </strong>
             </td>
         </tr>
