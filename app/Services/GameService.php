@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Game;
+use App\GameGenre;
 use Carbon\Carbon;
 
 
@@ -435,5 +436,16 @@ class GameService
             ->get();
 
         return $gameList;
+    }
+
+    /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
+    public function getGamesWithoutGenres()
+    {
+        $gameIds = GameGenre::pluck('game_id')->all();
+        $gamesList = Game::whereNotIn('id', $gameIds)->where('upcoming', 0)->get();
+        return $gamesList;
     }
 }

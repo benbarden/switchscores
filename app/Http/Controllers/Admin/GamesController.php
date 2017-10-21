@@ -62,6 +62,10 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $gameList = $this->serviceGame->getWithoutAmazonUkLink();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
+                case 'no-genre':
+                    $gameList = $this->serviceGame->getGamesWithoutGenres();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
                 default:
                     abort(404);
             }
@@ -100,6 +104,9 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
+        $genreService = resolve('Services\GenreService');
+        $bindings['GenreList'] = $genreService->getAll();
+
         return view('admin.games.add', $bindings);
     }
 
@@ -111,6 +118,11 @@ class GamesController extends \App\Http\Controllers\BaseController
         if (!$gameData) abort(404);
 
         $request = request();
+
+        $genreService = resolve('Services\GenreService');
+        /* @var $genreService \App\Services\GenreService */
+        $gameGenreService = resolve('Services\GameGenreService');
+        /* @var $gameGenreService \App\Services\GameGenreService */
 
         if ($request->isMethod('post')) {
 
@@ -125,6 +137,22 @@ class GamesController extends \App\Http\Controllers\BaseController
                 $request->developer, $request->publisher, $request->amazon_uk_link
             );
 
+            // Update genres
+            $gameGenres = [];
+            $gameGenreItemList = $request->genre_item;
+            if ($gameGenreItemList) {
+                foreach ($gameGenreItemList as $genreId => $value) {
+                    $gameGenres[] = $genreId;
+                }
+            }
+
+            $gameGenreService->deleteGameGenres($gameId);
+            if (count($gameGenres) > 0) {
+                $gameGenreService->createGameGenreList($gameId, $gameGenres);
+            }
+
+            // Done
+
             return redirect(route('admin.games.list'));
 
         } else {
@@ -137,6 +165,9 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
+
+        $bindings['GenreList'] = $genreService->getAll();
+        $bindings['GameGenreList'] = $gameGenreService->getByGame($gameId);
 
         return view('admin.games.edit', $bindings);
     }

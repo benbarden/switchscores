@@ -69,6 +69,21 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-md-4 control-label">Genres</label>
+        <div class="col-md-6">
+            {% if GenreList %}
+            {% for item in GenreList %}
+                <div class="checkbox">
+                    <label>
+                        <input id="genre_item_{{ item.id }}" class="genre_item" name="genre_item[{{ item.id }}]" type="checkbox">
+                        {{ item.genre }}
+                    </label>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit

@@ -49,4 +49,11 @@
     }
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
 
+    // Genres
+    {% if GameGenreList %}
+    {% for item in GameGenreList %}
+        $('#genre_item_{{ item.genre_id }}').attr('checked', true);
+    {% endfor %}
+    {% endif %}
+
 </script>

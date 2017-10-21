@@ -16,6 +16,13 @@ class GameGenre extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'game_id', 'genre_id'
+    ];
+
     public function game()
     {
         return $this->hasOne('App\Game', 'id', 'game_id');
