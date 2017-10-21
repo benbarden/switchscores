@@ -96,7 +96,7 @@
         </h2>
         {% if ChartsLatestEu %}
             <p>
-                <a href="{{ route('charts.date', {'date': ChartsLatestEu.chart_date}) }}">
+                <a href="{{ route('charts.date.show', {'countryCode': 'eu', 'date': ChartsLatestEu.chart_date}) }}">
                     European eShop charts: {{ ChartsLatestEu.chart_date|date('jS M') }}
                 </a>
             </p>
@@ -105,7 +105,7 @@
         {% endif %}
         {% if ChartsLatestUs %}
             <p>
-                <a href="{{ route('charts.us.date', {'date': ChartsLatestUs.chart_date}) }}">
+                <a href="{{ route('charts.date.show', {'countryCode': 'us', 'date': ChartsLatestUs.chart_date}) }}">
                     US eShop charts: {{ ChartsLatestUs.chart_date|date('jS M') }}
                 </a>
             </p>

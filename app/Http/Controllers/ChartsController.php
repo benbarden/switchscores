@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\ChartsRankingGlobal;
+
 class ChartsController extends BaseController
 {
     public function landing()
@@ -20,31 +22,28 @@ class ChartsController extends BaseController
         return view('charts.landing', $bindings);
     }
 
-    private function show($date = null, $region = '')
+    public function show($countryCode, $date)
     {
-        if (!$date) {
-            abort(404);
-        }
-
         $bindings = array();
 
-        $chartsRankingEuService = resolve('Services\ChartsRankingService');
-        $chartsRankingUsService = resolve('Services\ChartsRankingUsService');
+        $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
+        /* @var $chartsRankingGlobalService \App\Services\ChartsRankingGlobalService */
 
-        if ($region == 'US') {
-            $chartsRankingService = $chartsRankingUsService;
-            $title = 'Charts - US';
-            $regionText = 'US';
-            $regionRoute = 'charts.us.date';
-        } else {
-            $chartsRankingService = $chartsRankingEuService;
-            $title = 'Charts - Europe';
-            $regionText = 'European';
-            $regionPath = 'eu';
-            $regionRoute = 'charts.date';
+        switch ($countryCode) {
+            case ChartsRankingGlobal::COUNTRY_US;
+                $title = 'Charts - US';
+                $regionText = 'US';
+                break;
+            case ChartsRankingGlobal::COUNTRY_EU;
+                $title = 'Charts - Europe';
+                $regionText = 'European';
+                break;
+            default:
+                abort(404);
+                break;
         }
 
-        $gamesList = $chartsRankingService->getByDate($date);
+        $gamesList = $chartsRankingGlobalService->getByCountryAndDate($countryCode, $date);
 
         if (count($gamesList) == 0) {
             abort(404);
@@ -60,12 +59,14 @@ class ChartsController extends BaseController
         $bindings['RegionText'] = $regionText;
         $bindings['ChartDate'] = $date;
         $bindings['GamesList'] = $gamesList;
-        $bindings['RegionRoute'] = $regionRoute; // required for prev/next links
+        $bindings['CountryCode'] = $countryCode;
 
         // Next/Previous links
         $chartsDateService = resolve('Services\ChartsDateService');
-        $dateNext = $chartsDateService->getNext($region, $date);
-        $datePrev = $chartsDateService->getPrevious($region, $date);
+        /* @var $chartsDateService \App\Services\ChartsDateService */
+
+        $dateNext = $chartsDateService->getNext($countryCode, $date);
+        $datePrev = $chartsDateService->getPrevious($countryCode, $date);
         if ($dateNext) {
             $bindings['ChartDateNext'] = $dateNext;
         }
@@ -73,18 +74,6 @@ class ChartsController extends BaseController
             $bindings['ChartDatePrev'] = $datePrev;
         }
 
-        return $bindings;
-    }
-
-    public function showEu($date = null)
-    {
-        $bindings = $this->show($date, 'EU');
-        return view('charts.topFifteen', $bindings);
-    }
-
-    public function showUs($date = null)
-    {
-        $bindings = $this->show($date, 'US');
         return view('charts.topFifteen', $bindings);
     }
 
@@ -137,5 +126,17 @@ class ChartsController extends BaseController
         ", array($position));
 
         return view('charts.gamesAtPosition', $bindings);
+    }
+
+    public function redirectEu($date)
+    {
+        $redirUrl = sprintf('/charts/eu/%s', $date);
+        return redirect($redirUrl, 301);
+    }
+
+    public function redirectUs($date)
+    {
+        $redirUrl = sprintf('/charts/us/%s', $date);
+        return redirect($redirUrl, 301);
     }
 }

@@ -31,7 +31,7 @@ class SitemapController extends BaseController
         $chartDatesUs = $chartsDateService->getDateList('us');
         foreach ($chartDatesEu as $chartDate) {
             $sitePages[] = array(
-                'url' => route('charts.date', ['date' => $chartDate->chart_date]),
+                'url' => route('charts.date.show', ['countryCode' => 'eu', 'date' => $chartDate->chart_date]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
                 'priority' => '0.8'
@@ -39,7 +39,7 @@ class SitemapController extends BaseController
         }
         foreach ($chartDatesUs as $chartDate) {
             $sitePages[] = array(
-                'url' => route('charts.us.date', ['date' => $chartDate->chart_date]),
+                'url' => route('charts.date.show', ['countryCode' => 'us', 'date' => $chartDate->chart_date]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
                 'priority' => '0.8'

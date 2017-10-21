@@ -124,10 +124,10 @@ class GamesController extends BaseController
             return redirect($redirUrl, 301);
         }
 
+        $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
+        /* @var $chartsRankingGlobalService \App\Services\ChartsRankingGlobalService */
         // Get chart rankings for this game
-        $gameRanking = \App\ChartsRanking::where('game_id', $gameData->id)
-            ->orderBy('chart_date', 'desc')
-            ->get();
+        $gameRanking = $chartsRankingGlobalService->getByGameEu($gameData->id);
 
         // Get reviews
         $reviewLinkService = resolve('Services\ReviewLinkService');

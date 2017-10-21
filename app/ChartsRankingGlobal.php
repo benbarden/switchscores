@@ -4,12 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChartsRankingUs extends Model
+class ChartsRankingGlobal extends Model
 {
+    const COUNTRY_EU = 'eu';
+    const COUNTRY_US = 'us';
+
     /**
      * @var string
      */
-    protected $table = 'charts_rankings_us';
+    protected $table = 'charts_rankings_global';
 
     /**
      * @var bool
@@ -20,7 +23,7 @@ class ChartsRankingUs extends Model
      * @var array
      */
     protected $fillable = [
-        'chart_date', 'position', 'game_id',
+        'chart_date', 'position', 'game_id', 'country_code'
     ];
 
     public function game()
@@ -32,11 +35,9 @@ class ChartsRankingUs extends Model
     {
         $chartDate = $this->chart_date;
         $gameId = $this->game_id;
+        $countryCode = $this->country_code;
 
-        $previousChartsDate = ChartsDate::
-            where('chart_date', '<', $chartDate)
-            ->where('chart_date', '>=', '2017-06-03')
-            ->orderBy('chart_date', 'DESC')->limit(1)->get();
+        $previousChartsDate = ChartsDate::where('chart_date', '<', $chartDate)->orderBy('chart_date', 'DESC')->limit(1)->get();
 
         if (count($previousChartsDate) == 0) {
             $dummyClass = new \stdClass();
@@ -46,7 +47,8 @@ class ChartsRankingUs extends Model
 
         $previousDate = $previousChartsDate->first()->chart_date;
 
-        $previousRank = ChartsRankingUs::where('chart_date', $previousDate)
+        $previousRank = ChartsRankingGlobal::where('chart_date', $previousDate)
+            ->where('country_code', $countryCode)
             ->where('game_id', $gameId)
             ->first();
 

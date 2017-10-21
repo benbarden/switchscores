@@ -36,8 +36,11 @@ Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name
 Route::get('/charts/games-at-position', 'ChartsController@gamesAtPositionLanding')->name('charts.gamesAtPositionLanding');
 Route::get('/charts/games-at-position/{position?}', 'ChartsController@gamesAtPosition')->name('charts.gamesAtPosition');
 
-Route::get('/charts/{date?}', 'ChartsController@showEu')->name('charts.date');
-Route::get('/charts-us/{date?}', 'ChartsController@showUs')->name('charts.us.date');
+Route::get('/charts/{countryCode}/{date}', 'ChartsController@show')->name('charts.date.show');
+
+/* Charts redirects (old URLs) */
+Route::get('/charts/{date?}', 'ChartsController@redirectEu')->name('charts.date.redirect');
+Route::get('/charts-us/{date?}', 'ChartsController@redirectUs')->name('charts.us.date.redirect');
 
 /* Reviews */
 Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');

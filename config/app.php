@@ -180,8 +180,7 @@ return [
         // WOS
         App\Providers\ActivityFeedProvider::class,
         App\Providers\ChartsDateServiceProvider::class,
-        App\Providers\ChartsRankingServiceProvider::class,
-        App\Providers\ChartsRankingUsServiceProvider::class,
+        App\Providers\ChartsRankingGlobalServiceProvider::class,
         App\Providers\GameServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,

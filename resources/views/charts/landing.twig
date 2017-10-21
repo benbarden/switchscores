@@ -16,7 +16,7 @@
         {% if ChartDatesEu.count > 0 %}
             <div class="row">
             {% for item in ChartDatesEu %}
-                {% set ChartEuUrl = route('charts.date', {'date': item.chart_date}) %}
+                {% set ChartEuUrl = route('charts.date.show', {'countryCode': 'eu', 'date': item.chart_date}) %}
                 {% set ChartEuDate = item.chart_date|date('jS M Y') %}
                 <div class="col-sm-12 col-md-3 col-lg-3" style="border: 1px solid #dedede; padding: 15px 2px; text-align: center;">
                     <a href="{{ ChartEuUrl }}">{{ ChartEuDate }}</a>
@@ -32,7 +32,7 @@
         {% if ChartDatesUs.count > 0 %}
             <div class="row" style="border-left: 2px solid #000;">
                 {% for item in ChartDatesUs %}
-                    {% set ChartUsUrl = route('charts.us.date', {'date': item.chart_date}) %}
+                    {% set ChartUsUrl = route('charts.date.show', {'countryCode': 'us', 'date': item.chart_date}) %}
                     {% set ChartUsDate = item.chart_date|date('jS M Y') %}
                     <div class="col-sm-12 col-md-3 col-lg-3" style="border: 1px solid #dedede; padding: 15px 2px; text-align: center;">
                         <a href="{{ ChartUsUrl }}">{{ ChartUsDate }}</a>

@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\ChartsRankingService;
+use App\Services\ChartsRankingGlobalService;
 
-class ChartsRankingServiceProvider extends ServiceProvider
+class ChartsRankingGlobalServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class ChartsRankingServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\ChartsRankingService', function($app) {
-            return new ChartsRankingService();
+        $this->app->bind('Services\ChartsRankingGlobalService', function($app) {
+            return new ChartsRankingGlobalService();
         });
     }
 }

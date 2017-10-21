@@ -10,7 +10,7 @@
             {% for Rank in GameRanking %}
                 <tr>
                     <td>
-                        <a href="{{ route('charts.date', {'date': Rank.chart_date}) }}">{{ Rank.chart_date|date('jS M Y') }}</a>
+                        <a href="{{ route('charts.date.show', {'countryCode': 'eu', 'date': Rank.chart_date}) }}">{{ Rank.chart_date|date('jS M Y') }}</a>
                     </td>
                     <td style="text-align: center;">{{ Rank.position }}</td>
                     <td style="text-align: left;">

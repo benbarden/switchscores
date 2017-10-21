@@ -4,35 +4,37 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
+use App\ChartsRankingGlobal;
+
 class ChartsRankingController extends \App\Http\Controllers\BaseController
 {
     const MAX_RANK_COUNT = 15;
 
-    const COUNTRY_EU = 'eu';
-    const COUNTRY_US = 'us';
-
-    public function showList($country, $date)
+    public function showList($countryCode, $date)
     {
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Charts - Rankings';
 
-        switch ($country) {
-            case self::COUNTRY_EU:
-                $chartRankings = \App\ChartsRanking::where('chart_date', $date)->orderBy('position', 'asc')->get();
+        $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
+        /* @var $chartsRankingGlobalService \App\Services\ChartsRankingGlobalService */
+
+        switch ($countryCode) {
+            case ChartsRankingGlobal::COUNTRY_EU:
                 $countryDesc = "Europe";
                 break;
-            case self::COUNTRY_US:
-                $chartRankings = \App\ChartsRankingUs::where('chart_date', $date)->orderBy('position', 'asc')->get();
+            case ChartsRankingGlobal::COUNTRY_US:
                 $countryDesc = "US";
                 break;
             default:
                 abort(404);
         }
 
+        $chartRankings = $chartsRankingGlobalService->getByCountryAndDate($countryCode, $date);
+
         $bindings['PanelTitle'] = 'Charts: Rankings for '.$date.' - '.$countryDesc;
 
-        $bindings['CountryCode'] = $country;
+        $bindings['CountryCode'] = $countryCode;
         $bindings['CountryDesc'] = $countryDesc;
         $bindings['ChartDate'] = $date;
         $bindings['ChartRankings'] = $chartRankings;
@@ -40,7 +42,7 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
         return view('admin.charts.ranking.list', $bindings);
     }
 
-    public function add($country, $date)
+    public function add($countryCode, $date)
     {
         $request = request();
         if ($request->isMethod('post')) {
@@ -48,35 +50,27 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
             if ($uniqueCount != self::MAX_RANK_COUNT) {
                 //return redirect('admin.charts.ranking-eu.add')->withErrors($validator);
             }
-            //exit(var_export($request->ranking_games, true));
+
             $position = 1;
             foreach ($request->ranking_games as $key => $val) {
                 $rankData = [
+                    'country_code' => $countryCode,
                     'chart_date' => $date,
                     'position' => $position,
                     'game_id' => $val
                 ];
-                switch ($country) {
-                    case self::COUNTRY_EU:
-                        \App\ChartsRanking::create($rankData);
-                        break;
-                    case self::COUNTRY_US:
-                        \App\ChartsRankingUs::create($rankData);
-                        break;
-                    default:
-                        abort(404);
-                }
+                ChartsRankingGlobal::create($rankData);
                 $position++;
             }
 
             // Set availability to Y for this country
             $chartsDate = \App\ChartsDate::where('chart_date', $date)->first();
             if ($chartsDate) {
-                switch ($country) {
-                    case self::COUNTRY_EU:
+                switch ($countryCode) {
+                    case ChartsRankingGlobal::COUNTRY_EU:
                         $chartsDate->stats_europe = 'Y';
                         break;
-                    case self::COUNTRY_US:
+                    case ChartsRankingGlobal::COUNTRY_US:
                         $chartsDate->stats_us = 'Y';
                         break;
                     default:
@@ -85,21 +79,21 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
                 $chartsDate->save();
             }
 
-            return redirect(route('admin.charts.ranking.list', ['country' => $country, 'date' => $date]));
+            return redirect(route('admin.charts.ranking.list', ['country' => $countryCode, 'date' => $date]));
         }
 
         $bindings = array();
 
         $bindings['ChartDate'] = $date;
 
-        $bindings['CountryCode'] = $country;
+        $bindings['CountryCode'] = $countryCode;
 
-        switch ($country) {
-            case self::COUNTRY_EU:
+        switch ($countryCode) {
+            case ChartsRankingGlobal::COUNTRY_EU:
                 $gamesList = \App\Game::where('upcoming', 0)->orderBy('title', 'asc')->get();
                 $countryDesc = "Europe";
                 break;
-            case self::COUNTRY_US:
+            case ChartsRankingGlobal::COUNTRY_US:
                 // For US charts, get all games as some upcoming games may be out in the US
                 $gamesList = \App\Game::orderBy('title', 'asc')->get();
                 $countryDesc = "US";
