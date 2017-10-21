@@ -31,4 +31,19 @@
     <p>No charts recorded on this date.</p>
 {% endif %}
 
+{% if ChartDateNext %}
+    {% set ChartUrl = route(RegionRoute, {'date': ChartDateNext.chart_date}) %}
+    {% set ChartDate = ChartDateNext.chart_date|date('jS M Y') %}
+    <div class="pull-right">
+        <a href="{{ ChartUrl }}">Next: {{ ChartDate }} &gt;&gt;&gt;</a>
+    </div>
+{% endif %}
+{% if ChartDatePrev %}
+    {% set ChartUrl = route(RegionRoute, {'date': ChartDatePrev.chart_date}) %}
+    {% set ChartDate = ChartDatePrev.chart_date|date('jS M Y') %}
+    <div class="pull-left">
+        <a href="{{ ChartUrl }}">&lt;&lt;&lt; Previous: {{ ChartDate }}</a>
+    </div>
+{% endif %}
+
 {% endblock page_body %}

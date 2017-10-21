@@ -28,18 +28,23 @@ class ChartsController extends BaseController
 
         $bindings = array();
 
-        $chartsRankingService = resolve('Services\ChartsRankingService');
+        $chartsRankingEuService = resolve('Services\ChartsRankingService');
         $chartsRankingUsService = resolve('Services\ChartsRankingUsService');
 
         if ($region == 'US') {
-            $gamesList = $chartsRankingUsService->getByDate($date);
+            $chartsRankingService = $chartsRankingUsService;
             $title = 'Charts - US';
             $regionText = 'US';
+            $regionRoute = 'charts.us.date';
         } else {
-            $gamesList = $chartsRankingService->getByDate($date);
+            $chartsRankingService = $chartsRankingEuService;
             $title = 'Charts - Europe';
             $regionText = 'European';
+            $regionPath = 'eu';
+            $regionRoute = 'charts.date';
         }
+
+        $gamesList = $chartsRankingService->getByDate($date);
 
         if (count($gamesList) == 0) {
             abort(404);
@@ -55,6 +60,18 @@ class ChartsController extends BaseController
         $bindings['RegionText'] = $regionText;
         $bindings['ChartDate'] = $date;
         $bindings['GamesList'] = $gamesList;
+        $bindings['RegionRoute'] = $regionRoute; // required for prev/next links
+
+        // Next/Previous links
+        $chartsDateService = resolve('Services\ChartsDateService');
+        $dateNext = $chartsDateService->getNext($region, $date);
+        $datePrev = $chartsDateService->getPrevious($region, $date);
+        if ($dateNext) {
+            $bindings['ChartDateNext'] = $dateNext;
+        }
+        if ($datePrev) {
+            $bindings['ChartDatePrev'] = $datePrev;
+        }
 
         return $bindings;
     }
