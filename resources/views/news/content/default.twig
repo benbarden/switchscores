@@ -9,6 +9,22 @@
         <p>
             <small>Published: {{ NewsItem.created_at|date('jS M Y H:i') }}</small>
         </p>
+        <div class="row">
+            {% if NewsNext %}
+                <div class="pull-right col-md-5">
+                    <small>
+                        <a href="{{ NewsNext.url }}">Next: {{ NewsNext.title }} &gt;&gt;&gt;</a>
+                    </small>
+                </div>
+            {% endif %}
+            {% if NewsPrev %}
+                <div class="pull-left col-md-5">
+                    <small>
+                        <a href="{{ NewsPrev.url }}">&lt;&lt;&lt; Previous: {{ NewsPrev.title }}</a>
+                    </small>
+                </div>
+            {% endif %}
+        </div>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         {% include 'news/sidebar/news-game-details.twig' %}

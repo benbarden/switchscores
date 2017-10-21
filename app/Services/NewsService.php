@@ -79,4 +79,20 @@ class NewsService
             ->first();
         return $news;
     }
+
+    public function getNext(News $news)
+    {
+        $news = News::where('created_at', '>', $news->created_at)
+            ->orderBy('created_at', 'ASC')
+            ->first();
+        return $news;
+    }
+
+    public function getPrevious(News $news)
+    {
+        $news = News::where('created_at', '<', $news->created_at)
+            ->orderBy('created_at', 'DESC')
+            ->first();
+        return $news;
+    }
 }
