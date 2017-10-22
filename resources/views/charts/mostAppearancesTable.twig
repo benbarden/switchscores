@@ -1,0 +1,16 @@
+<table class="table table-striped table-condensed table-responsive">
+    <tr>
+        <th style="text-align: left;">Title</th>
+        <th style="text-align: center;">Appearances</th>
+    </tr>
+    {% for item in GamesList %}
+        <tr>
+            <td style="text-align: left;">
+                <a href="{{ route('game.show', {'id': item.game_id, 'title': item.link_title}) }}">{{ item.title }}</a>
+            </td>
+            <td style="text-align: center;">
+                {{ item.count }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

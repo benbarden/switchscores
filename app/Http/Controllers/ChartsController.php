@@ -81,10 +81,19 @@ class ChartsController extends BaseController
     {
         $bindings = array();
 
-        $bindings['GamesList'] = \DB::select("
+        $bindings['GamesListEu'] = \DB::select("
             SELECT cr.game_id, g.title, g.link_title, count(*) AS count
-            FROM charts_rankings cr
+            FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
+            WHERE cr.country_code = 'eu'
+            GROUP BY cr.game_id ORDER BY count(*) DESC
+        ");
+
+        $bindings['GamesListUs'] = \DB::select("
+            SELECT cr.game_id, g.title, g.link_title, count(*) AS count
+            FROM charts_rankings_global cr
+            JOIN games g ON cr.game_id = g.id
+            WHERE cr.country_code = 'us'
             GROUP BY cr.game_id ORDER BY count(*) DESC
         ");
 
@@ -119,9 +128,10 @@ class ChartsController extends BaseController
 
         $bindings['GamesList'] = \DB::select("
             SELECT cr.game_id, g.title, g.link_title, count(*) AS count
-            FROM charts_rankings cr
+            FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
-            WHERE cr.position = ?
+            WHERE cr.country_code = 'eu'
+            AND cr.position = ?
             GROUP BY cr.game_id ORDER BY count(*) DESC
         ", array($position));
 
