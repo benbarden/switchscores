@@ -432,6 +432,7 @@ class GameService
         $gameList = Game::whereHas('gameGenres', function($query) use ($genreId) {
             $query->where('genre_id', '=', $genreId);
         })
+            ->where('upcoming', '0')
             ->orderBy('title', 'asc')
             ->get();
 
