@@ -81,6 +81,11 @@ class GamesController extends \App\Http\Controllers\BaseController
     {
         $request = request();
 
+        $genreService = resolve('Services\GenreService');
+        /* @var $genreService \App\Services\GenreService */
+        $gameGenreService = resolve('Services\GameGenreService');
+        /* @var $gameGenreService \App\Services\GameGenreService */
+
         if ($request->isMethod('post')) {
 
             $this->validate($request, $this->validationRules);
@@ -90,6 +95,24 @@ class GamesController extends \App\Http\Controllers\BaseController
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
                 $request->developer, $request->publisher, $request->amazon_uk_link
             );
+
+            // Update genres
+            $gameGenres = [];
+            $gameGenreItemList = $request->genre_item;
+            if ($gameGenreItemList) {
+                foreach ($gameGenreItemList as $genreId => $value) {
+                    $gameGenres[] = $genreId;
+                }
+            }
+
+            // As this is a new game, there are no genres to delete
+            //$gameGenreService->deleteGameGenres($gameId);
+            $gameId = $game->id;
+            if (count($gameGenres) > 0) {
+                $gameGenreService->createGameGenreList($gameId, $gameGenres);
+            }
+
+            // Done
 
             // Trigger event
             event(new GameCreated($game));
@@ -104,7 +127,6 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
-        $genreService = resolve('Services\GenreService');
         $bindings['GenreList'] = $genreService->getAll();
 
         return view('admin.games.add', $bindings);
