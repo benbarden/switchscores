@@ -93,7 +93,6 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
                 $countryDesc = "Europe";
                 break;
             case ChartsRankingGlobal::COUNTRY_US:
-                // For US charts, get all games as some upcoming games may be out in the US
                 $countryDesc = "US";
                 break;
             default:
