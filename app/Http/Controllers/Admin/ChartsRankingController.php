@@ -90,17 +90,19 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
 
         switch ($countryCode) {
             case ChartsRankingGlobal::COUNTRY_EU:
-                $gamesList = \App\Game::where('upcoming', 0)->orderBy('title', 'asc')->get();
                 $countryDesc = "Europe";
                 break;
             case ChartsRankingGlobal::COUNTRY_US:
                 // For US charts, get all games as some upcoming games may be out in the US
-                $gamesList = \App\Game::orderBy('title', 'asc')->get();
                 $countryDesc = "US";
                 break;
             default:
                 abort(404);
         }
+
+        // Now that it's possible for preorders to show in the charts,
+        // we have to show all games in the dropdowns
+        $gamesList = \App\Game::orderBy('title', 'asc')->get();
 
         $bindings['TopTitle'] = 'Admin - Charts - Add ranking ('.$countryDesc.')';
         $bindings['PanelTitle'] = 'Add rankings - '.$date.' - '.$countryDesc;
