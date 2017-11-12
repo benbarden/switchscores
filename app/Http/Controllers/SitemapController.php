@@ -7,30 +7,56 @@ use App\Services\NewsService;
 
 class SitemapController extends BaseController
 {
+    public function getTimestampNow()
+    {
+        $now = new \DateTime('now');
+        $timestamp = $now->format('c');
+        return $timestamp;
+    }
+
     public function show()
     {
         $bindings = array();
-
-        $now = new \DateTime('now');
-        $timestamp = $now->format('c');
+        $timestamp = $this->getTimestampNow();
         $bindings['TimestampNow'] = $timestamp;
 
-        $sitePages = array();
-        $sitePages[] = array('url' => route('welcome'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '1.0');
-        $sitePages[] = array('url' => route('games.list.released'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('games.list.upcoming'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        return response()->view('sitemap.index', $bindings)->header('Content-Type', 'text/xml');
+    }
 
-        $sitePages[] = array('url' => route('reviews.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('reviews.topRatedAllTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('reviews.gamesNeedingReviews'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+    public function site()
+    {
+        $bindings = array();
+        $timestamp = $this->getTimestampNow();
+        $bindings['TimestampNow'] = $timestamp;
 
-        $sitePages[] = array('url' => route('charts.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages = array();
+        $sitemapPages[] = array('url' => route('welcome'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '1.0');
+        $sitemapPages[] = array('url' => route('news.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        $sitemapPages[] = array('url' => route('games.list.released'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('games.list.upcoming'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+
+        $sitemapPages[] = array('url' => route('reviews.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('reviews.topRatedAllTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('reviews.gamesNeedingReviews'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+
+        $bindings['SitemapPages'] = $sitemapPages;
+
+        return response()->view('sitemap.standard', $bindings)->header('Content-Type', 'text/xml');
+    }
+
+    public function charts()
+    {
+        $bindings = array();
+        $timestamp = $this->getTimestampNow();
+        $bindings['TimestampNow'] = $timestamp;
+
+        $sitemapPages[] = array('url' => route('charts.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
 
         $chartsDateService = resolve('Services\ChartsDateService');
         $chartDatesEu = $chartsDateService->getDateList('eu');
         $chartDatesUs = $chartsDateService->getDateList('us');
         foreach ($chartDatesEu as $chartDate) {
-            $sitePages[] = array(
+            $sitemapPages[] = array(
                 'url' => route('charts.date.show', ['countryCode' => 'eu', 'date' => $chartDate->chart_date]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
@@ -38,7 +64,7 @@ class SitemapController extends BaseController
             );
         }
         foreach ($chartDatesUs as $chartDate) {
-            $sitePages[] = array(
+            $sitemapPages[] = array(
                 'url' => route('charts.date.show', ['countryCode' => 'us', 'date' => $chartDate->chart_date]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
@@ -46,13 +72,52 @@ class SitemapController extends BaseController
             );
         }
 
-        $sitePages[] = array('url' => route('charts.mostAppearances'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitePages[] = array('url' => route('charts.gamesAtPositionLanding'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('charts.mostAppearances'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('charts.gamesAtPositionLanding'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         for ($chartPos = 1; $chartPos <= 15; $chartPos++) {
-            $sitePages[] = array('url' => route('charts.gamesAtPosition', ['position' => "$chartPos"]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+            $sitemapPages[] = array('url' => route('charts.gamesAtPosition', ['position' => "$chartPos"]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         }
 
-        $bindings['SitePages'] = $sitePages;
+        $bindings['SitemapPages'] = $sitemapPages;
+
+        return response()->view('sitemap.standard', $bindings)->header('Content-Type', 'text/xml');
+    }
+
+    public function genres()
+    {
+        $bindings = array();
+        $timestamp = $this->getTimestampNow();
+        $bindings['TimestampNow'] = $timestamp;
+
+        $sitemapPages = array();
+        $sitemapPages[] = array(
+            'url' => route('games.genres.landing'),
+            'lastmod' => $timestamp,
+            'changefreq' => 'weekly',
+            'priority' => '0.8'
+        );
+
+        $serviceGenre = resolve('Services\GenreService');
+        $genreList = $serviceGenre->getAll();
+        foreach ($genreList as $genre) {
+            $sitemapPages[] = array(
+                'url' => route('games.genres.item', ['linkTitle' => $genre->link_title]),
+                'lastmod' => $timestamp,
+                'changefreq' => 'weekly',
+                'priority' => '0.8'
+            );
+        }
+
+        $bindings['SitemapPages'] = $sitemapPages;
+
+        return response()->view('sitemap.standard', $bindings)->header('Content-Type', 'text/xml');
+    }
+
+    public function games()
+    {
+        $bindings = array();
+        $timestamp = $this->getTimestampNow();
+        $bindings['TimestampNow'] = $timestamp;
 
         $gameService = resolve('Services\GameService');
         /* @var $gameService GameService */
@@ -60,12 +125,21 @@ class SitemapController extends BaseController
 
         $bindings['GameList'] = $gameList;
 
+        return response()->view('sitemap.games', $bindings)->header('Content-Type', 'text/xml');
+    }
+
+    public function news()
+    {
+        $bindings = array();
+        $timestamp = $this->getTimestampNow();
+        $bindings['TimestampNow'] = $timestamp;
+
         $newsService = resolve('Services\NewsService');
         /* @var $newsService NewsService */
         $newsList = $newsService->getAll();
 
         $bindings['NewsList'] = $newsList;
 
-        return response()->view('sitemap.index', $bindings)->header('Content-Type', 'text/xml');
+        return response()->view('sitemap.news', $bindings)->header('Content-Type', 'text/xml');
     }
 }

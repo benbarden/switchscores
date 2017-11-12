@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for item in SitePages %}
-    <url>
-        <loc>{{ item.url }}</loc>
-        <lastmod>{{ item.lastmod }}</lastmod>
-        <changefreq>{{ item.changefreq }}</changefreq>
-        <priority>{{ item.priority }}</priority>
-    </url>
-    {% endfor %}
-    {% for item in GameList %}
-    <url>
-        <loc>{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}</loc>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>{{ route('sitemap.site') }}</loc>
         <lastmod>{{ TimestampNow }}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    {% endfor %}
-    {% for item in NewsList %}
-        <url>
-            <loc>{{ url('/') }}{{ item.url }}</loc>
-            <lastmod>{{ item.updated_at|date('c') }}</lastmod>
-            <changefreq>weekly</changefreq>
-            <priority>0.6</priority>
-        </url>
-    {% endfor %}
-</urlset>
+    </sitemap>
+    <sitemap>
+        <loc>{{ route('sitemap.charts') }}</loc>
+        <lastmod>{{ TimestampNow }}</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>{{ route('sitemap.genres') }}</loc>
+        <lastmod>{{ TimestampNow }}</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>{{ route('sitemap.games') }}</loc>
+        <lastmod>{{ TimestampNow }}</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>{{ route('sitemap.news') }}</loc>
+        <lastmod>{{ TimestampNow }}</lastmod>
+    </sitemap>
+</sitemapindex>

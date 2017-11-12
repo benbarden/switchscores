@@ -11,9 +11,16 @@
 |
 */
 
+// Front page
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
+// Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
+Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
+Route::get('/sitemap/charts', 'SitemapController@charts')->name('sitemap.charts');
+Route::get('/sitemap/genres', 'SitemapController@genres')->name('sitemap.genres');
+Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
+Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 
 // Old pages - redirects
 Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
