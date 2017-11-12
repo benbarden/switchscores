@@ -1,0 +1,16 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    The below is a list of custom tools and processes to update parts of the WOS website.
+    Clicking on one of the links will provide some additional information on the tool you select.
+    It won't run the tool until you click the next button.
+    Heavy tools or destructive operations will be clearly signposted.
+</p>
+
+<ul>
+    <li><a href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Game Ranks</a></li>
+</ul>
+
+{% endblock page_inner %}

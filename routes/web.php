@@ -93,6 +93,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
     Route::post('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
 
+    // Tools
+    Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
+    Route::get('/admin/tools/update-game-ranks/landing', 'Admin\ToolsController@updateGameRanksLanding')->name('admin.tools.updateGameRanks.landing');
+    Route::get('/admin/tools/update-game-ranks/process', 'Admin\ToolsController@updateGameRanksProcess')->name('admin.tools.updateGameRanks.process');
+
 });
 
 Auth::routes();

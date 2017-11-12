@@ -1,0 +1,20 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool will update the Rank field for each game.
+</p>
+<p>
+    Originally, it ran automatically after adding a review, but it was taking too long to complete.
+    Running it on its own should be fairly safe as it is not a particularly heavy script, although it
+    does need to process as many games as there are on the Top Rated list.
+</p>
+<p>
+    The process needs to be run after adding reviews. If several reviews are added, run this process
+    once you have finished adding reviews.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.updateGameRanks.process') }}">Start process</a>
+
+{% endblock page_inner %}
