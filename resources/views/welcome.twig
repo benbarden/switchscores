@@ -9,6 +9,19 @@
     </div>
     #}
     <div class="col-xs-12 col-sm-4 col-md-4">
+        {% if NewsList.count %}
+            <h2>
+                Latest news
+                <span class="h4">(<a href="{{ route('news.landing') }}">view all</a>)</span>
+            </h2>
+            {% for item in NewsList %}
+                <p>
+                    <strong>{{ item.created_at|date('jS M') }}</strong>:
+                    <a href="{{ item.url }}">{{ item.title }}</a>
+                </p>
+            {% endfor %}
+        {% endif %}
+        {#
         {% if ActivityFeedList.count %}
             <h2>
                 Latest updates
@@ -26,6 +39,7 @@
                 </p>
             {% endfor %}
         {% endif %}
+        #}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>

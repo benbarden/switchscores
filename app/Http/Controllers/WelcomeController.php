@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ActivityFeedService;
+use App\Services\NewsService;
 use Carbon\Carbon;
 
 class WelcomeController extends BaseController
@@ -11,14 +12,15 @@ class WelcomeController extends BaseController
     {
         $bindings = array();
 
-        // Homepage content
-        //$now = Carbon::now();
-        //$newReleases = $this->serviceGame->getListReleasedByMonth($now->month);
-        //$upcomingReleases = $this->serviceGame->getListUpcomingByMonth($now->month);
-
-        $serviceActivityFeed = resolve('Services\ActivityFeedService');
         /* @var $serviceActivityFeed ActivityFeedService */
+        /*
+        $serviceActivityFeed = resolve('Services\ActivityFeedService');
         $bindings['ActivityFeedList'] = $serviceActivityFeed->getAll();
+        */
+
+        $newsService = resolve('Services\NewsService');
+        /* @var $newsService NewsService */
+        $bindings['NewsList'] = $newsService->getAllWithLimit(10);
 
         $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 10);
         $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 10);
