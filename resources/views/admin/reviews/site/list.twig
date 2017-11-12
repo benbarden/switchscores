@@ -7,25 +7,29 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th class="text-center">Id</th>
                 <th>Name</th>
                 <th>Url</th>
-                <th>Active</th>
-                <th>Rating scale</th>
+                <th class="text-center">Active</th>
+                <th class="text-center">Rating scale</th>
             </tr>
         </thead>
         <tbody>
             {% for item in ReviewSites %}
                 <tr>
+                    <td class="text-center">
+                        {{ item.id }}
+                    </td>
                     <td>
                         {{ item.name }}
                     </td>
                     <td>
                         <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
                     </td>
-                    <td>
+                    <td class="text-center">
                         {{ item.active }}
                     </td>
-                    <td>
+                    <td class="text-center">
                         {{ item.rating_scale }}
                     </td>
                 </tr>
