@@ -1,4 +1,4 @@
-{% if GameImages %}
+{% if GameImages or VideoUrl %}
     {# http://fotorama.io/customize/ #}
     <link href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
@@ -10,8 +10,13 @@
          data-minheight="75"
          data-maxheight="100%"
          data-nav="thumbs">
+        {% if VideoUrl %}
+        <a href="{{ VideoUrl }}">{{ GameTitle }}</a>
+        {% endif %}
+        {% if GameImages %}
         {% for image in GameImages %}
             <img src="{{ MediaFolder }}{{ image.url }}" width="150" height="125">
         {% endfor %}
+        {% endif %}
     </div>
 {% endif %}

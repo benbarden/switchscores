@@ -16,6 +16,7 @@
         formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
+        formVals['video_url'] = "{{ GameData.video_url }}";
 
     } else {
 
@@ -32,6 +33,7 @@
         formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
+        formVals['video_url'] = "{{ old('video_url') }}";
 
     }
 
@@ -48,6 +50,7 @@
         $('#upcoming').attr('checked', true);
     }
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
+    $('#video_url').val(formVals['video_url']);
 
     // Genres
     {% if GameGenreList %}

@@ -42,7 +42,7 @@
         {% endif %}
     </div>
     <div class="col-sm-12 col-md-7">
-        {% include 'games/images.twig' with {'MediaFolder': GameData.media_folder, 'GameImages': GameData.images} %}
+        {% include 'games/images.twig' with {'GameTitle': GameData.title, 'VideoUrl': GameData.video_url, 'MediaFolder': GameData.media_folder, 'GameImages': GameData.images} %}
     </div>
 </div>
 <div class="row">

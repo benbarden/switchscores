@@ -93,7 +93,8 @@ class GamesController extends \App\Http\Controllers\BaseController
             $game = $this->serviceGame->create(
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->amazon_uk_link
+                $request->developer, $request->publisher, $request->amazon_uk_link,
+                $request->video_url
             );
 
             // Update genres
@@ -156,7 +157,8 @@ class GamesController extends \App\Http\Controllers\BaseController
                 $gameData,
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->amazon_uk_link
+                $request->developer, $request->publisher, $request->amazon_uk_link,
+                $request->video_url
             );
 
             // Update genres

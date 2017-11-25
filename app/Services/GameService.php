@@ -16,7 +16,7 @@ class GameService
 
     public function create(
         $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher, $amazonUkLink
+        $overview, $developer, $publisher, $amazonUkLink, $videoUrl
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -34,12 +34,13 @@ class GameService
             'developer' => $developer,
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
+            'video_url' => $videoUrl,
         ]);
     }
 
     public function edit(
         Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher, $amazonUkLink
+        $overview, $developer, $publisher, $amazonUkLink, $videoUrl
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -56,6 +57,7 @@ class GameService
             'publisher' => $publisher,
             'developer' => $developer,
             'amazon_uk_link' => $amazonUkLink,
+            'video_url' => $videoUrl,
         ];
 
         $game->fill($values);
