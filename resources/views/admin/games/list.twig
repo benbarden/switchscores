@@ -2,17 +2,29 @@
 
 {% block page_inner %}
 
-<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
-<div class="pull-right">
-    <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
-    <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
-    <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">Upcoming</a>
-    <a id="admin-nav-upcoming-q" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-q'}) }}">Qn</a>
-    <a id="admin-nav-upcoming-x" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-x'}) }}">XX</a>
-    <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
-    <a id="admin-nav-no-genre" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-genre'}) }}">No Genre</a>
-    <a id="admin-nav-no-dev-or-pub" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-dev-or-pub'}) }}">No Dev/Pub</a>
-    <a id="admin-nav-no-amazon-uk-link" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-amazon-uk-link'}) }}">No Amazon UK link</a>
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+    </div>
+    <div class="col-xs-12 col-sm-9">
+        <div class="pull-right">
+            <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
+            <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
+            <a id="admin-nav-no-genre" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-genre'}) }}">No Genre</a>
+            <a id="admin-nav-no-dev-or-pub" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-dev-or-pub'}) }}">No Dev/Pub</a>
+            <a id="admin-nav-no-amazon-uk-link" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-amazon-uk-link'}) }}">No Amazon link</a>
+        </div>
+        <br><br>
+        <div class="pull-right">
+            <strong>Upcoming:</strong>
+            <a id="admin-nav-upcoming-2017-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-dates'}) }}">2017 with dates</a>
+            <a id="admin-nav-upcoming-2017-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-quarters'}) }}">2017 with quarters</a>
+            <a id="admin-nav-upcoming-2017-sometime" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-sometime'}) }}">2017 sometime</a>
+            <a id="admin-nav-upcoming-2018-and-beyond" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-and-beyond'}) }}">2018 and beyond</a>
+            <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
+            <br>
+        </div>
+    </div>
 </div>
 
 <hr>

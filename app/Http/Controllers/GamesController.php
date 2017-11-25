@@ -28,24 +28,15 @@ class GamesController extends BaseController
         $upcoming2017WithDates = $this->serviceGame->getAllUpcomingYearWithDates(2017);
         $upcoming2017WithQuarter = $this->serviceGame->getAllUpcomingYearQuarters(2017);
         $upcoming2017NoInfo = $this->serviceGame->getAllUpcomingYearXs(2017);
-        $upcomingTBA = $this->serviceGame->getAllUpcomingTBA();
         $upcomingFuture = $this->serviceGame->getAllUpcomingFuture(2017);
-
-        // Get anything not already displayed
-        /* @var $upcomingFuture Collection */
-        /*
-        $upcomingFuture = $this->serviceGame->getListUpcoming();
-        $upcomingFuture = $upcomingFuture->whereNotIn(
-            'upcoming_date', ['TBA', '2017-XX', '2017-Q3', '2017-Q3/Q4', '2017-Q4']
-        );
-        */
+        $upcomingTBA = $this->serviceGame->getAllUpcomingTBA();
 
         $bindings['Upcoming2017WithDates'] = $upcoming2017WithDates;
         $bindings['Upcoming2017WithQuarter'] = $upcoming2017WithQuarter;
         $bindings['Upcoming2017NoInfo'] = $upcoming2017NoInfo;
-        $bindings['UpcomingTBA'] = $upcomingTBA;
         $bindings['UpcomingFuture'] = $upcomingFuture;
-        $bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
+        $bindings['UpcomingTBA'] = $upcomingTBA;
+        //$bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';

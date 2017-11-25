@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th style="text-align: left;">Title</th>
+                <th class="text-center">Media</th>
                 <th style="text-align: left;">Release date<br>(Europe)</th>
                 <th style="text-align: right;">eShop price</th>
             </tr>
@@ -14,10 +15,13 @@
                         <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
                             {{ item.title }}
                         </a>
-                        &nbsp;
+                    </td>
+                    <td class="text-center">
+                        {% if item.video_url %}
+                            <span class="glyphicon glyphicon-facetime-video" aria-hidden="true" title="Game has a video"></span>
+                        {% endif %}
                         {% if item.image_count > 0 %}
                             <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
-                            &nbsp;
                         {% endif %}
                     </td>
                     <td style="text-align: left;">
