@@ -6,6 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReviewSite extends Model
 {
+    const SITE_WOS = 1;
+    const SITE_SWITCH_PLAYER = 2;
+    const SITE_IGN = 3;
+    const SITE_NINTENDO_LIFE = 4;
+    const SITE_GAMESPEW = 5;
+    const SITE_GAMESPOT = 6;
+    const SITE_NINTENDO_WORLD_REPORT = 8;
+    const SITE_CUBED3 = 9;
+    const SITE_VIDEO_CHUMS = 11;
+    const SITE_GOD_IS_A_GEEK = 12;
+    const SITE_PURE_NINTENDO = 13;
+    const SITE_DIGITALLY_DOWNLOADED = 14;
+    const SITE_DESTRUCTOID = 15;
+    const SITE_NINTENDO_INSIDER = 17;
+
     /**
      * @var string
      */

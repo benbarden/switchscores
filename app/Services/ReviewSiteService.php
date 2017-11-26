@@ -23,6 +23,15 @@ class ReviewSiteService
         return ReviewSite::find($id);
     }
 
+    public function getByDomain($domainUrl)
+    {
+        $reviewSite = ReviewSite::
+            where('url', 'http://'.$domainUrl)
+            ->orWhere('url', 'https://'.$domainUrl)
+            ->first();
+        return $reviewSite;
+    }
+
     public function getAll()
     {
         $reviewSites = ReviewSite::orderBy('name', 'asc')->get();

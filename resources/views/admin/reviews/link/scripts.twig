@@ -7,8 +7,8 @@
 
         // This is used when editing existing games.
         formVals['game_id'] = "{{ ReviewLinkData.game_id }}";
-        formVals['site_id'] = "{{ ReviewLinkData.site_id }}";
         formVals['url'] = "{{ ReviewLinkData.url }}";
+        formVals['site_id'] = "{{ ReviewLinkData.site_id }}";
         formVals['rating_original'] = "{{ ReviewLinkData.rating_original }}";
         formVals['review_date'] = "{{ ReviewLinkData.review_date }}"
 
@@ -17,19 +17,35 @@
         // This is used for new games.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
         formVals['game_id'] = "{{ old('game_id') }}";
-        formVals['site_id'] = "{{ old('site_id') }}";
         formVals['url'] = "{{ old('url') }}";
+        formVals['site_id'] = "{{ old('site_id') }}";
         formVals['rating_original'] = "{{ old('rating_original') }}";
         formVals['review_date'] = "{{ old('review_date') }}"
 
     }
 
     $('#game_id').val(formVals['game_id']);
-    $('#site_id').val(formVals['site_id']);
     $('#url').val(formVals['url']);
+    $('#site_id').val(formVals['site_id']);
     $('#rating_original').val(formVals['rating_original']);
     $('#review_date').val(formVals['review_date']);
 
     $('#game_id').select2();
+
+    $('#url').on('blur', function() {
+        reviewUrl = $(this).val();
+        if (reviewUrl == '') {
+            $('#site_id').val(0);
+            return false;
+        }
+
+        //console.log(reviewUrl);
+
+        $.getJSON('/api/review/site', {reviewUrl: reviewUrl}, function(data) {
+            siteId = data.siteId;
+            siteName = data.siteName;
+            $('#site_id').val(siteId);
+        });
+    });
 
 </script>
