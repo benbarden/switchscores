@@ -36,7 +36,7 @@ class GamesController extends BaseController
         $bindings['Upcoming2017NoInfo'] = $upcoming2017NoInfo;
         $bindings['UpcomingFuture'] = $upcomingFuture;
         $bindings['UpcomingTBA'] = $upcomingTBA;
-        //$bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
+        $bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
