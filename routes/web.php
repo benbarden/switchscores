@@ -118,6 +118,6 @@ Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGam
 // **** NOTE: THESE NEED TO BE LAST! **** //
 
 /* Blog redirects */
-Route::get('/tag/{tag}/', 'BlogController@redirectTag')->name('blog.redirectTag');
-Route::get('/category/{tag}/', 'BlogController@redirectCategory')->name('blog.redirectCategory');
-Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->name('blog.redirectPost');
+//Route::get('/tag/{tag}/', 'BlogController@redirectTag')->name('blog.redirectTag');
+//Route::get('/category/{tag}/', 'BlogController@redirectCategory')->name('blog.redirectCategory');
+//Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->name('blog.redirectPost');
