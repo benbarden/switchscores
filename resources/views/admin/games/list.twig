@@ -8,6 +8,7 @@
     </div>
     <div class="col-xs-12 col-sm-9">
         <div class="pull-right">
+            <strong>Filters:</strong>
             <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
             <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
             <a id="admin-nav-no-genre" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-genre'}) }}">No Genre</a>
@@ -17,10 +18,13 @@
         <br><br>
         <div class="pull-right">
             <strong>Upcoming:</strong>
-            <a id="admin-nav-upcoming-2017-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-dates'}) }}">2017 with dates</a>
-            <a id="admin-nav-upcoming-2017-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-quarters'}) }}">2017 with quarters</a>
-            <a id="admin-nav-upcoming-2017-sometime" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-sometime'}) }}">2017 sometime</a>
-            <a id="admin-nav-upcoming-2018-and-beyond" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-and-beyond'}) }}">2018 and beyond</a>
+            <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">All</a>
+            <a id="admin-nav-upcoming-2017-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-dates'}) }}">2017 Dates</a>
+            <a id="admin-nav-upcoming-2017-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-quarters'}) }}">2017 Quarters</a>
+            <a id="admin-nav-upcoming-2018-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-with-dates'}) }}">2018 Dates</a>
+            <a id="admin-nav-upcoming-2018-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-with-quarters'}) }}">2018 Quarters</a>
+            <a id="admin-nav-upcoming-2018-sometime" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-sometime'}) }}">2018 XX</a>
+            <a id="admin-nav-upcoming-beyond" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-beyond'}) }}">Beyond</a>
             <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
             <br>
         </div>

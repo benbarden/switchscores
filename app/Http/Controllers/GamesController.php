@@ -25,17 +25,21 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        $upcoming2017WithDates = $this->serviceGame->getAllUpcomingYearWithDates(2017);
-        $upcoming2017WithQuarter = $this->serviceGame->getAllUpcomingYearQuarters(2017);
-        $upcoming2017NoInfo = $this->serviceGame->getAllUpcomingYearXs(2017);
-        $upcomingFuture = $this->serviceGame->getAllUpcomingFuture(2017);
-        $upcomingTBA = $this->serviceGame->getAllUpcomingTBA();
+        // 2017 - Will be phased out in January
+        $bindings['Upcoming2017WithDates'] = $this->serviceGame->getAllUpcomingYearWithDates(2017);
+        $bindings['Upcoming2017WithQuarter'] = $this->serviceGame->getAllUpcomingYearQuarters(2017);
+        $bindings['Upcoming2017NoInfo'] = $this->serviceGame->getAllUpcomingYearXs(2017);
 
-        $bindings['Upcoming2017WithDates'] = $upcoming2017WithDates;
-        $bindings['Upcoming2017WithQuarter'] = $upcoming2017WithQuarter;
-        $bindings['Upcoming2017NoInfo'] = $upcoming2017NoInfo;
-        $bindings['UpcomingFuture'] = $upcomingFuture;
-        $bindings['UpcomingTBA'] = $upcomingTBA;
+        // Current/Most active year
+        $bindings['Upcoming2018WithDates'] = $this->serviceGame->getAllUpcomingYearWithDates(2018);
+        $bindings['Upcoming2018WithQuarter'] = $this->serviceGame->getAllUpcomingYearQuarters(2018);
+        $bindings['Upcoming2018NoInfo'] = $this->serviceGame->getAllUpcomingYearXs(2018);
+
+        // Longer term / TBA
+        $bindings['UpcomingFuture'] = $this->serviceGame->getAllUpcomingFuture(2018);
+        $bindings['UpcomingTBA'] = $this->serviceGame->getAllUpcomingTBA();
+
+        // Needed for overall total
         $bindings['UpcomingGamesFullList'] = $this->serviceGame->getAllUpcoming();
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';

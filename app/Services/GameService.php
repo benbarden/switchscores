@@ -398,6 +398,7 @@ class GameService
         $gamesList = Game::where('upcoming', 1)
             //->whereNull('release_date')
             ->where('upcoming_date', 'not like', $currentYear.'%')
+            ->where('upcoming_date', 'not like', '2017%') // Temporary workaround
             ->where('upcoming_date', 'not like', 'TBA')
             ->orderBy('upcoming_date', 'asc')
             ->orderBy('title', 'asc')

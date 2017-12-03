@@ -7,7 +7,8 @@
 <div class="row">
     <div class="col-xs-12 col-sm-9">
         <p>
-            The tables below list the Switch games in our database that haven't been released in Europe yet.
+            This page lists the Switch games in our database that are due to be released in Europe,
+            but haven't come out yet.
         </p>
 
         <p>
@@ -23,10 +24,16 @@
         <h2>2017 games, quarter only</h2>
         {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2017WithQuarter} %}
 
-        <h2>2017 games, no firm date</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2017NoInfo} %}
+        <h2>2018 games with release dates</h2>
+        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018WithDates} %}
 
-        <h2>2018 and beyond</h2>
+        <h2>2018 games, quarter only</h2>
+        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018WithQuarter} %}
+
+        <h2>2018 games, no firm date</h2>
+        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018NoInfo} %}
+
+        <h2>Beyond 2018</h2>
         {% include 'common/tables/upcoming-games.twig' with {'GamesList': UpcomingFuture} %}
 
         <h2>TBA - no date given</h2>
@@ -44,11 +51,19 @@
                 <td class="text-right"><strong>{{ Upcoming2017WithQuarter.count }}</strong></td>
             </tr>
             <tr>
-                <td>2017 sometime</td>
-                <td class="text-right"><strong>{{ Upcoming2017NoInfo.count }}</strong></td>
+                <td>2018 with dates</td>
+                <td class="text-right"><strong>{{ Upcoming2018WithDates.count }}</strong></td>
             </tr>
             <tr>
-                <td>2018 and beyond</td>
+                <td>2018 with quarters</td>
+                <td class="text-right"><strong>{{ Upcoming2018WithQuarter.count }}</strong></td>
+            </tr>
+            <tr>
+                <td>2018 sometime</td>
+                <td class="text-right"><strong>{{ Upcoming2018NoInfo.count }}</strong></td>
+            </tr>
+            <tr>
+                <td>Beyond 2018</td>
                 <td class="text-right"><strong>{{ UpcomingFuture.count }}</strong></td>
             </tr>
             <tr>
