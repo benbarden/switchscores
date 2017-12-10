@@ -105,6 +105,27 @@ class StatsServiceTest extends TestCase
         $serviceStats = new StatsService;
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
 
-        $this->assertEquals(6.8, $reviewAvg);
+        $this->assertEquals(6.82, $reviewAvg);
     }
+
+    public function testReviewAverageTwoDecimalPlaces()
+    {
+        $reviews = new Collection();
+
+        $reviewLinkA = new ReviewLink();
+        $reviewLinkA->rating_normalised = 6.0;
+
+        $reviewLinkB = new ReviewLink();
+        $reviewLinkB->rating_normalised = 6.5;
+
+        $reviews
+            ->push($reviewLinkA)
+            ->push($reviewLinkB);
+
+        $serviceStats = new StatsService;
+        $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
+
+        $this->assertEquals(6.25, $reviewAvg);
+    }
+
 }

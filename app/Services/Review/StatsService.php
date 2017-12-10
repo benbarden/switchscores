@@ -24,7 +24,7 @@ class StatsService
             $sumTotal += $reviewScore;
         }
 
-        $avgScore = round(($sumTotal / $reviewCount), 1);
+        $avgScore = round(($sumTotal / $reviewCount), 2);
 
         return $avgScore;
     }
