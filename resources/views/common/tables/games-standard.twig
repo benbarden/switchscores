@@ -1,5 +1,5 @@
 {% if GamesList %}
-    <table class="table table-striped table-condensed table-responsive data-sortable">
+    <table class="table table-striped data-sortable">
         <thead>
             <tr>
                 <th class="text-center">Rank</th>
@@ -14,7 +14,13 @@
         <tbody>
             {% for item in GamesList %}
                 <tr>
-                    <td class="text-center">{{ item.game_rank }}</td>
+                    <td class="text-center">
+                        {% if item.game_rank %}
+                        {{ item.game_rank }}
+                        {% else %}
+                        &nbsp;
+                        {% endif %}
+                    </td>
                     <td style="text-align: left;">
                         <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
                             {{ item.title }}
@@ -24,6 +30,7 @@
                         {% if item.video_url %}
                             <span class="glyphicon glyphicon-facetime-video" aria-hidden="true" title="Game has a video"></span>
                         {% endif %}
+                        &nbsp;
                         {% if item.image_count > 0 %}
                             <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
                         {% endif %}
@@ -38,6 +45,8 @@
                     <td style="text-align: right;">
                         {% if item.price_eshop %}
                             &pound;{{ item.price_eshop }}
+                        {% else %}
+                            &nbsp;
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
@@ -51,6 +60,9 @@
         </tbody>
     </table>
     {#<p><em>{{ GamesList.count }} games.</em></p>#}
+{% else %}
+    <p>No games to display!</p>
+{% endif %}
 
 {% include 'common/table-sorting.twig' %}
 <script>
@@ -60,10 +72,11 @@
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": {{ GamesTableSort|raw }},
-            "paging": false,
+            "pageLength": 25,
             "columns": [
                 null,
                 null,
+                { "orderable": false },
                 null,
                 null,
                 null,
@@ -72,7 +85,3 @@
         });
     });
 </script>
-
-{% else %}
-    <p>No games to display!</p>
-{% endif %}

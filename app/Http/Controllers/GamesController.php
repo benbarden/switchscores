@@ -13,7 +13,7 @@ class GamesController extends BaseController
         $gamesList = $this->serviceGame->getListReleased();
 
         $bindings['GamesList'] = $gamesList;
-        $bindings['GamesTableSort'] = "[[2, 'desc'], [0, 'desc']]";
+        $bindings['GamesTableSort'] = "[[3, 'desc'], [1, 'asc']]";
 
         $bindings['TopTitle'] = 'Nintendo Switch released games';
         $bindings['PageTitle'] = 'Nintendo Switch games available in Europe';
