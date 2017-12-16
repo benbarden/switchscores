@@ -8,25 +8,27 @@
     </div>
     <div class="col-xs-12 col-sm-9">
         <div class="pull-right">
-            <strong>Filters:</strong>
-            <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.games.list') }}">All</a>
-            <a id="admin-nav-released" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'released'}) }}">Released</a>
-            <a id="admin-nav-no-genre" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-genre'}) }}">No Genre</a>
-            <a id="admin-nav-no-dev-or-pub" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-dev-or-pub'}) }}">No Dev/Pub</a>
-            <a id="admin-nav-no-amazon-uk-link" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'no-amazon-uk-link'}) }}">No Amazon link</a>
-        </div>
-        <br><br>
-        <div class="pull-right">
-            <strong>Upcoming:</strong>
-            <a id="admin-nav-upcoming" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming'}) }}">All</a>
-            <a id="admin-nav-upcoming-2017-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-dates'}) }}">2017 Dates</a>
-            <a id="admin-nav-upcoming-2017-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2017-with-quarters'}) }}">2017 Quarters</a>
-            <a id="admin-nav-upcoming-2018-with-dates" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-with-dates'}) }}">2018 Dates</a>
-            <a id="admin-nav-upcoming-2018-with-quarters" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-with-quarters'}) }}">2018 Quarters</a>
-            <a id="admin-nav-upcoming-2018-sometime" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-2018-sometime'}) }}">2018 XX</a>
-            <a id="admin-nav-upcoming-beyond" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-beyond'}) }}">Beyond</a>
-            <a id="admin-nav-upcoming-tba" class="btn btn-default" href="{{ route('admin.games.list', {'filter': 'upcoming-tba'}) }}">TBA</a>
-            <br>
+            <label for="admin-nav-game-filter">Filters:</label>
+            <select id="admin-nav-game-filter" name="admin-nav-game-filter" class="form-control">
+                <option value="">All games</option>
+                <option value="released">Released games</option>
+                <optgroup label="Missing data">
+                    <option value="no-genre">No genre</option>
+                    <option value="no-dev-or-pub">No developer/publisher</option>
+                    <option value="no-video-url">No video URL</option>
+                    <option value="no-amazon-uk-link">No Amazon UK link</option>
+                </optgroup>
+                <optgroup label="Upcoming games">
+                    <option value="upcoming">All upcoming</option>
+                    <option value="upcoming-2017-with-dates">2017 with dates</option>
+                    <option value="upcoming-2017-with-quarters">2017 with quarters</option>
+                    <option value="upcoming-2018-with-dates">2018 with dates</option>
+                    <option value="upcoming-2018-with-quarters">2018 with quarters</option>
+                    <option value="upcoming-2018-sometime">2018 sometime (XX)</option>
+                    <option value="upcoming-beyond">Beyond 2018</option>
+                    <option value="upcoming-tba">TBA</option>
+                </optgroup>
+            </select>
         </div>
     </div>
 </div>
@@ -83,9 +85,13 @@
     $('#js-btn-add').on('click', function() {
         top.location.href = '{{ route('admin.games.add') }}';
     });
+    $('#admin-nav-game-filter').on('change', function() {
+        selectedGameFilter = $(this).val();
+        top.location.href = '{{ route('admin.games.list')}}' + '/' + selectedGameFilter;
+    });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';
-        $('#admin-nav-' + activeNav).addClass('btn-primary');
+        $('#admin-nav-game-filter').val(activeNav);
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,

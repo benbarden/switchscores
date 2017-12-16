@@ -38,6 +38,24 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $gameList = $this->serviceGame->getAllReleased();
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
+                // Data to be filled in
+                case 'no-genre':
+                    $gameList = $this->serviceGame->getGamesWithoutGenres();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-dev-or-pub':
+                    $gameList = $this->serviceGame->getWithoutDevOrPub();
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
+                    break;
+                case 'no-video-url':
+                    $gameList = $this->serviceGame->getWithoutVideoUrl();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-amazon-uk-link':
+                    $gameList = $this->serviceGame->getWithoutAmazonUkLink();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                // Upcoming
                 case 'upcoming':
                     $gameList = $this->serviceGame->getAllUpcoming();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
@@ -69,18 +87,6 @@ class GamesController extends \App\Http\Controllers\BaseController
                 case 'upcoming-tba':
                     $gameList = $this->serviceGame->getAllUpcomingTBA();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'no-dev-or-pub':
-                    $gameList = $this->serviceGame->getWithoutDevOrPub();
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'no-amazon-uk-link':
-                    $gameList = $this->serviceGame->getWithoutAmazonUkLink();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
-                case 'no-genre':
-                    $gameList = $this->serviceGame->getGamesWithoutGenres();
-                    $jsInitialSort = "[ 0, 'desc']";
                     break;
                 default:
                     abort(404);

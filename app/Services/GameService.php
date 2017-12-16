@@ -427,6 +427,16 @@ class GameService
     }
 
     /**
+     * Used for Admin - Game filters
+     * @return mixed
+     */
+    public function getWithoutVideoUrl()
+    {
+        $gamesList = Game::where('video_url', null)->orderBy('id', 'desc')->get();
+        return $gamesList;
+    }
+
+    /**
      * Used for genre list pages
      * @return mixed
      */
