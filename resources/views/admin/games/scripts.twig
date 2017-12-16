@@ -15,6 +15,7 @@
         formVals['upcoming'] = "{{ GameData.upcoming }}";
         formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['media_folder'] = "{{ GameData.media_folder }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
         formVals['video_url'] = "{{ GameData.video_url }}";
 
@@ -32,6 +33,7 @@
         formVals['upcoming'] = "{{ old('upcoming') }}";
         formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['media_folder'] = "{{ old('media_folder') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
         formVals['video_url'] = "{{ old('video_url') }}";
 
@@ -49,6 +51,7 @@
     if (formVals['upcoming'] == 1) {
         $('#upcoming').attr('checked', true);
     }
+    $('#media_folder').val(formVals['media_folder']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
     $('#video_url').val(formVals['video_url']);
 

@@ -16,7 +16,7 @@ class GameService
 
     public function create(
         $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher, $amazonUkLink, $videoUrl
+        $overview, $developer, $publisher, $mediaFolder, $amazonUkLink, $videoUrl
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -30,8 +30,9 @@ class GameService
             'upcoming' => $isUpcoming,
             'upcoming_date' => $upcomingDate,
             'overview' => $overview,
-            'publisher' => $publisher,
             'developer' => $developer,
+            'publisher' => $publisher,
+            'media_folder' => $mediaFolder,
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
@@ -40,7 +41,7 @@ class GameService
 
     public function edit(
         Game $game, $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
-        $overview, $developer, $publisher, $amazonUkLink, $videoUrl
+        $overview, $developer, $publisher, $mediaFolder, $amazonUkLink, $videoUrl
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
@@ -54,8 +55,9 @@ class GameService
             'upcoming' => $isUpcoming,
             'upcoming_date' => $upcomingDate,
             'overview' => $overview,
-            'publisher' => $publisher,
             'developer' => $developer,
+            'publisher' => $publisher,
+            'media_folder' => $mediaFolder,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
         ];

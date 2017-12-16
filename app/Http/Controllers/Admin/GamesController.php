@@ -18,6 +18,7 @@ class GamesController extends \App\Http\Controllers\BaseController
         'upcoming_date' => 'max:30',
         'developer' => 'max:100',
         'publisher' => 'max:100',
+        'media_folder' => 'max:100',
     ];
 
     public function showList($report = null)
@@ -115,7 +116,7 @@ class GamesController extends \App\Http\Controllers\BaseController
             $game = $this->serviceGame->create(
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->amazon_uk_link,
+                $request->developer, $request->publisher, $request->media_folder, $request->amazon_uk_link,
                 $request->video_url
             );
 
@@ -179,7 +180,7 @@ class GamesController extends \App\Http\Controllers\BaseController
                 $gameData,
                 $request->title, $request->link_title, $request->release_date, $request->price_eshop,
                 $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->amazon_uk_link,
+                $request->developer, $request->publisher, $request->media_folder, $request->amazon_uk_link,
                 $request->video_url
             );
 

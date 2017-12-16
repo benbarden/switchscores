@@ -21,8 +21,8 @@ class Game extends Model
      */
     protected $fillable = [
         'title', 'link_title', 'release_date', 'price_eshop', 'players', 'upcoming', 'upcoming_date',
-        'overview', 'publisher', 'developer', 'review_count', 'rating_avg', 'amazon_uk_link',
-        'video_url',
+        'rating_avg', 'review_count', 'overview', 'image_count', 'developer', 'publisher',
+        'media_folder', 'amazon_uk_link', 'game_rank', 'video_url',
     ];
 
     public function charts()
