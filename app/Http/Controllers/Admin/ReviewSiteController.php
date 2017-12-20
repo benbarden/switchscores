@@ -40,6 +40,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
             $this->validate($request, [
                 'name' => 'required|max:50',
                 'url' => 'required',
+                'link_title' => 'required|max:100',
                 'active' => 'required'
             ]);
 
@@ -52,7 +53,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
             }
 
             $this->serviceClass->create(
-                $request->name, $request->url, $isActive, $ratingScale
+                $request->name, $request->url, $request->link_title, $isActive, $ratingScale
             );
 
             return redirect(route('admin.reviews.site.list'));

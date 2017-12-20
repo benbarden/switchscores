@@ -55,4 +55,48 @@ class ReviewsController extends BaseController
         return view('reviews.gamesNeedingReviews', $bindings);
     }
 
+    public function reviewSite($linkTitle)
+    {
+        $bindings = array();
+
+        $serviceReviewSite = resolve('Services\ReviewSiteService');
+        $serviceReviewLink = resolve('Services\ReviewLinkService');
+        /* @var $serviceReviewSite \App\Services\ReviewSiteService */
+        /* @var $serviceReviewLink \App\Services\ReviewLinkService */
+
+        $reviewSite = $serviceReviewSite->getByLinkTitle($linkTitle);
+
+        if (!$reviewSite) {
+            abort(404);
+        }
+
+        $siteId = $reviewSite->id;
+
+        $bindings['TopTitle'] = $reviewSite->name.' - Site profile';
+        $bindings['PageTitle'] = $reviewSite->name.' - Site profile';
+
+        $bindings['ReviewSite'] = $reviewSite;
+
+        $siteReviewsLatest = $serviceReviewLink->getLatestBySite($siteId);
+        $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
+        $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+
+        $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
+        if ($reviewScoreDistribution) {
+            foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
+                if ($scoreVal > $mostUsedScore['topScoreCount']) {
+                    $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
+                }
+            }
+        }
+
+        $bindings['SiteReviewsLatest'] = $siteReviewsLatest;
+        $bindings['ReviewCount'] = $reviewStats[0]->ReviewCount;
+        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
+        $bindings['ReviewScoreDistribution'] = $reviewScoreDistribution;
+        $bindings['MostUsedScore'] = $mostUsedScore;
+
+        return view('reviews.site', $bindings);
+    }
+
 }

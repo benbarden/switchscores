@@ -54,6 +54,8 @@ Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
 Route::get('/reviews/top-rated/all-time', 'ReviewsController@topRatedAllTime')->name('reviews.topRatedAllTime');
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
 
+Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
+
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');

@@ -1,0 +1,166 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-8">
+        <h1>{{ ReviewSite.name }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <h2>General info</h2>
+        <table class="table table-striped table-condensed table-responsive">
+            <tr>
+                <td class="text-center" colspan="2">
+                    <strong>
+                        Infobox
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">URL</span>
+                </td>
+                <td>
+                    <a href="{{ ReviewSite.url }}" target="_blank">{{ ReviewSite.url }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Review count</span>
+                </td>
+                <td>{{ ReviewCount }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Average score</span>
+                </td>
+                <td>{{ ReviewAvg }}</td>
+            </tr>
+        </table>
+        {% if ReviewScoreDistribution %}
+            <h2>Score distribution</h2>
+            <table class="table table-striped table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-center">Score</th>
+                        <th class="text-center">Review count</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in ReviewScoreDistribution %}
+                        <tr>
+                            <td class="text-center">
+                                {{ key }}
+                            </td>
+                            <td class="text-center">
+                                {{ value }}
+                            </td>
+                            <td class="text-left col-sm-12 col-md-5">
+                                {% set TopScoreCount = MostUsedScore['topScoreCount'] %}
+                                {% if TopScoreCount > 0 %}
+                                    {% set BarWidth = (value/TopScoreCount)*100 %}
+                                    <div style="background: #009; width: {{ BarWidth }}%;">&nbsp;</div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>
+                <small>
+                    All stats on this page refer to Nintendo Switch reviews only. Any other platforms
+                    reviewed by this site are not included in these figures.
+                </small>
+            </p>
+            <p>
+                <small>
+                    Where scores are awarded that are not whole numbers,
+                    these have been rounded up or down for the distribution stats.
+                    E.g. Anything from 7.5 to 8.4 would be rounded to an 8. 8.5 would round to a 9.
+                </small>
+            </p>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-7">
+        {% if SiteReviewsLatest %}
+            <h2>Latest reviews from {{ ReviewSite.name }}</h2>
+            <p>
+                Click the <span class="glyphicon glyphicon-share" aria-hidden="true"></span> icon
+                to read the review. This will open in a new tab.
+            </p>
+            <table class="table table-striped table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-left">Game</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Rating</th>
+                        <th class="text-center">vs avg</th>
+                        <th class="text-center">Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in SiteReviewsLatest %}
+                    <tr>
+                        <td class="text-left">
+                            <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                        </td>
+                        <td class="text-center">{{ item.review_date }}</td>
+                        <td class="text-center">{{ item.rating_normalised }}</td>
+                        <td class="text-center">
+                            {% if item.game.review_count >= 3 %}
+                                {% if item.rating_normalised > item.game.rating_avg %}
+                                    {# Rating higher than average #}
+                                    <span style="color: #090; font-weight: bold;">
+                                        {% set ratingDiff = item.rating_normalised - item.game.rating_avg %}
+                                        +{{ ratingDiff|number_format(2) }}
+                                    </span>
+                                {% elseif item.rating_normalised < item.game.rating_avg|number_format(2) %}
+                                    {# Rating lower than average #}
+                                    <span style="color: #f00; font-weight: bold;">
+                                        {% set ratingDiff = item.game.rating_avg - item.rating_normalised %}
+                                        -{{ ratingDiff|number_format(2) }}
+                                    </span>
+                                {% else %}
+                                    {# Rating exactly the average #}
+                                    <span style="color: #999; font-weight: bold;">0.00</span>
+                                {% endif %}
+                            {% else %}
+                                <span style="color: #000; font-weight: normal;">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if ReviewSite.rating_scale != 10 %}
+            <p>
+                <small>
+                    As {{ ReviewSite.name }} does not rank games out of 10, we have converted all ratings to
+                    the equivalent score out of 10.
+                </small>
+            </p>
+            {% endif %}
+            <p>
+                <small>
+                    The "vs avg" column shows how each review compares with the average rating recorded
+                    for a game. Green/positive numbers indicate reviews with ratings above the average;
+                    red/negative numbers indicate ratings below the average. If a rating equals the
+                    average (which is fairly uncommon), a grey 0.00 will be shown instead. Games with fewer
+                    than 3 reviews will show "N/A" as the average rating is not as useful with only 1 or 2
+                    reviews in total.
+                </small>
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock page_body %}

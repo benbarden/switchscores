@@ -10,7 +10,9 @@
             </tr>
             {% for Review in GameReviews %}
                 <tr>
-                    <td>{{ Review.site.name }}</td>
+                    <td>
+                        <a href="{{ route('reviews.site', {'linkTitle': Review.site.link_title}) }}">{{ Review.site.name }}</a>
+                    </td>
                     <td class="text-center">
                         {% if Review.rating_normalised %}
                             {{ Review.rating_normalised }}

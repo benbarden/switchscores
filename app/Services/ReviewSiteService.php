@@ -8,11 +8,12 @@ use App\ReviewSite;
 
 class ReviewSiteService
 {
-    public function create($name, $url, $active, $ratingScale)
+    public function create($name, $url, $linkTitle, $active, $ratingScale)
     {
         ReviewSite::create([
             'name' => $name,
             'url' => $url,
+            'link_title' => $linkTitle,
             'active' => $active,
             'rating_scale' => $ratingScale,
         ]);
@@ -28,6 +29,15 @@ class ReviewSiteService
         $reviewSite = ReviewSite::
             where('url', 'http://'.$domainUrl)
             ->orWhere('url', 'https://'.$domainUrl)
+            ->first();
+        return $reviewSite;
+    }
+
+    public function getByLinkTitle($linkTitle)
+    {
+        $reviewSite = ReviewSite::
+            where('link_title', $linkTitle)
+            ->where('active', 'Y')
             ->first();
         return $reviewSite;
     }

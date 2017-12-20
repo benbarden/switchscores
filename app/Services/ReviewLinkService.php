@@ -57,6 +57,16 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function getLatestBySite($siteId, $limit = 20)
+    {
+        $reviewLinks = ReviewLink::where('site_id', $siteId)
+            ->orderBy('review_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+        return $reviewLinks;
+    }
+
     public function getAllWithoutDate()
     {
         $reviewLinks = ReviewLink::whereNull('review_date')
@@ -89,5 +99,53 @@ class ReviewLinkService
         }
 
         return $ratingNormalised;
+    }
+
+    public function getSiteReviewStats($siteId)
+    {
+        $reviewAverage = \DB::select("
+            SELECT
+            count(*) AS ReviewCount,
+            sum(rl.rating_normalised) AS ReviewSum,
+            avg(rl.rating_normalised) AS ReviewAvg
+            FROM review_links rl
+            LEFT JOIN review_sites rs ON rl.site_id = rs.id
+            WHERE rs.id = ?
+        ", array($siteId));
+
+        return $reviewAverage;
+    }
+
+    public function getSiteScoreDistribution($siteId)
+    {
+        $reviewScores = \DB::select("
+            SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
+            FROM review_links
+            WHERE site_id = ?
+            GROUP BY round(rating_normalised, 0);
+        ", array($siteId));
+
+        if (!$reviewScores) return null;
+
+        $scoresArray = [
+            '1' => '0',
+            '2' => '0',
+            '3' => '0',
+            '4' => '0',
+            '5' => '0',
+            '6' => '0',
+            '7' => '0',
+            '8' => '0',
+            '9' => '0',
+            '10' => '0',
+        ];
+
+        foreach ($reviewScores as $score) {
+            $scoreValue = $score->RatingValue;
+            $scoreCount = $score->RatingCount;
+            $scoresArray[$scoreValue] = $scoreCount;
+        }
+
+        return $scoresArray;
     }
 }
