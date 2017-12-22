@@ -1,0 +1,40 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['name'] = "{{ ReviewSiteData.name }}";
+        formVals['link_title'] = "{{ ReviewSiteData.link_title }}";
+        formVals['url'] = "{{ ReviewSiteData.url }}";
+        formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
+        formVals['active'] = "{{ ReviewSiteData.active }}";
+        formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['name'] = "{{ old('name') }}";
+        formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['url'] = "{{ old('url') }}";
+        formVals['feed_url'] = "{{ old('feed_url') }}";
+        formVals['active'] = "{{ old('active') }}";
+        formVals['rating_scale'] = "{{ old('rating_scale') }}";
+
+    }
+
+    $('#name').val(formVals['name']);
+    $('#link_title').val(formVals['link_title']);
+    $('#url').val(formVals['url']);
+    $('#feed_url').val(formVals['feed_url']);
+    if (formVals['active'] == 'Y') {
+        $('#active').attr('checked', true);
+    } else {
+        $('#active').attr('checked', false);
+    }
+    $('#rating_scale').val(formVals['rating_scale']);
+
+</script>

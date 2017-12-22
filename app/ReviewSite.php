@@ -35,7 +35,7 @@ class ReviewSite extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'url', 'active', 'rating_scale', 'link_title'
+        'name', 'link_title', 'url', 'feed_url', 'active', 'rating_scale'
     ];
 
     public function links()

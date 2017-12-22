@@ -7,6 +7,16 @@ use Illuminate\Http\Request;
 class ReviewSiteController extends \App\Http\Controllers\BaseController
 {
     /**
+     * @var array
+     */
+    private $validationRules = [
+        'name' => 'required|max:50',
+        'url' => 'required',
+        'feed_url' => 'max:255',
+        'link_title' => 'required|max:100',
+    ];
+
+    /**
      * @var \App\Services\ReviewSiteService
      */
     private $serviceClass;
@@ -37,12 +47,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, [
-                'name' => 'required|max:50',
-                'url' => 'required',
-                'link_title' => 'required|max:100',
-                'active' => 'required'
-            ]);
+            $this->validate($request, $this->validationRules);
 
             $isActive = $request->active == 'on' ? 'Y' : 'N';
 
@@ -53,7 +58,8 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
             }
 
             $this->serviceClass->create(
-                $request->name, $request->url, $request->link_title, $isActive, $ratingScale
+                $request->name, $request->link_title, $request->url, $request->feed_url,
+                $isActive, $ratingScale
             );
 
             return redirect(route('admin.reviews.site.list'));
@@ -64,7 +70,52 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites - Add site';
         $bindings['PanelTitle'] = 'Add site';
+        $bindings['FormMode'] = 'add';
 
         return view('admin.reviews.site.add', $bindings);
+    }
+
+    public function edit($siteId)
+    {
+        $reviewSiteData = $this->serviceClass->find($siteId);
+        if (!$reviewSiteData) abort(404);
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+            $this->validate($request, $this->validationRules);
+
+            $isActive = $request->active == 'on' ? 'Y' : 'N';
+
+            if (isset($request->rating_scale)) {
+                $ratingScale = $request->rating_scale;
+            } else {
+                $ratingScale = 10;
+            }
+
+            $this->serviceClass->edit(
+                $reviewSiteData,
+                $request->name, $request->link_title, $request->url, $request->feed_url,
+                $isActive, $ratingScale
+            );
+
+            return redirect(route('admin.reviews.site.list'));
+
+        }
+
+        // ADD REVIEW SITE
+        $bindings = array();
+
+        $bindings['TopTitle'] = 'Admin - Reviews - Sites - Edit site';
+        $bindings['PanelTitle'] = 'Edit site';
+        $bindings['ReviewSiteData'] = $reviewSiteData;
+        $bindings['SiteId'] = $siteId;
+
+        $bindings['FormMode'] = 'edit';
+
+        return view('admin.reviews.site.edit', $bindings);
     }
 }

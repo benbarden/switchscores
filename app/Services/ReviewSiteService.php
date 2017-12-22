@@ -8,15 +8,34 @@ use App\ReviewSite;
 
 class ReviewSiteService
 {
-    public function create($name, $url, $linkTitle, $active, $ratingScale)
+    public function create($name, $linkTitle, $url, $feedUrl, $active, $ratingScale)
     {
         ReviewSite::create([
             'name' => $name,
-            'url' => $url,
             'link_title' => $linkTitle,
+            'url' => $url,
+            'feed_url' => $feedUrl,
             'active' => $active,
             'rating_scale' => $ratingScale,
         ]);
+    }
+
+    public function edit(
+        ReviewSite $reviewSiteData,
+        $name, $linkTitle, $url, $feedUrl, $active, $ratingScale
+    )
+    {
+        $values = [
+            'name' => $name,
+            'link_title' => $linkTitle,
+            'url' => $url,
+            'feed_url' => $feedUrl,
+            'active' => $active,
+            'rating_scale' => $ratingScale,
+        ];
+
+        $reviewSiteData->fill($values);
+        $reviewSiteData->save();
     }
 
     public function find($id)
