@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 use App\Services\Feed\Importer;
 
-class NintendoLifeLocalFeedTest extends TestCase
+class ImporterNLLocalFeedTest extends TestCase
 {
     /**
      * @var Importer

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 use App\Services\Feed\Importer;
 
-class NintendoLifeStubFeedTest extends TestCase
+class ImporterNLStubFeedTest extends TestCase
 {
     /**
      * @var Importer
