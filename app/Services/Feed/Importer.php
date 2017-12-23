@@ -21,6 +21,15 @@ class Importer
     private $siteId;
 
     /**
+     * @param integer $siteId
+     * @return void
+     */
+    public function setSiteId($siteId)
+    {
+        $this->siteId = $siteId;
+    }
+
+    /**
      * @return array
      */
     public function getFeedData()
@@ -47,15 +56,23 @@ class Importer
         $xmlData = file_get_contents(dirname(__FILE__).'/../../../storage/feeds/'.$feedName);
 
         $this->feedData = json_decode(json_encode(simplexml_load_string($xmlData)), true);
+    }
 
-        switch ($feedName) {
-            case 'nintendo-life.xml':
-                $this->siteId = ReviewSite::SITE_NINTENDO_LIFE;
-                break;
-            default:
-                $this->siteId = 0;
-                break;
+    /**
+     * @param string $feedUrl
+     * @throws \Exception
+     * @return void
+     */
+    public function loadRemoteFeedData($feedUrl)
+    {
+        // @todo Do this properly with GuzzleHttp
+        $xmlData = file_get_contents($feedUrl);
+
+        if (!$xmlData) {
+            throw new \Exception('Cannot load feed: '.$feedUrl);
         }
+
+        $this->feedData = json_decode(json_encode(simplexml_load_string($xmlData)), true);
     }
 
     /**

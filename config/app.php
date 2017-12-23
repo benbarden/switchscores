@@ -181,6 +181,7 @@ return [
         App\Providers\ActivityFeedProvider::class,
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\ChartsRankingGlobalServiceProvider::class,
+        App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,

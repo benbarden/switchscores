@@ -20,6 +20,8 @@ class ReviewSite extends Model
     const SITE_DIGITALLY_DOWNLOADED = 14;
     const SITE_DESTRUCTOID = 15;
     const SITE_NINTENDO_INSIDER = 17;
+    const SITE_MIKETENDO64 = 18;
+    const SITE_NINDIE_SPOTLIGHT = 19;
 
     /**
      * @var string

@@ -66,4 +66,12 @@ class ReviewSiteService
         $reviewSites = ReviewSite::orderBy('name', 'asc')->get();
         return $reviewSites;
     }
+
+    public function getFeedUrls()
+    {
+        $reviewSites = ReviewSite::
+            whereNotNull('feed_url')
+            ->get();
+        return $reviewSites;
+    }
 }

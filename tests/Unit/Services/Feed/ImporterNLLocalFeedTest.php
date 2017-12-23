@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Feed;
 
 use App\FeedItemReview;
+use App\ReviewSite;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 #use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,6 +23,7 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->feedImporter = new Importer();
 
         $this->feedImporter->loadLocalFeedData('nintendo-life.xml');
+        $this->feedImporter->setSiteId(ReviewSite::SITE_NINTENDO_LIFE);
 
         parent::setUp();
     }
@@ -43,6 +45,9 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->assertArrayHasKey('channel', $this->feedImporter->getFeedData());
     }
 
+    /**
+     * @depends testFeedKeyChannel
+     */
     public function testFeedKeyItem()
     {
         $feedData = $this->feedImporter->getFeedData();
@@ -50,6 +55,9 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->assertArrayHasKey('item', $feedData['channel']);
     }
 
+    /**
+     * @depends testFeedKeyChannel
+     */
     public function testFeedKeyItemCount()
     {
         $feedData = $this->feedImporter->getFeedData();
@@ -57,6 +65,9 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->assertCount(20, $feedData['channel']['item']);
     }
 
+    /**
+     * @depends testFeedKeyChannel
+     */
     public function testFeedModelGeneration()
     {
         $feedData = $this->feedImporter->getFeedData();
