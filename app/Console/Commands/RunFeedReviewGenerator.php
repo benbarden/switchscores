@@ -45,6 +45,8 @@ class RunFeedReviewGenerator extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         $gameService = resolve('Services\GameService');
         $reviewLinkService = resolve('Services\ReviewLinkService');

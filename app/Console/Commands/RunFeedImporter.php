@@ -41,6 +41,8 @@ class RunFeedImporter extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $reviewSiteService = resolve('Services\ReviewSiteService');
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         /* @var ReviewSiteService $reviewSiteService */

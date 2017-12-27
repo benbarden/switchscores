@@ -37,6 +37,8 @@ class UpdateGameRanks extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         // Review count
         $this->info('Game ranks');
 
