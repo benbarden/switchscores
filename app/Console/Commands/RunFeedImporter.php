@@ -81,7 +81,7 @@ class RunFeedImporter extends Command
                     // Check if it's already been imported
                     $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
                     if ($dbExistingItem) {
-                        $this->warn('Already imported: '.$itemUrl);
+                        //$this->warn('Already imported: '.$itemUrl);
                         continue;
                     }
 
