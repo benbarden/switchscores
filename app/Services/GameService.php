@@ -108,6 +108,13 @@ class GameService
         return $gamesList;
     }
 
+    public function getByTitle($title)
+    {
+        $game = Game::where('title', $title)
+            ->first();
+        return $game;
+    }
+
     /**
      * Used for public game lists
      * @return mixed

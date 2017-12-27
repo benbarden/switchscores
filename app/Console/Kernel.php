@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\RunFeedImporter::class,
+        Commands\RunFeedParser::class,
         Commands\UpdateGameReviewStats::class,
         Commands\UpdateGameImageCount::class,
         Commands\UpdateGameRanks::class,

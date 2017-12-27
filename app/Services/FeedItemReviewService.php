@@ -15,4 +15,13 @@ class FeedItemReviewService
             ->first();
         return $feedItemReview;
     }
+
+    public function getItemsToParse($limit = 25)
+    {
+        $feedItemReview = FeedItemReview::
+            whereNull('parsed')
+            ->limit($limit)
+            ->get();
+        return $feedItemReview;
+    }
 }
