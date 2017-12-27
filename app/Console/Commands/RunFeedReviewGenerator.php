@@ -78,6 +78,20 @@ class RunFeedReviewGenerator extends Command
                 $itemDate = $feedItem->item_date;
                 $itemRating = $feedItem->item_rating;
 
+                // Check for a duplicate review
+                // We can do this even if we don't have all the other fields yet
+                if ($gameId && $siteId) {
+                    $existingReview = $reviewLinkService->getByGameAndSite($gameId, $siteId);
+                    if ($existingReview) {
+                        $this->warn('Existing review found for this game/site. Marking as a duplicate.');
+                        $feedItem->process_status = 'Duplicate';
+                        $feedItem->processed = 1;
+                        $feedItem->save();
+                        continue;
+                    }
+                }
+
+                // Check for missing fields
                 $missingFields = [];
                 if (!$gameId) {
                     $missingFields[] = 'gameId';
@@ -98,16 +112,6 @@ class RunFeedReviewGenerator extends Command
                 if ($missingFields) {
                     $this->error('Unable to process due to missing field(s): '.implode($missingFields, ', '));
                     $feedItem->process_status = $processStatus;
-                    $feedItem->save();
-                    continue;
-                }
-
-                // Check for a duplicate review
-                $existingReview = $reviewLinkService->getByGameAndSite($gameId, $siteId);
-                if ($existingReview) {
-                    $this->warn('Existing review found for this game/site. Marking as a duplicate.');
-                    $feedItem->process_status = 'Duplicate';
-                    $feedItem->processed = 1;
                     $feedItem->save();
                     continue;
                 }
