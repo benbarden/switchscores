@@ -9,6 +9,8 @@
         formVals['site_id'] = "{{ FeedItemData.site_id }}";
         formVals['game_id'] = "{{ FeedItemData.game_id }}";
         formVals['item_rating'] = "{{ FeedItemData.item_rating }}";
+        formVals['processed'] = "{{ FeedItemData.processed }}";
+        formVals['process_status'] = "{{ FeedItemData.process_status }}";
 
     } else {
 
@@ -17,12 +19,18 @@
         formVals['site_id'] = "{{ old('site_id') }}";
         formVals['game_id'] = "{{ old('game_id') }}";
         formVals['item_rating'] = "{{ old('item_rating') }}";
+        formVals['processed'] = "{{ old('processed') }}";
+        formVals['process_status'] = "{{ old('process_status') }}";
 
     }
 
     $('#site_id').val(formVals['site_id']);
     $('#game_id').val(formVals['game_id']);
     $('#item_rating').val(formVals['item_rating']);
+    if (formVals['processed'] == 1) {
+        $('#processed').attr('checked', true);
+    }
+    $('#process_status').val(formVals['process_status']);
 
     $('#game_id').select2();
 

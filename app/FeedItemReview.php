@@ -21,7 +21,7 @@ class FeedItemReview extends Model
      */
     protected $fillable = [
         'site_id', 'game_id', 'item_url', 'item_title', 'item_date', 'item_rating',
-        'load_status', 'parse_status', 'processed'
+        'load_status', 'parse_status', 'parsed', 'process_status', 'processed'
     ];
 
     public function site()

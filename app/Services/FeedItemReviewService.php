@@ -10,12 +10,20 @@ class FeedItemReviewService
 {
     public function edit(
         FeedItemReview $feedItemReview,
-        $siteId, $gameId, $itemRating
+        $siteId, $gameId, $itemRating, $processed, $processStatus
     )
     {
+        $isProcessed = $processed == 'on' ? 1 : null;
+
+        if (!$processStatus) {
+            $processStatus = null;
+        }
+
         $feedItemReview->site_id = $siteId;
         $feedItemReview->game_id = $gameId;
         $feedItemReview->item_rating = $itemRating;
+        $feedItemReview->processed = $isProcessed;
+        $feedItemReview->process_status = $processStatus;
         $feedItemReview->save();
     }
 

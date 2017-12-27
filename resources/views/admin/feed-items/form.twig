@@ -17,7 +17,7 @@
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Game</label>
         <div class="col-md-6">
-            <select id="game_id" class="form-control" name="game_id" required>
+            <select id="game_id" class="form-control" name="game_id">
                 <option value="">&nbsp;</option>
                 {% for item in GamesList %}
                     <option value="{{ item.id }}">{{ item.title }}</option>
@@ -39,6 +39,8 @@
             </p>
         </div>
     </div>
+
+    <hr>
 
     <div class="form-group">
         <div class="col-md-4 text-right" style="font-weight: bold;">
@@ -62,6 +64,30 @@
         </div>
         <div class="col-md-6">
             {{ FeedItemData.item_date }}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <label for="processed" class="col-md-4 control-label">Processed</label>
+        <div class="col-md-6">
+            <input id="processed" type="checkbox" name="processed">
+            <br>
+            <small>
+                This option can be used to skip, or resubmit, an item to the processing queue.
+                <br>
+                Tick the box to skip the item. When doing so, ensure you fill in the reason below.
+                <br>
+                Untick the box to resubmit the item. In this case, clear the reason field.
+            </small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="process_status" class="col-md-4 control-label">Process status</label>
+        <div class="col-md-6">
+            <input id="process_status" class="form-control" name="process_status" type="text" />
         </div>
     </div>
 

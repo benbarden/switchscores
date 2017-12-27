@@ -68,7 +68,8 @@ class FeedItemController extends \App\Http\Controllers\BaseController
             $this->validate($request, $this->validationRules);
 
             $feedItemReviewService->edit(
-                $feedItemData, $request->site_id, $request->game_id, $request->item_rating
+                $feedItemData, $request->site_id, $request->game_id, $request->item_rating,
+                $request->processed, $request->process_status
             );
 
             // All done; send us back
