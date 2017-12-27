@@ -97,6 +97,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
     Route::get('/admin/reviews/link/{report?}', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
 
+    // Feed items
+    Route::get('/admin/feed-items/{report?}', 'Admin\FeedItemController@showList')->name('admin.feed-items.list');
+    Route::get('/admin/feed-items/edit/{linkId}', 'Admin\FeedItemController@edit')->name('admin.feed-items.edit');
+    Route::post('/admin/feed-items/edit/{linkId}', 'Admin\FeedItemController@edit')->name('admin.feed-items.edit');
+
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');
     Route::get('/admin/news/add', 'Admin\NewsController@add')->name('admin.news.add');

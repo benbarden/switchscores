@@ -29,7 +29,7 @@
                         {{ item.id }}
                     </td>
                     <td class="text-left">
-                        {{ item.game.title }}
+                        <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}" target="_blank">{{ item.game.title }}</a>
                     </td>
                     <td class="text-left">
                         {{ item.site.name }}

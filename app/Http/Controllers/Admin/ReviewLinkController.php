@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\ReviewLinkCreated;
 use Illuminate\Http\Request;
 use App\Game;
+use App\ReviewLink;
 
 class ReviewLinkController extends \App\Http\Controllers\BaseController
 {
@@ -58,24 +59,13 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         return view('admin.reviews.link.list', $bindings);
     }
 
-    private function updateGameReviewStats(Game $game)
-    {
-        $gameService = resolve('Services\GameService');
-        $serviceReviewStats = resolve('Services\Review\StatsService');
-
-        $gameReviews = $game->reviews()->get();
-
-        $reviewCount = $serviceReviewStats->calculateReviewCount($gameReviews);
-        $reviewAverage = $serviceReviewStats->calculateReviewAverage($gameReviews);
-        $gameService->updateReviewStats($game, $reviewCount, $reviewAverage);
-    }
-
     public function add()
     {
         $request = request();
 
         $gameService = resolve('Services\GameService');
         $reviewSiteService = resolve('Services\ReviewSiteService');
+        $serviceReviewStats = resolve('Services\Review\StatsService');
 
         if ($request->isMethod('post')) {
 
@@ -90,12 +80,12 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             $reviewLink = $this->serviceClass->create(
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
-                $request->review_date
+                $request->review_date, ReviewLink::TYPE_MANUAL
             );
 
             // Update game review stats
             $game = $gameService->find($request->game_id);
-            $this->updateGameReviewStats($game);
+            $serviceReviewStats->updateGameReviewStats($game);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
@@ -125,6 +115,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         $gameService = resolve('Services\GameService');
         $reviewSiteService = resolve('Services\ReviewSiteService');
+        $serviceReviewStats = resolve('Services\Review\StatsService');
 
         $request = request();
         $bindings = array();
@@ -150,7 +141,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             // Update game review stats
             $game = $gameService->find($request->game_id);
-            $this->updateGameReviewStats($game);
+            $serviceReviewStats->updateGameReviewStats($game);
 
             // Update ranks
             \Artisan::call('UpdateGameRanks');

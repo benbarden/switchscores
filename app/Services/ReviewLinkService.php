@@ -8,7 +8,9 @@ use App\ReviewSite;
 
 class ReviewLinkService
 {
-    public function create($gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate)
+    public function create(
+        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType
+    )
     {
         return ReviewLink::create([
             'game_id' => $gameId,
@@ -17,6 +19,7 @@ class ReviewLinkService
             'rating_original' => $ratingOriginal,
             'rating_normalised' => $ratingNormalised,
             'review_date' => $reviewDate,
+            'review_type' => $reviewType,
         ]);
     }
 
@@ -85,6 +88,14 @@ class ReviewLinkService
             ->orderBy('review_sites.name', 'asc')
             ->get();
         return $gameReviews;
+    }
+
+    public function getByGameAndSite($gameId, $siteId)
+    {
+        $gameReview = ReviewLink::where('game_id', $gameId)
+            ->where('site_id', $siteId)
+            ->first();
+        return $gameReview;
     }
 
     public function getNormalisedRating($ratingOriginal, ReviewSite $reviewSite)

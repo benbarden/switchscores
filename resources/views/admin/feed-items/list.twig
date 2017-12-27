@@ -1,0 +1,100 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+    </div>
+    <div class="col-xs-12 col-sm-9">
+        <div class="pull-right">
+            <label for="admin-nav-feed-item-filter">Filters:</label>
+            <select id="admin-nav-feed-item-filter" name="admin-nav-feed-item-filter" class="form-control">
+                <option value="">Unprocessed items</option>
+                <option value="processed">Processed items</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% if FeedItems.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-left">Title</th>
+                <th class="text-left">Status</th>
+                <th class="text-center">Process status</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in FeedItems %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
+                        <br>
+                        <small>
+                            {{ item.item_date }} | {{ item.site.name }}
+                        </small>
+                    </td>
+                    <td class="text-left">
+                        <ul>
+                            {% if item.game.title is not defined %}
+                                <li><span style="color: #f00;">Game not linked</span></li>
+                            {% else %}
+                                <li>Game linked OK ({{ item.game.title }})</li>
+                            {% endif %}
+                            {% if item.item_rating is null %}
+                                <li><span style="color: #f00;">Rating missing</span></li>
+                            {% else %}
+                                <li>Rating OK</li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                    <td class="text-center">
+                        {% if item.processed == 1 %}
+                        {{ item.process_status }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.feed-items.edit', {'itemId': item.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#admin-nav-feed-item-filter').on('change', function() {
+        selectedFilter = $(this).val();
+        top.location.href = '{{ route('admin.feed-items.list')}}' + '/' + selectedFilter;
+    });
+    $(document).ready(function() {
+        var activeNav = '{{ ActiveNav }}';
+        $('#admin-nav-feed-item-filter').val(activeNav);
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

@@ -66,20 +66,6 @@ class GameService
         $game->save();
     }
 
-    public function updateReviewStats(
-        Game $game, $reviewCount, $ratingAvg
-    )
-    {
-        $values = [
-            'review_count' => $reviewCount,
-            'rating_avg' => $ratingAvg,
-        ];
-
-        $game->fill($values);
-        $game->save();
-
-    }
-
     // ********************************************************** //
 
     public function find($id)

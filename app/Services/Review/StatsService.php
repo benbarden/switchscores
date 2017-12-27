@@ -2,6 +2,7 @@
 
 namespace App\Services\Review;
 
+use App\Game;
 use Illuminate\Support\Collection;
 
 class StatsService
@@ -27,5 +28,17 @@ class StatsService
         $avgScore = round(($sumTotal / $reviewCount), 2);
 
         return $avgScore;
+    }
+
+    public function updateGameReviewStats(Game $game)
+    {
+        $gameReviews = $game->reviews()->get();
+
+        $reviewCount = $this->calculateReviewCount($gameReviews);
+        $reviewAverage = $this->calculateReviewAverage($gameReviews);
+
+        $game->review_count = $reviewCount;
+        $game->rating_avg = $reviewAverage;
+        $game->save();
     }
 }

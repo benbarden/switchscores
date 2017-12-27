@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReviewLink extends Model
 {
+    const TYPE_MANUAL = 'Manual';
+    const TYPE_IMPORTED = 'Imported';
+
     /**
      * @var string
      */
@@ -20,7 +23,7 @@ class ReviewLink extends Model
      * @var array
      */
     protected $fillable = [
-        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised', 'review_date'
+        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised', 'review_date', 'review_type'
     ];
 
     public function site()
