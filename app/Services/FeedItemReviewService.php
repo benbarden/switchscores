@@ -33,12 +33,22 @@ class FeedItemReviewService
         return $feedItemReview;
     }
 
-    public function getItemsToParse($limit = 25)
+    public function getItemsToParse($limit = null)
     {
-        $feedItemReview = FeedItemReview::
-            whereNull('parsed')
-            ->limit($limit)
-            ->get();
+        $limit = (int) $limit;
+        if ($limit) {
+            $feedItemReview = FeedItemReview::
+                whereNull('parsed')
+                ->orderBy('item_date', 'asc')
+                ->limit($limit)
+                ->get();
+        } else {
+            $feedItemReview = FeedItemReview::
+                whereNull('parsed')
+                ->orderBy('id', 'asc')
+                ->get();
+        }
+
         return $feedItemReview;
     }
 

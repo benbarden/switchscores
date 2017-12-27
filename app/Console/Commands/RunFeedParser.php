@@ -47,7 +47,7 @@ class RunFeedParser extends Command
         /* @var FeedItemReviewService $feedItemReviewService */
         /* @var GameService $gameService */
 
-        $feedItems = $feedItemReviewService->getItemsToParse(25);
+        $feedItems = $feedItemReviewService->getItemsToParse();
 
         if (!$feedItems) {
             $this->info('No items to parse. Aborting.');
