@@ -24,6 +24,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
+                <th class="text-center">Date</th>
                 <th class="text-left">Status</th>
                 <th class="text-center">Process status</th>
                 <th class="text-center">Options</th>
@@ -41,6 +42,9 @@
                         <small>
                             {{ item.item_date }} | {{ item.site.name }}
                         </small>
+                    </td>
+                    <td class="text-center">
+                        <small>{{ item.item_date }}</small>
                     </td>
                     <td class="text-left">
                         <ul>
@@ -89,6 +93,7 @@
             "columns": [
                 null,
                 { "orderable": false },
+                null,
                 { "orderable": false },
                 null,
                 { "orderable": false }

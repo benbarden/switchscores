@@ -27,13 +27,13 @@ class FeedItemController extends \App\Http\Controllers\BaseController
         if ($report == null) {
             $bindings['ActiveNav'] = '';
             $feedItems = $feedItemReviewService->getUnprocessed();
-            $jsInitialSort = "[ 0, 'asc']";
+            $jsInitialSort = "[ 2, 'asc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'processed':
                     $feedItems = $feedItemReviewService->getProcessed();
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 2, 'desc']";
                     break;
                 default:
                     abort(404);

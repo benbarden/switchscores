@@ -54,7 +54,7 @@ class FeedItemReviewService
         if ($limit) {
             $feedItemReview = FeedItemReview::
                 whereNull('processed')
-                ->orderBy('id', 'asc')
+                ->orderBy('item_date', 'asc')
                 ->limit($limit)
                 ->get();
         } else {

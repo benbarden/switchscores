@@ -68,7 +68,7 @@ class RunFeedReviewGenerator extends Command
             try {
 
                 $itemId = $feedItem->id;
-                $this->info('Processing item: '.$itemId);
+                $this->info('Processing item: '.$itemId. ' with date: '.$feedItem->item_date);
                 $processStatus = '';
 
                 // Check the fields we need to create a review
