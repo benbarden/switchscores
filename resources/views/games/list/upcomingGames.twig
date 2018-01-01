@@ -18,12 +18,6 @@
 
         {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
 
-        <h2>2017 games with release dates</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2017WithDates} %}
-
-        <h2>2017 games, quarter only</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2017WithQuarter} %}
-
         <h2>2018 games with release dates</h2>
         {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018WithDates} %}
 
@@ -42,14 +36,6 @@
     <div class="col-xs-12 col-sm-3">
         <h3>Stats</h3>
         <table class="table table-striped table-condensed table-responsive">
-            <tr>
-                <td>2017 with dates</td>
-                <td class="text-right"><strong>{{ Upcoming2017WithDates.count }}</strong></td>
-            </tr>
-            <tr>
-                <td>2017 with quarters</td>
-                <td class="text-right"><strong>{{ Upcoming2017WithQuarter.count }}</strong></td>
-            </tr>
             <tr>
                 <td>2018 with dates</td>
                 <td class="text-right"><strong>{{ Upcoming2018WithDates.count }}</strong></td>

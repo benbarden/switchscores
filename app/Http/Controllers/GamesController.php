@@ -25,11 +25,6 @@ class GamesController extends BaseController
     {
         $bindings = array();
 
-        // 2017 - Will be phased out in January
-        $bindings['Upcoming2017WithDates'] = $this->serviceGame->getAllUpcomingYearWithDates(2017);
-        $bindings['Upcoming2017WithQuarter'] = $this->serviceGame->getAllUpcomingYearQuarters(2017);
-        $bindings['Upcoming2017NoInfo'] = $this->serviceGame->getAllUpcomingYearXs(2017);
-
         // Current/Most active year
         $bindings['Upcoming2018WithDates'] = $this->serviceGame->getAllUpcomingYearWithDates(2018);
         $bindings['Upcoming2018WithQuarter'] = $this->serviceGame->getAllUpcomingYearQuarters(2018);
