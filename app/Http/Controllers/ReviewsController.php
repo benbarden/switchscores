@@ -25,6 +25,22 @@ class ReviewsController extends BaseController
         return view('reviews.landing', $bindings);
     }
 
+    public function topRatedLanding()
+    {
+        $bindings = array();
+
+        $thisYear = date('Y');
+        $bindings['Year'] = $thisYear;
+        $bindings['TopRatedThisYear'] = $this->serviceGame->getListTopRatedByYear($thisYear, 15);
+        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 15);
+        $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
+
+        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
+        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
+
+        return view('reviews.topRated.landing', $bindings);
+    }
+
     public function topRatedAllTime()
     {
         $bindings = array();
@@ -37,7 +53,28 @@ class ReviewsController extends BaseController
         $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
 
-        return view('reviews.topRatedAllTime', $bindings);
+        return view('reviews.topRated.allTime', $bindings);
+    }
+
+    public function topRatedByYear($year)
+    {
+        $allowedYears = [2017, 2018];
+        if (!in_array($year, $allowedYears)) {
+            abort(404);
+        }
+
+        $bindings = array();
+
+        $gamesList = $this->serviceGame->getListTopRatedByYear($year);
+
+        $bindings['GamesList'] = $gamesList;
+        $bindings['GamesTableSort'] = "[5, 'desc']";
+        $bindings['Year'] = $year;
+
+        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games - '.$year;
+        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games - '.$year;
+
+        return view('reviews.topRated.byYear', $bindings);
     }
 
     public function gamesNeedingReviews()

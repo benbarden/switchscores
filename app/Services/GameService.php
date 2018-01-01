@@ -223,9 +223,35 @@ class GameService
         if ($limit == null) {
             $gamesList = Game::where('review_count', '>', '2')
                 ->orderBy('rating_avg', 'desc')
+                ->orderBy('review_count', 'desc')
                 ->get();
         } else {
             $gamesList = Game::where('review_count', '>', '2')
+                ->orderBy('rating_avg', 'desc')
+                ->orderBy('review_count', 'desc')
+                ->limit($limit)
+                ->get();
+        }
+        return $gamesList;
+    }
+
+    /**
+     * Top Rated - By year
+     * @return mixed
+     */
+    public function getListTopRatedByYear($year, $limit = null)
+    {
+        if ($limit == null) {
+            $gamesList = Game::
+                where('release_year', $year)
+                ->where('review_count', '>', '2')
+                ->orderBy('rating_avg', 'desc')
+                ->orderBy('review_count', 'desc')
+                ->get();
+        } else {
+            $gamesList = Game::
+                where('release_year', $year)
+                ->where('review_count', '>', '2')
                 ->orderBy('rating_avg', 'desc')
                 ->orderBy('review_count', 'desc')
                 ->limit($limit)

@@ -1,0 +1,20 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>{{ PageTitle }}</h1>
+
+<p>
+    A list of Nintendo Switch games released in Europe, sorted to show the highest
+    average rating across the reviews we've collated at World of Switch.
+    This list only contains games released in {{ Year }}.
+</p>
+
+<p>
+    Games with fewer than 3 reviews are not listed below; these can be found on the
+    <a href="{{ route('reviews.gamesNeedingReviews') }}">Games needing more reviews</a> page.
+</p>
+
+{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_body %}

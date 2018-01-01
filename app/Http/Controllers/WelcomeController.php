@@ -20,7 +20,7 @@ class WelcomeController extends BaseController
 
         $newsService = resolve('Services\NewsService');
         /* @var $newsService NewsService */
-        $bindings['NewsList'] = $newsService->getAllWithLimit(10);
+        $bindings['NewsList'] = $newsService->getAllWithLimit(5);
 
         $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 10);
         $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 10);

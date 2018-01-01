@@ -3,44 +3,6 @@
 {% block page_body %}
 
 <div class="row">
-    {#
-    <div class="pull-right col-xs-12 col-sm-3">
-        <img class="img-responsive" src="/img/logo.png" alt="" />
-    </div>
-    #}
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        {% if NewsList.count %}
-            <h2>
-                Latest news
-                <span class="h4">(<a href="{{ route('news.landing') }}">view all</a>)</span>
-            </h2>
-            {% for item in NewsList %}
-                <p>
-                    <strong>{{ item.created_at|date('jS M') }}</strong>:
-                    <a href="{{ item.url }}">{{ item.title }}</a>
-                </p>
-            {% endfor %}
-        {% endif %}
-        {#
-        {% if ActivityFeedList.count %}
-            <h2>
-                Latest updates
-            </h2>
-            {% for item in ActivityFeedList %}
-                {% set feedMessage = item.getMessageWithValues() %}
-                {% set feedSmallPrint = item.getSmallPrint() %}
-                <p>
-                    <strong>{{ item.created_at|date('jS M') }}</strong>:
-                    {{ feedMessage|raw }}
-                    {% if feedSmallPrint != '' %}
-                    <br>
-                    <small>{{ feedSmallPrint }}</small>
-                    {% endif %}
-                </p>
-            {% endfor %}
-        {% endif %}
-        #}
-    </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             New releases
@@ -110,8 +72,9 @@
         </h2>
         {% if ChartsLatestEu %}
             <p>
+                <strong>{{ ChartsLatestEu.chart_date|date('jS M') }}</strong>:
                 <a href="{{ route('charts.date.show', {'countryCode': 'eu', 'date': ChartsLatestEu.chart_date}) }}">
-                    European eShop charts: {{ ChartsLatestEu.chart_date|date('jS M') }}
+                    Latest European eShop charts
                 </a>
             </p>
         {% else %}
@@ -119,16 +82,31 @@
         {% endif %}
         {% if ChartsLatestUs %}
             <p>
+                <strong>{{ ChartsLatestUs.chart_date|date('jS M') }}</strong>:
                 <a href="{{ route('charts.date.show', {'countryCode': 'us', 'date': ChartsLatestUs.chart_date}) }}">
-                    US eShop charts: {{ ChartsLatestUs.chart_date|date('jS M') }}
+                    Latest US eShop charts
                 </a>
             </p>
         {% else %}
             <p>Could not display latest US charts data.</p>
         {% endif %}
+        {% if NewsList.count %}
+            <h2>
+                Latest news
+                <span class="h4">(<a href="{{ route('news.landing') }}">view all</a>)</span>
+            </h2>
+            {% for item in NewsList %}
+                <p>
+                    <strong>{{ item.created_at|date('jS M') }}</strong>:
+                    <a href="{{ item.url }}">{{ item.title }}</a>
+                </p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Top Rated - New
-            <span class="h4">(<a href="{{ route('reviews.topRatedAllTime') }}">view all-time</a>)</span>
+            <span class="h4">(<a href="{{ route('reviews.topRated.landing') }}">view more</a>)</span>
         </h2>
         {% if TopRatedNewReleases %}
             <p>
