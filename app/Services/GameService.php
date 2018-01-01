@@ -14,12 +14,30 @@ class GameService
     const ORDER_NEWEST = 1;
     const ORDER_OLDEST = 2;
 
+    /**
+     * @param $releaseDate
+     * @return null|string
+     */
+    public function getReleaseYear($releaseDate)
+    {
+        if ($releaseDate) {
+            $releaseDateObject = new \DateTime($releaseDate);
+            $releaseYear = $releaseDateObject->format('Y');
+        } else {
+            $releaseYear = null;
+        }
+
+        return $releaseYear;
+    }
+
     public function create(
         $title, $linkTitle, $releaseDate, $priceEshop, $players, $upcoming, $upcomingDate,
         $overview, $developer, $publisher, $mediaFolder, $amazonUkLink, $videoUrl
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
+
+        $releaseYear = $this->getReleaseYear($releaseDate);
 
         return Game::create([
             'title' => $title,
@@ -36,6 +54,7 @@ class GameService
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
+            'release_year' => $releaseYear,
         ]);
     }
 
@@ -45,6 +64,8 @@ class GameService
     )
     {
         $isUpcoming = $upcoming == 'on' ? 1 : 0;
+
+        $releaseYear = $this->getReleaseYear($releaseDate);
 
         $values = [
             'title' => $title,
@@ -60,6 +81,7 @@ class GameService
             'media_folder' => $mediaFolder,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
+            'release_year' => $releaseYear,
         ];
 
         $game->fill($values);

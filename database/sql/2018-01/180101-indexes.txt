@@ -1,0 +1,3 @@
+ALTER TABLE `games`
+ADD INDEX `upcoming_date` (`upcoming_date` ASC);
+
