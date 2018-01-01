@@ -45,7 +45,7 @@ class GamesController extends BaseController
 
     public function listTopRated()
     {
-        return redirect(route('reviews.topRatedAllTime'), 301);
+        return redirect(route('reviews.topRated.allTime'), 301);
     }
 
     public function listReviewsNeeded()
