@@ -43,13 +43,13 @@ class UpdateGameRanks extends Command
         $this->info('Game ranks');
 
         $gameRankList = \DB::select("
-            SELECT g.id AS game_id, g.title, g.rating_avg
+            SELECT g.id AS game_id, g.title, g.rating_avg, g.game_rank
             FROM games g
             WHERE review_count > 2
             ORDER BY rating_avg DESC
         ");
 
-        $this->info('Updating '.count($gameRankList).' games');
+        $this->info('Checking '.count($gameRankList).' games');
 
         $rankCounter = 1;
         $actualRank = 1;
@@ -61,6 +61,7 @@ class UpdateGameRanks extends Command
             $gameId = $game->game_id;
             $gameTitle = $game->title;
             $ratingAvg = $game->rating_avg;
+            $prevRank = $game->game_rank;
 
             if ($lastRatingAvg == -1) {
                 // First record
@@ -73,8 +74,11 @@ class UpdateGameRanks extends Command
                 $actualRank = $rankCounter;
             }
 
-            // Notify
-            $this->info(sprintf('Game: %s - Rating: %s - Rank: %s', $gameTitle, $ratingAvg, $actualRank));
+            // Notify if different
+            if ($prevRank != $actualRank) {
+                $this->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
+                    $gameTitle, $ratingAvg, $prevRank, $actualRank));
+            }
 
             // Save rank to DB
             \DB::update("

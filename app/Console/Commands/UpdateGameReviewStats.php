@@ -43,7 +43,7 @@ class UpdateGameReviewStats extends Command
         $this->info('Review counts');
 
         $reviewCountList = \DB::select("
-            SELECT g.id AS game_id, g.title, count(rl.game_id) AS review_count
+            SELECT g.id AS game_id, g.title, g.review_count, count(rl.game_id) AS review_count_new
             FROM games g
             LEFT JOIN review_links rl ON g.id = rl.game_id
             LEFT JOIN review_sites rs ON rl.site_id = rs.id
@@ -51,24 +51,35 @@ class UpdateGameReviewStats extends Command
             GROUP BY g.id;
         ");
 
-        $this->info('Updating '.count($reviewCountList).' games');
+        $this->info('Checking '.count($reviewCountList).' games');
 
         foreach ($reviewCountList as $item) {
+
             $gameId = $item->game_id;
+            $gameTitle = $item->title;
             $reviewCount = $item->review_count;
-            \DB::update("
-                UPDATE games SET review_count = ? WHERE id = ?
-            ", array($reviewCount, $gameId));
+            $reviewCountNew = $item->review_count_new;
+
+            if ($reviewCount != $reviewCountNew) {
+
+                $this->info(sprintf('Game: %s - Previous review count: %s - New review count: %s',
+                    $gameTitle, $reviewCount, $reviewCountNew));
+
+                \DB::update("
+                    UPDATE games SET review_count = ? WHERE id = ?
+                ", array($reviewCountNew, $gameId));
+
+            }
+
         }
 
         // Average rating
         $this->info('Average ratings');
 
         $avgRatingList = \DB::select("
-            SELECT g.id AS game_id, g.title,
-            count(rl.game_id) AS review_count,
+            SELECT g.id AS game_id, g.title, g.review_count, g.rating_avg,
             sum(rl.rating_normalised) AS rating_sum,
-            avg(rl.rating_normalised) AS rating_avg
+            round(avg(rl.rating_normalised), 2) AS rating_avg_new
             FROM games g
             LEFT JOIN review_links rl ON g.id = rl.game_id
             LEFT JOIN review_sites rs ON rl.site_id = rs.id
@@ -76,17 +87,31 @@ class UpdateGameReviewStats extends Command
             GROUP BY g.id;
         ");
 
-        $this->info('Updating '.count($avgRatingList).' games');
+        $this->info('Checking '.count($avgRatingList).' games');
 
         foreach ($avgRatingList as $item) {
+
             $gameId = $item->game_id;
+            $gameTitle = $item->title;
             $reviewCount = $item->review_count;
+
             if ($reviewCount == 0) continue;
+
             //$ratingSum = $item->rating_sum;
             $ratingAvg = $item->rating_avg;
-            \DB::update("
-                UPDATE games SET rating_avg = ? WHERE id = ?
-            ", array($ratingAvg, $gameId));
+            $ratingAvgNew = $item->rating_avg_new;
+
+            if ($ratingAvg != $ratingAvgNew) {
+
+                $this->info(sprintf('Game: %s - Previous average: %s - New average: %s',
+                    $gameTitle, $ratingAvg, $ratingAvgNew));
+
+                \DB::update("
+                    UPDATE games SET rating_avg = ? WHERE id = ?
+                ", array($ratingAvgNew, $gameId));
+
+            }
+
         }
 
     }
