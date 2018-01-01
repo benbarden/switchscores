@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Services\ReviewLinkService;
+use App\Services\ReviewSiteService;
 
 class ReviewsController extends BaseController
 {
@@ -11,10 +12,15 @@ class ReviewsController extends BaseController
     {
         $bindings = array();
 
-        $serviceReviews = resolve('Services\ReviewLinkService');
-        /* @var $serviceReviews \App\Services\ReviewLinkService */
-        $reviewList = $serviceReviews->getLatestNaturalOrder(10);
+        $serviceReviewLinks = resolve('Services\ReviewLinkService');
+        /* @var $serviceReviewLinks \App\Services\ReviewLinkService */
+        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
 
+        $serviceReviewSites = resolve('Services\ReviewSiteService');
+        /* @var $serviceReviewSites \App\Services\ReviewSiteService */
+        $reviewPartnerList = $serviceReviewSites->getActive();
+
+        $bindings['ReviewPartnerList'] = $reviewPartnerList;
         $bindings['ReviewList'] = $reviewList;
         $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 15);
         $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(10);

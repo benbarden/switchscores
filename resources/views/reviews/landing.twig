@@ -27,77 +27,44 @@
         <h2>
             Top rated - New
         </h2>
-        {% if TopRatedNewReleases %}
+        {% if TopRatedNewReleases.count > 0 %}
             <p>
                 Top rated games released in the last 30 days.
             </p>
-            <table class="table table-striped table-responsive">
-                <thead>
-                    <tr>
-                        <th>Game</th>
-                        <th class="text-center">Rating</th>
-                        <th class="text-right">Reviews</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for item in TopRatedNewReleases %}
-                    <tr>
-                        <td>
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
-                                {{ item.title }}
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            {{ item.rating_avg }}
-                        </td>
-                        <td class="text-right">
-                            {{ item.review_count }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
         {% else %}
-            <p>Could not display Top rated.</p>
+            <p>No Top Rated games to display.</p>
         {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
-            Top rated - All-time
-            <span class="h4">(<a href="{{ route('reviews.topRated.allTime') }}">view all</a>)</span>
+            Our review partners
         </h2>
-        {% if TopRatedAllTime %}
-            <p>
-                Top rated games of all-time.
-            </p>
+        {% if ReviewPartnerList %}
             <table class="table table-striped table-responsive">
                 <thead>
                     <tr>
-                        <th>Game</th>
-                        <th class="text-center">Rating</th>
-                        <th class="text-right">Reviews</th>
+                        <th class="text-left">Name</th>
+                        <th class="text-center">View site</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for item in TopRatedAllTime %}
+                {% for item in ReviewPartnerList %}
                     <tr>
-                        <td>
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
-                                {{ item.title }}
+                        <td class="text-left">
+                            <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}">
+                                {{ item.name }}
                             </a>
                         </td>
                         <td class="text-center">
-                            {{ item.rating_avg }}
-                        </td>
-                        <td class="text-right">
-                            {{ item.review_count }}
+                            <a href="{{ item.url }}" target="_blank">View site</a>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>Could not display Top rated.</p>
+            <p>Could not display review partners.</p>
         {% endif %}
     </div>
 </div>

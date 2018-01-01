@@ -67,6 +67,14 @@ class ReviewSiteService
         return $reviewSites;
     }
 
+    public function getActive()
+    {
+        $reviewSites = ReviewSite::
+            where('active', 'Y')
+            ->orderBy('name', 'asc')->get();
+        return $reviewSites;
+    }
+
     public function getFeedUrls()
     {
         $reviewSites = ReviewSite::
