@@ -61,14 +61,6 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $gameList = $this->serviceGame->getAllUpcoming();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'upcoming-2017-with-dates':
-                    $gameList = $this->serviceGame->getAllUpcomingYearWithDates(2017);
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-2017-with-quarters':
-                    $gameList = $this->serviceGame->getAllUpcomingYearQuarters(2017);
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
                 case 'upcoming-2018-with-dates':
                     $gameList = $this->serviceGame->getAllUpcomingYearWithDates(2018);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
