@@ -14,7 +14,7 @@ class ChartsController extends BaseController
         $chartDatesEu = $chartsDateService->getDateList('eu');
         $chartDatesUs = $chartsDateService->getDateList('us');
 
-        $bindings['TopTitle'] = 'Charts';
+        $bindings['TopTitle'] = 'Nintendo Switch eShop Charts';
         $bindings['PageTitle'] = 'Charts';
         $bindings['ChartDatesEu'] = $chartDatesEu;
         $bindings['ChartDatesUs'] = $chartDatesUs;
@@ -31,11 +31,11 @@ class ChartsController extends BaseController
 
         switch ($countryCode) {
             case ChartsRankingGlobal::COUNTRY_US;
-                $title = 'Charts - US';
+                $title = 'Nintendo Switch eShop Charts - US';
                 $regionText = 'US';
                 break;
             case ChartsRankingGlobal::COUNTRY_EU;
-                $title = 'Charts - Europe';
+                $title = 'Nintendo Switch eShop Charts - Europe';
                 $regionText = 'European';
                 break;
             default:
@@ -54,7 +54,7 @@ class ChartsController extends BaseController
 
         $pageTitle = $regionText.' eShop Charts: '.$chartDateDesc;
 
-        $bindings['TopTitle'] = $title;
+        $bindings['TopTitle'] = $title.' - '.$chartDateDesc;
         $bindings['PageTitle'] = $pageTitle;
         $bindings['RegionText'] = $regionText;
         $bindings['ChartDate'] = $date;

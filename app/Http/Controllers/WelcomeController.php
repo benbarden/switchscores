@@ -30,7 +30,7 @@ class WelcomeController extends BaseController
         $bindings['ChartsLatestEu'] = $chartsDateService->getDateList('eu', 1);
         $bindings['ChartsLatestUs'] = $chartsDateService->getDateList('us', 1);
 
-        $bindings['TopTitle'] = 'Welcome to World of Switch';
+        $bindings['TopTitle'] = 'Welcome';
         $bindings['PageTitle'] = 'World of Switch - Homepage';
 
         return view('welcome', $bindings);
