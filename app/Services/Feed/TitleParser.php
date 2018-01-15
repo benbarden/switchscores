@@ -46,6 +46,7 @@ class TitleParser
         $this->title = str_replace('(Switch eShop)', '', $this->title);
         $this->title = str_replace('(Nintendo Switch)', '', $this->title);
         $this->title = str_replace('(Switch)', '', $this->title);
+        $this->title = str_replace('[Nintendo Switch eShop]', '', $this->title);
     }
 
     /**
