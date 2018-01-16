@@ -36,7 +36,7 @@ class SitemapController extends BaseController
         $sitemapPages[] = array('url' => route('games.list.upcoming'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
 
         $sitemapPages[] = array('url' => route('reviews.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.8');
-        $sitemapPages[] = array('url' => route('reviews.topRatedAllTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('reviews.topRated.allTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         $sitemapPages[] = array('url' => route('reviews.gamesNeedingReviews'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
 
         $bindings['SitemapPages'] = $sitemapPages;
