@@ -63,7 +63,8 @@ class Parser
     {
         switch ($this->siteId) {
             case ReviewSite::SITE_CUBED3:
-                // No feed URL yet
+                $this->titleParser->stripPlatformText();
+                $this->titleParser->cleanupText();
                 break;
             case ReviewSite::SITE_DESTRUCTOID:
                 // No feed URL yet
