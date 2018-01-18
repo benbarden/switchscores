@@ -58,7 +58,7 @@ class RunFeedReviewGenerator extends Command
         /* @var ReviewSiteService $reviewSiteService */
         /* @var StatsService $reviewStatsService */
 
-        $feedItems = $feedItemReviewService->getUnprocessed(10);
+        $feedItems = $feedItemReviewService->getUnprocessed();
 
         if (!$feedItems) {
             $this->info('No items to process. Aborting.');
