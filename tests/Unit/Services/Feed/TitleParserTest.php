@@ -142,4 +142,15 @@ class TitleParserTest extends TestCase
         $this->titleParser->cleanupText();
         $this->assertEquals('Review: Energy Cycle', $this->titleParser->getTitle());
     }
+    
+    /**
+     * @depends testCleanupText
+     */
+    public function testStripSquareBracketPlatformText2()
+    {
+        $this->titleParser->setTitle('Review: Baseball Riot [Nintendo Switch eShop]');
+        $this->titleParser->stripPlatformText();
+        $this->titleParser->cleanupText();
+        $this->assertEquals('Review: Baseball Riot', $this->titleParser->getTitle());
+    }
 }
