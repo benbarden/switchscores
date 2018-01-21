@@ -30,6 +30,33 @@ class StatsService
         return $avgScore;
     }
 
+    public function calculateStandardDeviation(Collection $reviews)
+    {
+        $reviewCount = $reviews->count();
+
+        if ($reviewCount == 0) return null;
+
+        $reviewsArray = [];
+        foreach ($reviews as $review) {
+            $reviewsArray[] = $review['rating_normalised'];
+        }
+
+        $sdValue = $this->calculateSd($reviewsArray);
+
+        return round($sdValue, 4);
+    }
+
+    // Function to calculate square of value - mean
+    public function calculateSdSquare($x, $mean) {
+        return pow($x - $mean, 2);
+    }
+
+    // Function to calculate standard deviation (uses sd_square)
+    public function calculateSd($array) {
+        // square root of sum of squares divided by N-1
+        return sqrt(array_sum(array_map(array($this, 'calculateSdSquare'), $array, array_fill(0, count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
+    }
+
     public function updateGameReviewStats(Game $game)
     {
         $gameReviews = $game->reviews()->get();
