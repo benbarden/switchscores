@@ -115,7 +115,8 @@ class Parser
                 $this->titleParser->cleanupText();
                 break;
             case ReviewSite::SITE_VIDEO_CHUMS:
-                // No feed URL yet
+                $this->titleParser->stripReviewText();
+                $this->titleParser->cleanupText();
                 break;
             case ReviewSite::SITE_WOS:
                 // N/A

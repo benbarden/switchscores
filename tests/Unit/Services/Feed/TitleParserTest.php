@@ -142,7 +142,7 @@ class TitleParserTest extends TestCase
         $this->titleParser->cleanupText();
         $this->assertEquals('Review: Energy Cycle', $this->titleParser->getTitle());
     }
-    
+
     /**
      * @depends testCleanupText
      */
