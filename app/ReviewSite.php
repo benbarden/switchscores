@@ -22,6 +22,7 @@ class ReviewSite extends Model
     const SITE_NINTENDO_INSIDER = 17;
     const SITE_MIKETENDO64 = 18;
     const SITE_NINDIE_SPOTLIGHT = 19;
+    const SITE_THE_SWITCH_EFFECT = 20;
 
     /**
      * @var string

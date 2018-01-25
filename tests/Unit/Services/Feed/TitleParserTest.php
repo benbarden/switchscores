@@ -153,4 +153,16 @@ class TitleParserTest extends TestCase
         $this->titleParser->cleanupText();
         $this->assertEquals('Review: Baseball Riot', $this->titleParser->getTitle());
     }
+
+    /**
+     * @depends testCleanupText
+     */
+    public function testStripTheSwitchEffectExample1()
+    {
+        $this->titleParser->setTitle('[Review] Steamworld Dig 2 – Nintendo Switch');
+        $this->titleParser->stripReviewText();
+        $this->titleParser->stripPlatformText();
+        $this->titleParser->cleanupText();
+        $this->assertEquals('Steamworld Dig 2', $this->titleParser->getTitle());
+    }
 }

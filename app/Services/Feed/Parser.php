@@ -118,6 +118,11 @@ class Parser
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
+            case ReviewSite::SITE_THE_SWITCH_EFFECT:
+                $this->titleParser->stripPlatformText();
+                $this->titleParser->stripReviewText();
+                $this->titleParser->cleanupText();
+                break;
             case ReviewSite::SITE_WOS:
                 // N/A
                 break;
