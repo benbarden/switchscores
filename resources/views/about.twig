@@ -1,0 +1,73 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+
+        <h2>{{ PageTitle }}</h2>
+        <p>
+            World of Switch (WOS) is a site dedicated to the Nintendo Switch.
+            The main focus is on charts, stats, and reviews, and providing a database
+            of Switch games released in Europe.
+        </p>
+        <p>
+            The games database is updated daily. Reviews and rankings are updated
+            daily, if new reviews are available to add. eShop chart rankings for
+            Europe and the US are added every Saturday.
+        </p>
+
+        <h2>Get in touch</h2>
+        <p>
+            For news and updates,
+            <a href="https://twitter.com/worldofswitch">follow @worldofswitch on Twitter</a>.
+        </p>
+        <p>
+            Questions, feedback and general comments can be sent via Twitter, or email
+            (hello at worldofswitch dot com).
+        </p>
+        <p>
+            The site is developed and maintained by Ben Barden
+            (<a href="https://twitter.com/benbarden">@benbarden</a>).
+        </p>
+
+        <h2>A quick history</h2>
+        <p>
+            Below is a summary of a few milestones in the life of WOS.
+            This doesn't include the frequent updates to the games database,
+            the list of reviews, and eShop chart rankings.
+        </p>
+        <ul>
+            <li>01/01/2018 - Review partners added to Reviews page</li>
+            <li>27/12/2017 - Completed work on the review importer</li>
+            <li>20/12/2017 - New pages for review partner sites</li>
+            <li>26/11/2017 - Videos added to game pages</li>
+            <li>12/11/2017 - Major update to games database (no functional changes)</li>
+            <li>23/10/2017 - Finished adding genres to all Switch games</li>
+            <li>21/10/2017 - Improvements to navigation, charts, News, sortable tables</li>
+            <li>15/10/2017 - News section added; Ranking added to games</li>
+            <li>
+                25/08/2017 - Refocusing on charts, stats and reviews - less so on news.
+                Closing the wordpress.com blog
+            </li>
+            <li>10/08/2017 - New homepage</li>
+            <li>05/08/2017 - Browse by genre</li>
+            <li>16/07/2017 - New-look website</li>
+            <li>25/06/2017 - Added average review score, total review count, and Top Rated page</li>
+            <li>22/06/2017 - Added first review links</li>
+            <li>27/05/2017 - Moved stats microsite to be the main site; moved blog to wordpress.com</li>
+            <li>21/05/2017 - Launched separate stats microsite</li>
+            <li>03/04/2017 - Launched worldofswitch.com - initially as a WordPress blog</li>
+        </ul>
+        
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>Content</h2>
+        <ul>
+            <li><a href="{{ route('charts.landing') }}">Charts</a></li>
+            <li><a href="{{ route('reviews.landing') }}">Reviews</a></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock page_body %}

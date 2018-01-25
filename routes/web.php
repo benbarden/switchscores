@@ -14,6 +14,9 @@
 // Front page
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
+// Static content
+Route::get('/about', 'AboutController@show')->name('about');
+
 // Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
 Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
