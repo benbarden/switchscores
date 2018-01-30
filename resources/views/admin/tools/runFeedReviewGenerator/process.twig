@@ -1,0 +1,14 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Run Feed Review Generator has completed.
+</p>
+
+<ul>
+    <li><a href="{{ route('admin.feed-items.list') }}">Feed Items</a></li>
+    <li><a href="{{ route('admin.tools.landing') }}">Tools landing page</a></li>
+</ul>
+
+{% endblock page_inner %}

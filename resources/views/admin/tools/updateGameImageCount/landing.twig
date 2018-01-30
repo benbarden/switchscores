@@ -1,0 +1,20 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool will update the Image Count field for each game.
+</p>
+<p>
+    At this time, there are no image management screens as part of Admin, so this tool
+    is unlikely to be of much use. It may come in handy when those screens are added.
+</p>
+<p>
+    For now, if any images are manually uploaded and added to the database, this screen
+    can be used to recalculate the total number of images for each game without needing
+    to run the command manually.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.updateGameImageCount.process') }}">Start process</a>
+
+{% endblock page_inner %}

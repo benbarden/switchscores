@@ -1,0 +1,15 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool will update Review Stats for each game. This affects the Review Count and Average Score fields.
+</p>
+<p>
+    This process is run automatically after adding a review, but only for the game that's being updated.
+    This tool may come in handy if you need to regenerate stats for every game in the database.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.updateGameReviewStats.process') }}">Start process</a>
+
+{% endblock page_inner %}

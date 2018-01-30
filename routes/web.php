@@ -116,8 +116,18 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Tools
     Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
+    Route::get('/admin/tools/run-feed-importer/landing', 'Admin\ToolsController@runFeedImporterLanding')->name('admin.tools.runFeedImporter.landing');
+    Route::get('/admin/tools/run-feed-importer/process', 'Admin\ToolsController@runFeedImporterProcess')->name('admin.tools.runFeedImporter.process');
+    Route::get('/admin/tools/run-feed-parser/landing', 'Admin\ToolsController@runFeedParserLanding')->name('admin.tools.runFeedParser.landing');
+    Route::get('/admin/tools/run-feed-parser/process', 'Admin\ToolsController@runFeedParserProcess')->name('admin.tools.runFeedParser.process');
+    Route::get('/admin/tools/run-feed-review-generator/landing', 'Admin\ToolsController@runFeedReviewGeneratorLanding')->name('admin.tools.runFeedReviewGenerator.landing');
+    Route::get('/admin/tools/run-feed-review-generator/process', 'Admin\ToolsController@runFeedReviewGeneratorProcess')->name('admin.tools.runFeedReviewGenerator.process');
     Route::get('/admin/tools/update-game-ranks/landing', 'Admin\ToolsController@updateGameRanksLanding')->name('admin.tools.updateGameRanks.landing');
     Route::get('/admin/tools/update-game-ranks/process', 'Admin\ToolsController@updateGameRanksProcess')->name('admin.tools.updateGameRanks.process');
+    Route::get('/admin/tools/update-game-image-count/landing', 'Admin\ToolsController@updateGameImageCountLanding')->name('admin.tools.updateGameImageCount.landing');
+    Route::get('/admin/tools/update-game-image-count/process', 'Admin\ToolsController@updateGameImageCountProcess')->name('admin.tools.updateGameImageCount.process');
+    Route::get('/admin/tools/update-game-review-stats/landing', 'Admin\ToolsController@updateGameReviewStatsLanding')->name('admin.tools.updateGameReviewStats.landing');
+    Route::get('/admin/tools/update-game-review-stats/process', 'Admin\ToolsController@updateGameReviewStatsProcess')->name('admin.tools.updateGameReviewStats.process');
 
 });
 

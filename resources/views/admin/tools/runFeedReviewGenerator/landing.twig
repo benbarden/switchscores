@@ -1,0 +1,20 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool runs the Feed Review Generator tool. (Step 3 of 3)
+</p>
+<p>
+    Once the Feed Importer and the Feed Parser have run, you should review the contents of the
+    <a href="{{ route('admin.feed-items.list') }}">Feed Items</a> page.
+</p>
+<p>
+    The Feed Review Generator will only process the items that have been matched to games and
+    have ratings attached. If there are entries on the Feed Items page that are missing these fields,
+    they will be left alone until the details are filled in.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.runFeedReviewGenerator.process') }}">Start process</a>
+
+{% endblock page_inner %}
