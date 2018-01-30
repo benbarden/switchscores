@@ -124,6 +124,26 @@ class GameService
     }
 
     /**
+     * Welcome page stats
+     * @return integer
+     */
+    public function countReleased()
+    {
+        $listCount = Game::where('upcoming', 0)->count();
+        return $listCount;
+    }
+
+    /**
+     * Welcome page stats
+     * @return integer
+     */
+    public function countUpcoming()
+    {
+        $listCount = Game::where('upcoming', 1)->count();
+        return $listCount;
+    }
+
+    /**
      * Used for public game lists
      * @return mixed
      */

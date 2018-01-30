@@ -52,6 +52,15 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function countActive()
+    {
+        $listReviews = ReviewLink::select('review_links.*', 'review_sites.name')
+            ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
+            ->where('review_sites.active', '=', 'Y')
+            ->count();
+        return $listReviews;
+    }
+
     public function getLatestNaturalOrder($limit = 10)
     {
         $reviewLinks = ReviewLink::orderBy('review_date', 'desc')
