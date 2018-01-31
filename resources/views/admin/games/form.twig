@@ -2,99 +2,111 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="title" class="col-md-4 control-label">Title</label>
-        <div class="col-md-6">
-            <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="link_title" class="col-md-4 control-label">Link title</label>
-        <div class="col-md-6">
-            <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="release_date" class="col-md-4 control-label">Release date</label>
-        <div class="col-md-6">
-            <input id="release_date" type="date" class="form-control" name="release_date">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="price_eshop" class="col-md-4 control-label">eShop price</label>
-        <div class="col-md-6">
-            <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="players" class="col-md-4 control-label">No of players</label>
-        <div class="col-md-6">
-            <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="developer" class="col-md-4 control-label">Developer</label>
-        <div class="col-md-6">
-            <input id="developer" type="text" class="form-control" name="developer" size="50" maxlength="100">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="publisher" class="col-md-4 control-label">Publisher</label>
-        <div class="col-md-6">
-            <input id="publisher" type="text" class="form-control" name="publisher" size="50" maxlength="100">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="upcoming" class="col-md-4 control-label">Upcoming</label>
-        <div class="col-md-6">
-            <input id="upcoming" type="checkbox" name="upcoming">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="upcoming_date" class="col-md-4 control-label">Upcoming date</label>
-        <div class="col-md-6">
-            <input id="upcoming_date" type="text" class="form-control" name="upcoming_date" maxlength="30">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="media_folder" class="col-md-4 control-label">Media folder</label>
-        <div class="col-md-6">
-            <input id="media_folder" type="text" class="form-control" name="media_folder">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="amazon_uk_link" class="col-md-4 control-label">Amazon UK link</label>
-        <div class="col-md-6">
-            <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="video_url" class="col-md-4 control-label">Video URL</label>
-        <div class="col-md-6">
-            <input id="video_url" type="text" class="form-control" name="video_url">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="overview" class="col-md-4 control-label">Overview</label>
-        <div class="col-md-6">
-            <textarea id="overview" class="form-control" name="overview" rows="10"></textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-md-4 control-label">Genres</label>
-        <div class="col-md-6">
-            {% if GenreList %}
-            {% for item in GenreList %}
-                <div class="checkbox">
-                    <label>
-                        <input id="genre_item_{{ item.id }}" class="genre_item" name="genre_item[{{ item.id }}]" type="checkbox">
-                        {{ item.genre }}
-                    </label>
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <div class="form-group">
+                <label for="title" class="col-md-4 control-label">Title</label>
+                <div class="col-md-6">
+                    <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
                 </div>
-            {% endfor %}
-            {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="link_title" class="col-md-4 control-label">Link title</label>
+                <div class="col-md-6">
+                    <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="release_date" class="col-md-4 control-label">Release date</label>
+                <div class="col-md-6">
+                    <input id="release_date" type="date" class="form-control" name="release_date">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="price_eshop" class="col-md-4 control-label">eShop price</label>
+                <div class="col-md-6">
+                    <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="players" class="col-md-4 control-label">No of players</label>
+                <div class="col-md-6">
+                    <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="developer" class="col-md-4 control-label">Developer</label>
+                <div class="col-md-6">
+                    <input id="developer" type="text" class="form-control" name="developer" size="50" maxlength="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="publisher" class="col-md-4 control-label">Publisher</label>
+                <div class="col-md-6">
+                    <input id="publisher" type="text" class="form-control" name="publisher" size="50" maxlength="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upcoming" class="col-md-4 control-label">Upcoming</label>
+                <div class="col-md-6">
+                    <input id="upcoming" type="checkbox" name="upcoming">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upcoming_date" class="col-md-4 control-label">Upcoming date</label>
+                <div class="col-md-6">
+                    <input id="upcoming_date" type="text" class="form-control" name="upcoming_date" maxlength="30">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="media_folder" class="col-md-4 control-label">Media folder</label>
+                <div class="col-md-6">
+                    <input id="media_folder" type="text" class="form-control" name="media_folder">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="amazon_uk_link" class="col-md-4 control-label">Amazon UK link</label>
+                <div class="col-md-6">
+                    <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="video_url" class="col-md-4 control-label">Video URL</label>
+                <div class="col-md-6">
+                    <input id="video_url" type="text" class="form-control" name="video_url">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="overview" class="col-md-4 control-label">Overview</label>
+                <div class="col-md-6">
+                    <textarea id="overview" class="form-control" name="overview" rows="10"></textarea>
+                </div>
+            </div>
+
         </div>
+
+        <div class="col-md-3">
+
+            <div class="form-group">
+                <label class="control-label">Genres</label>
+                {% if GenreList %}
+                    {% for item in GenreList %}
+                        <div class="checkbox">
+                            <label>
+                                <input id="genre_item_{{ item.id }}" class="genre_item" name="genre_item[{{ item.id }}]" type="checkbox">
+                                {{ item.genre }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+        </div>
+
     </div>
+
     <div class="form-group">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
