@@ -22,16 +22,25 @@
     </div>
 </div>
 
+{% if auth_user() %}
+<div class="row">
+    <div class="col-md-12">
+        {% if IsOnOwnedList == 'Y' %}
+            <a id="js-user-owned-list-btn" class="js-user-owned-list-toggle btn btn-default btn-sm" data-id="{{ GameId }}" data-content="added">Added to Owned List</a>
+        {% else %}
+            <a id="js-user-owned-list-btn" class="js-user-owned-list-toggle btn btn-default btn-primary btn-sm" data-id="{{ GameId }}" data-content="not-added">Add to Owned List</a>
+        {% endif %}
+        {% if IsOnWishList == 'Y' %}
+            <a id="js-user-wish-list-btn" class="js-user-wish-list-toggle btn btn-default btn-sm" data-id="{{ GameId }}" data-content="added">Added to Wishlist</a>
+        {% else %}
+            <a id="js-user-wish-list-btn" class="js-user-wish-list-toggle btn btn-default btn-primary btn-sm" data-id="{{ GameId }}" data-content="not-added">Add to Wishlist</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
 <div class="row">
     <div class="col-sm-12 col-md-5">
-        {#
-        <h2>Overview</h2>
-        {% if GameData.overview %}
-        <p>{{ GameData.overview }}</p>
-        {% else %}
-        <p><em>Coming soon!</em></p>
-        {% endif %}
-        #}
         <h2>Game info</h2>
         {% include 'games/infobox.twig' with {'GameData': GameData} %}
         {% if GameData.amazon_uk_link %}
@@ -53,5 +62,7 @@
         {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
     </div>
 </div>
+
+{% include 'games/scripts.twig' %}
 
 {% endblock page_body %}

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use App\Helpers\LinkHelper;
+
 /**
  * Configuration options for Twig.
  */
@@ -144,7 +146,13 @@ return [
         | in order to be marked as safe.
         |
         */
-        'facades' => [],
+        'facades' => [
+            'LinkHelper' => [
+                'is_safe' => [
+                    'gameShow'
+                ]
+            ]
+        ],
 
         /*
         |--------------------------------------------------------------------------

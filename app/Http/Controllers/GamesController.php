@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Collection;
 
+use Auth;
+use App\Services\UserListService;
+use App\Services\UserListItemService;
+
 class GamesController extends BaseController
 {
     public function listReleased()
@@ -95,44 +99,63 @@ class GamesController extends BaseController
      * @param $linkTitle
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function show($id, $linkTitle)
+    public function show($gameId, $linkTitle)
     {
         $bindings = array();
 
-        $gameData = \App\Game::where('id', $id)->get();
-
-        if (!$gameData) {
-            abort(404);
-        }
-
-        $gameData = $gameData->first();
-
+        $gameData = $this->serviceGame->find($gameId);
         if (!$gameData) {
             abort(404);
         }
 
         if ($gameData->link_title != $linkTitle) {
-            $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
+            $redirUrl = sprintf('/games/%s/%s', $gameId, $gameData->link_title);
             return redirect($redirUrl, 301);
         }
 
         $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
         /* @var $chartsRankingGlobalService \App\Services\ChartsRankingGlobalService */
         // Get chart rankings for this game
-        $gameRanking = $chartsRankingGlobalService->getByGameEu($gameData->id);
+        $gameRanking = $chartsRankingGlobalService->getByGameEu($gameId);
 
         // Get reviews
         $reviewLinkService = resolve('Services\ReviewLinkService');
-        $gameReviews = $reviewLinkService->getByGame($gameData->id);
+        $gameReviews = $reviewLinkService->getByGame($gameId);
 
         $bindings['TopTitle'] = $gameData->title;
         $bindings['PageTitle'] = $gameData->title.' - Nintendo Switch game details';
+        $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['GameRanking'] = $gameRanking;
         $bindings['GameReviews'] = $gameReviews;
 
         // Total rank count
         $bindings['RankMaximum'] = $this->serviceGame->getListTopRatedCount();
+
+        // Check if game is on lists
+        if (Auth::id()) {
+            $userId = Auth::id();
+
+            $userListService = resolve('Services\UserListService');
+            $userListItemService = resolve('Services\UserListItemService');
+            /* @var $userListService UserListService */
+            /* @var $userListItemService UserListItemService */
+
+            $ownedList = $userListService->getOwnedListByUser($userId);
+            $wishList = $userListService->getWishListByUser($userId);
+
+            if ($ownedList) {
+                $listId = $ownedList->id;
+                $gameOnOwnedList = $userListItemService->getByListAndGame($listId, $gameId);
+                $bindings['IsOnOwnedList'] = !is_null($gameOnOwnedList) ? 'Y' : 'N';
+            }
+            if ($wishList) {
+                $listId = $wishList->id;
+                $gameOnWishList = $userListItemService->getByListAndGame($listId, $gameId);
+                $bindings['IsOnWishList'] = !is_null($gameOnWishList) ? 'Y' : 'N';
+            }
+
+        }
 
         return view('games.show', $bindings);
     }
@@ -144,13 +167,10 @@ class GamesController extends BaseController
      */
     public function showId($id)
     {
-        $gameData = \App\Game::where('id', $id)->get();
-
+        $gameData = $this->serviceGame->find($id);
         if (!$gameData) {
             abort(404);
         }
-
-        $gameData = $gameData->first();
 
         $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
         return redirect($redirUrl, 301);

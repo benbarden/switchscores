@@ -1,0 +1,63 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Welcome, {{ auth_user().display_name }}!</h2>
+
+        <p>
+            We're just getting started with the WOS Members section. Please follow
+            <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>
+            on Twitter for the latest updates.
+        </p>
+
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Wishlist</h2>
+
+        {% if WishListItems.count > 0 %}
+            <ul>
+                {% for item in WishListItems %}
+                    <li id="js-user-playlist-item-{{ item.id }}">
+                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                        <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>
+                Your wishlist is empty. To start filling it in, head over to our
+                <a href="{{ route('games.list.released') }}">games page</a>.
+            </p>
+        {% endif %}
+
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Owned list</h2>
+
+        {% if OwnedListItems.count > 0 %}
+            <ul>
+                {% for item in OwnedListItems %}
+                    <li id="js-user-playlist-item-{{ item.id }}">
+                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                        <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>
+                Your owned list is empty. To start filling it in, head over to our
+                <a href="{{ route('games.list.released') }}">games page</a>.
+            </p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% include 'user/scripts.twig' %}
+
+{% endblock page_body %}

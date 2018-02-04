@@ -27,6 +27,8 @@ class BaseController extends Controller
 
         $currentUser = Auth::user();
         $currentUserId = Auth::id();
+        \View::share('auth_user', $currentUser);
+        \View::share('auth_id', $currentUserId);
         \View::share('user', $currentUser);
         \View::share('uid', $currentUserId);
     }

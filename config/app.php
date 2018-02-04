@@ -190,6 +190,8 @@ return [
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
         App\Providers\Review\StatsServiceProvider::class,
+        App\Providers\UserListServiceProvider::class,
+        App\Providers\UserListItemServiceProvider::class,
 
         TwigBridge\ServiceProvider::class,
 
@@ -243,6 +245,10 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Twig' => TwigBridge\Facade\Twig::class,
+
+        // WOS
+
+        'LinkHelper' => App\Helpers\LinkHelper::class,
 
     ],
 

@@ -1,0 +1,24 @@
+<script>
+
+    $('.js-user-remove-playlist-item').on('click', function() {
+        itemId = $(this).data('id');
+        if (itemId == '') {
+            return false;
+        }
+
+        if (!window.confirm('Remove this item from the list?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/user-list-item/delete', {itemId: itemId}, function(data) {
+            $('#js-user-playlist-item-' + itemId).remove();
+        });
+    });
+
+</script>

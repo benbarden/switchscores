@@ -17,4 +17,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');

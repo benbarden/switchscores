@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ChartsCreated' => [
             'App\Listeners\ActivityFeedNewCharts'
         ],
+        'App\Events\UserCreated' => [
+            'App\Listeners\CreateListsForNewUser'
+        ],
     ];
 
     /**
