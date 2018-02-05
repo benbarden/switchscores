@@ -4,13 +4,15 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Stuff to do</h2>
+        <h2>Site stats</h2>
         <div class="row">
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.feed-items.list') }}">{{ UnprocessedFeedItemsCount }}</a></h2>
                 <a href="{{ route('admin.feed-items.list') }}">feed items to review</a>
             </div>
             <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.user.list') }}">{{ RegisteredUserCount }}</a></h2>
+                <a href="{{ route('admin.user.list') }}">registered users</a>
             </div>
             <div class="col-md-4 text-center">
             </div>
@@ -40,6 +42,7 @@
             <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
             <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
             <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>
+            <li><a href="{{ route('admin.user.list') }}">Users</a></li>
         </ul>
     </div>
 </div>

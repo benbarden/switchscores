@@ -192,6 +192,7 @@ return [
         App\Providers\Review\StatsServiceProvider::class,
         App\Providers\UserListServiceProvider::class,
         App\Providers\UserListItemServiceProvider::class,
+        App\Providers\UserServiceProvider::class,
 
         TwigBridge\ServiceProvider::class,
 

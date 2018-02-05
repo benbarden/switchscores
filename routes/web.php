@@ -141,6 +141,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tools/update-game-review-stats/landing', 'Admin\ToolsController@updateGameReviewStatsLanding')->name('admin.tools.updateGameReviewStats.landing');
     Route::get('/admin/tools/update-game-review-stats/process', 'Admin\ToolsController@updateGameReviewStatsProcess')->name('admin.tools.updateGameReviewStats.process');
 
+    // News
+    Route::get('/admin/user/list', 'Admin\UserController@showList')->name('admin.user.list');
+
 });
 
 Auth::routes();
