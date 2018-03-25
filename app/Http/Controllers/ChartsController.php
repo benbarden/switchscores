@@ -126,11 +126,20 @@ class ChartsController extends BaseController
         $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Top 15';
         $bindings['PositionNo'] = $position;
 
-        $bindings['GamesList'] = \DB::select("
+        $bindings['GamesListEu'] = \DB::select("
             SELECT cr.game_id, g.title, g.link_title, count(*) AS count
             FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
             WHERE cr.country_code = 'eu'
+            AND cr.position = ?
+            GROUP BY cr.game_id ORDER BY count(*) DESC
+        ", array($position));
+
+        $bindings['GamesListUs'] = \DB::select("
+            SELECT cr.game_id, g.title, g.link_title, count(*) AS count
+            FROM charts_rankings_global cr
+            JOIN games g ON cr.game_id = g.id
+            WHERE cr.country_code = 'us'
             AND cr.position = ?
             GROUP BY cr.game_id ORDER BY count(*) DESC
         ", array($position));
