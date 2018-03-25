@@ -25,16 +25,17 @@ Route::get('/sitemap/genres', 'SitemapController@genres')->name('sitemap.genres'
 Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
 Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 
-// Old pages - redirects
-Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
-Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('games.list.reviewsNeeded');
-
 // Main game pages
+Route::get('/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 
 Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
 Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
+
+// Old pages - redirects
+Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
+Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('games.list.reviewsNeeded');
 
 // These must be after the game redirects
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');

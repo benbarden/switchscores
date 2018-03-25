@@ -10,6 +10,20 @@ use App\Services\UserListItemService;
 
 class GamesController extends BaseController
 {
+    public function landing()
+    {
+        $bindings = [];
+
+        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 15);
+        $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 15);
+        $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
+
+        $bindings['TopTitle'] = 'List of Nintendo Switch games';
+        $bindings['PageTitle'] = 'List of Nintendo Switch games';
+
+        return view('games.landing', $bindings);
+    }
+
     public function listReleased()
     {
         $bindings = array();

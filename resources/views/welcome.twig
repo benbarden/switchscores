@@ -49,25 +49,33 @@
             <p>Could not display latest US charts data.</p>
         {% endif %}
 
-        <!-- Top rated - New -->
+        <!-- Latest reviews -->
 
         <h2>
-            Top rated - New
+            Latest reviews
         </h2>
-        {% if TopRatedNewReleases.count %}
-            <p>
-                Top rated games released in the last 30 days.
-            </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
+        {% if ReviewList.count %}
+            {% for item in ReviewList %}
+                <p>
+                    <strong>{{ item.review_date|date('jS M') }}</strong>:
+                    <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                    <br>
+                    <small>
+                        Source: <a href="{{ route('reviews.site', {'linkTitle': item.site.link_title}) }}">{{ item.site.name }}</a>;
+                        Rating: {{ item.rating_normalised }}
+                    </small>
+                </p>
+            {% endfor %}
         {% else %}
-            <p>Could not display Top rated.</p>
+            <p>No reviews to display.</p>
         {% endif %}
 
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             New releases
-            <span class="h4">(<a href="{{ route('games.list.released') }}">view all</a>)</span>
+            <span class="h4">(<a href="{{ route('games.list.released') }}">more</a>)</span>
+            <span class="h4">(<a href="{{ route('games.landing') }}">all games</a>)</span>
         </h2>
         {% if NewReleases.count %}
             <table class="table table-striped table-responsive">
@@ -98,34 +106,16 @@
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
-            Upcoming releases
-            <span class="h4">(<a href="{{ route('games.list.upcoming') }}">view all</a>)</span>
+            Best Switch games
+            <span class="h4">(<a href="{{ route('reviews.topRated.allTime') }}">view all</a>)</span>
         </h2>
-        {% if UpcomingReleases.count %}
-            <table class="table table-striped table-responsive">
-                <thead>
-                <tr>
-                    <th>Game</th>
-                    <th class="text-center">Release date</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in UpcomingReleases %}
-                    <tr>
-                        <td>
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
-                                {{ item.title }}
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            {{ item.release_date|date('jS M') }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        {% if TopRatedAllTime.count %}
+            <p>
+                Top rated Switch games of all-time.
+            </p>
+            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
         {% else %}
-            <p>No games within this timeframe.</p>
+            <p>Could not display Top rated.</p>
         {% endif %}
     </div>
 </div>
