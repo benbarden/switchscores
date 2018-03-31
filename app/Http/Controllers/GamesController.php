@@ -19,7 +19,7 @@ class GamesController extends BaseController
         $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
 
         $bindings['TopTitle'] = 'List of Nintendo Switch games';
-        $bindings['PageTitle'] = 'List of Nintendo Switch games';
+        $bindings['PageTitle'] = 'Games';
 
         return view('games.landing', $bindings);
     }

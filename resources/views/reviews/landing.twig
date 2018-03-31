@@ -2,6 +2,12 @@
 
 {% block page_body %}
 
+<h1>{{ PageTitle }}</h1>
+
+<ul>
+    <li><a href="{{ route('reviews.gamesNeedingReviews') }}">Games needing more reviews</a></li>
+</ul>
+
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
