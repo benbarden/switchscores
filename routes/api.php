@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
+
+Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
