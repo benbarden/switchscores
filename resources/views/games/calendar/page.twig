@@ -5,19 +5,23 @@
 <h1>{{ PageTitle }}</h1>
 
 <ul>
-    <li><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></li>
+    <li><a href="{{ route('games.calendar.landing') }}">Back to the release calendar homepage</a></li>
 </ul>
+
+<p>
+    <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to
+    receive a ranking. Games without a rating or rank have not been reviewed by any of our review
+    partners. Once a game reaches 3 or more reviews in our database, it will be ranked. Games with no
+    rank are particularly susceptible to moving up or down the list in the future. This will level out
+    as more reviews are added. Treat these games as "buy at your own risk" :)
+</p>
 
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
-            Newest
-            <span class="h4">
-                (<a href="{{ route('games.calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
-                (<a href="{{ route('games.list.released') }}">all games</a>)
-            </span>
+            By date (Total {{ GamesByMonthList.count }})
         </h2>
-        {% if NewReleases.count %}
+        {% if GamesByMonthList.count %}
             <table class="table table-striped table-responsive">
                 <thead>
                 <tr>
@@ -26,7 +30,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for item in NewReleases %}
+                {% for item in GamesByMonthList %}
                     <tr>
                         <td>
                             <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
@@ -41,12 +45,22 @@
                 </tbody>
             </table>
         {% else %}
-            <p>No games within this timeframe.</p>
+            <p>No games to display.</p>
         {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
-            Upcoming
+            By rating
+        </h2>
+        {% if GamesByMonthRatings.count %}
+            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': GamesByMonthRatings} %}
+        {% else %}
+            <p>No games to display.</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        {#
+        <h2>
             <span class="h4">(<a href="{{ route('games.list.upcoming') }}">view all</a>)</span>
         </h2>
         {% if UpcomingReleases.count %}
@@ -75,20 +89,7 @@
         {% else %}
             <p>No games within this timeframe.</p>
         {% endif %}
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>
-            Top rated - All-time
-            <span class="h4">(<a href="{{ route('reviews.topRated.allTime') }}">view all</a>)</span>
-        </h2>
-        {% if TopRatedAllTime.count %}
-            <p>
-                Top rated Switch games of all-time.
-            </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
-        {% else %}
-            <p>Could not display Top rated.</p>
-        {% endif %}
+        #}
     </div>
 </div>
 

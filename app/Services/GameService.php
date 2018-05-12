@@ -313,13 +313,30 @@ class GameService
     }
 
     /**
-     * Top Rated - By month
+     * Release Calendar list
+     * @param integer $year
      * @param integer $month
      * @return mixed
      */
-    public function getListTopRatedByMonth($month)
+    public function getReleaseCalendarList($year, $month)
     {
-        $gamesList = Game::where('review_count', '>', '2')
+        $gamesList = Game::whereYear('release_date', '=', $year)
+            ->whereMonth('release_date', '=', $month)
+            ->orderBy('release_date', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+        return $gamesList;
+    }
+
+    /**
+     * Release Calendar ratings
+     * @param integer $year
+     * @param integer $month
+     * @return mixed
+     */
+    public function getReleaseCalendarRatings($year, $month)
+    {
+        $gamesList = Game::whereYear('release_date', '=', $year)
             ->whereMonth('release_date', '=', $month)
             ->orderBy('rating_avg', 'desc')
             ->get();

@@ -18,6 +18,8 @@ class GamesController extends BaseController
         $bindings['UpcomingReleases'] = $this->serviceGame->getListUpcomingNextXDays(45, 15);
         $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
 
+        $bindings['CalendarThisMonth'] = date('Y-m');
+
         $bindings['TopTitle'] = 'List of Nintendo Switch games';
         $bindings['PageTitle'] = 'Games';
 
@@ -71,6 +73,64 @@ class GamesController extends BaseController
         return redirect(route('reviews.gamesNeedingReviews'), 301);
     }
 
+    private function getAllowedDates()
+    {
+        $dates = [];
+
+        for ($i=2017; $i<date('Y')+1; $i++) {
+
+            for ($j=1; $j<13; $j++) {
+
+                // Start from March 2017
+                if ($i == 2017 && $j < 3) continue;
+                // Don't go beyond the current month and year
+                if ($i == date('Y') && $j > date('m')) break;
+                // Good to go
+                $dateToAdd = $i.'-'.str_pad($j, 2, '0', STR_PAD_LEFT);
+                $dates[] = $dateToAdd;
+
+            }
+
+        }
+
+        $dates = array_reverse($dates);
+
+        return $dates;
+    }
+
+    public function calendarLanding()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
+        $bindings['PageTitle'] = 'Release calendar';
+
+        $bindings['DateList'] = $this->getAllowedDates();
+
+        return view('games.calendar.landing', $bindings);
+    }
+
+    public function calendarPage($date)
+    {
+        $dates = $this->getAllowedDates();
+        if (!in_array($date, $dates)) {
+            abort(404);
+        }
+
+        $bindings = [];
+
+        $dtDate = new \DateTime($date);
+        $dtDateDesc = $dtDate->format('M Y');
+
+        $bindings['GamesByMonthList'] = $this->serviceGame->getReleaseCalendarList($dtDate->format('Y'), $dtDate->format('m'));
+        $bindings['GamesByMonthRatings'] = $this->serviceGame->getReleaseCalendarRatings($dtDate->format('Y'), $dtDate->format('m'));
+
+        $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
+        $bindings['PageTitle'] = 'Release calendar: '.$dtDateDesc;
+
+        return view('games.calendar.page', $bindings);
+    }
+
     public function genresLanding()
     {
         $bindings = array();
@@ -109,7 +169,7 @@ class GamesController extends BaseController
     }
 
     /**
-     * @param $id
+     * @param $gameId
      * @param $linkTitle
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */

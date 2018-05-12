@@ -30,6 +30,9 @@ Route::get('/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 
+Route::get('/games/calendar', 'GamesController@calendarLanding')->name('games.calendar.landing');
+Route::get('/games/calendar/{date}', 'GamesController@calendarPage')->name('games.calendar.page');
+
 Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
 Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
 

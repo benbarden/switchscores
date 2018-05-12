@@ -1,0 +1,59 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<h1>{{ PageTitle }}</h1>
+
+<p>
+    The Release Calendar allows you to find which games were released in every month since
+    the Nintendo Switch launched back in March 2017. You'll find a full list of games based
+    on their European release date, and a list of which titles ranked at the top of that
+    month. This may be helpful if you'd like to catch up on a previous month's releases,
+    particularly in some of the busier months.
+</p>
+<p>
+    All ranks and ratings are subject to change as we add more reviews to the site.
+    The current calendar month is provided so you can
+    see how things are progressing, but should be treated with caution as the ratings of
+    very new games may be particularly volatile. Additionally, upcoming games are included
+    for the current month, many of which will not yet have ratings.
+</p>
+<p>
+    Check back often to see how the latest releases stack up!
+</p>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>
+            Dates
+        </h2>
+        {% if DateList|length %}
+            <table class="table table-striped table-responsive">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in DateList %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('games.calendar.page', {'date': item}) }}">
+                                {{ item|date('M Y') }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Error loading dates!</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+    </div>
+</div>
+
+{% endblock page_body %}
