@@ -306,6 +306,7 @@ class GameService
         $gamesList = Game::where('review_count', '>', '2')
             ->whereBetween('release_date', array(Carbon::now()->subDays($days), Carbon::now()->addDay()))
             ->orderBy('rating_avg', 'desc')
+            ->orderBy('review_count', 'desc')
             ->limit($limit)
             ->get();
         return $gamesList;
