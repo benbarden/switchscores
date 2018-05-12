@@ -9,7 +9,9 @@
         <tr>
             <th style="text-align: center;">Position</th>
             <th style="text-align: left;">Title</th>
-            <th style="text-align: left;">Movement</th>
+            <th style="text-align: center;">Movement</th>
+            <th style="text-align: center;">Rank</th>
+            <th style="text-align: center;">Rating</th>
         </tr>
         {% for item in GamesList %}
             <tr>
@@ -19,10 +21,16 @@
                 <td style="text-align: left;">
                     <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
                 </td>
-                <td style="text-align: left;">
+                <td style="text-align: center;">
                     {% set movementItem = item.getMovement() %}
                     {% set currentPosition = item.position %}
                     {% include 'charts/chartMovement.twig' with {'movementItem': movementItem, 'currentPosition': currentPosition} %}
+                </td>
+                <td style="text-align: center;">
+                    {{ item.game.game_rank }}
+                </td>
+                <td style="text-align: center;">
+                    {{ item.game.rating_avg }}
                 </td>
             </tr>
         {% endfor %}
