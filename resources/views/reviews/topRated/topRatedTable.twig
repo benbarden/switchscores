@@ -3,7 +3,7 @@
     <tr>
         <th>Game</th>
         <th class="text-center">Rating</th>
-        <th class="text-right">Reviews</th>
+        <th class="text-center">Rank</th>
     </tr>
     </thead>
     <tbody>
@@ -17,8 +17,8 @@
             <td class="text-center">
                 {{ item.rating_avg }}
             </td>
-            <td class="text-right">
-                {{ item.review_count }}
+            <td class="text-center">
+                {{ item.game_rank }}
             </td>
         </tr>
     {% endfor %}
