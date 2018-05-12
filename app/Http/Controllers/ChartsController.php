@@ -82,19 +82,23 @@ class ChartsController extends BaseController
         $bindings = array();
 
         $bindings['GamesListEu'] = \DB::select("
-            SELECT cr.game_id, g.title, g.link_title, count(*) AS count
+            SELECT cr.game_id, g.title, g.link_title, g.game_rank, g.rating_avg, count(*) AS count
             FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
             WHERE cr.country_code = 'eu'
-            GROUP BY cr.game_id ORDER BY count(*) DESC
+            GROUP BY cr.game_id
+            HAVING count > 2
+            ORDER BY count DESC, g.rating_avg DESC
         ");
 
         $bindings['GamesListUs'] = \DB::select("
-            SELECT cr.game_id, g.title, g.link_title, count(*) AS count
+            SELECT cr.game_id, g.title, g.link_title, g.game_rank, g.rating_avg, count(*) AS count
             FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
             WHERE cr.country_code = 'us'
-            GROUP BY cr.game_id ORDER BY count(*) DESC
+            GROUP BY cr.game_id
+            HAVING count > 2
+            ORDER BY count DESC, g.rating_avg DESC
         ");
 
         $bindings['TopTitle'] = 'Charts - Most appearances';
