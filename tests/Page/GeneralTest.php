@@ -1,23 +1,23 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Page;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class WelcomeTest extends TestCase
+class GeneralTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testHomepageBasic()
+    public function testHomepage()
     {
         $response = $this->get('/');
+        $response->assertStatus(200);
+    }
 
+    public function testAbout()
+    {
+        $response = $this->get('/about');
         $response->assertStatus(200);
     }
 }

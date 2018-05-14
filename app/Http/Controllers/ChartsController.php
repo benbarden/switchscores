@@ -125,6 +125,15 @@ class ChartsController extends BaseController
 
     public function gamesAtPosition($position)
     {
+        $posList = [];
+        for ($i=1; $i<16; $i++) {
+            $posList[] = $i;
+        }
+
+        if (!in_array($position, $posList)) {
+            abort(404);
+        }
+
         $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position '.$position;
         $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Top 15';
