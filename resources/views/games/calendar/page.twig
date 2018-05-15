@@ -17,7 +17,7 @@
 </p>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="col-xs-12 col-sm-6 col-md-6">
         <h2>
             By date (Total {{ GamesByMonthList.count }})
         </h2>
@@ -33,6 +33,13 @@
                 {% for item in GamesByMonthList %}
                     <tr>
                         <td>
+                            {% if item.isUpcoming() %}
+                                <span class="label label-info">Upcoming</span>
+                                &nbsp;
+                            {% elseif item.isRecentlyReleased() %}
+                                <span class="label label-primary">New</span>
+                                &nbsp;
+                            {% endif %}
                             <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
                                 {{ item.title }}
                             </a>
@@ -48,7 +55,7 @@
             <p>No games to display.</p>
         {% endif %}
     </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="col-xs-12 col-sm-6 col-md-6">
         <h2>
             By rating
         </h2>
@@ -57,8 +64,6 @@
         {% else %}
             <p>No games to display.</p>
         {% endif %}
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
     </div>
 </div>
 
