@@ -16,6 +16,7 @@ Route::get('/', 'WelcomeController@show')->name('welcome');
 
 // Static content
 Route::get('/about', 'AboutController@show')->name('about');
+Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
 // Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
