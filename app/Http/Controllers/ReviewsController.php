@@ -5,25 +5,29 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewSiteService;
+use App\Services\TopRatedService;
+use App\Services\GameReleaseDateService;
 
 class ReviewsController extends BaseController
 {
     public function landing()
     {
-        $bindings = array();
-
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated \App\Services\TopRatedService */
         $serviceReviewLinks = resolve('Services\ReviewLinkService');
         /* @var $serviceReviewLinks \App\Services\ReviewLinkService */
-        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
-
         $serviceReviewSites = resolve('Services\ReviewSiteService');
         /* @var $serviceReviewSites \App\Services\ReviewSiteService */
+
+        $bindings = [];
+
+        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
         $reviewPartnerList = $serviceReviewSites->getActive();
 
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
         $bindings['ReviewList'] = $reviewList;
-        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 15);
-        $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(10);
+        $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($this->region, 30, 15);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($this->region, 10);
 
         $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
         $bindings['PageTitle'] = 'Reviews';
@@ -33,13 +37,16 @@ class ReviewsController extends BaseController
 
     public function topRatedLanding()
     {
-        $bindings = array();
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated \App\Services\TopRatedService */
+
+        $bindings = [];
 
         $thisYear = date('Y');
         $bindings['Year'] = $thisYear;
-        $bindings['TopRatedThisYear'] = $this->serviceGame->getListTopRatedByYear($thisYear, 15);
-        $bindings['TopRatedNewReleases'] = $this->serviceGame->getListTopRatedLastXDays(30, 15);
-        $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
+        $bindings['TopRatedThisYear'] = $serviceTopRated->getByYear($this->region, $thisYear, 15);
+        $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($this->region, 30, 15);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($this->region, 15);
 
         $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
@@ -49,9 +56,12 @@ class ReviewsController extends BaseController
 
     public function topRatedAllTime()
     {
-        $bindings = array();
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated \App\Services\TopRatedService */
 
-        $gamesList = $this->serviceGame->getListTopRated();
+        $bindings = [];
+
+        $gamesList = $serviceTopRated->getList($this->region);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = "[5, 'desc']";
@@ -64,14 +74,17 @@ class ReviewsController extends BaseController
 
     public function topRatedByYear($year)
     {
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated \App\Services\TopRatedService */
+
         $allowedYears = [2017, 2018];
         if (!in_array($year, $allowedYears)) {
             abort(404);
         }
 
-        $bindings = array();
+        $bindings = [];
 
-        $gamesList = $this->serviceGame->getListTopRatedByYear($year);
+        $gamesList = $serviceTopRated->getByYear($this->region, $year);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = "[5, 'desc']";
@@ -85,9 +98,12 @@ class ReviewsController extends BaseController
 
     public function gamesNeedingReviews()
     {
-        $bindings = array();
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
 
-        $gamesList = $this->serviceGame->getListReviewsNeeded();
+        $bindings = [];
+
+        $gamesList = $serviceGameReleaseDate->getReviewsNeeded($this->region);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = "[[6, 'desc'], [3, 'desc']]";
@@ -103,8 +119,8 @@ class ReviewsController extends BaseController
         $bindings = array();
 
         $serviceReviewSite = resolve('Services\ReviewSiteService');
-        $serviceReviewLink = resolve('Services\ReviewLinkService');
         /* @var $serviceReviewSite \App\Services\ReviewSiteService */
+        $serviceReviewLink = resolve('Services\ReviewLinkService');
         /* @var $serviceReviewLink \App\Services\ReviewLinkService */
 
         $reviewSite = $serviceReviewSite->getByLinkTitle($linkTitle);

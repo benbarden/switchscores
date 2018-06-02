@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\GameReleaseDateService;
+use App\Services\GameGenreService;
 use App\Events\GameCreated;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,6 @@ class GamesController extends \App\Http\Controllers\BaseController
         'link_title' => 'required|max:100',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
-        'upcoming_date' => 'max:30',
         'developer' => 'max:100',
         'publisher' => 'max:100',
         'media_folder' => 'max:100',
@@ -23,25 +24,30 @@ class GamesController extends \App\Http\Controllers\BaseController
 
     public function showList($report = null)
     {
-        $bindings = array();
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceGameGenre = resolve('Services\GameGenreService');
+        /* @var $serviceGameGenre GameGenreService */
+
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Games';
         $bindings['PanelTitle'] = 'Games';
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $this->serviceGame->getAll();
+            $gameList = $this->serviceGame->getAll($this->region);
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
-                    $gameList = $this->serviceGame->getAllReleased();
+                    $gameList = $serviceGameReleaseDate->getReleased($this->region);
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 // Data to be filled in
                 case 'no-genre':
-                    $gameList = $this->serviceGame->getGamesWithoutGenres();
+                    $gameList = $serviceGameGenre->getGamesWithoutGenres($this->region);
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-dev-or-pub':
@@ -58,27 +64,27 @@ class GamesController extends \App\Http\Controllers\BaseController
                     break;
                 // Upcoming
                 case 'upcoming':
-                    $gameList = $this->serviceGame->getAllUpcoming();
+                    $gameList = $serviceGameReleaseDate->getUpcoming($this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-with-dates':
-                    $gameList = $this->serviceGame->getAllUpcomingYearWithDates(2018);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-with-quarters':
-                    $gameList = $this->serviceGame->getAllUpcomingYearQuarters(2018);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-sometime':
-                    $gameList = $this->serviceGame->getAllUpcomingYearXs(2018);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearXs(2018, $this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-beyond':
-                    $gameList = $this->serviceGame->getAllUpcomingFuture(2018);
+                    $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-tba':
-                    $gameList = $this->serviceGame->getAllUpcomingTBA();
+                    $gameList = $serviceGameReleaseDate->getUpcomingTBA($this->region);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 default:
@@ -100,17 +106,36 @@ class GamesController extends \App\Http\Controllers\BaseController
         /* @var $genreService \App\Services\GenreService */
         $gameGenreService = resolve('Services\GameGenreService');
         /* @var $gameGenreService \App\Services\GameGenreService */
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
 
         if ($request->isMethod('post')) {
 
             $this->validate($request, $this->validationRules);
 
             $game = $this->serviceGame->create(
-                $request->title, $request->link_title, $request->release_date, $request->price_eshop,
-                $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->media_folder, $request->amazon_uk_link,
-                $request->video_url
+                $request->title, $request->link_title, $request->price_eshop, $request->players,
+                $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
+                $request->media_folder, $request->video_url
             );
+            $gameId = $game->id;
+
+            // Update release dates
+            $regionsToUpdate = ['eu', 'us', 'jp'];
+
+            foreach ($regionsToUpdate as $region) {
+
+                $releaseDateField = 'release_date_'.$region;
+                $isReleasedField = 'is_released_'.$region;
+                $upcomingDateField = 'upcoming_date_'.$region;
+
+                $releaseDate = $request->{$releaseDateField};
+                $released = $request->{$isReleasedField};
+                $upcomingDate = $request->{$upcomingDateField};
+
+                // As this is a new game, we should create all of the regional data
+                $serviceGameReleaseDate->createGameReleaseDate($gameId, $region, $releaseDate, $released, $upcomingDate);
+            }
 
             // Update genres
             $gameGenres = [];
@@ -123,7 +148,6 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             // As this is a new game, there are no genres to delete
             //$gameGenreService->deleteGameGenres($gameId);
-            $gameId = $game->id;
             if (count($gameGenres) > 0) {
                 $gameGenreService->createGameGenreList($gameId, $gameGenres);
             }
@@ -138,6 +162,8 @@ class GamesController extends \App\Http\Controllers\BaseController
         }
 
         $bindings = array();
+
+        $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
 
         $bindings['TopTitle'] = 'Admin - Games - Add game';
         $bindings['PanelTitle'] = 'Add game';
@@ -161,6 +187,8 @@ class GamesController extends \App\Http\Controllers\BaseController
         /* @var $genreService \App\Services\GenreService */
         $gameGenreService = resolve('Services\GameGenreService');
         /* @var $gameGenreService \App\Services\GameGenreService */
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
 
         if ($request->isMethod('post')) {
 
@@ -170,11 +198,35 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             $this->serviceGame->edit(
                 $gameData,
-                $request->title, $request->link_title, $request->release_date, $request->price_eshop,
-                $request->players, $request->upcoming, $request->upcoming_date, $request->overview,
-                $request->developer, $request->publisher, $request->media_folder, $request->amazon_uk_link,
-                $request->video_url
+                $request->title, $request->link_title, $request->price_eshop, $request->players,
+                $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
+                $request->media_folder, $request->video_url
             );
+
+            // Update release dates
+            $regionsToUpdate = ['eu', 'us', 'jp'];
+
+            foreach ($regionsToUpdate as $region) {
+
+                $releaseDateField = 'release_date_'.$region;
+                $isReleasedField = 'is_released_'.$region;
+                $upcomingDateField = 'upcoming_date_'.$region;
+
+                $releaseDate = $request->{$releaseDateField};
+                $released = $request->{$isReleasedField};
+                $upcomingDate = $request->{$upcomingDateField};
+
+                // Check if existing data is available before updating!
+                $regionData = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
+                if ($regionData) {
+                    // Edit existing
+                    $serviceGameReleaseDate->editGameReleaseDate($regionData, $releaseDate, $released, $upcomingDate);
+                } else {
+                    // Create new
+                    $serviceGameReleaseDate->createGameReleaseDate($gameId, $region, $releaseDate, $released, $upcomingDate);
+                }
+
+            }
 
             // Update genres
             $gameGenres = [];
@@ -200,10 +252,30 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         }
 
+        $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
+
         $bindings['TopTitle'] = 'Admin - Games - Edit game';
         $bindings['PanelTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
+
+        // Load game release date info for the form
+        $gameReleaseDatesDb = $serviceGameReleaseDate->getByGame($gameId);
+
+        $gameReleaseDates = [];
+        $dateFormData = [];
+        foreach ($gameReleaseDatesDb as $gameReleaseDate) {
+            $region = $gameReleaseDate->region;
+            $releaseDate = $gameReleaseDate->release_date;
+            $upcomingDate = $gameReleaseDate->upcoming_date;
+            $isReleased = $gameReleaseDate->is_released;
+            $dateFormData['release_date'] = $releaseDate;
+            $dateFormData['upcoming_date'] = $upcomingDate;
+            $dateFormData['is_released'] = $isReleased;
+            $gameReleaseDates[$region] = $dateFormData;
+        }
+
+        $bindings['GameReleaseDates'] = $gameReleaseDates;
 
         $bindings['GenreList'] = $genreService->getAll();
         $bindings['GameGenreList'] = $gameGenreService->getByGame($gameId);

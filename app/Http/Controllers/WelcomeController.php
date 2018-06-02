@@ -4,20 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Services\NewsService;
 use App\Services\ReviewLinkService;
+use App\Services\GameReleaseDateService;
+use App\Services\TopRatedService;
 use Carbon\Carbon;
 
 class WelcomeController extends BaseController
 {
     public function show()
     {
-        $bindings = array();
+        $bindings = [];
 
         $serviceReviewLinks = resolve('Services\ReviewLinkService');
         /* @var $serviceReviewLinks ReviewLinkService */
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated TopRatedService */
 
         $bindings['ReviewList'] = $serviceReviewLinks->getLatestNaturalOrder(5);
-        $bindings['NewReleases'] = $this->serviceGame->getListReleasedLastXDays(45, 15);
-        $bindings['TopRatedAllTime'] = $this->serviceGame->getListTopRated(15);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($this->region, 15);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($this->region, 15);
 
         // Charts
         $chartsDateService = resolve('Services\ChartsDateService');
@@ -25,8 +31,8 @@ class WelcomeController extends BaseController
         $bindings['ChartsLatestUs'] = $chartsDateService->getDateList('us', 1);
 
         // Quick stats
-        $bindings['TotalReleasedGames'] = $this->serviceGame->countReleased();
-        $bindings['TotalUpcomingGames'] = $this->serviceGame->countUpcoming();
+        $bindings['TotalReleasedGames'] = $serviceGameReleaseDate->countReleased($this->region);
+        $bindings['TotalUpcomingGames'] = $serviceGameReleaseDate->countUpcoming($this->region);
         $bindings['TotalReviews'] = $serviceReviewLinks->countActive();
 
         $bindings['TopTitle'] = 'Welcome';

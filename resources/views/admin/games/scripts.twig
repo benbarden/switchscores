@@ -5,57 +5,81 @@
     if (formMode == 'edit') {
 
         // This is used when editing existing games.
+        // *** Main *** //
         formVals['title'] = "{{ GameData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ GameData.link_title }}";
-        formVals['release_date'] = "{{ GameData.release_date }}";
+        // *** Dates *** //
+        {% for key,value in RegionList %}
+        formVals['release_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'release_date') }}";
+        formVals['upcoming_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'upcoming_date') }}";
+        formVals['is_released_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'is_released') }}";
+        {% endfor %}
+        // *** eShop *** //
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
-        formVals['upcoming_date'] = "{{ GameData.upcoming_date }}";
-        formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['upcoming'] = "{{ GameData.upcoming }}";
+        // *** Additional *** //
         formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['media_folder'] = "{{ GameData.media_folder }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
+        formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        // *** Media *** //
+        formVals['media_folder'] = "{{ GameData.media_folder }}";
         formVals['video_url'] = "{{ GameData.video_url }}";
 
     } else {
 
         // This is used for new games.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        // *** Main *** //
         formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ old('link_title') }}";
-        formVals['release_date'] = "{{ old('release_date') }}";
+        // *** Dates *** //
+        {% for key,value in RegionList %}
+        formVals['release_date_{{ key }}'] = "{{ old('release_date_'~key) }}";
+        formVals['upcoming_date_{{ key }}'] = "{{ old('upcoming_date_'~key) }}";
+        formVals['is_released_{{ key }}'] = "{{ old('is_released_'~key) }}";
+        {% endfor %}
+        // *** eShop *** //
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
-        formVals['upcoming_date'] = "{{ old('upcoming_date') }}";
-        formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['upcoming'] = "{{ old('upcoming') }}";
+        // *** Additional *** //
         formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['media_folder'] = "{{ old('media_folder') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
+        formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        // *** Media *** //
+        formVals['media_folder'] = "{{ old('media_folder') }}";
         formVals['video_url'] = "{{ old('video_url') }}";
 
     }
 
+    // Enable tabs
+    $('#tabs').tabs();
+
+    // *** Main *** //
     $('#title').val(formVals['title']);
     $('#link_title').val(formVals['link_title']);
-    $('#release_date').val(formVals['release_date']);
+    // *** Dates *** //
+    {% for key,value in RegionList %}
+    $('#release_date_{{ key }}').val(formVals['release_date_{{ key }}']);
+    $('#upcoming_date_{{ key }}').val(formVals['upcoming_date_{{ key }}']);
+    if (formVals['is_released_{{ key }}'] == 1) {
+        $('#is_released_{{ key }}').attr('checked', true);
+    }
+    {% endfor %}
+    // *** eShop *** //
     $('#price_eshop').val(formVals['price_eshop']);
     $('#players').val(formVals['players']);
-    $('#upcoming_date').val(formVals['upcoming_date']);
-    $('#overview').val(formVals['overview']);
+    // *** Additional *** //
     $('#developer').val(formVals['developer']);
     $('#publisher').val(formVals['publisher']);
-    if (formVals['upcoming'] == 1) {
-        $('#upcoming').attr('checked', true);
-    }
-    $('#media_folder').val(formVals['media_folder']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
+    $('#overview').val(formVals['overview']);
+    // *** Media *** //
+    $('#media_folder').val(formVals['media_folder']);
     $('#video_url').val(formVals['video_url']);
 
-    // Genres
+    // *** Genres *** //
     {% if GameGenreList %}
     {% for item in GameGenreList %}
         $('#genre_item_{{ item.genre_id }}').attr('checked', true);

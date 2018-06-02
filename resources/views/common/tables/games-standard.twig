@@ -22,10 +22,10 @@
                         {% endif %}
                     </td>
                     <td style="text-align: left;">
-                        {% if item.isUpcoming() %}
+                        {% if item.is_released == 0 %}
                             <span class="label label-info">Upcoming</span>
                             &nbsp;
-                        {% elseif item.isRecentlyReleased() %}
+                        {% elseif DateHelper.isNew(item.release_date) %}
                             <span class="label label-primary">New</span>
                             &nbsp;
                         {% endif %}

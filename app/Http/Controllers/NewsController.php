@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GameReleaseDateService;
+use App\Services\TopRatedService;
 use Carbon\Carbon;
 
 class NewsController extends BaseController
@@ -23,11 +25,15 @@ class NewsController extends BaseController
 
     public function displayContent($date, $title)
     {
-        $request = request();
-        $requestUri = $request->getPathInfo();
-
+        $serviceTopRated = resolve('Services\TopRatedService');
+        /* @var $serviceTopRated TopRatedService */
         $serviceNews = resolve('Services\NewsService');
         /* @var $serviceNews \App\Services\NewsService */
+        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
+        /* @var $serviceGameReleaseDate GameReleaseDateService */
+
+        $request = request();
+        $requestUri = $request->getPathInfo();
 
         $newsItem = $serviceNews->getByUrl($requestUri);
         if (!$newsItem) {
@@ -40,7 +46,7 @@ class NewsController extends BaseController
         $bindings['NewsItem'] = $newsItem;
 
         // Total rank count
-        $bindings['RankMaximum'] = $this->serviceGame->getListTopRatedCount();
+        $bindings['RankMaximum'] = $serviceTopRated->getCount($this->region);
 
         // Next/Previous links
         $newsNext = $serviceNews->getNext($newsItem);
@@ -50,6 +56,11 @@ class NewsController extends BaseController
         }
         if ($newsPrev) {
             $bindings['NewsPrev'] = $newsPrev;
+        }
+
+        // Game details
+        if ($newsItem->game_id) {
+            $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($newsItem->game_id, $this->region);
         }
 
         return view('news.content.default', $bindings);

@@ -45,19 +45,14 @@ class Game extends Model
         return $this->hasMany('App\GameGenre', 'game_id', 'id');
     }
 
-    // Date helper functions
-    public function isRecentlyReleased()
+    public function releaseDates()
     {
-        $releaseDate = $this->release_date;
-        if (date('Y-m-d', strtotime('-7 days')) < $releaseDate) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->hasMany('App\GameReleaseDate', 'game_id', 'id');
     }
 
-    public function isUpcoming()
+    // GameReleaseDate helper functions
+    public function regionReleaseDate($region)
     {
-        return $this->upcoming == 1;
+        return $this->releaseDates()->where('region', '=', $region)->first();
     }
 }

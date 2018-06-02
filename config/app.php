@@ -179,10 +179,12 @@ return [
 
         // WOS
         App\Providers\ActivityFeedProvider::class,
+        App\Providers\CalendarServiceProvider::class,
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\ChartsRankingGlobalServiceProvider::class,
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameServiceProvider::class,
+        App\Providers\GameReleaseDateServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\NewsServiceProvider::class,
@@ -190,6 +192,7 @@ return [
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
         App\Providers\Review\StatsServiceProvider::class,
+        App\Providers\TopRatedServiceProvider::class,
         App\Providers\UserListServiceProvider::class,
         App\Providers\UserListItemServiceProvider::class,
         App\Providers\UserServiceProvider::class,
@@ -250,6 +253,7 @@ return [
         // WOS
 
         'LinkHelper' => App\Helpers\LinkHelper::class,
+        'DateHelper' => App\Helpers\DateHelper::class,
 
     ],
 

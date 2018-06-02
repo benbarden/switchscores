@@ -7,59 +7,31 @@
 <div class="row">
     <div class="col-xs-12 col-sm-9">
         <p>
-            This page lists the Switch games in our database that are due to be released in Europe,
-            but haven't come out yet.
-        </p>
-
-        <p>
-            As games are released, they’ll be moved to the
+            This page lists Nintendo Switch games that are planned but not yet released.
+            As games are released, they’ll move to the
             <a href="{{ route('games.list.released') }}">released Switch games index</a>.
         </p>
 
         {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
 
-        <h2>2018 games with release dates</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018WithDates} %}
-
-        <h2>2018 games, quarter only</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018WithQuarter} %}
-
-        <h2>2018 games, no firm date</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': Upcoming2018NoInfo} %}
-
-        <h2>Beyond 2018</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': UpcomingFuture} %}
-
-        <h2>TBA - no date given</h2>
-        {% include 'common/tables/upcoming-games.twig' with {'GamesList': UpcomingTBA} %}
+        {% for item in UpcomingLists %}
+            <h2>{{ item.MainTitle }}</h2>
+            {% include 'common/tables/upcoming-games.twig' with {'GamesList': item.List} %}
+        {% endfor %}
     </div>
     <div class="col-xs-12 col-sm-3">
         <h3>Stats</h3>
         <table class="table table-striped table-condensed table-responsive">
-            <tr>
-                <td>2018 with dates</td>
-                <td class="text-right"><strong>{{ Upcoming2018WithDates.count }}</strong></td>
-            </tr>
-            <tr>
-                <td>2018 with quarters</td>
-                <td class="text-right"><strong>{{ Upcoming2018WithQuarter.count }}</strong></td>
-            </tr>
-            <tr>
-                <td>2018 sometime</td>
-                <td class="text-right"><strong>{{ Upcoming2018NoInfo.count }}</strong></td>
-            </tr>
-            <tr>
-                <td>Beyond 2018</td>
-                <td class="text-right"><strong>{{ UpcomingFuture.count }}</strong></td>
-            </tr>
-            <tr>
-                <td>TBA</td>
-                <td class="text-right"><strong>{{ UpcomingTBA.count }}</strong</td>
-            </tr>
+            {% for item in UpcomingLists %}
+                <tr>
+                    <td>{{ item.ShortTitle }}</td>
+                    <td class="text-right"><strong>{{ item.List.count }}</strong></td>
+                </tr>
+            {% endfor %}
             <tr>
                 <td>Total upcoming games</td>
                 <td class="text-right">
-                    {{ UpcomingGamesFullList.count }}
+                    {{ UpcomingGamesCount }}
                 </td>
             </tr>
         </table>

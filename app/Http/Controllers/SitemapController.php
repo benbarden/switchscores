@@ -121,7 +121,7 @@ class SitemapController extends BaseController
 
         $gameService = resolve('Services\GameService');
         /* @var $gameService GameService */
-        $gameList = $gameService->getAll();
+        $gameList = $gameService->getAll($this->region);
 
         $bindings['GameList'] = $gameList;
 

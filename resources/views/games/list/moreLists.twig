@@ -1,7 +1,8 @@
 <h2>More lists</h2>
 <ul>
+    <li><a href="{{ route('games.landing') }}">Games homepage</a></li>
     {% if thisPage != 'released' %}
-        <li><a href="{{ route('games.list.released') }}">All released Switch titles</a></li>
+        <li><a href="{{ route('games.list.released') }}">Released Switch titles</a></li>
     {% endif %}
     {% if thisPage != 'upcoming' %}
         <li><a href="{{ route('games.list.upcoming') }}">Upcoming Switch releases</a></li>

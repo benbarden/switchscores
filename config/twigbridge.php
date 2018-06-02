@@ -151,6 +151,11 @@ return [
                 'is_safe' => [
                     'gameShow'
                 ]
+            ],
+            'DateHelper' => [
+                'is_safe' => [
+                    'isNew'
+                ]
             ]
         ],
 
