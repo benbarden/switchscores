@@ -29,14 +29,9 @@ class WikipediaCrawlerTest extends TestCase
         parent::tearDown();
     }
 
-    public function loadPageOne()
+    public function loadHtml()
     {
-        $this->wikiCrawler->loadLocalData('wikipedia-games-1.html');
-    }
-
-    public function loadPageTwo()
-    {
-        $this->wikiCrawler->loadLocalData('wikipedia-games-2.html');
+        $this->wikiCrawler->loadLocalData('wikipedia-games-list-180602.html');
     }
 
     /**
@@ -47,15 +42,14 @@ class WikipediaCrawlerTest extends TestCase
     {
         $row = <<<tableRow
 <tr>
-<th scope="row"><i>The Longest 5 Minutes</i></th>
+<th scope="row"><i>The Longest Five Minutes</i></th>
 <td><a href="/wiki/Role-playing_video_game" title="Role-playing video game">Role-playing</a></td>
 <td>Syupro-DX</td>
 <td><a href="/wiki/NIS_America" class="mw-redirect" title="NIS America">NIS America</a></td>
-<td style="background:#F99;vertical-align:middle;text-align:center;" class="table-no">No</td>
-<td data-sort-value="" style="background: #ececec; color: #2C2C2C; vertical-align: middle; font-size: smaller; text-align: center;" class="table-na">Unreleased</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-04-26-0000</span><span style="white-space:nowrap">April 26, 2018</span></td>
 <td><span class="sortkey" style="display:none;speak:none">000000002018-02-13-0000</span><span style="white-space:nowrap">February 13, 2018</span></td>
 <td><span class="sortkey" style="display:none;speak:none">000000002018-02-16-0000</span><span style="white-space:nowrap">February 16, 2018</span></td>
-<td><sup id="cite_ref-424" class="reference"><a href="#cite_note-424">[423]</a></sup></td>
+<td><sup id="cite_ref-auto2_293-0" class="reference"><a href="#cite_note-auto2-293">[293]</a></sup></td>
 </tr>
 
 tableRow;
@@ -67,12 +61,14 @@ tableRow;
 
         // @todo Generate a model from the data.
 
-        $expectedTitle = 'The Longest 5 Minutes';
+        $expectedTitle = 'The Longest Five Minutes';
         $expectedGenre = 'Role-playing';
         $expectedDev = 'Syupro-DX';
         $expectedPub = 'NIS America';
-        $expectedExcls = 'No';
-        $expectedRelDateJP = 'Unreleased';
+        $expectedRelDateJP = [
+            0 => '000000002018-04-26-0000',
+            1 => 'April 26, 2018',
+        ];
         $expectedRelDateNA = [
             0 => '000000002018-02-13-0000',
             1 => 'February 13, 2018',
@@ -88,10 +84,9 @@ tableRow;
         $this->assertEquals($expectedGenre, $rowData[1]);
         $this->assertEquals($expectedDev, $rowData[2]);
         $this->assertEquals($expectedPub, $rowData[3]);
-        $this->assertEquals($expectedExcls, $rowData[4]);
-        $this->assertEquals($expectedRelDateJP, $rowData[5]);
-        $this->assertEquals($expectedRelDateNA, $rowData[6]);
-        $this->assertEquals($expectedRelDatePAL, $rowData[7]);
+        $this->assertEquals($expectedRelDateJP, $rowData[4]);
+        $this->assertEquals($expectedRelDateNA, $rowData[5]);
+        $this->assertEquals($expectedRelDatePAL, $rowData[6]);
 
     }
 
@@ -107,13 +102,12 @@ tableRow;
 <tr>
 <th scope="row"><i><a href="/wiki/2064:_Read_Only_Memories" title="2064: Read Only Memories">2064: Read Only Memories</a></i></th>
 <td><a href="/wiki/Adventure_game" title="Adventure game">Adventure</a></td>
-<td>Midboss</td>
-<td>Midboss</td>
-<td style="background:#F99;vertical-align:middle;text-align:center;" class="table-no">No</td>
-<td style="background:#DDF; color:#2C2C2C; text-align:center;"><span class="sortkey" style="display:none;speak:none">000000002018-03-31-0000</span>Q1 2018</td>
-<td style="background:#DDF; color:#2C2C2C; text-align:center;"><span class="sortkey" style="display:none;speak:none">000000002018-03-31-0000</span>Q1 2018</td>
-<td style="background:#DDF; color:#2C2C2C; text-align:center;"><span class="sortkey" style="display:none;speak:none">000000002018-03-31-0000</span>Q1 2018</td>
-<td><sup id="cite_ref-12" class="reference"><a href="#cite_note-12">[11]</a></sup></td>
+<td><a href="/wiki/MidBoss" title="MidBoss">MidBoss</a></td>
+<td>MidBoss</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-13-31-0000</span>2018</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-13-31-0000</span>2018</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-13-31-0000</span>2018</td>
+<td></td>
 </tr>
 
 tableRow;
@@ -127,20 +121,19 @@ tableRow;
 
         $expectedTitle = '2064: Read Only Memories';
         $expectedGenre = 'Adventure';
-        $expectedDev = 'Midboss';
-        $expectedPub = 'Midboss';
-        $expectedExcls = 'No';
+        $expectedDev = 'MidBoss';
+        $expectedPub = 'MidBoss';
         $expectedRelDateJP = [
-            0 => '000000002018-03-31-0000',
-            1 => 'Q1 2018',
+            0 => '000000002018-13-31-0000',
+            1 => '2018',
         ];
         $expectedRelDateNA = [
-            0 => '000000002018-03-31-0000',
-            1 => 'Q1 2018',
+            0 => '000000002018-13-31-0000',
+            1 => '2018',
         ];
         $expectedRelDatePAL = [
-            0 => '000000002018-03-31-0000',
-            1 => 'Q1 2018',
+            0 => '000000002018-13-31-0000',
+            1 => '2018',
         ];
 
         $rowData = $tableData[0]; // There's only one row in this test case
@@ -149,16 +142,64 @@ tableRow;
         $this->assertEquals($expectedGenre, $rowData[1]);
         $this->assertEquals($expectedDev, $rowData[2]);
         $this->assertEquals($expectedPub, $rowData[3]);
-        $this->assertEquals($expectedExcls, $rowData[4]);
-        $this->assertEquals($expectedRelDateJP, $rowData[5]);
-        $this->assertEquals($expectedRelDateNA, $rowData[6]);
-        $this->assertEquals($expectedRelDatePAL, $rowData[7]);
+        $this->assertEquals($expectedRelDateJP, $rowData[4]);
+        $this->assertEquals($expectedRelDateNA, $rowData[5]);
+        $this->assertEquals($expectedRelDatePAL, $rowData[6]);
+
+    }
+
+    public function test3DMiniGolf()
+    {
+        $row = <<<tableRow
+<tr>
+<th scope="row"><i>3D MiniGolf</i></th>
+<td><a href="/wiki/Sports_game" title="Sports game">Sports</a></td>
+<td>Joindots</td>
+<td>Joindots</td>
+<td>Unreleased</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-02-01-0000</span><span style="white-space:nowrap">February 1, 2018</span></td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-02-01-0000</span><span style="white-space:nowrap">February 1, 2018</span></td>
+<td><sup id="cite_ref-10" class="reference"><a href="#cite_note-10">[10]</a></sup></td>
+</tr>
+
+tableRow;
+
+        $this->wikiCrawler->loadSingleRow($row);
+        $this->wikiCrawler->extractRows();
+        $tableData = $this->wikiCrawler->getTableData();
+        //print_r($tableData);
+
+        // @todo Generate a model from the data.
+
+        $expectedTitle = '3D MiniGolf';
+        $expectedGenre = 'Sports';
+        $expectedDev = 'Joindots';
+        $expectedPub = 'Joindots';
+        $expectedRelDateJP = 'Unreleased';
+        $expectedRelDateNA = [
+            0 => '000000002018-02-01-0000',
+            1 => 'February 1, 2018',
+        ];
+        $expectedRelDatePAL = [
+            0 => '000000002018-02-01-0000',
+            1 => 'February 1, 2018',
+        ];
+
+        $rowData = $tableData[0]; // There's only one row in this test case
+
+        $this->assertEquals($expectedTitle, $rowData[0]);
+        $this->assertEquals($expectedGenre, $rowData[1]);
+        $this->assertEquals($expectedDev, $rowData[2]);
+        $this->assertEquals($expectedPub, $rowData[3]);
+        $this->assertEquals($expectedRelDateJP, $rowData[4]);
+        $this->assertEquals($expectedRelDateNA, $rowData[5]);
+        $this->assertEquals($expectedRelDatePAL, $rowData[6]);
 
     }
 
     public function testDummy()
     {
-        $this->loadPageOne();
+        $this->loadHtml();
         $this->wikiCrawler->extractRows();
         $tableData = $this->wikiCrawler->getTableData();
         //print_r($tableData);
@@ -166,7 +207,7 @@ tableRow;
 
     public function testTableHeaders()
     {
-        $this->loadPageOne();
+        $this->loadHtml();
         $this->wikiCrawler->extractRows();
         $tableData = $this->wikiCrawler->getTableData();
 
@@ -175,14 +216,13 @@ tableRow;
             1 => 'Genre(s)',
             2 => 'Developer(s)',
             3 => 'Publisher(s)',
-            4 => 'Excls.',
-            5 => 'Release date',
-            6 => 'Ref.',
+            4 => 'Release date',
+            5 => 'Ref.',
         ];
 
         $expectedHeader1 = [
-            0 => 'Japan',
-            1 => 'North America',
+            0 => 'JP',
+            1 => 'NA',
             2 => 'PAL',
         ];
 

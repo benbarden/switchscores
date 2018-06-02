@@ -85,7 +85,7 @@ class Crawler
 
             return $tr->filter('td, th')->each(function ($td, $i) {
 
-                if (in_array($i, [5, 6, 7])) {
+                if (in_array($i, [4, 5, 6])) {
 
                     // Different processing for date fields
                     $spanCount = substr_count($td->html(), '<span ');
