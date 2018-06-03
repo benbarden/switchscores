@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\FeedItemReviewService;
 use App\Services\GameGenreService;
 use App\Services\UserService;
 
 class IndexController extends \App\Http\Controllers\BaseController
 {
+    public function feedItemsLanding()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Feed items';
+        $bindings['PanelTitle'] = 'Feed items';
+
+        return view('admin.feed-items.landing', $bindings);
+    }
+
     public function show()
     {
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $feedItemReviewService */
+        $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
+        $feedItemReviewService = $this->serviceContainer->getFeedItemReviewService();
+
         $userService = resolve('Services\UserService');
         /* @var UserService $userService */
         $serviceGameGenre = resolve('Services\GameGenreService');
@@ -26,14 +36,16 @@ class IndexController extends \App\Http\Controllers\BaseController
         $gamesWithoutDevOrPub = $this->serviceGame->getWithoutDevOrPub();
         $gamesWithoutVideos = $this->serviceGame->getWithoutVideoUrl();
         $gamesWithoutGenres = $serviceGameGenre->getGamesWithoutGenres($this->region);
-        $unprocessedFeedItems = $feedItemReviewService->getUnprocessed();
+        $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
+        $pendingFeedGameItems = $feedItemGameService->getPending();
         $userList = $userService->getAll();
 
-        $bindings['GamesWithoutDevOrPubCount'] = $gamesWithoutDevOrPub->count();
-        $bindings['GamesWithoutVideosCount'] = $gamesWithoutVideos->count();
-        $bindings['GamesWithoutGenresCount'] = $gamesWithoutGenres->count();
-        $bindings['UnprocessedFeedItemsCount'] = $unprocessedFeedItems->count();
-        $bindings['RegisteredUserCount'] = $userList->count();
+        $bindings['GamesWithoutDevOrPubCount'] = count($gamesWithoutDevOrPub);
+        $bindings['GamesWithoutVideosCount'] = count($gamesWithoutVideos);
+        $bindings['GamesWithoutGenresCount'] = count($gamesWithoutGenres);
+        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
+        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
+        $bindings['RegisteredUserCount'] = count($userList);
 
         return view('admin.index', $bindings);
     }

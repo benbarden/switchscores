@@ -1,0 +1,10 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<ul>
+    <li><a href="{{ route('admin.feed-items.reviews.list') }}">Reviews</a></li>
+    <li><a href="{{ route('admin.feed-items.games.list') }}">Games</a></li>
+</ul>
+
+{% endblock page_inner %}

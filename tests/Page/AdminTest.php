@@ -169,10 +169,17 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminFeedItemsProcessed()
+    public function testAdminFeedItemsGames()
     {
         $this->be($this->userAdmin);
-        $response = $this->get('/admin/feed-items/processed');
+        $response = $this->get('/admin/feed-items/games');
+        $response->assertStatus(200);
+    }
+
+    public function testAdminFeedItemsReviews()
+    {
+        $this->be($this->userAdmin);
+        $response = $this->get('/admin/feed-items/reviews');
         $response->assertStatus(200);
     }
 

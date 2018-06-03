@@ -4,14 +4,16 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <a href="{{ route('admin.tools.runFeedReviewGenerator.landing') }}" class="btn btn-primary">Go to the Feed Review Generator</a>
     </div>
     <div class="col-xs-12 col-sm-9">
         <div class="pull-right">
             <label for="admin-nav-feed-item-filter">Filters:</label>
             <select id="admin-nav-feed-item-filter" name="admin-nav-feed-item-filter" class="form-control">
-                <option value="">Unprocessed items</option>
-                <option value="processed">Processed items</option>
+                <option value="">All pending items</option>
+                <option value="pending-game-id">Pending - with game ID</option>
+                <option value="pending-no-game-id">Pending - no game ID</option>
+                <option value="ok-and-complete">OK to update, and Complete</option>
+                <option value="inactive">Inactive items</option>
             </select>
         </div>
     </div>
@@ -25,9 +27,9 @@
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
-                <th class="text-center">Date</th>
+                <th class="text-left">Game</th>
                 <th class="text-left">Status</th>
-                <th class="text-center">Process status</th>
+                <th class="text-left">Modified fields</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -38,38 +40,30 @@
                         {{ item.id }}
                     </td>
                     <td class="text-left">
-                        <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
-                        <br>
-                        <small>
-                            {{ item.item_date }} | {{ item.site.name }}
-                        </small>
-                    </td>
-                    <td class="text-center">
-                        <small>{{ item.item_date }}</small>
+                        {{ item.item_title }}
                     </td>
                     <td class="text-left">
-                        <ul>
-                            {% if item.game.title is not defined %}
-                                <li><span style="color: #f00;">Game not linked</span></li>
-                            {% else %}
-                                <li>Game linked OK ({{ item.game.title }})</li>
-                            {% endif %}
-                            {% if item.item_rating is null %}
-                                <li><span style="color: #f00;">Rating missing</span></li>
-                            {% else %}
-                                <li>Rating OK</li>
-                            {% endif %}
-                        </ul>
-                    </td>
-                    <td class="text-center">
-                        {% if item.processed == 1 %}
-                        {{ item.process_status }}
+                        {% if item.game.title is not defined %}
+                        <span style="color: #f00;">Game not linked</span>
                         {% else %}
-                        -
+                        {{ item.game.title }}
+                        {% endif %}
+                    </td>
+                    <td class="text-left">
+                        {{ item.status_desc }}
+                    </td>
+                    <td class="text-left">
+                        {% set ModFields = SerialHelper.unserialize(item.modified_fields) %}
+                        {% if ModFields %}
+                        <ul>
+                        {% for field in ModFields %}
+                            <li>{{ field }}</li>
+                        {% endfor %}
+                        </ul>
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.feed-items.edit', {'itemId': item.id}) }}">Edit</a>
+                        <a href="{{ route('admin.feed-items.games.edit', {'itemId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -83,7 +77,7 @@
 <script>
     $('#admin-nav-feed-item-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('admin.feed-items.list')}}' + '/' + selectedFilter;
+        top.location.href = '{{ route('admin.feed-items.games.list')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';

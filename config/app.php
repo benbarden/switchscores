@@ -182,9 +182,12 @@ return [
         App\Providers\CalendarServiceProvider::class,
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\ChartsRankingGlobalServiceProvider::class,
+        App\Providers\CrawlerWikipediaGamesListSourceServiceProvider::class,
+        App\Providers\FeedItemGameServiceProvider::class,
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameServiceProvider::class,
         App\Providers\GameReleaseDateServiceProvider::class,
+        App\Providers\GameTitleHashServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\NewsServiceProvider::class,
@@ -254,6 +257,7 @@ return [
 
         'LinkHelper' => App\Helpers\LinkHelper::class,
         'DateHelper' => App\Helpers\DateHelper::class,
+        'SerialHelper' => App\Helpers\SerialHelper::class,
 
     ],
 

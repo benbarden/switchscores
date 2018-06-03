@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdateGameImageCount::class,
         Commands\UpdateGameRanks::class,
         Commands\WikipediaCrawlGamesList::class,
+        Commands\WikipediaImportGamesList::class,
     ];
 
     /**

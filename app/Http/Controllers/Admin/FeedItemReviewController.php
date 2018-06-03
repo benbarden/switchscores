@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Services\FeedItemReviewService;
 use Illuminate\Http\Request;
 
-class FeedItemController extends \App\Http\Controllers\BaseController
+class FeedItemReviewController extends \App\Http\Controllers\BaseController
 {
     /**
      * @var array
@@ -44,7 +44,7 @@ class FeedItemController extends \App\Http\Controllers\BaseController
         $bindings['FeedItems'] = $feedItems;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        return view('admin.feed-items.list', $bindings);
+        return view('admin.feed-items.reviews.list', $bindings);
     }
 
     public function edit($itemId)
@@ -56,7 +56,7 @@ class FeedItemController extends \App\Http\Controllers\BaseController
         if (!$feedItemData) abort(404);
 
         $gameService = $this->serviceContainer->getGameService();
-        
+
         $reviewSiteService = resolve('Services\ReviewSiteService');
 
         $request = request();
@@ -74,7 +74,7 @@ class FeedItemController extends \App\Http\Controllers\BaseController
             );
 
             // All done; send us back
-            return redirect(route('admin.feed-items.list'));
+            return redirect(route('admin.feed-items.reviews.list'));
 
         } else {
 
@@ -91,6 +91,6 @@ class FeedItemController extends \App\Http\Controllers\BaseController
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 
-        return view('admin.feed-items.edit', $bindings);
+        return view('admin.feed-items.reviews.edit', $bindings);
     }
 }

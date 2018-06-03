@@ -156,6 +156,11 @@ return [
                 'is_safe' => [
                     'isNew'
                 ]
+            ],
+            'SerialHelper' => [
+                'is_safe' => [
+                    'unserialize'
+                ]
             ]
         ],
 

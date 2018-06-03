@@ -7,14 +7,16 @@
         <h2>Site stats</h2>
         <div class="row">
             <div class="col-md-4 text-center">
-                <h2><a href="{{ route('admin.feed-items.list') }}">{{ UnprocessedFeedItemsCount }}</a></h2>
-                <a href="{{ route('admin.feed-items.list') }}">feed items to review</a>
+                <h2><a href="{{ route('admin.feed-items.reviews.list') }}">{{ UnprocessedFeedReviewItemsCount }}</a></h2>
+                <a href="{{ route('admin.feed-items.reviews.list') }}">pending reviews</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.feed-items.games.list') }}">{{ PendingFeedGameItemsCount }}</a></h2>
+                <a href="{{ route('admin.feed-items.games.list') }}">pending game updates</a>
             </div>
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.user.list') }}">{{ RegisteredUserCount }}</a></h2>
                 <a href="{{ route('admin.user.list') }}">registered users</a>
-            </div>
-            <div class="col-md-4 text-center">
             </div>
         </div>
         <div class="row">
@@ -38,7 +40,7 @@
             <li><a href="{{ route('admin.games.list') }}">Games</a></li>
             <li><a href="{{ route('admin.charts.date.list') }}">eShop charts</a></li>
             <li><a href="{{ route('admin.news.list') }}">News</a></li>
-            <li><a href="{{ route('admin.feed-items.list') }}">Feed items</a></li>
+            <li><a href="{{ route('admin.feed-items.landing') }}">Feed items</a></li>
             <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
             <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
             <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>

@@ -1,0 +1,289 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Source
+        </div>
+        <div class="col-md-6">
+            {{ FeedItemData.source }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="game_id" class="col-md-4 control-label">Game</label>
+        <div class="col-md-6">
+            <select id="game_id" class="form-control" name="game_id">
+                <option value="">&nbsp;</option>
+                {% for item in GamesList %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <label for="status_code" class="col-md-4 control-label">Status</label>
+        <div class="col-md-6">
+            <select id="status_code" class="form-control" name="status_code">
+                <option value="">&nbsp;</option>
+                {% for item in StatusList %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+        </div>
+        <div class="col-md-3 text-left" style="font-weight: bold;">
+            Feed value
+        </div>
+        <div class="col-md-3 text-left" style="font-weight: bold;">
+            Existing value
+        </div>
+        <div class="col-md-2 text-left" style="font-weight: bold;">
+            Changes?
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Title
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.item_title }}
+        </div>
+        <div class="col-md-3">
+            {{ GameData.title }}
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Genre
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.item_genre }}
+        </div>
+        <div class="col-md-3">
+            -
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Developers
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.item_developers }}
+        </div>
+        <div class="col-md-3">
+            {{ GameData.developer }}
+        </div>
+        <div class="col-md-2 text-left">
+            {% if FeedItemData.item_developers != GameData.developer %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Publishers
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.item_publishers }}
+        </div>
+        <div class="col-md-3">
+            {{ GameData.publisher }}
+        </div>
+        <div class="col-md-2 text-left">
+            {% if FeedItemData.item_publishers != GameData.publisher %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Release date: Europe
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.release_date_eu }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesEU.release_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.release_date_eu != ReleaseDatesEU.release_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Upcoming date: Europe
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.upcoming_date_eu }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesEU.upcoming_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.upcoming_date_eu != ReleaseDatesEU.upcoming_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Is released: Europe
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.is_released_eu }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesEU.is_released }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.is_released_eu != ReleaseDatesEU.is_released %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Release date: US
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.release_date_us }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesUS.release_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.release_date_us != ReleaseDatesUS.release_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Upcoming date: US
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.upcoming_date_us }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesUS.upcoming_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.upcoming_date_us != ReleaseDatesUS.upcoming_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Is released: US
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.is_released_us }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesUS.is_released }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.is_released_us != ReleaseDatesUS.is_released %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Release date: Japan
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.release_date_jp }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesJP.release_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.release_date_jp != ReleaseDatesJP.release_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Upcoming date: Japan
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.upcoming_date_jp }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesJP.upcoming_date }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.upcoming_date_jp != ReleaseDatesJP.upcoming_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Is released: Japan
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.is_released_jp }}
+        </div>
+        <div class="col-md-3">
+            {{ ReleaseDatesJP.is_released }}
+        </div>
+        <div class="col-md-2">
+            {% if FeedItemData.is_released_jp != ReleaseDatesJP.is_released %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>
