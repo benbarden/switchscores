@@ -143,6 +143,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tools/run-feed-parser/process', 'Admin\ToolsController@runFeedParserProcess')->name('admin.tools.runFeedParser.process');
     Route::get('/admin/tools/run-feed-review-generator/landing', 'Admin\ToolsController@runFeedReviewGeneratorLanding')->name('admin.tools.runFeedReviewGenerator.landing');
     Route::get('/admin/tools/run-feed-review-generator/process', 'Admin\ToolsController@runFeedReviewGeneratorProcess')->name('admin.tools.runFeedReviewGenerator.process');
+    Route::get('/admin/tools/run-wikipedia-crawler/landing', 'Admin\ToolsController@runWikipediaCrawlerLanding')->name('admin.tools.runWikipediaCrawler.landing');
+    Route::get('/admin/tools/run-wikipedia-crawler/process', 'Admin\ToolsController@runWikipediaCrawlerProcess')->name('admin.tools.runWikipediaCrawler.process');
+    Route::get('/admin/tools/run-wikipedia-importer/landing', 'Admin\ToolsController@runWikipediaImporterLanding')->name('admin.tools.runWikipediaImporter.landing');
+    Route::get('/admin/tools/run-wikipedia-importer/process', 'Admin\ToolsController@runWikipediaImporterProcess')->name('admin.tools.runWikipediaImporter.process');
+    Route::get('/admin/tools/run-wikipedia-updater/landing', 'Admin\ToolsController@runWikipediaUpdaterLanding')->name('admin.tools.runWikipediaUpdater.landing');
+    Route::get('/admin/tools/run-wikipedia-updater/process', 'Admin\ToolsController@runWikipediaUpdaterProcess')->name('admin.tools.runWikipediaUpdater.process');
     Route::get('/admin/tools/update-game-ranks/landing', 'Admin\ToolsController@updateGameRanksLanding')->name('admin.tools.updateGameRanks.landing');
     Route::get('/admin/tools/update-game-ranks/process', 'Admin\ToolsController@updateGameRanksProcess')->name('admin.tools.updateGameRanks.process');
     Route::get('/admin/tools/update-game-image-count/landing', 'Admin\ToolsController@updateGameImageCountLanding')->name('admin.tools.updateGameImageCount.landing');

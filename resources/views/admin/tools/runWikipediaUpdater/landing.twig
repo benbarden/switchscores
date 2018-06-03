@@ -1,0 +1,20 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool runs the Wikipedia Updater tool. (Step 3 of 3)
+</p>
+<p>
+    Once the Wikipedia Crawler and Importer have run, you should review the contents of the
+    <a href="{{ route('admin.feed-items.games.list') }}">Feed Items - Games</a> page.
+</p>
+<p>
+    The Wikipedia Updater will only process the items that have been marked as "OK to update".
+    Feed items that are linked to games will mean those games are updated. Feed items not linked to games
+    will result in new games being added to the database.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.'~ViewName~'.process') }}">Start process</a>
+
+{% endblock page_inner %}

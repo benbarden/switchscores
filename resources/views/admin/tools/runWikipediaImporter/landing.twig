@@ -1,0 +1,19 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool runs the Wikipedia Importer tool. (Step 2 of 3)
+</p>
+<p>
+    After running the crawler, the Importer converts the crawler data into Feed Items for updating
+    games or adding existing games.
+</p>
+<p>
+    Once the Feed Importer has run, you'll need to review the Feed Items screen prior to running
+    the final stage of the process - the Wikipedia Updater.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.'~ViewName~'.process') }}">Start process</a>
+
+{% endblock page_inner %}

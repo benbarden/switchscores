@@ -1,0 +1,18 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool runs the Wikipedia Crawler tool. (Step 1 of 3)
+</p>
+<p>
+    The crawler visits the Nintendo Switch games list on Wikipedia and stores the details
+    in the WOS database.
+</p>
+<p>
+    Once the crawler has run, you'll need to run the Importer.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.'~ViewName~'.process') }}">Start process</a>
+
+{% endblock page_inner %}
