@@ -55,7 +55,8 @@ class FeedItemController extends \App\Http\Controllers\BaseController
         $feedItemData = $feedItemReviewService->find($itemId);
         if (!$feedItemData) abort(404);
 
-        $gameService = resolve('Services\GameService');
+        $gameService = $this->serviceContainer->getGameService();
+        
         $reviewSiteService = resolve('Services\ReviewSiteService');
 
         $request = request();
@@ -86,7 +87,7 @@ class FeedItemController extends \App\Http\Controllers\BaseController
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll();
+        $bindings['GamesList'] = $gameService->getAll($this->region);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 
