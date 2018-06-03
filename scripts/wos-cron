@@ -6,3 +6,7 @@
 
 25 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameReviewStats >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
 30 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameRanks >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+
+10 6 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaCrawlGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+15 6 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaImportGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+20 6 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaUpdateGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
