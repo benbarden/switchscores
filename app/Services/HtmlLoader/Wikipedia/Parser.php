@@ -55,10 +55,11 @@ class Parser
             }
 
             $upcomingDate = $releaseDate;
-            if ($upcomingDate > $dtNow) {
-                $isReleased = 1;
-            } else {
+
+            if ($dtReleaseDate > $dtNow) {
                 $isReleased = 0;
+            } else {
+                $isReleased = 1;
             }
 
         } else {
