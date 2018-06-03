@@ -158,4 +158,21 @@ class FeedItemGameService
             return null;
         }
     }
+
+    public function getActiveByGameId($gameId)
+    {
+        $feedItem = FeedItemGame::
+            where('game_id', $gameId)
+            ->whereIn('status_code', [
+                FeedItemGame::STATUS_PENDING,
+                FeedItemGame::STATUS_OK_TO_UPDATE,
+            ])
+            ->orderBy('created_at', 'asc')
+            ->get();
+        if ($feedItem) {
+            return $feedItem->first();
+        } else {
+            return null;
+        }
+    }
 }

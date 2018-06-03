@@ -89,6 +89,16 @@ class WikipediaImportGamesList extends Command
 
                 // Check if anything's changed since the last record, if one exists
                 if ($gameId) {
+
+                    // We need to skip anything that's already waiting to be reviewed.
+                    // Otherwise, the list will keep adding duplicates each time the importer runs.
+                    $activeFeedItem = $feedItemGameService->getActiveByGameId($gameId);
+                    if ($activeFeedItem) {
+                        $this->info('Found an active, unprocessed entry for: '.$title.'; skipping');
+                        continue;
+                    }
+
+                    // There isn't a previous entry in feed items, but has the game actually changed?
                     $game = $gameService->find($gameId);
                     $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
                     $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
