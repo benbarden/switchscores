@@ -20,6 +20,12 @@
                     <option value="{{ item.id }}">{{ item.title }}</option>
                 {% endfor %}
             </select>
+            <p>
+                <small>
+                    If the game is not currently set but a suitable record exists, select it, save the changes,
+                    then come back to this screen. The table of values shown below will update accordingly.
+                </small>
+            </p>
         </div>
     </div>
 
@@ -43,13 +49,13 @@
         <div class="col-md-4 text-right" style="font-weight: bold;">
         </div>
         <div class="col-md-3 text-left" style="font-weight: bold;">
-            Feed value
+            Current value
         </div>
         <div class="col-md-3 text-left" style="font-weight: bold;">
-            Existing value
+            New value from feed
         </div>
         <div class="col-md-2 text-left" style="font-weight: bold;">
-            Changes?
+            Changed?
         </div>
     </div>
     <div class="form-group">
@@ -57,10 +63,10 @@
             Title
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.item_title }}
+            {{ GameData.title }}
         </div>
         <div class="col-md-3">
-            {{ GameData.title }}
+            {{ FeedItemData.item_title }}
         </div>
         <div class="col-md-2">
 
@@ -71,10 +77,10 @@
             Genre
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.item_genre }}
+            -
         </div>
         <div class="col-md-3">
-            -
+            {{ FeedItemData.item_genre }}
         </div>
         <div class="col-md-2">
 
@@ -85,10 +91,10 @@
             Developers
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.item_developers }}
+            {{ GameData.developer }}
         </div>
         <div class="col-md-3">
-            {{ GameData.developer }}
+            {{ FeedItemData.item_developers }}
         </div>
         <div class="col-md-2 text-left">
             {% if FeedItemData.item_developers != GameData.developer %}
@@ -103,10 +109,10 @@
             Publishers
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.item_publishers }}
+            {{ GameData.publisher }}
         </div>
         <div class="col-md-3">
-            {{ GameData.publisher }}
+            {{ FeedItemData.item_publishers }}
         </div>
         <div class="col-md-2 text-left">
             {% if FeedItemData.item_publishers != GameData.publisher %}
@@ -121,10 +127,10 @@
             Release date: Europe
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.release_date_eu }}
+            {{ ReleaseDatesEU.release_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.release_date }}
+            {{ FeedItemData.release_date_eu }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.release_date_eu != ReleaseDatesEU.release_date %}
@@ -139,10 +145,10 @@
             Upcoming date: Europe
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_eu }}
+            {{ ReleaseDatesEU.upcoming_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.upcoming_date }}
+            {{ FeedItemData.upcoming_date_eu }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.upcoming_date_eu != ReleaseDatesEU.upcoming_date %}
@@ -157,10 +163,10 @@
             Is released: Europe
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.is_released_eu }}
+            {{ ReleaseDatesEU.is_released }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.is_released }}
+            {{ FeedItemData.is_released_eu }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.is_released_eu != ReleaseDatesEU.is_released %}
@@ -175,10 +181,10 @@
             Release date: US
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.release_date_us }}
+            {{ ReleaseDatesUS.release_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesUS.release_date }}
+            {{ FeedItemData.release_date_us }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.release_date_us != ReleaseDatesUS.release_date %}
@@ -193,10 +199,10 @@
             Upcoming date: US
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_us }}
+            {{ ReleaseDatesUS.upcoming_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesUS.upcoming_date }}
+            {{ FeedItemData.upcoming_date_us }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.upcoming_date_us != ReleaseDatesUS.upcoming_date %}
@@ -211,10 +217,10 @@
             Is released: US
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.is_released_us }}
+            {{ ReleaseDatesUS.is_released }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesUS.is_released }}
+            {{ FeedItemData.is_released_us }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.is_released_us != ReleaseDatesUS.is_released %}
@@ -229,10 +235,10 @@
             Release date: Japan
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.release_date_jp }}
+            {{ ReleaseDatesJP.release_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesJP.release_date }}
+            {{ FeedItemData.release_date_jp }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.release_date_jp != ReleaseDatesJP.release_date %}
@@ -247,10 +253,10 @@
             Upcoming date: Japan
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_jp }}
+            {{ ReleaseDatesJP.upcoming_date }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesJP.upcoming_date }}
+            {{ FeedItemData.upcoming_date_jp }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.upcoming_date_jp != ReleaseDatesJP.upcoming_date %}
@@ -265,10 +271,10 @@
             Is released: Japan
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.is_released_jp }}
+            {{ ReleaseDatesJP.is_released }}
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesJP.is_released }}
+            {{ FeedItemData.is_released_jp }}
         </div>
         <div class="col-md-2">
             {% if FeedItemData.is_released_jp != ReleaseDatesJP.is_released %}
