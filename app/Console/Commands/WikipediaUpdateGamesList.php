@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
 use App\FeedItemGame;
 use App\Game;
 use App\GameTitleHash;
 use App\Services\UrlService;
-use Illuminate\Console\Command;
-
 use App\Services\GameService;
 use App\Services\GameReleaseDateService;
 use App\Services\GameTitleHashService;
 use App\Services\FeedItemGameService;
+use App\Events\GameCreated;
 
 class WikipediaUpdateGamesList extends Command
 {
@@ -181,6 +181,8 @@ class WikipediaUpdateGamesList extends Command
                 $feedItem->game_id = $gameId;
                 $feedItem->setStatusComplete();
                 $feedItem->save();
+
+                event(new GameCreated($game));
 
             }
 
