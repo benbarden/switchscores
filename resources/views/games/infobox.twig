@@ -14,20 +14,30 @@
         </td>
         <td>{{ GameData.title }}</td>
     </tr>
-    {% if ReleaseDateInfo.is_released == 1 %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Release date</span>
-            </td>
-            <td>{{ ReleaseDateInfo.release_date|date('jS M Y') }}</td>
-        </tr>
-    {% else %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Expected release date (Europe)</span>
-            </td>
-            <td>{{ ReleaseDateInfo.upcoming_date }}</td>
-        </tr>
+    {% if ReleaseDates %}
+        {% for item in ReleaseDates %}
+            {% if item.region == 'eu' %}
+                {% set RegionDesc = 'Europe' %}
+            {% elseif item.region == 'us' %}
+                {% set RegionDesc = 'US' %}
+            {% elseif item.region == 'jp' %}
+                {% set RegionDesc = 'Japan' %}
+            {% else %}
+                {% set RegionDesc = item.region %}
+            {% endif %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Release date: {{ RegionDesc }}</span>
+                </td>
+                <td>
+                    {% if item.release_date and item.is_released == 1 %}
+                        {{ item.release_date|date('jS M Y') }}
+                    {% else %}
+                        {{ item.upcoming_date }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
     {% endif %}
     <tr>
         <td>

@@ -262,7 +262,7 @@ class GamesController extends BaseController
         $bindings['GameRanking'] = $gameRanking;
         $bindings['GameReviews'] = $gameReviews;
 
-        $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $this->region);
+        $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 
         // Total rank count
         $bindings['RankMaximum'] = $serviceTopRated->getCount($this->region);
