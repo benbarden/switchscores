@@ -71,7 +71,7 @@ class WikipediaUpdateGamesList extends Command
             if ($gameId) {
 
                 // Existing game
-                $game = $feedItemGameService->find($gameId);
+                $game = $gameService->find($gameId);
                 if (!$game) {
                     $this->info('Game not found: '.$gameId.' ; skipping');
                     continue;
@@ -79,12 +79,12 @@ class WikipediaUpdateGamesList extends Command
 
                 // Check standard fields
                 $gameChanged = false;
-                if ($game->developer != $feedItem->developers) {
-                    $game->developer = $feedItem->developers;
+                if ($game->developer != $feedItem->item_developers) {
+                    $game->developer = $feedItem->item_developers;
                     $gameChanged = true;
                 }
-                if ($game->publisher != $feedItem->publishers) {
-                    $game->publisher = $feedItem->publishers;
+                if ($game->publisher != $feedItem->item_publishers) {
+                    $game->publisher = $feedItem->item_publishers;
                     $gameChanged = true;
                 }
 
