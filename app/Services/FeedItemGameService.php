@@ -91,13 +91,21 @@ class FeedItemGameService
         return $list;
     }
 
-    public function getOKAndComplete()
+    public function getComplete()
     {
         $list = FeedItemGame::
             whereIn('status_code', [
-                FeedItemGame::STATUS_OK_TO_UPDATE,
                 FeedItemGame::STATUS_COMPLETE,
             ])
+            ->orderBy('id', 'asc')
+            ->get();
+        return $list;
+    }
+
+    public function getForProcessing()
+    {
+        $list = FeedItemGame::
+            where('status_code', FeedItemGame::STATUS_OK_TO_UPDATE)
             ->orderBy('id', 'asc')
             ->get();
         return $list;

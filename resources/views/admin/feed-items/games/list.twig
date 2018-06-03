@@ -12,7 +12,8 @@
                 <option value="">All pending items</option>
                 <option value="pending-game-id">Pending - with game ID</option>
                 <option value="pending-no-game-id">Pending - no game ID</option>
-                <option value="ok-and-complete">OK to update, and Complete</option>
+                <option value="ok-to-update">OK to update</option>
+                <option value="complete">Complete</option>
                 <option value="inactive">Inactive items</option>
             </select>
         </div>
@@ -47,6 +48,8 @@
                         <span style="color: #f00;">Game not linked</span>
                         {% else %}
                         {{ item.game.title }}
+                            [<a href="{{ route('admin.games.edit', {'gameId': item.game.id}) }}" target="_blank">edit</a>]
+                            [<a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">view</a>]
                         {% endif %}
                     </td>
                     <td class="text-left">

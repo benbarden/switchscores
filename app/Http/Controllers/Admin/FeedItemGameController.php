@@ -39,8 +39,12 @@ class FeedItemGameController extends BaseController
                     $feedItems = $feedItemGameService->getPendingNoGameId();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
-                case 'ok-and-complete':
-                    $feedItems = $feedItemGameService->getOKAndComplete();
+                case 'ok-to-update':
+                    $feedItems = $feedItemGameService->getForProcessing();
+                    $jsInitialSort = "[ 0, 'asc']";
+                    break;
+                case 'complete':
+                    $feedItems = $feedItemGameService->getComplete();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'inactive':

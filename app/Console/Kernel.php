@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdateGameRanks::class,
         Commands\WikipediaCrawlGamesList::class,
         Commands\WikipediaImportGamesList::class,
+        Commands\WikipediaUpdateGamesList::class,
     ];
 
     /**

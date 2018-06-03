@@ -40,4 +40,10 @@ class FeedItemGame extends Model
     {
         return $this->hasOne('App\Game', 'id', 'game_id');
     }
+
+    public function setStatusComplete()
+    {
+        $this->status_code = self::STATUS_COMPLETE;
+        $this->status_desc = 'Complete';
+    }
 }
