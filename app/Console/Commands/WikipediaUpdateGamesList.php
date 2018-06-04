@@ -151,8 +151,8 @@ class WikipediaUpdateGamesList extends Command
 
                 // New game
                 $linkTitle = $serviceUrl->generateLinkText($title);
-                $developers = $feedItem->developers;
-                $publishers = $feedItem->publishers;
+                $developers = $feedItem->item_developers;
+                $publishers = $feedItem->item_publishers;
 
                 $game = $gameService->create($title, $linkTitle, null, null, $developers, $publishers, null, null, null, null);
 
@@ -169,9 +169,9 @@ class WikipediaUpdateGamesList extends Command
                     $fieldUpcomingDate = 'upcoming_date_'.$region;
                     $fieldIsReleased = 'is_released_'.$region;
 
-                    $releaseDateValue = $feedItem{$fieldReleaseDate};
-                    $upcomingDateValue = $feedItem{$fieldUpcomingDate};
-                    $isReleasedValue = $feedItem{$fieldIsReleased};
+                    $releaseDateValue = $feedItem->{$fieldReleaseDate};
+                    $upcomingDateValue = $feedItem->{$fieldUpcomingDate};
+                    $isReleasedValue = $feedItem->{$fieldIsReleased} == 1 ? 'on' : 'off';
 
                     $gameReleaseDateService->createGameReleaseDate($gameId, $region, $releaseDateValue, $isReleasedValue, $upcomingDateValue);
 
