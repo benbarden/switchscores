@@ -80,11 +80,17 @@ class WikipediaUpdateGamesList extends Command
                 // Check standard fields
                 $gameChanged = false;
                 if ($game->developer != $feedItem->item_developers) {
-                    $game->developer = $feedItem->item_developers;
+                    $newDeveloper = $feedItem->item_developers;
+                    $newDeveloper = str_replace("\r", ' ', $newDeveloper);
+                    $newDeveloper = str_replace("\n", ' ', $newDeveloper);
+                    $game->developer = $newDeveloper;
                     $gameChanged = true;
                 }
                 if ($game->publisher != $feedItem->item_publishers) {
-                    $game->publisher = $feedItem->item_publishers;
+                    $newPublisher = $feedItem->item_publishers;
+                    $newPublisher = str_replace("\r", ' ', $newPublisher);
+                    $newPublisher = str_replace("\n", ' ', $newPublisher);
+                    $game->publisher = $newPublisher;
                     $gameChanged = true;
                 }
 
@@ -151,8 +157,16 @@ class WikipediaUpdateGamesList extends Command
 
                 // New game
                 $linkTitle = $serviceUrl->generateLinkText($title);
-                $developers = $feedItem->item_developers;
-                $publishers = $feedItem->item_publishers;
+
+                $newDeveloper = $feedItem->item_developers;
+                $newDeveloper = str_replace("\r", ' ', $newDeveloper);
+                $newDeveloper = str_replace("\n", ' ', $newDeveloper);
+                $developers = $newDeveloper;
+
+                $newPublisher = $feedItem->item_publishers;
+                $newPublisher = str_replace("\r", ' ', $newPublisher);
+                $newPublisher = str_replace("\n", ' ', $newPublisher);
+                $publishers = $newPublisher;
 
                 $game = $gameService->create($title, $linkTitle, null, null, $developers, $publishers, null, null, null, null);
 
