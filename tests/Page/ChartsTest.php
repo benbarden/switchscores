@@ -98,7 +98,7 @@ class ChartsTest extends TestCase
         $response = $this->get('/charts/games-at-position/15');
         $response->assertStatus(200);
 
-        $response = $this->get('/charts/games-at-position/16');
+        $response = $this->get('/charts/games-at-position/31');
         $response->assertStatus(404);
     }
 }
