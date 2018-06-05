@@ -8,7 +8,7 @@ use App\ChartsRankingGlobal;
 
 class ChartsRankingController extends \App\Http\Controllers\BaseController
 {
-    const MAX_RANK_COUNT = 15;
+    const MAX_RANK_COUNT = 30;
 
     public function showList($countryCode, $date)
     {

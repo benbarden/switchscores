@@ -102,7 +102,7 @@ class ChartsController extends BaseController
         ");
 
         $bindings['TopTitle'] = 'Charts - Most appearances';
-        $bindings['PageTitle'] = 'Most appearances in the eShop Top 15';
+        $bindings['PageTitle'] = 'Most appearances in the eShop Charts';
 
         return view('charts.mostAppearances', $bindings);
     }
@@ -111,10 +111,10 @@ class ChartsController extends BaseController
     {
         $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position';
-        $bindings['PageTitle'] = 'Games at position X in the eShop Top 15';
+        $bindings['PageTitle'] = 'Games at position X in the eShop Charts';
 
         $fifteenList = array();
-        for ($i=1; $i<=15; $i++) {
+        for ($i=1; $i<=30; $i++) {
             $fifteenList[] = $i;
         }
 
@@ -126,7 +126,7 @@ class ChartsController extends BaseController
     public function gamesAtPosition($position)
     {
         $posList = [];
-        for ($i=1; $i<16; $i++) {
+        for ($i=1; $i<=30; $i++) {
             $posList[] = $i;
         }
 
@@ -136,7 +136,7 @@ class ChartsController extends BaseController
 
         $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position '.$position;
-        $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Top 15';
+        $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Charts';
         $bindings['PositionNo'] = $position;
 
         $bindings['GamesListEu'] = \DB::select("
