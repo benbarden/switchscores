@@ -6,6 +6,57 @@ namespace App\Services\HtmlLoader\Wikipedia;
 
 class Parser
 {
+    public function getYearsArray()
+    {
+        $dtNow = new \DateTime('now');
+        $yearsArray = [];
+        // Go up to 2 years in the future
+        for ($year = 2017; $year <= ((int)$dtNow->format('Y') + 2); $year++) {
+            $yearsArray[] = $year;
+        }
+
+        return $yearsArray;
+    }
+
+    public function getYearMonthsArray()
+    {
+        $yearMonthsArray = [];
+
+        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+
+        $invalidOptions = ['January 2017', 'February 2017'];
+
+        $yearsArray = $this->getYearsArray();
+
+        foreach ($yearsArray as $year) {
+            foreach ($monthNames as $month) {
+                $yearMonth = $month.' '.$year;
+                if (in_array($yearMonth, $invalidOptions)) continue;
+                $yearMonthsArray[] = $yearMonth;
+            }
+        }
+
+        return $yearMonthsArray;
+    }
+
+    public function getYearQuartersArray()
+    {
+        $yearQuartersArray = [];
+
+        $quarterNames = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+        $yearsArray = $this->getYearsArray();
+
+        foreach ($yearsArray as $year) {
+            foreach ($quarterNames as $quarter) {
+                $yearQuartersArray[] = $quarter.' '.$year;
+            }
+        }
+
+        return $yearQuartersArray;
+    }
+
     public function getDates($row, $rowData = "")
     {
         $releaseDate = null;
@@ -27,16 +78,22 @@ class Parser
 
         $okToParseDate = false;
 
-        if (in_array($releaseDateRaw, ['2018', '2019'])) {
+        // Dynamic date arrays
+        $yearsArray = $this->getYearsArray();
+        $yearMonthsArray = $this->getYearMonthsArray();
+        $yearQuartersArray = $this->getYearQuartersArray();
+
+        if (in_array($releaseDateRaw, $yearsArray)) {
             // 2018, 2019
-            $upcomingDate = $releaseDateRaw.'-XX';
-        } elseif (in_array($releaseDateRaw, [
-                'Q2 2018', 'Q3 2018', 'Q4 2018',
-                'Q1 2019', 'Q2 2019', 'Q3 2019', 'Q4 2019'
-            ])) {
+            $upcomingDate = $releaseDateRaw . '-XX';
+        } elseif (in_array($releaseDateRaw, $yearQuartersArray)) {
             // Quarter, Year
             $dateLogic = explode(' ', $releaseDateRaw);
             $upcomingDate = $dateLogic[1].'-'.$dateLogic[0];
+        } elseif (in_array($releaseDateRaw, $yearMonthsArray)) {
+            // Month, Year
+            $dtMonthYear = new \DateTime($releaseDateRaw);
+            $upcomingDate = $dtMonthYear->format('Y-m').'-XX';
         } elseif (in_array($releaseDateRaw, ['Unreleased', 'TBA'])) {
             // Unreleased, TBA
             $upcomingDate = $releaseDateRaw;
