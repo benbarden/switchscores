@@ -6,7 +6,7 @@ namespace App\Services\HtmlLoader\Wikipedia;
 
 class Parser
 {
-    public function getDates($row, $title = "")
+    public function getDates($row, $rowData = "")
     {
         $releaseDate = null;
         $upcomingDate = null;
@@ -51,7 +51,7 @@ class Parser
                 $dtReleaseDate = new \DateTime($releaseDateRaw);
                 $releaseDate = $dtReleaseDate->format('Y-m-d');
             } catch (\Exception $e) {
-                throw new \Exception('Failed to parse date: '.$releaseDateRaw);
+                throw new \Exception($rowData.' - Failed to parse date: '.$releaseDateRaw);
             }
 
             $upcomingDate = $releaseDate;
@@ -100,9 +100,10 @@ class Parser
             $rowPubs = $row[3];
 
             // Release dates
-            list($jpReleaseDate, $jpUpcomingDate, $jpIsReleased) = $this->getDates($row[4], $rowTitle);
-            list($usReleaseDate, $usUpcomingDate, $usIsReleased) = $this->getDates($row[5], $rowTitle);
-            list($euReleaseDate, $euUpcomingDate, $euIsReleased) = $this->getDates($row[6], $rowTitle);
+            $rowErrorData = $rowTitle.','.$rowDevs.','.$rowPubs; // used if the date fails
+            list($jpReleaseDate, $jpUpcomingDate, $jpIsReleased) = $this->getDates($row[4], $rowErrorData);
+            list($usReleaseDate, $usUpcomingDate, $usIsReleased) = $this->getDates($row[5], $rowErrorData);
+            list($euReleaseDate, $euUpcomingDate, $euIsReleased) = $this->getDates($row[6], $rowErrorData);
 
             //$this->info('Processing item: '.$rowTitle);
 
