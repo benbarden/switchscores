@@ -63,8 +63,8 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
     {
         $request = request();
 
-        $gameService = resolve('Services\GameService');
-        $reviewSiteService = resolve('Services\ReviewSiteService');
+        $gameService = $this->serviceContainer->getGameService();
+        $reviewSiteService = $this->serviceContainer->getReviewSiteService();
         $serviceReviewStats = resolve('Services\Review\StatsService');
 
         if ($request->isMethod('post')) {
@@ -101,7 +101,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll();
+        $bindings['GamesList'] = $gameService->getAll($this->region);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 
