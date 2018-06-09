@@ -7,3 +7,14 @@
         </ul>
     </div>
 {% endif %}
+
+{% if ErrorsCustom %}
+    <div class="alert alert-danger">
+        <p>The following errors occurred:</p>
+        <ul>
+            {% for error in ErrorsCustom %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

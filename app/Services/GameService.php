@@ -60,6 +60,11 @@ class GameService
         $game->save();
     }
 
+    public function deleteGame($gameId)
+    {
+        Game::where('id', $gameId)->delete();
+    }
+
     // ********************************************************** //
 
     public function find($id)

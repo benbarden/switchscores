@@ -3,17 +3,30 @@
 
 namespace App\Services;
 
-use App\Services\GameService;
-
 
 class ServiceContainer
 {
-    const KEY_GAME_SERVICE = 'GameService';
-    const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
-    const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
+    const KEY_ACTIVITY_FEED_SERVICE = 'ActivityFeedService';
+    const KEY_CALENDAR_SERVICE = 'CalendarService';
+    const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
+    const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
+    const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
+    const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
+    const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
+    const KEY_GAME_SERVICE = 'GameService';
+    const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
+    const KEY_GENRE_SERVICE = 'GenreService';
+    const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
+    const KEY_NEWS_SERVICE = 'NewsService';
+    const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
+    const KEY_TOP_RATED_SERVICE = 'TopRatedService';
+    const KEY_URL_SERVICE = 'UrlService';
+    const KEY_USER_LIST_SERVICE = 'UserListService';
+    const KEY_USER_LIST_ITEM_SERVICE = 'UserListItemService';
+    const KEY_USER_SERVICE = 'UserService';
 
     private $services = [];
 
@@ -57,18 +70,10 @@ class ServiceContainer
 
     private function getServiceName($serviceKey)
     {
-        switch ($serviceKey) {
-            case self::KEY_GAME_SERVICE:
-            case self::KEY_GAME_RELEASE_DATE_SERVICE:
-            case self::KEY_GAME_TITLE_HASH_SERVICE:
-            case self::KEY_FEED_ITEM_GAME_SERVICE:
-            case self::KEY_FEED_ITEM_REVIEW_SERVICE:
-            case self::KEY_REVIEW_SITE_SERVICE:
-                $serviceName = "Services\\".$serviceKey;
-                break;
-            default:
-                throw new \Exception('Failed to load service class: '.$serviceKey);
-                break;
+        if (class_exists("App\\Services\\".$serviceKey)) {
+            $serviceName = "App\\Services\\".$serviceKey;
+        } else {
+            throw new \Exception('Failed to load service class: '.$serviceKey);
         }
         return $serviceName;
     }
@@ -76,15 +81,51 @@ class ServiceContainer
     // ** Get specific classes ** //
 
     /**
+     * @return ActivityFeedService
+     */
+    public function getActivityFeedService()
+    {
+        return $this->load(self::KEY_ACTIVITY_FEED_SERVICE);
+    }
+
+    /**
+     * @return CalendarService
+     */
+    public function getCalendarService()
+    {
+        return $this->load(self::KEY_CALENDAR_SERVICE);
+    }
+
+    /**
+     * @return ChartsDateService
+     */
+    public function getChartsDateService()
+    {
+        return $this->load(self::KEY_CHARTS_DATE_SERVICE);
+    }
+
+    /**
+     * @return ChartsRankingGlobalService
+     */
+    public function getChartsRankingGlobalService()
+    {
+        return $this->load(self::KEY_CHARTS_RANKING_GLOBAL_SERVICE);
+    }
+
+    /**
+     * @return CrawlerWikipediaGamesListSourceService
+     */
+    public function getCrawlerWikipediaGamesListSourceService()
+    {
+        return $this->load(self::KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE);
+    }
+
+    /**
      * @return FeedItemGameService
      */
     public function getFeedItemGameService()
     {
-        $serviceKey = self::KEY_FEED_ITEM_GAME_SERVICE;
-
-        $serviceObject = $this->load($serviceKey);
-
-        return $serviceObject;
+        return $this->load(self::KEY_FEED_ITEM_GAME_SERVICE);
     }
 
     /**
@@ -92,23 +133,15 @@ class ServiceContainer
      */
     public function getFeedItemReviewService()
     {
-        $serviceKey = self::KEY_FEED_ITEM_REVIEW_SERVICE;
-
-        $serviceObject = $this->load($serviceKey);
-
-        return $serviceObject;
+        return $this->load(self::KEY_FEED_ITEM_REVIEW_SERVICE);
     }
 
     /**
-     * @return GameService
+     * @return GameGenreService
      */
-    public function getGameService()
+    public function getGameGenreService()
     {
-        $serviceKey = self::KEY_GAME_SERVICE;
-
-        $serviceObject = $this->load($serviceKey);
-
-        return $serviceObject;
+        return $this->load(self::KEY_GAME_GENRE_SERVICE);
     }
 
     /**
@@ -116,11 +149,15 @@ class ServiceContainer
      */
     public function getGameReleaseDateService()
     {
-        $serviceKey = self::KEY_GAME_RELEASE_DATE_SERVICE;
+        return $this->load(self::KEY_GAME_RELEASE_DATE_SERVICE);
+    }
 
-        $serviceObject = $this->load($serviceKey);
-
-        return $serviceObject;
+    /**
+     * @return GameService
+     */
+    public function getGameService()
+    {
+        return $this->load(self::KEY_GAME_SERVICE);
     }
 
     /**
@@ -128,11 +165,39 @@ class ServiceContainer
      */
     public function getGameTitleHashService()
     {
-        $serviceKey = self::KEY_GAME_TITLE_HASH_SERVICE;
+        return $this->load(self::KEY_GAME_TITLE_HASH_SERVICE);
+    }
 
-        $serviceObject = $this->load($serviceKey);
+    /**
+     * @return GenreService
+     */
+    public function getGenreService()
+    {
+        return $this->load(self::KEY_GENRE_SERVICE);
+    }
 
-        return $serviceObject;
+    /**
+     * @return NewsCategoryService
+     */
+    public function getNewsCategoryService()
+    {
+        return $this->load(self::KEY_NEWS_CATEGORY_SERVICE);
+    }
+
+    /**
+     * @return NewsService
+     */
+    public function getNewsService()
+    {
+        return $this->load(self::KEY_NEWS_SERVICE);
+    }
+
+    /**
+     * @return ReviewLinkService
+     */
+    public function getReviewLinkService()
+    {
+        return $this->load(self::KEY_REVIEW_LINK_SERVICE);
     }
 
     /**
@@ -140,10 +205,46 @@ class ServiceContainer
      */
     public function getReviewSiteService()
     {
-        $serviceKey = self::KEY_REVIEW_SITE_SERVICE;
+        return $this->load(self::KEY_REVIEW_SITE_SERVICE);
+    }
 
-        $serviceObject = $this->load($serviceKey);
+    /**
+     * @return TopRatedService
+     */
+    public function getTopRatedService()
+    {
+        return $this->load(self::KEY_TOP_RATED_SERVICE);
+    }
 
-        return $serviceObject;
+    /**
+     * @return UrlService
+     */
+    public function getUrlService()
+    {
+        return $this->load(self::KEY_URL_SERVICE);
+    }
+
+    /**
+     * @return UserListItemService
+     */
+    public function getUserListItemService()
+    {
+        return $this->load(self::KEY_USER_LIST_ITEM_SERVICE);
+    }
+
+    /**
+     * @return UserListService
+     */
+    public function getUserListService()
+    {
+        return $this->load(self::KEY_USER_LIST_SERVICE);
+    }
+
+    /**
+     * @return UserService
+     */
+    public function getUserService()
+    {
+        return $this->load(self::KEY_USER_SERVICE);
     }
 }

@@ -30,6 +30,8 @@ class GameGenreService
         GameGenre::where('game_id', $gameId)->delete();
     }
 
+    // ********************************************************** //
+
     public function getByGame($gameId)
     {
         return GameGenre::where('game_id', $gameId)->get();

@@ -59,7 +59,7 @@ class NewsController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll();
+        $bindings['GamesList'] = $gameService->getAll($this->region);
 
         $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
 
@@ -103,7 +103,7 @@ class NewsController extends \App\Http\Controllers\BaseController
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
 
-        $bindings['GamesList'] = $gameService->getAll();
+        $bindings['GamesList'] = $gameService->getAll($this->region);
 
         $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
 

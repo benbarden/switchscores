@@ -6,6 +6,7 @@ use App\Services\GameReleaseDateService;
 use App\Services\GameGenreService;
 use App\Events\GameCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GamesController extends \App\Http\Controllers\BaseController
 {
@@ -281,5 +282,86 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['GameGenreList'] = $gameGenreService->getByGame($gameId);
 
         return view('admin.games.edit', $bindings);
+    }
+
+    public function delete($gameId)
+    {
+        // Core
+        $serviceGame = $this->serviceContainer->getGameService();
+
+        // Validation
+        $serviceNews = $this->serviceContainer->getNewsService();
+        $serviceUserListItem = $this->serviceContainer->getUserListItemService();
+        $serviceReviewLink = $this->serviceContainer->getReviewLinkService();
+        $serviceChartsRankingGlobal = $this->serviceContainer->getChartsRankingGlobalService();
+
+        // Deletion
+        $serviceActivityFeed = $this->serviceContainer->getActivityFeedService();
+        $serviceFeedItemGames = $this->serviceContainer->getFeedItemGameService();
+        $serviceGameReleaseDates = $this->serviceContainer->getGameReleaseDateService();
+        // No service for game_images
+        $serviceGameGenres = $this->serviceContainer->getGameGenreService();
+        $serviceGameTitleHashes = $this->serviceContainer->getGameTitleHashService();
+
+        $gameData = $serviceGame->find($gameId);
+        if (!$gameData) abort(404);
+
+        $bindings = [];
+        $customErrors = [];
+
+        $request = request();
+
+        // Validation: check for any reason we should not allow the game to be deleted.
+        $gameNews = $serviceNews->getByGameId($gameId);
+        if (count($gameNews) > 0) {
+            $customErrors[] = 'Game is linked to '.count($gameNews).' news article(s)';
+        }
+
+        $gameUserListItem = $serviceUserListItem->getByGame($gameId);
+        if (count($gameUserListItem) > 0) {
+            $customErrors[] = 'Game is linked to '.count($gameUserListItem).' user list(s)';
+        }
+
+        $gameReviews = $serviceReviewLink->getByGame($gameId);
+        if (count($gameReviews) > 0) {
+            $customErrors[] = 'Game is linked to '.count($gameReviews).' review(s)';
+        }
+
+        $gameChartsRankingGlobalEu = $serviceChartsRankingGlobal->getByGameEu($gameId);
+        $gameChartsRankingGlobalUs = $serviceChartsRankingGlobal->getByGameUs($gameId);
+        $totalChartsCount = count($gameChartsRankingGlobalEu) + count($gameChartsRankingGlobalUs);
+        if ($totalChartsCount > 0) {
+            $customErrors[] = 'Game is linked to '.count($gameReviews).' chart(s)';
+        }
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'delete-post';
+
+            $serviceActivityFeed->deleteByGameId($gameId);
+            $serviceFeedItemGames->deleteByGameId($gameId);
+            $serviceGameReleaseDates->deleteByGameId($gameId);
+            DB::table('game_images')->where('game_id', $gameId)->delete();
+            $serviceGameGenres->deleteGameGenres($gameId);
+            $serviceGameTitleHashes->deleteByGameId($gameId);
+            $serviceGame->deleteGame($gameId);
+
+            // Done
+
+            return redirect(route('admin.games.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'delete';
+
+        }
+
+        $bindings['TopTitle'] = 'Admin - Games - Delete game';
+        $bindings['PanelTitle'] = 'Delete game';
+        $bindings['GameData'] = $gameData;
+        $bindings['GameId'] = $gameId;
+        $bindings['ErrorsCustom'] = $customErrors;
+
+        return view('admin.games.delete', $bindings);
     }
 }

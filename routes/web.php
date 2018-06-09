@@ -94,6 +94,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/games/add', 'Admin\GamesController@add')->name('admin.games.add');
     Route::get('/admin/games/edit/{gameId}', 'Admin\GamesController@edit')->name('admin.games.edit');
     Route::post('/admin/games/edit/{gameId}', 'Admin\GamesController@edit')->name('admin.games.edit');
+    Route::get('/admin/games/delete/{gameId}', 'Admin\GamesController@delete')->name('admin.games.delete');
+    Route::post('/admin/games/delete/{gameId}', 'Admin\GamesController@delete')->name('admin.games.delete');
 
     // Charts: Dates
     Route::get('/admin/charts/date', 'Admin\ChartsDateController@showList')->name('admin.charts.date.list');

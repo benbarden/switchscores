@@ -34,6 +34,15 @@ class ActivityFeedService
         ]);
     }
 
+    public function deleteByGameId($gameId)
+    {
+        $gameId = (int) $gameId;
+        $props = '{"game_id":'.$gameId.'}';
+        ActivityFeed::where('properties', $props)->delete();
+    }
+
+    // ********************************************************** //
+
     public function find($id)
     {
         return ActivityFeed::find($id);
@@ -44,4 +53,5 @@ class ActivityFeedService
         $activityFeedItems = ActivityFeed::orderBy('created_at', 'desc')->limit($limit)->get();
         return $activityFeedItems;
     }
+
 }

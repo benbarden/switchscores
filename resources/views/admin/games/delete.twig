@@ -1,0 +1,42 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% if ErrorsCustom %}
+    {% include 'common/form-errors.twig' %}
+    <div class="alert alert-warning" role="alert">
+        Cannot delete the game: <strong>{{ GameData.title }}</strong> (id: {{ GameId }}) due to the above errors.
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Warning!</strong> You are about to delete the game: <strong>{{ GameData.title }}</strong> (id: {{ GameId }})
+        <br>Please review the details shown below before proceeding. There is no option to undo the deletion if you proceed!
+    </div>
+
+    <div class="alert alert-warning" role="alert">
+        This will delete ALL DATA associated with this game, including:
+        <ul>
+            <li>Core game data</li>
+            <li>Release date info</li>
+            <li>Genres</li>
+            <li>Title hashes (used by the Wikipedia crawler)</li>
+            <li>Feed items (games)</li>
+            <li>Images (DB links only; files will need to be deleted manually)</li>
+            <li>Activity feed records</li>
+        </ul>
+    </div>
+
+    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.games.delete', {'gameId': GameId}) }}">
+        {{ csrf_field() }}
+
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-4">
+                <button type="submit" class="btn outline btn-danger">
+                    Confirm deletion
+                </button>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+{% endblock page_inner %}

@@ -80,6 +80,13 @@ class NewsService
         return $news;
     }
 
+    public function getByGameId($gameId)
+    {
+        $news = News::where('game_id', $gameId)
+            ->get();
+        return $news;
+    }
+
     public function getNext(News $news)
     {
         $news = News::where('created_at', '>', $news->created_at)

@@ -9,22 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class GameReleaseDateService
 {
-    /**
-     * @param $releaseDate
-     * @return null|string
-     */
-    public function getReleaseYear($releaseDate)
-    {
-        if ($releaseDate) {
-            $releaseDateObject = new \DateTime($releaseDate);
-            $releaseYear = $releaseDateObject->format('Y');
-        } else {
-            $releaseYear = null;
-        }
-
-        return $releaseYear;
-    }
-
     public function createGameReleaseDate(
         $gameId, $region, $releaseDate, $released, $upcomingDate
     )
@@ -62,7 +46,28 @@ class GameReleaseDateService
         $gameReleaseDate->save();
     }
 
-    // ********************************************** //
+    public function deleteByGameId($gameId)
+    {
+        GameReleaseDate::where('game_id', $gameId)->delete();
+    }
+
+    // ********************************************************** //
+
+    /**
+     * @param $releaseDate
+     * @return null|string
+     */
+    public function getReleaseYear($releaseDate)
+    {
+        if ($releaseDate) {
+            $releaseDateObject = new \DateTime($releaseDate);
+            $releaseYear = $releaseDateObject->format('Y');
+        } else {
+            $releaseYear = null;
+        }
+
+        return $releaseYear;
+    }
 
     public function getByGame($gameId)
     {

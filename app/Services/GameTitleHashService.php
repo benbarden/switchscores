@@ -20,6 +20,13 @@ class GameTitleHashService
         ]);
     }
 
+    public function deleteByGameId($gameId)
+    {
+        GameTitleHash::where('game_id', $gameId)->delete();
+    }
+
+    // ********************************************************** //
+
     public function generateHash($title)
     {
         return md5($title);

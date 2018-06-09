@@ -28,4 +28,12 @@ class UserListItemService
             ->first();
         return $userListItem;
     }
+
+    public function getByGame($gameId)
+    {
+        $userListItem = UserListItem::
+            where('game_id', $gameId)
+            ->get();
+        return $userListItem;
+    }
 }
