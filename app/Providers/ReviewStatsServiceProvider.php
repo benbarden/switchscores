@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Providers\Review;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\Review\StatsService;
+use App\Services\ReviewStatsService;
 
-class StatsServiceProvider extends ServiceProvider
+class ReviewStatsServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class StatsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\Review\StatsService', function($app) {
-            return new StatsService();
+        $this->app->bind('Services\ReviewStatsService', function($app) {
+            return new ReviewStatsService();
         });
     }
 }

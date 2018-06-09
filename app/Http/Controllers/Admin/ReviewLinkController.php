@@ -30,30 +30,32 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         parent::__construct();
     }
 
-    public function showList($report = null)
+    public function showList()
     {
-        $bindings = array();
+        $serviceReviewLink = $this->serviceContainer->getReviewLinkService();
+        $serviceReviewSite = $this->serviceContainer->getReviewSiteService();
+
+        $bindings = [];
+
+        $siteId = request()->siteId;
+
+        $reviewSites = $serviceReviewSite->getAll();
 
         $bindings['TopTitle'] = 'Admin - Reviews - Links';
         $bindings['PanelTitle'] = 'Reviews: Links';
 
         $jsInitialSort = "[ 3, 'desc']";
 
-        if ($report == null) {
-            $bindings['ActiveNav'] = 'all';
-            $reviewLinks = $this->serviceClass->getAll();
+        if (!$siteId) {
+            $bindings['ActiveSiteId'] = '';
+            $reviewLinks = $serviceReviewLink->getAll();
         } else {
-            $bindings['ActiveNav'] = $report;
-            switch ($report) {
-                case 'no-date':
-                    $reviewLinks = $this->serviceClass->getAllWithoutDate();
-                    break;
-                default:
-                    abort(404);
-            }
+            $bindings['ActiveSiteId'] = $siteId;
+            $reviewLinks = $serviceReviewLink->getAllBySite($siteId);
         }
 
         $bindings['ReviewLinks'] = $reviewLinks;
+        $bindings['ReviewSites'] = $reviewSites;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('admin.reviews.link.list', $bindings);
@@ -65,7 +67,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         $gameService = $this->serviceContainer->getGameService();
         $reviewSiteService = $this->serviceContainer->getReviewSiteService();
-        $serviceReviewStats = resolve('Services\Review\StatsService');
+        $reviewStatsService = $this->serviceContainer->getReviewStatsService();
 
         if ($request->isMethod('post')) {
 
@@ -85,13 +87,13 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             // Update game review stats
             $game = $gameService->find($request->game_id);
-            $serviceReviewStats->updateGameReviewStats($game);
+            $reviewStatsService->updateGameReviewStats($game);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
 
             // All done; send us back
-            return redirect(route('admin.reviews.link.list'));
+            return redirect(route('admin.reviews.link.list').'?siteId='.$siteId);
 
         }
 
@@ -113,9 +115,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $reviewLinkData = $this->serviceClass->find($linkId);
         if (!$reviewLinkData) abort(404);
 
-        $gameService = resolve('Services\GameService');
-        $reviewSiteService = resolve('Services\ReviewSiteService');
-        $serviceReviewStats = resolve('Services\Review\StatsService');
+        $gameService = $this->serviceContainer->getGameService();
+        $reviewSiteService = $this->serviceContainer->getReviewSiteService();
+        $reviewStatsService = $this->serviceContainer->getReviewStatsService();
 
         $request = request();
         $bindings = array();
@@ -141,13 +143,13 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
             // Update game review stats
             $game = $gameService->find($request->game_id);
-            $serviceReviewStats->updateGameReviewStats($game);
+            $reviewStatsService->updateGameReviewStats($game);
 
             // Update ranks
             \Artisan::call('UpdateGameRanks');
 
             // All done; send us back
-            return redirect(route('admin.reviews.link.list'));
+            return redirect(route('admin.reviews.link.list').'?siteId='.$siteId);
 
         } else {
 
@@ -160,7 +162,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['GamesList'] = $gameService->getAll();
+        $bindings['GamesList'] = $gameService->getAll($this->region);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 

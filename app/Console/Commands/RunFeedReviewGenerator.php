@@ -9,7 +9,7 @@ use App\Services\FeedItemReviewService;
 use App\Services\GameService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewSiteService;
-use App\Services\Review\StatsService;
+use App\Services\ReviewStatsService;
 use App\Events\ReviewLinkCreated;
 
 class RunFeedReviewGenerator extends Command
@@ -51,12 +51,12 @@ class RunFeedReviewGenerator extends Command
         $gameService = resolve('Services\GameService');
         $reviewLinkService = resolve('Services\ReviewLinkService');
         $reviewSiteService = resolve('Services\ReviewSiteService');
-        $reviewStatsService = resolve('Services\Review\StatsService');
+        $reviewStatsService = resolve('Services\ReviewStatsService');
         /* @var FeedItemReviewService $feedItemReviewService */
         /* @var GameService $gameService */
         /* @var ReviewLinkService $reviewLinkService */
         /* @var ReviewSiteService $reviewSiteService */
-        /* @var StatsService $reviewStatsService */
+        /* @var ReviewStatsService $reviewStatsService */
 
         $feedItems = $feedItemReviewService->getUnprocessed();
 

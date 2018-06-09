@@ -194,7 +194,7 @@ return [
         App\Providers\NewsCategoryServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,
-        App\Providers\Review\StatsServiceProvider::class,
+        App\Providers\ReviewStatsServiceProvider::class,
         App\Providers\TopRatedServiceProvider::class,
         App\Providers\UserListServiceProvider::class,
         App\Providers\UserListItemServiceProvider::class,

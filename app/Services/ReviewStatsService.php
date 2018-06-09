@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Review;
+namespace App\Services;
 
 use App\Game;
 use Illuminate\Support\Collection;
 
-class StatsService
+class ReviewStatsService
 {
     public function calculateReviewCount(Collection $reviews)
     {

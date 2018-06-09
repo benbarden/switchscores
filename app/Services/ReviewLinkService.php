@@ -52,6 +52,15 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function getAllBySite($siteId)
+    {
+        $reviewLinks = ReviewLink::where('site_id', $siteId)
+            ->orderBy('review_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+        return $reviewLinks;
+    }
+
     public function countActive()
     {
         $listReviews = ReviewLink::select('review_links.*', 'review_sites.name')

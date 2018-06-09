@@ -22,6 +22,7 @@ class ServiceContainer
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
+    const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
     const KEY_USER_LIST_SERVICE = 'UserListService';
@@ -206,6 +207,14 @@ class ServiceContainer
     public function getReviewSiteService()
     {
         return $this->load(self::KEY_REVIEW_SITE_SERVICE);
+    }
+
+    /**
+     * @return ReviewStatsService
+     */
+    public function getReviewStatsService()
+    {
+        return $this->load(self::KEY_REVIEW_STATS_SERVICE);
     }
 
     /**

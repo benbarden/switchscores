@@ -7,10 +7,10 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use App\Services\Review\StatsService;
+use App\Services\ReviewStatsService;
 use App\ReviewLink;
 
-class StatsServiceTest extends TestCase
+class ReviewStatsServiceTest extends TestCase
 {
     public function testReviewCountThree()
     {
@@ -18,7 +18,7 @@ class StatsServiceTest extends TestCase
         $reviewLink = new ReviewLink();
         $reviews->push($reviewLink)->push($reviewLink)->push($reviewLink);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
         $reviewCount = $serviceStats->calculateReviewCount($reviews);
 
         $this->assertEquals(3, $reviewCount);
@@ -42,7 +42,7 @@ class StatsServiceTest extends TestCase
             ->push($reviewLinkB)
             ->push($reviewLinkC);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
 
         $this->assertEquals(8.0, $reviewAvg);
@@ -70,7 +70,7 @@ class StatsServiceTest extends TestCase
             ->push($reviewLinkC)
             ->push($reviewLinkD);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
 
         $this->assertEquals(8.5, $reviewAvg);
@@ -102,7 +102,7 @@ class StatsServiceTest extends TestCase
             ->push($reviewLinkD)
             ->push($reviewLinkE);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
 
         $this->assertEquals(6.82, $reviewAvg);
@@ -122,7 +122,7 @@ class StatsServiceTest extends TestCase
             ->push($reviewLinkA)
             ->push($reviewLinkB);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
 
         $this->assertEquals(6.25, $reviewAvg);
@@ -169,7 +169,7 @@ class StatsServiceTest extends TestCase
         $reviewLinkItem->rating_normalised = 8.5;
         $reviews->push($reviewLinkItem);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
 
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
         $this->assertEquals(9.33, $reviewAvg);
@@ -197,7 +197,7 @@ class StatsServiceTest extends TestCase
         $reviewLinkItem->rating_normalised = 6.0;
         $reviews->push($reviewLinkItem);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
 
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
         $this->assertEquals(5.98, $reviewAvg);
@@ -237,7 +237,7 @@ class StatsServiceTest extends TestCase
         $reviewLinkItem->rating_normalised = 6.0;
         $reviews->push($reviewLinkItem);
 
-        $serviceStats = new StatsService;
+        $serviceStats = new ReviewStatsService;
 
         $reviewAvg = $serviceStats->calculateReviewAverage($reviews);
         $this->assertEquals(5.83, $reviewAvg);

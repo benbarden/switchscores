@@ -2,11 +2,29 @@
 
 {% block page_inner %}
 
-<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review link">
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review link">
+    </div>
+    <div class="col-xs-12 col-sm-9">
+        <div class="pull-right">
+            <label for="admin-nav-site-filter">Filter by site:</label>
+            <select id="admin-nav-site-filter" name="admin-nav-site-filter" class="form-control">
+                <option value="">All reviews</option>
+                {% for item in ReviewSites %}
+                    <option value="{{ item.id }}">{% if item.active == 'N' %}[INACTIVE]{% endif %} {{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
+{#
 <div class="pull-right">
     <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.reviews.link.list') }}">All</a>
     <a id="admin-nav-no-date" class="btn btn-default" href="{{ route('admin.reviews.link.list', {'filter': 'no-date'}) }}">No date</a>
 </div>
+#}
 <hr>
 {% if ReviewLinks.count > 0 %}
     <table class="table table-striped data-sortable">
@@ -66,9 +84,14 @@
     $('#js-btn-add').on('click', function() {
         top.location.href = '{{ route('admin.reviews.link.add') }}';
     });
+    $('#admin-nav-site-filter').on('change', function() {
+        selectedSiteFilter = $(this).val();
+        top.location.href = '{{ route('admin.reviews.link.list')}}?siteId=' + selectedSiteFilter;
+    });
     $(document).ready(function() {
-        var activeNav = '{{ ActiveNav }}';
-        $('#admin-nav-' + activeNav).addClass('btn-primary');
+        var activeSiteId = '{{ ActiveSiteId }}';
+        $('#admin-nav-site-filter').val(activeSiteId);
+        //$('#admin-nav-' + activeNav).addClass('btn-primary');
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,
