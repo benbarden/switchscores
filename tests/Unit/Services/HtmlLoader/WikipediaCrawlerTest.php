@@ -197,6 +197,68 @@ tableRow;
 
     }
 
+    public function testTheFlameInTheFlood()
+    {
+        $row = <<<tableRow
+<tr>
+<th scope="row"><i><a href="/wiki/The_Flame_in_the_Flood" title="The Flame in the Flood">The Flame in the Flood</a></i></th>
+<td><a href="/wiki/Adventure_video_game" class="mw-redirect" title="Adventure video game">Adventure</a></td>
+<td>The Molasses Flood</td>
+<td>
+<div class="hlist hlist-separated">
+<ul>
+<li><span style="font-size:95%;"><a href="/wiki/Japan" title="Japan">JP</a>:</span> <a href="/wiki/Teyon" title="Teyon">Teyon</a></li>
+<li><span style="font-size:95%;"><abbr title="Worldwide">WW</abbr>:</span> <a href="/wiki/Curve_Digital" title="Curve Digital">Curve Digital</a></li>
+</ul>
+</div>
+</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-03-29-0000</span><span style="white-space:nowrap">March 29, 2018</span></td>
+<td><span class="sortkey" style="display:none;speak:none">000000002017-10-12-0000</span><span style="white-space:nowrap">October 12, 2017</span></td>
+<td><span class="sortkey" style="display:none;speak:none">000000002017-10-12-0000</span><span style="white-space:nowrap">October 12, 2017</span></td>
+<td></td>
+</tr>
+
+tableRow;
+
+        $this->wikiCrawler->loadSingleRow($row);
+        $this->wikiCrawler->extractRows();
+        $tableData = $this->wikiCrawler->getTableData();
+        //print_r($tableData);
+
+        // @todo Generate a model from the data.
+
+        $expectedTitle = 'The Flame in the Flood';
+        $expectedGenre = 'Adventure';
+        $expectedDev = 'The Molasses Flood';
+        $expectedPub = [
+            0 => 'JP: Teyon',
+            1 => 'WW: Curve Digital',
+        ];
+        $expectedRelDateJP = [
+            0 => '000000002018-03-29-0000',
+            1 => 'March 29, 2018',
+        ];
+        $expectedRelDateNA = [
+            0 => '000000002017-10-12-0000',
+            1 => 'October 12, 2017',
+        ];
+        $expectedRelDatePAL = [
+            0 => '000000002017-10-12-0000',
+            1 => 'October 12, 2017',
+        ];
+
+        $rowData = $tableData[0]; // There's only one row in this test case
+
+        $this->assertEquals($expectedTitle, $rowData[0]);
+        $this->assertEquals($expectedGenre, $rowData[1]);
+        $this->assertEquals($expectedDev, $rowData[2]);
+        $this->assertEquals($expectedPub, $rowData[3]);
+        $this->assertEquals($expectedRelDateJP, $rowData[4]);
+        $this->assertEquals($expectedRelDateNA, $rowData[5]);
+        $this->assertEquals($expectedRelDatePAL, $rowData[6]);
+
+    }
+/*
     public function testDummy()
     {
         $this->loadHtml();
@@ -204,6 +266,7 @@ tableRow;
         $tableData = $this->wikiCrawler->getTableData();
         //print_r($tableData);
     }
+*/
 
     public function testTableHeaders()
     {

@@ -92,7 +92,7 @@ class Crawler
                     } elseif ($spanCount == 2) {
 
                         // Expected - we can deal with this
-                        return $td->filter('span')->each(function($span, $i) {
+                        return $td->filter('span')->each(function ($span, $i) {
                             return trim($span->text());
                         });
 
@@ -111,7 +111,7 @@ class Crawler
                     } else {
 
                         // Not sure what to do here!
-                        throw new \Exception('Unhandled span count: '.$spanCount);
+                        throw new \Exception('Unhandled span count: ' . $spanCount);
 
                     }
 
@@ -124,6 +124,25 @@ class Crawler
                         return trim($td->text());
                     }
                     */
+
+                } elseif (in_array($i, [2, 3])) {
+
+                    // Developer, Publisher
+                    $listItemCount = substr_count($td->html(), '<li>');
+
+                    if ($listItemCount == 0) {
+
+                        // Just return the text
+                        return trim($td->text());
+
+                    } else {
+
+                        // Expected - we can deal with this
+                        return $td->filter('li')->each(function ($span, $i) {
+                            return trim($span->text());
+                        });
+
+                    }
 
                 } else {
                     return trim($td->text());

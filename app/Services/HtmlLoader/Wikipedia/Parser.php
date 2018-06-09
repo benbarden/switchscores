@@ -153,8 +153,16 @@ class Parser
                 $rowGenres = $row[1];
             }
 
-            $rowDevs = $row[2];
-            $rowPubs = $row[3];
+            if (is_array($row[2])) {
+                $rowDevs = implode(', ', $row[2]);
+            } else {
+                $rowDevs = $row[2];
+            }
+            if (is_array($row[3])) {
+                $rowPubs = implode(', ', $row[3]);
+            } else {
+                $rowPubs = $row[3];
+            }
 
             // Release dates
             $rowErrorData = $rowTitle.','.$rowDevs.','.$rowPubs; // used if the date fails
