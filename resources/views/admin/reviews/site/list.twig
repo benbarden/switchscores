@@ -16,6 +16,7 @@
                 <th>URLs</th>
                 <th class="text-center">Active</th>
                 <th class="text-center">Rating scale</th>
+                <th class="text-center">Reviews</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -48,6 +49,9 @@
                     </td>
                     <td class="text-center">
                         {{ item.rating_scale }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.reviews.link.list') }}?siteId={{ item.id }}">View</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.reviews.site.edit', {'siteId': item.id}) }}">Edit</a>
