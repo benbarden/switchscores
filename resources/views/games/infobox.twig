@@ -83,6 +83,20 @@
         </td>
         <td>{{ GameData.publisher }}</td>
     </tr>
+    {% if GameGenres %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Genres</span>
+        </td>
+        <td>
+            <p>
+            {% for item in GameGenres %}
+                <a href="{{ route('games.genres.item', {'linkTitle': item.genre.link_title }) }}">{{ item.genre.genre }}</a><br>
+            {% endfor %}
+            </p>
+        </td>
+    </tr>
+    {% endif %}
     {% if NewsInfoBox == 'Y' %}
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
         <tr>

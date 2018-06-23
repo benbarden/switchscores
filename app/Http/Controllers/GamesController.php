@@ -228,14 +228,11 @@ class GamesController extends BaseController
      */
     public function show($gameId, $linkTitle)
     {
-        $serviceTopRated = resolve('Services\TopRatedService');
-        /* @var $serviceTopRated TopRatedService */
-        $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
-        /* @var $chartsRankingGlobalService ChartsRankingGlobalService */
-        $reviewLinkService = resolve('Services\ReviewLinkService');
-        /* @var $reviewLinkService ReviewLinkService */
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceTopRated = $this->serviceContainer->getTopRatedService();
+        $chartsRankingGlobalService = $this->serviceContainer->getChartsRankingGlobalService();
+        $reviewLinkService = $this->serviceContainer->getReviewLinkService();
+        $serviceGameReleaseDate = $this->serviceContainer->getGameReleaseDateService();
+        $serviceGameGenres = $this->serviceContainer->getGameGenreService();
 
         $bindings = [];
 
@@ -255,12 +252,16 @@ class GamesController extends BaseController
         // Get reviews
         $gameReviews = $reviewLinkService->getByGame($gameId);
 
+        // Get genres
+        $gameGenres = $serviceGameGenres->getByGame($gameId);
+
         $bindings['TopTitle'] = $gameData->title;
         $bindings['PageTitle'] = $gameData->title.' - Nintendo Switch game details';
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['GameRanking'] = $gameRanking;
         $bindings['GameReviews'] = $gameReviews;
+        $bindings['GameGenres'] = $gameGenres;
 
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 
