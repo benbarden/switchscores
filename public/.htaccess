@@ -25,6 +25,9 @@ Redirect 301 /tag/tumbleseed /games/41/tumbleseed
     RewriteCond %{HTTP_HOST} !^(.+)\.(.+)\.(.+)
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
 
+    # Redirect index.html
+    RewriteRule ^index\.html$ / [NC,R=301,L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
