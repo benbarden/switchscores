@@ -104,8 +104,9 @@ class Crawler
                             $output[0] .= '-0000';
                             return $output;
                         } else {
-                            // Not sure what to do here!
-                            throw new \Exception('Cannot handle field due to no available text matches');
+                            //throw new \Exception('Cannot handle field due to no available text matches ['.$td->text().']');
+                            // Just return the text and see what happens
+                            return trim($td->text());
                         }
 
                     } else {
