@@ -23,6 +23,8 @@ class ReviewSite extends Model
     const SITE_MIKETENDO64 = 18;
     const SITE_NINDIE_SPOTLIGHT = 19;
     const SITE_THE_SWITCH_EFFECT = 20;
+    const SITE_100_HOUR_REVIEWS = 21; // NB: No feed
+    const SITE_THE_NEW_ODYSSEY = 22;
 
     /**
      * @var string

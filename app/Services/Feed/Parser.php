@@ -124,6 +124,9 @@ class Parser
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
+            case ReviewSite::SITE_THE_NEW_ODYSSEY:
+                // Titles too inconsistent; will have to match these manually.
+                break;
             case ReviewSite::SITE_WOS:
                 // N/A
                 break;

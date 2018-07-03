@@ -7,6 +7,8 @@ use App\ReviewSite;
 use App\FeedItemReview;
 use Carbon\Carbon;
 
+use GuzzleHttp\Client as GuzzleClient;
+
 
 class Importer
 {
@@ -65,14 +67,30 @@ class Importer
      */
     public function loadRemoteFeedData($feedUrl)
     {
-        // @todo Do this properly with GuzzleHttp
-        $xmlData = file_get_contents($feedUrl);
+        try {
+            $client = new GuzzleClient();
+            $response = $client->request('GET', $feedUrl);
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to load feed URL! Error: '.$e->getMessage());
+        }
 
-        if (!$xmlData) {
+        try {
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody();
+
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to load feed URL! Status code: '.$statusCode.'Error: '.$e->getMessage());
+        }
+
+        if ($statusCode != 200) {
             throw new \Exception('Cannot load feed: '.$feedUrl);
         }
 
-        $this->feedData = json_decode(json_encode(simplexml_load_string($xmlData)), true);
+        try {
+            $this->feedData = json_decode(json_encode(simplexml_load_string($body)), true);
+        } catch (\Exception $e) {
+            throw new \Exception('Error loading data! Error details: '.$e->getMessage().'; Raw data: '.$body);
+        }
     }
 
     /**
