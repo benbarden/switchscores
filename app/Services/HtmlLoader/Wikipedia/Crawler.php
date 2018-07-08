@@ -99,14 +99,23 @@ class Crawler
                     } elseif ($spanCount == 1) {
 
                         if (strpos($td->text(), '-0000') !== false) {
+                            // Clean it up first
+                            $text = $td->text();
+                            $text = str_replace("\r", '', $text);
+                            $text = str_replace("\n", '', $text);
+                            $text = trim($text);
                             // Fragile but it'll have to do
-                            $output = explode('-0000', $td->text());
+                            $output = explode('-0000', $text);
                             $output[0] .= '-0000';
                             return $output;
                         } else {
                             //throw new \Exception('Cannot handle field due to no available text matches ['.$td->text().']');
                             // Just return the text and see what happens
-                            return trim($td->text());
+                            $text = $td->text();
+                            $text = str_replace("\r", '', $text);
+                            $text = str_replace("\n", '', $text);
+                            $text = trim($text);
+                            return $text;
                         }
 
                     } else {

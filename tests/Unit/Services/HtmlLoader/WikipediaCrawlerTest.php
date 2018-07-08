@@ -258,6 +258,65 @@ tableRow;
         $this->assertEquals($expectedRelDatePAL, $rowData[6]);
 
     }
+
+    // This test is to find a workaround for HTML with a line break in it
+    public function test9MonkeysOfShaolin()
+    {
+        $row = <<<tableRow
+<tr>
+<th scope="row"><i>9 Monkeys of Shaolin</i>
+</th>
+<td><a href="/wiki/Beat_%27em_up" title="Beat &#39;em up">Beat 'em up</a>
+</td>
+<td>Sobaka Studio
+</td>
+<td><a href="/wiki/1C_Company" title="1C Company">Buka Entertainment</a>
+</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-12-31-0000</span>Q4 2018</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-12-31-0000</span>Q4 2018</td>
+<td><span class="sortkey" style="display:none;speak:none">000000002018-12-31-0000</span>Q4 2018
+</td>
+<td><sup id="cite_ref-13" class="reference"><a href="#cite_note-13">&#91;13&#93;</a></sup>
+</td></tr>
+
+tableRow;
+
+        $this->wikiCrawler->loadSingleRow($row);
+        $this->wikiCrawler->extractRows();
+        $tableData = $this->wikiCrawler->getTableData();
+        //print_r($tableData);
+
+        // @todo Generate a model from the data.
+
+        $expectedTitle = '9 Monkeys of Shaolin';
+        $expectedGenre = 'Beat \'em up';
+        $expectedDev = 'Sobaka Studio';
+        $expectedPub = 'Buka Entertainment';
+        $expectedRelDateJP = [
+            0 => '000000002018-12-31-0000',
+            1 => 'Q4 2018',
+        ];
+        $expectedRelDateNA = [
+            0 => '000000002018-12-31-0000',
+            1 => 'Q4 2018',
+        ];
+        $expectedRelDatePAL = [
+            0 => '000000002018-12-31-0000',
+            1 => 'Q4 2018',
+        ];
+
+        $rowData = $tableData[0]; // There's only one row in this test case
+
+        $this->assertEquals($expectedTitle, $rowData[0]);
+        $this->assertEquals($expectedGenre, $rowData[1]);
+        $this->assertEquals($expectedDev, $rowData[2]);
+        $this->assertEquals($expectedPub, $rowData[3]);
+        $this->assertEquals($expectedRelDateJP, $rowData[4]);
+        $this->assertEquals($expectedRelDateNA, $rowData[5]);
+        $this->assertEquals($expectedRelDatePAL, $rowData[6]);
+
+    }
+
 /*
     public function testDummy()
     {
