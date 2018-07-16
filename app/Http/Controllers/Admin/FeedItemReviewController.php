@@ -49,6 +49,8 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
 
     public function edit($itemId)
     {
+        $regionCode = \Request::get('regionCode');
+
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         /* @var FeedItemReviewService $feedItemReviewService */
 
@@ -87,7 +89,7 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 

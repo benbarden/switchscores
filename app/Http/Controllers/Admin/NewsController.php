@@ -34,6 +34,8 @@ class NewsController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $regionCode = \Request::get('regionCode');
+
         $newsService = resolve('Services\NewsService');
         $gameService = resolve('Services\GameService');
         $newsCategoryService = resolve('Services\NewsCategoryService');
@@ -59,7 +61,7 @@ class NewsController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
 
@@ -68,6 +70,8 @@ class NewsController extends \App\Http\Controllers\BaseController
 
     public function edit($newsId)
     {
+        $regionCode = \Request::get('regionCode');
+
         $newsService = resolve('Services\NewsService');
         $gameService = resolve('Services\GameService');
         $newsCategoryService = resolve('Services\NewsCategoryService');
@@ -103,7 +107,7 @@ class NewsController extends \App\Http\Controllers\BaseController
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
 

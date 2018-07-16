@@ -25,6 +25,8 @@ class NewsController extends BaseController
 
     public function displayContent($date, $title)
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceTopRated = resolve('Services\TopRatedService');
         /* @var $serviceTopRated TopRatedService */
         $serviceNews = resolve('Services\NewsService');
@@ -46,7 +48,7 @@ class NewsController extends BaseController
         $bindings['NewsItem'] = $newsItem;
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceTopRated->getCount($this->region);
+        $bindings['RankMaximum'] = $serviceTopRated->getCount($regionCode);
 
         // Next/Previous links
         $newsNext = $serviceNews->getNext($newsItem);
@@ -60,7 +62,7 @@ class NewsController extends BaseController
 
         // Game details
         if ($newsItem->game_id) {
-            $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($newsItem->game_id, $this->region);
+            $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($newsItem->game_id, $regionCode);
         }
 
         return view('news.content.default', $bindings);

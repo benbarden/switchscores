@@ -67,6 +67,7 @@ class RegisterController extends BaseController
             'display_name' => $data['display_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'region' => 'eu',
         ]);
 
         event(new UserCreated($user));

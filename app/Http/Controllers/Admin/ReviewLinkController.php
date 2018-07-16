@@ -63,6 +63,8 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $regionCode = \Request::get('regionCode');
+
         $request = request();
 
         $gameService = $this->serviceContainer->getGameService();
@@ -103,7 +105,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 
@@ -112,6 +114,8 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
     public function edit($linkId)
     {
+        $regionCode = \Request::get('regionCode');
+
         $reviewLinkData = $this->serviceClass->find($linkId);
         if (!$reviewLinkData) abort(404);
 
@@ -162,7 +166,7 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         $bindings['ReviewSites'] = $reviewSiteService->getAll();
 

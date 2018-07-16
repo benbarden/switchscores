@@ -25,6 +25,8 @@ class GamesController extends \App\Http\Controllers\BaseController
 
     public function showList($report = null)
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
         /* @var $serviceGameReleaseDate GameReleaseDateService */
         $serviceGameGenre = resolve('Services\GameGenreService');
@@ -37,18 +39,18 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $this->serviceGame->getAll($this->region);
+            $gameList = $this->serviceGame->getAll($regionCode);
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
-                    $gameList = $serviceGameReleaseDate->getReleased($this->region);
+                    $gameList = $serviceGameReleaseDate->getReleased($regionCode);
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 // Data to be filled in
                 case 'no-genre':
-                    $gameList = $serviceGameGenre->getGamesWithoutGenres($this->region);
+                    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-dev-or-pub':
@@ -65,27 +67,27 @@ class GamesController extends \App\Http\Controllers\BaseController
                     break;
                 // Upcoming
                 case 'upcoming':
-                    $gameList = $serviceGameReleaseDate->getUpcoming($this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcoming($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-with-dates':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-with-quarters':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-2018-sometime':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearXs(2018, $this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcomingYearXs(2018, $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-beyond':
-                    $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'upcoming-tba':
-                    $gameList = $serviceGameReleaseDate->getUpcomingTBA($this->region);
+                    $gameList = $serviceGameReleaseDate->getUpcomingTBA($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 default:

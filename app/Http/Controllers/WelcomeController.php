@@ -12,6 +12,8 @@ class WelcomeController extends BaseController
 {
     public function show()
     {
+        $regionCode = \Request::get('regionCode');
+
         $bindings = [];
 
         $serviceReviewLinks = resolve('Services\ReviewLinkService');
@@ -22,8 +24,8 @@ class WelcomeController extends BaseController
         /* @var $serviceTopRated TopRatedService */
 
         $bindings['ReviewList'] = $serviceReviewLinks->getLatestNaturalOrder(5);
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($this->region, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($this->region, 15);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 15);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
 
         // Charts
         $chartsDateService = resolve('Services\ChartsDateService');
@@ -31,8 +33,8 @@ class WelcomeController extends BaseController
         $bindings['ChartsLatestUs'] = $chartsDateService->getDateList('us', 1);
 
         // Quick stats
-        $bindings['TotalReleasedGames'] = $serviceGameReleaseDate->countReleased($this->region);
-        $bindings['TotalUpcomingGames'] = $serviceGameReleaseDate->countUpcoming($this->region);
+        $bindings['TotalReleasedGames'] = $serviceGameReleaseDate->countReleased($regionCode);
+        $bindings['TotalUpcomingGames'] = $serviceGameReleaseDate->countUpcoming($regionCode);
         $bindings['TotalReviews'] = $serviceReviewLinks->countActive();
 
         $bindings['TopTitle'] = 'Welcome';

@@ -65,6 +65,8 @@ class FeedItemGameController extends BaseController
 
     public function edit($itemId)
     {
+        $regionCode = \Request::get('regionCode');
+
         $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
         $gameService = $this->serviceContainer->getGameService();
         $gameReleaseDateService = $this->serviceContainer->getGameReleaseDateService();
@@ -138,7 +140,7 @@ class FeedItemGameController extends BaseController
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll($this->region);
+        $bindings['GamesList'] = $gameService->getAll($regionCode);
 
         // Load existing game data
         if ($feedItemData->game_id) {

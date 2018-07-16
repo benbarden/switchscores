@@ -19,6 +19,8 @@ class IndexController extends \App\Http\Controllers\BaseController
 
     public function show()
     {
+        $regionCode = \Request::get('regionCode');
+
         $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
         $feedItemReviewService = $this->serviceContainer->getFeedItemReviewService();
 
@@ -35,7 +37,7 @@ class IndexController extends \App\Http\Controllers\BaseController
         // Quick stats
         $gamesWithoutDevOrPub = $this->serviceGame->getWithoutDevOrPub();
         $gamesWithoutVideos = $this->serviceGame->getWithoutVideoUrl();
-        $gamesWithoutGenres = $serviceGameGenre->getGamesWithoutGenres($this->region);
+        $gamesWithoutGenres = $serviceGameGenre->getGamesWithoutGenres($regionCode);
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingFeedGameItems = $feedItemGameService->getPending();
         $userList = $userService->getAll();

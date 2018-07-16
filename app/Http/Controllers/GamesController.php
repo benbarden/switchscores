@@ -19,6 +19,8 @@ class GamesController extends BaseController
 {
     public function landing()
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
         /* @var $serviceGameReleaseDate GameReleaseDateService */
         $serviceTopRated = resolve('Services\TopRatedService');
@@ -26,9 +28,9 @@ class GamesController extends BaseController
 
         $bindings = [];
 
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($this->region, 15);
-        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming($this->region, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($this->region, 15);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 15);
+        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming($regionCode, 15);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
@@ -40,12 +42,14 @@ class GamesController extends BaseController
 
     public function listReleased()
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
         /* @var $serviceGameReleaseDate GameReleaseDateService */
 
         $bindings = [];
 
-        $gamesList = $serviceGameReleaseDate->getReleased($this->region);
+        $gamesList = $serviceGameReleaseDate->getReleased($regionCode);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = "[[3, 'desc'], [1, 'asc']]";
@@ -58,6 +62,8 @@ class GamesController extends BaseController
 
     public function listUpcoming()
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
         /* @var $serviceGameReleaseDate GameReleaseDateService */
 
@@ -69,35 +75,35 @@ class GamesController extends BaseController
         $upcomingLists[] = [
             'MainTitle' => '2018 games with release dates',
             'ShortTitle' => '2018 with dates',
-            'List' => $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $this->region)
+            'List' => $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode)
         ];
         $upcomingLists[] = [
             'MainTitle' => '2018 games, quarter only',
             'ShortTitle' => '2018 with quarters',
-            'List' => $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $this->region)
+            'List' => $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $regionCode)
         ];
         $upcomingLists[] = [
             'MainTitle' => '2018 games, no firm date',
             'ShortTitle' => '2018 sometime',
-            'List' => $serviceGameReleaseDate->getUpcomingYearXs(2018, $this->region)
+            'List' => $serviceGameReleaseDate->getUpcomingYearXs(2018, $regionCode)
         ];
 
         // Longer term/TBA
         $upcomingLists[] = [
             'MainTitle' => 'Beyond 2018',
             'ShortTitle' => 'Beyond 2018',
-            'List' => $serviceGameReleaseDate->getUpcomingFuture(2018, $this->region)
+            'List' => $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode)
         ];
         $upcomingLists[] = [
             'MainTitle' => 'TBA - no date given',
             'ShortTitle' => 'TBA',
-            'List' => $serviceGameReleaseDate->getUpcomingTBA($this->region)
+            'List' => $serviceGameReleaseDate->getUpcomingTBA($regionCode)
         ];
 
         $bindings['UpcomingLists'] = $upcomingLists;
 
         // Needed for overall total
-        $bindings['UpcomingGamesCount'] = $serviceGameReleaseDate->countUpcoming($this->region);
+        $bindings['UpcomingGamesCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
@@ -154,6 +160,8 @@ class GamesController extends BaseController
 
     public function calendarPage($date)
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceCalendar = resolve('Services\CalendarService');
         /* @var $serviceCalendar CalendarService */
 
@@ -169,8 +177,8 @@ class GamesController extends BaseController
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        $bindings['GamesByMonthList'] = $serviceCalendar->getList($this->region, $calendarYear, $calendarMonth);
-        $bindings['GamesByMonthRatings'] = $serviceCalendar->getRatings($this->region, $calendarYear, $calendarMonth);
+        $bindings['GamesByMonthList'] = $serviceCalendar->getList($regionCode, $calendarYear, $calendarMonth);
+        $bindings['GamesByMonthRatings'] = $serviceCalendar->getRatings($regionCode, $calendarYear, $calendarMonth);
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Release calendar: '.$dtDateDesc;
@@ -197,6 +205,8 @@ class GamesController extends BaseController
 
     public function genreByName($linkTitle)
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceGenre = resolve('Services\GenreService');
         /* @var $serviceGenre GenreService */
         $serviceGameGenre = resolve('Services\GameGenreService');
@@ -212,7 +222,7 @@ class GamesController extends BaseController
 
         $bindings['GenreData'] = $genreData;
 
-        $bindings['GamesList'] = $serviceGameGenre->getGamesByGenre($this->region, $genreData->id);
+        $bindings['GamesList'] = $serviceGameGenre->getGamesByGenre($regionCode, $genreData->id);
         $bindings['GamesTableSort'] = "[1, 'asc']";
 
         $bindings['TopTitle'] = 'Nintendo Switch games in genre: '.$genreData->genre;
@@ -228,6 +238,8 @@ class GamesController extends BaseController
      */
     public function show($gameId, $linkTitle)
     {
+        $regionCode = \Request::get('regionCode');
+
         $serviceTopRated = $this->serviceContainer->getTopRatedService();
         $chartsRankingGlobalService = $this->serviceContainer->getChartsRankingGlobalService();
         $reviewLinkService = $this->serviceContainer->getReviewLinkService();
@@ -266,7 +278,7 @@ class GamesController extends BaseController
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceTopRated->getCount($this->region);
+        $bindings['RankMaximum'] = $serviceTopRated->getCount($regionCode);
 
         // Check if game is on lists
         if (Auth::id()) {
