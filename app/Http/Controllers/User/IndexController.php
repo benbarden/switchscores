@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers\User;
 
+use Illuminate\Routing\Controller as Controller;
+use App\Services\ServiceContainer;
 use Auth;
-use App\Services\UserListService;
-use App\Services\UserListItemService;
 
-class IndexController extends \App\Http\Controllers\BaseController
+class IndexController extends Controller
 {
     public function show()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $bindings = array();
 
         $bindings['TopTitle'] = 'Members index';
         $bindings['PanelTitle'] = 'Members index';
 
+        $bindings['UserRegion'] = Auth::user()->region;
+
         $userId = Auth::id();
 
-        $userListService = resolve('Services\UserListService');
-        $userListItemService = resolve('Services\UserListItemService');
-        /* @var $userListService UserListService */
-        /* @var $userListItemService UserListItemService */
+        $userListService = $serviceContainer->getUserListService();
+        $userListItemService = $serviceContainer->getUserListItemService();
 
         $ownedList = $userListService->getOwnedListByUser($userId);
         $wishList = $userListService->getWishListByUser($userId);

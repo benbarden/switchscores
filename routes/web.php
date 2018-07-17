@@ -80,6 +80,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user-list-item/add', 'User\UserListController@addPlaylistItem')->name('user.list-item.add');
     Route::get('/user-list-item/delete', 'User\UserListController@deletePlaylistItem')->name('user.list-item.delete');
 
+    // User profile
+    Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
+
 });
 
 /* Admin */
