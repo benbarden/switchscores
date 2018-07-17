@@ -9,6 +9,7 @@
                 <th class="text-right">#</th>
                 <th>Display name</th>
                 <th>Email</th>
+                <th class="text-center">Region</th>
                 <th class="text-center">Joined</th>
             </tr>
         </thead>
@@ -23,6 +24,9 @@
                     </td>
                     <td>
                         {{ item.email }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.region }}
                     </td>
                     <td class="text-center">
                         {{ item.created_at }}
@@ -42,6 +46,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,
