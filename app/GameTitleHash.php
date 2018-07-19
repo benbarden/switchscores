@@ -23,4 +23,8 @@ class GameTitleHash extends Model
         'title', 'title_hash', 'game_id',
     ];
 
+    public function game()
+    {
+        return $this->hasOne('App\Game', 'id', 'game_id');
+    }
 }

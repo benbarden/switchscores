@@ -40,7 +40,7 @@
                 <th class="text-right">#</th>
                 <th>Title</th>
                 <th>Release date</th>
-                <th class="text-center">Status</th>
+                <th class="text-center">Hashes</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -61,11 +61,7 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {% if item.is_released == 1 %}
-                        Released
-                        {% else %}
-                        Upcoming
-                        {% endif %}
+                        <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">View</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a> :

@@ -1,0 +1,31 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="alert alert-warning" role="alert">
+    <strong>Warning!</strong> You are about to delete the following title hash:
+    <ul>
+        <li>Title: {{ GameTitleHashData.title }}</li>
+        <li>Hash: {{ GameTitleHashData.title_hash }}</li>
+        <li>For game: {{ GameTitleHashData.game.title }} (id: {{ GameTitleHashData.game.id }})</li>
+    </ul>
+</div>
+
+<div class="alert alert-warning" role="alert">
+    This will prevent automated processes from linking <strong>{{ GameTitleHashData.title }}</strong> to the
+    game listed above.
+</div>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('admin.games-title-hash.delete', {'itemId': GameTitleHashId}) }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-danger">
+                Confirm deletion
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock page_inner %}

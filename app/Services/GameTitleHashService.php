@@ -20,12 +20,36 @@ class GameTitleHashService
         ]);
     }
 
+    public function edit(
+        GameTitleHash $gameTitleHash, $title, $titleHash, $gameId
+    )
+    {
+        $values = [
+            'title' => $title,
+            'title_hash' => $titleHash,
+            'game_id' => $gameId,
+        ];
+
+        $gameTitleHash->fill($values);
+        $gameTitleHash->save();
+    }
+
+    public function delete($titleHashId)
+    {
+        GameTitleHash::where('id', $titleHashId)->delete();
+    }
+
     public function deleteByGameId($gameId)
     {
         GameTitleHash::where('game_id', $gameId)->delete();
     }
 
     // ********************************************************** //
+
+    public function find($id)
+    {
+        return GameTitleHash::find($id);
+    }
 
     public function generateHash($title)
     {
@@ -40,5 +64,22 @@ class GameTitleHashService
         } else {
             return null;
         }
+    }
+
+    public function getByGameId($gameId)
+    {
+        $titleHashList = GameTitleHash::
+            where('game_id', $gameId)
+            ->orderBy('id', 'desc')
+            ->get();
+        return $titleHashList;
+    }
+
+    public function getAll()
+    {
+        $titleHashList = GameTitleHash::
+            orderBy('id', 'desc')
+            ->get();
+        return $titleHashList;
     }
 }
