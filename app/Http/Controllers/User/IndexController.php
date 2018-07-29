@@ -16,7 +16,7 @@ class IndexController extends Controller
         $bindings = array();
 
         $bindings['TopTitle'] = 'Members index';
-        $bindings['PanelTitle'] = 'Members index';
+        $bindings['PageTitle'] = 'Members index';
 
         $bindings['UserRegion'] = Auth::user()->region;
 

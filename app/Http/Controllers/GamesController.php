@@ -34,8 +34,8 @@ class GamesController extends BaseController
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
-        $bindings['TopTitle'] = 'List of Nintendo Switch games';
-        $bindings['PageTitle'] = 'Games';
+        $bindings['TopTitle'] = 'Nintendo Switch games list';
+        $bindings['PageTitle'] = 'Nintendo Switch games list';
 
         return view('games.landing', $bindings);
     }
@@ -55,7 +55,7 @@ class GamesController extends BaseController
         $bindings['GamesTableSort'] = "[[3, 'desc'], [1, 'asc']]";
 
         $bindings['TopTitle'] = 'Nintendo Switch released games';
-        $bindings['PageTitle'] = 'Nintendo Switch games available in Europe';
+        $bindings['PageTitle'] = 'Nintendo Switch released games';
 
         return view('games.list.releasedGames', $bindings);
     }
@@ -151,7 +151,7 @@ class GamesController extends BaseController
         $bindings = [];
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
-        $bindings['PageTitle'] = 'Release calendar';
+        $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
 
         $bindings['DateList'] = $this->getAllowedDates();
 
@@ -181,7 +181,7 @@ class GamesController extends BaseController
         $bindings['GamesByMonthRatings'] = $serviceCalendar->getRatings($regionCode, $calendarYear, $calendarMonth);
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
-        $bindings['PageTitle'] = 'Release calendar: '.$dtDateDesc;
+        $bindings['PageTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
 
         return view('games.calendar.page', $bindings);
     }
@@ -267,8 +267,8 @@ class GamesController extends BaseController
         // Get genres
         $gameGenres = $serviceGameGenres->getByGame($gameId);
 
-        $bindings['TopTitle'] = $gameData->title;
-        $bindings['PageTitle'] = $gameData->title.' - Nintendo Switch game details';
+        $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game details';
+        $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['GameRanking'] = $gameRanking;

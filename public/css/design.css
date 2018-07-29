@@ -1,17 +1,18 @@
 /* Background */
-html,body {min-height:100%;}
+html, body {min-height: 100%;}
 body {background: url('../img/background.jpg') fixed center bottom repeat-x;}
+#wos-body {background: #fff; padding: 8px;}
 
 /* Typography */
-h1,.h1{font-size:36px}
-h2,.h2{font-size:26px}
-h3,.h3{font-size:20px}
-h4,.h4{font-size:16px}
-h5,.h5{font-size:14px}
-h6,.h6{font-size:12px}
+h1, .h1 {font-size: 30px;}
+h2, .h2 {font-size: 24px;}
+h3, .h3 {font-size: 20px;}
+h4, .h4 {font-size: 16px;}
+h5, .h5 {font-size: 14px;}
+h6, .h6 {font-size: 12px;}
 
 /* Game page */
-.fotorama {margin-top:21px;}
-.game-rating {text-align:right;}
-.game-rating p {margin-top:5px;display:inline-block;text-align:center;padding:0 5px;border:1px solid #ddd;}
-.game-rating span {display:block;font-size:12px;text-transform:uppercase;padding:5px;margin:0 -5px;background:#f5f5f5;}
+.fotorama {margin-top: 21px;}
+.game-rating {text-align: right;}
+.game-rating p {margin-top: 5px; display: inline-block; text-align: center; padding: 0 5px; border: 1px solid #ddd;}
+.game-rating span {display: block; font-size: 12px; text-transform: uppercase; padding: 5px; margin: 0 -5px; background: #f5f5f5;}

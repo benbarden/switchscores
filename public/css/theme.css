@@ -1,7 +1,3 @@
-.fancy-table tr th {background: #9cf; color: #000;}
-.fancy-table tr td {background: #ededed; color: #000; border-bottom: 1px solid #999;}
-.fancy-table tr th, .fancy-table tr td {font-size: 100%; padding: 6px;}
-
 body {
     background: #ffffff;
     color: #000000;

@@ -4,7 +4,6 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-8">
-        <h2>{{ NewsItem.title }}</h2>
         {{ NewsItem.content_html|raw }}
         <p>
             <small>Published: {{ NewsItem.created_at|date('jS M Y H:i') }}</small>
