@@ -30,7 +30,10 @@
                 <tbody>
                 {% for item in GamesByMonthList %}
                     <tr>
-                        <td>
+                        <td class="text-center" style="vertical-align: middle;">
+                            {{ ImageHelper.packshotHtml(item, 'release-calendar') }}
+                        </td>
+                        <td style="vertical-align: middle;">
                             {% if item.is_released == 0 %}
                                 <span class="label label-info">Upcoming</span>
                                 &nbsp;
@@ -42,7 +45,7 @@
                                 {{ item.title }}
                             </a>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center" style="vertical-align: middle;">
                             {{ item.release_date|date('jS M') }}
                         </td>
                     </tr>

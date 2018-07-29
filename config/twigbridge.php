@@ -147,14 +147,19 @@ return [
         |
         */
         'facades' => [
-            'LinkHelper' => [
-                'is_safe' => [
-                    'gameShow'
-                ]
-            ],
             'DateHelper' => [
                 'is_safe' => [
                     'isNew'
+                ]
+            ],
+            'ImageHelper' => [
+                'is_safe' => [
+                    'packshotHtml'
+                ]
+            ],
+            'LinkHelper' => [
+                'is_safe' => [
+                    'gameShow'
                 ]
             ],
             'SerialHelper' => [

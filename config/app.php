@@ -255,8 +255,9 @@ return [
 
         // WOS
 
-        'LinkHelper' => App\Helpers\LinkHelper::class,
         'DateHelper' => App\Helpers\DateHelper::class,
+        'ImageHelper' => App\Helpers\ImageHelper::class,
+        'LinkHelper' => App\Helpers\LinkHelper::class,
         'SerialHelper' => App\Helpers\SerialHelper::class,
 
     ],
