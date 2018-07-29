@@ -46,9 +46,13 @@ class ReviewLinkService
         return ReviewLink::find($id);
     }
 
-    public function getAll()
+    public function getAll($limit = null)
     {
-        $reviewLinks = ReviewLink::orderBy('id', 'desc')->get();
+        $reviewLinks = ReviewLink::orderBy('id', 'desc');
+        if ($limit) {
+            $reviewLinks = $reviewLinks->limit($limit);
+        }
+        $reviewLinks = $reviewLinks->get();
         return $reviewLinks;
     }
 

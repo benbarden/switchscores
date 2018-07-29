@@ -27,6 +27,13 @@
 #}
 <hr>
 {% if ReviewLinks.count > 0 %}
+    {% if TableLimit is defined %}
+        <p>
+            Page is limited to {{ TableLimit }} review links to minimise performance issues. You can filter by site to see
+            all review links associated with that site.
+        </p>
+    {% endif %}
+
     <table class="table table-striped data-sortable">
         <thead>
             <tr>

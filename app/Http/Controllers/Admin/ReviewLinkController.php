@@ -48,7 +48,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         if (!$siteId) {
             $bindings['ActiveSiteId'] = '';
-            $reviewLinks = $serviceReviewLink->getAll();
+            $tableLimit = 250;
+            $reviewLinks = $serviceReviewLink->getAll($tableLimit);
+            $bindings['TableLimit'] = $tableLimit;
         } else {
             $bindings['ActiveSiteId'] = $siteId;
             $reviewLinks = $serviceReviewLink->getAllBySite($siteId);
