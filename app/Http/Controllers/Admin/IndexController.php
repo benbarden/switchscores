@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\GameGenreService;
-use App\Services\UserService;
+use Illuminate\Routing\Controller as Controller;
+use App\Services\ServiceContainer;
 
-class IndexController extends \App\Http\Controllers\BaseController
+class IndexController extends Controller
 {
     public function feedItemsLanding()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $bindings = [];
 
         $bindings['TopTitle'] = 'Feed items';
@@ -19,35 +22,55 @@ class IndexController extends \App\Http\Controllers\BaseController
 
     public function show()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
-        $feedItemReviewService = $this->serviceContainer->getFeedItemReviewService();
-
-        $userService = resolve('Services\UserService');
-        /* @var UserService $userService */
-        $serviceGameGenre = resolve('Services\GameGenreService');
-        /* @var $serviceGameGenre GameGenreService */
+        $feedItemGameService = $serviceContainer->getFeedItemGameService();
+        $feedItemReviewService = $serviceContainer->getFeedItemReviewService();
+        $userService = $serviceContainer->getUserService();
+        $gameGenreService = $serviceContainer->getGameGenreService();
+        $gameService = $serviceContainer->getGameService();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin index';
         $bindings['PanelTitle'] = 'Admin index';
 
-        // Quick stats
-        $gamesWithoutDevOrPub = $this->serviceGame->getWithoutDevOrPub();
-        $gamesWithoutVideos = $this->serviceGame->getWithoutVideoUrl();
-        $gamesWithoutGenres = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+
+        // Feeds - Items to action
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingFeedGameItems = $feedItemGameService->getPending();
-        $userList = $userService->getAll();
 
-        $bindings['GamesWithoutDevOrPubCount'] = count($gamesWithoutDevOrPub);
-        $bindings['GamesWithoutVideosCount'] = count($gamesWithoutVideos);
-        $bindings['GamesWithoutGenresCount'] = count($gamesWithoutGenres);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
+
+
+        // Missing data
+        $missingBoxart = $gameService->getWithoutBoxart();
+        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url');
+        $missingNintendoPageUrl = $gameService->getByNullField('nintendo_page_url');
+        $missingVideoUrl = $gameService->getByNullField('video_url');
+        $missingTwitterId = $gameService->getByNullField('twitter_id');
+        $missingDevOrPub = $gameService->getWithoutDevOrPub();
+        $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
+        $missingAmazonUkLink = $gameService->getWithoutAmazonUkLink();
+
+        $bindings['MissingBoxartCount'] = count($missingBoxart);
+        $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);
+        $bindings['MissingNintendoPageUrlCount'] = count($missingNintendoPageUrl);
+        $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
+        $bindings['MissingTwitterIdCount'] = count($missingTwitterId);
+        $bindings['MissingDevOrPubCount'] = count($missingDevOrPub);
+        $bindings['MissingGenresCount'] = count($missingGenres);
+        $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
+
+
+        // Information
+        $userList = $userService->getAll();
         $bindings['RegisteredUserCount'] = count($userList);
+
 
         return view('admin.index', $bindings);
     }

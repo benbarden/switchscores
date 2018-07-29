@@ -168,7 +168,7 @@ class WikipediaUpdateGamesList extends Command
                 $newPublisher = str_replace("\n", ' ', $newPublisher);
                 $publishers = $newPublisher;
 
-                $game = $gameService->create($title, $linkTitle, null, null, $developers, $publishers, null, null, null, null);
+                $game = $gameService->create($title, $linkTitle, null, null, $developers, $publishers);
 
                 $gameId = $game->id;
 

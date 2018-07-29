@@ -15,10 +15,28 @@ class GameService
     const ORDER_NEWEST = 1;
     const ORDER_OLDEST = 2;
 
+    /**
+     * @param $title
+     * @param $linkTitle
+     * @param $priceEshop
+     * @param $players
+     * @param $developer
+     * @param $publisher
+     * @param null $amazonUkLink
+     * @param null $overview
+     * @param null $mediaFolder
+     * @param null $videoUrl
+     * @param null $boxartUrl
+     * @param null $boxartSquareUrl
+     * @param null $vendorPageUrl
+     * @param null $nintendoPageUrl
+     * @param null $twitterId
+     * @return Game
+     */
     public function create(
-        $title, $linkTitle, $priceEshop, $players,
-        $developer, $publisher, $amazonUkLink, $overview,
-        $mediaFolder, $videoUrl
+        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
+        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null, $twitterId = null
     )
     {
         return Game::create([
@@ -33,14 +51,19 @@ class GameService
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
+            'boxart_url' => $boxartUrl,
+            'boxart_square_url' => $boxartSquareUrl,
+            'vendor_page_url' => $vendorPageUrl,
+            'nintendo_page_url' => $nintendoPageUrl,
+            'twitter_id' => $twitterId,
         ]);
     }
 
     public function edit(
         Game $game,
-        $title, $linkTitle, $priceEshop, $players,
-        $developer, $publisher, $amazonUkLink, $overview,
-        $mediaFolder, $videoUrl
+        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
+        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null, $twitterId = null
     )
     {
         $values = [
@@ -54,6 +77,11 @@ class GameService
             'media_folder' => $mediaFolder,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
+            'boxart_url' => $boxartUrl,
+            'boxart_square_url' => $boxartSquareUrl,
+            'vendor_page_url' => $vendorPageUrl,
+            'nintendo_page_url' => $nintendoPageUrl,
+            'twitter_id' => $twitterId,
         ];
 
         $game->fill($values);
@@ -101,15 +129,29 @@ class GameService
         return $gamesList;
     }
 
+    public function getWithoutBoxart()
+    {
+        $gamesList = Game::where('boxart_url', null)->where('boxart_square_url', null)->orderBy('id', 'asc')->get();
+        return $gamesList;
+    }
+
     public function getWithoutAmazonUkLink()
     {
         $gamesList = Game::where('amazon_uk_link', null)->orderBy('id', 'desc')->get();
         return $gamesList;
     }
 
-    public function getWithoutVideoUrl()
+    public function getByNullField($field)
     {
-        $gamesList = Game::where('video_url', null)->orderBy('id', 'desc')->get();
+        $allowedFields = [
+            'video_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id'
+        ];
+
+        if (!in_array($field, $allowedFields)) {
+            throw new \Exception('Field '.$field.' not supported by getByMissingField');
+        }
+
+        $gamesList = Game::where($field, null)->orderBy('id', 'desc')->get();
         return $gamesList;
     }
 }

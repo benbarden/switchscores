@@ -97,6 +97,30 @@
         </td>
     </tr>
     {% endif %}
+    {% if GameData.vendor_page_url %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Official site</span>
+            </td>
+            <td><a href="{{ GameData.vendor_page_url }}" target="_blank">Visit site</a></td>
+        </tr>
+    {% endif %}
+    {% if GameData.nintendo_page_url %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Nintendo eShop page</span>
+            </td>
+            <td><a href="{{ GameData.nintendo_page_url }}" target="_blank">Visit site</a></td>
+        </tr>
+    {% endif %}
+    {% if GameData.twitter_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Twitter account</span>
+            </td>
+            <td><a href="https://twitter.com/{{ GameData.twitter_id }}" target="_blank">{{ GameData.twitter_id }}</a></td>
+        </tr>
+    {% endif %}
     {% if NewsInfoBox == 'Y' %}
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
         <tr>

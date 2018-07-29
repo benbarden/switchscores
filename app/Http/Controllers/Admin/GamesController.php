@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\GameReleaseDateService;
-use App\Services\GameGenreService;
-use App\Events\GameCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class GamesController extends \App\Http\Controllers\BaseController
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use App\Services\ServiceContainer;
+
+use App\Events\GameCreated;
+
+class GamesController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var array
      */
@@ -25,12 +33,14 @@ class GamesController extends \App\Http\Controllers\BaseController
 
     public function showList($report = null)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
-        $serviceGameGenre = resolve('Services\GameGenreService');
-        /* @var $serviceGameGenre GameGenreService */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameGenre = $serviceContainer->getGameGenreService();
 
         $bindings = [];
 
@@ -39,7 +49,7 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $this->serviceGame->getAll($regionCode);
+            $gameList = $serviceGame->getAll($regionCode);
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
@@ -54,15 +64,31 @@ class GamesController extends \App\Http\Controllers\BaseController
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-dev-or-pub':
-                    $gameList = $this->serviceGame->getWithoutDevOrPub();
+                    $gameList = $serviceGame->getWithoutDevOrPub();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
+                case 'no-boxart':
+                    $gameList = $serviceGame->getWithoutBoxart();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
                 case 'no-video-url':
-                    $gameList = $this->serviceGame->getWithoutVideoUrl();
+                    $gameList = $serviceGame->getByNullField('video_url');
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-vendor-page-url':
+                    $gameList = $serviceGame->getByNullField('vendor_page_url');
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-nintendo-page-url':
+                    $gameList = $serviceGame->getByNullField('nintendo_page_url');
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-twitter-id':
+                    $gameList = $serviceGame->getByNullField('twitter_id');
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-amazon-uk-link':
-                    $gameList = $this->serviceGame->getWithoutAmazonUkLink();
+                    $gameList = $serviceGame->getWithoutAmazonUkLink();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 // Upcoming
@@ -103,23 +129,27 @@ class GamesController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $request = request();
 
-        $genreService = resolve('Services\GenreService');
-        /* @var $genreService \App\Services\GenreService */
-        $gameGenreService = resolve('Services\GameGenreService');
-        /* @var $gameGenreService \App\Services\GameGenreService */
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGenre = $serviceContainer->getGenreService();
+        $serviceGameGenre = $serviceContainer->getGameGenreService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         if ($request->isMethod('post')) {
 
             $this->validate($request, $this->validationRules);
 
-            $game = $this->serviceGame->create(
+            $game = $serviceGame->create(
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url
+                $request->media_folder, $request->video_url,
+                $request->boxart_url, $request->boxart_square_url,
+                $request->vendor_page_url, $request->nintendo_page_url,
+                $request->twitter_id
             );
             $gameId = $game->id;
 
@@ -152,7 +182,7 @@ class GamesController extends \App\Http\Controllers\BaseController
             // As this is a new game, there are no genres to delete
             //$gameGenreService->deleteGameGenres($gameId);
             if (count($gameGenres) > 0) {
-                $gameGenreService->createGameGenreList($gameId, $gameGenres);
+                $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
 
             // Done
@@ -164,7 +194,7 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         }
 
-        $bindings = array();
+        $bindings = [];
 
         $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
 
@@ -172,26 +202,27 @@ class GamesController extends \App\Http\Controllers\BaseController
         $bindings['PanelTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GenreList'] = $genreService->getAll();
+        $bindings['GenreList'] = $serviceGenre->getAll();
 
         return view('admin.games.add', $bindings);
     }
 
     public function edit($gameId)
     {
-        $bindings = array();
-
-        $gameData = $this->serviceGame->find($gameId);
-        if (!$gameData) abort(404);
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
 
         $request = request();
 
-        $genreService = resolve('Services\GenreService');
-        /* @var $genreService \App\Services\GenreService */
-        $gameGenreService = resolve('Services\GameGenreService');
-        /* @var $gameGenreService \App\Services\GameGenreService */
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $bindings = [];
+
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGenre = $serviceContainer->getGenreService();
+        $serviceGameGenre = $serviceContainer->getGameGenreService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+
+        $gameData = $serviceGame->find($gameId);
+        if (!$gameData) abort(404);
 
         if ($request->isMethod('post')) {
 
@@ -199,11 +230,14 @@ class GamesController extends \App\Http\Controllers\BaseController
 
             $this->validate($request, $this->validationRules);
 
-            $this->serviceGame->edit(
+            $serviceGame->edit(
                 $gameData,
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url
+                $request->media_folder, $request->video_url,
+                $request->boxart_url, $request->boxart_square_url,
+                $request->vendor_page_url, $request->nintendo_page_url,
+                $request->twitter_id
             );
 
             // Update release dates
@@ -240,9 +274,9 @@ class GamesController extends \App\Http\Controllers\BaseController
                 }
             }
 
-            $gameGenreService->deleteGameGenres($gameId);
+            $serviceGameGenre->deleteGameGenres($gameId);
             if (count($gameGenres) > 0) {
-                $gameGenreService->createGameGenreList($gameId, $gameGenres);
+                $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
 
             // Done
@@ -280,30 +314,33 @@ class GamesController extends \App\Http\Controllers\BaseController
 
         $bindings['GameReleaseDates'] = $gameReleaseDates;
 
-        $bindings['GenreList'] = $genreService->getAll();
-        $bindings['GameGenreList'] = $gameGenreService->getByGame($gameId);
+        $bindings['GenreList'] = $serviceGenre->getAll();
+        $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
 
         return view('admin.games.edit', $bindings);
     }
 
     public function delete($gameId)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         // Core
-        $serviceGame = $this->serviceContainer->getGameService();
+        $serviceGame = $serviceContainer->getGameService();
 
         // Validation
-        $serviceNews = $this->serviceContainer->getNewsService();
-        $serviceUserListItem = $this->serviceContainer->getUserListItemService();
-        $serviceReviewLink = $this->serviceContainer->getReviewLinkService();
-        $serviceChartsRankingGlobal = $this->serviceContainer->getChartsRankingGlobalService();
+        $serviceNews = $serviceContainer->getNewsService();
+        $serviceUserListItem = $serviceContainer->getUserListItemService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceChartsRankingGlobal = $serviceContainer->getChartsRankingGlobalService();
 
         // Deletion
-        $serviceActivityFeed = $this->serviceContainer->getActivityFeedService();
-        $serviceFeedItemGames = $this->serviceContainer->getFeedItemGameService();
-        $serviceGameReleaseDates = $this->serviceContainer->getGameReleaseDateService();
+        $serviceActivityFeed = $serviceContainer->getActivityFeedService();
+        $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
+        $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
         // No service for game_images
-        $serviceGameGenres = $this->serviceContainer->getGameGenreService();
-        $serviceGameTitleHashes = $this->serviceContainer->getGameTitleHashService();
+        $serviceGameGenres = $serviceContainer->getGameGenreService();
+        $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
