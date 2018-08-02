@@ -72,20 +72,20 @@ class GamesController extends Controller
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-video-url':
-                    $gameList = $serviceGame->getByNullField('video_url');
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $gameList = $serviceGame->getByNullField('video_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-vendor-page-url':
-                    $gameList = $serviceGame->getByNullField('vendor_page_url');
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $gameList = $serviceGame->getByNullField('vendor_page_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-nintendo-page-url':
-                    $gameList = $serviceGame->getByNullField('nintendo_page_url');
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-twitter-id':
-                    $gameList = $serviceGame->getByNullField('twitter_id');
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $gameList = $serviceGame->getByNullField('twitter_id', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-amazon-uk-link':
                     $gameList = $serviceGame->getWithoutAmazonUkLink();

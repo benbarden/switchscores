@@ -141,7 +141,7 @@ class GameService
         return $gamesList;
     }
 
-    public function getByNullField($field)
+    public function getByNullField($field, $region)
     {
         $allowedFields = [
             'video_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id'
@@ -151,7 +151,20 @@ class GameService
             throw new \Exception('Field '.$field.' not supported by getByMissingField');
         }
 
-        $gamesList = Game::where($field, null)->orderBy('id', 'asc')->get();
+        $gamesList = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where($field, null)
+            ->orderBy('game_release_dates.release_date', 'asc')
+            //->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->orderBy('games.id', 'asc');
+        $gamesList = $gamesList->get();
+
         return $gamesList;
     }
 
@@ -172,16 +185,16 @@ class GameService
                 $gameList = $this->getWithoutBoxart();
                 break;
             case 'no-video-url':
-                $gameList = $this->getByNullField('video_url');
+                $gameList = $this->getByNullField('video_url', $regionCode);
                 break;
             case 'no-vendor-page-url':
-                $gameList = $this->getByNullField('vendor_page_url');
+                $gameList = $this->getByNullField('vendor_page_url', $regionCode);
                 break;
             case 'no-nintendo-page-url':
-                $gameList = $this->getByNullField('nintendo_page_url');
+                $gameList = $this->getByNullField('nintendo_page_url', $regionCode);
                 break;
             case 'no-twitter-id':
-                $gameList = $this->getByNullField('twitter_id');
+                $gameList = $this->getByNullField('twitter_id', $regionCode);
                 break;
             case 'no-amazon-uk-link':
                 $gameList = $this->getWithoutAmazonUkLink();
@@ -190,9 +203,6 @@ class GameService
                 return null;
                 break;
         }
-
-        //$this_id = 123;
-        //$id_array = array('349','430','123','423','113');
 
         if ($gameList == null) return null;
 

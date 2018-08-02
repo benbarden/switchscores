@@ -49,10 +49,10 @@ class IndexController extends Controller
 
         // Missing data
         $missingBoxart = $gameService->getWithoutBoxart();
-        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url');
-        $missingNintendoPageUrl = $gameService->getByNullField('nintendo_page_url');
-        $missingVideoUrl = $gameService->getByNullField('video_url');
-        $missingTwitterId = $gameService->getByNullField('twitter_id');
+        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url', $regionCode);
+        $missingNintendoPageUrl = $gameService->getByNullField('nintendo_page_url', $regionCode);
+        $missingVideoUrl = $gameService->getByNullField('video_url', $regionCode);
+        $missingTwitterId = $gameService->getByNullField('twitter_id', $regionCode);
         $missingDevOrPub = $gameService->getWithoutDevOrPub();
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
         $missingAmazonUkLink = $gameService->getWithoutAmazonUkLink();
