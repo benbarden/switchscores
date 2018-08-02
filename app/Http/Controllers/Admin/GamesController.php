@@ -69,27 +69,27 @@ class GamesController extends Controller
                     break;
                 case 'no-boxart':
                     $gameList = $serviceGame->getWithoutBoxart();
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-video-url':
                     $gameList = $serviceGame->getByNullField('video_url');
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-vendor-page-url':
                     $gameList = $serviceGame->getByNullField('vendor_page_url');
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-nintendo-page-url':
                     $gameList = $serviceGame->getByNullField('nintendo_page_url');
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-twitter-id':
                     $gameList = $serviceGame->getByNullField('twitter_id');
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-amazon-uk-link':
                     $gameList = $serviceGame->getWithoutAmazonUkLink();
-                    $jsInitialSort = "[ 0, 'desc']";
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 // Upcoming
                 case 'upcoming':
@@ -214,6 +214,8 @@ class GamesController extends Controller
 
         $request = request();
 
+        $gameListFilter = $request->filter;
+
         $bindings = [];
 
         $serviceGame = $serviceContainer->getGameService();
@@ -223,6 +225,13 @@ class GamesController extends Controller
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
+
+        // Filters and next game id
+        $bindings['GameListFilter'] = $gameListFilter;
+        $nextId = $serviceGame->getNextId($gameListFilter, $gameId);
+        if ($nextId) {
+            $bindings['GameListFilterNextId'] = $nextId;
+        }
 
         if ($request->isMethod('post')) {
 
@@ -281,7 +290,12 @@ class GamesController extends Controller
 
             // Done
 
-            return redirect(route('admin.games.list'));
+            if ($gameListFilter && $nextId) {
+                return redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
+                //http_redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
+            } else {
+                return redirect(route('admin.games.list'));
+            }
 
         } else {
 

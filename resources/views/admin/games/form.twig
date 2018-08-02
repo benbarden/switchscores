@@ -170,11 +170,23 @@
 
     </div>
 
+    <hr>
+
     <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-primary">
-                Submit
+        <div class="col-md-10 col-md-offset-2">
+            <button id="btn-submit" type="submit" class="btn outline btn-primary">
+                Save, return to list
             </button>
+            {% if GameListFilter and GameListFilterNextId %}
+            <input type="hidden" name="nav_next_id" id="nav_next_id" value="">
+            <input type="hidden" name="filter" id="filter" value="{{ GameListFilter }}">
+            <button id="btn-save-go-to-next" class="btn outline btn-default">
+                Save, go to next
+            </button>
+            <button id="btn-skip-go-to-next" class="btn outline btn-default">
+                Skip, go to next
+            </button>
+            {% endif %}
         </div>
     </div>
 </form>

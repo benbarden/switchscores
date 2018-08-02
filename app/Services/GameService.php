@@ -137,7 +137,7 @@ class GameService
 
     public function getWithoutAmazonUkLink()
     {
-        $gamesList = Game::where('amazon_uk_link', null)->orderBy('id', 'desc')->get();
+        $gamesList = Game::where('amazon_uk_link', null)->orderBy('id', 'asc')->get();
         return $gamesList;
     }
 
@@ -151,7 +151,63 @@ class GameService
             throw new \Exception('Field '.$field.' not supported by getByMissingField');
         }
 
-        $gamesList = Game::where($field, null)->orderBy('id', 'desc')->get();
+        $gamesList = Game::where($field, null)->orderBy('id', 'asc')->get();
         return $gamesList;
+    }
+
+    public function getNextId($filter, $currentId)
+    {
+        $gameList = null;
+
+        $regionCode = \Request::get('regionCode');
+
+        switch ($filter) {
+            //case 'no-genre':
+            //    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+            //    break;
+            case 'no-dev-or-pub':
+                $gameList = $this->getWithoutDevOrPub();
+                break;
+            case 'no-boxart':
+                $gameList = $this->getWithoutBoxart();
+                break;
+            case 'no-video-url':
+                $gameList = $this->getByNullField('video_url');
+                break;
+            case 'no-vendor-page-url':
+                $gameList = $this->getByNullField('vendor_page_url');
+                break;
+            case 'no-nintendo-page-url':
+                $gameList = $this->getByNullField('nintendo_page_url');
+                break;
+            case 'no-twitter-id':
+                $gameList = $this->getByNullField('twitter_id');
+                break;
+            case 'no-amazon-uk-link':
+                $gameList = $this->getWithoutAmazonUkLink();
+                break;
+            default:
+                return null;
+                break;
+        }
+
+        //$this_id = 123;
+        //$id_array = array('349','430','123','423','113');
+
+        if ($gameList == null) return null;
+
+        $gameIdList = $gameList->pluck('id')->toArray();
+
+        if (count($gameIdList) == 0) return null;
+
+        $flipped = array_flip($gameIdList);
+
+        if (count($flipped) == 0) return null;
+
+        if (!array_key_exists($currentId, $flipped)) return null;
+
+        $nextId = $gameIdList[$flipped[$currentId]+1];
+
+        return $nextId;
     }
 }
