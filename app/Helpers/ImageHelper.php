@@ -26,10 +26,10 @@ class ImageHelper
         }
 
         if ($game->boxart_url) {
-            $boxartPath = '/img/games/boxart/resized/';
+            $boxartPath = '/img/games/boxart/';
             $boxartUrl = $boxartPath.$game->boxart_url;
         } elseif ($game->boxart_square_url) {
-            $boxartPath = '/img/games/square/resized/';
+            $boxartPath = '/img/games/square/';
             $boxartUrl = $boxartPath.$game->boxart_square_url;
         } else {
             $boxartPath = null;
