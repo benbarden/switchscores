@@ -196,7 +196,7 @@ class GameService
                 $gameList = $this->getWithoutDevOrPub();
                 break;
             case 'no-boxart':
-                $gameList = $this->getWithoutBoxart();
+                $gameList = $this->getWithoutBoxart($regionCode);
                 break;
             case 'no-video-url':
                 $gameList = $this->getByNullField('video_url', $regionCode);
