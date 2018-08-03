@@ -129,9 +129,23 @@ class GameService
         return $gamesList;
     }
 
-    public function getWithoutBoxart()
+    public function getWithoutBoxart($region)
     {
-        $gamesList = Game::where('boxart_url', null)->where('boxart_square_url', null)->orderBy('id', 'asc')->get();
+        $gamesList = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('boxart_url', null)
+            ->where('boxart_square_url', null)
+            ->orderBy('game_release_dates.release_date', 'asc')
+            //->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->orderBy('games.id', 'asc');
+        $gamesList = $gamesList->get();
+
         return $gamesList;
     }
 

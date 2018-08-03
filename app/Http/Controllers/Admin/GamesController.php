@@ -68,7 +68,7 @@ class GamesController extends Controller
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 case 'no-boxart':
-                    $gameList = $serviceGame->getWithoutBoxart();
+                    $gameList = $serviceGame->getWithoutBoxart($regionCode);
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'no-video-url':
