@@ -69,7 +69,7 @@ class GamesController extends Controller
                     break;
                 case 'no-boxart':
                     $gameList = $serviceGame->getWithoutBoxart($regionCode);
-                    $jsInitialSort = "[ 0, 'asc']";
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-video-url':
                     $gameList = $serviceGame->getByNullField('video_url', $regionCode);
