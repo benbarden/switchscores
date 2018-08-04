@@ -7,12 +7,12 @@ namespace App\Services;
 class ServiceContainer
 {
     const KEY_ACTIVITY_FEED_SERVICE = 'ActivityFeedService';
-    const KEY_CALENDAR_SERVICE = 'CalendarService';
     const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
     const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
+    const KEY_GAME_CALENDAR_SERVICE = 'GameCalendarService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
     const KEY_GAME_SERVICE = 'GameService';
@@ -90,14 +90,6 @@ class ServiceContainer
     }
 
     /**
-     * @return CalendarService
-     */
-    public function getCalendarService()
-    {
-        return $this->load(self::KEY_CALENDAR_SERVICE);
-    }
-
-    /**
      * @return ChartsDateService
      */
     public function getChartsDateService()
@@ -135,6 +127,14 @@ class ServiceContainer
     public function getFeedItemReviewService()
     {
         return $this->load(self::KEY_FEED_ITEM_REVIEW_SERVICE);
+    }
+
+    /**
+     * @return GameCalendarService
+     */
+    public function getGameCalendarService()
+    {
+        return $this->load(self::KEY_GAME_CALENDAR_SERVICE);
     }
 
     /**

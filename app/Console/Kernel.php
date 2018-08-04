@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\RunFeedImporter::class,
         Commands\RunFeedParser::class,
         Commands\RunFeedReviewGenerator::class,
+        Commands\UpdateGameCalendarStats::class,
         Commands\UpdateGameReviewStats::class,
         Commands\UpdateGameImageCount::class,
         Commands\UpdateGameRanks::class,

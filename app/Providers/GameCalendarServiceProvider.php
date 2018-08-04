@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\CalendarService;
+use App\Services\GameCalendarService;
 
-class CalendarServiceProvider extends ServiceProvider
+class GameCalendarServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class CalendarServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\CalendarService', function($app) {
-            return new CalendarService();
+        $this->app->bind('Services\GameCalendarService', function($app) {
+            return new GameCalendarService();
         });
     }
 }

@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 use Illuminate\Support\Collection;
 
-use Auth;
-use App\Services\CalendarService;
-use App\Services\ChartsRankingGlobalService;
-use App\Services\GameGenreService;
-use App\Services\GameReleaseDateService;
-use App\Services\GenreService;
-use App\Services\ReviewLinkService;
-use App\Services\TopRatedService;
-use App\Services\UserListService;
-use App\Services\UserListItemService;
+use App\Services\ServiceContainer;
 
-class GamesController extends BaseController
+use Auth;
+
+class GamesController extends Controller
 {
+    //use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     public function landing()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
-        $serviceTopRated = resolve('Services\TopRatedService');
-        /* @var $serviceTopRated TopRatedService */
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceTopRated = $serviceContainer->getTopRatedService();
 
         $bindings = [];
 
@@ -42,10 +43,12 @@ class GamesController extends BaseController
 
     public function listReleased()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $bindings = [];
 
@@ -62,10 +65,12 @@ class GamesController extends BaseController
 
     public function listUpcoming()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $bindings = [];
 
@@ -121,51 +126,56 @@ class GamesController extends BaseController
         return redirect(route('reviews.gamesNeedingReviews'), 301);
     }
 
-    private function getAllowedDates()
-    {
-        $dates = [];
-
-        for ($i=2017; $i<date('Y')+1; $i++) {
-
-            for ($j=1; $j<13; $j++) {
-
-                // Start from March 2017
-                if ($i == 2017 && $j < 3) continue;
-                // Don't go beyond the current month and year
-                if ($i == date('Y') && $j > date('m')) break;
-                // Good to go
-                $dateToAdd = $i.'-'.str_pad($j, 2, '0', STR_PAD_LEFT);
-                $dates[] = $dateToAdd;
-
-            }
-
-        }
-
-        $dates = array_reverse($dates);
-
-        return $dates;
-    }
-
     public function calendarLanding()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
+
         $bindings = [];
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
 
-        $bindings['DateList'] = $this->getAllowedDates();
+        $dateList = $serviceGameCalendar->getAllowedDates();
+        $dateListArray = [];
+
+        if ($dateList) {
+
+            foreach ($dateList as $date) {
+
+                list($dateYear, $dateMonth) = explode('-', $date);
+
+                $gameCalendarStat = $serviceGameCalendar->getStat($regionCode, $dateYear, $dateMonth);
+                $dateCount = $gameCalendarStat->released_count;
+
+                $dateListArray[] = [
+                    'DateRaw' => $date,
+                    'GameCount' => $dateCount,
+                ];
+
+            }
+
+        }
+
+        $bindings['DateList'] = $dateListArray;
 
         return view('games.calendar.landing', $bindings);
     }
 
     public function calendarPage($date)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceCalendar = resolve('Services\CalendarService');
-        /* @var $serviceCalendar CalendarService */
+        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
 
-        $dates = $this->getAllowedDates();
+        $dates = $serviceGameCalendar->getAllowedDates();
         if (!in_array($date, $dates)) {
             abort(404);
         }
@@ -177,8 +187,8 @@ class GamesController extends BaseController
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        $bindings['GamesByMonthList'] = $serviceCalendar->getList($regionCode, $calendarYear, $calendarMonth);
-        $bindings['GamesByMonthRatings'] = $serviceCalendar->getRatings($regionCode, $calendarYear, $calendarMonth);
+        $bindings['GamesByMonthList'] = $serviceGameCalendar->getList($regionCode, $calendarYear, $calendarMonth);
+        $bindings['GamesByMonthRatings'] = $serviceGameCalendar->getRatings($regionCode, $calendarYear, $calendarMonth);
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
@@ -188,8 +198,10 @@ class GamesController extends BaseController
 
     public function genresLanding()
     {
-        $serviceGenre = resolve('Services\GenreService');
-        /* @var $serviceGenre GenreService */
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGenre = $serviceContainer->getGenreService();
 
         $bindings = [];
 
@@ -205,12 +217,13 @@ class GamesController extends BaseController
 
     public function genreByName($linkTitle)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGenre = resolve('Services\GenreService');
-        /* @var $serviceGenre GenreService */
-        $serviceGameGenre = resolve('Services\GameGenreService');
-        /* @var $serviceGameGenre GameGenreService */
+        $serviceGenre = $serviceContainer->getGenreService();
+        $serviceGameGenre = $serviceContainer->getGameGenreService();
 
         $genreData = $serviceGenre->getByLinkTitle($linkTitle);
 
@@ -238,17 +251,21 @@ class GamesController extends BaseController
      */
     public function show($gameId, $linkTitle)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = $this->serviceContainer->getTopRatedService();
-        $chartsRankingGlobalService = $this->serviceContainer->getChartsRankingGlobalService();
-        $reviewLinkService = $this->serviceContainer->getReviewLinkService();
-        $serviceGameReleaseDate = $this->serviceContainer->getGameReleaseDateService();
-        $serviceGameGenres = $this->serviceContainer->getGameGenreService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceChartsRankingGlobal = $serviceContainer->getChartsRankingGlobalService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameGenres = $serviceContainer->getGameGenreService();
 
         $bindings = [];
 
-        $gameData = $this->serviceGame->find($gameId);
+        $gameData = $serviceGame->find($gameId);
         if (!$gameData) {
             abort(404);
         }
@@ -259,10 +276,10 @@ class GamesController extends BaseController
         }
 
         // Get chart rankings for this game
-        $gameRanking = $chartsRankingGlobalService->getByGameEu($gameId);
+        $gameRanking = $serviceChartsRankingGlobal->getByGameEu($gameId);
 
         // Get reviews
-        $gameReviews = $reviewLinkService->getByGame($gameId);
+        $gameReviews = $serviceReviewLink->getByGame($gameId);
 
         // Get genres
         $gameGenres = $serviceGameGenres->getByGame($gameId);
@@ -284,10 +301,8 @@ class GamesController extends BaseController
         if (Auth::id()) {
             $userId = Auth::id();
 
-            $userListService = resolve('Services\UserListService');
-            $userListItemService = resolve('Services\UserListItemService');
-            /* @var $userListService UserListService */
-            /* @var $userListItemService UserListItemService */
+            $userListService = $serviceContainer->getUserListService();
+            $userListItemService = $serviceContainer->getUserListItemService();
 
             $ownedList = $userListService->getOwnedListByUser($userId);
             $wishList = $userListService->getWishListByUser($userId);
@@ -315,7 +330,12 @@ class GamesController extends BaseController
      */
     public function showId($id)
     {
-        $gameData = $this->serviceGame->find($id);
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $gameData = $serviceGame->find($id);
         if (!$gameData) {
             abort(404);
         }
