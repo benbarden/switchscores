@@ -12,8 +12,8 @@
     <title>{{ TopTitle }} | World of Switch</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=20180729" rel="stylesheet">
-    <link href="{{ asset('css/design.css') }}?v=20180729" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=20180804" rel="stylesheet">
+    <link href="{{ asset('css/design.css') }}?v=20180804" rel="stylesheet">
 
     <!-- Bootstrap -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -44,6 +44,18 @@
     <div class="container">
         <div class="row">
             <div id="wos-body" class="col-sm-12">
+                {% if crumbNav is defined %}
+                <ol class="breadcrumb">
+                    <li><a href="{{ route('welcome') }}">Home</a></li>
+                    {% for item in crumbNav %}
+                        {% if loop.last %}
+                            <li>{{ item.text }}</li>
+                        {% else %}
+                            <li class="active"><a href="{{ item.url }}">{{ item.text }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                {% endif %}
                 {% if hideHeader is not defined %}
                 <h1>
                     {{ PageTitle }}

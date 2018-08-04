@@ -1,6 +1,10 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set crumbNav = [{'url': route('charts.landing'), 'text': 'Charts'}, {'text': 'Most appearances'}] %}
+
 {% block page_body %}
+
+{% include 'charts/charts-alert.twig' %}
 
 <p>
     This page shows which games have appeared most often in the Switch eShop charts.

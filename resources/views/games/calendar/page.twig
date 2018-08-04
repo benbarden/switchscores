@@ -1,10 +1,8 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% block page_body %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.calendar.landing'), 'text': 'Release calendar'}, {'text': CalendarDateDesc}] %}
 
-<ul>
-    <li><a href="{{ route('games.calendar.landing') }}">Back to the release calendar homepage</a></li>
-</ul>
+{% block page_body %}
 
 <p>
     <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to

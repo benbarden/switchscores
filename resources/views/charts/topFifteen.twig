@@ -1,6 +1,10 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set crumbNav = [{'url': route('charts.landing'), 'text': 'Charts'}, {'text': PageTitle}] %}
+
 {% block page_body %}
+
+{% include 'charts/charts-alert.twig' %}
 
 {% if GamesList.count > 0 %}
     <table class="table table-striped table-condensed table-responsive">

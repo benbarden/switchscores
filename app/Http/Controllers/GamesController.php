@@ -238,6 +238,8 @@ class GamesController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
 
+        $bindings['CalendarDateDesc'] = $dtDateDesc;
+
         return view('games.calendar.page', $bindings);
     }
 

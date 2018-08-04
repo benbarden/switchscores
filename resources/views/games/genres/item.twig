@@ -1,5 +1,7 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.genres.landing'), 'text': 'Games by genre'}, {'text': GenreData.genre}] %}
+
 {% block page_body %}
 
 <p>

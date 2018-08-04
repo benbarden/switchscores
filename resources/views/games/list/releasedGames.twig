@@ -1,5 +1,7 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Released games'}] %}
+
 {% block page_body %}
 
 <p>A list of Nintendo Switch games currently available to buy from the Nintendo eShop.</p>

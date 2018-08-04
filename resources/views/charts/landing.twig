@@ -1,6 +1,10 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set crumbNav = [{'text': 'Charts'}] %}
+
 {% block page_body %}
+
+{% include 'charts/charts-alert.twig' %}
 
 <h2>Insights</h2>
 <ul>
