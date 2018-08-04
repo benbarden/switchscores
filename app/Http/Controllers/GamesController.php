@@ -132,10 +132,28 @@ class GamesController extends Controller
         /* @var $serviceContainer ServiceContainer */
 
         $regionCode = \Request::get('regionCode');
+        $regionCodeDesc = null;
+        switch ($regionCode) {
+            case 'eu':
+                $regionCodeDesc = 'Europe';
+                break;
+            case 'us':
+                $regionCodeDesc = 'US';
+                break;
+            case 'jp':
+                $regionCodeDesc = 'Japan';
+                break;
+            default:
+                break;
+        }
 
         $serviceGameCalendar = $serviceContainer->getGameCalendarService();
 
         $bindings = [];
+
+        if ($regionCodeDesc) {
+            $bindings['RegionCodeDesc'] = $regionCodeDesc;
+        }
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
