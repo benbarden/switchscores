@@ -11,26 +11,21 @@
 
 <h2>Review importer</h2>
 
-<ul>
-    <li><a href="{{ route('admin.tools.runFeedImporter.landing') }}">Run Feed Importer</a></li>
-    <li><a href="{{ route('admin.tools.runFeedParser.landing') }}">Run Feed Parser</a></li>
-    <li><a href="{{ route('admin.tools.runFeedReviewGenerator.landing') }}">Run Feed Review Generator</a></li>
-</ul>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedImporter.landing') }}">Run Feed Importer</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedParser.landing') }}">Run Feed Parser</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedReviewGenerator.landing') }}">Run Feed Review Generator</a>
 
 <h2>Wikipedia crawler</h2>
 
-<ul>
-    <li><a href="{{ route('admin.tools.runWikipediaCrawler.landing') }}">Run Wikipedia Crawler</a></li>
-    <li><a href="{{ route('admin.tools.runWikipediaImporter.landing') }}">Run Wikipedia Importer</a></li>
-    <li><a href="{{ route('admin.tools.runWikipediaUpdater.landing') }}">Run Wikipedia Updater</a></li>
-</ul>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaCrawler.landing') }}">Run Wikipedia Crawler</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaImporter.landing') }}">Run Wikipedia Importer</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaUpdater.landing') }}">Run Wikipedia Updater</a>
 
 <h2>Game updates</h2>
 
-<ul>
-    <li><a href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Game Ranks</a></li>
-    <li><a href="{{ route('admin.tools.updateGameImageCount.landing') }}">Update Game Image Count</a></li>
-    <li><a href="{{ route('admin.tools.updateGameReviewStats.landing') }}">Update Game Review Stats</a></li>
-</ul>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Ranks</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameCalendarStats.landing') }}">Update Calendar Stats</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameImageCount.landing') }}">Update Image Count</a>
+<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameReviewStats.landing') }}">Update Review Stats</a>
 
 {% endblock page_inner %}

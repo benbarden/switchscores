@@ -163,6 +163,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tools/run-wikipedia-importer/process', 'Admin\ToolsController@runWikipediaImporterProcess')->name('admin.tools.runWikipediaImporter.process');
     Route::get('/admin/tools/run-wikipedia-updater/landing', 'Admin\ToolsController@runWikipediaUpdaterLanding')->name('admin.tools.runWikipediaUpdater.landing');
     Route::get('/admin/tools/run-wikipedia-updater/process', 'Admin\ToolsController@runWikipediaUpdaterProcess')->name('admin.tools.runWikipediaUpdater.process');
+    Route::get('/admin/tools/update-game-calendar-stats/landing', 'Admin\ToolsController@updateGameCalendarStatsLanding')->name('admin.tools.updateGameCalendarStats.landing');
+    Route::get('/admin/tools/update-game-calendar-stats/process', 'Admin\ToolsController@updateGameCalendarStatsProcess')->name('admin.tools.updateGameCalendarStats.process');
     Route::get('/admin/tools/update-game-ranks/landing', 'Admin\ToolsController@updateGameRanksLanding')->name('admin.tools.updateGameRanks.landing');
     Route::get('/admin/tools/update-game-ranks/process', 'Admin\ToolsController@updateGameRanksProcess')->name('admin.tools.updateGameRanks.process');
     Route::get('/admin/tools/update-game-image-count/landing', 'Admin\ToolsController@updateGameImageCountLanding')->name('admin.tools.updateGameImageCount.landing');

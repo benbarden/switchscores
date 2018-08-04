@@ -1,0 +1,15 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool will update the released game stats on the Release Calendar page.
+</p>
+<p>
+    This process will also run every night. Running it manually may be useful after marking
+    games as released.
+</p>
+
+<a class="btn btn-primary" href="{{ route('admin.tools.updateGameCalendarStats.process') }}">Start process</a>
+
+{% endblock page_inner %}

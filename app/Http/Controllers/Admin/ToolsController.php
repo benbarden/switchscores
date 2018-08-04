@@ -176,6 +176,28 @@ class ToolsController extends \App\Http\Controllers\BaseController
 
     /* Game updates */
 
+    public function updateGameCalendarStatsLanding()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Tools - Update Game Calendar Stats';
+        $bindings['PanelTitle'] = 'Tools - Update Game Calendar Stats';
+
+        return view('admin.tools.updateGameCalendarStats.landing', $bindings);
+    }
+
+    public function updateGameCalendarStatsProcess()
+    {
+        \Artisan::call('UpdateGameCalendarStats');
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Tools - Update Game Calendar Stats';
+        $bindings['PanelTitle'] = 'Tools - Update Game Calendar Stats';
+
+        return view('admin.tools.updateGameCalendarStats.process', $bindings);
+    }
+
     public function updateGameRanksLanding()
     {
         $bindings = [];
