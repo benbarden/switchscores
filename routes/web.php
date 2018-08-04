@@ -30,6 +30,7 @@ Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 Route::get('/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
+Route::get('/games/unreleased', 'GamesController@listUnreleased')->name('games.list.unreleased');
 
 Route::get('/games/calendar', 'GamesController@calendarLanding')->name('games.calendar.landing');
 Route::get('/games/calendar/{date}', 'GamesController@calendarPage')->name('games.calendar.page');

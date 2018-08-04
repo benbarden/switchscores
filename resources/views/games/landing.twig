@@ -5,6 +5,7 @@
 <ul>
     <li><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></li>
     <li><a href="{{ route('games.genres.landing') }}">Games by genre</a></li>
+    <li><a href="{{ route('games.list.unreleased') }}">Unreleased games</a></li>
 </ul>
 
 <div class="row">
@@ -13,7 +14,7 @@
             Newest
             <span class="h4">
                 (<a href="{{ route('games.calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
-                (<a href="{{ route('games.list.released') }}">all games</a>)
+                (<a href="{{ route('games.list.released') }}">all released</a>)
             </span>
         </h2>
         {% if NewReleases.count %}
@@ -46,7 +47,7 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Upcoming
-            <span class="h4">(<a href="{{ route('games.list.upcoming') }}">view all</a>)</span>
+            <span class="h4">(<a href="{{ route('games.list.upcoming') }}">all upcoming</a>)</span>
         </h2>
         {% if UpcomingReleases.count %}
             <table class="table table-striped table-responsive">

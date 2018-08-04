@@ -7,6 +7,9 @@
     {% if thisPage != 'upcoming' %}
         <li><a href="{{ route('games.list.upcoming') }}">Upcoming Switch releases</a></li>
     {% endif %}
+    {% if thisPage != 'unreleased' %}
+        <li><a href="{{ route('games.list.unreleased') }}">Unreleased Switch games</a></li>
+    {% endif %}
     {% if thisPage != 'genresLanding' %}
         <li><a href="{{ route('games.genres.landing') }}">Released Switch games by genre</a></li>
     {% endif %}

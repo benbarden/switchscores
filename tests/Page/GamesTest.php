@@ -42,6 +42,13 @@ class GamesTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function testGamesUnreleasedPage()
+    {
+        $response = $this->get('/games/unreleased');
+
+        $response->assertStatus(200);
+    }
+
     public function testGamesReleaseCalendar()
     {
         $response = $this->get('/games/calendar');

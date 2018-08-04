@@ -117,6 +117,7 @@ class GameReleaseDateService
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 0)
+            ->where('upcoming_date', 'not like', 'Unreleased')
             ->count();
 
         return $gameCount;
@@ -167,7 +168,8 @@ class GameReleaseDateService
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 0)
-            ->whereNotNull('game_release_dates.release_date')
+            ->where('upcoming_date', 'not like', 'Unreleased')
+            //->whereNotNull('game_release_dates.release_date')
             ->orderBy('game_release_dates.upcoming_date', 'asc')
             ->orderBy('games.title', 'asc');
 
@@ -284,6 +286,30 @@ class GameReleaseDateService
     }
 
     /**
+     * @param $region
+     * @return mixed
+     */
+    public function getUnreleased($region)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 0)
+            ->where('game_release_dates.upcoming_date', 'Unreleased')
+            ->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
      * @param $currentYear
      * @param $region
      * @return \Illuminate\Support\Collection
@@ -306,6 +332,7 @@ class GameReleaseDateService
             ->where('upcoming_date', 'not like', $currentYear.'%')
             ->where('upcoming_date', 'not like', '2017%') // Temporary workaround
             ->where('upcoming_date', 'not like', 'TBA')
+            ->where('upcoming_date', 'not like', 'Unreleased')
             ->orderBy('game_release_dates.upcoming_date', 'asc')
             ->orderBy('games.title', 'asc');
 

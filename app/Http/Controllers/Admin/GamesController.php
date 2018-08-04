@@ -116,6 +116,10 @@ class GamesController extends Controller
                     $gameList = $serviceGameReleaseDate->getUpcomingTBA($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
+                case 'unreleased':
+                    $gameList = $serviceGameReleaseDate->getUnreleased($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
+                    break;
                 default:
                     abort(404);
             }

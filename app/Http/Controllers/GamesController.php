@@ -116,6 +116,33 @@ class GamesController extends Controller
         return view('games.list.upcomingGames', $bindings);
     }
 
+    public function listUnreleased()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+
+        $bindings = [];
+
+        $upcomingLists = [];
+
+        $upcomingLists[] = [
+            'MainTitle' => 'Unreleased in this region',
+            'ShortTitle' => 'Unreleased',
+            'List' => $serviceGameReleaseDate->getUnreleased($regionCode)
+        ];
+
+        $bindings['UpcomingLists'] = $upcomingLists;
+
+        $bindings['TopTitle'] = 'Nintendo Switch unreleased games';
+        $bindings['PageTitle'] = 'Unreleased Nintendo Switch games';
+
+        return view('games.list.unreleasedGames', $bindings);
+    }
+
     public function listTopRated()
     {
         return redirect(route('reviews.topRated.allTime'), 301);
