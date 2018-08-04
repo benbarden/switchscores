@@ -22,35 +22,10 @@
             </div>
         </div>
 
-        <!-- Charts -->
+        <!-- Calendar -->
 
         <h2>Release calendar</h2>
         <p><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></p>
-
-        <h2>
-            Switch eShop charts
-            <span class="h4">(<a href="{{ route('charts.landing') }}">view all</a>)</span>
-        </h2>
-        {% if ChartsLatestEu %}
-            <p>
-                <strong>{{ ChartsLatestEu.chart_date|date('jS M') }}</strong>:
-                <a href="{{ route('charts.date.show', {'countryCode': 'eu', 'date': ChartsLatestEu.chart_date}) }}">
-                    Latest European eShop charts
-                </a>
-            </p>
-        {% else %}
-            <p>Could not display latest European charts data.</p>
-        {% endif %}
-        {% if ChartsLatestUs %}
-            <p>
-                <strong>{{ ChartsLatestUs.chart_date|date('jS M') }}</strong>:
-                <a href="{{ route('charts.date.show', {'countryCode': 'us', 'date': ChartsLatestUs.chart_date}) }}">
-                    Latest US eShop charts
-                </a>
-            </p>
-        {% else %}
-            <p>Could not display latest US charts data.</p>
-        {% endif %}
 
         <!-- Latest reviews -->
 
