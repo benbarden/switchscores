@@ -20,4 +20,4 @@ h6, .h6 {font-size: 12px;}
 
 /* Blog */
 #wos-blog {font-size: 15px; line-height: 1.6em;}
-#wos-blog p, ul, ol, img {margin-bottom: 28px;}
+#wos-blog p, #wos-blog ul, #wos-blog ol, #wos-blog img {margin-bottom: 28px;}
