@@ -16,19 +16,30 @@
     If you'd like to suggest a new list, contact us on Twitter at <a href="https://twitter.com/worldofswitch.com" target="_blank">@worldofswitch</a>.
 </p>
 
-<h2>Our current lists</h2>
-
-{% if ListUrls %}
-<ul>
-    {% for item in ListUrls %}
-    <li>
-        <a href="{{ item.url }}">{{ item.text }}</a> -
-        {{ item.count }} {% if item.count == 1 %}game{% else %}games{% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No lists found!</p>
-{% endif %}
+<div class="row">
+    <div class="col-md-8 col-sm-8">
+        <h2>Our current lists</h2>
+        {% if ListUrls %}
+            <ul>
+                {% for item in ListUrls %}
+                    <li>
+                        <a href="{{ item.url }}">{{ item.text }}</a> -
+                        {{ item.count }} {% if item.count == 1 %}game{% else %}games{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No lists found!</p>
+        {% endif %}
+    </div>
+    <div class="col-md-4 col-sm-4">
+        <h2>Genres</h2>
+        <p>
+            <strong>Don't forget to check out our <a href="{{ route('games.genres.landing') }}">Genres</a> section too.</strong>
+            For example, puzzle games can be found there. However, we think the genre pages are getting a bit full,
+            so we may add lists to break down the genres into smaller chunks.
+        </p>
+    </div>
+</div>
 
 {% endblock page_body %}
