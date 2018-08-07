@@ -1,12 +1,28 @@
 {% extends 'theme/wos/base.twig' %}
 
+{% set hideHeader = true %}
+
 {% block page_body %}
 
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-        <!-- Quick stats -->
+        <!-- Calendar -->
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="/img/logo.png" style="height: 125px; width: 125px;" alt="World of Switch">
+            </div>
+            <div class="col-md-8 text-left">
+                <h2>World of Switch</h2>
+                <p><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></p>
+                <a class="twitter-share-button"
+                   href="https://twitter.com/intent/tweet?text=World of Switch - Nintendo Switch games database&via=worldofswitch"
+                   data-size="medium">
+                    Tweet</a>
+            </div>
+        </div>
 
+        <!-- Quick stats -->
         <div class="row">
             <div class="col-md-4 text-center">
                 <h1><a href="{{ route('games.list.released') }}"><strong>{{ TotalReleasedGames }}</strong></a></h1>
@@ -22,13 +38,7 @@
             </div>
         </div>
 
-        <!-- Calendar -->
-
-        <h2>Release calendar</h2>
-        <p><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></p>
-
         <!-- Latest reviews -->
-
         <h2>
             Latest reviews
         </h2>

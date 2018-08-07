@@ -40,13 +40,16 @@ class ImageHelper
 
         if (!is_null($boxartPath) && !is_null($boxartUrl)) {
 
-            $htmlOutput = '<img src="'.$boxartUrl.'" style="height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
+            $htmlOutput = '<img src="'.$boxartUrl.'" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
 
         } elseif ($showEmptyCell) {
 
+            $htmlOutput = '<img src="/img/logo.png" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
+            /*
             $htmlOutput = '<div style="background: #ccc; '.
                 'height: '.$sizeInPixels.'px; width: '.$sizeInPixels.'px; '.
                 'text-align: center; margin: 0 auto;"></div>';
+            */
 
         } else {
             // do nothing

@@ -12,8 +12,8 @@
     <title>{{ TopTitle }} | World of Switch</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=20180804b" rel="stylesheet">
-    <link href="{{ asset('css/design.css') }}?v=20180804b" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=20180807" rel="stylesheet">
+    <link href="{{ asset('css/design.css') }}?v=20180807" rel="stylesheet">
 
     <!-- Bootstrap -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -75,7 +75,11 @@
         </div>
     </div>
 
+    <div class="push"></div>
+
 </div>
+
+{% include 'theme/wos/nav-bottom.twig' %}
 
 <script>
     window.twttr = (function(d, s, id) {

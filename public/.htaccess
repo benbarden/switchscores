@@ -1,13 +1,16 @@
 
-Redirect 301 /switch-games-index /lists/released-nintendo-switch-games
-Redirect 301 /upcoming-nintendo-switch-games-index /lists/upcoming-nintendo-switch-games
 Redirect 301 /eshop-charts-updates /charts
 Redirect 301 /about-world-of-switch /about
 
-Redirect 301 /games/57/battle-sports-mekuru /games/184/flip-wars
+Redirect 301 /switch-games-index /games/released
+Redirect 301 /upcoming-nintendo-switch-games-index /games/upcoming
+Redirect 301 /lists/released-nintendo-switch-games /games/released
+Redirect 301 /lists/upcoming-nintendo-switch-games /games/upcoming
 
 Redirect 301 /news/top-rated-new-releases/171012 /news/171012/top-rated-new-releases-12th-october-2017
 Redirect 301 /news/site-updates/171015 /news/171015/site-update-15th-october-2017
+
+Redirect 301 /games/57/battle-sports-mekuru /games/184/flip-wars
 
 # Redirect tags
 Redirect 301 /tag/overcooked /games/82/overcooked-special-edition

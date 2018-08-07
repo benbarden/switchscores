@@ -1,0 +1,33 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('lists.landing'), 'text': 'Lists'}, {'text': PageTitle}] %}
+
+{% block page_body %}
+
+{% if GameList|length %}
+<p><small>{{ GameList|length }} games on this list.</small></p>
+{% endif %}
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-md-offset-1">
+        {% if GameList|length %}
+            <div class="row">
+                {% for item in GameList %}
+                    <div class="col-sm-4 col-md-3 col-lg-3" style="min-height: 200px; padding: 5px 2px; text-align: center;">
+                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'game-show') }}</a>
+                        <br>
+                        <span class="h5">
+                        <a href="{{ LinkHelper.gameShow(item) }}">
+                            <strong>{{ item.title }}</strong>
+                        </a>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No games found!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock page_body %}

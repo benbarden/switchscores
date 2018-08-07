@@ -46,6 +46,13 @@ Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 
+/* Lists */
+//Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
+//Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
+Route::get('/lists', 'ListsController@landing')->name('lists.landing');
+Route::get('/lists/{listName}', 'ListsController@page')->name('lists.page');
+
+
 /* Charts */
 Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
 Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name('charts.mostAppearances');
@@ -183,8 +190,8 @@ Auth::routes();
 
 
 /* Misc redirects */
-Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
-Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
+//Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
+//Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
 
 // **** NOTE: THESE NEED TO BE LAST! **** //
 

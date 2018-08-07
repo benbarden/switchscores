@@ -1,0 +1,34 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'text': 'Lists'}] %}
+
+{% block page_body %}
+
+<p>
+    With so many games available for the Nintendo Switch, it can be hard to know where to begin when
+    looking for new games to buy.
+</p>
+<p>
+    Our lists are designed to help you dig deeper into our games database, taking a cross-section
+    of the games based on a number of different criteria.
+</p>
+<p>
+    If you'd like to suggest a new list, contact us on Twitter at <a href="https://twitter.com/worldofswitch.com" target="_blank">@worldofswitch</a>.
+</p>
+
+<h2>Our current lists</h2>
+
+{% if ListUrls %}
+<ul>
+    {% for item in ListUrls %}
+    <li>
+        <a href="{{ item.url }}">{{ item.text }}</a> -
+        {{ item.count }} {% if item.count == 1 %}game{% else %}games{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No lists found!</p>
+{% endif %}
+
+{% endblock page_body %}

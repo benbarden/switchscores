@@ -2,6 +2,9 @@
 html, body {min-height: 100%;}
 body {background: url('../img/background.jpg') fixed center bottom repeat-x;}
 #wos-body {background: #fff; padding: 8px;}
+.push {height: 100px;}
+#navbar-footer {background: #dedede; color: #000; margin-bottom: 0;}
+#navbar-footer a {background: #dedede; color: #000; font-weight: bold;}
 
 /* Typography */
 h1, .h1 {font-size: 30px;}
