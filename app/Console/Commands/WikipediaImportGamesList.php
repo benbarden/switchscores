@@ -69,26 +69,32 @@ class WikipediaImportGamesList extends Command
 
                 $i++;
 
-                $this->line('Processing item: '.$i);
-
-                //$this->info('Generating feed model');
+                $this->line('Processing item: '.$i.' - '.$crawlerModel->title);
 
                 $importer->setCrawlerModel($crawlerModel);
                 $feedItemGame = $importer->generateFeedModel();
                 $title = $feedItemGame->item_title;
 
-                // Discard games with all TBA dates
-                if (($feedItemGame->upcoming_date_eu == 'TBA') &&
-                    ($feedItemGame->upcoming_date_us == 'TBA') &&
-                    ($feedItemGame->upcoming_date_jp == 'TBA')) {
-                    $this->error($title.' - all dates are TBA - skipping');
+                // Discard games with only TBA/Unreleased dates
+                $datesToSkip = ['TBA', 'Unreleased'];
+                if ((in_array($feedItemGame->upcoming_date_eu, $datesToSkip)) &&
+                    (in_array($feedItemGame->upcoming_date_us, $datesToSkip)) &&
+                    (in_array($feedItemGame->upcoming_date_jp, $datesToSkip))) {
+                    $this->error('All dates are TBA or Unreleased; skipping');
                     continue;
                 }
 
-                // Discard games starting with Untitled
-                $ignoreText = 'Untitled ';
-                if (substr($title, 0, strlen($ignoreText)) == $ignoreText) {
-                    $this->error('Ignoring Untitled entry: '. $title.' - skipping');
+                // Discard games containing certain text
+                $foundSkipText = null;
+                $textToSkip = ['Untitled ', '(tentative title)', 'Nintendo Labo'];
+                foreach ($textToSkip as $skipText) {
+                    if (strpos($title, $skipText) !== false) {
+                        $foundSkipText = $skipText;
+                        break;
+                    }
+                }
+                if ($foundSkipText != null) {
+                    $this->error('Found ignore text: '.$foundSkipText.'; skipping');
                     continue;
                 }
 
@@ -109,7 +115,7 @@ class WikipediaImportGamesList extends Command
                     // Otherwise, the list will keep adding duplicates each time the importer runs.
                     $activeFeedItem = $feedItemGameService->getActiveByGameId($gameId);
                     if ($activeFeedItem) {
-                        $this->warn('Found an active, unprocessed entry for: '.$title.'; skipping');
+                        $this->warn('Found an active, unprocessed entry; skipping');
                         continue;
                     }
 
@@ -118,31 +124,19 @@ class WikipediaImportGamesList extends Command
                     $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
                     $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
                     if (count($modifiedFieldList) == 0) {
-                        $this->line('No changes to game: '.$title.' [id: '.$gameId.']; skipping');
+                        $this->line('No changes; skipping');
                         continue;
                     } else {
-                        $this->info('Found changes to game: '.$title.' [id: '.$gameId.']');
+                        $this->info('Changes found');
                         $feedItemGame->modified_fields = serialize($modifiedFieldList);
                     }
-                    /*
-                    $lastFeedItem = $feedItemGameService->getLastEntryByGameId($gameId);
-                    if ($lastFeedItem) {
-                        $modifiedFieldList = $importer->getModifiedFields($feedItemGame, $lastFeedItem);
-                        if (count($modifiedFieldList) == 0) {
-                            $this->info('No changes to game: '.$title.' [id: '.$gameId.']; skipping');
-                            continue;
-                        } else {
-                            $feedItemGame->modified_fields = serialize($modifiedFieldList);
-                        }
-                    }
-                    */
                 } else {
                     // If we don't know the game id and we haven't dealt with the imported data yet,
                     // duplicates will be added each time the importer is run.
                     // This check will stop those duplicates if an update is pending.
                     $activeFeedItem = $feedItemGameService->getActiveByTitle($title);
                     if ($activeFeedItem) {
-                        $this->warn('Found an active, unprocessed entry for: '.$title.'; skipping');
+                        $this->warn('Found an active, unprocessed entry; skipping');
                         continue;
                     }
                 }
