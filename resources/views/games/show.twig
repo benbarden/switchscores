@@ -54,26 +54,19 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-12 col-md-5">
+    <div class="col-sm-12 col-md-6">
         <h2>Game info</h2>
-        {% include 'games/infobox.twig' with {'GameData': GameData, 'ReleaseDateInfo': ReleaseDateInfo} %}
-        {% if GameData.amazon_uk_link %}
-        <h2>Buying options</h2>
-        <ul>
-            <li><a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a></li>
-        </ul>
-        {% endif %}
-    </div>
-    <div class="col-sm-12 col-md-7">
+        {% include 'games/infobox.twig' with {'GameData': GameData, 'NewsInfoBox': 'N', 'ReleaseDateInfo': ReleaseDateInfo} %}
         {% include 'games/images.twig' with {'GameTitle': GameData.title, 'VideoUrl': GameData.video_url, 'MediaFolder': GameData.media_folder, 'GameImages': GameData.images} %}
+    </div>
+    <div class="col-sm-12 col-md-6">
+        {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
     </div>
     <div class="col-sm-12 col-md-6">
-        {% include 'games/charts.twig' with {'GameData': GameData, 'GameRanking': GameRanking} %}
     </div>
 </div>
 
