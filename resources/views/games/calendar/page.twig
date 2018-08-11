@@ -5,11 +5,8 @@
 {% block page_body %}
 
 <p>
-    <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to
-    receive a ranking. Games without a rating or rank have not been reviewed by any of our review
-    partners. Once a game reaches 3 or more reviews in our database, it will be ranked. Games with no
-    rank are particularly susceptible to moving up or down the list in the future. This will level out
-    as more reviews are added. Treat these games as "buy at your own risk" :)
+    <strong>Not in Europe?</strong>
+    <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
 </p>
 
 <div class="row">
@@ -66,5 +63,12 @@
         {% endif %}
     </div>
 </div>
+<p>
+    <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to
+    receive a ranking. Games without a rating or rank have not been reviewed by any of our review
+    partners. Once a game reaches 3 or more reviews in our database, it will be ranked. Games with no
+    rank are particularly susceptible to moving up or down the list in the future. This will level out
+    as more reviews are added. Treat these games as "buy at your own risk" :)
+</p>
 
 {% endblock page_body %}
