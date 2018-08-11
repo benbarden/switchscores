@@ -56,7 +56,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item) }}" target="_blank">{{ item.title }}</a>
                     </td>
                     <td>
                         {% if item.release_date %}

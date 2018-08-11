@@ -54,7 +54,7 @@
                         {{ item.id }}
                     </td>
                     <td class="text-left">
-                        <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}" target="_blank">{{ item.game.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
                     </td>
                     <td class="text-left">
                         {{ item.site.name }}

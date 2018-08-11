@@ -102,7 +102,7 @@
                     {% for item in SiteReviewsLatest %}
                     <tr>
                         <td class="text-left">
-                            <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
                         </td>
                         <td class="text-center">{{ item.review_date }}</td>
                         <td class="text-center">{{ item.rating_normalised }}</td>

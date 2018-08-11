@@ -19,7 +19,7 @@
                         {{ item.position }}
                     </td>
                     <td>
-                        <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -17,7 +17,7 @@
             {% for item in ReviewList %}
                 <p>
                     <strong>{{ item.review_date|date('jS M') }}</strong>:
-                    <a href="{{ route('game.show', {'id': item.game.id, 'title': item.game.link_title}) }}">{{ item.game.title }}</a>
+                    <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
                     <br>
                     <small>
                         Source: <a href="{{ route('reviews.site', {'linkTitle': item.site.link_title}) }}">{{ item.site.name }}</a>;

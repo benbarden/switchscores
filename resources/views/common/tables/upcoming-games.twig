@@ -12,10 +12,12 @@
             {% for item in GamesList %}
                 <tr>
                     <td class="text-center" style="vertical-align: middle;">
-                        {{ ImageHelper.packshotHtml(item, 'release-calendar') }}
+                        <a href="{{ LinkHelper.gameShow(item) }}">
+                            {{ ImageHelper.packshotHtml(item, 'release-calendar') }}
+                        </a>
                     </td>
                     <td style="text-align: left; vertical-align: middle;">
-                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                        <a href="{{ LinkHelper.gameShow(item) }}">
                             {{ item.title }}
                         </a>
                     </td>

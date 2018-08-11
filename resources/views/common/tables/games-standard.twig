@@ -29,7 +29,7 @@
                             <span class="label label-primary">New</span>
                             &nbsp;
                         {% endif %}
-                        <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                        <a href="{{ LinkHelper.gameShow(item) }}">
                             {{ item.title }}
                         </a>
                     </td>

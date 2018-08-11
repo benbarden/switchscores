@@ -31,7 +31,7 @@
                 {% for item in NewReleases %}
                     <tr>
                         <td>
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                            <a href="{{ LinkHelper.gameShow(item) }}">
                                 {{ item.title }}
                             </a>
                         </td>
@@ -63,7 +63,7 @@
                 {% for item in UpcomingReleases %}
                     <tr>
                         <td>
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                            <a href="{{ LinkHelper.gameShow(item) }}">
                                 {{ item.title }}
                             </a>
                         </td>
