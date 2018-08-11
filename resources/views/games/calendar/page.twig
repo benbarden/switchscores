@@ -27,7 +27,9 @@
                 {% for item in GamesByMonthList %}
                     <tr>
                         <td class="text-center" style="vertical-align: middle;">
+                            <a href="{{ LinkHelper.gameShow(item) }}">
                             {{ ImageHelper.packshotHtml(item, 'release-calendar') }}
+                            </a>
                         </td>
                         <td style="vertical-align: middle;">
                             {% if item.is_released == 0 %}
@@ -37,7 +39,7 @@
                                 <span class="label label-primary">New</span>
                                 &nbsp;
                             {% endif %}
-                            <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}">
+                            <a href="{{ LinkHelper.gameShow(item) }}">
                                 {{ item.title }}
                             </a>
                         </td>
