@@ -319,6 +319,7 @@ class GameService
         if (count($flipped) == 0) return null;
 
         if (!array_key_exists($currentId, $flipped)) return null;
+        if (!array_key_exists($currentId+1, $flipped)) return null;
 
         $nextId = $gameIdList[$flipped[$currentId]+1];
 
