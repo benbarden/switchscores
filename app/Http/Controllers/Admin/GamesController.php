@@ -237,6 +237,8 @@ class GamesController extends Controller
             $bindings['GameListFilterNextId'] = $nextId;
         }
 
+        $regionsToUpdate = ['eu', 'us', 'jp'];
+
         if ($request->isMethod('post')) {
 
             $bindings['FormMode'] = 'edit-post';
@@ -254,7 +256,6 @@ class GamesController extends Controller
             );
 
             // Update release dates
-            $regionsToUpdate = ['eu', 'us', 'jp'];
 
             foreach ($regionsToUpdate as $region) {
 
@@ -319,6 +320,12 @@ class GamesController extends Controller
 
         $gameReleaseDates = [];
         $dateFormData = [];
+        $wikiFormats = [];
+
+        foreach ($regionsToUpdate as $region) {
+            $wikiFormats[$region] = null;
+        }
+
         foreach ($gameReleaseDatesDb as $gameReleaseDate) {
             $region = $gameReleaseDate->region;
             $releaseDate = $gameReleaseDate->release_date;
@@ -328,7 +335,23 @@ class GamesController extends Controller
             $dateFormData['upcoming_date'] = $upcomingDate;
             $dateFormData['is_released'] = $isReleased;
             $gameReleaseDates[$region] = $dateFormData;
+
+            if ($releaseDate) {
+                $dtRelDate = new \DateTime($releaseDate);
+                $dtRelDateY = $dtRelDate->format('Y');
+                $dtRelDateM = $dtRelDate->format('m');
+                $dtRelDateD = $dtRelDate->format('d');
+                $wikiFormats[$region] = sprintf('{{dts|%s|%s|%s}}', $dtRelDateY, $dtRelDateM, $dtRelDateD);
+            }
+
         }
+
+        foreach ($regionsToUpdate as $region) {
+            if ($wikiFormats[$region] == null) {
+                $wikiFormats[$region] = 'Unreleased';
+            }
+        }
+        $bindings['WikiDateList'] = sprintf('%s||%s||%s', $wikiFormats['jp'], $wikiFormats['us'], $wikiFormats['eu']);
 
         $bindings['GameReleaseDates'] = $gameReleaseDates;
 
