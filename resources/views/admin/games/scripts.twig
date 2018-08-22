@@ -119,6 +119,25 @@
         });
     });
 
+    // Autogenerate upcoming date
+    $('#release_date_eu, #release_date_us, #release_date_jp').on('blur', function() {
+
+        fieldId = $(this).attr('id');
+        fieldRegion = fieldId.replace('release_date_', '');
+
+        releaseDate = $(this).val();
+
+        if (releaseDate == '') {
+            $('#upcoming_date_' + fieldRegion).val('');
+            return false;
+        }
+
+        //var upcomingDate = releaseDate.split("-").reverse().join("-");
+
+        // can keep the same value as the field rather helpfully translates the value
+        $('#upcoming_date_' + fieldRegion).val(releaseDate);
+    });
+
     // Save, go to next
     $('#btn-save-go-to-next').on('click', function() {
         nextId = '{{ GameListFilterNextId }}';
