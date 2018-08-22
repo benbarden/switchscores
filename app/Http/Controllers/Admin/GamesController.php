@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -142,11 +143,38 @@ class GamesController extends Controller
         $serviceGenre = $serviceContainer->getGenreService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, $this->validationRules);
+            //$this->validate($request, $this->validationRules);
 
+            $validator = Validator::make($request->all(), $this->validationRules);
+
+            if ($validator->fails()) {
+                return redirect(route('admin.games.add'))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // Check title hash is unique
+            $titleHash = $serviceGameTitleHash->generateHash($request->title);
+            $existingTitleHash = $serviceGameTitleHash->getByHash($titleHash);
+
+            $validator->after(function ($validator) use ($existingTitleHash) {
+                // Check for duplicates
+                if ($existingTitleHash != null) {
+                    $validator->errors()->add('title', 'Title already exists for another record!');
+                }
+            });
+
+            if ($validator->fails()) {
+                return redirect(route('admin.games.add'))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // Add game
             $game = $serviceGame->create(
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
@@ -156,6 +184,9 @@ class GamesController extends Controller
                 $request->twitter_id
             );
             $gameId = $game->id;
+
+            // Add title hash
+            $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
 
             // Update release dates
             $regionsToUpdate = ['eu', 'us', 'jp'];
