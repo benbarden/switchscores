@@ -20,7 +20,7 @@ class GamesTitleHashController extends Controller
      * @var array
      */
     private $validationRules = [
-        'title' => 'required|max:15',
+        'title' => 'required|max:150',
         //'title_hash' => 'required|max:64',
         'game_id' => 'required',
     ];
