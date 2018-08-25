@@ -318,10 +318,32 @@ class GameService
 
         if (count($flipped) == 0) return null;
 
-        if (!array_key_exists($currentId, $flipped)) return null;
-        if (!array_key_exists($currentId+1, $flipped)) return null;
+        // currentId is the current game id we're editing.
+        // gameIdList is an array of game IDs with the current filter,
+        // with array indexes starting from zero.
+        // The flipped array reverses the keys and values in the gameIdList array.
+        // So for instance, if the first game id in this filter is 107,
+        // the flipped array will start with key 107, value 0.
+        // Whereas the gameIdList would have key 0, value 107.
 
-        $nextId = $gameIdList[$flipped[$currentId]+1];
+        // This allows us to do the following:
+        // 1. get the array index of the current game id.
+        // e.g. game id 926 has an index of 289.
+        // 2. add 1 to the index to get the next index.
+        // e.g. the next index would be 290.
+        // 3. get the next game id with this index from the gameIdList array.
+        // e.g. index 290 is game id 663.
+
+        $currentGameIndex = $flipped[$currentId];
+        $nextGameIndex = $currentGameIndex + 1;
+
+        // Make sure the next game index exists.
+        if (!array_key_exists($nextGameIndex, $gameIdList)) {
+            // This is the end of the array
+            return null;
+        } else {
+            $nextId = $gameIdList[$nextGameIndex];
+        }
 
         return $nextId;
     }
