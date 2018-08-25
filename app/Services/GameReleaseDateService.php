@@ -168,9 +168,17 @@ class GameReleaseDateService
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 0)
-            ->where('upcoming_date', 'not like', 'Unreleased')
+            ->where('upcoming_date', 'not like', 'Unreleased');
             //->whereNotNull('game_release_dates.release_date')
-            ->orderBy('game_release_dates.upcoming_date', 'asc')
+
+        if ($limit != null) {
+            // We usually limit this list to show a shortened version on a top-level landing page.
+            // Those pages also format the dates. So, we need to make sure we have a
+            // real release date, or the upcoming date won't format correctly.
+            $games = $games->whereNotNull('game_release_dates.release_date');
+        }
+
+        $games = $games->orderBy('game_release_dates.upcoming_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
