@@ -95,13 +95,13 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Best Switch games
-            <span class="h4">(<a href="{{ route('reviews.topRated.allTime') }}">view all</a>)</span>
+            <span class="h4">(<a href="{{ route('topRated.allTime') }}">view all</a>)</span>
         </h2>
         {% if TopRatedAllTime.count %}
             <p>
                 Top rated Switch games of all-time.
             </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
+            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
         {% else %}
             <p>Could not display Top rated.</p>
         {% endif %}

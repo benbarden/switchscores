@@ -145,7 +145,7 @@ class GamesController extends Controller
 
     public function listTopRated()
     {
-        return redirect(route('reviews.topRated.allTime'), 301);
+        return redirect(route('topRated.allTime'), 301);
     }
 
     public function listReviewsNeeded()
@@ -233,12 +233,12 @@ class GamesController extends Controller
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
         $bindings['GamesByMonthList'] = $serviceGameCalendar->getList($regionCode, $calendarYear, $calendarMonth);
-        $bindings['GamesByMonthRatings'] = $serviceGameCalendar->getRatings($regionCode, $calendarYear, $calendarMonth);
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
 
         $bindings['CalendarDateDesc'] = $dtDateDesc;
+        $bindings['CalendarDateUrl'] = $date;
 
         return view('games.calendar.page', $bindings);
     }

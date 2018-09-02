@@ -1,0 +1,54 @@
+{% if MinHeight is not defined %}
+{% set MinHeight = '350px' %}
+{% endif %}
+
+{% if ShowRanks is not defined %}
+{% set ShowRanks = false %}
+{% endif %}
+
+{% set ItemRank = 0 %}
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-md-offset-1">
+        {% if GamesList|length %}
+            <div class="row">
+                {% for item in GamesList %}
+                    {% set ItemRank = ItemRank + 1 %}
+                    <div class="col-sm-4 col-md-3 col-lg-3" style="min-height: {{ MinHeight }}; padding: 5px 2px; text-align: center;">
+                        {% if ShowRanks %}
+                        <span class="label label-info h4">#{{ ItemRank }}</span>
+                        <br><br>
+                        {% endif %}
+                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'game-show') }}</a>
+                        <br>
+                        <p class="h4">
+                            <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
+                        </p>
+                        <p class="h5">
+                        {% if item.is_released == 0 %}
+                            <span class="label label-info">Upcoming</span>
+                            &nbsp;
+                        {% elseif DateHelper.isNew(item.release_date) %}
+                            <span class="label label-primary">New</span>
+                            &nbsp;
+                        {% endif %}
+                        {{ item.release_date|date('jS M') }}
+                        </p>
+                        {% if item.rating_avg %}
+                            <p class="h5">
+                                Average rating: {{ item.rating_avg }}
+                            </p>
+                        {% endif %}
+                        {% if item.game_rank %}
+                            <p class="h5">
+                                Site rank: {{ item.game_rank }}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No games found!</p>
+        {% endif %}
+    </div>
+</div>

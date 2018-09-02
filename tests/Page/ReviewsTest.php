@@ -17,25 +17,25 @@ class ReviewsTest extends TestCase
 
     public function testTopRated()
     {
-        $response = $this->get('/reviews/top-rated');
+        $response = $this->get('/top-rated');
         $response->assertStatus(200);
 
-        $response = $this->get('/reviews/top-rated/all-time');
+        $response = $this->get('/top-rated/all-time');
         $response->assertStatus(200);
 
-        $response = $this->get('/reviews/top-rated/by-year');
+        $response = $this->get('/top-rated/by-year');
         $response->assertStatus(404);
 
-        $response = $this->get('/reviews/top-rated/by-year/2016');
+        $response = $this->get('/top-rated/by-year/2016');
         $response->assertStatus(404);
 
-        $response = $this->get('/reviews/top-rated/by-year/2017');
+        $response = $this->get('/top-rated/by-year/2017');
         $response->assertStatus(200);
 
-        $response = $this->get('/reviews/top-rated/by-year/2018');
+        $response = $this->get('/top-rated/by-year/2018');
         $response->assertStatus(200);
 
-        $response = $this->get('/reviews/top-rated/by-year/2019');
+        $response = $this->get('/top-rated/by-year/2019');
         $response->assertStatus(404);
     }
 

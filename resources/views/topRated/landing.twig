@@ -14,18 +14,22 @@
     Ratings are calculated from the reviews we store from our carefully selected review partners.
     Games need to have at least 3 review scores to be included in these lists.
 </p>
+<p>
+    Check out our <a href="{{ route('topRated.byMonthLanding') }}">Top Rated - by month</a> page
+    to see the top games for each month since the Switch launched.
+</p>
 
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Top rated - {{ Year }}
-            <span class="h4">(<a href="{{ route('reviews.topRated.byYear', {'year': Year}) }}">view all</a>)</span>
+            <span class="h4">(<a href="{{ route('topRated.byYear', {'year': Year}) }}">view all</a>)</span>
         </h2>
         {% if TopRatedThisYear.count > 0 %}
             <p>
                 Top rated games released in {{ Year }}.
             </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedThisYear} %}
+            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedThisYear} %}
         {% else %}
             <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
         {% endif %}
@@ -38,7 +42,7 @@
             <p>
                 Top rated games released in the last 30 days.
             </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
+            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
         {% else %}
             <p>Could not display Top rated.</p>
         {% endif %}
@@ -46,13 +50,13 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Top rated - All-time
-            <span class="h4">(<a href="{{ route('reviews.topRated.allTime') }}">view all</a>)</span>
+            <span class="h4">(<a href="{{ route('topRated.allTime') }}">view all</a>)</span>
         </h2>
         {% if TopRatedAllTime.count %}
             <p>
                 Top rated Switch games of all-time.
             </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
+            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
         {% else %}
             <p>Could not display Top rated.</p>
         {% endif %}

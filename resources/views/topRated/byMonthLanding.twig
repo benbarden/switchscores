@@ -1,18 +1,26 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Release calendar'}] %}
+{% set crumbNav = [{'url': route('topRated.landing'), 'text': 'Top Rated'}, {'text': 'By month'}] %}
 
 {% block page_body %}
 
 <p>
-    The Release Calendar allows you to find which games were released in every month since
-    the Nintendo Switch launched back in March 2017. You'll find a full list of games based
-    on their release date. This may be helpful if you'd like to catch up on a previous month's
-    releases, particularly in some of the busier months.
+    The "By month" section of Top Rated allows you to see the top games for each month
+    since the Nintendo Switch launched back in March 2017.
 </p>
 <p>
-    You can also see the <a href="{{ route('topRated.byMonthLanding') }}">Top Rated - By month</a>
-    page to see the top rated games for each month.
+    All ranks and ratings are subject to change as we add more reviews to the site.
+    The current calendar month is provided so you can
+    see how things are progressing, but should be treated with caution as the ratings of
+    very new games may be particularly volatile. Additionally, upcoming games are included
+    for the current month, many of which will not yet have ratings.
+</p>
+<p>
+    You can also see the <a href="{{ route('games.calendar.landing') }}">Release Calendar</a>
+    for a simple list of which games released in a given calendar month, minus the ratings.
+</p>
+<p>
+    Check back often to see how the latest releases stack up!
 </p>
 
 <div class="row">
@@ -31,7 +39,7 @@
                 {% for item in DateList %}
                     <div class="col-sm-4 col-md-2 col-lg-2" style="border: 1px solid #dedede; padding: 15px 2px; text-align: center;">
                         <span class="h3">
-                        <a href="{{ route('games.calendar.page', {'date': item.DateRaw}) }}">
+                        <a href="{{ route('topRated.byMonthPage', {'date': item.DateRaw}) }}">
                             <strong>{{ item.DateRaw|date('M Y') }}</strong>
                         </a>
                         </span>

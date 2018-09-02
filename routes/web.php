@@ -65,13 +65,16 @@ Route::get('/charts/{countryCode}/{date}', 'ChartsController@show')->name('chart
 Route::get('/charts/{date?}', 'ChartsController@redirectEu')->name('charts.date.redirect');
 Route::get('/charts-us/{date?}', 'ChartsController@redirectUs')->name('charts.us.date.redirect');
 
+/* Top Rated */
+Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
+Route::get('/top-rated/all-time', 'TopRatedController@allTime')->name('topRated.allTime');
+Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topRated.byYear');
+Route::get('/top-rated/by-month', 'TopRatedController@byMonthLanding')->name('topRated.byMonthLanding');
+Route::get('/top-rated/by-month/{date}', 'TopRatedController@byMonthPage')->name('topRated.byMonthPage');
+
 /* Reviews */
 Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
-Route::get('/reviews/top-rated', 'ReviewsController@topRatedLanding')->name('reviews.topRated.landing');
-Route::get('/reviews/top-rated/all-time', 'ReviewsController@topRatedAllTime')->name('reviews.topRated.allTime');
-Route::get('/reviews/top-rated/by-year/{year}', 'ReviewsController@topRatedByYear')->name('reviews.topRated.byYear');
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
-
 Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
 
 /* News */

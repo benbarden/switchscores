@@ -37,7 +37,7 @@
             <p>
                 Top rated games released in the last 30 days.
             </p>
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
+            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
         {% else %}
             <p>No Top Rated games to display.</p>
         {% endif %}

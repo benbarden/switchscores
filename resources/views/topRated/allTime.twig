@@ -1,13 +1,12 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('reviews.topRated.landing'), 'text': 'Top rated'}, {'text': Year}] %}
+{% set crumbNav = [{'url': route('topRated.landing'), 'text': 'Top rated'}, {'text': 'All-time'}] %}
 
 {% block page_body %}
 
 <p>
     A list of Nintendo Switch games released in Europe, sorted to show the highest
     average rating across the reviews we've collated at World of Switch.
-    This list only contains games released in {{ Year }}.
 </p>
 
 <p>

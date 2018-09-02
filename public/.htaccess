@@ -1,4 +1,6 @@
 
+Redirect 301 /reviews/top-rated /top-rated
+
 Redirect 301 /eshop-charts-updates /charts
 Redirect 301 /about-world-of-switch /about
 

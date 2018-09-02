@@ -5,72 +5,15 @@
 {% block page_body %}
 
 <p>
-    <strong>Not in Europe?</strong>
+    This page lists all of the Nintendo Switch games released in {{ CalendarDateDesc }}.
+    You can also <a href="{{ route('topRated.byMonthPage', {'date': CalendarDateUrl}) }}">view this month's
+    games ordered by rating</a>.
+</p>
+
+<p>
     <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
 </p>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <h2>
-            By date (Total {{ GamesByMonthList.count }})
-        </h2>
-        {% if GamesByMonthList.count %}
-            <table class="table table-striped table-responsive">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Game</th>
-                    <th class="text-center">Release date</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in GamesByMonthList %}
-                    <tr>
-                        <td class="text-center" style="vertical-align: middle;">
-                            <a href="{{ LinkHelper.gameShow(item) }}">
-                            {{ ImageHelper.packshotHtml(item, 'release-calendar') }}
-                            </a>
-                        </td>
-                        <td style="vertical-align: middle;">
-                            {% if item.is_released == 0 %}
-                                <span class="label label-info">Upcoming</span>
-                                &nbsp;
-                            {% elseif DateHelper.isNew(item.release_date) %}
-                                <span class="label label-primary">New</span>
-                                &nbsp;
-                            {% endif %}
-                            <a href="{{ LinkHelper.gameShow(item) }}">
-                                {{ item.title }}
-                            </a>
-                        </td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            {{ item.release_date|date('jS M') }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No games to display.</p>
-        {% endif %}
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <h2>
-            By rating
-        </h2>
-        {% if GamesByMonthRatings.count %}
-            {% include 'reviews/topRated/topRatedTable.twig' with {'topRatedList': GamesByMonthRatings} %}
-        {% else %}
-            <p>No games to display.</p>
-        {% endif %}
-    </div>
-</div>
-<p>
-    <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to
-    receive a ranking. Games without a rating or rank have not been reviewed by any of our review
-    partners. Once a game reaches 3 or more reviews in our database, it will be ranked. Games with no
-    rank are particularly susceptible to moving up or down the list in the future. This will level out
-    as more reviews are added. Treat these games as "buy at your own risk" :)
-</p>
+{% include 'topRated/byMonthPageGrid.twig' with {'GamesList': GamesByMonthList, 'MinHeight': '300px'} %}
 
 {% endblock page_body %}

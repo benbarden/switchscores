@@ -1,0 +1,31 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('topRated.landing'), 'text': 'Top Rated'}, {'url': route('topRated.byMonthLanding'), 'text': 'By month'}, {'text': CalendarDateDesc}] %}
+
+{% block page_body %}
+
+<p>
+    <strong>Not in Europe?</strong>
+    <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
+</p>
+
+<h2>Games with ranks</h2>
+{% include 'topRated/byMonthPageGrid.twig' with {'GamesList': GamesRatingsWithRanks, 'MinHeight': '350px', 'ShowRanks': true} %}
+
+<h2>Games with reviews but no rank</h2>
+<p>
+    <strong>Disclaimer:</strong> Games with a rating but no rank do not have enough reviews to
+    receive a ranking. Once a game reaches 3 or more reviews in our database, it will be ranked.
+    Games with no rank are particularly susceptible to moving up or down the list in the future.
+    This will level out as more reviews are added. Treat these games as "buy at your own risk".
+</p>
+{% include 'topRated/byMonthPageGrid.twig' with {'GamesList': GamesRatingsLowReviewCount, 'MinHeight': '300px'} %}
+
+<h2>Games with no reviews</h2>
+<p>
+    Games with no reviews have not been reviewed by any of our review partners.
+    They do not have an average review score or a rank.
+</p>
+{% include 'topRated/byMonthPageGrid.twig' with {'GamesList': GamesRatingsNoReviews, 'MinHeight': '250px'} %}
+
+{% endblock page_body %}
