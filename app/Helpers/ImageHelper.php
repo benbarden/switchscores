@@ -44,7 +44,7 @@ class ImageHelper
 
         } elseif ($showEmptyCell) {
 
-            $htmlOutput = '<img src="/img/logo.png" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
+            $htmlOutput = '<img src="/img/logo-grey.png" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
             /*
             $htmlOutput = '<div style="background: #ccc; '.
                 'height: '.$sizeInPixels.'px; width: '.$sizeInPixels.'px; '.
