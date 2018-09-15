@@ -12,3 +12,4 @@ npm-debug.log
 .DS_Store
 /public/img/media/*
 /public/img/games/*
+db.sql
