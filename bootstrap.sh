@@ -2,7 +2,10 @@
 
 sudo apt-get update
 
+sudo apt-get install make -y
 sudo apt-get install htop -y
+sudo apt-get install zip -y
+sudo apt-get install curl -y
 
 sudo apt-get install -y apache2
 if ! [ -L /var/www ]; then
@@ -10,22 +13,34 @@ if ! [ -L /var/www ]; then
     sudo ln -fs /vagrant /var/www
 fi
 
+# Apache modules
+sudo a2enmod rewrite
+sudo a2enmod dir
+
+# Apache config
 sudo cp /vagrant/vagrant-deploy/apache2/apache2.conf /etc/apache2/
 sudo cp /vagrant/vagrant-deploy/apache2/envvars /etc/apache2/
 sudo cp /vagrant/vagrant-deploy/apache2/dir.conf /etc/apache2/mods-available/
 
-sudo a2enmod rewrite
-sudo a2enmod dir
-
-sudo apt-get install php7.2 php7.2-cli php7.2-common php7.2-curl php7.2-json php7.2-opcache php7.2-mysql php7.2-mbstring php7.2-zip php7.2-fpm php7.2-xml -y
-#sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql -y
+# PHP
+sudo apt-get install php7.2 -y
+sudo apt-get install php7.2-cli -y
+sudo apt-get install php7.2-common -y
+sudo apt-get install php7.2-curl -y
+sudo apt-get install php7.2-json -y
+sudo apt-get install php7.2-opcache -y
+sudo apt-get install php7.2-mysql -y
+sudo apt-get install php7.2-mbstring -y
+sudo apt-get install php7.2-zip -y
+sudo apt-get install php7.2-fpm -y
+sudo apt-get install php7.2-xml -y
 sudo apt-get install libapache2-mod-php7.2 -y
 
-debconf-set-selections <<< 'mysql-server mysql-server/root_password password pass'
-debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password pass'
+# Additional dependencies
+sudo phpenmod mbstring
+sudo phpenmod curl
 
-sudo apt-get install mysql-server -y
-
+# Apache
 sudo a2dissite 000-default
 
 sudo cp /vagrant/vagrant-deploy/apache2/wos-local.conf /etc/apache2/sites-available
@@ -34,27 +49,21 @@ sudo a2ensite wos-local
 sudo service apache2 stop
 sudo service apache2 start
 
+# MySQL
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password pass'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password pass'
+
+sudo apt-get install mysql-server -y
+
 sudo service mysql stop
 sudo service mysql start
 
-# MySQL setup
 mysql -u root -ppass -e "create database wos;"
 mysql -u root -ppass -e "create user 'wos'@'localhost' identified by 'pass';"
 mysql -u root -ppass -e "grant all privileges on wos.* to 'wos'@'localhost';"
 mysql -u root -ppass -e "flush privileges;"
 
 mysql -u root -ppass wos < /vagrant/db.sql
-
-# Additional dependencies
-sudo apt-get install make -y
-sudo apt-get install zip -y
-#sudo apt-get install php7.2-cli -y
-#sudo apt-get install php7.2-xml -y
-#sudo apt-get install php7.2-mbstring -y
-#sudo apt-get install php7.2-curl -y
-#sudo apt-get install php7.2-zip -y
-sudo phpenmod mbstring
-sudo phpenmod curl
 
 # Composer
 cd /home/vagrant/
