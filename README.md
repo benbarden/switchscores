@@ -8,5 +8,5 @@ Install Vagrant and VirtualBox.
 
 Then run this from the root of the project:
 
-    $ vagrant box add ubuntu/xenial64
+    $ vagrant box add ubuntu/bionic64
 

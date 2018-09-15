@@ -6,8 +6,8 @@ sudo apt-get install htop -y
 
 sudo apt-get install -y apache2
 if ! [ -L /var/www ]; then
-    rm -rf /var/www
-    ln -fs /vagrant /var/www
+    sudo rm -rf /var/www
+    sudo ln -fs /vagrant /var/www
 fi
 
 sudo cp /vagrant/vagrant-deploy/apache2/apache2.conf /etc/apache2/
@@ -17,7 +17,9 @@ sudo cp /vagrant/vagrant-deploy/apache2/dir.conf /etc/apache2/mods-available/
 sudo a2enmod rewrite
 sudo a2enmod dir
 
-sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql -y
+sudo apt-get install php7.2 php7.2-cli php7.2-common php7.2-curl php7.2-json php7.2-opcache php7.2-mysql php7.2-mbstring php7.2-zip php7.2-fpm php7.2-xml -y
+#sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql -y
+sudo apt-get install libapache2-mod-php7.2 -y
 
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password pass'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password pass'
@@ -42,3 +44,28 @@ mysql -u root -ppass -e "grant all privileges on wos.* to 'wos'@'localhost';"
 mysql -u root -ppass -e "flush privileges;"
 
 mysql -u root -ppass wos < /vagrant/db.sql
+
+# Additional dependencies
+sudo apt-get install make -y
+sudo apt-get install zip -y
+#sudo apt-get install php7.2-cli -y
+#sudo apt-get install php7.2-xml -y
+#sudo apt-get install php7.2-mbstring -y
+#sudo apt-get install php7.2-curl -y
+#sudo apt-get install php7.2-zip -y
+sudo phpenmod mbstring
+sudo phpenmod curl
+
+# Composer
+cd /home/vagrant/
+curl  -k -sS https://getcomposer.org/installer | php
+sudo mv /home/vagrant/composer.phar /usr/local/bin/composer
+echo 'export COMPOSER_HOME="/home/vagrant/.composer"' | tee -a .bashrc
+source ~/.bashrc
+echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' | tee -a .bashrc
+source ~/.bashrc
+sudo runuser -l vagrant -c 'source ~/.bashrc'
+
+cd /var/www
+/usr/local/bin/composer install
+/usr/local/bin/composer dump-autoload
