@@ -40,6 +40,9 @@ sudo apt-get install libapache2-mod-php7.2 -y
 sudo phpenmod mbstring
 sudo phpenmod curl
 
+# PHP settings
+sudo sed -i 's,^;upload_tmp_dir =.*$,upload_tmp_dir = /vagrant/storage/tmp,' /etc/php/7.2/apache2/php.ini
+
 # Apache
 sudo a2dissite 000-default
 
