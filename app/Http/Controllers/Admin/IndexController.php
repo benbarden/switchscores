@@ -39,6 +39,17 @@ class IndexController extends Controller
         $bindings['PanelTitle'] = 'Admin index';
 
 
+        // Action lists
+        $actionListGamesForReleaseCount = $gameService->getActionListGamesForRelease($regionCode);
+        $actionListRecentNoNintendoUrlCount = $gameService->getActionListRecentNoNintendoUrl($regionCode);
+        $actionListUpcomingNoNintendoUrlCount = $gameService->getActionListUpcomingNoNintendoUrl($regionCode);
+        $actionListNintendoUrlNoPackshotCount = $gameService->getActionListNintendoUrlNoPackshots($regionCode);
+
+        $bindings['ActionListGamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+        $bindings['ActionListRecentNoNintendoUrlCount'] = count($actionListRecentNoNintendoUrlCount);
+        $bindings['ActionListUpcomingNoNintendoUrlCount'] = count($actionListUpcomingNoNintendoUrlCount);
+        $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
+
         // Feeds - Items to action
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingFeedGameItems = $feedItemGameService->getPending();
@@ -48,22 +59,18 @@ class IndexController extends Controller
 
 
         // Missing data
-        $missingBoxart = $gameService->getWithoutBoxart($regionCode);
-        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url', $regionCode);
-        $missingNintendoPageUrl = $gameService->getByNullField('nintendo_page_url', $regionCode);
-        $missingVideoUrl = $gameService->getByNullField('video_url', $regionCode);
-        $missingTwitterId = $gameService->getByNullField('twitter_id', $regionCode);
         $missingDevOrPub = $gameService->getWithoutDevOrPub();
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
+        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url', $regionCode);
+        $missingVideoUrl = $gameService->getByNullField('video_url', $regionCode);
+        $missingTwitterId = $gameService->getByNullField('twitter_id', $regionCode);
         $missingAmazonUkLink = $gameService->getWithoutAmazonUkLink();
 
-        $bindings['MissingBoxartCount'] = count($missingBoxart);
-        $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);
-        $bindings['MissingNintendoPageUrlCount'] = count($missingNintendoPageUrl);
-        $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
-        $bindings['MissingTwitterIdCount'] = count($missingTwitterId);
         $bindings['MissingDevOrPubCount'] = count($missingDevOrPub);
         $bindings['MissingGenresCount'] = count($missingGenres);
+        $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);
+        $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
+        $bindings['MissingTwitterIdCount'] = count($missingTwitterId);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
 
 

@@ -213,6 +213,124 @@ class GameService
         return $gamesList;
     }
 
+    /**
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getActionListGamesForRelease($region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 0)
+            ->whereRaw('DATE(game_release_dates.release_date) <= CURDATE()');
+
+        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getActionListRecentNoNintendoUrl($region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->whereNull('games.nintendo_page_url');
+
+        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getActionListUpcomingNoNintendoUrl($region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 0)
+            ->whereNull('games.nintendo_page_url')
+            ->whereNotNull('game_release_dates.release_date');
+
+        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getActionListNintendoUrlNoPackshots($region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->whereNotNull('games.nintendo_page_url')
+            ->whereNull('boxart_url')
+            ->whereNull('boxart_square_url');
+
+        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
     public function getWithoutDevOrPub()
     {
         $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('id', 'asc')->get();
@@ -282,6 +400,18 @@ class GameService
             //case 'no-genre':
             //    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
             //    break;
+            case 'action-list-games-for-release':
+                $gameList = $this->getActionListGamesForRelease($regionCode);
+                break;
+            case 'action-list-recent-no-nintendo-url':
+                $gameList = $this->getActionListRecentNoNintendoUrl($regionCode);
+                break;
+            case 'action-list-upcoming-no-nintendo-url':
+                $gameList = $this->getActionListUpcomingNoNintendoUrl($regionCode);
+                break;
+            case 'action-list-nintendo-url-no-packshots':
+                $gameList = $this->getActionListNintendoUrlNoPackshots($regionCode);
+                break;
             case 'no-dev-or-pub':
                 $gameList = $this->getWithoutDevOrPub();
                 break;

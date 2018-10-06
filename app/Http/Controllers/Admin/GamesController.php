@@ -57,40 +57,28 @@ class GamesController extends Controller
             switch ($report) {
                 case 'released':
                     $gameList = $serviceGameReleaseDate->getReleased($regionCode);
-                    $jsInitialSort = "[ 2, 'desc']";
+                    $jsInitialSort = "[ 2, 'desc'], [ 1, 'asc']";
                     break;
-                // Data to be filled in
-                case 'no-genre':
-                    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
-                case 'no-dev-or-pub':
-                    $gameList = $serviceGame->getWithoutDevOrPub();
+                case 'unreleased':
+                    $gameList = $serviceGameReleaseDate->getUnreleased($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'no-boxart':
-                    $gameList = $serviceGame->getWithoutBoxart($regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                // Action lists
+                case 'action-list-games-for-release':
+                    $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'no-video-url':
-                    $gameList = $serviceGame->getByNullField('video_url', $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                case 'action-list-recent-no-nintendo-url':
+                    $gameList = $serviceGame->getActionListRecentNoNintendoUrl($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'no-vendor-page-url':
-                    $gameList = $serviceGame->getByNullField('vendor_page_url', $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                case 'action-list-upcoming-no-nintendo-url':
+                    $gameList = $serviceGame->getActionListUpcomingNoNintendoUrl($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'no-nintendo-page-url':
-                    $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-twitter-id':
-                    $gameList = $serviceGame->getByNullField('twitter_id', $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-amazon-uk-link':
-                    $gameList = $serviceGame->getWithoutAmazonUkLink();
-                    $jsInitialSort = "[ 0, 'asc']";
+                case 'action-list-nintendo-url-no-packshots':
+                    $gameList = $serviceGame->getActionListNintendoUrlNoPackshots($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 // Upcoming
                 case 'upcoming':
@@ -117,9 +105,38 @@ class GamesController extends Controller
                     $gameList = $serviceGameReleaseDate->getUpcomingTBA($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'unreleased':
-                    $gameList = $serviceGameReleaseDate->getUnreleased($regionCode);
+                // Missing data
+                case 'no-dev-or-pub':
+                    $gameList = $serviceGame->getWithoutDevOrPub();
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
+                    break;
+                case 'no-genre':
+                    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-nintendo-page-url':
+                    $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
+                case 'no-vendor-page-url':
+                    $gameList = $serviceGame->getByNullField('vendor_page_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
+                case 'no-boxart':
+                    $gameList = $serviceGame->getWithoutBoxart($regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
+                case 'no-video-url':
+                    $gameList = $serviceGame->getByNullField('video_url', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
+                case 'no-twitter-id':
+                    $gameList = $serviceGame->getByNullField('twitter_id', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
+                case 'no-amazon-uk-link':
+                    $gameList = $serviceGame->getWithoutAmazonUkLink();
+                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 default:
                     abort(404);
@@ -325,10 +342,10 @@ class GamesController extends Controller
             }
 
             // Done
-
-            if ($gameListFilter && $nextId) {
+            if ($request->button_pressed == 'save-return-to-list') {
+                return redirect('/admin/games/list/'.$gameListFilter);
+            } elseif ($gameListFilter && $nextId) {
                 return redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
-                //http_redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
             } else {
                 return redirect(route('admin.games.list'));
             }

@@ -138,16 +138,24 @@
         $('#upcoming_date_' + fieldRegion).val(releaseDate);
     });
 
+    // Save, return to list
+    $('#btn-submit').on('click', function() {
+        $('#button_pressed').val("save-return-to-list");
+        $('#btn-submit').click();
+    });
+
     // Save, go to next
     $('#btn-save-go-to-next').on('click', function() {
         nextId = '{{ GameListFilterNextId }}';
         if (nextId != '') {
             $('#nav_next_id').val(nextId);
+            $('#button_pressed').val("save-go-to-next");
             $('#btn-submit').click();
         }
     });
     // Skip
     $('#btn-skip-go-to-next').on('click', function() {
+        $('#button_pressed').val("skip-go-to-next");
         nextPageUrl = '/admin/games/edit/{{ GameListFilterNextId }}?filter={{ GameListFilter }}';
         //console.log(nextPageUrl);
         top.location.href = nextPageUrl;
