@@ -206,8 +206,8 @@
             <button id="btn-submit" class="btn outline btn-primary">
                 Save, return to list
             </button>
+            <input type="hidden" name="button_pressed" id="button_pressed" value="save-return-to-list">
             {% if GameListFilter and GameListFilterNextId %}
-            <input type="hidden" name="button_pressed" id="button_pressed" value="">
             <input type="hidden" name="nav_next_id" id="nav_next_id" value="">
             <input type="hidden" name="filter" id="filter" value="{{ GameListFilter }}">
             <button id="btn-save-go-to-next" class="btn outline btn-default">

@@ -140,7 +140,6 @@
 
     // Save, return to list
     $('#btn-submit').on('click', function() {
-        $('#button_pressed').val("save-return-to-list");
         $('#btn-submit').click();
     });
 
@@ -148,8 +147,8 @@
     $('#btn-save-go-to-next').on('click', function() {
         nextId = '{{ GameListFilterNextId }}';
         if (nextId != '') {
-            $('#nav_next_id').val(nextId);
             $('#button_pressed').val("save-go-to-next");
+            $('#nav_next_id').val(nextId);
             $('#btn-submit').click();
         }
     });
