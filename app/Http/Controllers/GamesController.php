@@ -195,7 +195,11 @@ class GamesController extends Controller
                 list($dateYear, $dateMonth) = explode('-', $date);
 
                 $gameCalendarStat = $serviceGameCalendar->getStat($regionCode, $dateYear, $dateMonth);
-                $dateCount = $gameCalendarStat->released_count;
+                if ($gameCalendarStat) {
+                    $dateCount = $gameCalendarStat->released_count;
+                } else {
+                    $dateCount = 0;
+                }
 
                 $dateListArray[] = [
                     'DateRaw' => $date,
