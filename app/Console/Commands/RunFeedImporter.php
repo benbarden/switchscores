@@ -77,11 +77,18 @@ class RunFeedImporter extends Command
                     $feedItemReview = $feedImporter->generateModel($feedItem);
                     $itemTitle = $feedItemReview->item_title;
                     $itemUrl = $feedItemReview->item_url;
+                    $itemDate = $feedItemReview->item_date;
 
                     // Check if it's already been imported
                     $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
                     if ($dbExistingItem) {
                         //$this->warn('Already imported: '.$itemUrl);
+                        continue;
+                    }
+
+                    // Check that it's not a historic review
+                    if ($feedItemReview->isHistoric()) {
+                        $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                         continue;
                     }
 
