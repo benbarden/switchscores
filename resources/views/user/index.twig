@@ -1,85 +1,75 @@
-{% extends 'theme/wos/base.twig' %}
+{% extends 'theme/wos/member/page-wide.twig' %}
 
-{% set hideTweetButton = true %}
 {% set crumbNav = [{'text': 'Members index'}] %}
 
-{% block page_body %}
+{% block page_inner %}
 
-<div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Welcome, {{ auth_user().display_name }}!</h2>
+            <p>
+                We're just getting started with the WOS Members section. Please follow
+                <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>
+                on Twitter for the latest updates.
+            </p>
 
-        <h2>Welcome, {{ auth_user().display_name }}!</h2>
+            <h2>Set your region</h2>
 
-        <p>
-            We're just getting started with the WOS Members section. Please follow
-            <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>
-            on Twitter for the latest updates.
-        </p>
+            <p>
+                Changing your region allows you to see released games, upcoming games, and a release
+                calendar for the following regions: Europe (the default), US, or Japan. You can change
+                this option below.
+            </p>
 
-        <h2>Set your region</h2>
-
-        <p>
-            Changing your region allows you to see released games, upcoming games, and a release
-            calendar for the following regions: Europe (the default), US, or Japan. You can change
-            this option below.
-        </p>
-
-        <select id="user-region" name="user-region">
-            <option value="">&nbsp;</option>
-            <option value="eu">Europe</option>
-            <option value="us">US</option>
-            <option value="jp">Japan</option>
-        </select>
-        <input id="btn-save-user-region" type="button" value="Save">
-        <div id="js-user-region-notify" class="alert alert-success" role="alert" style="display: none;">
-            Region saved!
+            <select id="user-region" name="user-region">
+                <option value="">&nbsp;</option>
+                <option value="eu">Europe</option>
+                <option value="us">US</option>
+                <option value="jp">Japan</option>
+            </select>
+            <input id="btn-save-user-region" type="button" value="Save">
+            <div id="js-user-region-notify" class="alert alert-success" role="alert" style="display: none;">
+                Region saved!
+            </div>
         </div>
+        <div class="col-md-6">
+            <h2>Wishlist</h2>
 
+            {% if WishListItems.count > 0 %}
+                <ul>
+                    {% for item in WishListItems %}
+                        <li id="js-user-playlist-item-{{ item.id }}">
+                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                            <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>
+                    Your wishlist is empty. To start filling it in, head over to our
+                    <a href="{{ route('games.list.released') }}">games page</a>.
+                </p>
+            {% endif %}
+            <h2>Owned list</h2>
+
+            {% if OwnedListItems.count > 0 %}
+                <ul>
+                    {% for item in OwnedListItems %}
+                        <li id="js-user-playlist-item-{{ item.id }}">
+                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                            <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>
+                    Your owned list is empty. To start filling it in, head over to our
+                    <a href="{{ route('games.list.released') }}">games page</a>.
+                </p>
+            {% endif %}
+        </div>
     </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-
-        <h2>Wishlist</h2>
-
-        {% if WishListItems.count > 0 %}
-            <ul>
-                {% for item in WishListItems %}
-                    <li id="js-user-playlist-item-{{ item.id }}">
-                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                        <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>
-                Your wishlist is empty. To start filling it in, head over to our
-                <a href="{{ route('games.list.released') }}">games page</a>.
-            </p>
-        {% endif %}
-
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-
-        <h2>Owned list</h2>
-
-        {% if OwnedListItems.count > 0 %}
-            <ul>
-                {% for item in OwnedListItems %}
-                    <li id="js-user-playlist-item-{{ item.id }}">
-                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                        <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>
-                Your owned list is empty. To start filling it in, head over to our
-                <a href="{{ route('games.list.released') }}">games page</a>.
-            </p>
-        {% endif %}
-
-    </div>
-</div>
 
 {% include 'user/scripts.twig' %}
 
-{% endblock page_body %}
+{% endblock page_inner %}

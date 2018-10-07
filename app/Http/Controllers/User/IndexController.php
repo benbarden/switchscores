@@ -13,10 +13,12 @@ class IndexController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Members index';
         $bindings['PageTitle'] = 'Members index';
+
+        $bindings['PanelTitle'] = 'Members index';
 
         $bindings['UserRegion'] = Auth::user()->region;
 
