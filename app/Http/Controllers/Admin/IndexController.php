@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
+use App\ReviewUser;
+
 class IndexController extends Controller
 {
     public function feedItemsLanding()
@@ -27,6 +29,7 @@ class IndexController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
+        $reviewUserService = $serviceContainer->getReviewUserService();
         $feedItemGameService = $serviceContainer->getFeedItemGameService();
         $feedItemReviewService = $serviceContainer->getFeedItemReviewService();
         $userService = $serviceContainer->getUserService();
@@ -41,21 +44,23 @@ class IndexController extends Controller
 
         // Action lists
         $actionListGamesForReleaseCount = $gameService->getActionListGamesForRelease($regionCode);
-        $actionListRecentNoNintendoUrlCount = $gameService->getActionListRecentNoNintendoUrl($regionCode);
-        $actionListUpcomingNoNintendoUrlCount = $gameService->getActionListUpcomingNoNintendoUrl($regionCode);
-        $actionListNintendoUrlNoPackshotCount = $gameService->getActionListNintendoUrlNoPackshots($regionCode);
+        $pendingFeedGameItems = $feedItemGameService->getPending();
+        $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
+        $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
 
         $bindings['ActionListGamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
+        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
+        $bindings['PendingReviewUserCount'] = count($pendingReviewUser);
+
+        // Action lists
+        $actionListNintendoUrlNoPackshotCount = $gameService->getActionListNintendoUrlNoPackshots($regionCode);
+        $actionListRecentNoNintendoUrlCount = $gameService->getActionListRecentNoNintendoUrl($regionCode);
+        $actionListUpcomingNoNintendoUrlCount = $gameService->getActionListUpcomingNoNintendoUrl($regionCode);
+
+        $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
         $bindings['ActionListRecentNoNintendoUrlCount'] = count($actionListRecentNoNintendoUrlCount);
         $bindings['ActionListUpcomingNoNintendoUrlCount'] = count($actionListUpcomingNoNintendoUrlCount);
-        $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
-
-        // Feeds - Items to action
-        $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
-        $pendingFeedGameItems = $feedItemGameService->getPending();
-
-        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
-        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
 
 
         // Missing data

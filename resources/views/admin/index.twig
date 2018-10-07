@@ -11,21 +11,25 @@
                 <a href="{{ route('admin.games.list')}}/action-list-games-for-release">games to release</a>
             </div>
             <div class="col-md-4 text-center">
-                <h2><a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">{{ ActionListNintendoUrlNoPackshotsCount }}</a></h2>
-                <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">games with Nintendo URLs but no packshots</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <h2><a href="{{ route('admin.feed-items.reviews.list') }}">{{ UnprocessedFeedReviewItemsCount }}</a></h2>
-                <a href="{{ route('admin.feed-items.reviews.list') }}">pending reviews</a>
-            </div>
-            <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.feed-items.games.list') }}">{{ PendingFeedGameItemsCount }}</a></h2>
                 <a href="{{ route('admin.feed-items.games.list') }}">pending game updates</a>
             </div>
         </div>
         <div class="row">
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.feed-items.reviews.list') }}">{{ UnprocessedFeedReviewItemsCount }}</a></h2>
+                <a href="{{ route('admin.feed-items.reviews.list') }}">pending feed reviews</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.reviews.user.list') }}">{{ PendingReviewUserCount }}</a></h2>
+                <a href="{{ route('admin.reviews.user.list') }}">pending user reviews</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">{{ ActionListNintendoUrlNoPackshotsCount }}</a></h2>
+                <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">games with Nintendo URLs but no packshots</a>
+            </div>
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.games.list')}}/action-list-recent-no-nintendo-url">{{ ActionListRecentNoNintendoUrlCount }}</a></h2>
                 <a href="{{ route('admin.games.list')}}/action-list-recent-no-nintendo-url">recent games with no Nintendo URL</a>
