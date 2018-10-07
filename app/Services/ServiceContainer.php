@@ -21,8 +21,10 @@ class ServiceContainer
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
+    const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
+    const KEY_REVIEW_USER_SERVICE = 'ReviewUserService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
     const KEY_USER_LIST_SERVICE = 'UserListService';
@@ -202,6 +204,14 @@ class ServiceContainer
     }
 
     /**
+     * @return ReviewQuickRatingService
+     */
+    public function getReviewQuickRatingService()
+    {
+        return $this->load(self::KEY_REVIEW_QUICK_RATING_SERVICE);
+    }
+
+    /**
      * @return ReviewSiteService
      */
     public function getReviewSiteService()
@@ -215,6 +225,14 @@ class ServiceContainer
     public function getReviewStatsService()
     {
         return $this->load(self::KEY_REVIEW_STATS_SERVICE);
+    }
+
+    /**
+     * @return ReviewUserService
+     */
+    public function getReviewUserService()
+    {
+        return $this->load(self::KEY_REVIEW_USER_SERVICE);
     }
 
     /**

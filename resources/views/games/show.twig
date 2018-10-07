@@ -63,12 +63,8 @@
         {% include 'games/reviews.twig' with {'GameReviews': GameReviews} %}
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-    </div>
-    <div class="col-sm-12 col-md-6">
-    </div>
-</div>
+
+{% include 'games/userReviews.twig' with {'ReviewList': GameReviewUserList} %}
 
 {% include 'games/scripts.twig' %}
 

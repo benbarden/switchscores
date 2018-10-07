@@ -1,0 +1,10 @@
+{% extends 'theme/wos/member/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('user.reviews.add') %}
+{% include 'user/reviews/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'user/reviews/scripts.twig' %}
+
+{% endblock page_inner %}

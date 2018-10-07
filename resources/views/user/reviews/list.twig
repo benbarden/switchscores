@@ -1,0 +1,95 @@
+{% extends 'theme/wos/member/page-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review">
+    </div>
+</div>
+
+<hr>
+
+{% if MsgSuccess %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Thanks for submitting your review!</strong> All reviews are subject to admin approval.
+        We'll get to your review as soon as we can.
+    </div>
+{% else %}
+    <p>
+        This is where you can submit your own reviews to the site.
+    </p>
+    <p>
+        <strong>Do you publish reviews on a blog or website of your own?</strong>
+        We'll soon provide a way for partners to add reviews.
+        Stay tuned for further details.
+        <br>
+        Get in touch via <a href="https://twitter.com/worldofswitch">@worldofswitch on Twitter</a> if you're interested.
+    </p>
+{% endif %}
+
+{% if ReviewUserList.count > 0 %}
+
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-left">Game</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Quick rating</th>
+                <th class="text-center">Score</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReviewUserList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.quickRating.rating_desc }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.review_score }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.getStatusDesc() }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have not added any reviews yet.</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('user.reviews.add') }}';
+    });
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false },
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

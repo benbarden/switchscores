@@ -94,6 +94,11 @@ Route::group(['middleware' => ['auth']], function() {
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 
+    // User reviews
+    Route::get('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
+    Route::post('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
+    Route::get('/user/reviews/{report?}', 'User\ReviewUserController@showList')->name('user.reviews.list');
+
 });
 
 /* Admin */
@@ -143,6 +148,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
     Route::post('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
     Route::get('/admin/reviews/link/{report?}', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
+
+    // User reviews
+    Route::get('/admin/reviews/user/edit/{reviewId}', 'Admin\ReviewUserController@edit')->name('admin.reviews.user.edit');
+    Route::post('/admin/reviews/user/edit/{reviewId}', 'Admin\ReviewUserController@edit')->name('admin.reviews.user.edit');
+    Route::get('/admin/reviews/user/{report?}', 'Admin\ReviewUserController@showList')->name('admin.reviews.user.list');
 
     // Feed items
     Route::get('/admin/feed-items', 'Admin\IndexController@feedItemsLanding')->name('admin.feed-items.landing');

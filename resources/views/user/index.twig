@@ -6,11 +6,17 @@
 
     <div class="row">
         <div class="col-md-6">
-            <h2>Welcome, {{ auth_user().display_name }}!</h2>
+            <h2>Welcome {{ auth_user().display_name }}</h2>
             <p>
-                We're just getting started with the WOS Members section. Please follow
-                <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>
-                on Twitter for the latest updates.
+                Got a question? Need help? Tweet us via
+                <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
+                You can also follow us for the latest updates.
+            </p>
+
+            <h2>Reviews are go!</h2>
+            <p>
+                We're now giving members the opportunity to add their own reviews to the site.
+                Get started at <a href="{{ route('user.reviews.list') }}">My reviews</a>.
             </p>
 
             <h2>Set your region</h2>
@@ -33,7 +39,13 @@
             </div>
         </div>
         <div class="col-md-6">
-            <h2>Wishlist</h2>
+            <h2>Lists</h2>
+            <p>
+                We'll be tidying up this section soon. In the meantime, you can add games to your wishlist or owned list
+                by heading to the <a href="{{ route('games.list.released') }}">released games page</a>.
+            </p>
+
+            <h3>Wishlist</h3>
 
             {% if WishListItems.count > 0 %}
                 <ul>
@@ -50,7 +62,8 @@
                     <a href="{{ route('games.list.released') }}">games page</a>.
                 </p>
             {% endif %}
-            <h2>Owned list</h2>
+
+            <h3>Owned list</h3>
 
             {% if OwnedListItems.count > 0 %}
                 <ul>
