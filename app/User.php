@@ -37,4 +37,9 @@ class User extends Authenticatable
     {
         return $this->is_admin == 1;
     }
+
+    public function site()
+    {
+        return $this->hasOne('App\ReviewSite', 'id', 'site_id');
+    }
 }

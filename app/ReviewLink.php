@@ -8,6 +8,7 @@ class ReviewLink extends Model
 {
     const TYPE_MANUAL = 'Manual';
     const TYPE_IMPORTED = 'Imported';
+    const TYPE_PARTNER = 'Partner';
 
     /**
      * @var string
@@ -34,5 +35,10 @@ class ReviewLink extends Model
     public function game()
     {
         return $this->hasOne('App\Game', 'id', 'game_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne('App\User', 'id', 'user_id');
     }
 }

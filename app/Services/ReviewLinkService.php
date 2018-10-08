@@ -9,7 +9,7 @@ use App\ReviewSite;
 class ReviewLinkService
 {
     public function create(
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType
+        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $userId = null
     )
     {
         return ReviewLink::create([
@@ -20,6 +20,7 @@ class ReviewLinkService
             'rating_normalised' => $ratingNormalised,
             'review_date' => $reviewDate,
             'review_type' => $reviewType,
+            'user_id' => $userId,
         ]);
     }
 

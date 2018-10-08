@@ -4,6 +4,13 @@
 
 <div class="row">
     <div class="col-md-6">
+        <h2>Information</h2>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.user.list') }}">{{ RegisteredUserCount }}</a></h2>
+                <a href="{{ route('admin.user.list') }}">registered users</a>
+            </div>
+        </div>
         <h2>Action lists</h2>
         <div class="row">
             <div class="col-md-4 text-center">
@@ -23,6 +30,10 @@
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.reviews.user.list') }}">{{ PendingReviewUserCount }}</a></h2>
                 <a href="{{ route('admin.reviews.user.list') }}">pending user reviews</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.reviews.partner.list') }}">{{ PendingPartnerReviewCount }}</a></h2>
+                <a href="{{ route('admin.reviews.partner.list') }}">pending partner reviews</a>
             </div>
         </div>
         <div class="row">
@@ -49,34 +60,70 @@
                 <a href="{{ route('admin.games.list')}}/no-genre">no genre</a>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <h2>Information</h2>
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <h2><a href="{{ route('admin.user.list') }}">{{ RegisteredUserCount }}</a></h2>
-                <a href="{{ route('admin.user.list') }}">registered users</a>
-            </div>
-        </div>
         <h2>Missing data (Low priority)</h2>
         <div class="row">
-            <div class="col-md-4 text-center">
-                <h2><a href="{{ route('admin.games.list')}}/no-vendor-page-url">{{ MissingVendorPageUrlCount }}</a></h2>
-                <a href="{{ route('admin.games.list')}}/no-vendor-page-url">no vendor URL</a>
-            </div>
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.games.list')}}/no-video-url">{{ MissingVideoUrlCount }}</a></h2>
                 <a href="{{ route('admin.games.list')}}/no-video-url">no video URL</a>
             </div>
             <div class="col-md-4 text-center">
+                <h2><a href="{{ route('admin.games.list')}}/no-vendor-page-url">{{ MissingVendorPageUrlCount }}</a></h2>
+                <a href="{{ route('admin.games.list')}}/no-vendor-page-url">no vendor URL</a>
+            </div>
+            <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.games.list')}}/no-twitter-id">{{ MissingTwitterIdCount }}</a></h2>
                 <a href="{{ route('admin.games.list')}}/no-twitter-id">no Twitter ID</a>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-4 text-center">
                 <h2><a href="{{ route('admin.games.list')}}/no-amazon-uk-link">{{ MissingAmazonUkLink }}</a></h2>
                 <a href="{{ route('admin.games.list')}}/no-amazon-uk-link">no Amazon UK link</a>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Navigation</h2>
+        <h3>Games</h3>
+        <ul>
+            <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
+            <li><a href="{{ route('admin.games-title-hash.list') }}">Title hashes</a></li>
+        </ul>
+        <h3>Reviews</h3>
+        <ul>
+            <li><a href="{{ route('admin.feed-items.reviews.list') }}">Feed items - Reviews</a></li>
+            <li><a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a></li>
+            <li><a href="{{ route('admin.reviews.user.list') }}">User reviews</a></li>
+            <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
+            <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
+        </ul>
+        <h3>Tools: Review importer</h3>
+        <ul>
+            <li><a href="{{ route('admin.tools.runFeedImporter.landing') }}">Run Feed Importer</a></li>
+            <li><a href="{{ route('admin.tools.runFeedParser.landing') }}">Run Feed Parser</a></li>
+            <li><a href="{{ route('admin.tools.runFeedReviewGenerator.landing') }}">Run Feed Review Generator</a></li>
+        </ul>
+        <h3>Tools: Wikipedia crawler</h3>
+        <ul>
+            <li><a href="{{ route('admin.tools.runWikipediaCrawler.landing') }}">Run Wikipedia Crawler</a></li>
+            <li><a href="{{ route('admin.tools.runWikipediaImporter.landing') }}">Run Wikipedia Importer</a></li>
+            <li><a href="{{ route('admin.tools.runWikipediaUpdater.landing') }}">Run Wikipedia Updater</a></li>
+        </ul>
+        <h3>Tools: Game updates</h3>
+        <ul>
+            <li><a href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Game Ranks</a></li>
+            <li><a href="{{ route('admin.tools.updateGameCalendarStats.landing') }}">Update Calendar Stats</a></li>
+            <li><a href="{{ route('admin.tools.updateGameImageCount.landing') }}">Update Image Count</a></li>
+            <li><a href="{{ route('admin.tools.updateGameReviewStats.landing') }}">Update Review Stats</a></li>
+        </ul>
+        <h3>Miscellaneous</h3>
+        <ul>
+            <li><a href="{{ route('admin.tools.landing') }}">Tools landing page</a></li>
+            <li><a href="{{ route('admin.user.list') }}">Users</a></li>
+            <li><a href="{{ route('admin.news.list') }}">News</a></li>
+            <li><a href="{{ route('admin.charts.date.list') }}">Charts</a> (no longer in use)</li>
+        </ul>
     </div>
 </div>
 

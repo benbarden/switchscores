@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
 use App\ReviewUser;
+use App\PartnerReview;
 
 class IndexController extends Controller
 {
@@ -30,6 +31,7 @@ class IndexController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $reviewUserService = $serviceContainer->getReviewUserService();
+        $partnerReviewService = $serviceContainer->getPartnerReviewService();
         $feedItemGameService = $serviceContainer->getFeedItemGameService();
         $feedItemReviewService = $serviceContainer->getFeedItemReviewService();
         $userService = $serviceContainer->getUserService();
@@ -47,11 +49,13 @@ class IndexController extends Controller
         $pendingFeedGameItems = $feedItemGameService->getPending();
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
+        $pendingPartnerReview = $partnerReviewService->getByStatus(PartnerReview::STATUS_PENDING);
 
         $bindings['ActionListGamesForReleaseCount'] = count($actionListGamesForReleaseCount);
         $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingReviewUserCount'] = count($pendingReviewUser);
+        $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
 
         // Action lists
         $actionListNintendoUrlNoPackshotCount = $gameService->getActionListNintendoUrlNoPackshots($regionCode);

@@ -192,6 +192,7 @@ return [
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\NewsServiceProvider::class,
         App\Providers\NewsCategoryServiceProvider::class,
+        App\Providers\PartnerReviewServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewQuickRatingServiceProvider::class,
         App\Providers\ReviewSiteServiceProvider::class,

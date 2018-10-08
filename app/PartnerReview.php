@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReviewUser extends Model
+class PartnerReview extends Model
 {
     const STATUS_PENDING = 0;
     const STATUS_ACTIVE = 1;
@@ -13,7 +13,7 @@ class ReviewUser extends Model
     /**
      * @var string
      */
-    protected $table = 'review_user';
+    protected $table = 'partner_reviews';
 
     /**
      * @var bool
@@ -24,7 +24,7 @@ class ReviewUser extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'game_id', 'quick_rating', 'review_score', 'review_body', 'item_status'
+        'user_id', 'site_id', 'game_id', 'item_url', 'item_date', 'item_rating', 'item_status', 'review_link_id'
     ];
 
     public function user()
@@ -32,14 +32,19 @@ class ReviewUser extends Model
         return $this->hasOne('App\User', 'id', 'user_id');
     }
 
+    public function site()
+    {
+        return $this->hasOne('App\ReviewSite', 'id', 'site_id');
+    }
+
     public function game()
     {
         return $this->hasOne('App\Game', 'id', 'game_id');
     }
 
-    public function quickRating()
+    public function reviewLink()
     {
-        return $this->hasOne('App\ReviewQuickRating', 'id', 'quick_rating');
+        return $this->hasOne('App\ReviewLink', 'id', 'review_link_id');
     }
 
     public function getStatusDesc()

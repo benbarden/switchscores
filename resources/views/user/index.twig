@@ -13,6 +13,15 @@
                 You can also follow us for the latest updates.
             </p>
 
+            {% if auth_user().site_id != 0 %}
+                <h2>You now have partner access</h2>
+                <p>
+                    We're now accepting reviews direct from partners on a very exclusive basis.
+                    If you're seeing this notice, welcome aboard! Get started at
+                    <a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>.
+                </p>
+            {% endif %}
+
             <h2>Reviews are go!</h2>
             <p>
                 We're now giving members the opportunity to add their own reviews to the site.

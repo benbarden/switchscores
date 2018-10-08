@@ -1,0 +1,10 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('admin.reviews.partner.edit', {'reviewId': ReviewId}) %}
+{% include 'admin/reviews/partner/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'admin/reviews/partner/scripts.twig' %}
+
+{% endblock page_inner %}

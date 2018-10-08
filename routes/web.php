@@ -99,6 +99,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
     Route::get('/user/reviews/{report?}', 'User\ReviewUserController@showList')->name('user.reviews.list');
 
+    // Partner reviews
+    Route::get('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
+    Route::post('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
+    Route::get('/user/partner-reviews/{report?}', 'User\PartnerReviewController@showList')->name('user.partner-reviews.list');
+
 });
 
 /* Admin */
@@ -153,6 +158,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/user/edit/{reviewId}', 'Admin\ReviewUserController@edit')->name('admin.reviews.user.edit');
     Route::post('/admin/reviews/user/edit/{reviewId}', 'Admin\ReviewUserController@edit')->name('admin.reviews.user.edit');
     Route::get('/admin/reviews/user/{report?}', 'Admin\ReviewUserController@showList')->name('admin.reviews.user.list');
+
+    // Partner reviews
+    Route::get('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
+    Route::post('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
+    Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
 
     // Feed items
     Route::get('/admin/feed-items', 'Admin\IndexController@feedItemsLanding')->name('admin.feed-items.landing');

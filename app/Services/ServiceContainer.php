@@ -20,6 +20,7 @@ class ServiceContainer
     const KEY_GENRE_SERVICE = 'GenreService';
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
     const KEY_NEWS_SERVICE = 'NewsService';
+    const KEY_PARTNER_REVIEW_SERVICE = 'PartnerReviewService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
@@ -193,6 +194,14 @@ class ServiceContainer
     public function getNewsService()
     {
         return $this->load(self::KEY_NEWS_SERVICE);
+    }
+
+    /**
+     * @return PartnerReviewService
+     */
+    public function getPartnerReviewService()
+    {
+        return $this->load(self::KEY_PARTNER_REVIEW_SERVICE);
     }
 
     /**
