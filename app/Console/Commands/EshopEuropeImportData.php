@@ -47,7 +47,8 @@ class EshopEuropeImportData extends Command
 
         try {
 
-            $eshopLoader->loadLocalData('europe-test-1500-games.json');
+            //$eshopLoader->loadLocalData('europe-test-1500-games.json');
+            $eshopLoader->loadGames();
             $responseArray = $eshopLoader->getResponseData();
 
             $gameData = $responseArray['response']['docs'];

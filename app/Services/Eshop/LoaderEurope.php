@@ -253,7 +253,7 @@ class LoaderEurope
         $this->responseData = json_decode($json, true);
     }
 
-    public function loadGames($limit = 25, $locale = 'en')
+    public function loadGames($limit = 9999, $locale = 'en')
     {
         // Base url
         $baseUrl = str_replace('{locale}', $locale, self::GET_GAMES_EU_URL);
