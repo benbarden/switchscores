@@ -1,0 +1,49 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% if FeedItems.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-left">Title</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in FeedItems %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        {{ item.title }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.id}) }}">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

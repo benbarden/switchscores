@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\EshopEuropeImportData::class,
+        Commands\EshopEuropeLinkGames::class,
         Commands\RunFeedImporter::class,
         Commands\RunFeedParser::class,
         Commands\RunFeedReviewGenerator::class,

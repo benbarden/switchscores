@@ -10,6 +10,7 @@ class ServiceContainer
     const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
     const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
+    const KEY_ESHOP_EUROPE_GAME_SERVICE = 'EshopEuropeGameService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
     const KEY_GAME_CALENDAR_SERVICE = 'GameCalendarService';
@@ -114,6 +115,14 @@ class ServiceContainer
     public function getCrawlerWikipediaGamesListSourceService()
     {
         return $this->load(self::KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE);
+    }
+
+    /**
+     * @return EshopEuropeGameService
+     */
+    public function getEshopEuropeGameService()
+    {
+        return $this->load(self::KEY_ESHOP_EUROPE_GAME_SERVICE);
     }
 
     /**

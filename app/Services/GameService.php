@@ -116,9 +116,24 @@ class GameService
                 'game_release_dates.is_released',
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.region', '=', $region)
             ->orderBy('games.title', 'asc');
         $games = $games->get();
+
+        return $games;
+    }
+
+    public function getAllWithoutEshopId($region)
+    {
+        if ($region == 'eu') {
+            $field = 'eshop_europe_fs_id';
+        } else {
+            throw new \Exception('Unsupported region: '.$region);
+        }
+
+        $games = Game::whereNull('games.'.$field)
+            ->orderBy('games.title', 'asc')
+            ->get();
 
         return $games;
     }

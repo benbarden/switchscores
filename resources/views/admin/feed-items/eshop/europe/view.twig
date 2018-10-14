@@ -1,0 +1,30 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-right">Field</th>
+            <th class="text-left">Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, val in GameData %}
+            <tr>
+                <td class="text-right" style="font-weight: bold;">
+                    {{ key }}
+                </td>
+                <td class="text-left">
+                    {% if val is null %}
+                        &nbsp;
+                    {% else %}
+                        <small>{{ val }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock page_inner %}

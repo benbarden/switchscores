@@ -164,14 +164,24 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
 
-    // Feed items
+    // Feed items: Landing
     Route::get('/admin/feed-items', 'Admin\IndexController@feedItemsLanding')->name('admin.feed-items.landing');
+
+    // Feed items: Reviews
     Route::get('/admin/feed-items/reviews/{report?}', 'Admin\FeedItemReviewController@showList')->name('admin.feed-items.reviews.list');
     Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
     Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
+
+    // Feed items: Games
     Route::get('/admin/feed-items/games/{report?}', 'Admin\FeedItemGameController@showList')->name('admin.feed-items.games.list');
     Route::get('/admin/feed-items/games/edit/{linkId}', 'Admin\FeedItemGameController@edit')->name('admin.feed-items.games.edit');
     Route::post('/admin/feed-items/games/edit/{linkId}', 'Admin\FeedItemGameController@edit')->name('admin.feed-items.games.edit');
+
+    // Feed items: eShop (Europe)
+    Route::get('/admin/feed-items/eshop/europe/{report?}', 'Admin\FeedItemEshopEuropeController@showList')->name('admin.feed-items.eshop.europe.list');
+    Route::get('/admin/feed-items/eshop/europe/view/{itemId}', 'Admin\FeedItemEshopEuropeController@view')->name('admin.feed-items.eshop.europe.view');
+    Route::get('/admin/feed-items/eshop/europe/edit/{itemId}', 'Admin\FeedItemEshopEuropeController@edit')->name('admin.feed-items.eshop.europe.edit');
+    Route::post('/admin/feed-items/eshop/europe/edit/{itemId}', 'Admin\FeedItemEshopEuropeController@edit')->name('admin.feed-items.eshop.europe.edit');
 
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');

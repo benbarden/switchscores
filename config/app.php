@@ -182,6 +182,7 @@ return [
         App\Providers\ChartsDateServiceProvider::class,
         App\Providers\ChartsRankingGlobalServiceProvider::class,
         App\Providers\CrawlerWikipediaGamesListSourceServiceProvider::class,
+        App\Providers\EshopEuropeGameServiceProvider::class,
         App\Providers\FeedItemGameServiceProvider::class,
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,
