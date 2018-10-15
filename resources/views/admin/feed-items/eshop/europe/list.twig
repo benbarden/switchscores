@@ -8,6 +8,8 @@
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
+                <th class="text-center">Change date</th>
+                <th class="text-center">Square image</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -19,6 +21,16 @@
                     </td>
                     <td class="text-left">
                         {{ item.title }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.change_date }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.image_url_sq_s %}
+                            <a href="{{ item.image_url_sq_s }}" target="_blank">View</a>
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.id}) }}">View</a>
@@ -40,6 +52,8 @@
             "columns": [
                 null,
                 null,
+                null,
+                { "orderable": false },
                 { "orderable": false }
             ]
         });

@@ -16,7 +16,7 @@ class EshopEuropeGameService
     public function getAll($limit = null)
     {
         $feedItems = EshopEuropeGame
-            ::orderBy('created_at', 'desc');
+            ::orderBy('change_date', 'desc');
 
         if ($limit) {
             $feedItems = $feedItems->limit($limit);

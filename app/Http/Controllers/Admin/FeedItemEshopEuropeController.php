@@ -17,7 +17,7 @@ class FeedItemEshopEuropeController extends Controller
         $eshopGameService = $serviceContainer->getEshopEuropeGameService();
 
         $feedItems = $eshopGameService->getAll();
-        $jsInitialSort = "[ 0, 'desc']";
+        $jsInitialSort = "[ 2, 'desc']";
 
         $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe';
         $bindings['PanelTitle'] = 'Feed items - eShop: Europe';
