@@ -47,8 +47,13 @@ class EshopEuropeImportData extends Command
 
         try {
 
-            //$eshopLoader->loadLocalData('europe-test-1500-games.json');
-            $eshopLoader->loadGames();
+            if (\App::environment() == 'local') {
+                $this->info('Loading local data from JSON file');
+                $eshopLoader->loadLocalData('europe-test-1500-games.json');
+            } else {
+                $this->warn('Loading LIVE data from eShop. Do not abuse!');
+                $eshopLoader->loadGames();
+            }
             $responseArray = $eshopLoader->getResponseData();
 
             $gameData = $responseArray['response']['docs'];
@@ -58,6 +63,7 @@ class EshopEuropeImportData extends Command
 
             $this->info('Importing data...');
             $eshopLoader->importToDb();
+            $this->info('Complete!');
 
         } catch (\Exception $e) {
             $this->error($e->getMessage());
