@@ -2,6 +2,15 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
+    {% if FormMode == 'edit' %}
+    <div class="form-group">
+        <label for="url" class="col-md-4 control-label">Source (Review type)</label>
+        <div class="col-md-6">
+            <span class="form-control-static">{{ ReviewLinkData.review_type }}</span>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Game</label>
         <div class="col-md-6">
