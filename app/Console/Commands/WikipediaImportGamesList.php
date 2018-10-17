@@ -42,6 +42,8 @@ class WikipediaImportGamesList extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $this->info('Loading source data...');
 
         $crawlerService = resolve('Services\CrawlerWikipediaGamesListSourceService');

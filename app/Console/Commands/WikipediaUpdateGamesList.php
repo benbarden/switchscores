@@ -44,6 +44,8 @@ class WikipediaUpdateGamesList extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $this->info('Loading source data...');
 
         $feedItemGameService = resolve('Services\FeedItemGameService');

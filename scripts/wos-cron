@@ -1,16 +1,16 @@
 # Cron jobs for WOS
 
-10 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaCrawlGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-15 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaImportGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-20 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaUpdateGamesList >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+10 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaCrawlGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-crawl-games-list.log 2>&1
+15 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaImportGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-import-games-list.log 2>&1
+20 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaUpdateGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-update-games-list.log 2>&1
 
-10 4 * * * www-data cd /var/www/worldofswitch.com && php artisan EshopEuropeImportData >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-20 4 * * * www-data cd /var/www/worldofswitch.com && php artisan EshopEuropeLinkGames >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+10 4 * * * www-data cd /var/www/worldofswitch.com && php artisan EshopEuropeImportData >> /var/www/worldofswitch.com/storage/logs/cron-eshop-europe-import-data.log 2>&1
+20 4 * * * www-data cd /var/www/worldofswitch.com && php artisan EshopEuropeLinkGames >> /var/www/worldofswitch.com/storage/logs/cron-eshop-europe-link-games.log 2>&1
 
-10 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedImporter >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-15 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedParser >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-20 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedReviewGenerator >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+10 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedImporter >> /var/www/worldofswitch.com/storage/logs/cron-run-feed-importer.log 2>&1
+15 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedParser >> /var/www/worldofswitch.com/storage/logs/cron-run-feed-parser.log 2>&1
+20 5 * * * www-data cd /var/www/worldofswitch.com && php artisan RunFeedReviewGenerator >> /var/www/worldofswitch.com/storage/logs/cron-run-feed-review-generator.log 2>&1
 
-25 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameReviewStats >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-30 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameRanks >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
-35 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameCalendarStats >> /var/www/worldofswitch.com/storage/logs/cron.log 2>&1
+25 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameReviewStats >> /var/www/worldofswitch.com/storage/logs/cron-update-game-review-stats.log 2>&1
+30 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameRanks >> /var/www/worldofswitch.com/storage/logs/cron-update-game-ranks.log 2>&1
+35 5 * * * www-data cd /var/www/worldofswitch.com && php artisan UpdateGameCalendarStats >> /var/www/worldofswitch.com/storage/logs/cron-update-game-calendar-stats.log 2>&1

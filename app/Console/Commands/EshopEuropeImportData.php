@@ -39,6 +39,8 @@ class EshopEuropeImportData extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $this->info('Clearing previous data');
 
         \DB::statement("TRUNCATE TABLE eshop_europe_games");

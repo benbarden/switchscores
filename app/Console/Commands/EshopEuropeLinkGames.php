@@ -42,6 +42,8 @@ class EshopEuropeLinkGames extends Command
      */
     public function handle()
     {
+        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+
         $this->info('Loading data...');
 
         $gameService = resolve('Services\GameService');
