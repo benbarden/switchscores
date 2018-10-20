@@ -112,6 +112,21 @@ class GameService
         return $game;
     }
 
+    public function getByFsId($region, $fsId)
+    {
+        switch ($region) {
+            case 'eu':
+                $field = 'eshop_europe_fs_id';
+                break;
+            default:
+                throw new \Exception('Unsupported region: '.$region);
+                break;
+        }
+
+        $game = Game::where($field, $fsId)->first();
+        return $game;
+    }
+
     public function getAll($region)
     {
         $games = DB::table('games')

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\EshopEuropeImportData::class,
         Commands\EshopEuropeLinkGames::class,
+        Commands\EshopEuropeUpdateNintendoUrls::class,
         Commands\RunFeedImporter::class,
         Commands\RunFeedParser::class,
         Commands\RunFeedReviewGenerator::class,
