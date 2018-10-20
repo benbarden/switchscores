@@ -16,8 +16,24 @@ class FeedItemEshopEuropeController extends Controller
 
         $eshopGameService = $serviceContainer->getEshopEuropeGameService();
 
-        $feedItems = $eshopGameService->getAll();
-        $jsInitialSort = "[ 2, 'desc']";
+        $jsInitialSort = "[ 3, 'desc']";
+        if ($report == null) {
+            $bindings['ActiveNav'] = 'all';
+            $feedItems = $eshopGameService->getAll();
+        } else {
+            $bindings['ActiveNav'] = $report;
+            switch ($report) {
+                case 'with-link':
+                    $feedItems = $eshopGameService->getAllWithLink();
+                    break;
+                case 'no-link':
+                    $feedItems = $eshopGameService->getAllWithoutLink();
+                    break;
+                default:
+                    abort(404);
+                    break;
+            }
+        }
 
         $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe';
         $bindings['PanelTitle'] = 'Feed items - eShop: Europe';

@@ -53,7 +53,8 @@ class EshopEuropeLinkGames extends Command
         $gameTitleHashService = resolve('Services\GameTitleHashService');
         /* @var GameTitleHashService $gameTitleHashService */
 
-        $gameData = $gameService->getAllWithoutEshopId('eu');
+        //$gameData = $gameService->getAllWithoutEshopId('eu');
+        $gameData = $gameService->getAllModels();
 
         $this->info('Found records: '.count($gameData));
 
@@ -61,21 +62,24 @@ class EshopEuropeLinkGames extends Command
 
             foreach ($gameData as $game) {
 
+                $fsId = null;
                 $title = $game->title;
 
                 $eshopGame = $eshopEuropeGameService->getByTitle($title);
 
                 if (!$eshopGame) {
-                    $this->warn('No match for title: '.$title);
-                    continue;
-                }
-
-                if ($game->eshop_europe_fs_id != null) {
-                    $this->error('Wait, why is this here? '.$title.'|'.$game->eshop_europe_fs_id.'|'.$eshopGame->fs_id);
+                    //$this->warn('No match for title: '.$title);
                     continue;
                 }
 
                 $fsId = $eshopGame->fs_id;
+
+                if ($game->eshop_europe_fs_id != null) {
+                    if ($game->eshop_europe_fs_id == $fsId) {
+                        //$this->warn($title.' - already linked to '.$fsId.'; skipping');
+                        continue;
+                    }
+                }
 
                 $this->info('Found title: '.$title.' - updating game with fs_id: '.$fsId);
 

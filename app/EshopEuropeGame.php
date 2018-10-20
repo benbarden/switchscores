@@ -99,4 +99,10 @@ class EshopEuropeGame extends Model
         'download_play',
 
     ];
+
+    public function game()
+    {
+        return $this->hasOne('App\Game', 'eshop_europe_fs_id', 'fs_id');
+    }
+
 }

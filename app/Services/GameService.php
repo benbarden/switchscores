@@ -123,6 +123,12 @@ class GameService
         return $games;
     }
 
+    public function getAllModels()
+    {
+        $games = Game::orderBy('games.title', 'asc')->get();
+        return $games;
+    }
+
     public function getAllWithoutEshopId($region)
     {
         if ($region == 'eu') {
@@ -381,7 +387,7 @@ class GameService
     public function getByNullField($field, $region)
     {
         $allowedFields = [
-            'video_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id'
+            'video_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id', 'eshop_europe_fs_id'
         ];
 
         if (!in_array($field, $allowedFields)) {

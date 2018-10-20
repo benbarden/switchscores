@@ -24,6 +24,7 @@ class Game extends Model
         'rating_avg', 'review_count', 'overview', 'image_count', 'developer', 'publisher',
         'media_folder', 'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_url', 'boxart_square_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id',
+        'eshop_europe_fs_id',
     ];
 
     public function charts()
@@ -55,5 +56,10 @@ class Game extends Model
     public function regionReleaseDate($region)
     {
         return $this->releaseDates()->where('region', '=', $region)->first();
+    }
+
+    public function eshopEuropeGame()
+    {
+        return $this->hasOne('App\EshopEuropeGame', 'fs_id', 'eshop_europe_fs_id');
     }
 }

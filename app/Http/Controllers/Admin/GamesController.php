@@ -114,6 +114,10 @@ class GamesController extends Controller
                     $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
+                case 'no-eshop-europe-link':
+                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id', $regionCode);
+                    $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";
+                    break;
                 case 'no-nintendo-page-url':
                     $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 0, 'asc']";

@@ -2,12 +2,28 @@
 
 {% block page_inner %}
 
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="pull-right">
+            <label for="admin-nav-filter">Filters:</label>
+            <select id="admin-nav-filter" name="admin-nav-filter" class="form-control">
+                <option value="">All games</option>
+                <option value="with-link">Items linked to a WOS game</option>
+                <option value="no-link">Items not linked to a WOS game</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<hr>
+
 {% if FeedItems.count > 0 %}
     <table class="table table-striped data-sortable">
         <thead>
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
+                <th class="text-left">Link</th>
                 <th class="text-center">Change date</th>
                 <th class="text-center">Nintendo Url</th>
                 <th class="text-center">Square image</th>
@@ -18,13 +34,22 @@
             {% for item in FeedItems %}
                 <tr>
                     <td class="text-right">
-                        {{ item.id }}
+                        {{ item.fs_id }}
                     </td>
                     <td class="text-left">
                         {{ item.title }}
                     </td>
                     <td class="text-center">
-                        {{ item.change_date }}
+                        {% if item.game %}
+                            <small>{{ item.game.id }}</small>
+                        {% elseif item.game_id %}
+                            <small>{{ item.game_id }}</small>
+                        {% else %}
+                            <small>-</small>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <small>{{ item.change_date }}</small>
                     </td>
                     <td class="text-center">
                         {% if item.url %}
@@ -53,7 +78,13 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
+    $('#admin-nav-filter').on('change', function() {
+        selectedFilter = $(this).val();
+        top.location.href = '{{ route('admin.feed-items.eshop.europe.list')}}' + '/' + selectedFilter;
+    });
     $(document).ready(function() {
+        var activeNav = '{{ ActiveNav }}';
+        $('#admin-nav-filter').val(activeNav);
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,
@@ -61,6 +92,7 @@
                 null,
                 null,
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false }
