@@ -111,7 +111,7 @@
             <td>
                 <span style="font-weight: bold;">Nintendo eShop page</span>
             </td>
-            <td><a href="{{ GameData.nintendo_page_url }}" target="_blank">Visit eShop page</a></td>
+            <td><a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a></td>
         </tr>
     {% endif %}
     {% if GameData.twitter_id %}

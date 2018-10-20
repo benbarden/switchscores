@@ -53,7 +53,7 @@
                     </td>
                     <td class="text-center">
                         {% if item.url %}
-                            <a href="https://www.nintendo.co.uk{{ item.url }}" target="_blank">View</a>
+                            <a href="{{ LinkHelper.eshopUrl('eu', item.url) }}" target="_blank">View</a>
                         {% else %}
                             -
                         {% endif %}
