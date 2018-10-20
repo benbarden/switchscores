@@ -9,6 +9,7 @@
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
                 <th class="text-center">Change date</th>
+                <th class="text-center">Nintendo Url</th>
                 <th class="text-center">Square image</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -24,6 +25,13 @@
                     </td>
                     <td class="text-center">
                         {{ item.change_date }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.url %}
+                            <a href="https://www.nintendo.co.uk{{ item.url }}" target="_blank">View</a>
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.image_url_sq_s %}
@@ -53,6 +61,7 @@
                 null,
                 null,
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false }
             ]
