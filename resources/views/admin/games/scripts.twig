@@ -30,6 +30,7 @@
         formVals['vendor_page_url'] = "{{ GameData.vendor_page_url }}";
         formVals['nintendo_page_url'] = "{{ GameData.nintendo_page_url }}";
         formVals['twitter_id'] = "{{ GameData.twitter_id }}";
+        formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
 
     } else {
 
@@ -60,6 +61,7 @@
         formVals['vendor_page_url'] = "{{ old('vendor_page_url') }}";
         formVals['nintendo_page_url'] = "{{ old('nintendo_page_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
+        formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
 
     }
 
@@ -93,6 +95,7 @@
     $('#vendor_page_url').val(formVals['vendor_page_url']);
     $('#nintendo_page_url').val(formVals['nintendo_page_url']);
     $('#twitter_id').val(formVals['twitter_id']);
+    $('#eshop_europe_fs_id').val(formVals['eshop_europe_fs_id']);
 
     // *** Genres *** //
     {% if GameGenreList %}
@@ -100,6 +103,8 @@
         $('#genre_item_{{ item.genre_id }}').attr('checked', true);
     {% endfor %}
     {% endif %}
+
+    $('#eshop_europe_fs_id').select2();
 
     // Autogenerate link URL
     $('#title').on('blur', function() {

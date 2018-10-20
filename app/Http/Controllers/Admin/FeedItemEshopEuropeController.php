@@ -51,7 +51,7 @@ class FeedItemEshopEuropeController extends Controller
         $bindings = [];
 
         $eshopGameService = $serviceContainer->getEshopEuropeGameService();
-        $gameData = $eshopGameService->find($itemId);
+        $gameData = $eshopGameService->getByFsId($itemId);
         if (!$gameData) abort(404);
 
         $bindings['GameData'] = $gameData->toArray();

@@ -21,6 +21,7 @@
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <legend>Dates</legend>
                 <div id="tabs">
@@ -53,8 +54,30 @@
                     {% endfor %}
                 </div>
             </fieldset>
+
             <fieldset>
-                <legend>eShop</legend>
+                <legend>eShop (Europe)</legend>
+                <div class="form-group">
+                    <label for="eshop_europe_fs_id" class="col-md-4 control-label">eShop link</label>
+                    <div class="col-md-6">
+                        <select id="eshop_europe_fs_id" class="form-control" name="eshop_europe_fs_id">
+                            <option value="">&nbsp;</option>
+                            {% for item in EshopEuropeList %}
+                                <option value="{{ item.fs_id }}">{{ item.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nintendo_page_url" class="col-md-4 control-label">
+                        Nintendo page URL (UK)
+                        <br><small>https://www.nintendo.co.uk/</small>
+                    </label>
+                    <div class="col-md-6">
+                        <input id="nintendo_page_url" type="text" class="form-control" name="nintendo_page_url">
+                        <small>Don't include domain, just the relative path</small>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="price_eshop" class="col-md-4 control-label">eShop price</label>
                     <div class="col-md-6">
@@ -67,9 +90,27 @@
                         <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="boxart_url" class="col-md-4 control-label">Boxart URL</label>
+                    <div class="col-md-6">
+                        <input id="boxart_url" type="text" class="form-control" name="boxart_url">
+                        <small>Store standard boxart in /img/games/boxart/. You only need to
+                            include the filename in the above field, not the full URL.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="boxart_square_url" class="col-md-4 control-label">Boxart square URL</label>
+                    <div class="col-md-6">
+                        <input id="boxart_square_url" type="text" class="form-control" name="boxart_square_url">
+                        <small>Store square boxart in /img/games/square/. You only need to
+                            include the filename in the above field, not the full URL. Square boxart
+                            will only be used if standard boxart does not exist.</small>
+                    </div>
+                </div>
             </fieldset>
+
             <fieldset>
-                <legend>Additional</legend>
+                <legend>Vendor</legend>
                 <div class="form-group">
                     <label for="developer" class="col-md-4 control-label">Developer</label>
                     <div class="col-md-6">
@@ -80,6 +121,38 @@
                     <label for="publisher" class="col-md-4 control-label">Publisher</label>
                     <div class="col-md-6">
                         <input id="publisher" type="text" class="form-control" name="publisher" size="50" maxlength="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="vendor_page_url" class="col-md-4 control-label">Vendor page URL</label>
+                    <div class="col-md-6">
+                        <input id="vendor_page_url" type="text" class="form-control" name="vendor_page_url">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="twitter_id" class="col-md-4 control-label">
+                        Twitter username
+                        <br><small>https://twitter.com/</small>
+                    </label>
+                    <div class="col-md-6">
+                        <input id="twitter_id" type="text" class="form-control" name="twitter_id" maxlength="30">
+                        <small>Don't include full URL - just the username</small>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Low use</legend>
+                <div class="form-group">
+                    <label for="video_url" class="col-md-4 control-label">Video URL</label>
+                    <div class="col-md-6">
+                        <input id="video_url" type="text" class="form-control" name="video_url">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="media_folder" class="col-md-4 control-label">Media folder</label>
+                    <div class="col-md-6">
+                        <input id="media_folder" type="text" class="form-control" name="media_folder">
                     </div>
                 </div>
                 <div class="form-group">
@@ -95,64 +168,8 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
-                <legend>Media</legend>
-                <div class="form-group">
-                    <label for="media_folder" class="col-md-4 control-label">Media folder</label>
-                    <div class="col-md-6">
-                        <input id="media_folder" type="text" class="form-control" name="media_folder">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="video_url" class="col-md-4 control-label">Video URL</label>
-                    <div class="col-md-6">
-                        <input id="video_url" type="text" class="form-control" name="video_url">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="boxart_url" class="col-md-4 control-label">Boxart URL</label>
-                    <div class="col-md-6">
-                        <input id="boxart_url" type="text" class="form-control" name="boxart_url">
-                        <small>Store standard boxart in /img/games/boxart/. You only need to
-                        include the filename in the above field, not the full URL.</small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="boxart_square_url" class="col-md-4 control-label">Boxart square URL</label>
-                    <div class="col-md-6">
-                        <input id="boxart_square_url" type="text" class="form-control" name="boxart_square_url">
-                        <small>Store square boxart in /img/games/square/. You only need to
-                            include the filename in the above field, not the full URL. Square boxart
-                        will only be used if standard boxart does not exist.</small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="vendor_page_url" class="col-md-4 control-label">Vendor page URL</label>
-                    <div class="col-md-6">
-                        <input id="vendor_page_url" type="text" class="form-control" name="vendor_page_url">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nintendo_page_url" class="col-md-4 control-label">
-                        Nintendo page URL (UK)
-                        <br><small>https://www.nintendo.co.uk/</small>
-                    </label>
-                    <div class="col-md-6">
-                        <input id="nintendo_page_url" type="text" class="form-control" name="nintendo_page_url">
-                        <small>Don't include domain, just the relative path</small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="twitter_id" class="col-md-4 control-label">
-                        Twitter username
-                        <br><small>https://twitter.com/</small>
-                    </label>
-                    <div class="col-md-6">
-                        <input id="twitter_id" type="text" class="form-control" name="twitter_id" maxlength="30">
-                        <small>Don't include full URL - just the username</small>
-                    </div>
-                </div>
-            </fieldset>
+
+            {#
             {% if FormMode == 'edit' %}
                 {% for key,value in RegionList %}
                     {% if key == 'eu' %}
@@ -183,6 +200,8 @@
                 </div>
             </fieldset>
             {% endif %}
+            #}
+
         </div>
 
         <div class="col-md-3">

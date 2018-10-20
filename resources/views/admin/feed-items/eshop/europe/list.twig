@@ -21,7 +21,7 @@
     <table class="table table-striped data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-right">fs_id</th>
                 <th class="text-left">Title</th>
                 <th class="text-left">Link</th>
                 <th class="text-center">Change date</th>
@@ -66,7 +66,7 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.id}) }}">View</a>
+                        <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.fs_id}) }}">View</a>
                     </td>
                 </tr>
             {% endfor %}

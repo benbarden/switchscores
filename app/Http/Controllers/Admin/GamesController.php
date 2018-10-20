@@ -165,6 +165,7 @@ class GamesController extends Controller
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
+        $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
 
         if ($request->isMethod('post')) {
 
@@ -202,7 +203,7 @@ class GamesController extends Controller
                 $request->media_folder, $request->video_url,
                 $request->boxart_url, $request->boxart_square_url,
                 $request->vendor_page_url, $request->nintendo_page_url,
-                $request->twitter_id
+                $request->twitter_id, $request->eshop_europe_fs_id
             );
             $gameId = $game->id;
 
@@ -259,6 +260,7 @@ class GamesController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['GenreList'] = $serviceGenre->getAll();
+        $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
 
         return view('admin.games.add', $bindings);
     }
@@ -278,6 +280,7 @@ class GamesController extends Controller
         $serviceGenre = $serviceContainer->getGenreService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
@@ -304,7 +307,7 @@ class GamesController extends Controller
                 $request->media_folder, $request->video_url,
                 $request->boxart_url, $request->boxart_square_url,
                 $request->vendor_page_url, $request->nintendo_page_url,
-                $request->twitter_id
+                $request->twitter_id, $request->eshop_europe_fs_id
             );
 
             // Update release dates
@@ -409,6 +412,7 @@ class GamesController extends Controller
 
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
+        $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
 
         return view('admin.games.edit', $bindings);
     }

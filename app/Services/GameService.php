@@ -31,12 +31,14 @@ class GameService
      * @param null $vendorPageUrl
      * @param null $nintendoPageUrl
      * @param null $twitterId
+     * @param null $eshopEuropeFsId
      * @return Game
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null, $twitterId = null
+        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null,
+        $nintendoPageUrl = null, $twitterId = null, $eshopEuropeFsId = null
     )
     {
         return Game::create([
@@ -56,6 +58,7 @@ class GameService
             'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
             'twitter_id' => $twitterId,
+            'eshop_europe_fs_id' => $eshopEuropeFsId,
         ]);
     }
 
@@ -63,7 +66,8 @@ class GameService
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null, $twitterId = null
+        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null,
+        $twitterId = null, $eshopEuropeFsId = null
     )
     {
         $values = [
@@ -82,6 +86,7 @@ class GameService
             'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
             'twitter_id' => $twitterId,
+            'eshop_europe_fs_id' => $eshopEuropeFsId,
         ];
 
         $game->fill($values);
@@ -438,6 +443,9 @@ class GameService
                 break;
             case 'no-boxart':
                 $gameList = $this->getWithoutBoxart($regionCode);
+                break;
+            case 'no-eshop-europe-link':
+                $gameList = $this->getByNullField('eshop_europe_fs_id', $regionCode);
                 break;
             case 'no-video-url':
                 $gameList = $this->getByNullField('video_url', $regionCode);
