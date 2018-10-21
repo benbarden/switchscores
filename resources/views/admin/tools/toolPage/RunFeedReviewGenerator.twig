@@ -1,7 +1,3 @@
-{% extends 'theme/wos/admin/page-narrow.twig' %}
-
-{% block page_inner %}
-
 <p>
     This tool runs the Feed Review Generator tool. (Step 3 of 3)
 </p>
@@ -14,7 +10,3 @@
     have ratings attached. If there are entries on the Feed Items page that are missing these fields,
     they will be left alone until the details are filled in.
 </p>
-
-<a class="btn btn-primary" href="{{ route('admin.tools.runFeedReviewGenerator.process') }}">Start process</a>
-
-{% endblock page_inner %}

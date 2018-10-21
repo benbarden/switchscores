@@ -4,6 +4,144 @@ namespace App\Http\Controllers\Admin;
 
 class ToolsController extends \App\Http\Controllers\BaseController
 {
+    protected $commandList = [];
+
+    public function __construct()
+    {
+        $this->commandList = [
+            /* *** Wikipedia *** */
+            'WikipediaCrawlGamesList' => [
+                'command' => 'WikipediaCrawlGamesList',
+                'group' => 'Wikipedia',
+                'title' => 'Wikipedia Crawl Games List',
+                'desc' => 'Crawls the Nintendo Switch games list on Wikipedia and saves data to the WOS database',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0310',
+                'nextStep' => 'WikipediaImportGamesList',
+            ],
+            'WikipediaImportGamesList' => [
+                'command' => 'WikipediaImportGamesList',
+                'group' => 'Wikipedia',
+                'title' => 'Wikipedia Import Games List',
+                'desc' => 'Converts crawler data into Feed Items for creating or updating games',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0315',
+                'nextStep' => 'WikipediaUpdateGamesList',
+                'relatedLink' => [
+                    'url' => route('admin.feed-items.games.list'),
+                    'text' => 'Feed Items - Games'
+                ],
+            ],
+            'WikipediaUpdateGamesList' => [
+                'command' => 'WikipediaUpdateGamesList',
+                'group' => 'Wikipedia',
+                'title' => 'Wikipedia Update Games List',
+                'desc' => 'Processes feed items (games) that are marked as OK to update',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0320',
+            ],
+            /* *** eShop *** */
+            'EshopEuropeImportData' => [
+                'command' => 'EshopEuropeImportData',
+                'group' => 'Eshop',
+                'title' => 'Eshop Europe Import Data',
+                'desc' => 'Imports data from the European eShop',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0410',
+                'nextStep' => 'EshopEuropeLinkGames',
+            ],
+            'EshopEuropeLinkGames' => [
+                'command' => 'EshopEuropeLinkGames',
+                'group' => 'Eshop',
+                'title' => 'Eshop Europe Link Games',
+                'desc' => 'Attempts to link data from the European eShop to games in the WOS database',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0420',
+            ],
+            'EshopEuropeUpdateNintendoUrls' => [
+                'command' => 'EshopEuropeUpdateNintendoUrls',
+                'group' => 'Eshop',
+                'title' => 'Eshop Europe Update Nintendo Urls',
+                'desc' => 'Updates Nintendo URLs for games linked to eShop Europe data records',
+                'scheduleFreq' => 'Manual',
+                'scheduleTime' => 'N/A',
+            ],
+            /* *** Reviews *** */
+            'RunFeedImporter' => [
+                'command' => 'RunFeedImporter',
+                'group' => 'Reviews',
+                'title' => 'Run Feed Importer',
+                'desc' => 'Visits RSS feeds from partner sites, and loads any reviews that have not yet been imported',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0510',
+                'nextStep' => 'RunFeedParser',
+            ],
+            'RunFeedParser' => [
+                'command' => 'RunFeedParser',
+                'group' => 'Reviews',
+                'title' => 'Run Feed Parser',
+                'desc' => 'Attempts to match titles from the feed importer to games in the WOS database',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0515',
+                'nextStep' => 'RunFeedReviewGenerator',
+                'relatedLink' => [
+                    'url' => route('admin.feed-items.reviews.list'),
+                    'text' => 'Feed Items - Reviews'
+                ],
+            ],
+            'RunFeedReviewGenerator' => [
+                'command' => 'RunFeedReviewGenerator',
+                'group' => 'Reviews',
+                'title' => 'Run Feed Review Generator',
+                'desc' => 'Creates review links for feed items linked to games and with ratings',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0520',
+            ],
+            /* *** Games *** */
+            'UpdateGameReviewStats' => [
+                'command' => 'UpdateGameReviewStats',
+                'group' => 'Game updates',
+                'title' => 'Update Game Review Stats',
+                'desc' => 'Updates the Review Count and Average Score fields for each game',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0525',
+            ],
+            'UpdateGameRanks' => [
+                'command' => 'UpdateGameRanks',
+                'group' => 'Game updates',
+                'title' => 'Update Game Ranks',
+                'desc' => 'Updates the rank field for each game',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0530',
+            ],
+            'UpdateGameCalendarStats' => [
+                'command' => 'UpdateGameCalendarStats',
+                'group' => 'Game updates',
+                'title' => 'Update Game Calendar Stats',
+                'desc' => 'Updates the released game stats on the Release Calendar page',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0535',
+            ],
+            'UpdateGameImageCount' => [
+                'command' => 'UpdateGameImageCount',
+                'group' => 'Game updates',
+                'title' => 'Update Game Image Count',
+                'desc' => 'Updates the Image Count field for each game',
+                'scheduleFreq' => 'Manual',
+                'scheduleTime' => 'N/A',
+            ],
+        ];
+
+        parent::__construct();
+    }
+
+    private function getToolDetails($commandName)
+    {
+        if (!array_key_exists($commandName, $this->commandList)) abort(404);
+
+        return $this->commandList[$commandName];
+    }
+
     public function landing()
     {
         $bindings = [];
@@ -11,7 +149,43 @@ class ToolsController extends \App\Http\Controllers\BaseController
         $bindings['TopTitle'] = 'Tools';
         $bindings['PanelTitle'] = 'Tools';
 
+        $bindings['ToolList'] = $this->commandList;
+
         return view('admin.tools.landing', $bindings);
+    }
+
+    public function toolLandingModular($commandName)
+    {
+        $bindings = [];
+
+        $toolDetails = $this->getToolDetails($commandName);
+
+        $toolTitle = $toolDetails['title'];
+
+        $bindings['TopTitle'] = 'Tools - '.$toolTitle;
+        $bindings['PanelTitle'] = 'Tools - '.$toolTitle;
+        $bindings['ToolDetails'] = $toolDetails;
+
+        return view('admin.tools.toolLandingModular', $bindings);
+    }
+
+    public function toolProcessModular($commandName)
+    {
+        $toolDetails = $this->getToolDetails($commandName);
+
+        \Artisan::call($commandName, []);
+        $commandOutput = \Artisan::output();
+
+        $bindings = [];
+
+        $toolTitle = $toolDetails['title'];
+
+        $bindings['TopTitle'] = 'Tools - '.$toolTitle;
+        $bindings['PanelTitle'] = 'Tools - '.$toolTitle;
+        $bindings['ToolDetails'] = $toolDetails;
+        $bindings['CommandOutput'] = $commandOutput;
+
+        return view('admin.tools.toolProcessModular', $bindings);
     }
 
     /* Review importer */
@@ -174,93 +348,4 @@ class ToolsController extends \App\Http\Controllers\BaseController
         return view('admin.tools.'.$viewName.'.process', $bindings);
     }
 
-    /* Game updates */
-
-    public function updateGameCalendarStatsLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Calendar Stats';
-        $bindings['PanelTitle'] = 'Tools - Update Game Calendar Stats';
-
-        return view('admin.tools.updateGameCalendarStats.landing', $bindings);
-    }
-
-    public function updateGameCalendarStatsProcess()
-    {
-        \Artisan::call('UpdateGameCalendarStats');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Calendar Stats';
-        $bindings['PanelTitle'] = 'Tools - Update Game Calendar Stats';
-
-        return view('admin.tools.updateGameCalendarStats.process', $bindings);
-    }
-
-    public function updateGameRanksLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Ranks';
-        $bindings['PanelTitle'] = 'Tools - Update Game Ranks';
-
-        return view('admin.tools.updateGameRanks.landing', $bindings);
-    }
-
-    public function updateGameRanksProcess()
-    {
-        \Artisan::call('UpdateGameRanks');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Ranks';
-        $bindings['PanelTitle'] = 'Tools - Update Game Ranks';
-
-        return view('admin.tools.updateGameRanks.process', $bindings);
-    }
-
-    public function updateGameImageCountLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Image Count';
-        $bindings['PanelTitle'] = 'Tools - Update Game Image Count';
-
-        return view('admin.tools.updateGameImageCount.landing', $bindings);
-    }
-
-    public function updateGameImageCountProcess()
-    {
-        \Artisan::call('UpdateGameImageCount');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Image Count';
-        $bindings['PanelTitle'] = 'Tools - Update Game Image Count';
-
-        return view('admin.tools.updateGameImageCount.process', $bindings);
-    }
-
-    public function updateGameReviewStatsLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Review Stats';
-        $bindings['PanelTitle'] = 'Tools - Update Game Review Stats';
-
-        return view('admin.tools.updateGameReviewStats.landing', $bindings);
-    }
-
-    public function updateGameReviewStatsProcess()
-    {
-        \Artisan::call('UpdateGameReviewStats');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Update Game Review Stats';
-        $bindings['PanelTitle'] = 'Tools - Update Game Review Stats';
-
-        return view('admin.tools.updateGameReviewStats.process', $bindings);
-    }
 }

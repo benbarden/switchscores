@@ -1,7 +1,3 @@
-{% extends 'theme/wos/admin/page-narrow.twig' %}
-
-{% block page_inner %}
-
 <p>
     This tool runs the Wikipedia Updater tool. (Step 3 of 3)
 </p>
@@ -14,7 +10,3 @@
     Feed items that are linked to games will mean those games are updated. Feed items not linked to games
     will result in new games being added to the database.
 </p>
-
-<a class="btn btn-primary" href="{{ route('admin.tools.'~ViewName~'.process') }}">Start process</a>
-
-{% endblock page_inner %}

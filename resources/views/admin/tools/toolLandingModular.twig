@@ -1,0 +1,9 @@
+{% extends 'theme/wos/admin/page-narrow.twig' %}
+
+{% block page_inner %}
+
+{% include 'admin/tools/toolPage/'~ToolDetails.command~'.twig' %}
+
+<a class="btn btn-primary" href="{{ route('admin.tools.toolProcessModular', {'commandName': ToolDetails.command}) }}">Start process</a>
+
+{% endblock page_inner %}

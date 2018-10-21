@@ -1,7 +1,3 @@
-{% extends 'theme/wos/admin/page-narrow.twig' %}
-
-{% block page_inner %}
-
 <p>
     This tool runs the Feed Parser tool. (Step 2 of 3)
 </p>
@@ -14,7 +10,3 @@
     Once the Feed Parser has run, you'll need to review the Feed Items screen prior to running
     the final stage of the process - the Feed Review Generator.
 </p>
-
-<a class="btn btn-primary" href="{{ route('admin.tools.runFeedParser.process') }}">Start process</a>
-
-{% endblock page_inner %}

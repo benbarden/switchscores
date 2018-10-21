@@ -1,4 +1,4 @@
-{% extends 'theme/wos/admin/page-narrow.twig' %}
+{% extends 'theme/wos/admin/page-wide.twig' %}
 
 {% block page_inner %}
 
@@ -9,23 +9,33 @@
     Heavy tools or destructive operations will be clearly signposted.
 </p>
 
-<h2>Review importer</h2>
+<h2>All tools</h2>
 
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedImporter.landing') }}">Run Feed Importer</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedParser.landing') }}">Run Feed Parser</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runFeedReviewGenerator.landing') }}">Run Feed Review Generator</a>
-
-<h2>Wikipedia crawler</h2>
-
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaCrawler.landing') }}">Run Wikipedia Crawler</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaImporter.landing') }}">Run Wikipedia Importer</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.runWikipediaUpdater.landing') }}">Run Wikipedia Updater</a>
-
-<h2>Game updates</h2>
-
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Ranks</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameCalendarStats.landing') }}">Update Calendar Stats</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameImageCount.landing') }}">Update Image Count</a>
-<a class="btn btn-default btn-primary" href="{{ route('admin.tools.updateGameReviewStats.landing') }}">Update Review Stats</a>
+<table class="table table-striped data-sortable">
+    <thead>
+    <tr>
+        <th class="text-left">Group</th>
+        <th class="text-left">Tool</th>
+        <th class="text-left">Details</th>
+        <th class="text-center">Schedule</th>
+        <th class="text-center">Time</th>
+        <th class="text-center">Options</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for item in ToolList %}
+            <tr>
+                <td class="text-left">{{ item.group }}</td>
+                <td class="text-left">{{ item.title }}</td>
+                <td class="text-left">{{ item.desc }}</td>
+                <td class="text-center">{{ item.scheduleFreq }}</td>
+                <td class="text-center">{{ item.scheduleTime }}</td>
+                <td class="text-center">
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': item.command}) }}">Launch</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock page_inner %}

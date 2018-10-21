@@ -1,7 +1,3 @@
-{% extends 'theme/wos/admin/page-narrow.twig' %}
-
-{% block page_inner %}
-
 <p>
     This tool will update the Rank field for each game.
 </p>
@@ -9,7 +5,3 @@
     The process needs to be run after adding reviews. If several reviews are added, run this process
     once you have finished adding reviews.
 </p>
-
-<a class="btn btn-primary" href="{{ route('admin.tools.updateGameRanks.process') }}">Start process</a>
-
-{% endblock page_inner %}
