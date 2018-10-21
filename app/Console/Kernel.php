@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\EshopEuropeImportData::class,
         Commands\EshopEuropeLinkGames::class,
         Commands\EshopEuropeUpdateNintendoUrls::class,
+        Commands\EshopEuropeDownloadPackshots::class,
         Commands\RunFeedImporter::class,
         Commands\RunFeedParser::class,
         Commands\RunFeedReviewGenerator::class,

@@ -66,6 +66,14 @@ class ToolsController extends \App\Http\Controllers\BaseController
                 'scheduleFreq' => 'Manual',
                 'scheduleTime' => 'N/A',
             ],
+            'EshopEuropeDownloadPackshots' => [
+                'command' => 'EshopEuropeDownloadPackshots',
+                'group' => 'Eshop',
+                'title' => 'Eshop Europe Download Packshots',
+                'desc' => 'Finds packshots from the European eShop, downloads them and links them to games',
+                'scheduleFreq' => 'Manual',
+                'scheduleTime' => 'N/A',
+            ],
             /* *** Reviews *** */
             'RunFeedImporter' => [
                 'command' => 'RunFeedImporter',
