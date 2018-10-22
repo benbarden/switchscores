@@ -1,0 +1,67 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Upcoming games'}] %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-9">
+        <p>
+            This page lists Nintendo Switch games that are currently on sale in Europe.
+            Prices are updated nightly.
+        </p>
+        {% if RegionCode != 'eu' %}
+        <p>
+            As you've set a region other than Europe, this page won't be much use unless
+            you want to buy something from the European eShop.
+            We may add support for other regions if there's enough interest.
+        </p>
+        {% endif %}
+
+        {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
+
+        <h2>{{ item.MainTitle }}</h2>
+        {% if GamesList %}
+            <p><em>{{ GamesList.count }} games currently on sale.</em></p>
+            <table class="table table-striped table-condensed table-responsive">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align: left;">Title</th>
+                    <th style="text-align: right;">Standard price</th>
+                    <th style="text-align: right;">Discounted price</th>
+                    <th style="text-align: center;">Discount</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in GamesList %}
+                    <tr>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">
+                                {{ ImageHelper.packshotHtmlBuilder(item.game_id, 'release-calendar') }}
+                            </a>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">{{ item.game_title }}</a>
+                        </td>
+                        <td style="text-align: right; vertical-align: middle;">
+                            &pound;{{ item.price_eshop }}
+                        </td>
+                        <td style="text-align: right; vertical-align: middle;">
+                            &pound;{{ item.price_lowest_f }}
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            {{ item.price_discount_percentage_f }}%
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No games to display!</p>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock page_body %}

@@ -14,6 +14,18 @@ class EshopEuropeGameService
         return EshopEuropeGame::find($id);
     }
 
+    public function getByTitle($title)
+    {
+        $eshopGame = EshopEuropeGame::where('title', $title)->first();
+        return $eshopGame;
+    }
+
+    public function getByFsId($fsId)
+    {
+        $eshopGame = EshopEuropeGame::where('fs_id', $fsId)->first();
+        return $eshopGame;
+    }
+
     public function getAll($limit = null)
     {
         $feedItems = EshopEuropeGame
@@ -60,16 +72,22 @@ class EshopEuropeGameService
         return $feedItems;
     }
 
-    public function getByTitle($title)
+    public function getGamesOnSale($limit = null)
     {
-        $eshopGame = EshopEuropeGame::where('title', $title)->first();
-        return $eshopGame;
-    }
+        $feedItems = DB::table('eshop_europe_games')
+            ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
+            ->select('eshop_europe_games.*',
+                'games.id AS game_id',
+                'games.title AS game_title',
+                'games.link_title AS game_link_title',
+                'games.price_eshop')
+            ->where('eshop_europe_games.price_has_discount_b', '=', 1)
+            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc');
+        if ($limit) {
+            $feedItems = $feedItems->limit($limit);
+        }
+        $feedItems = $feedItems->get();
 
-    public function getByFsId($fsId)
-    {
-        $eshopGame = EshopEuropeGame::where('fs_id', $fsId)->first();
-        return $eshopGame;
+        return $feedItems;
     }
-
 }

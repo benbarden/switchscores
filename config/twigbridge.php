@@ -154,7 +154,7 @@ return [
             ],
             'ImageHelper' => [
                 'is_safe' => [
-                    'packshotHtml'
+                    'packshotHtml', 'packshotHtmlBuilder'
                 ]
             ],
             'LinkHelper' => [

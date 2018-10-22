@@ -3,11 +3,24 @@
 
 namespace App\Helpers;
 
+use App\Services\ServiceContainer;
+
 use App\Game;
 
 
 class ImageHelper
 {
+    static function packshotHtmlBuilder($gameId, $page)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $gameService = $serviceContainer->getGameService();
+        $game = $gameService->find($gameId);
+
+        return self::packshotHtml($game, $page);
+    }
+
     static function packshotHtml($game, $page)
     {
         switch ($page) {

@@ -38,6 +38,8 @@ Route::get('/games/calendar/{date}', 'GamesController@calendarPage')->name('game
 Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
 Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
 
+Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
+
 // Old pages - redirects
 Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
 Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('games.list.reviewsNeeded');

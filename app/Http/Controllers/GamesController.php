@@ -295,6 +295,28 @@ class GamesController extends Controller
         return view('games.genres.item', $bindings);
     }
 
+    public function gamesOnSale()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceEshopEuropeGame = $serviceContainer->getEshopEuropeGameService();
+        $gamesOnSale = $serviceEshopEuropeGame->getGamesOnSale();
+
+        $bindings = [];
+
+        $bindings['RegionCode'] = $regionCode;
+
+        $bindings['GamesList'] = $gamesOnSale;
+
+        $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
+        $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
+
+        return view('games.on-sale.gamesOnSale', $bindings);
+    }
+
     /**
      * @param $gameId
      * @param $linkTitle
