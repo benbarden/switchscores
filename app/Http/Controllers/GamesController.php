@@ -376,7 +376,7 @@ class GamesController extends Controller
 
         }
 
-        return view('games.show', $bindings);
+        return view('games.page.show', $bindings);
     }
 
     /**
