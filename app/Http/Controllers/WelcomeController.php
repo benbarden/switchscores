@@ -23,9 +23,9 @@ class WelcomeController extends BaseController
         $serviceTopRated = resolve('Services\TopRatedService');
         /* @var $serviceTopRated TopRatedService */
 
-        $bindings['ReviewList'] = $serviceReviewLinks->getLatestNaturalOrder(5);
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
+        $bindings['ReviewList'] = $serviceReviewLinks->getLatestNaturalOrder(20);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 20);
+        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 20);
 
         // Charts
         $chartsDateService = resolve('Services\ChartsDateService');

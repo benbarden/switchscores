@@ -32,6 +32,10 @@ class ImageHelper
                 $sizeInPixels = 75;
                 $showEmptyCell = false;
                 break;
+            case 'landing-mini':
+                $sizeInPixels = 75;
+                $showEmptyCell = true;
+                break;
             default:
                 $sizeInPixels = 125;
                 $showEmptyCell = false;

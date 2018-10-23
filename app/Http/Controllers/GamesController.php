@@ -29,9 +29,9 @@ class GamesController extends Controller
 
         $bindings = [];
 
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 15);
-        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming($regionCode, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 21);
+        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming($regionCode, 21);
+        //$bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
