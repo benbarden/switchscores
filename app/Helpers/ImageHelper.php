@@ -18,6 +18,10 @@ class ImageHelper
         $gameService = $serviceContainer->getGameService();
         $game = $gameService->find($gameId);
 
+        if (!$game) {
+            return '<img src="/img/logo-grey.png" style="border: 0; height: 75px;" alt="Nintendo Switch games">';
+        }
+
         return self::packshotHtml($game, $page);
     }
 
