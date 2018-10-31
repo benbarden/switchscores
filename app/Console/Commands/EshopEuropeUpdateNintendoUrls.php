@@ -77,7 +77,8 @@ class EshopEuropeUpdateNintendoUrls extends Command
                 $game->nintendo_page_url = $url;
                 $game->save();
             } elseif ($game->nintendo_page_url != $url) {
-                $this->warn($gameTitle.' - No change made. Game URL already set to: '.$game->nintendo_page_url.' - eShop record has: '.$url);
+                // URL set to something else
+                //$this->warn($gameTitle.' - No change made. Game URL already set to: '.$game->nintendo_page_url.' - eShop record has: '.$url);
             } else {
                 // It's the same, so nothing to do
                 //$this->warn($gameTitle.' - URL set and matches eShop data. Nothing to do.');
