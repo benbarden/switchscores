@@ -39,9 +39,6 @@ class UpdateGameRanks extends Command
     {
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
-        // Review count
-        $this->info('Game ranks');
-
         $gameRankList = \DB::select("
             SELECT g.id AS game_id, g.title, g.rating_avg, g.game_rank
             FROM games g
@@ -75,9 +72,16 @@ class UpdateGameRanks extends Command
             }
 
             // Notify if different
-            if ($prevRank != $actualRank) {
+            if (!$prevRank) {
+                // No previous rank - notification needed
+                $this->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
+                    $gameTitle, $ratingAvg, $actualRank));
+            } elseif (abs($prevRank - $actualRank) > 1) {
+                // Rank has changed by more than 1 - notification needed
                 $this->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
                     $gameTitle, $ratingAvg, $prevRank, $actualRank));
+            } else {
+                // It's either the same, or not much difference. Don't notify.
             }
 
             // Save rank to DB
