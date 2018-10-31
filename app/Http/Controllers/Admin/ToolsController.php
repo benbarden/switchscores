@@ -63,16 +63,16 @@ class ToolsController extends \App\Http\Controllers\BaseController
                 'group' => 'Eshop',
                 'title' => 'Eshop Europe Update Game Data',
                 'desc' => 'Updates data for games linked to eShop Europe data records',
-                'scheduleFreq' => 'Manual',
-                'scheduleTime' => 'N/A',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0422',
             ],
             'EshopEuropeDownloadPackshots' => [
                 'command' => 'EshopEuropeDownloadPackshots',
                 'group' => 'Eshop',
                 'title' => 'Eshop Europe Download Packshots',
                 'desc' => 'Finds packshots from the European eShop, downloads them and links them to games',
-                'scheduleFreq' => 'Manual',
-                'scheduleTime' => 'N/A',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0425',
             ],
             /* *** Reviews *** */
             'RunFeedImporter' => [
