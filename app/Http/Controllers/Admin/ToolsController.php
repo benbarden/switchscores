@@ -58,11 +58,11 @@ class ToolsController extends \App\Http\Controllers\BaseController
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0420',
             ],
-            'EshopEuropeUpdateNintendoUrls' => [
-                'command' => 'EshopEuropeUpdateNintendoUrls',
+            'EshopEuropeUpdateGameData' => [
+                'command' => 'EshopEuropeUpdateGameData',
                 'group' => 'Eshop',
-                'title' => 'Eshop Europe Update Nintendo Urls',
-                'desc' => 'Updates Nintendo URLs for games linked to eShop Europe data records',
+                'title' => 'Eshop Europe Update Game Data',
+                'desc' => 'Updates data for games linked to eShop Europe data records',
                 'scheduleFreq' => 'Manual',
                 'scheduleTime' => 'N/A',
             ],

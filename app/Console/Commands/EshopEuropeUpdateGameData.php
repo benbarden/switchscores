@@ -7,21 +7,21 @@ use Illuminate\Console\Command;
 use App\Services\GameService;
 use App\Services\EshopEuropeGameService;
 
-class EshopEuropeUpdateNintendoUrls extends Command
+class EshopEuropeUpdateGameData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'EshopEuropeUpdateNintendoUrls';
+    protected $signature = 'EshopEuropeUpdateGameData';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Updates Nintendo URLs for games linked to eShop Europe data records.';
+    protected $description = 'Updates data for games linked to eShop Europe data records.';
 
     /**
      * Create a new command instance.
@@ -71,6 +71,7 @@ class EshopEuropeUpdateNintendoUrls extends Command
 
             $gameTitle = $game->title;
 
+            // Update Nintendo page url
             if ($game->nintendo_page_url == null) {
                 // No URL set, so let's update it
                 $this->info($gameTitle.' - no existing nintendo_page_url. Updating...');
