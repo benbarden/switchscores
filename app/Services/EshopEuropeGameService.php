@@ -80,7 +80,9 @@ class EshopEuropeGameService
                 'games.id AS game_id',
                 'games.title AS game_title',
                 'games.link_title AS game_link_title',
-                'games.price_eshop')
+                'games.price_eshop',
+                'games.game_rank',
+                'games.rating_avg')
             ->where('eshop_europe_games.price_has_discount_b', '=', 1)
             ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc');
         if ($limit) {

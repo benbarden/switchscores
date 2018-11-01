@@ -5,7 +5,7 @@
 {% block page_body %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-9">
+    <div class="col-xs-12 col-sm-12">
         <p>
             This page lists Nintendo Switch games that are currently on sale in Europe.
             Prices are updated nightly.
@@ -23,7 +23,7 @@
         <h2>{{ item.MainTitle }}</h2>
         {% if GamesList %}
             <p><em>{{ GamesList.count }} games currently on sale.</em></p>
-            <table class="table table-striped table-condensed table-responsive">
+            <table class="table table-striped table-condensed table-responsive data-sortable">
                 <thead>
                 <tr>
                     <th></th>
@@ -31,6 +31,8 @@
                     <th style="text-align: right;">Standard price</th>
                     <th style="text-align: right;">Discounted price</th>
                     <th style="text-align: center;">Discount</th>
+                    <th style="text-align: center;">Rank</th>
+                    <th style="text-align: center;">Avg rating</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,14 +46,24 @@
                         <td style="text-align: left; vertical-align: middle;">
                             <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">{{ item.game_title }}</a>
                         </td>
-                        <td style="text-align: right; vertical-align: middle;">
+                        <td style="text-align: center; vertical-align: middle;">
                             &pound;{{ item.price_eshop }}
                         </td>
-                        <td style="text-align: right; vertical-align: middle;">
+                        <td style="text-align: center; vertical-align: middle;">
                             &pound;{{ item.price_lowest_f }}
                         </td>
                         <td style="text-align: center; vertical-align: middle;">
                             {{ item.price_discount_percentage_f }}%
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            {% if item.game_rank %}
+                                {{ item.game_rank }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            {{ item.rating_avg }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -63,5 +75,23 @@
     </div>
 </div>
 
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [6, 'desc'],
+            "pageLength": 999,
+            "columns": [
+                { "orderable": false },
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                null
+            ]
+        });
+    });
+</script>
 
 {% endblock page_body %}
