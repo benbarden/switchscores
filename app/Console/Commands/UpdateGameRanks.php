@@ -76,8 +76,8 @@ class UpdateGameRanks extends Command
                 // No previous rank - notification needed
                 $this->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
                     $gameTitle, $ratingAvg, $actualRank));
-            } elseif (abs($prevRank - $actualRank) > 1) {
-                // Rank has changed by more than 1 - notification needed
+            } elseif (abs($prevRank - $actualRank) > 10) {
+                // Rank has changed by more than 10 - notification needed
                 $this->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
                     $gameTitle, $ratingAvg, $prevRank, $actualRank));
             } else {
