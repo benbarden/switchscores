@@ -44,6 +44,15 @@
     <div class="container">
         <div class="row">
             <div id="wos-body" class="col-sm-12">
+                {% if auth_user() %}
+                <div class="pull-right">
+                <ol class="breadcrumb" style="background: #dedede; margin-bottom: 10px !important;">
+                    <li>Members</li>
+                    <li><a href="{{ route('user.index') }}">Dashboard</a></li>
+                    <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
+                </ol>
+                </div>
+                {% endif %}
                 {% if crumbNav is defined %}
                 <ol class="breadcrumb">
                     <li><a href="{{ route('welcome') }}">Home</a></li>
