@@ -44,7 +44,11 @@
                             </a>
                         </td>
                         <td style="text-align: left; vertical-align: middle;">
-                            <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">{{ item.game_title }}</a>
+                            {% if item.game_title %}
+                                <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">{{ item.game_title }}</a>
+                            {% else %}
+                                {{ item.title }}
+                            {% endif %}
                         </td>
                         <td style="text-align: center; vertical-align: middle;">
                             &pound;{{ item.price_eshop }}
