@@ -32,6 +32,8 @@ class TitleParser
      */
     public function stripReviewText()
     {
+        $this->title = str_replace('Nintendo Switch Review', '', $this->title);
+        $this->title = str_replace('Switch Review', '', $this->title);
         $this->title = str_replace('[Review]', '', $this->title);
         $this->title = str_replace('Mini-Review: ', '', $this->title);
         $this->title = str_replace('Review: ', '', $this->title);

@@ -84,32 +84,12 @@ class Parser
             case ReviewSite::SITE_IGN:
                 // No feed URL yet
                 break;
-            case ReviewSite::SITE_MIKETENDO64:
-                $this->titleParser->stripPlatformText();
-                $this->titleParser->stripReviewText();
-                $this->titleParser->cleanupText();
-                break;
-            case ReviewSite::SITE_NINDIE_SPOTLIGHT:
-                $this->titleParser->stripPlatformText();
-                $this->titleParser->stripReviewText();
-                $this->titleParser->cleanupText();
-                break;
             case ReviewSite::SITE_NINTENDO_INSIDER:
-                $this->titleParser->stripReviewText();
-                $this->titleParser->cleanupText();
-                break;
-            case ReviewSite::SITE_NINTENDO_LIFE:
-                $this->titleParser->stripPlatformText();
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
             case ReviewSite::SITE_NINTENDO_WORLD_REPORT:
                 // No feed URL yet
-                break;
-            case ReviewSite::SITE_PURE_NINTENDO:
-                $this->titleParser->stripPlatformText();
-                $this->titleParser->stripReviewText();
-                $this->titleParser->cleanupText();
                 break;
             case ReviewSite::SITE_SWITCH_PLAYER:
                 $this->titleParser->stripReviewText();
@@ -119,18 +99,22 @@ class Parser
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
-            case ReviewSite::SITE_THE_SWITCH_EFFECT:
-                $this->titleParser->stripPlatformText();
-                $this->titleParser->stripReviewText();
-                $this->titleParser->cleanupText();
-                break;
             case ReviewSite::SITE_THE_NEW_ODYSSEY:
                 // Titles too inconsistent; will have to match these manually.
                 break;
             case ReviewSite::SITE_WOS:
                 // N/A
                 break;
+            case ReviewSite::SITE_MIKETENDO64:
+            case ReviewSite::SITE_NINDIE_SPOTLIGHT:
+            case ReviewSite::SITE_NINTENDO_LIFE:
+            case ReviewSite::SITE_PURE_NINTENDO:
+            case ReviewSite::SITE_THE_SWITCH_EFFECT:
             default:
+                // Default settings that work for most sites
+                $this->titleParser->stripPlatformText();
+                $this->titleParser->stripReviewText();
+                $this->titleParser->cleanupText();
                 break;
         }
     }

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+use App\ReviewSite;
 use App\Services\ReviewSiteService;
 use App\Services\FeedItemReviewService;
 use App\Services\Feed\Importer;
@@ -87,7 +88,7 @@ class RunFeedImporter extends Command
                     }
 
                     // Check that it's not a historic review
-                    if ($feedItemReview->isHistoric()) {
+                    if ($feedItemReview->isHistoric() && $siteId != ReviewSite::SITE_SWITCHWATCH) {
                         $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                         continue;
                     }

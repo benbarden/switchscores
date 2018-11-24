@@ -107,4 +107,11 @@ class ParserTest extends TestCase
         $this->assertEquals('Never Stop Sneakin\'', $this->parser->getTitleParser()->getTitle());
     }
 
+    public function testParseBySiteRulesSwitchWatch()
+    {
+        $this->parser->setSiteId(ReviewSite::SITE_SWITCHWATCH);
+        $this->parser->getTitleParser()->setTitle('Mushroom Wars 2 Nintendo Switch Review');
+        $this->parser->parseBySiteRules();
+        $this->assertEquals('Mushroom Wars 2', $this->parser->getTitleParser()->getTitle());
+    }
 }
