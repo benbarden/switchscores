@@ -17,6 +17,7 @@ class ServiceContainer
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
     const KEY_GAME_SERVICE = 'GameService';
+    const KEY_GAME_TAG_SERVICE = 'GameTagService';
     const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
     const KEY_GENRE_SERVICE = 'GenreService';
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
@@ -27,6 +28,7 @@ class ServiceContainer
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
     const KEY_REVIEW_USER_SERVICE = 'ReviewUserService';
+    const KEY_TAG_SERVICE = 'TagService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
     const KEY_USER_LIST_SERVICE = 'UserListService';
@@ -174,6 +176,14 @@ class ServiceContainer
     }
 
     /**
+     * @return GameTagService
+     */
+    public function getGameTagService()
+    {
+        return $this->load(self::KEY_GAME_TAG_SERVICE);
+    }
+
+    /**
      * @return GameTitleHashService
      */
     public function getGameTitleHashService()
@@ -251,6 +261,14 @@ class ServiceContainer
     public function getReviewUserService()
     {
         return $this->load(self::KEY_REVIEW_USER_SERVICE);
+    }
+
+    /**
+     * @return TagService
+     */
+    public function getTagService()
+    {
+        return $this->load(self::KEY_TAG_SERVICE);
     }
 
     /**

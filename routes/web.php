@@ -200,6 +200,10 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // News
     Route::get('/admin/user/list', 'Admin\UserController@showList')->name('admin.user.list');
 
+    // Tags
+    Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
+    Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');
+
 });
 
 Auth::routes();

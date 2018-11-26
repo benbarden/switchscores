@@ -1,0 +1,84 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<h2>Add a tag</h2>
+<label for="txt-new-tag-name">Name of tag</label>
+<input id="txt-new-tag-name" type="text" maxlength="50">
+<input id="btn-save-tag" type="button" value="Save">
+<div id="js-new-tag-notify" class="alert alert-success" role="alert" style="display: none;">
+</div>
+
+<h2>All tags</h2>
+{% if TagList.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Tag</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in TagList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.tag_name }}
+                    </td>
+                    <td class="text-center">
+                        Delete
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No tags found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null
+            ]
+        });
+    });
+    $('#btn-save-tag').on('click', function() {
+
+        tagName = $('#txt-new-tag-name').val();
+        if (tagName == '') {
+            $('#js-new-tag-notify').text('No tag name set.');
+            $('#js-new-tag-notify').show();
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.tag.add') }}', {tagName: tagName}, function(data) {
+            $('#js-new-tag-notify').text('Tag saved!');
+            $('#js-new-tag-notify').show();
+            $('#txt-new-tag-name').val('');
+            setTimeout("$('#js-new-tag-notify').fadeOut(); window.location.reload(true);", 1000);
+        })
+        .fail(function(data) {
+            $('#js-new-tag-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-new-tag-notify').show();
+            $('#txt-new-tag-name').val('');
+        });
+    });
+</script>
+
+{% endblock page_inner %}
