@@ -438,6 +438,7 @@ class GamesController extends Controller
         // No service for game_images
         $serviceGameGenres = $serviceContainer->getGameGenreService();
         $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
+        $serviceGameTags = $serviceContainer->getGameTagService();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
@@ -480,6 +481,7 @@ class GamesController extends Controller
             DB::table('game_images')->where('game_id', $gameId)->delete();
             $serviceGameGenres->deleteGameGenres($gameId);
             $serviceGameTitleHashes->deleteByGameId($gameId);
+            $serviceGameTags->deleteGameTags($gameId);
             $serviceGame->deleteGame($gameId);
 
             // Done

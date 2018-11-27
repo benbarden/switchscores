@@ -15,6 +15,11 @@ class TagService
         ]);
     }
 
+    public function find($tagId)
+    {
+        return Tag::find($tagId);
+    }
+
     /**
      * @return mixed
      */

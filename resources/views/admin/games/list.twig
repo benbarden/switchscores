@@ -52,7 +52,7 @@
                 <th class="text-right">#</th>
                 <th>Title</th>
                 <th>Release date</th>
-                <th class="text-center">Hashes</th>
+                <th class="text-center">More</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -73,7 +73,8 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">View</a>
+                        <a href="{{ route('admin.tag.game.list', {'gameId': item.id}) }}">Tags</a> :
+                        <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">Hashes</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}?filter={{ ActiveNav }}">Edit</a> :
