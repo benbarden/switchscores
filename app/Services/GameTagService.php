@@ -71,7 +71,7 @@ class GameTagService
     public function getTagsNotOnGame($gameId)
     {
         $games = DB::select('
-            select * from tags where id not in (select tag_id from game_tags where game_id = ?);
+            select * from tags where id not in (select tag_id from game_tags where game_id = ?) ORDER BY tag_name
         ', [$gameId]);
 
         return $games;

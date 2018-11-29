@@ -8,10 +8,11 @@ use App\Tag;
 
 class TagService
 {
-    public function create($tagName)
+    public function create($tagName, $linkTitle)
     {
         Tag::create([
-            'tag_name' => $tagName
+            'tag_name' => $tagName,
+            'link_title' => $linkTitle
         ]);
     }
 
@@ -35,6 +36,14 @@ class TagService
     {
         $tag = Tag::
             where('tag_name', $name)
+            ->first();
+        return $tag;
+    }
+
+    public function getByLinkTitle($linkTitle)
+    {
+        $tag = Tag::
+            where('link_title', $linkTitle)
             ->first();
         return $tag;
     }

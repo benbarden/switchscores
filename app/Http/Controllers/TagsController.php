@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
-class ListsController extends Controller
+class TagsController extends Controller
 {
     public function getListData($listName)
     {
@@ -126,8 +126,14 @@ class ListsController extends Controller
 
     public function landing()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $tagService = $serviceContainer->getTagService();
+
         $bindings = [];
 
+        /*
         $listUrls = [
             ['listName' => 'aca-neogeo', 'text' => 'ACA NeoGeo'],
             ['listName' => 'arcade-archives', 'text' => 'Arcade Archives'],
@@ -150,34 +156,46 @@ class ListsController extends Controller
             $listName = $listUrl['listName'];
             $listGameIds = $this->getListData($listName);
             $listUrl['count'] = count($listGameIds);
-            $listUrl['url'] = route('lists.page', ['listName' => $listName]);
+            $listUrl['url'] = route('tags.page', ['listName' => $listName]);
         }
 
         $bindings['ListUrls'] = $listUrls;
+        */
 
-        $bindings['PageTitle'] = 'Lists';
-        $bindings['TopTitle'] = 'Lists of games available for Nintendo Switch';
+        $bindings['TagList'] = $tagService->getAll();
 
-        return view('lists.landing', $bindings);
+        $bindings['PageTitle'] = 'Tags';
+        $bindings['TopTitle'] = 'Tags - Nintendo Switch games';
+
+        return view('tags.landing', $bindings);
     }
 
-    public function page($listName)
+    public function page($linkTitle)
     {
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
+        $regionCode = \Request::get('regionCode');
+
+        $tagService = $serviceContainer->getTagService();
+        $gameTagService = $serviceContainer->getGameTagService();
+
         $bindings = [];
 
-        $gameList = $this->getListData($listName);
-        $pageTitle = $this->getPageTitle($listName);
+        $tag = $tagService->getByLinkTitle($linkTitle);
 
-        if (count($gameList) == 0) abort(404);
+        if (!$tag) abort(404);
+
+        $tagId = $tag->id;
+        $tagName = $tag->tag_name;
+
+        $gameList = $gameTagService->getGamesByTag($regionCode, $tagId);
 
         $bindings['GameList'] = $gameList;
 
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $tagName.' - Nintendo Switch games by tag';
+        $bindings['TopTitle'] = $tagName.' - Nintendo Switch games by tag';
 
-        return view('lists.page', $bindings);
+        return view('tags.page', $bindings);
     }
 }

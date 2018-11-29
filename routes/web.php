@@ -51,8 +51,8 @@ Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 /* Lists */
 //Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
 //Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
-Route::get('/lists', 'ListsController@landing')->name('lists.landing');
-Route::get('/lists/{listName}', 'ListsController@page')->name('lists.page');
+Route::get('/tags', 'TagsController@landing')->name('tags.landing');
+Route::get('/tags/{linkTitle}', 'TagsController@page')->name('tags.page');
 
 
 /* Charts */

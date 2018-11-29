@@ -1,6 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'text': 'Lists'}] %}
+{% set crumbNav = [{'text': 'Tags'}] %}
 
 {% block page_body %}
 
@@ -9,27 +9,26 @@
     looking for new games to buy.
 </p>
 <p>
-    Our lists are designed to help you dig deeper into our games database, taking a cross-section
+    Our tags are designed to help you dig deeper into our games database, taking a cross-section
     of the games based on a number of different criteria.
 </p>
 <p>
-    If you'd like to suggest a new list, contact us on Twitter at <a href="https://twitter.com/worldofswitch.com" target="_blank">@worldofswitch</a>.
+    If you'd like to suggest a new tags, contact us on Twitter at <a href="https://twitter.com/worldofswitch.com" target="_blank">@worldofswitch</a>.
 </p>
 
 <div class="row">
     <div class="col-md-8 col-sm-8">
-        <h2>Our current lists</h2>
-        {% if ListUrls %}
+        <h2>Current tags</h2>
+        {% if TagList %}
             <ul>
-                {% for item in ListUrls %}
-                    <li>
-                        <a href="{{ item.url }}">{{ item.text }}</a> -
-                        {{ item.count }} {% if item.count == 1 %}game{% else %}games{% endif %}
-                    </li>
+                {% for item in TagList %}
+                <li>
+                    <a href="{{ route('tags.page', {'linkTitle': item.link_title}) }}">{{ item.tag_name }}</a>
+                </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>No lists found!</p>
+            <p>No tags found!</p>
         {% endif %}
     </div>
     <div class="col-md-4 col-sm-4">
@@ -37,7 +36,7 @@
         <p>
             <strong>Don't forget to check out our <a href="{{ route('games.genres.landing') }}">Genres</a> section too.</strong>
             For example, puzzle games can be found there. However, we think the genre pages are getting a bit full,
-            so we may add lists to break down the genres into smaller chunks.
+            so we may add tags to break down the genres into smaller chunks.
         </p>
     </div>
 </div>

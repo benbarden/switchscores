@@ -32,7 +32,6 @@ class TagController extends Controller
 
         $gameService = $serviceContainer->getGameService();
         $gameTagService = $serviceContainer->getGameTagService();
-        $tagService = $serviceContainer->getTagService();
 
         $game = $gameService->find($gameId);
         if (!$game) abort(404);
@@ -140,6 +139,7 @@ class TagController extends Controller
         /* @var $serviceContainer ServiceContainer */
         $tagService = $serviceContainer->getTagService();
         $userService = $serviceContainer->getUserService();
+        $urlService = $serviceContainer->getUrlService();
 
         $userId = Auth::id();
 
@@ -160,7 +160,9 @@ class TagController extends Controller
             return response()->json(['error' => 'Tag already exists!'], 400);
         }
 
-        $tagService->create($tagName);
+        $linkTitle = $urlService->generateLinkText($tagName);
+
+        $tagService->create($tagName, $linkTitle);
 
         $data = array(
             'status' => 'OK'
