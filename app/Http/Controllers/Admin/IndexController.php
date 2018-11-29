@@ -45,13 +45,17 @@ class IndexController extends Controller
 
 
         // Action lists
-        $actionListGamesForReleaseCount = $gameService->getActionListGamesForRelease($regionCode);
+        $actionListGamesForReleaseCountEu = $gameService->getActionListGamesForRelease('eu');
+        $actionListGamesForReleaseCountUs = $gameService->getActionListGamesForRelease('us');
+        $actionListGamesForReleaseCountJp = $gameService->getActionListGamesForRelease('jp');
         $pendingFeedGameItems = $feedItemGameService->getPending();
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
         $pendingPartnerReview = $partnerReviewService->getByStatus(PartnerReview::STATUS_PENDING);
 
-        $bindings['ActionListGamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+        $bindings['ActionListGamesForReleaseCountEu'] = count($actionListGamesForReleaseCountEu);
+        $bindings['ActionListGamesForReleaseCountUs'] = count($actionListGamesForReleaseCountUs);
+        $bindings['ActionListGamesForReleaseCountJp'] = count($actionListGamesForReleaseCountJp);
         $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingReviewUserCount'] = count($pendingReviewUser);

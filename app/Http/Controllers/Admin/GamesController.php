@@ -15,6 +15,8 @@ use App\Services\ServiceContainer;
 
 use App\Events\GameCreated;
 
+use Auth;
+
 class GamesController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -38,6 +40,7 @@ class GamesController extends Controller
         /* @var $serviceContainer ServiceContainer */
 
         $regionCode = \Request::get('regionCode');
+        $regionOverride = \Request::get('regionOverride');
 
         $serviceGame = $serviceContainer->getGameService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
@@ -65,6 +68,9 @@ class GamesController extends Controller
                     break;
                 // Action lists
                 case 'action-list-games-for-release':
+                    if ($regionOverride) {
+                        $regionCode = $regionOverride;
+                    }
                     $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
@@ -149,6 +155,8 @@ class GamesController extends Controller
 
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = $jsInitialSort;
+
+        $bindings['RegionCode'] = $regionCode;
 
         return view('admin.games.list', $bindings);
     }
@@ -501,5 +509,44 @@ class GamesController extends Controller
         $bindings['ErrorsCustom'] = $customErrors;
 
         return view('admin.games.delete', $bindings);
+    }
+
+    public function releaseGame()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $gameService = $serviceContainer->getGameService();
+        $userService = $serviceContainer->getUserService();
+        $gameReleaseDateService = $serviceContainer->getGameReleaseDateService();
+
+        $userId = Auth::id();
+
+        $user = $userService->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $regionCode = $request->regionCode;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+        if (!$regionCode) {
+            return response()->json(['error' => 'Missing data: regionCode'], 400);
+        }
+
+        $gameReleaseDate = $gameReleaseDateService->getByGameAndRegion($gameId, $regionCode);
+        if (!$gameReleaseDate) {
+            return response()->json(['error' => 'gameReleaseDate not found for game: '.$gameId.'; region: '.$regionCode], 400);
+        }
+
+        $gameReleaseDateService->markAsReleased($gameReleaseDate);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
     }
 }

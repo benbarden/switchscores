@@ -51,6 +51,12 @@ class GameReleaseDateService
         GameReleaseDate::where('game_id', $gameId)->delete();
     }
 
+    public function markAsReleased(GameReleaseDate $gameReleaseDate)
+    {
+        $gameReleaseDate->is_released = 1;
+        $gameReleaseDate->save();
+    }
+
     // ********************************************************** //
 
     /**

@@ -45,6 +45,10 @@
 
 <hr>
 
+<h2>Games (Region: {{ RegionCode }})</h2>
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
 {% if GameList.count > 0 %}
     <table class="table table-striped data-sortable">
         <thead>
@@ -73,8 +77,12 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.tag.game.list', {'gameId': item.id}) }}">Tags</a> :
-                        <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">Hashes</a>
+                        {% if ActiveNav == 'action-list-games-for-release' %}
+                            <a href="javascript:void(0);" id="lnk-release-game-{{ item.id }}" class="lnk-release-game">Release</a>
+                        {% else %}
+                            <a href="{{ route('admin.tag.game.list', {'gameId': item.id}) }}">Tags</a> :
+                            <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">Hashes</a>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}?filter={{ ActiveNav }}">Edit</a> :
@@ -90,6 +98,7 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
+    var regionCode = '{{ RegionCode }}';
     $('#js-btn-add').on('click', function() {
         top.location.href = '{{ route('admin.games.add') }}';
     });
@@ -110,6 +119,41 @@
                 { "orderable": false },
                 { "orderable": false }
             ]
+        });
+    });
+
+    $('.lnk-release-game').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        gameId = elemId.replace('lnk-release-game-', '');
+
+        if (gameId == '') {
+            $('#js-admin-notify').text('Missing gameId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Release this game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.games.release') }}', {'gameId': gameId, 'regionCode': regionCode}, function(data) {
+            //$('#js-admin-notify').text('Game released!');
+            //$('#js-admin-notify').show();
+            $('#lnk-release-game-' + gameId).parent().html('<em>Released</em>');
+            //setTimeout("$('#js-admin-notify').fadeOut();", 2000);
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
         });
     });
 </script>

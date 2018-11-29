@@ -442,7 +442,9 @@ class GameService
             //    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
             //    break;
             case 'action-list-games-for-release':
-                $gameList = $this->getActionListGamesForRelease($regionCode);
+                // Removing due to issues with region override field.
+                // Shouldn't be needed anymore as we can release via a quick AJAX link.
+                //$gameList = $this->getActionListGamesForRelease($regionCode);
                 break;
             case 'action-list-recent-no-nintendo-url':
                 $gameList = $this->getActionListRecentNoNintendoUrl($regionCode);
