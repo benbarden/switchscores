@@ -6,132 +6,31 @@ namespace App\Services\HtmlLoader\Wikipedia;
 
 class Parser
 {
-    public function getYearsArray()
+    public function limitField($input, $maxChars)
     {
-        $dtNow = new \DateTime('now');
-        $yearsArray = [];
-        // Go up to 2 years in the future
-        for ($year = 2017; $year <= ((int)$dtNow->format('Y') + 2); $year++) {
-            $yearsArray[] = $year;
+        if (strlen($input) > $maxChars) {
+            $output = substr($input, 0, $maxChars);
+        } else {
+            $output = $input;
         }
-
-        return $yearsArray;
+        return $output;
     }
 
-    public function getYearMonthsArray()
+    public function flattenArray($input)
     {
-        $yearMonthsArray = [];
-
-        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'];
-
-        $invalidOptions = ['January 2017', 'February 2017'];
-
-        $yearsArray = $this->getYearsArray();
-
-        foreach ($yearsArray as $year) {
-            foreach ($monthNames as $month) {
-                $yearMonth = $month.' '.$year;
-                if (in_array($yearMonth, $invalidOptions)) continue;
-                $yearMonthsArray[] = $yearMonth;
-            }
-        }
-
-        return $yearMonthsArray;
-    }
-
-    public function getYearQuartersArray()
-    {
-        $yearQuartersArray = [];
-
-        $quarterNames = ['Q1', 'Q2', 'Q3', 'Q4'];
-
-        $yearsArray = $this->getYearsArray();
-
-        foreach ($yearsArray as $year) {
-            foreach ($quarterNames as $quarter) {
-                $yearQuartersArray[] = $quarter.' '.$year;
-            }
-        }
-
-        return $yearQuartersArray;
-    }
-
-    public function getDates($row, $rowData = "")
-    {
-        $releaseDate = null;
-        $upcomingDate = null;
-        $isReleased = null;
-
-        if (is_array($row)) {
-            if (count($row) == 2) {
-                $releaseDateRaw = $row[1];
-            } else {
-                //$this->warn('Unexpected array count for game '.$title);
-                $releaseDateRaw = $row;
-            }
+        if (is_array($input)) {
+            $output = implode(', ', $input);
         } else {
-            $releaseDateRaw = $row;
+            $output = $input;
         }
-
-        $dtNow = new \DateTime('now');
-
-        $okToParseDate = false;
-
-        // Dynamic date arrays
-        $yearsArray = $this->getYearsArray();
-        $yearMonthsArray = $this->getYearMonthsArray();
-        $yearQuartersArray = $this->getYearQuartersArray();
-
-        if (in_array($releaseDateRaw, $yearsArray)) {
-            // 2018, 2019
-            $upcomingDate = $releaseDateRaw . '-XX';
-        } elseif (in_array($releaseDateRaw, $yearQuartersArray)) {
-            // Quarter, Year
-            $dateLogic = explode(' ', $releaseDateRaw);
-            $upcomingDate = $dateLogic[1].'-'.$dateLogic[0];
-        } elseif (in_array($releaseDateRaw, $yearMonthsArray)) {
-            // Month, Year
-            $dtMonthYear = new \DateTime($releaseDateRaw);
-            $upcomingDate = $dtMonthYear->format('Y-m').'-XX';
-        } elseif (in_array($releaseDateRaw, ['Unreleased', 'TBA'])) {
-            // Unreleased, TBA
-            $upcomingDate = $releaseDateRaw;
-        } else {
-            // Should be a real date - ok to continue
-            $okToParseDate = true;
-        }
-
-        if ($okToParseDate) {
-
-            try {
-                $dtReleaseDate = new \DateTime($releaseDateRaw);
-                $releaseDate = $dtReleaseDate->format('Y-m-d');
-            } catch (\Exception $e) {
-                throw new \Exception($rowData.' - Failed to parse date: '.$releaseDateRaw);
-            }
-
-            $upcomingDate = $releaseDate;
-
-            if ($dtReleaseDate > $dtNow) {
-                $isReleased = 0;
-            } else {
-                $isReleased = 1;
-            }
-
-        } else {
-
-            $releaseDate = null;
-            $isReleased = 0;
-
-        }
-
-        return [$releaseDate, $upcomingDate, $isReleased];
+        return $output;
     }
 
     public function processTableData($tableData)
     {
         $counter = -1;
+
+        $dateHandler = new DateHandler();
 
         foreach ($tableData as $row) {
 
@@ -140,35 +39,16 @@ class Parser
             // Skip the first two rows
             if (in_array($counter, [0, 1])) continue;
 
-            // Handle fields
-            if (strlen($row[0]) > 150) {
-                $rowTitle = substr($row[0], 0, 150);
-            } else {
-                $rowTitle = $row[0];
-            }
-
-            if (strlen($row[1]) > 150) {
-                $rowGenres = substr($row[1], 0, 150);
-            } else {
-                $rowGenres = $row[1];
-            }
-
-            if (is_array($row[2])) {
-                $rowDevs = implode(', ', $row[2]);
-            } else {
-                $rowDevs = $row[2];
-            }
-            if (is_array($row[3])) {
-                $rowPubs = implode(', ', $row[3]);
-            } else {
-                $rowPubs = $row[3];
-            }
+            $rowTitle = $this->limitField($row[0], 150);
+            $rowGenres = $this->limitField($row[1], 150);
+            $rowDevs = $this->flattenArray($row[2]);
+            $rowPubs = $this->flattenArray($row[3]);
 
             // Release dates
             $rowErrorData = $rowTitle.','.$rowDevs.','.$rowPubs; // used if the date fails
-            list($jpReleaseDate, $jpUpcomingDate, $jpIsReleased) = $this->getDates($row[4], $rowErrorData);
-            list($usReleaseDate, $usUpcomingDate, $usIsReleased) = $this->getDates($row[5], $rowErrorData);
-            list($euReleaseDate, $euUpcomingDate, $euIsReleased) = $this->getDates($row[6], $rowErrorData);
+            list($jpReleaseDate, $jpUpcomingDate, $jpIsReleased) = $dateHandler->getDates($row[4], $rowErrorData);
+            list($usReleaseDate, $usUpcomingDate, $usIsReleased) = $dateHandler->getDates($row[5], $rowErrorData);
+            list($euReleaseDate, $euUpcomingDate, $euIsReleased) = $dateHandler->getDates($row[6], $rowErrorData);
 
             //$this->info('Processing item: '.$rowTitle);
 

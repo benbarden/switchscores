@@ -10,6 +10,8 @@ use App\Services\GameReleaseDateService;
 use App\Services\GameTitleHashService;
 use App\Services\FeedItemGameService;
 use App\Services\HtmlLoader\Wikipedia\Importer;
+use App\Services\HtmlLoader\Wikipedia\Skipper;
+use App\Services\HtmlLoader\Wikipedia\DateHandler;
 
 class WikipediaImportGamesList extends Command
 {
@@ -57,6 +59,9 @@ class WikipediaImportGamesList extends Command
         $gameReleaseDateService = resolve('Services\GameReleaseDateService');
         /* @var GameReleaseDateService $gameReleaseDateService */
 
+        $wikiSkipper = new Skipper();
+        $dateHandler = new DateHandler();
+
         $gamesList = $crawlerService->getAll();
 
         $this->info('Found '.count($gamesList).' item(s)');
@@ -78,28 +83,31 @@ class WikipediaImportGamesList extends Command
                 $title = $feedItemGame->item_title;
 
                 // Discard games with only TBA/Unreleased dates
-                $datesToSkip = ['TBA', 'Unreleased'];
-                if ((in_array($feedItemGame->upcoming_date_eu, $datesToSkip)) &&
-                    (in_array($feedItemGame->upcoming_date_us, $datesToSkip)) &&
-                    (in_array($feedItemGame->upcoming_date_jp, $datesToSkip))) {
+                $countTBAOrUnreleased = $wikiSkipper->countDatesTBAOrUnreleased($feedItemGame);
+                if ($countTBAOrUnreleased == 3) {
                     $this->error('All dates are TBA or Unreleased; skipping');
                     continue;
                 }
 
                 // Discard games containing certain text
-                $foundSkipText = null;
-                $textToSkip = ['Untitled ', '(tentative title)', 'Nintendo Labo'];
-                foreach ($textToSkip as $skipText) {
-                    if (strpos($title, $skipText) !== false) {
-                        $foundSkipText = $skipText;
-                        break;
-                    }
-                }
-                if ($foundSkipText != null) {
-                    $this->error('Found ignore text: '.$foundSkipText.'; skipping');
+                $skipText = $wikiSkipper->getSkipText($title);
+                if ($skipText != null) {
+                    $this->error('Found ignore text: '.$skipText.'; skipping');
                     continue;
                 }
 
+                // Discard games without any dates
+                $countRealDates = $wikiSkipper->countRealDates($feedItemGame, $dateHandler);
+                if ($countRealDates == 0) {
+                    $this->error(
+                        'Found no real dates; skipping ('.
+                        'EU: '.$feedItemGame->upcoming_date_eu.'; '.
+                        'US: '.$feedItemGame->upcoming_date_us.'; '.
+                        'JP: '.$feedItemGame->upcoming_date_jp.
+                        ')');
+                    continue;
+                }
+                
                 // See if we can locate the game
                 $titleHash = $gameTitleHashService->generateHash($title);
                 $gameTitleHash = $gameTitleHashService->getByHash($titleHash);
@@ -142,6 +150,9 @@ class WikipediaImportGamesList extends Command
                         continue;
                     }
                 }
+
+                // If we get this far, all of the necessary checks have passed.
+                // Saving the model will create an entry in feed_item_games.
 
                 $feedItemGame->save();
 

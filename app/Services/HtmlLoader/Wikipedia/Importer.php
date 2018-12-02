@@ -44,8 +44,7 @@ class Importer
         $feedItemGame->release_date_jp = $this->crawlerModel->release_date_jp;
         $feedItemGame->upcoming_date_jp = $this->crawlerModel->upcoming_date_jp;
         $feedItemGame->is_released_jp = $this->crawlerModel->is_released_jp;
-        $feedItemGame->status_code = FeedItemGame::STATUS_PENDING;
-        $feedItemGame->status_desc = 'Pending';
+        $feedItemGame->setStatusPending();
 
         return $feedItemGame;
     }
