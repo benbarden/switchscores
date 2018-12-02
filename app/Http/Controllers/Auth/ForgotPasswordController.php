@@ -27,7 +27,7 @@ class ForgotPasswordController extends BaseController
      */
     public function __construct()
     {
-        $this->redirectTo('/');
+        //$this->redirectTo('/');
         //$this->middleware('guest');
     }
 }
