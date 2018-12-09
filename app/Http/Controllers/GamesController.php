@@ -78,37 +78,19 @@ class GamesController extends Controller
 
         // Current/Most active year
         $upcomingLists[] = [
-            'MainTitle' => '2018 games with release dates',
-            'ShortTitle' => '2018 with dates',
+            'MainTitle' => '2018',
+            'ShortTitle' => '2018',
             'List' => $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode)
         ];
-        $upcomingLists[] = [
-            'MainTitle' => '2018 games, quarter only',
-            'ShortTitle' => '2018 with quarters',
-            'List' => $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $regionCode)
-        ];
-        $upcomingLists[] = [
-            'MainTitle' => '2018 games, no firm date',
-            'ShortTitle' => '2018 sometime',
-            'List' => $serviceGameReleaseDate->getUpcomingYearXs(2018, $regionCode)
-        ];
 
-        // Longer term/TBA
+        // Longer term
         $upcomingLists[] = [
-            'MainTitle' => 'Beyond 2018',
-            'ShortTitle' => 'Beyond 2018',
+            'MainTitle' => 'Future',
+            'ShortTitle' => 'Future',
             'List' => $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode)
-        ];
-        $upcomingLists[] = [
-            'MainTitle' => 'TBA - no date given',
-            'ShortTitle' => 'TBA',
-            'List' => $serviceGameReleaseDate->getUpcomingTBA($regionCode)
         ];
 
         $bindings['UpcomingLists'] = $upcomingLists;
-
-        // Needed for overall total
-        $bindings['UpcomingGamesCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';

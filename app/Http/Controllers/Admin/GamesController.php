@@ -95,20 +95,8 @@ class GamesController extends Controller
                     $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
-                case 'upcoming-2018-with-quarters':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearQuarters(2018, $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-2018-sometime':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearXs(2018, $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
                 case 'upcoming-beyond':
                     $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode);
-                    $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-tba':
-                    $gameList = $serviceGameReleaseDate->getUpcomingTBA($regionCode);
                     $jsInitialSort = "[ 2, 'asc'], [ 1, 'asc']";
                     break;
                 // Missing data
