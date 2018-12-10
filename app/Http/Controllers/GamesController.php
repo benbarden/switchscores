@@ -76,18 +76,11 @@ class GamesController extends Controller
 
         $upcomingLists = [];
 
-        // Current/Most active year
+        // All
         $upcomingLists[] = [
-            'MainTitle' => '2018',
-            'ShortTitle' => '2018',
-            'List' => $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode)
-        ];
-
-        // Longer term
-        $upcomingLists[] = [
-            'MainTitle' => 'Future',
-            'ShortTitle' => 'Future',
-            'List' => $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode)
+            'MainTitle' => 'All upcoming games',
+            'ShortTitle' => 'All upcoming games',
+            'List' => $serviceGameReleaseDate->getUpcoming($regionCode)
         ];
 
         $bindings['UpcomingLists'] = $upcomingLists;
