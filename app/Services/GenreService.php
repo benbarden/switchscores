@@ -26,4 +26,12 @@ class GenreService
             ->first();
         return $genre;
     }
+
+    public function getByGenreTitle($genre)
+    {
+        $genre = Genre::
+            where('genre', $genre)
+            ->first();
+        return $genre;
+    }
 }

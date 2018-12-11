@@ -16,11 +16,16 @@ class GameGenreService
         if (count($genreIdList) == 0) return false;
 
         foreach ($genreIdList as $genreId) {
-            GameGenre::create([
-                'game_id' => $gameId,
-                'genre_id' => $genreId
-            ]);
+            $this->create($gameId, $genreId);
         }
+    }
+
+    public function create($gameId, $genreId)
+    {
+        return GameGenre::create([
+            'game_id' => $gameId,
+            'genre_id' => $genreId
+        ]);
     }
 
     public function deleteGameGenres(
