@@ -52,6 +52,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Title</th>
+                <th class="text-center">eShop: EU</th>
                 <th>Release date</th>
                 <th class="text-center">More</th>
                 <th class="text-center">Options</th>
@@ -65,6 +66,13 @@
                     </td>
                     <td>
                         <a href="{{ LinkHelper.gameShow(item) }}" target="_blank">{{ item.title }}</a>
+                    </td>
+                    <td class="text-center">
+                        {% if item.eshop_europe_fs_id %}
+                            <i class="fas fa-link"></i>
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td>
                         {% if item.release_date %}
@@ -112,6 +120,7 @@
             "columns": [
                 null,
                 null,
+                { "orderable": false },
                 null,
                 { "orderable": false },
                 { "orderable": false }
