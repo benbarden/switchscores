@@ -98,7 +98,8 @@ class GameTagService
             ->where('game_tags.tag_id', $tagId)
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', '1')
-            ->orderBy('games.title', 'asc');
+            ->orderBy('games.rating_avg', 'desc')
+            ->orderBy('game_release_dates.release_date', 'desc');
 
         $games = $games->get();
         return $games;

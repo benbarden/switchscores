@@ -15,7 +15,7 @@
         <span class="label label-primary">New</span>
         &nbsp;
     {% endif %}
-    {{ item.release_date|date('jS M') }}
+    {{ item.release_date|date('jS M Y') }}
 </p>
 {% if item.rating_avg %}
     <p class="h5">

@@ -13,14 +13,8 @@
         {% if GameList|length %}
             <div class="row">
                 {% for item in GameList %}
-                    <div class="col-sm-4 col-md-3 col-lg-3" style="min-height: 200px; padding: 5px 2px; text-align: center;">
-                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'game-show') }}</a>
-                        <br>
-                        <span class="h5">
-                        <a href="{{ LinkHelper.gameShow(item) }}">
-                            <strong>{{ item.title }}</strong>
-                        </a>
-                        </span>
+                    <div class="col-sm-4 col-md-3 col-lg-3" style="min-height: 300px; padding: 5px 2px; text-align: center;">
+                        {% include 'games/layouts/cleanGridItem.twig' with {'Game': item} %}
                     </div>
                 {% endfor %}
             </div>
