@@ -1,0 +1,29 @@
+{% if ShowPageRank %}
+    <span class="label label-info h4">#{{ PageRank }}</span>
+    <br><br>
+{% endif %}
+<a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'game-show') }}</a>
+<br>
+<p class="h4">
+    <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
+</p>
+<p class="h5">
+    {% if item.is_released == 0 %}
+        <span class="label label-info">Upcoming</span>
+        &nbsp;
+    {% elseif DateHelper.isNew(item.release_date) %}
+        <span class="label label-primary">New</span>
+        &nbsp;
+    {% endif %}
+    {{ item.release_date|date('jS M') }}
+</p>
+{% if item.rating_avg %}
+    <p class="h5">
+        Average rating: {{ item.rating_avg }}
+    </p>
+{% endif %}
+{% if item.game_rank %}
+    <p class="h5">
+        Site rank: {{ item.game_rank }}
+    </p>
+{% endif %}
