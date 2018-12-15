@@ -35,6 +35,7 @@ class IndexController extends Controller
         $feedItemGameService = $serviceContainer->getFeedItemGameService();
         $feedItemReviewService = $serviceContainer->getFeedItemReviewService();
         $userService = $serviceContainer->getUserService();
+        $gameTagService = $serviceContainer->getGameTagService();
         $gameGenreService = $serviceContainer->getGameGenreService();
         $gameService = $serviceContainer->getGameService();
 
@@ -73,6 +74,7 @@ class IndexController extends Controller
 
         // Missing data
         $missingDevOrPub = $gameService->getWithoutDevOrPub();
+        $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
         $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url', $regionCode);
         $missingVideoUrl = $gameService->getByNullField('video_url', $regionCode);
@@ -80,6 +82,7 @@ class IndexController extends Controller
         $missingAmazonUkLink = $gameService->getWithoutAmazonUkLink();
 
         $bindings['MissingDevOrPubCount'] = count($missingDevOrPub);
+        $bindings['MissingTagsCount'] = count($missingTags);
         $bindings['MissingGenresCount'] = count($missingGenres);
         $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);

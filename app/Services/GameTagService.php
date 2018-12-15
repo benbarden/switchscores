@@ -118,7 +118,7 @@ class GameTagService
                 'game_release_dates.is_released',
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year',
-                'game_genres.genre_id')
+                'game_tags.tag_id')
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', '1')
             ->whereNull('game_tags.tag_id')

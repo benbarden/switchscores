@@ -45,6 +45,7 @@ class GamesController extends Controller
         $serviceGame = $serviceContainer->getGameService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
+        $serviceGameTag = $serviceContainer->getGameTagService();
 
         $bindings = [];
 
@@ -103,6 +104,10 @@ class GamesController extends Controller
                 case 'no-dev-or-pub':
                     $gameList = $serviceGame->getWithoutDevOrPub();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
+                    break;
+                case 'no-tags':
+                    $gameList = $serviceGameTag->getGamesWithoutTags($regionCode);
+                    $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-genre':
                     $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
