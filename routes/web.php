@@ -21,9 +21,12 @@ Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 // Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
 Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
-Route::get('/sitemap/charts', 'SitemapController@charts')->name('sitemap.charts');
-Route::get('/sitemap/genres', 'SitemapController@genres')->name('sitemap.genres');
 Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
+Route::get('/sitemap/calendar', 'SitemapController@calendar')->name('sitemap.calendar');
+Route::get('/sitemap/top-rated', 'SitemapController@topRated')->name('sitemap.topRated');
+Route::get('/sitemap/reviews', 'SitemapController@reviews')->name('sitemap.reviews');
+Route::get('/sitemap/genres', 'SitemapController@genres')->name('sitemap.genres');
+Route::get('/sitemap/tags', 'SitemapController@tags')->name('sitemap.tags');
 Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 
 // Main game pages

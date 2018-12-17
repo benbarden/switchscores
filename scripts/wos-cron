@@ -1,5 +1,10 @@
 # Cron jobs for WOS
 
+0 1 * * * www-data cd /var/www/worldofswitch.com && php artisan SitemapGenerateGames >> /var/www/worldofswitch.com/storage/logs/cron-sitemap-generate-games.log 2>&1
+2 1 * * * www-data cd /var/www/worldofswitch.com && php artisan SitemapGenerateCalendar >> /var/www/worldofswitch.com/storage/logs/cron-sitemap-generate-calendar.log 2>&1
+4 1 * * * www-data cd /var/www/worldofswitch.com && php artisan SitemapGenerateTopRated >> /var/www/worldofswitch.com/storage/logs/cron-sitemap-generate-top-rated.log 2>&1
+6 1 * * * www-data cd /var/www/worldofswitch.com && php artisan SitemapGenerateNews >> /var/www/worldofswitch.com/storage/logs/cron-sitemap-generate-news.log 2>&1
+
 10 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaCrawlGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-crawl-games-list.log 2>&1
 15 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaImportGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-import-games-list.log 2>&1
 20 3 * * * www-data cd /var/www/worldofswitch.com && php artisan WikipediaUpdateGamesList >> /var/www/worldofswitch.com/storage/logs/cron-wikipedia-update-games-list.log 2>&1
