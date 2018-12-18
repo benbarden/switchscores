@@ -1,0 +1,142 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-md-12">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-right">Field</th>
+            <th class="text-left">Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Id
+            </td>
+            <td class="text-left">
+                {{ UserData.id }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Display name
+            </td>
+            <td class="text-left">
+                {{ UserData.display_name }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Email
+            </td>
+            <td class="text-left">
+                {{ UserData.email }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Region
+            </td>
+            <td class="text-left">
+                {{ UserData.region }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Site id
+            </td>
+            <td class="text-left">
+                {{ UserData.site_id }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+                Registered
+            </td>
+            <td class="text-left">
+                {{ UserData.created_at }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right" style="font-weight: bold;">
+            </td>
+            <td class="text-left">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+    <h3>Wishlist</h3>
+
+    {% if WishListItems.count > 0 %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="text-left">Game</th>
+                <th class="text-center">Added</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in WishListItems %}
+            <tr>
+                <td class="text-left">
+                    <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                </td>
+                <td class="text-center">
+                    {{ item.created_at }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>
+            Wishlist is empty.
+        </p>
+    {% endif %}
+
+    </div>
+    <div class="col-md-6">
+
+        <h3>Owned list</h3>
+
+        {% if OwnedListItems.count > 0 %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="text-left">Game</th>
+                    <th class="text-center">Added</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in OwnedListItems %}
+                    <tr>
+                        <td class="text-left">
+                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                        </td>
+                        <td class="text-center">
+                            {{ item.created_at }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>
+                Owned list is empty.
+            </p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

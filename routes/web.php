@@ -203,6 +203,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // News
     Route::get('/admin/user/list', 'Admin\UserController@showList')->name('admin.user.list');
+    Route::get('/admin/user/view/{userId}', 'Admin\UserController@showUser')->name('admin.user.view');
 
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');

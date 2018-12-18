@@ -9,7 +9,7 @@
     <li>Go to /password/reset</li>
     <li>Enter the user's email address</li>
     <li>When the page finishes loading, check the password_resets table in the DB and grab the token field.
-    (NB if it has a / in it, request another token or the page won't loading. Annoying, I know)</li>
+    (NB if it has a / in it, request another token or the page won't load. Annoying, I know)</li>
     <li>Go to /password/reset/TOKEN</li>
     <li>Re-enter the email address and enter the new password twice</li>
     <li>This should now work.</li>
@@ -34,7 +34,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {{ item.display_name }}
+                        <a href="{{ route('admin.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
                     </td>
                     <td>
                         {{ item.email }}
