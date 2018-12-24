@@ -14,83 +14,18 @@
             </p>
             <h3>Member navigation</h3>
             <ul>
-                <li><a href="{{ route('user.settings') }}">Settings</a></li>
+                <li><a href="{{ route('user.collection.landing') }}">Games collection</a> - New!</li>
                 <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
                 {% if auth_user().site_id != 0 %}
                 <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>
                 {% endif %}
+                <li><a href="{{ route('user.settings') }}">Settings</a></li>
             </ul>
 
         </div>
         <div class="col-md-6">
-            <h2>Lists</h2>
-            <p>
-                We'll be tidying up this section soon. In the meantime, you can add games to your wishlist or owned list
-                by heading to the <a href="{{ route('games.list.released') }}">released games page</a>.
-            </p>
 
-            <h3>Wishlist</h3>
-
-            {% if WishListItems.count > 0 %}
-                <ul>
-                    {% for item in WishListItems %}
-                        <li id="js-user-playlist-item-{{ item.id }}">
-                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                            <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>
-                    Your wishlist is empty. To start filling it in, head over to our
-                    <a href="{{ route('games.list.released') }}">games page</a>.
-                </p>
-            {% endif %}
-
-            <h3>Owned list</h3>
-
-            {% if OwnedListItems.count > 0 %}
-                <ul>
-                    {% for item in OwnedListItems %}
-                        <li id="js-user-playlist-item-{{ item.id }}">
-                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                            <a href="javascript:void(0);" class="js-user-remove-playlist-item" data-id="{{ item.id }}" title="Delete from list">[x]</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>
-                    Your owned list is empty. To start filling it in, head over to our
-                    <a href="{{ route('games.list.released') }}">games page</a>.
-                </p>
-            {% endif %}
         </div>
     </div>
-
-<script>
-
-    $('.js-user-remove-playlist-item').on('click', function() {
-        itemId = $(this).data('id');
-        if (itemId == '') {
-            return false;
-        }
-
-        if (!window.confirm('Remove this item from the list?')) {
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('/user-list-item/delete', {itemId: itemId}, function(data) {
-            $('#js-user-playlist-item-' + itemId).remove();
-        });
-    });
-
-</script>
-
 
 {% endblock page_inner %}

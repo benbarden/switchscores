@@ -95,6 +95,14 @@ Route::group(['middleware' => ['auth']], function() {
     // Settings
     Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
 
+    // Collection
+    Route::get('/user/collection/index', 'User\CollectionController@landing')->name('user.collection.landing');
+    Route::get('/user/collection/add', 'User\CollectionController@add')->name('user.collection.add');
+    Route::post('/user/collection/add', 'User\CollectionController@add')->name('user.collection.add');
+    Route::get('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');
+    Route::post('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');
+    Route::get('/user/collection/delete', 'User\CollectionController@delete')->name('user.collection.delete');
+
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 

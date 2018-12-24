@@ -1,0 +1,17 @@
+{% if fieldValue is null %}
+    <td class="text-center" style="background: #c9c9c9; color: #000;">
+        Not set!
+    </td>
+{% elseif fieldValue == 1 %}
+    <td class="text-center" style="background: #77dd77; color: #000;">
+        Yes
+    </td>
+{% elseif fieldValue == 0 %}
+    <td class="text-center" style="background: #fdfd96; color: #000;">
+        No
+    </td>
+{% else %}
+    <td class="text-center">
+        ? {{ fieldValue }} ?
+    </td>
+{% endif %}

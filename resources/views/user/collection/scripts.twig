@@ -1,0 +1,55 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+    var urlGameId = '{{ UrlGameId }}';
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing entries.
+        formVals['game_id'] = "{{ CollectionData.game_id }}";
+        formVals['owned_from'] = "{{ CollectionData.owned_from }}";
+        formVals['owned_type'] = "{{ CollectionData.owned_type }}";
+        formVals['is_started'] = "{{ CollectionData.is_started }}";
+        formVals['is_ongoing'] = "{{ CollectionData.is_ongoing }}";
+        formVals['is_complete'] = "{{ CollectionData.is_complete }}";
+        formVals['hours_played'] = "{{ CollectionData.hours_played }}";
+
+    } else {
+
+        // This is used for new games.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        gameId = "{{ old('game_id') }}";
+        if (gameId == '') {
+            if (urlGameId != '') {
+                gameId = urlGameId;
+            }
+        }
+
+        formVals['game_id'] = gameId;
+        formVals['owned_from'] = "{{ old('owned_from') }}";
+        formVals['owned_type'] = "{{ old('owned_type') }}";
+        formVals['is_started'] = "{{ old('is_started') }}";
+        formVals['is_ongoing'] = "{{ old('is_ongoing') }}";
+        formVals['is_complete'] = "{{ old('is_complete') }}";
+        formVals['hours_played'] = "{{ old('hours_played') }}";
+
+    }
+
+    $('#game_id').val(formVals['game_id']);
+    $('#owned_from').val(formVals['owned_from']);
+    $('#owned_type').val(formVals['owned_type']);
+    if (formVals['is_started'] == 1) {
+        $('#is_started').attr('checked', true);
+    }
+    if (formVals['is_ongoing'] == 1) {
+        $('#is_ongoing').attr('checked', true);
+    }
+    if (formVals['is_complete'] == 1) {
+        $('#is_complete').attr('checked', true);
+    }
+    $('#hours_played').val(formVals['hours_played']);
+
+    $('#game_id').select2();
+
+</script>

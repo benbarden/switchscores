@@ -1,0 +1,147 @@
+{% extends 'theme/wos/member/page-wide.twig' %}
+
+{% set crumbNav = [{'text': 'Members index'}] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Games collection</h2>
+
+        <p>
+            Welcome to your Switch games collection. You can add all of your Switch games by clicking "Add a game".
+        </p>
+        <p>
+            If you see "Not set" against any of the games listed below, it means you haven't filled that value in.
+            There may be some stats and features linked to this information in the future, so it's worth adding
+            it in if you know it.
+        </p>
+
+        {% if UserId <= 10 %}
+        <p>
+            <strong>For members who used the old system of adding to your "owned list":</strong>
+            We've migrated games from your owned list into the games collection.
+        </p>
+        {% endif %}
+
+        {% if CollectionList.count > 0 %}
+
+            <table class="table table-striped data-sortable">
+                <thead>
+                <tr>
+                    <th class="text-left">Game</th>
+                    <th class="text-center">
+                        <abbr title="The date when you bought the game or when it was given to you.">Owned<br>from</abbr>
+                    </th>
+                    <th class="text-center">
+                        <abbr title="Whether you own a digital or physical version of the game.">Type</abbr>
+                    </th>
+                    <th class="text-center">
+                        <abbr title="Shows if you've started playing the game yet.">Started</abbr>
+                    </th>
+                    <th class="text-center">
+                        <abbr title="Shows if this is a game you're actively playing or aren't done with yet.">In progress</abbr>
+                    </th>
+                    <th class="text-center">
+                        <abbr title="Shows if you've finished the game or not.">Complete</abbr>
+                    </th>
+                    <th class="text-center">
+                        <abbr title="The number of hours you've played the game for.">Hours played</abbr>
+                    </th>
+                    <th class="text-center">
+                        Options
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in CollectionList %}
+                    <tr id="js-collection-row-{{ item.id }}">
+                        <td class="text-left">
+                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                        </td>
+                        {% if item.owned_from %}
+                            <td class="text-center">
+                                {{ item.owned_from }}
+                            </td>
+                        {% else %}
+                            <td class="text-center" style="background: #c9c9c9; color: #000;">
+                                Not set!
+                            </td>
+                        {% endif %}
+                        {% if item.owned_type %}
+                            <td class="text-center">
+                                {{ item.owned_type }}
+                            </td>
+                        {% else %}
+                            <td class="text-center" style="background: #c9c9c9; color: #000;">
+                                Not set!
+                            </td>
+                        {% endif %}
+                        {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_started} %}
+                        {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_ongoing} %}
+                        {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_complete} %}
+                        {% if item.hours_played %}
+                            <td class="text-center">
+                                {{ item.hours_played }}
+                            </td>
+                        {% else %}
+                            <td class="text-center" style="background: #c9c9c9; color: #000;">
+                                Not set!
+                            </td>
+                        {% endif %}
+                        <td class="text-center">
+                            <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
+                            <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Your games collection is empty! Do you own any games? :)</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('user.collection.add') }}';
+    });
+
+    $('.js-remove-collection-item').on('click', function() {
+        itemId = $(this).data('content');
+
+        if (itemId == '') {
+            return false;
+        }
+
+        if (!window.confirm('Remove this game from your collection?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/user/collection/delete', {itemId: itemId}, function(data) {
+            $('#js-collection-row-' + itemId).remove();
+            return false;
+        });
+    });
+
+</script>
+
+
+
+{% endblock page_inner %}

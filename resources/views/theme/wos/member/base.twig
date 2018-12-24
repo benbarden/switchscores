@@ -55,6 +55,7 @@
 
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ route('user.collection.landing') }}">Games collection</a></li>
                         <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
                         {% if auth_user().site_id != 0 %}
                         <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>

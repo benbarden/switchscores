@@ -1,0 +1,10 @@
+{% extends 'theme/wos/member/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('user.collection.edit', {'itemId': ItemId}) %}
+{% include 'user/collection/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'user/collection/scripts.twig' %}
+
+{% endblock page_inner %}

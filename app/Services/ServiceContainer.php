@@ -31,6 +31,7 @@ class ServiceContainer
     const KEY_TAG_SERVICE = 'TagService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
+    const KEY_USER_GAMES_COLLECTION_SERVICE = 'UserGamesCollectionService';
     const KEY_USER_LIST_SERVICE = 'UserListService';
     const KEY_USER_LIST_ITEM_SERVICE = 'UserListItemService';
     const KEY_USER_SERVICE = 'UserService';
@@ -285,6 +286,14 @@ class ServiceContainer
     public function getUrlService()
     {
         return $this->load(self::KEY_URL_SERVICE);
+    }
+
+    /**
+     * @return UserGamesCollectionService
+     */
+    public function getUserGamesCollectionService()
+    {
+        return $this->load(self::KEY_USER_GAMES_COLLECTION_SERVICE);
     }
 
     /**

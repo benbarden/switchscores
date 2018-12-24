@@ -202,6 +202,7 @@ return [
         App\Providers\ReviewUserServiceProvider::class,
         App\Providers\TagServiceProvider::class,
         App\Providers\TopRatedServiceProvider::class,
+        App\Providers\UserGamesCollectionServiceProvider::class,
         App\Providers\UserListServiceProvider::class,
         App\Providers\UserListItemServiceProvider::class,
         App\Providers\UserServiceProvider::class,

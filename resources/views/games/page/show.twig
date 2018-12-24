@@ -21,18 +21,7 @@
             </div>
             <div class="col-md-10">
                 {% if auth_user() %}
-                    {% if IsOnOwnedList == 'Y' %}
-                        <a id="js-user-owned-list-btn" class="js-user-owned-list-toggle btn btn-default btn-xs" data-id="{{ GameId }}" data-content="added">Added to Owned List</a>
-                    {% else %}
-                        <a id="js-user-owned-list-btn" class="js-user-owned-list-toggle btn btn-default btn-primary btn-xs" data-id="{{ GameId }}" data-content="not-added">Add to Owned List</a>
-                    {% endif %}
-                {% endif %}
-                {% if auth_user() %}
-                    {% if IsOnWishList == 'Y' %}
-                        <a id="js-user-wish-list-btn" class="js-user-wish-list-toggle btn btn-default btn-xs" data-id="{{ GameId }}" data-content="added">Added to Wishlist</a>
-                    {% else %}
-                        <a id="js-user-wish-list-btn" class="js-user-wish-list-toggle btn btn-default btn-primary btn-xs" data-id="{{ GameId }}" data-content="not-added">Add to Wishlist</a>
-                    {% endif %}
+                    <a class="btn btn-default btn-primary btn-xs" href="{{ route('user.collection.add', {'gameId': GameId}) }}">Add to Games collection</a>
                 {% endif %}
             </div>
         </div>
@@ -65,7 +54,5 @@
 </div>
 
 {% include 'games/page/userReviews.twig' with {'ReviewList': GameReviewUserList} %}
-
-{% include 'games/page/scripts.twig' %}
 
 {% endblock page_body %}
