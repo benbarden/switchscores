@@ -92,12 +92,15 @@ Route::group(['middleware' => ['auth']], function() {
     // Index
     Route::get('/user', 'User\IndexController@show')->name('user.index');
 
-    // User lists
-    Route::get('/user-list-item/add', 'User\UserListController@addPlaylistItem')->name('user.list-item.add');
-    Route::get('/user-list-item/delete', 'User\UserListController@deletePlaylistItem')->name('user.list-item.delete');
+    // Settings
+    Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
 
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
+
+    // User lists
+    Route::get('/user-list-item/add', 'User\UserListController@addPlaylistItem')->name('user.list-item.add');
+    Route::get('/user-list-item/delete', 'User\UserListController@deletePlaylistItem')->name('user.list-item.delete');
 
     // User reviews
     Route::get('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');

@@ -12,40 +12,15 @@
                 <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
                 You can also follow us for the latest updates.
             </p>
+            <h3>Member navigation</h3>
+            <ul>
+                <li><a href="{{ route('user.settings') }}">Settings</a></li>
+                <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
+                {% if auth_user().site_id != 0 %}
+                <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>
+                {% endif %}
+            </ul>
 
-            {% if auth_user().site_id != 0 %}
-                <h2>You now have partner access</h2>
-                <p>
-                    We're now accepting reviews direct from partners on a very exclusive basis.
-                    If you're seeing this notice, welcome aboard! Get started at
-                    <a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>.
-                </p>
-            {% endif %}
-
-            <h2>Reviews are go!</h2>
-            <p>
-                We're now giving members the opportunity to add their own reviews to the site.
-                Get started at <a href="{{ route('user.reviews.list') }}">My reviews</a>.
-            </p>
-
-            <h2>Set your region</h2>
-
-            <p>
-                Changing your region allows you to see released games, upcoming games, and a release
-                calendar for the following regions: Europe (the default), US, or Japan. You can change
-                this option below.
-            </p>
-
-            <select id="user-region" name="user-region">
-                <option value="">&nbsp;</option>
-                <option value="eu">Europe</option>
-                <option value="us">US</option>
-                <option value="jp">Japan</option>
-            </select>
-            <input id="btn-save-user-region" type="button" value="Save">
-            <div id="js-user-region-notify" class="alert alert-success" role="alert" style="display: none;">
-                Region saved!
-            </div>
         </div>
         <div class="col-md-6">
             <h2>Lists</h2>
@@ -92,6 +67,30 @@
         </div>
     </div>
 
-{% include 'user/scripts.twig' %}
+<script>
+
+    $('.js-user-remove-playlist-item').on('click', function() {
+        itemId = $(this).data('id');
+        if (itemId == '') {
+            return false;
+        }
+
+        if (!window.confirm('Remove this item from the list?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/user-list-item/delete', {itemId: itemId}, function(data) {
+            $('#js-user-playlist-item-' + itemId).remove();
+        });
+    });
+
+</script>
+
 
 {% endblock page_inner %}
