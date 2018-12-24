@@ -20,7 +20,7 @@
 {% if ReviewList.count > 0 %}
     <div class="alert alert-warning" role="alert">
         If you've approved some reviews, don't forget to run
-        <a href="{{ route('admin.tools.updateGameRanks.landing') }}">Update Game Ranks</a>
+        <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameRanks'}) }}">Update Game Ranks</a>
         when you're done.
     </div>
 
