@@ -1,3 +1,3 @@
 {% if NewsItem.game_id %}
-    {% include 'games/infobox.twig' with {'GameData': NewsItem.game, 'NewsInfoBox': 'Y', 'ReleaseDateInfo': ReleaseDateInfo} %}
+    {% include 'games/page/infobox.twig' with {'GameData': NewsItem.game, 'NewsInfoBox': 'Y', 'ReleaseDateInfo': ReleaseDateInfo} %}
 {% endif %}
