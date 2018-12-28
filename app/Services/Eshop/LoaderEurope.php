@@ -117,6 +117,11 @@ class LoaderEurope
      */
     private $responseData;
 
+    /**
+     * @var integer
+     */
+    private $importedItemCount;
+
     public function __construct()
     {
         $this->setModeLive();
@@ -155,6 +160,11 @@ class LoaderEurope
     public function getResponseData()
     {
         return $this->responseData;
+    }
+
+    public function getImportedCount()
+    {
+        return $this->importedItemCount;
     }
 
     public function handleModelField($gameModel, $field, $value)
@@ -312,6 +322,8 @@ class LoaderEurope
         $eshopGame = null;
         $eshopGameData = $this->responseData['response']['docs'];
 
+        $totalItemCount = count($eshopGameData);
+
         try {
 
             foreach ($eshopGameData as $eshopGame) {
@@ -323,5 +335,7 @@ class LoaderEurope
         } catch (\Exception $e) {
             throw new \Exception('Error importing data! Message: '.$e->getMessage().'; Record: '.var_export($eshopGame, true));
         }
+
+        $this->importedItemCount = $totalItemCount;
     }
 }

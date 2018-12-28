@@ -65,7 +65,8 @@ class EshopEuropeImportData extends Command
 
             $this->info('Importing data...');
             $eshopLoader->importToDb();
-            $this->info('Complete!');
+            $importedItemCount = $eshopLoader->getImportedCount();
+            $this->info('Complete! Imported '.$importedItemCount.' item(s).');
 
         } catch (\Exception $e) {
             $this->error($e->getMessage());
