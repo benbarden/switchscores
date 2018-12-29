@@ -59,4 +59,34 @@ class UserGamesCollectionService
             ->get();
         return $items;
     }
+
+    public function getUserTotalGames($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)
+            ->count();
+    }
+
+    public function getUserTotalHours($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)
+            ->sum('hours_played');
+    }
+
+    public function getUserTotalNotStarted($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('is_started', 0)
+            ->count();
+    }
+
+    public function getUserTotalInProgress($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('is_ongoing', 1)
+            ->count();
+    }
+
+    public function getUserTotalCompleted($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('is_complete', 1)
+            ->count();
+    }
 }

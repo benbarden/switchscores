@@ -41,6 +41,31 @@ class CollectionController extends Controller
 
         $bindings['CollectionList'] = $collectionService->getByUser($userId);
 
+        // Stats
+        $collectionStats = [];
+        $collectionStats[] = [
+            'title' => 'Total games',
+            'count' => $collectionService->getUserTotalGames($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games not started',
+            'count' => $collectionService->getUserTotalNotStarted($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games in progress',
+            'count' => $collectionService->getUserTotalInProgress($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games completed',
+            'count' => $collectionService->getUserTotalCompleted($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Total hours logged',
+            'count' => $collectionService->getUserTotalHours($userId)
+        ];
+
+        $bindings['CollectionStats'] = $collectionStats;
+
         return view('user.collection.index', $bindings);
     }
 

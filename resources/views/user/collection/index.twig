@@ -13,7 +13,7 @@
 <hr>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <h2>Games collection</h2>
 
         <p>
@@ -26,12 +26,29 @@
         </p>
 
         {% if UserId <= 10 %}
-        <p>
-            <strong>For members who used the old system of adding to your "owned list":</strong>
-            We've migrated games from your owned list into the games collection.
-        </p>
+            <p>
+                <strong>For members who used the old system of adding to your "owned list":</strong>
+                We've migrated games from your owned list into the games collection.
+            </p>
         {% endif %}
+    </div>
+    <div class="col-md-4">
+        <h3>Collection stats</h3>
+        <table class="table table-striped">
+            <tbody>
+            {% for item in CollectionStats %}
+                <tr>
+                    <td class="text-left">{{ item.title }}</td>
+                    <td class="text-right">{{ item.count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-12">
         {% if CollectionList.count > 0 %}
 
             <table class="table table-striped data-sortable">
