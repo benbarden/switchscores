@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\BaseController;
+use Illuminate\Routing\Controller as Controller;
+use App\Services\ServiceContainer;
 use Auth;
 
-use App\UserListItem;
-use App\Services\UserListService;
-use App\Services\UserListItemService;
-
-class UserListController extends BaseController
+class UserListController extends Controller
 {
     public function addPlaylistItem()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $userListService = $serviceContainer->getUserListService();
+        $userListItemService = $serviceContainer->getUserListItemService();
+
         $request = request();
 
         $gameId = $request->itemId;
@@ -30,11 +33,6 @@ class UserListController extends BaseController
         }
 
         $userId = Auth::id();
-
-        $userListService = resolve('Services\UserListService');
-        $userListItemService = resolve('Services\UserListItemService');
-        /* @var $userListService UserListService */
-        /* @var $userListItemService UserListItemService */
 
         if ($listType == 'owned') {
 
@@ -75,6 +73,11 @@ class UserListController extends BaseController
 
     public function deletePlaylistItem()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceUserListItem = $serviceContainer->getUserListItemService();
+
         $request = request();
 
         $playlistItemId = $request->itemId;
@@ -83,8 +86,6 @@ class UserListController extends BaseController
             return response()->json(['error' => 'Missing data: itemId'], 400);
         }
 
-        $serviceUserListItem = resolve('Services\UserListItemService');
-        /* @var $serviceUserListItem UserListItemService */
         $userListItem = $serviceUserListItem->find($playlistItemId);
 
         if ($userListItem->listParent->user_id != Auth::id()) {
