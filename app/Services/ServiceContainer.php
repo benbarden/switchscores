@@ -15,6 +15,7 @@ class ServiceContainer
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
     const KEY_GAME_CALENDAR_SERVICE = 'GameCalendarService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
+    const KEY_GAME_RANK_UPDATE_SERVICE = 'GameRankUpdateService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
     const KEY_GAME_SERVICE = 'GameService';
     const KEY_GAME_TAG_SERVICE = 'GameTagService';
@@ -158,6 +159,14 @@ class ServiceContainer
     public function getGameGenreService()
     {
         return $this->load(self::KEY_GAME_GENRE_SERVICE);
+    }
+
+    /**
+     * @return GameRankUpdateService
+     */
+    public function getGameRankUpdateService()
+    {
+        return $this->load(self::KEY_GAME_RANK_UPDATE_SERVICE);
     }
 
     /**

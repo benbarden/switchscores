@@ -18,14 +18,16 @@ class ReviewsController extends Controller
         $serviceTopRated = $serviceContainer->getTopRatedService();
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
         $serviceReviewSites = $serviceContainer->getReviewSiteService();
+        $serviceGameRankUpdate = $serviceContainer->getGameRankUpdateService();
 
         $bindings = [];
 
-        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
+        //$reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
         $reviewPartnerList = $serviceReviewSites->getActive();
 
+        $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getRecent(20);
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
-        $bindings['ReviewList'] = $reviewList;
+        //$bindings['ReviewList'] = $reviewList;
         $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($regionCode, 30, 15);
         $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 10);
 

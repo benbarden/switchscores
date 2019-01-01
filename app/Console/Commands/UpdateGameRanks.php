@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+use App\Services\GameRankUpdateService;
+
 class UpdateGameRanks extends Command
 {
     /**
@@ -37,6 +39,9 @@ class UpdateGameRanks extends Command
      */
     public function handle()
     {
+        $serviceGameRankUpdate = resolve('Services\GameRankUpdateService');
+        /* @var GameRankUpdateService $serviceGameRankUpdate */
+
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
         $gameRankList = \DB::select("
@@ -73,15 +78,31 @@ class UpdateGameRanks extends Command
 
             // Notify if different
             if (!$prevRank) {
+
                 // No previous rank - notification needed
                 $this->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
                     $gameTitle, $ratingAvg, $actualRank));
-            } elseif (abs($prevRank - $actualRank) > 10) {
-                // Rank has changed by more than 10 - notification needed
+
+                // Store rank update
+                $serviceGameRankUpdate->create($gameId, null, $actualRank, $ratingAvg);
+
+            //} elseif (abs($prevRank - $actualRank) > 10) {
+
+            } elseif ($prevRank != $actualRank) {
+
+                // Log all rank changes, even though we might hide some on the site
+
+                // Rank has changed - notification needed
                 $this->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
                     $gameTitle, $ratingAvg, $prevRank, $actualRank));
+
+                // Store rank update
+                $serviceGameRankUpdate->create($gameId, $prevRank, $actualRank, $ratingAvg);
+
             } else {
-                // It's either the same, or not much difference. Don't notify.
+
+                // No change. No notification needed
+
             }
 
             // Save rank to DB

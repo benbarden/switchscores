@@ -187,6 +187,7 @@ return [
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,
         App\Providers\GameServiceProvider::class,
+        App\Providers\GameRankUpdateServiceProvider::class,
         App\Providers\GameReleaseDateServiceProvider::class,
         App\Providers\GameTitleHashServiceProvider::class,
         App\Providers\GenreServiceProvider::class,

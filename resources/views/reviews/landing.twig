@@ -7,6 +7,30 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
+            Rank updates
+        </h2>
+        {% if GameRankUpdates.count %}
+            {% for item in GameRankUpdates %}
+                <p>
+                    <strong>{{ item.created_at|date('jS M') }}</strong>:
+                    <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                    <br>
+                    {% if item.movement > 0 %}
+                        <span style="color: #090;">Up {{ item.movement }} place(s)</span>,
+                        from {{ item.rank_old }} to {{ item.rank_new }}
+                    {% elseif item.movement < 0 %}
+                        <span style="color: #900;">Down {{ item.movement|replace('-', ' ') }} place(s)</span>,
+                        from {{ item.rank_old }} to {{ item.rank_new }}
+                    {% else %}
+                        <em>No change (?!)</em>
+                    {% endif %}
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No rank updates to display.</p>
+        {% endif %}
+        {#
+        <h2>
             Latest reviews
         </h2>
         {% if ReviewList.count %}
@@ -24,6 +48,7 @@
         {% else %}
             <p>No reviews to display.</p>
         {% endif %}
+        #}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>Unranked games</h2>
