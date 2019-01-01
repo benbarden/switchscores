@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Services\ServiceContainer;
 
-class ReviewsController extends BaseController
+class ReviewsController extends Controller
 {
     public function landing()
     {
