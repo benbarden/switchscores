@@ -33,7 +33,7 @@ class WikipediaDateHandlerTest extends TestCase
 
     public function testGetYearsArray()
     {
-        $expected = ['2017', '2018', '2019', '2020'];
+        $expected = ['2017', '2018', '2019', '2020', '2021'];
 
         $this->assertEquals($expected, $this->dateHandler->getYearsArray());
     }
@@ -49,6 +49,8 @@ class WikipediaDateHandlerTest extends TestCase
             'July 2019', 'August 2019', 'September 2019', 'October 2019', 'November 2019', 'December 2019',
             'January 2020', 'February 2020', 'March 2020', 'April 2020', 'May 2020', 'June 2020',
             'July 2020', 'August 2020', 'September 2020', 'October 2020', 'November 2020', 'December 2020',
+            'January 2021', 'February 2021', 'March 2021', 'April 2021', 'May 2021', 'June 2021',
+            'July 2021', 'August 2021', 'September 2021', 'October 2021', 'November 2021', 'December 2021',
         ];
 
         $this->assertEquals($expected, $this->dateHandler->getYearMonthsArray());
@@ -61,6 +63,7 @@ class WikipediaDateHandlerTest extends TestCase
             'Q1 2018', 'Q2 2018', 'Q3 2018', 'Q4 2018',
             'Q1 2019', 'Q2 2019', 'Q3 2019', 'Q4 2019',
             'Q1 2020', 'Q2 2020', 'Q3 2020', 'Q4 2020',
+            'Q1 2021', 'Q2 2021', 'Q3 2021', 'Q4 2021',
         ];
 
         $this->assertEquals($expected, $this->dateHandler->getYearQuartersArray());
