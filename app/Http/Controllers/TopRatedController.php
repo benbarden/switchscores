@@ -62,7 +62,7 @@ class TopRatedController extends Controller
 
         $serviceTopRated = $serviceContainer->getTopRatedService();
 
-        $allowedYears = [2017, 2018];
+        $allowedYears = [2017, 2018, 2019];
         if (!in_array($year, $allowedYears)) {
             abort(404);
         }
