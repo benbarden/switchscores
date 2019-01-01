@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use Illuminate\Routing\Controller as Controller;
 
-class AboutController extends BaseController
+use App\Services\ServiceContainer;
+
+class AboutController extends Controller
 {
     public function show()
     {
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'About';
         $bindings['PageTitle'] = 'About World of Switch';

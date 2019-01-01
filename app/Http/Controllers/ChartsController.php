@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\ChartsRankingGlobal;
+use Illuminate\Routing\Controller as Controller;
 
-class ChartsController extends BaseController
+use App\Services\ServiceContainer;
+use App\ChartsRankingGlobal;
+use Illuminate\Support\Facades\DB;
+
+class ChartsController extends Controller
 {
     public function landing()
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
 
-        $chartsDateService = resolve('Services\ChartsDateService');
+        $bindings = [];
+
+        $chartsDateService = $serviceContainer->getChartsDateService();
         $chartDatesEu = $chartsDateService->getDateList('eu');
         $chartDatesUs = $chartsDateService->getDateList('us');
 
@@ -24,10 +31,16 @@ class ChartsController extends BaseController
 
     public function show($countryCode, $date)
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
 
-        $chartsRankingGlobalService = resolve('Services\ChartsRankingGlobalService');
-        /* @var $chartsRankingGlobalService \App\Services\ChartsRankingGlobalService */
+        $bindings = [];
+
+        $chartsDateService = $serviceContainer->getChartsDateService();
+        $chartsRankingGlobalService = $serviceContainer->getChartsRankingGlobalService();
+
+        $title = '';
+        $regionText = '';
 
         switch ($countryCode) {
             case ChartsRankingGlobal::COUNTRY_US;
@@ -62,9 +75,6 @@ class ChartsController extends BaseController
         $bindings['CountryCode'] = $countryCode;
 
         // Next/Previous links
-        $chartsDateService = resolve('Services\ChartsDateService');
-        /* @var $chartsDateService \App\Services\ChartsDateService */
-
         $dateNext = $chartsDateService->getNext($countryCode, $date);
         $datePrev = $chartsDateService->getPrevious($countryCode, $date);
         if ($dateNext) {
@@ -79,9 +89,9 @@ class ChartsController extends BaseController
 
     public function mostAppearances()
     {
-        $bindings = array();
+        $bindings = [];
 
-        $bindings['GamesListEu'] = \DB::select("
+        $bindings['GamesListEu'] = DB::select("
             SELECT cr.game_id, g.title, g.link_title, g.game_rank, g.rating_avg, count(*) AS count
             FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
@@ -91,7 +101,7 @@ class ChartsController extends BaseController
             ORDER BY count DESC, g.rating_avg DESC
         ");
 
-        $bindings['GamesListUs'] = \DB::select("
+        $bindings['GamesListUs'] = DB::select("
             SELECT cr.game_id, g.title, g.link_title, g.game_rank, g.rating_avg, count(*) AS count
             FROM charts_rankings_global cr
             JOIN games g ON cr.game_id = g.id
@@ -109,7 +119,8 @@ class ChartsController extends BaseController
 
     public function gamesAtPositionLanding()
     {
-        $bindings = array();
+        $bindings = [];
+
         $bindings['TopTitle'] = 'Charts - Games at position';
         $bindings['PageTitle'] = 'Games at position X in the eShop Charts';
 
@@ -125,6 +136,8 @@ class ChartsController extends BaseController
 
     public function gamesAtPosition($position)
     {
+        $bindings = [];
+
         $posList = [];
         for ($i=1; $i<=30; $i++) {
             $posList[] = $i;
@@ -134,7 +147,6 @@ class ChartsController extends BaseController
             abort(404);
         }
 
-        $bindings = array();
         $bindings['TopTitle'] = 'Charts - Games at position '.$position;
         $bindings['PageTitle'] = 'Games at No '.$position.' in the eShop Charts';
         $bindings['PositionNo'] = $position;

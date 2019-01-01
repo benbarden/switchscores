@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Services\ReviewLinkService;
-use App\Services\ReviewSiteService;
-use App\Services\TopRatedService;
-use App\Services\GameReleaseDateService;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Services\ServiceContainer;
 
 class ReviewsController extends BaseController
 {
     public function landing()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = resolve('Services\TopRatedService');
-        /* @var $serviceTopRated \App\Services\TopRatedService */
-        $serviceReviewLinks = resolve('Services\ReviewLinkService');
-        /* @var $serviceReviewLinks \App\Services\ReviewLinkService */
-        $serviceReviewSites = resolve('Services\ReviewSiteService');
-        /* @var $serviceReviewSites \App\Services\ReviewSiteService */
+        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceReviewLinks = $serviceContainer->getReviewLinkService();
+        $serviceReviewSites = $serviceContainer->getReviewSiteService();
 
         $bindings = [];
 
@@ -39,10 +37,12 @@ class ReviewsController extends BaseController
 
     public function gamesNeedingReviews()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $bindings = [];
 
@@ -59,12 +59,13 @@ class ReviewsController extends BaseController
 
     public function reviewSite($linkTitle)
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = resolve('Services\ReviewSiteService');
-        /* @var $serviceReviewSite \App\Services\ReviewSiteService */
-        $serviceReviewLink = resolve('Services\ReviewLinkService');
-        /* @var $serviceReviewLink \App\Services\ReviewLinkService */
+        $bindings = [];
+
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
         $reviewSite = $serviceReviewSite->getByLinkTitle($linkTitle);
 

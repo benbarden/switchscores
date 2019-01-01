@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\GameReleaseDateService;
-use App\Services\TopRatedService;
-use Carbon\Carbon;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Services\ServiceContainer;
 
 class NewsController extends BaseController
 {
     public function landing()
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
 
-        $serviceNews = resolve('Services\NewsService');
-        /* @var $serviceNews \App\Services\NewsService */
+        $bindings = [];
+
+        $serviceNews = $serviceContainer->getNewsService();
+
         $newsList = $serviceNews->getPaginated(10);
 
         $bindings['NewsList'] = $newsList;
@@ -23,16 +26,16 @@ class NewsController extends BaseController
         return view('news.landing', $bindings);
     }
 
-    public function displayContent($date, $title)
+    public function displayContent()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = resolve('Services\TopRatedService');
-        /* @var $serviceTopRated TopRatedService */
-        $serviceNews = resolve('Services\NewsService');
-        /* @var $serviceNews \App\Services\NewsService */
-        $serviceGameReleaseDate = resolve('Services\GameReleaseDateService');
-        /* @var $serviceGameReleaseDate GameReleaseDateService */
+        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceNews = $serviceContainer->getNewsService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $request = request();
         $requestUri = $request->getPathInfo();
@@ -42,7 +45,7 @@ class NewsController extends BaseController
             abort(404);
         }
 
-        $bindings = array();
+        $bindings = [];
         $bindings['PageTitle'] = $newsItem->title;
         $bindings['TopTitle'] = $newsItem->title;
         $bindings['NewsItem'] = $newsItem;

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use Illuminate\Routing\Controller as Controller;
 
-class PrivacyController extends BaseController
+use App\Services\ServiceContainer;
+
+class PrivacyController extends Controller
 {
     public function show()
     {
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Privacy';
         $bindings['PageTitle'] = 'Privacy policy';
