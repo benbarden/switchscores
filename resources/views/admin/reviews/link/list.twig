@@ -27,11 +27,16 @@
 #}
 <hr>
 {% if ReviewLinks.count > 0 %}
+    <div class="alert alert-warning" role="alert">
+        If you've added any reviews or edited the ratings, don't forget to run
+        <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameRanks'}) }}">Update Game Ranks</a>
+        when you're done.
+    </div>
     {% if TableLimit is defined %}
-        <p>
+        <div class="alert alert-warning" role="alert">
             Page is limited to {{ TableLimit }} review links to minimise performance issues. You can filter by site to see
             all review links associated with that site.
-        </p>
+        </div>
     {% endif %}
 
     <table class="table table-striped data-sortable">
