@@ -8,6 +8,17 @@ use App\ReviewSite;
 
 class ReviewLinkService
 {
+    /**
+     * @param $gameId
+     * @param $siteId
+     * @param $url
+     * @param $ratingOriginal
+     * @param $ratingNormalised
+     * @param $reviewDate
+     * @param $reviewType
+     * @param null $userId
+     * @return ReviewLink
+     */
     public function create(
         $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $userId = null
     )
@@ -24,6 +35,16 @@ class ReviewLinkService
         ]);
     }
 
+    /**
+     * @param ReviewLink $reviewLinkData
+     * @param $gameId
+     * @param $siteId
+     * @param $url
+     * @param $ratingOriginal
+     * @param $ratingNormalised
+     * @param $reviewDate
+     * @return void
+     */
     public function edit(
         ReviewLink $reviewLinkData,
         $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate
@@ -42,6 +63,10 @@ class ReviewLinkService
         $reviewLinkData->save();
     }
 
+    /**
+     * @param $id
+     * @return ReviewLink
+     */
     public function find($id)
     {
         return ReviewLink::find($id);
