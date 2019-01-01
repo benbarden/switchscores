@@ -71,7 +71,7 @@ class NewsService
     /**
      * Gets a news item from its URL
      * @param string $url
-     * @return \Illuminate\Database\Eloquent\Model|null|static
+     * @return News
      */
     public function getByUrl($url)
     {
