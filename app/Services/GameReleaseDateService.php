@@ -378,4 +378,93 @@ class GameReleaseDateService
         return $games;
     }
 
+    /**
+     * @param $reviewCount
+     * @param $region
+     * @return mixed
+     */
+    public function getUnrankedByReviewCount($reviewCount, $region)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->where('review_count', '=', $reviewCount)
+            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $year
+     * @param $region
+     * @return mixed
+     */
+    public function getUnrankedByYear($year, $region)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->where('game_release_dates.release_year', '=', $year)
+            ->where('review_count', '<', '3')
+            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $filter
+     * @param $region
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getUnrankedByList($filter, $region)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->where('review_count', '<', '3');
+
+        switch ($filter) {
+            case 'aca-neogeo':
+                $games = $games->where('games.title', 'LIKE', 'ACA NeoGeo %');
+                break;
+            case 'arcade-archives':
+                $games = $games->where('games.title', 'LIKE', 'Arcade Archives %');
+                break;
+            case 'all-others':
+                $games = $games->where('games.title', 'NOT LIKE', 'ACA NeoGeo %');
+                $games = $games->where('games.title', 'NOT LIKE', 'Arcade Archives %');
+                break;
+            default:
+                throw new \Exception('Unknown filter: '.$filter);
+        }
+
+        $games = $games->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
 }

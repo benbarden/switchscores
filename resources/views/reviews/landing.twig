@@ -4,10 +4,6 @@
 
 {% block page_body %}
 
-<ul>
-    <li><a href="{{ route('reviews.gamesNeedingReviews') }}">Games needing more reviews</a></li>
-</ul>
-
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
@@ -30,22 +26,36 @@
         {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>
-            Top rated - New
-        </h2>
-        {% if TopRatedNewReleases.count > 0 %}
-            <p>
-                Top rated games released in the last 30 days.
-            </p>
-            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
-        {% else %}
-            <p>No Top Rated games to display.</p>
-        {% endif %}
+        <h2>Unranked games</h2>
+        <p>
+            Games need to have 3 reviews to be ranked. Review partners can help to get more of our database ranked.
+        </p>
+        <h3>By review count</h3>
+        <ul>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-count', 'filter': '2'}) }}">2 reviews</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-count', 'filter': '1'}) }}">1 review</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-count', 'filter': '0'}) }}">0 reviews</a></li>
+        </ul>
+        <h3>By year released</h3>
+        <ul>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-year', 'filter': '2017'}) }}">2017</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-year', 'filter': '2018'}) }}">2018</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-year', 'filter': '2019'}) }}">2019</a></li>
+        </ul>
+        <h3>By list</h3>
+        <ul>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-list', 'filter': 'aca-neogeo'}) }}">ACA NeoGeo</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-list', 'filter': 'arcade-archives'}) }}">Arcade Archives</a></li>
+            <li><a href="{{ route('reviews.notRanked', {'mode': 'by-list', 'filter': 'all-others'}) }}">All except the above</a></li>
+        </ul>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h2>
             Our review partners
         </h2>
+        <p>
+            Got a site with Switch reviews? Want to join as a partner? <a href="{{ route('about') }}">Contact us</a>.
+        </p>
         {% if ReviewPartnerList %}
             <table class="table table-striped table-responsive">
                 <thead>

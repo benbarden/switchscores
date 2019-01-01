@@ -35,8 +35,58 @@ class ReviewsController extends Controller
         return view('reviews.landing', $bindings);
     }
 
+    public function notRanked($mode, $filter)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+
+        $bindings = [];
+
+        switch ($mode) {
+
+            case 'by-count':
+                if (!in_array($filter, ['0', '1', '2'])) abort(404);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $regionCode);
+                $tableSort = "[1, 'asc']";
+                break;
+
+            case 'by-year':
+                if (!in_array($filter, ['2017', '2018', '2019'])) abort(404);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $regionCode);
+                $tableSort = "[1, 'asc']";
+                break;
+
+            case 'by-list':
+                if (!in_array($filter, ['aca-neogeo', 'arcade-archives', 'all-others'])) abort(404);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $regionCode);
+                $tableSort = "[1, 'asc']";
+                break;
+
+            default:
+                abort(404);
+
+        }
+
+        $bindings['GamesList'] = $gamesList;
+        $bindings['GamesTableSort'] = $tableSort;
+
+        $bindings['TopTitle'] = 'Nintendo Switch - Unranked games';
+        $bindings['PageTitle'] = 'Unranked Nintendo Switch games';
+
+        $bindings['PageMode'] = $mode;
+        $bindings['PageFilter'] = $filter;
+
+        return view('reviews.notRanked', $bindings);
+    }
+
     public function gamesNeedingReviews()
     {
+        return redirect()->route('reviews.landing');
+
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 

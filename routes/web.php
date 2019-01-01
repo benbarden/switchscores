@@ -79,8 +79,9 @@ Route::get('/top-rated/by-month/{date}', 'TopRatedController@byMonthPage')->name
 
 /* Reviews */
 Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
-Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
 Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
+Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
+Route::get('/reviews/not-ranked/{mode}/{filter}', 'ReviewsController@notRanked')->name('reviews.notRanked');
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
