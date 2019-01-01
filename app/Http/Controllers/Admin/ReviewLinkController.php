@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\ReviewLinkCreated;
-use Illuminate\Http\Request;
-use App\Game;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use App\Services\ServiceContainer;
+
 use App\ReviewLink;
 
-class ReviewLinkController extends \App\Http\Controllers\BaseController
+use App\Events\ReviewLinkCreated;
+
+class ReviewLinkController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var array
      */
@@ -19,21 +27,13 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         'rating_original' => 'required'
     ];
 
-    /**
-     * @var \App\Services\ReviewLinkService
-     */
-    private $serviceClass;
-
-    public function __construct()
-    {
-        $this->serviceClass = resolve('Services\ReviewLinkService');
-        parent::__construct();
-    }
-
     public function showList()
     {
-        $serviceReviewLink = $this->serviceContainer->getReviewLinkService();
-        $serviceReviewSite = $this->serviceContainer->getReviewSiteService();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
 
         $bindings = [];
 
@@ -65,13 +65,17 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
         $request = request();
 
-        $gameService = $this->serviceContainer->getGameService();
-        $reviewSiteService = $this->serviceContainer->getReviewSiteService();
-        $reviewStatsService = $this->serviceContainer->getReviewStatsService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceReviewStats = $serviceContainer->getReviewStatsService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
 
         if ($request->isMethod('post')) {
 
@@ -80,18 +84,18 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $reviewSiteService->find($siteId);
+            $reviewSite = $serviceReviewSite->find($siteId);
 
-            $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $reviewLink = $this->serviceClass->create(
+            $reviewLink = $serviceReviewLink->create(
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, ReviewLink::TYPE_MANUAL
             );
 
             // Update game review stats
-            $game = $gameService->find($request->game_id);
-            $reviewStatsService->updateGameReviewStats($game);
+            $game = $serviceGame->find($request->game_id);
+            $serviceReviewStats->updateGameReviewStats($game);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
@@ -101,32 +105,37 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
 
         }
 
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - Add link';
         $bindings['PanelTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
-        $bindings['ReviewSites'] = $reviewSiteService->getAll();
+        $bindings['ReviewSites'] = $serviceReviewSite->getAll();
 
         return view('admin.reviews.link.add', $bindings);
     }
 
     public function edit($linkId)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $reviewLinkData = $this->serviceClass->find($linkId);
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceReviewStats = $serviceContainer->getReviewStatsService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+
+        $reviewLinkData = $serviceReviewLink->find($linkId);
         if (!$reviewLinkData) abort(404);
 
-        $gameService = $this->serviceContainer->getGameService();
-        $reviewSiteService = $this->serviceContainer->getReviewSiteService();
-        $reviewStatsService = $this->serviceContainer->getReviewStatsService();
-
         $request = request();
-        $bindings = array();
+
+        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -137,22 +146,22 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $reviewSiteService->find($siteId);
+            $reviewSite = $serviceReviewSite->find($siteId);
 
-            $ratingNormalised = $this->serviceClass->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $this->serviceClass->edit(
+            $serviceReviewLink->edit(
                 $reviewLinkData,
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date
             );
 
             // Update game review stats
-            $game = $gameService->find($request->game_id);
-            $reviewStatsService->updateGameReviewStats($game);
+            $game = $serviceGame->find($request->game_id);
+            $serviceReviewStats->updateGameReviewStats($game);
 
             // Update ranks
-            \Artisan::call('UpdateGameRanks');
+            //\Artisan::call('UpdateGameRanks');
 
             // All done; send us back
             return redirect(route('admin.reviews.link.list').'?siteId='.$siteId);
@@ -168,9 +177,9 @@ class ReviewLinkController extends \App\Http\Controllers\BaseController
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
-        $bindings['ReviewSites'] = $reviewSiteService->getAll();
+        $bindings['ReviewSites'] = $serviceReviewSite->getAll();
 
         return view('admin.reviews.link.edit', $bindings);
     }

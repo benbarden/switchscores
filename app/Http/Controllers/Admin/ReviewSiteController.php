@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class ReviewSiteController extends \App\Http\Controllers\BaseController
+use App\Services\ServiceContainer;
+
+class ReviewSiteController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var array
      */
@@ -16,25 +23,19 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
         'link_title' => 'required|max:100',
     ];
 
-    /**
-     * @var \App\Services\ReviewSiteService
-     */
-    private $serviceClass;
-
-    public function __construct()
-    {
-        $this->serviceClass = resolve('Services\ReviewSiteService');
-        parent::__construct();
-    }
-
     public function showList()
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites';
         $bindings['PanelTitle'] = 'Reviews: Sites';
 
-        $reviewSites = $this->serviceClass->getAll();
+        $reviewSites = $serviceReviewSite->getAll();
 
         $bindings['ReviewSites'] = $reviewSites;
 
@@ -43,6 +44,11 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -57,7 +63,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
                 $ratingScale = 10;
             }
 
-            $this->serviceClass->create(
+            $serviceReviewSite->create(
                 $request->name, $request->link_title, $request->url, $request->feed_url,
                 $isActive, $ratingScale
             );
@@ -66,7 +72,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
         }
 
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites - Add site';
         $bindings['PanelTitle'] = 'Add site';
@@ -77,7 +83,12 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
     public function edit($siteId)
     {
-        $reviewSiteData = $this->serviceClass->find($siteId);
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+
+        $reviewSiteData = $serviceReviewSite->find($siteId);
         if (!$reviewSiteData) abort(404);
 
         $request = request();
@@ -96,7 +107,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
                 $ratingScale = 10;
             }
 
-            $this->serviceClass->edit(
+            $serviceReviewSite->edit(
                 $reviewSiteData,
                 $request->name, $request->link_title, $request->url, $request->feed_url,
                 $isActive, $ratingScale
@@ -106,8 +117,7 @@ class ReviewSiteController extends \App\Http\Controllers\BaseController
 
         }
 
-        // ADD REVIEW SITE
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - Sites - Edit site';
         $bindings['PanelTitle'] = 'Edit site';

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-class ToolsController extends \App\Http\Controllers\BaseController
+use Illuminate\Routing\Controller as Controller;
+
+use App\Services\ServiceContainer;
+
+class ToolsController extends Controller
 {
     protected $commandList = [];
 
@@ -140,7 +144,7 @@ class ToolsController extends \App\Http\Controllers\BaseController
             ],
         ];
 
-        parent::__construct();
+        //parent::__construct();
     }
 
     private function getToolDetails($commandName)

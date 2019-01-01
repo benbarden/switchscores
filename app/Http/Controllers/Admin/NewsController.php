@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class NewsController extends \App\Http\Controllers\BaseController
+use App\Services\ServiceContainer;
+
+class NewsController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var array
      */
@@ -19,12 +26,15 @@ class NewsController extends \App\Http\Controllers\BaseController
 
     public function showList()
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - News';
         $bindings['PanelTitle'] = 'News';
 
-        $newsService = resolve('Services\NewsService');
+        $newsService = $serviceContainer->getNewsService();
         $newsList = $newsService->getAll();
 
         $bindings['NewsList'] = $newsList;
@@ -34,11 +44,14 @@ class NewsController extends \App\Http\Controllers\BaseController
 
     public function add()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $newsService = resolve('Services\NewsService');
-        $gameService = resolve('Services\GameService');
-        $newsCategoryService = resolve('Services\NewsCategoryService');
+        $newsService = $serviceContainer->getNewsService();
+        $gameService = $serviceContainer->getGameService();
+        $newsCategoryService = $serviceContainer->getNewsCategoryService();
 
         $request = request();
 
@@ -55,7 +68,7 @@ class NewsController extends \App\Http\Controllers\BaseController
 
         }
 
-        $bindings = array();
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - News - Add news';
         $bindings['PanelTitle'] = 'Add news';
@@ -70,13 +83,16 @@ class NewsController extends \App\Http\Controllers\BaseController
 
     public function edit($newsId)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $newsService = resolve('Services\NewsService');
-        $gameService = resolve('Services\GameService');
-        $newsCategoryService = resolve('Services\NewsCategoryService');
+        $newsService = $serviceContainer->getNewsService();
+        $gameService = $serviceContainer->getGameService();
+        $newsCategoryService = $serviceContainer->getNewsCategoryService();
 
-        $bindings = array();
+        $bindings = [];
 
         $newsData = $newsService->find($newsId);
         if (!$newsData) abort(404);
