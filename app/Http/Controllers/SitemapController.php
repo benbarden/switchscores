@@ -215,13 +215,6 @@ class SitemapController extends Controller
             'priority' => '0.8'
         );
 
-        $sitemapPages[] = array(
-            'url' => route('reviews.gamesNeedingReviews'),
-            'lastmod' => $timestamp,
-            'changefreq' => 'weekly',
-            'priority' => '0.8'
-        );
-
         $reviewSiteList = $serviceReviewSite->getActive();
         foreach ($reviewSiteList as $reviewSite) {
             $sitemapPages[] = array(

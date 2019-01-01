@@ -125,7 +125,7 @@ class GamesController extends Controller
 
     public function listReviewsNeeded()
     {
-        return redirect(route('reviews.gamesNeedingReviews'), 301);
+        return redirect(route('reviews.landing'), 301);
     }
 
     public function calendarLanding()
@@ -146,6 +146,7 @@ class GamesController extends Controller
                 $regionCodeDesc = 'Japan';
                 break;
             default:
+                abort(404);
                 break;
         }
 

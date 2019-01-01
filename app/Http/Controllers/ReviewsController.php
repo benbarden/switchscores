@@ -86,25 +86,6 @@ class ReviewsController extends Controller
     public function gamesNeedingReviews()
     {
         return redirect()->route('reviews.landing');
-
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-
-        $bindings = [];
-
-        $gamesList = $serviceGameReleaseDate->getReviewsNeeded($regionCode);
-
-        $bindings['GamesList'] = $gamesList;
-        $bindings['GamesTableSort'] = "[[6, 'desc'], [3, 'desc']]";
-
-        $bindings['TopTitle'] = 'Nintendo Switch - Games needing more reviews';
-        $bindings['PageTitle'] = 'Nintendo Switch games needing more reviews';
-
-        return view('reviews.gamesNeedingReviews', $bindings);
     }
 
     public function reviewSite($linkTitle)
