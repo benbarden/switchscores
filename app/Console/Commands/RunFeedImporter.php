@@ -88,7 +88,12 @@ class RunFeedImporter extends Command
                     }
 
                     // Check that it's not a historic review
-                    if ($feedItemReview->isHistoric() && $siteId != ReviewSite::SITE_SWITCHWATCH) {
+                    $historicReviewsAllowed = [
+                        ReviewSite::SITE_SWITCHWATCH,
+                        ReviewSite::SITE_TWO_BEARD_GAMING,
+                    ];
+
+                    if ($feedItemReview->isHistoric() && !in_array($siteId, $historicReviewsAllowed)) {
                         $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                         continue;
                     }

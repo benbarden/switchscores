@@ -26,6 +26,9 @@ class ReviewSite extends Model
     const SITE_100_HOUR_REVIEWS = 21; // NB: No feed
     const SITE_THE_NEW_ODYSSEY = 22;
     const SITE_SWITCHWATCH = 23;
+    const SITE_NINTENDO_NOMAD = 24;
+    const SITE_TWO_BEARD_GAMING = 25;
+    const SITE_SWITCH_INDIE_FIX = 26;
 
     /**
      * @var string
