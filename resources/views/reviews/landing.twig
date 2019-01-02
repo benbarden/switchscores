@@ -22,7 +22,7 @@
                         <span style="color: #900;">Down {{ item.movement|replace('-', ' ') }} place(s)</span>,
                         from {{ item.rank_old }} to {{ item.rank_new }}
                     {% else %}
-                        <em>No change (?!)</em>
+                        Initial rank: {{ item.rank_new }}
                     {% endif %}
                 </p>
             {% endfor %}

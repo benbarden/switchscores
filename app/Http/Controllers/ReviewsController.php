@@ -25,7 +25,7 @@ class ReviewsController extends Controller
         //$reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
         $reviewPartnerList = $serviceReviewSites->getActive();
 
-        $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getRecent(20);
+        $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getNotableRecent(20);
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
         //$bindings['ReviewList'] = $reviewList;
         $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($regionCode, 30, 15);

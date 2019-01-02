@@ -42,8 +42,18 @@ class GameRankUpdateService
         return GameRankUpdate::where('game_id', $gameId)->get();
     }
 
-    public function getRecent($limit = 30)
+    public function getAllRecent($limit = 20)
     {
-        return GameRankUpdate::orderBy('created_at', 'desc')->get();
+        return GameRankUpdate::orderBy('created_at', 'desc')->limit($limit)->get();
+    }
+
+    public function getNotableRecent($limit = 20)
+    {
+        return GameRankUpdate::
+            whereNull('rank_old')
+            ->orWhere('movement', '>', '9')
+            ->orWhere('movement', '<', '-9')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)->get();
     }
 }
