@@ -32,8 +32,7 @@ class UserController extends Controller
         /* @var $serviceContainer ServiceContainer */
 
         $userService = $serviceContainer->getUserService();
-        $userListService = $serviceContainer->getUserListService();
-        $userListItemService = $serviceContainer->getUserListItemService();
+        $collectionService = $serviceContainer->getUserGamesCollectionService();
 
         $userData = $userService->find($userId);
         if (!$userData) abort(404);
@@ -45,20 +44,10 @@ class UserController extends Controller
         $bindings['TopTitle'] = 'Admin - View User - '.$displayName;
         $bindings['PanelTitle'] = 'View User - '.$displayName;
 
-        $ownedList = $userListService->getOwnedListByUser($userId);
-        $wishList = $userListService->getWishListByUser($userId);
-        if ($ownedList) {
-            $listId = $ownedList->id;
-            //$bindings['OwnedList'] = $ownedList;
-            $bindings['OwnedListItems'] = $userListItemService->getByList($listId);
-        }
-        if ($wishList) {
-            $listId = $wishList->id;
-            //$bindings['WishList'] = $wishList;
-            $bindings['WishListItems'] = $userListItemService->getByList($listId);
-        }
-
         $bindings['UserData'] = $userData;
+
+        $bindings['CollectionList'] = $collectionService->getByUser($userId);
+        $bindings['CollectionStats'] = $collectionService->getStats($userId);
 
         return view('admin.user.view', $bindings);
     }

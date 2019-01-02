@@ -89,4 +89,31 @@ class UserGamesCollectionService
         return UserGamesCollection::where('user_id', $userId)->where('is_complete', 1)
             ->count();
     }
+
+    public function getStats($userId)
+    {
+        $collectionStats = [];
+        $collectionStats[] = [
+            'title' => 'Total games',
+            'count' => $this->getUserTotalGames($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games not started',
+            'count' => $this->getUserTotalNotStarted($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games in progress',
+            'count' => $this->getUserTotalInProgress($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Games completed',
+            'count' => $this->getUserTotalCompleted($userId)
+        ];
+        $collectionStats[] = [
+            'title' => 'Total hours logged',
+            'count' => $this->getUserTotalHours($userId)
+        ];
+
+        return $collectionStats;
+    }
 }

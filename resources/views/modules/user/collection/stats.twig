@@ -1,0 +1,10 @@
+<table class="table table-striped">
+    <tbody>
+    {% for item in CollectionStats %}
+        <tr>
+            <td class="text-left">{{ item.title }}</td>
+            <td class="text-right">{{ item.count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

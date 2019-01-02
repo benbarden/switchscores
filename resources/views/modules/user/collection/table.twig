@@ -1,0 +1,82 @@
+{% if CollectionList.count > 0 %}
+
+    <table class="table table-striped data-sortable">
+        <thead>
+        <tr>
+            <th class="text-left">Game</th>
+            <th class="text-center">
+                <abbr title="The date when you bought the game or when it was given to you.">Owned<br>from</abbr>
+            </th>
+            <th class="text-center">
+                <abbr title="Whether you own a digital or physical version of the game.">Type</abbr>
+            </th>
+            <th class="text-center">
+                <abbr title="Shows if you've started playing the game yet.">Started</abbr>
+            </th>
+            <th class="text-center">
+                <abbr title="Shows if this is a game you're actively playing or aren't done with yet.">In progress</abbr>
+            </th>
+            <th class="text-center">
+                <abbr title="Shows if you've finished the game or not.">Complete</abbr>
+            </th>
+            <th class="text-center">
+                <abbr title="The number of hours you've played the game for.">Hours played</abbr>
+            </th>
+            <th class="text-center">
+                Options
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in CollectionList %}
+            <tr id="js-collection-row-{{ item.id }}">
+                <td class="text-left">
+                    <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                </td>
+                {% if item.owned_from %}
+                    <td class="text-center">
+                        {{ item.owned_from }}
+                    </td>
+                {% else %}
+                    <td class="text-center" style="background: #c9c9c9; color: #000;">
+                        Not set!
+                    </td>
+                {% endif %}
+                {% if item.owned_type %}
+                    <td class="text-center">
+                        {{ item.owned_type }}
+                    </td>
+                {% else %}
+                    <td class="text-center" style="background: #c9c9c9; color: #000;">
+                        Not set!
+                    </td>
+                {% endif %}
+                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_started} %}
+                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_ongoing} %}
+                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_complete} %}
+                {% if item.hours_played %}
+                    <td class="text-center">
+                        {{ item.hours_played }}
+                    </td>
+                {% else %}
+                    <td class="text-center" style="background: #c9c9c9; color: #000;">
+                        Not set!
+                    </td>
+                {% endif %}
+                <td class="text-center">
+                    {% if AsRole == 'user' %}
+                    <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
+                    <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {% if AsRole == 'user' %}
+        <p>Your games collection is empty! Do you own any games? :)</p>
+    {% else %}
+        <p>This user's games collection is empty.</p>
+    {% endif %}
+{% endif %}

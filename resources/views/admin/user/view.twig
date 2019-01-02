@@ -3,7 +3,7 @@
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
 
     <table class="table table-striped">
         <thead>
@@ -61,82 +61,21 @@
                 {{ UserData.created_at }}
             </td>
         </tr>
-        <tr>
-            <td class="text-right" style="font-weight: bold;">
-            </td>
-            <td class="text-left">
-            </td>
-        </tr>
         </tbody>
     </table>
 
     </div>
+    <div class="col-md-4">
+        <h3>Collection stats</h3>
+        {% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
+    </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-
-    <h3>Wishlist</h3>
-
-    {% if WishListItems.count > 0 %}
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th class="text-left">Game</th>
-                <th class="text-center">Added</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in WishListItems %}
-            <tr>
-                <td class="text-left">
-                    <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                </td>
-                <td class="text-center">
-                    {{ item.created_at }}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>
-            Wishlist is empty.
-        </p>
-    {% endif %}
-
+    <div class="col-md-12">
+        <h3>Games collection</h3>
+        {% include 'modules/user/collection/table.twig' with {'CollectionList': CollectionList, 'AsRole': 'admin'} %}
     </div>
-    <div class="col-md-6">
-
-        <h3>Owned list</h3>
-
-        {% if OwnedListItems.count > 0 %}
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="text-left">Game</th>
-                    <th class="text-center">Added</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in OwnedListItems %}
-                    <tr>
-                        <td class="text-left">
-                            <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                        </td>
-                        <td class="text-center">
-                            {{ item.created_at }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>
-                Owned list is empty.
-            </p>
-        {% endif %}
-
-    </div>
-
 </div>
 
 {% endblock page_inner %}
