@@ -63,8 +63,8 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {% if item.release_date is not null %}
-                                        {{ item.release_date }}
+                                    {% if item.release_date and item.is_released == 1 %}
+                                        {{ item.release_date|date('jS M Y') }}
                                     {% else %}
                                         {{ item.upcoming_date }}
                                     {% endif %}
