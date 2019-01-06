@@ -13,7 +13,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'display_name', 'email', 'password', 'region', 'site_id',
+        'display_name', 'email', 'password', 'region', 'site_id', 'developer_id', 'publisher_id',
     ];
 
     /**
@@ -41,5 +41,15 @@ class User extends Authenticatable
     public function site()
     {
         return $this->hasOne('App\ReviewSite', 'id', 'site_id');
+    }
+
+    public function developer()
+    {
+        return $this->hasOne('App\Developer', 'id', 'developer_id');
+    }
+
+    public function publisher()
+    {
+        return $this->hasOne('App\Publisher', 'id', 'publisher_id');
     }
 }

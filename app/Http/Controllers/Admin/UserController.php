@@ -75,6 +75,8 @@ class UserController extends Controller
 
         $serviceUser = $serviceContainer->getUserService();
         $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $servicePublisher = $serviceContainer->getPublisherService();
 
         $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);
@@ -92,8 +94,10 @@ class UserController extends Controller
             $displayName = $request->display_name;
             $email = $request->email;
             $siteId = $request->site_id;
+            $developerId = $request->developer_id;
+            $publisherId = $request->publisher_id;
 
-            $serviceUser->edit($userData, $displayName, $email, $siteId);
+            $serviceUser->edit($userData, $displayName, $email, $siteId, $developerId, $publisherId);
 
             return redirect(route('admin.user.list'));
 
@@ -109,6 +113,8 @@ class UserController extends Controller
         $bindings['UserId'] = $userId;
 
         $bindings['ReviewSites'] = $serviceReviewSite->getAll();
+        $bindings['Developers'] = $serviceDeveloper->getAll();
+        $bindings['Publishers'] = $servicePublisher->getAll();
 
         return view('admin.user.edit', $bindings);
     }

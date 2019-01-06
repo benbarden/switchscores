@@ -9,6 +9,8 @@
         formVals['display_name'] = "{{ UserData.display_name }}";
         formVals['email'] = "{{ UserData.email }}";
         formVals['site_id'] = "{{ UserData.site_id }}";
+        formVals['developer_id'] = "{{ UserData.developer_id }}";
+        formVals['publisher_id'] = "{{ UserData.publisher_id }}";
 
     } else {
 
@@ -17,11 +19,15 @@
         formVals['display_name'] = "{{ old('display_name') }}";
         formVals['email'] = "{{ old('email') }}";
         formVals['site_id'] = "{{ old('site_id') }}";
+        formVals['developer_id'] = "{{ old('developer_id') }}";
+        formVals['publisher_id'] = "{{ old('publisher_id') }}";
 
     }
 
     $('#display_name').val(formVals['display_name']);
     $('#email').val(formVals['email']);
     $('#site_id').val(formVals['site_id']);
+    $('#developer_id').val(formVals['developer_id']);
+    $('#publisher_id').val(formVals['publisher_id']);
 
 </script>

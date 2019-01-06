@@ -29,6 +29,30 @@
     </div>
 
     <div class="form-group">
+        <label for="developer_id" class="col-md-4 control-label">Developer</label>
+        <div class="col-md-6">
+            <select id="developer_id" class="form-control" name="developer_id">
+                <option value="">&nbsp;</option>
+                {% for item in Developers %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="publisher_id" class="col-md-4 control-label">Publisher</label>
+        <div class="col-md-6">
+            <select id="publisher_id" class="form-control" name="publisher_id">
+                <option value="">&nbsp;</option>
+                {% for item in Publishers %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
