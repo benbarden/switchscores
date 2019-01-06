@@ -32,7 +32,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {{ item.name }}
+                        <a href="{{ route('publishers.page', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.publisher.edit', {'publisherId': item.id}) }}">Edit</a> :

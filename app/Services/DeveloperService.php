@@ -66,4 +66,9 @@ class DeveloperService
     {
         return Developer::orderBy('created_at', 'desc')->get();
     }
+
+    public function getByLinkTitle($linkTitle)
+    {
+        return Developer::where('link_title', $linkTitle)->first();
+    }
 }

@@ -66,4 +66,9 @@ class PublisherService
     {
         return Publisher::orderBy('created_at', 'desc')->get();
     }
+
+    public function getByLinkTitle($linkTitle)
+    {
+        return Publisher::where('link_title', $linkTitle)->first();
+    }
 }

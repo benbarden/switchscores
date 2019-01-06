@@ -64,4 +64,32 @@ class GameDeveloperService
 
         return $games;
     }
+
+    /**
+     * @param $region
+     * @param $developerId
+     * @return mixed
+     */
+    public function getGamesByDeveloper($region, $developerId)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->join('game_developers', 'games.id', '=', 'game_developers.game_id')
+            ->join('developers', 'game_developers.developer_id', '=', 'developers.id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year',
+                'game_developers.developer_id',
+                'developers.name')
+            ->where('game_developers.developer_id', $developerId)
+            ->where('game_release_dates.region', $region)
+            //->where('game_release_dates.is_released', '1')
+            ->orderBy('game_release_dates.release_date', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
 }

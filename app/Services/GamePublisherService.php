@@ -64,4 +64,31 @@ class GamePublisherService
 
         return $games;
     }
+
+    /**
+     * @param $region
+     * @param $publisherId
+     * @return mixed
+     */
+    public function getGamesByPublisher($region, $publisherId)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->join('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year',
+                'game_publishers.publisher_id',
+                'publishers.name')
+            ->where('game_publishers.publisher_id', $publisherId)
+            ->where('game_release_dates.region', $region)
+            //->where('game_release_dates.is_released', '1')
+            ->orderBy('game_release_dates.release_date', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
 }

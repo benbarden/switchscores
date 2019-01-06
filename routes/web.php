@@ -51,12 +51,15 @@ Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 
-/* Lists */
+/* Tags */
 //Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
 //Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
 Route::get('/tags', 'TagsController@landing')->name('tags.landing');
 Route::get('/tags/{linkTitle}', 'TagsController@page')->name('tags.page');
 
+/* Developers and publishers */
+Route::get('/developers/{linkTitle}', 'DevelopersController@page')->name('developers.page');
+Route::get('/publishers/{linkTitle}', 'PublishersController@page')->name('publishers.page');
 
 /* Charts */
 Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
