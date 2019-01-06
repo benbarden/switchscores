@@ -1,0 +1,27 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['display_name'] = "{{ UserData.display_name }}";
+        formVals['email'] = "{{ UserData.email }}";
+        formVals['site_id'] = "{{ UserData.site_id }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['display_name'] = "{{ old('display_name') }}";
+        formVals['email'] = "{{ old('email') }}";
+        formVals['site_id'] = "{{ old('site_id') }}";
+
+    }
+
+    $('#display_name').val(formVals['display_name']);
+    $('#email').val(formVals['email']);
+    $('#site_id').val(formVals['site_id']);
+
+</script>

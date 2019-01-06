@@ -22,9 +22,9 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Display name</th>
-                <th>Email</th>
-                <th class="text-center">Region</th>
+                <th class="text-left">Review site</th>
                 <th class="text-center">Joined</th>
+                <th class="text-center">Options</th>
             </tr>
         </thead>
         <tbody>
@@ -35,15 +35,17 @@
                     </td>
                     <td>
                         <a href="{{ route('admin.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
+                        <br>
+                        <small>{{ item.email }}</small>
                     </td>
-                    <td>
-                        {{ item.email }}
+                    <td class="text-left">
+                        {{ item.site.name }}
                     </td>
                     <td class="text-center">
-                        {{ item.region }}
+                        {{ item.created_at|date('Y-m-d') }}
                     </td>
                     <td class="text-center">
-                        {{ item.created_at }}
+                        <a href="{{ route('admin.user.edit', {'userId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
