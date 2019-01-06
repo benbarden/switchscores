@@ -1,0 +1,131 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<h2>Game developers</h2>
+
+<p>
+    This page lists the developers used for the game <strong>{{ GameData.title }}</strong>
+    and allows you to add or remove developers.
+</p>
+
+{% if UnusedDeveloperList %}
+    <h3>Choose a developer to add</h3>
+    <select id="developer-list" name="developer-list">
+        <option value=""></option>
+        {% for item in UnusedDeveloperList %}
+            <option value="{{ item.id }}">{{ item.name }}</option>
+        {% endfor %}
+    </select>
+    <input id="btn-add-developer" type="button" value="Add to game">
+    <div id="js-developer-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+{% endif %}
+
+<h3>Game developers</h3>
+{% if GameDeveloperList.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Developer</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameDeveloperList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.developer.name }}
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" id="lnk-remove-developer-{{ item.id }}" class="lnk-remove-developer">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>This game has no developers assigned.</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null
+            ]
+        });
+    });
+    $('#btn-add-developer').on('click', function() {
+
+        developerName = $('#developer-list option:selected').text();
+        developerId = $('#developer-list option:selected').val();
+
+        if (developerId == '') {
+            $('#js-developer-notify').text('No developer selected.');
+            $('#js-developer-notify').show();
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.developer.game.add', {'gameId': GameId}) }}', {developerId: developerId}, function(data) {
+            $('#js-developer-notify').text('Developer added!');
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 1000);
+        })
+        .fail(function(data) {
+            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+        });
+    });
+    $('.lnk-remove-developer').on('click', function() {
+
+        elemId = $(this).attr('id');
+        gameDeveloperId = elemId.replace('lnk-remove-developer-', '');
+
+        if (gameDeveloperId == '') {
+            $('#js-developer-notify').text('Failed to load gameDeveloperId');
+            $('#js-developer-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Remove this developer from the game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.developer.game.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
+            $('#js-developer-notify').text('Developer removed!');
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 1000);
+        })
+        .fail(function(data) {
+            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+        });
+    });
+</script>
+
+{% endblock page_inner %}

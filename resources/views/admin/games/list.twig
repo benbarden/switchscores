@@ -67,6 +67,13 @@
                     </td>
                     <td>
                         <a href="{{ LinkHelper.gameShow(item) }}" target="_blank">{{ item.title }}</a>
+                        <br>
+                        <small>
+                            <a href="{{ route('admin.tag.game.list', {'gameId': item.id}) }}">Tags</a> :
+                            <a href="{{ route('admin.developer.game.list', {'gameId': item.id}) }}">Developers</a> :
+                            <a href="{{ route('admin.publisher.game.list', {'gameId': item.id}) }}">Publishers</a> :
+                            <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">Hashes</a>
+                        </small>
                     </td>
                     <td class="text-center">
                         {% if item.eshop_europe_fs_id %}
@@ -86,8 +93,7 @@
                         {% if ActiveNav == 'action-list-games-for-release' %}
                             <a href="javascript:void(0);" id="lnk-release-game-{{ item.id }}" class="lnk-release-game">Release</a>
                         {% else %}
-                            <a href="{{ route('admin.tag.game.list', {'gameId': item.id}) }}">Tags</a> :
-                            <a href="{{ route('admin.games-title-hash.list', {'gameId': item.id}) }}">Hashes</a>
+                            &nbsp;
                         {% endif %}
                     </td>
                     <td class="text-center">

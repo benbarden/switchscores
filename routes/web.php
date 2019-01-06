@@ -234,6 +234,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/developer/edit/{developerId}', 'Admin\DeveloperController@edit')->name('admin.developer.edit');
     Route::get('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
     Route::post('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
+    Route::get('/admin/developer/game/{gameId}/list', 'Admin\DeveloperController@showGameList')->name('admin.developer.game.list');
+    Route::get('/admin/developer/game/{gameId}/add', 'Admin\DeveloperController@addGameDeveloper')->name('admin.developer.game.add');
+    Route::get('/admin/developer/game/{gameId}/remove', 'Admin\DeveloperController@removeGameDeveloper')->name('admin.developer.game.remove');
 
     // Publishers
     Route::get('/admin/publisher/list', 'Admin\PublisherController@showList')->name('admin.publisher.list');
@@ -243,6 +246,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/publisher/edit/{publisherId}', 'Admin\PublisherController@edit')->name('admin.publisher.edit');
     Route::get('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
     Route::post('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
+    Route::get('/admin/publisher/game/{gameId}/list', 'Admin\PublisherController@showGameList')->name('admin.publisher.game.list');
+    Route::get('/admin/publisher/game/{gameId}/add', 'Admin\PublisherController@addGamePublisher')->name('admin.publisher.game.add');
+    Route::get('/admin/publisher/game/{gameId}/remove', 'Admin\PublisherController@removeGamePublisher')->name('admin.publisher.game.remove');
 
 });
 

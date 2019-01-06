@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Services\ServiceContainer;
 
+use Auth;
+
 class PublisherController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -155,4 +157,110 @@ class PublisherController extends Controller
         return view('admin.publisher.delete', $bindings);
     }
 
+    public function showGameList($gameId)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) abort(404);
+
+        $gameTitle = $game->title;
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Admin - Publishers for game: '.$gameTitle;
+        $bindings['PanelTitle'] = 'Publishers for game: '.$gameTitle;
+
+        $bindings['GameId'] = $gameId;
+        $bindings['GameData'] = $game;
+        $bindings['GamePublisherList'] = $serviceGamePublisher->getByGame($gameId);
+
+        $bindings['UnusedPublisherList'] = $serviceGamePublisher->getPublishersNotOnGame($gameId);
+
+        return view('admin.publisher.gamePublishers', $bindings);
+    }
+
+    public function addGamePublisher()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $servicePublisher = $serviceContainer->getPublisherService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $publisherId = $request->publisherId;
+        if (!$publisherId) {
+            return response()->json(['error' => 'Missing data: publisherId'], 400);
+        }
+
+        $publisherData = $servicePublisher->find($publisherId);
+        if (!$publisherData) {
+            return response()->json(['error' => 'Publisher not found!'], 400);
+        }
+
+        $existingGamePublisher = $serviceGamePublisher->gameHasPublisher($gameId, $publisherId);
+        if ($existingGamePublisher) {
+            return response()->json(['error' => 'Game already has this Publisher!'], 400);
+        }
+
+        $serviceGamePublisher->createGamePublisher($gameId, $publisherId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function removeGamePublisher()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $gamePublisherId = $request->gamePublisherId;
+        if (!$gamePublisherId) {
+            return response()->json(['error' => 'Missing data: gamePublisherId'], 400);
+        }
+
+        $gamePublisherData = $serviceGamePublisher->find($gamePublisherId);
+        if (!$gamePublisherData) {
+            return response()->json(['error' => 'Game publisher not found!'], 400);
+        }
+
+        if ($gamePublisherData->game_id != $gameId) {
+            return response()->json(['error' => 'Game id mismatch on game Publisher record!'], 400);
+        }
+
+        $serviceGamePublisher->delete($gamePublisherId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
 }
