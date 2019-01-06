@@ -1,0 +1,10 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('admin.publisher.add') %}
+{% include 'admin/publisher/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'admin/publisher/scripts.twig' %}
+
+{% endblock page_inner %}

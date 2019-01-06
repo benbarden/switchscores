@@ -221,10 +221,28 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
+    Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');
     Route::get('/admin/tag/game/{gameId}/list', 'Admin\TagController@showGameTagList')->name('admin.tag.game.list');
     Route::get('/admin/tag/game/{gameId}/add', 'Admin\TagController@addGameTag')->name('admin.tag.game.add');
     Route::get('/admin/tag/game/{gameId}/remove', 'Admin\TagController@removeGameTag')->name('admin.tag.game.remove');
-    Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');
+
+    // Developers
+    Route::get('/admin/developer/list', 'Admin\DeveloperController@showList')->name('admin.developer.list');
+    Route::get('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
+    Route::post('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
+    Route::get('/admin/developer/edit/{developerId}', 'Admin\DeveloperController@edit')->name('admin.developer.edit');
+    Route::post('/admin/developer/edit/{developerId}', 'Admin\DeveloperController@edit')->name('admin.developer.edit');
+    Route::get('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
+    Route::post('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
+
+    // Publishers
+    Route::get('/admin/publisher/list', 'Admin\PublisherController@showList')->name('admin.publisher.list');
+    Route::get('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
+    Route::post('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
+    Route::get('/admin/publisher/edit/{publisherId}', 'Admin\PublisherController@edit')->name('admin.publisher.edit');
+    Route::post('/admin/publisher/edit/{publisherId}', 'Admin\PublisherController@edit')->name('admin.publisher.edit');
+    Route::get('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
+    Route::post('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
 
 });
 

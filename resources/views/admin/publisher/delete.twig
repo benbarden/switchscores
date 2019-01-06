@@ -1,0 +1,29 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% if ErrorsCustom %}
+    {% include 'common/form-errors.twig' %}
+    <div class="alert alert-warning" role="alert">
+        Cannot delete the publisher: <strong>{{ PublisherData.name }}</strong> (id: {{ PublisherId }}) due to the above errors.
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Warning!</strong> You are about to delete the publisher: <strong>{{ PublisherData.name }}</strong> (id: {{ PublisherId }})
+        <br>Please ensure this is what you want to do before proceeding. There is no option to undo the deletion if you proceed!
+    </div>
+
+    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.publisher.delete', {'publisherId': PublisherId}) }}">
+        {{ csrf_field() }}
+
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-4">
+                <button type="submit" class="btn outline btn-danger">
+                    Confirm deletion
+                </button>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+{% endblock page_inner %}

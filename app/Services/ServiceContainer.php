@@ -10,11 +10,14 @@ class ServiceContainer
     const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
     const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
+    const KEY_DEVELOPER_SERVICE = 'DeveloperService';
     const KEY_ESHOP_EUROPE_GAME_SERVICE = 'EshopEuropeGameService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
     const KEY_GAME_CALENDAR_SERVICE = 'GameCalendarService';
+    const KEY_GAME_DEVELOPER_SERVICE = 'GameDeveloperService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
+    const KEY_GAME_PUBLISHER_SERVICE = 'GamePublisherService';
     const KEY_GAME_RANK_UPDATE_SERVICE = 'GameRankUpdateService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
     const KEY_GAME_SERVICE = 'GameService';
@@ -24,6 +27,7 @@ class ServiceContainer
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_PARTNER_REVIEW_SERVICE = 'PartnerReviewService';
+    const KEY_PUBLISHER_SERVICE = 'PublisherService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
@@ -122,6 +126,14 @@ class ServiceContainer
     }
 
     /**
+     * @return DeveloperService
+     */
+    public function getDeveloperService()
+    {
+        return $this->load(self::KEY_DEVELOPER_SERVICE);
+    }
+
+    /**
      * @return EshopEuropeGameService
      */
     public function getEshopEuropeGameService()
@@ -154,11 +166,27 @@ class ServiceContainer
     }
 
     /**
+     * @return GameDeveloperService
+     */
+    public function getGameDeveloperService()
+    {
+        return $this->load(self::KEY_GAME_DEVELOPER_SERVICE);
+    }
+
+    /**
      * @return GameGenreService
      */
     public function getGameGenreService()
     {
         return $this->load(self::KEY_GAME_GENRE_SERVICE);
+    }
+
+    /**
+     * @return GamePublisherService
+     */
+    public function getGamePublisherService()
+    {
+        return $this->load(self::KEY_GAME_PUBLISHER_SERVICE);
     }
 
     /**
@@ -231,6 +259,14 @@ class ServiceContainer
     public function getPartnerReviewService()
     {
         return $this->load(self::KEY_PARTNER_REVIEW_SERVICE);
+    }
+
+    /**
+     * @return PublisherService
+     */
+    public function getPublisherService()
+    {
+        return $this->load(self::KEY_PUBLISHER_SERVICE);
     }
 
     /**

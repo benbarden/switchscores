@@ -1,0 +1,67 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="+ New publisher">
+    </div>
+    <div class="col-xs-12 col-sm-9">
+    </div>
+</div>
+
+<hr>
+
+<h2>Publishers</h2>
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+{% if PublisherList.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Name</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in PublisherList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.publisher.edit', {'publisherId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('admin.publisher.delete', {'publisherId': item.id}) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('admin.publisher.add') }}';
+    });
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

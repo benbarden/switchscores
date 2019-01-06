@@ -1,0 +1,10 @@
+{% extends 'theme/wos/admin/page-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('admin.developer.edit', {'developerId': DeveloperId}) %}
+{% include 'admin/developer/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'admin/developer/scripts.twig' %}
+
+{% endblock page_inner %}

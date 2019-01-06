@@ -1,0 +1,52 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="form-group">
+                <label for="name" class="col-md-4 control-label">Name</label>
+                <div class="col-md-6">
+                    <input id="name" type="text" class="form-control" name="name" maxlength="100" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="link_title" class="col-md-4 control-label">Link title</label>
+                <div class="col-md-6">
+                    <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="website_url" class="col-md-4 control-label">Website URL</label>
+                <div class="col-md-6">
+                    <input id="website_url" type="text" class="form-control" name="website_url">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="twitter_id" class="col-md-4 control-label">
+                    Twitter ID
+                    <br><small>https://twitter.com/</small>
+                </label>
+                <div class="col-md-6">
+                    <input id="twitter_id" type="text" class="form-control" name="twitter_id" maxlength="20">
+                    <small>Don't include full URL - just the username</small>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+
+</form>
