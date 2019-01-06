@@ -312,6 +312,9 @@ class GamesController extends Controller
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameGenres = $serviceContainer->getGameGenreService();
         $serviceReviewUser = $serviceContainer->getReviewUserService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceGameTag = $serviceContainer->getGameTagService();
 
         $bindings = [];
 
@@ -337,6 +340,11 @@ class GamesController extends Controller
         // Get user reviews
         $gameUserReviews = $serviceReviewUser->getByGame($gameId);
 
+        // Get game metadata
+        $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
+        $gamePublishers = $serviceGamePublisher->getByGame($gameId);
+        $gameTags = $serviceGameTag->getByGame($gameId);
+
         $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game details';
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
@@ -345,6 +353,9 @@ class GamesController extends Controller
         $bindings['GameReviews'] = $gameReviews;
         $bindings['GameGenres'] = $gameGenres;
         $bindings['GameReviewUserList'] = $gameUserReviews;
+        $bindings['GameDevelopers'] = $gameDevelopers;
+        $bindings['GamePublishers'] = $gamePublishers;
+        $bindings['GameTags'] = $gameTags;
 
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 

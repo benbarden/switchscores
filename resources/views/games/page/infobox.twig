@@ -73,22 +73,77 @@
         </td>
         <td>{{ GameData.players }}</td>
     </tr>
+
+    {% if GameDevelopers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('developers.page', {'linkTitle': item.developer.link_title}) }}">{{ item.developer.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>{{ GameData.developer }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GamePublishers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>
+                {% for item in GamePublishers %}
+                    <a href="{{ route('publishers.page', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>{{ GameData.publisher }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GameTags|length > 0 and item.is_released == 1 %}
+
     <tr>
         <td>
-            <span style="font-weight: bold;">Developer</span>
+            <span style="font-weight: bold;">Tag(s)</span>
         </td>
-        <td>{{ GameData.developer }}</td>
-    </tr>
-    <tr>
         <td>
-            <span style="font-weight: bold;">Publisher</span>
+            {% for item in GameTags %}
+                <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">{{ item.tag.tag_name }}</a>
+                <br>
+            {% endfor %}
         </td>
-        <td>{{ GameData.publisher }}</td>
     </tr>
-    {% if GameGenres %}
+
+    {% endif %}
+
+    {% if GameGenres|length > 0 %}
     <tr>
         <td>
-            <span style="font-weight: bold;">Genres</span>
+            <span style="font-weight: bold;">eShop genres</span>
         </td>
         <td>
             {% for item in GameGenres %}
