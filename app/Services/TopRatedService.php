@@ -118,6 +118,27 @@ class TopRatedService
 
     /**
      * @param $region
+     * @return integer
+     */
+    public function getUnrankedCount($region)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('games.review_count', '<', '3')
+            ->orderBy('games.rating_avg', 'desc');
+
+        $topRatedCounter = $games->count();
+        return $topRatedCounter;
+    }
+
+    /**
+     * @param $region
      * @param $year
      * @param $month
      * @return mixed

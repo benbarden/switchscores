@@ -1,0 +1,86 @@
+<h2 style="font-variant: small-caps">Information</h2>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}">Total games (All regions)</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}" class="h4">{{ TotalGameCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/released">Released games</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/released" class="h4">{{ ReleasedGameCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/upcoming">Upcoming games</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/upcoming" class="h4">{{ UpcomingGameCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="#">Ranked games</a>
+        </td>
+        <td class="text-right">
+            <a href="#" class="h4">{{ RankedGameCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="#">Unranked games</a>
+        </td>
+        <td class="text-right">
+            <a href="#" class="h4">{{ UnrankedGameCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.reviews.link.list') }}">Review links</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.reviews.link.list') }}" class="h4">{{ ReviewLinkCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.user.list') }}">Registered users</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop Europe: total records</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}" class="h4">{{ EshopEuropeTotalCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}/with-link">eShop Europe: total linked to a WOS record</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}/with-link" class="h4">{{ EshopEuropeLinkedCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link">eShop Europe: total unlinked items</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link" class="h4">{{ EshopEuropeUnlinkedCount }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

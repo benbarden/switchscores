@@ -30,14 +30,19 @@ class IndexController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
+        $serviceReviewLinks = $serviceContainer->getReviewLinkService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
+
         $reviewUserService = $serviceContainer->getReviewUserService();
         $partnerReviewService = $serviceContainer->getPartnerReviewService();
         $feedItemGameService = $serviceContainer->getFeedItemGameService();
         $feedItemReviewService = $serviceContainer->getFeedItemReviewService();
-        $userService = $serviceContainer->getUserService();
         $gameTagService = $serviceContainer->getGameTagService();
         $gameGenreService = $serviceContainer->getGameGenreService();
-        $gameService = $serviceContainer->getGameService();
+        $serviceGame = $serviceContainer->getGameService();
 
         $bindings = [];
 
@@ -45,10 +50,23 @@ class IndexController extends Controller
         $bindings['PanelTitle'] = 'Admin index';
 
 
+        // Information and site stats
+        $bindings['TotalGameCount'] = $serviceGame->getCount();
+        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
+        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
+        $bindings['RankedGameCount'] = $serviceTopRated->getCount($regionCode);
+        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount($regionCode);
+        $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
+        $bindings['RegisteredUserCount'] = $serviceUser->getCount();
+        $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();
+        $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, true);
+        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
+
+
         // Action lists
-        $actionListGamesForReleaseCountEu = $gameService->getActionListGamesForRelease('eu');
-        $actionListGamesForReleaseCountUs = $gameService->getActionListGamesForRelease('us');
-        $actionListGamesForReleaseCountJp = $gameService->getActionListGamesForRelease('jp');
+        $actionListGamesForReleaseCountEu = $serviceGame->getActionListGamesForRelease('eu');
+        $actionListGamesForReleaseCountUs = $serviceGame->getActionListGamesForRelease('us');
+        $actionListGamesForReleaseCountJp = $serviceGame->getActionListGamesForRelease('jp');
         $pendingFeedGameItems = $feedItemGameService->getPending();
         $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
         $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
@@ -63,9 +81,9 @@ class IndexController extends Controller
         $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
 
         // Action lists
-        $actionListNintendoUrlNoPackshotCount = $gameService->getActionListNintendoUrlNoPackshots($regionCode);
-        $actionListRecentNoNintendoUrlCount = $gameService->getActionListRecentNoNintendoUrl($regionCode);
-        $actionListUpcomingNoNintendoUrlCount = $gameService->getActionListUpcomingNoNintendoUrl($regionCode);
+        $actionListNintendoUrlNoPackshotCount = $serviceGame->getActionListNintendoUrlNoPackshots($regionCode);
+        $actionListRecentNoNintendoUrlCount = $serviceGame->getActionListRecentNoNintendoUrl($regionCode);
+        $actionListUpcomingNoNintendoUrlCount = $serviceGame->getActionListUpcomingNoNintendoUrl($regionCode);
 
         $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
         $bindings['ActionListRecentNoNintendoUrlCount'] = count($actionListRecentNoNintendoUrlCount);
@@ -73,13 +91,13 @@ class IndexController extends Controller
 
 
         // Missing data
-        $missingDevOrPub = $gameService->getWithoutDevOrPub();
+        $missingDevOrPub = $serviceGame->getWithoutDevOrPub();
         $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
-        $missingVendorPageUrl = $gameService->getByNullField('vendor_page_url', $regionCode);
-        $missingVideoUrl = $gameService->getByNullField('video_url', $regionCode);
-        $missingTwitterId = $gameService->getByNullField('twitter_id', $regionCode);
-        $missingAmazonUkLink = $gameService->getWithoutAmazonUkLink();
+        $missingVendorPageUrl = $serviceGame->getByNullField('vendor_page_url', $regionCode);
+        $missingVideoUrl = $serviceGame->getByNullField('video_url', $regionCode);
+        $missingTwitterId = $serviceGame->getByNullField('twitter_id', $regionCode);
+        $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
 
         $bindings['MissingDevOrPubCount'] = count($missingDevOrPub);
         $bindings['MissingTagsCount'] = count($missingTags);
@@ -88,11 +106,6 @@ class IndexController extends Controller
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingTwitterIdCount'] = count($missingTwitterId);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
-
-
-        // Information
-        $userList = $userService->getAll();
-        $bindings['RegisteredUserCount'] = count($userList);
 
 
         return view('admin.index', $bindings);

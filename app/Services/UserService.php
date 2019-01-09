@@ -42,4 +42,9 @@ class UserService
     {
         return User::orderBy('created_at', 'desc')->get();
     }
+
+    public function getCount()
+    {
+        return User::orderBy('created_at', 'desc')->count();
+    }
 }

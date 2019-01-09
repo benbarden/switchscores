@@ -40,7 +40,12 @@ class EshopEuropeGameService
         return $feedItems;
     }
 
-    public function getAllWithLink($limit = null)
+    public function getTotalCount()
+    {
+        return EshopEuropeGame::orderBy('title', 'asc')->count();
+    }
+
+    public function getAllWithLink($limit = null, $count = false)
     {
         $feedItems = DB::table('eshop_europe_games')
             ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
@@ -51,12 +56,16 @@ class EshopEuropeGameService
         if ($limit) {
             $feedItems = $feedItems->limit($limit);
         }
-        $feedItems = $feedItems->get();
+        if ($count) {
+            $feedItems = $feedItems->count();
+        } else {
+            $feedItems = $feedItems->get();
+        }
 
         return $feedItems;
     }
 
-    public function getAllWithoutLink($limit = null)
+    public function getAllWithoutLink($limit = null, $count = false)
     {
         $feedItems = DB::table('eshop_europe_games')
             ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
@@ -67,7 +76,11 @@ class EshopEuropeGameService
         if ($limit) {
             $feedItems = $feedItems->limit($limit);
         }
-        $feedItems = $feedItems->get();
+        if ($count) {
+            $feedItems = $feedItems->count();
+        } else {
+            $feedItems = $feedItems->get();
+        }
 
         return $feedItems;
     }

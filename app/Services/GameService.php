@@ -143,6 +143,11 @@ class GameService
         return $games;
     }
 
+    public function getCount()
+    {
+        return Game::orderBy('title', 'asc')->count();
+    }
+
     public function getAllModels()
     {
         $games = Game::orderBy('games.title', 'asc')->get();

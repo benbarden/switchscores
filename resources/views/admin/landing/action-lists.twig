@@ -1,0 +1,172 @@
+<h2 style="font-variant: small-caps">Action lists</h2>
+
+<h3>User data</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.reviews.user.list') }}">Pending user reviews</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.reviews.user.list') }}" class="h4">{{ PendingReviewUserCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.reviews.partner.list') }}">Pending partner reviews</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.reviews.partner.list') }}" class="h4">{{ PendingPartnerReviewCount }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Games to release</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu">EU games to release</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu" class="h4">{{ ActionListGamesForReleaseCountEu }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us">US games to release</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us" class="h4">{{ ActionListGamesForReleaseCountUs }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp">JP games to release</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp" class="h4">{{ ActionListGamesForReleaseCountJp }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Feed updates</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.feed-items.reviews.list') }}">Pending feed reviews</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.feed-items.games.list') }}">Pending game updates</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Action lists: others</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">With Nintendo URL, no packshot</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots" class="h4">{{ ActionListNintendoUrlNoPackshotsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-recent-no-nintendo-url">Recent, no Nintendo URL</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-recent-no-nintendo-url" class="h4">{{ ActionListRecentNoNintendoUrlCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-upcoming-no-nintendo-url">Upcoming, no Nintendo URL</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-upcoming-no-nintendo-url" class="h4">{{ ActionListUpcomingNoNintendoUrlCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-dev-or-pub">No dev/pub</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-dev-or-pub" class="h4">{{ MissingDevOrPubCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Missing data (Low priority)</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/no-video-url" class="h4">{{ MissingVideoUrlCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/no-vendor-page-url">No vendor URL</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/no-vendor-page-url" class="h4">{{ MissingVendorPageUrlCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/no-twitter-id">No Twitter ID</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/no-twitter-id" class="h4">{{ MissingTwitterIdCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list') }}/no-amazon-uk-link" class="h4">{{ MissingAmazonUkLink }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
