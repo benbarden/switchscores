@@ -210,12 +210,21 @@ class EshopEuropeUpdateGameData extends Command
             // *** FIELD UPDATES:
             // European release date
             // Check for bad dates
-            if (in_array($eshopReleaseDateRaw, ['TBD'])) {
-                $isBadDate = true;
-            } else {
-                $isBadDate = false;
-                $eshopReleaseDateObj = \DateTime::createFromFormat('d/m/Y', $eshopReleaseDateRaw);
-                $eshopReleaseDate = $eshopReleaseDateObj->format('Y-m-d');
+            $badDatesArray = [
+                'TBD',
+                'Spring 2019'
+            ];
+            try {
+                if (in_array($eshopReleaseDateRaw, $badDatesArray)) {
+                    $isBadDate = true;
+                } else {
+                    $isBadDate = false;
+                    $eshopReleaseDateObj = \DateTime::createFromFormat('d/m/Y', $eshopReleaseDateRaw);
+                    $eshopReleaseDate = $eshopReleaseDateObj->format('Y-m-d');
+                }
+            } catch (\Throwable $e) {
+                $this->error('ERROR: ['.$eshopReleaseDateRaw.'] - '.$e->getMessage());
+                return;
             }
 
             if (!$isBadDate) {
