@@ -29,10 +29,11 @@
         <tr>
             <th class="text-right">#</th>
             <th class="text-left">Game</th>
-            <th class="text-center">Rating</th>
+            <th class="text-left">Site</th>
+            <th class="text-center">Date</th>
             <th class="text-center">Link</th>
-            <th class="text-center">Date of review</th>
-            <th class="text-center">Date submitted</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Original</th>
             <th class="text-center">Status</th>
             <th class="text-center">Options</th>
         </tr>
@@ -46,24 +47,33 @@
                 <td class="text-left">
                     <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
                 </td>
-                <td class="text-center">
-                    {{ item.item_rating }}
-                </td>
-                <td class="text-center">
-                    <a href="{{ item.item_url }}" target="_blank">Go to review</a>
+
+                <td class="text-left">
+                    {{ item.site.name }}
                 </td>
                 <td class="text-center">
                     {{ item.item_date }}
                 </td>
                 <td class="text-center">
-                    {{ item.created_at }}
+                    <a href="{{ item.url }}" target="_blank">View</a>
+                </td>
+                <td class="text-center">
+                    {{ item.item_rating }}
+                </td>
+                <td class="text-center">
+                    {% if item.site.rating_scale == 5 %}
+                        {% set OriginalRating = item.item_rating * 2 %}
+                        {{ OriginalRating|number_format(1, '.', ',') }}
+                    {% else %}
+                        -
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {{ item.getStatusDesc() }}
                 </td>
                 <td class="text-center">
                     {% if item.getStatusDesc() != 'Active' %}
-                    <a href="{{ route('admin.reviews.partner.edit', {'reviewId': item.id}) }}">Edit</a>
+                        <a href="{{ route('admin.reviews.partner.edit', {'reviewId': item.id}) }}">Edit</a>
                     {% endif %}
                 </td>
             </tr>
@@ -92,6 +102,7 @@
                 null,
                 null,
                 { "orderable": false },
+                null,
                 null,
                 { "orderable": false },
                 { "orderable": false }

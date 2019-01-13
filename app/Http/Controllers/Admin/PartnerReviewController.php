@@ -24,7 +24,7 @@ class PartnerReviewController extends Controller
         $bindings['TopTitle'] = 'Admin - Reviews - Partner reviews';
         $bindings['PanelTitle'] = 'Partner reviews';
 
-        $jsInitialSort = "[ 3, 'desc']";
+        $jsInitialSort = "[ 0, 'desc']";
 
         if (!isset($filterStatus)) {
             $bindings['FilterStatus'] = '';
