@@ -52,6 +52,16 @@ class Game extends Model
         return $this->hasMany('App\GameReleaseDate', 'game_id', 'id');
     }
 
+    public function gameDevelopers()
+    {
+        return $this->hasMany('App\GameDeveloper', 'game_id', 'id');
+    }
+
+    public function gamePublishers()
+    {
+        return $this->hasMany('App\GamePublisher', 'game_id', 'id');
+    }
+
     // GameReleaseDate helper functions
     public function regionReleaseDate($region)
     {

@@ -147,21 +147,24 @@ class EshopEuropeUpdateGameData extends Command
 
             // *** FIELD UPDATES:
             // Publisher
-            if ($game->publisher == null) {
-                // Not set, so let's update it
-                $this->info($gameTitle.' - no publisher. '.
-                    'Expected: '.$eshopPublisher.' - Updating.');
-                $game->publisher = $eshopPublisher;
-                $saveChanges = true;
-                $showSplitter = true;
-            } elseif ($game->publisher != $eshopPublisher) {
-                // Different
-                $this->warn($gameTitle.' - different publisher. '.
-                    'Game data: '.$game->publisher.' - '.
-                    'Expected: '.$eshopPublisher);
-                $showSplitter = true;
-            } else {
-                // Same value, nothing to do
+            if ($game->gamePublishers()->count() == 0) {
+                // Only proceed if new publisher db entries do not exist
+                if ($game->publisher == null) {
+                    // Not set, so let's update it
+                    $this->info($gameTitle.' - no publisher. '.
+                        'Expected: '.$eshopPublisher.' - Updating.');
+                    $game->publisher = $eshopPublisher;
+                    $saveChanges = true;
+                    $showSplitter = true;
+                } elseif ($game->publisher != $eshopPublisher) {
+                    // Different
+                    $this->warn($gameTitle.' - different publisher. '.
+                        'Game data: '.$game->publisher.' - '.
+                        'Expected: '.$eshopPublisher);
+                    $showSplitter = true;
+                } else {
+                    // Same value, nothing to do
+                }
             }
 
             // *** FIELD UPDATES:

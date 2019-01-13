@@ -53,11 +53,18 @@ class Importer
     {
         $modifiedFields = [];
 
-        if ($newFeedItem->item_developers != $game->developer) {
-            $modifiedFields[] = 'item_developers';
+        if ($game->gameDevelopers()->count() == 0) {
+            // Only proceed if new developer db entries do not exist
+            if ($newFeedItem->item_developers != $game->developer) {
+                $modifiedFields[] = 'item_developers';
+            }
         }
-        if ($newFeedItem->item_publishers != $game->publisher) {
-            $modifiedFields[] = 'item_publishers';
+
+        if ($game->gamePublishers()->count() == 0) {
+            // Only proceed if new publisher db entries do not exist
+            if ($newFeedItem->item_publishers != $game->publisher) {
+                $modifiedFields[] = 'item_publishers';
+            }
         }
 
         foreach ($gameReleaseDates as $gameReleaseDate) {

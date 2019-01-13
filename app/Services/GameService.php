@@ -100,11 +100,19 @@ class GameService
 
     // ********************************************************** //
 
+    /**
+     * @param $id
+     * @return Game
+     */
     public function find($id)
     {
         return Game::find($id);
     }
 
+    /**
+     * @param $title
+     * @return Game
+     */
     public function getByTitle($title)
     {
         $game = Game::where('title', $title)
@@ -112,6 +120,12 @@ class GameService
         return $game;
     }
 
+    /**
+     * @param $region
+     * @param $fsId
+     * @return Game
+     * @throws \Exception
+     */
     public function getByFsId($region, $fsId)
     {
         switch ($region) {
