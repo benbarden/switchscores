@@ -20,13 +20,15 @@
 <hr>
 
 {% if FeedItems.count > 0 %}
+<div class="table-responsive">
     <table class="table table-striped data-sortable">
         <thead>
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Title</th>
                 <th class="text-center">Date</th>
-                <th class="text-left">Status</th>
+                <th class="text-center">Game link</th>
+                <th class="text-center">Rating</th>
                 <th class="text-center">Process status</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -37,29 +39,37 @@
                     <td class="text-right">
                         {{ item.id }}
                     </td>
-                    <td class="text-left">
+                    <td class="text-left" style="max-width: 300px;">
                         <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
                         <br>
                         <small>
-                            {{ item.item_date }} | {{ item.site.name }}
+                            {{ item.site.name }}
                         </small>
                     </td>
                     <td class="text-center">
-                        <small>{{ item.item_date }}</small>
+                        {{ item.item_date|date('Y-m-d') }}
                     </td>
-                    <td class="text-left">
-                        <ul>
-                            {% if item.game.title is not defined %}
-                                <li><span style="color: #f00;">Game not linked</span></li>
-                            {% else %}
-                                <li>Game linked OK ({{ item.game.title }})</li>
-                            {% endif %}
-                            {% if item.item_rating is null %}
-                                <li><span style="color: #f00;">Rating missing</span></li>
-                            {% else %}
-                                <li>Rating OK</li>
-                            {% endif %}
-                        </ul>
+                    <td class="text-center">
+                        {% if item.game.title is not defined %}
+                            <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        {% else %}
+                            <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.item_rating is null %}
+                            <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        {% else %}
+                            <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.processed == 1 %}
@@ -75,6 +85,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 {% else %}
     <p>No items found!</p>
 {% endif %}
@@ -95,6 +106,7 @@
                 null,
                 { "orderable": false },
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 null,
                 { "orderable": false }
