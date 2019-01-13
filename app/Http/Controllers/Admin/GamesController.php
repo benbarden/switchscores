@@ -46,6 +46,8 @@ class GamesController extends Controller
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameTag = $serviceContainer->getGameTagService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
 
         $bindings = [];
 
@@ -100,11 +102,32 @@ class GamesController extends Controller
                     $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
-                // Missing data
-                case 'no-dev-or-pub':
-                    $gameList = $serviceGame->getWithoutDevOrPub();
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
+                // Developers and Publishers
+                case 'no-developer-set':
+                    $gameList = $serviceGameDeveloper->getGamesWithNoDeveloper();
+                    $jsInitialSort = "[ 0, 'desc']";
                     break;
+                case 'old-developers-to-migrate':
+                    $gameList = $serviceGameDeveloper->getOldDevelopersToMigrate();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'game-developer-links':
+                    $gameList = $serviceGameDeveloper->getGameDeveloperLinks();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'no-publisher-set':
+                    $gameList = $serviceGamePublisher->getGamesWithNoPublisher();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'old-publishers-to-migrate':
+                    $gameList = $serviceGamePublisher->getOldPublishersToMigrate();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                case 'game-publisher-links':
+                    $gameList = $serviceGamePublisher->getGamePublisherLinks();
+                    $jsInitialSort = "[ 0, 'desc']";
+                    break;
+                // Missing data
                 case 'no-tags':
                     $gameList = $serviceGameTag->getGamesWithoutTags($regionCode);
                     $jsInitialSort = "[ 0, 'desc']";

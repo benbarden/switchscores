@@ -36,6 +36,9 @@ class IndexController extends Controller
         $serviceUser = $serviceContainer->getUserService();
         $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
 
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
         $reviewUserService = $serviceContainer->getReviewUserService();
         $partnerReviewService = $serviceContainer->getPartnerReviewService();
         $feedItemGameService = $serviceContainer->getFeedItemGameService();
@@ -90,8 +93,16 @@ class IndexController extends Controller
         $bindings['ActionListUpcomingNoNintendoUrlCount'] = count($actionListUpcomingNoNintendoUrlCount);
 
 
-        // Missing data
-        $missingDevOrPub = $serviceGame->getWithoutDevOrPub();
+        // Developers and Publishers
+        $bindings['NoDeveloperCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
+        $bindings['OldDevelopersToMigrate'] = $serviceGameDeveloper->countOldDevelopersToMigrate();
+        $bindings['GameDeveloperLinks'] = $serviceGameDeveloper->countGameDeveloperLinks();
+
+        $bindings['NoPublisherCount'] = $serviceGamePublisher->countGamesWithNoPublisher();
+        $bindings['OldPublishersToMigrate'] = $serviceGamePublisher->countOldPublishersToMigrate();
+        $bindings['GamePublisherLinks'] = $serviceGamePublisher->countGamePublisherLinks();
+
+        // Missing data - others
         $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
         $missingVendorPageUrl = $serviceGame->getByNullField('vendor_page_url', $regionCode);
@@ -99,7 +110,6 @@ class IndexController extends Controller
         $missingTwitterId = $serviceGame->getByNullField('twitter_id', $regionCode);
         $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
 
-        $bindings['MissingDevOrPubCount'] = count($missingDevOrPub);
         $bindings['MissingTagsCount'] = count($missingTags);
         $bindings['MissingGenresCount'] = count($missingGenres);
         $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);

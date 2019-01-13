@@ -92,4 +92,85 @@ class GameDeveloperService
         return $games;
     }
 
+    // *** ACTION LISTS *** //
+
+    public function getGamesWithNoDeveloper()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
+            ->leftJoin('developers', 'game_developers.developer_id', '=', 'developers.id')
+            ->select('games.*', 'developers.name')
+            ->whereNull('developers.id')
+            ->whereNull('games.developer')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countGamesWithNoDeveloper()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_developers gd on g.id = gd.game_id
+            left join developers d on d.id = gd.developer_id
+            where d.id is null and g.developer is null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getOldDevelopersToMigrate()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
+            ->leftJoin('developers', 'game_developers.developer_id', '=', 'developers.id')
+            ->select('games.*', 'developers.name')
+            ->whereNull('developers.id')
+            ->whereNotNull('games.developer')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countOldDevelopersToMigrate()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_developers gd on g.id = gd.game_id
+            left join developers d on d.id = gd.developer_id
+            where d.id is null and g.developer is not null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getGameDeveloperLinks()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
+            ->leftJoin('developers', 'game_developers.developer_id', '=', 'developers.id')
+            ->select('games.*', 'developers.name')
+            ->whereNotNull('developers.id')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countGameDeveloperLinks()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_developers gd on g.id = gd.game_id
+            left join developers d on d.id = gd.developer_id
+            where d.id is not null;
+        ');
+
+        return $games[0]->count;
+    }
 }

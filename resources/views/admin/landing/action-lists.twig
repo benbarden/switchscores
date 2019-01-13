@@ -77,10 +77,80 @@
     </tbody>
 </table>
 
+<h3>Developers and Publishers</h3>
+
+<table class="table table-striped data-sortable">
+    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-developer-set">No developer set</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-developer-set" class="h4">{{ NoDeveloperCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/old-developers-to-migrate">Old developers to migrate</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/old-developers-to-migrate" class="h4">{{ OldDevelopersToMigrate }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/game-developer-links">Game/developer links created</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/game-developer-links" class="h4">{{ GameDeveloperLinks }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-publisher-set">No publisher set</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-publisher-set" class="h4">{{ NoPublisherCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/old-publishers-to-migrate">Old publishers to migrate</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/old-publishers-to-migrate" class="h4">{{ OldPublishersToMigrate }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/game-publisher-links">Game/publisher links created</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/game-publisher-links" class="h4">{{ GamePublisherLinks }}</a>
+        </td>
+    </tr>
+</table>
+
 <h3>Action lists: others</h3>
 
 <table class="table table-striped data-sortable">
     <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
+        </td>
+    </tr>
     <tr>
         <td>
             <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">With Nintendo URL, no packshot</a>
@@ -103,30 +173,6 @@
         </td>
         <td class="text-right">
             <a href="{{ route('admin.games.list')}}/action-list-upcoming-no-nintendo-url" class="h4">{{ ActionListUpcomingNoNintendoUrlCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-dev-or-pub">No dev/pub</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-dev-or-pub" class="h4">{{ MissingDevOrPubCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
         </td>
     </tr>
     </tbody>

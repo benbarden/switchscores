@@ -377,12 +377,6 @@ class GameService
         return $games;
     }
 
-    public function getWithoutDevOrPub()
-    {
-        $gamesList = Game::where('developer', null)->orWhere('publisher', null)->orderBy('id', 'asc')->get();
-        return $gamesList;
-    }
-
     public function getWithoutBoxart($region)
     {
         $gamesList = DB::table('games')

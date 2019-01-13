@@ -91,4 +91,86 @@ class GamePublisherService
         $games = $games->get();
         return $games;
     }
+
+    // *** ACTION LISTS *** //
+
+    public function getGamesWithNoPublisher()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->select('games.*', 'publishers.name')
+            ->whereNull('publishers.id')
+            ->whereNull('games.publisher')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countGamesWithNoPublisher()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_publishers gp on g.id = gp.game_id
+            left join publishers p on p.id = gp.publisher_id
+            where p.id is null and g.publisher is null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getOldPublishersToMigrate()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->select('games.*', 'publishers.name')
+            ->whereNull('publishers.id')
+            ->whereNotNull('games.publisher')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countOldPublishersToMigrate()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_publishers gp on g.id = gp.game_id
+            left join publishers p on p.id = gp.publisher_id
+            where p.id is null and g.publisher is not null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getGamePublisherLinks()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->select('games.*', 'publishers.name')
+            ->whereNotNull('publishers.id')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countGamePublisherLinks()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_publishers gp on g.id = gp.game_id
+            left join publishers p on p.id = gp.publisher_id
+            where p.id is not null;
+        ');
+
+        return $games[0]->count;
+    }
 }
