@@ -64,7 +64,7 @@ class DeveloperService
 
     public function getAll()
     {
-        return Developer::orderBy('created_at', 'desc')->get();
+        return Developer::orderBy('name', 'asc')->get();
     }
 
     public function getByLinkTitle($linkTitle)
