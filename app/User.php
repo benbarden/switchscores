@@ -12,8 +12,9 @@ class User extends Authenticatable
     /**
      * @var array
      */
+    // is_admin has to be fillable or unit tests will fail
     protected $fillable = [
-        'display_name', 'email', 'password', 'region', 'site_id', 'developer_id', 'publisher_id',
+        'display_name', 'email', 'password', 'region', 'site_id', 'developer_id', 'publisher_id', 'is_admin',
     ];
 
     /**

@@ -91,6 +91,11 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function countBySite($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)->count();
+    }
+
     public function countActive()
     {
         $listReviews = ReviewLink::select('review_links.*', 'review_sites.name')

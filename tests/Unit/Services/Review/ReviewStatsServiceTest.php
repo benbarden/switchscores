@@ -245,4 +245,56 @@ class ReviewStatsServiceTest extends TestCase
         $standardDeviation = $serviceStats->calculateStandardDeviation($reviews);
         $this->assertEquals(2.1419, $standardDeviation);
     }
+
+    public function testCalculateReviewLinkContributionTenPercent()
+    {
+        $serviceStats = new ReviewStatsService;
+
+        $contribTotal = 100;
+        $siteTotal = 1000;
+        $expected = 10.0;
+
+        $actual = $serviceStats->calculateContributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateReviewLinkContributionHalfPercent()
+    {
+        $serviceStats = new ReviewStatsService;
+
+        $contribTotal = 5;
+        $siteTotal = 1000;
+        $expected = 0.5;
+
+        $actual = $serviceStats->calculateContributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateGameDatabaseCompletionOnePercent()
+    {
+        $serviceStats = new ReviewStatsService;
+
+        $contribTotal = 15;
+        $siteTotal = 1500;
+        $expected = 1.0;
+
+        $actual = $serviceStats->calculateContributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateGameDatabaseCompletionOneHundredPercent()
+    {
+        $serviceStats = new ReviewStatsService;
+
+        $contribTotal = 1500;
+        $siteTotal = 1500;
+        $expected = 100;
+
+        $actual = $serviceStats->calculateContributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
 }

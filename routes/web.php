@@ -253,6 +253,10 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/publisher/game/{gameId}/add', 'Admin\PublisherController@addGamePublisher')->name('admin.publisher.game.add');
     Route::get('/admin/publisher/game/{gameId}/remove', 'Admin\PublisherController@removeGamePublisher')->name('admin.publisher.game.remove');
 
+    // Stats
+    Route::get('/admin/stats', 'Admin\StatsController@landing')->name('admin.stats.landing');
+    Route::get('/admin/stats/review/site', 'Admin\StatsController@reviewSite')->name('admin.stats.review.site');
+
 });
 
 Auth::routes();

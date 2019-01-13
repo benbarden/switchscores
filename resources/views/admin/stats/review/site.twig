@@ -1,0 +1,95 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.stats.landing'), 'text': 'Stats'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        <h2>Overall</h2>
+
+        <table class="table table-striped data-sortable">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}/released">Released games</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}/released" class="h4">{{ ReleasedGameCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">Ranked games</a>
+                </td>
+                <td class="text-right">
+                    <a href="#" class="h4">{{ RankedGameCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#">Unranked games</a>
+                </td>
+                <td class="text-right">
+                    <a href="#" class="h4">{{ UnrankedGameCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.link.list') }}">Review links</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.reviews.link.list') }}" class="h4">{{ ReviewLinkCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-9">
+
+        <h2>Review sites</h2>
+
+        {% if ReviewSitesArray %}
+
+            <table class="table table-striped data-sortable">
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th class="text-center">Review total</th>
+                        <th class="text-center">WOS review share</th>
+                        <th class="text-center">Games reviewed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in ReviewSitesArray %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}" target="_blank">
+                                {{ item.name }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {{ item.review_count }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.review_link_contrib_total }}%
+                        </td>
+                        <td class="text-center">
+                            {{ item.review_game_completion_total }}%
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

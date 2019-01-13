@@ -1,0 +1,11 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': 'Stats'}] %}
+
+{% block page_inner %}
+
+<ul>
+    <li><a href="{{ route('admin.stats.review.site') }}">Review site stats</a></li>
+</ul>
+
+{% endblock page_inner %}
