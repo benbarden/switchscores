@@ -1,0 +1,44 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.stats.landing'), 'text': 'Stats'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% if ItemList %}
+
+            <table class="table table-striped data-sortable">
+                <thead>
+                    <tr>
+                        <th class="text-left">Publisher</th>
+                        <th class="text-center">Count</th>
+                        <th class="text-center">Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in ItemList %}
+                    <tr>
+                        <td class="text-left">
+                            {{ item.publisher }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.count }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('admin.stats.games.oldPublisherGameList', {'publisher': item.publisher}) }}">View games</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

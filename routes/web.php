@@ -256,6 +256,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Stats
     Route::get('/admin/stats', 'Admin\StatsController@landing')->name('admin.stats.landing');
     Route::get('/admin/stats/review/site', 'Admin\StatsController@reviewSite')->name('admin.stats.review.site');
+    Route::get('/admin/stats/games/old-developer-multiple', 'Admin\StatsController@oldDeveloperMultiple')->name('admin.stats.games.oldDeveloperMultiple');
+    Route::get('/admin/stats/games/old-developer-by-count', 'Admin\StatsController@oldDeveloperByCount')->name('admin.stats.games.oldDeveloperByCount');
+    Route::get('/admin/stats/games/old-developer/{developer}', 'Admin\StatsController@oldDeveloperGameList')->name('admin.stats.games.oldDeveloperGameList');
+    Route::get('/admin/stats/games/old-publisher-multiple', 'Admin\StatsController@oldPublisherMultiple')->name('admin.stats.games.oldPublisherMultiple');
+    Route::get('/admin/stats/games/old-publisher-by-count', 'Admin\StatsController@oldPublisherByCount')->name('admin.stats.games.oldPublisherByCount');
+    Route::get('/admin/stats/games/old-publisher/{publisher}', 'Admin\StatsController@oldPublisherGameList')->name('admin.stats.games.oldPublisherGameList');
 
 });
 

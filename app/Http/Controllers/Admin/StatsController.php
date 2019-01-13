@@ -33,7 +33,6 @@ class StatsController extends Controller
         $serviceReviewSite = $serviceContainer->getReviewSiteService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceTopRated = $serviceContainer->getTopRatedService();
-        $serviceGame = $serviceContainer->getGameService();
         $serviceReviewStats = $serviceContainer->getReviewStatsService();
 
         $bindings['RankedGameCount'] = $serviceTopRated->getCount($regionCode);
@@ -75,5 +74,111 @@ class StatsController extends Controller
         $bindings['TopTitle'] = 'Admin - Review site stats';
 
         return view('admin.stats.review.site', $bindings);
+    }
+
+    public function oldDeveloperMultiple()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getOldDevelopersMultiple();
+
+        $bindings['PageTitle'] = 'Old developers - multiple records';
+        $bindings['TopTitle'] = 'Admin - Games - Old developers - multiple records';
+
+        return view('admin.stats.games.old-developer-multiple', $bindings);
+    }
+
+    public function oldPublisherMultiple()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getOldPublishersMultiple();
+
+        $bindings['PageTitle'] = 'Old publishers - multiple records';
+        $bindings['TopTitle'] = 'Admin - Games - Old publishers - multiple records';
+
+        return view('admin.stats.games.old-publisher-multiple', $bindings);
+    }
+
+    public function oldDeveloperByCount()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getOldDevelopersByCount();
+
+        $bindings['PageTitle'] = 'Old developers - by count';
+        $bindings['TopTitle'] = 'Admin - Games - Old developers - by count';
+
+        return view('admin.stats.games.old-developer-by-count', $bindings);
+    }
+
+    public function oldPublisherByCount()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getOldPublishersByCount();
+
+        $bindings['PageTitle'] = 'Old publishers - by count';
+        $bindings['TopTitle'] = 'Admin - Games - Old publishers - by count';
+
+        return view('admin.stats.games.old-publisher-by-count', $bindings);
+    }
+
+    public function oldDeveloperGameList($developer)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getByDeveloper($regionCode, $developer);
+
+        $bindings['PageTitle'] = 'Old developers - Game list';
+        $bindings['TopTitle'] = 'Admin - Games - Old developers - Game list';
+
+        return view('admin.stats.games.old-developer-game-list', $bindings);
+    }
+
+    public function oldPublisherGameList($publisher)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $bindings = [];
+
+        $bindings['ItemList'] = $serviceGame->getByPublisher($regionCode, $publisher);
+
+        $bindings['PageTitle'] = 'Old publishers - by count';
+        $bindings['TopTitle'] = 'Admin - Games - Old publishers - by count';
+
+        return view('admin.stats.games.old-publisher-game-list', $bindings);
     }
 }

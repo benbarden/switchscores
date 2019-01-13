@@ -522,4 +522,52 @@ class GameService
 
         return $nextId;
     }
+
+    // *** STATS *** //
+
+    public function getOldDevelopersMultiple()
+    {
+        $games = DB::select("
+            select id, title, developer
+            from games
+            where developer like '%,%';
+        ");
+
+        return $games;
+    }
+
+    public function getOldPublishersMultiple()
+    {
+        $games = DB::select("
+            select id, title, publisher
+            from games
+            where publisher like '%,%';
+        ");
+
+        return $games;
+    }
+
+    public function getOldDevelopersByCount()
+    {
+        $games = DB::select("
+            select developer, count(*) AS count
+            from games
+            group by developer
+            order by count(*) desc;
+        ");
+
+        return $games;
+    }
+
+    public function getOldPublishersByCount()
+    {
+        $games = DB::select("
+            select publisher, count(*) AS count
+            from games
+            group by publisher
+            order by count(*) desc;
+        ");
+
+        return $games;
+    }
 }
