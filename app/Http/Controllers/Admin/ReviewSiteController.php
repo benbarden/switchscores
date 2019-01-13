@@ -35,9 +35,8 @@ class ReviewSiteController extends Controller
         $bindings['TopTitle'] = 'Admin - Reviews - Sites';
         $bindings['PanelTitle'] = 'Reviews: Sites';
 
-        $reviewSites = $serviceReviewSite->getAll();
-
-        $bindings['ReviewSites'] = $reviewSites;
+        $bindings['ReviewSitesActive'] = $serviceReviewSite->getActive();
+        $bindings['ReviewSitesInactive'] = $serviceReviewSite->getInactive();
 
         return view('admin.reviews.site.list', $bindings);
     }

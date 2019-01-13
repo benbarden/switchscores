@@ -2,67 +2,17 @@
 
 {% block page_inner %}
 
-<p>
-    Yellow is used to denote inactive sites.
-</p>
-
 <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a site">
-{% if ReviewSites.count > 0 %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th class="text-center">#</th>
-                <th>Name</th>
-                <th>URLs</th>
-                <th class="text-center">Active</th>
-                <th class="text-center">Rating scale</th>
-                <th class="text-center">Reviews</th>
-                <th class="text-center">Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in ReviewSites %}
-                {% if item.active == 'N' %}
-                    {% set RowClass = ' class="warning"' %}
-                {% else %}
-                    {% set RowClass = '' %}
-                {% endif %}
-                <tr{{ RowClass|raw }}>
-                    <td class="text-center">
-                        {{ item.id }}
-                    </td>
-                    <td>
-                        {{ item.name }}
-                    </td>
-                    <td>
-                        <small>
-                        Site: <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
-                        {% if item.feed_url %}
-                        <br>
-                        Feed:
-                        <a href="{{ item.feed_url }}" target="_blank">{{ item.feed_url }}</a>
-                        {% endif %}
-                        </small>
-                    </td>
-                    <td class="text-center">
-                        {{ item.active }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.rating_scale }}
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('admin.reviews.link.list') }}?siteId={{ item.id }}">View</a>
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('admin.reviews.site.edit', {'siteId': item.id}) }}">Edit</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>No sites found!</p>
-{% endif %}
+
+<hr>
+
+<h2>Active sites</h2>
+
+{% include 'admin/reviews/site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
+
+<h2>Inactive sites</h2>
+
+{% include 'admin/reviews/site/list-table.twig' with {'ReviewSites': ReviewSitesInactive} %}
 
 <script>
     $('#js-btn-add').on('click', function() {
