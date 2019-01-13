@@ -22,7 +22,7 @@ class PartnerReviewController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - Partner reviews';
-        $bindings['PanelTitle'] = 'Partner reviews';
+        $bindings['PageTitle'] = 'Partner reviews';
 
         $jsInitialSort = "[ 0, 'desc']";
 
@@ -122,7 +122,7 @@ class PartnerReviewController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Partner reviews - Edit';
-        $bindings['PanelTitle'] = 'Edit partner review';
+        $bindings['PageTitle'] = 'Edit partner review';
         $bindings['ReviewData'] = $reviewData;
         $bindings['ReviewId'] = $reviewId;
 

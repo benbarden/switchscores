@@ -19,7 +19,7 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Feed items';
-        $bindings['PanelTitle'] = 'Feed items';
+        $bindings['PageTitle'] = 'Feed items';
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         /* @var FeedItemReviewService $feedItemReviewService */
@@ -85,7 +85,7 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
         }
 
         $bindings['TopTitle'] = 'Admin - Feed items - Edit';
-        $bindings['PanelTitle'] = 'Edit feed item';
+        $bindings['PageTitle'] = 'Edit feed item';
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 

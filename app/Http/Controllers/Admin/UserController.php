@@ -31,7 +31,7 @@ class UserController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Users';
-        $bindings['PanelTitle'] = 'Users';
+        $bindings['PageTitle'] = 'Users';
 
         $userList = $userService->getAll();
 
@@ -55,8 +55,8 @@ class UserController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - View User - '.$displayName;
-        $bindings['PanelTitle'] = 'View User - '.$displayName;
+        $bindings['TopTitle'] = 'Admin - View user - '.$displayName;
+        $bindings['PageTitle'] = 'View user - '.$displayName;
 
         $bindings['UserData'] = $userData;
 
@@ -108,7 +108,7 @@ class UserController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Edit user';
-        $bindings['PanelTitle'] = 'Edit user';
+        $bindings['PageTitle'] = 'Edit user';
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 

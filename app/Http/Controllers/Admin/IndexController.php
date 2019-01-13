@@ -18,7 +18,7 @@ class IndexController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Feed items';
-        $bindings['PanelTitle'] = 'Feed items';
+        $bindings['PageTitle'] = 'Feed items';
 
         return view('admin.feed-items.landing', $bindings);
     }
@@ -47,7 +47,7 @@ class IndexController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin index';
-        $bindings['PanelTitle'] = 'Admin index';
+        $bindings['PageTitle'] = 'Admin index';
 
 
         // Information and site stats

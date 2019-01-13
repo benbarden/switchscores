@@ -32,7 +32,7 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
 
         $chartRankings = $chartsRankingGlobalService->getByCountryAndDate($countryCode, $date);
 
-        $bindings['PanelTitle'] = 'Charts: Rankings for '.$date.' - '.$countryDesc;
+        $bindings['PageTitle'] = 'Charts: Rankings for '.$date.' - '.$countryDesc;
 
         $bindings['CountryCode'] = $countryCode;
         $bindings['CountryDesc'] = $countryDesc;
@@ -104,7 +104,7 @@ class ChartsRankingController extends \App\Http\Controllers\BaseController
         $gamesList = \App\Game::orderBy('title', 'asc')->get();
 
         $bindings['TopTitle'] = 'Admin - Charts - Add ranking ('.$countryDesc.')';
-        $bindings['PanelTitle'] = 'Add rankings - '.$date.' - '.$countryDesc;
+        $bindings['PageTitle'] = 'Add rankings - '.$date.' - '.$countryDesc;
 
         $bindings['GamesList'] = $gamesList;
 

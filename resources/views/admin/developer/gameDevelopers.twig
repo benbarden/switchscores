@@ -1,8 +1,8 @@
-{% extends 'theme/wos/admin/page-wide.twig' %}
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.games.list'), 'text': 'Games'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
-
-<h2>Game developers</h2>
 
 <p>
     This page lists the developers used for the game <strong>{{ GameData.title }}</strong>

@@ -36,7 +36,7 @@ class FeedItemEshopEuropeController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe';
-        $bindings['PanelTitle'] = 'Feed items - eShop: Europe';
+        $bindings['PageTitle'] = 'Feed items - eShop: Europe';
         $bindings['FeedItems'] = $feedItems;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
@@ -57,7 +57,7 @@ class FeedItemEshopEuropeController extends Controller
         $bindings['GameData'] = $gameData->toArray();
 
         $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe - '.$gameData->title;
-        $bindings['PanelTitle'] = $gameData->title.' - Feed items - eShop: Europe';
+        $bindings['PageTitle'] = $gameData->title.' - Feed items - eShop: Europe';
 
         return view('admin.feed-items.eshop.europe.view', $bindings);
     }

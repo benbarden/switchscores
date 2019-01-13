@@ -20,7 +20,7 @@ class FeedItemGameController extends BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Feed items - Games';
-        $bindings['PanelTitle'] = 'Feed items - Games';
+        $bindings['PageTitle'] = 'Feed items - Games';
 
         $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
 
@@ -136,7 +136,7 @@ class FeedItemGameController extends BaseController
         }
 
         $bindings['TopTitle'] = 'Admin - Feed items - Games - Edit';
-        $bindings['PanelTitle'] = 'Edit feed item';
+        $bindings['PageTitle'] = 'Edit feed item';
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 

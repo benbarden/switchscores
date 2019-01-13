@@ -20,7 +20,7 @@ class ReviewUserController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Reviews - User reviews';
-        $bindings['PanelTitle'] = 'User reviews';
+        $bindings['PageTitle'] = 'User reviews';
 
         $jsInitialSort = "[ 3, 'desc']";
 
@@ -84,7 +84,7 @@ class ReviewUserController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - User reviews - Edit';
-        $bindings['PanelTitle'] = 'Edit user review';
+        $bindings['PageTitle'] = 'Edit user review';
         $bindings['ReviewUserData'] = $reviewUserData;
         $bindings['ReviewId'] = $reviewId;
 

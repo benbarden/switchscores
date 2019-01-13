@@ -1,4 +1,6 @@
-{% extends 'theme/wos/admin/page-wide.twig' %}
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.games-title-hash.list'), 'text': 'Game title hashes'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -12,8 +14,8 @@
 </div>
 
 <div class="alert alert-warning" role="alert">
-    This will prevent automated processes from linking <strong>{{ GameTitleHashData.title }}</strong> to the
-    game listed above.
+    This will prevent automated processes from linking the text <strong>{{ GameTitleHashData.title }}</strong>
+    to the game listed above.
 </div>
 
 <form class="form-horizontal" role="form" method="post" action="{{ route('admin.games-title-hash.delete', {'itemId': GameTitleHashId}) }}">

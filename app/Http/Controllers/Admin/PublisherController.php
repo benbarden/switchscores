@@ -33,7 +33,7 @@ class PublisherController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Publishers';
-        $bindings['PanelTitle'] = 'Publishers';
+        $bindings['PageTitle'] = 'Publishers';
 
         $bindings['PublisherList'] = $servicePublisher->getAll();
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
@@ -65,7 +65,7 @@ class PublisherController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Add publisher';
-        $bindings['PanelTitle'] = 'Add publisher';
+        $bindings['PageTitle'] = 'Add publisher';
         $bindings['FormMode'] = 'add';
 
         return view('admin.publisher.add', $bindings);
@@ -104,7 +104,7 @@ class PublisherController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Edit publisher';
-        $bindings['PanelTitle'] = 'Edit publisher';
+        $bindings['PageTitle'] = 'Edit publisher';
         $bindings['PublisherData'] = $publisherData;
         $bindings['PublisherId'] = $publisherId;
 
@@ -149,7 +149,7 @@ class PublisherController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Delete publisher';
-        $bindings['PanelTitle'] = 'Delete publisher';
+        $bindings['PageTitle'] = 'Delete publisher';
         $bindings['PublisherData'] = $publisherData;
         $bindings['PublisherId'] = $publisherId;
         $bindings['ErrorsCustom'] = $customErrors;
@@ -173,7 +173,7 @@ class PublisherController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Publishers for game: '.$gameTitle;
-        $bindings['PanelTitle'] = 'Publishers for game: '.$gameTitle;
+        $bindings['PageTitle'] = 'Publishers for game: '.$gameTitle;
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;

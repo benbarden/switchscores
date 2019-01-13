@@ -32,8 +32,8 @@ class ReviewSiteController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Sites';
-        $bindings['PanelTitle'] = 'Reviews: Sites';
+        $bindings['TopTitle'] = 'Admin - Review sites';
+        $bindings['PageTitle'] = 'Review sites';
 
         $bindings['ReviewSitesActive'] = $serviceReviewSite->getActive();
         $bindings['ReviewSitesInactive'] = $serviceReviewSite->getInactive();
@@ -73,8 +73,8 @@ class ReviewSiteController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Sites - Add site';
-        $bindings['PanelTitle'] = 'Add site';
+        $bindings['TopTitle'] = 'Admin - Review sites - Add site';
+        $bindings['PageTitle'] = 'Add site';
         $bindings['FormMode'] = 'add';
 
         return view('admin.reviews.site.add', $bindings);
@@ -118,8 +118,8 @@ class ReviewSiteController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Sites - Edit site';
-        $bindings['PanelTitle'] = 'Edit site';
+        $bindings['TopTitle'] = 'Admin - Review sites - Edit site';
+        $bindings['PageTitle'] = 'Edit site';
         $bindings['ReviewSiteData'] = $reviewSiteData;
         $bindings['SiteId'] = $siteId;
 

@@ -11,7 +11,7 @@ class ChartsDateController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Charts - Dates';
-        $bindings['PanelTitle'] = 'eShop Charts';
+        $bindings['PageTitle'] = 'eShop Charts';
 
         $chartDates = \App\ChartsDate::orderBy('chart_date', 'desc')->get();
 
@@ -34,7 +34,7 @@ class ChartsDateController extends \App\Http\Controllers\BaseController
         $bindings = array();
 
         $bindings['TopTitle'] = 'Admin - Charts - Add date';
-        $bindings['PanelTitle'] = 'Add new charts date';
+        $bindings['PageTitle'] = 'Add new charts date';
 
         return view('admin.charts.date.add', $bindings);
     }

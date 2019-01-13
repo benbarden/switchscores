@@ -41,8 +41,8 @@ class ReviewLinkController extends Controller
 
         $reviewSites = $serviceReviewSite->getAll();
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Links';
-        $bindings['PanelTitle'] = 'Reviews: Links';
+        $bindings['TopTitle'] = 'Admin - Review links';
+        $bindings['PageTitle'] = 'Review links';
 
         $jsInitialSort = "[ 3, 'desc']";
 
@@ -107,8 +107,8 @@ class ReviewLinkController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Add link';
-        $bindings['PanelTitle'] = 'Add review link';
+        $bindings['TopTitle'] = 'Admin - Review links - Add link';
+        $bindings['PageTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll($regionCode);
@@ -172,8 +172,8 @@ class ReviewLinkController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Reviews - Edit link';
-        $bindings['PanelTitle'] = 'Edit review link';
+        $bindings['TopTitle'] = 'Admin - Review links - Edit link';
+        $bindings['PageTitle'] = 'Edit review link';
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 

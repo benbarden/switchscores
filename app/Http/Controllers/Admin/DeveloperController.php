@@ -33,7 +33,7 @@ class DeveloperController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Developers';
-        $bindings['PanelTitle'] = 'Developers';
+        $bindings['PageTitle'] = 'Developers';
 
         $bindings['DeveloperList'] = $serviceDeveloper->getAll();
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
@@ -65,7 +65,7 @@ class DeveloperController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Add developer';
-        $bindings['PanelTitle'] = 'Add developer';
+        $bindings['PageTitle'] = 'Add developer';
         $bindings['FormMode'] = 'add';
 
         return view('admin.developer.add', $bindings);
@@ -106,7 +106,7 @@ class DeveloperController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Edit developer';
-        $bindings['PanelTitle'] = 'Edit developer';
+        $bindings['PageTitle'] = 'Edit developer';
         $bindings['DeveloperData'] = $developerData;
         $bindings['DeveloperId'] = $developerId;
 
@@ -151,7 +151,7 @@ class DeveloperController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Delete developer';
-        $bindings['PanelTitle'] = 'Delete developer';
+        $bindings['PageTitle'] = 'Delete developer';
         $bindings['DeveloperData'] = $developerData;
         $bindings['DeveloperId'] = $developerId;
         $bindings['ErrorsCustom'] = $customErrors;
@@ -175,7 +175,7 @@ class DeveloperController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Developers for game: '.$gameTitle;
-        $bindings['PanelTitle'] = 'Developers for game: '.$gameTitle;
+        $bindings['PageTitle'] = 'Developers for game: '.$gameTitle;
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;

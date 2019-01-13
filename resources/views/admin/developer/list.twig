@@ -1,4 +1,6 @@
-{% extends 'theme/wos/admin/page-wide.twig' %}
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -11,8 +13,6 @@
 </div>
 
 <hr>
-
-<h2>Developers</h2>
 
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 

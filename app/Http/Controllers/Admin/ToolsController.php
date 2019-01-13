@@ -159,7 +159,7 @@ class ToolsController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Tools';
-        $bindings['PanelTitle'] = 'Tools';
+        $bindings['PageTitle'] = 'Tools';
 
         $bindings['ToolList'] = $this->commandList;
 
@@ -175,7 +175,7 @@ class ToolsController extends Controller
         $toolTitle = $toolDetails['title'];
 
         $bindings['TopTitle'] = 'Tools - '.$toolTitle;
-        $bindings['PanelTitle'] = 'Tools - '.$toolTitle;
+        $bindings['PageTitle'] = $toolTitle;
         $bindings['ToolDetails'] = $toolDetails;
 
         return view('admin.tools.toolLandingModular', $bindings);
@@ -193,171 +193,11 @@ class ToolsController extends Controller
         $toolTitle = $toolDetails['title'];
 
         $bindings['TopTitle'] = 'Tools - '.$toolTitle;
-        $bindings['PanelTitle'] = 'Tools - '.$toolTitle;
+        $bindings['PageTitle'] = $toolTitle;
         $bindings['ToolDetails'] = $toolDetails;
         $bindings['CommandOutput'] = $commandOutput;
 
         return view('admin.tools.toolProcessModular', $bindings);
-    }
-
-    /* Review importer */
-
-    public function runFeedImporterLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Importer';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Importer';
-
-        return view('admin.tools.runFeedImporter.landing', $bindings);
-    }
-
-    public function runFeedImporterProcess()
-    {
-        \Artisan::call('RunFeedImporter');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Importer';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Importer';
-
-        return view('admin.tools.runFeedImporter.process', $bindings);
-    }
-
-    public function runFeedParserLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Parser';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Parser';
-
-        return view('admin.tools.runFeedParser.landing', $bindings);
-    }
-
-    public function runFeedParserProcess()
-    {
-        \Artisan::call('RunFeedParser');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Parser';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Parser';
-
-        return view('admin.tools.runFeedParser.process', $bindings);
-    }
-
-    public function runFeedReviewGeneratorLanding()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Review Generator';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Review Generator';
-
-        return view('admin.tools.runFeedReviewGenerator.landing', $bindings);
-    }
-
-    public function runFeedReviewGeneratorProcess()
-    {
-        \Artisan::call('RunFeedReviewGenerator');
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Tools - Run Feed Review Generator';
-        $bindings['PanelTitle'] = 'Tools - Run Feed Review Generator';
-
-        return view('admin.tools.runFeedReviewGenerator.process', $bindings);
-    }
-
-    /* Wikipedia crawler */
-
-    public function runWikipediaCrawlerLanding()
-    {
-        $title = 'Tools - Run Wikipedia Crawler';
-        $viewName = 'runWikipediaCrawler';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.landing', $bindings);
-    }
-
-    public function runWikipediaCrawlerProcess()
-    {
-        \Artisan::call('WikipediaCrawlGamesList');
-
-        $title = 'Tools - Run Wikipedia Crawler';
-        $viewName = 'runWikipediaCrawler';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.process', $bindings);
-    }
-
-    public function runWikipediaImporterLanding()
-    {
-        $title = 'Tools - Run Wikipedia Importer';
-        $viewName = 'runWikipediaImporter';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.landing', $bindings);
-    }
-
-    public function runWikipediaImporterProcess()
-    {
-        \Artisan::call('WikipediaImportGamesList');
-
-        $title = 'Tools - Run Wikipedia Importer';
-        $viewName = 'runWikipediaImporter';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.process', $bindings);
-    }
-
-    public function runWikipediaUpdaterLanding()
-    {
-        $title = 'Tools - Run Wikipedia Updater';
-        $viewName = 'runWikipediaUpdater';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.landing', $bindings);
-    }
-
-    public function runWikipediaUpdaterProcess()
-    {
-        \Artisan::call('WikipediaUpdateGamesList');
-
-        $title = 'Tools - Run Wikipedia Updater';
-        $viewName = 'runWikipediaUpdater';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $title;
-        $bindings['PanelTitle'] = $title;
-        $bindings['ViewName'] = $viewName;
-
-        return view('admin.tools.'.$viewName.'.process', $bindings);
     }
 
 }

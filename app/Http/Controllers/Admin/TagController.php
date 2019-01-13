@@ -17,7 +17,7 @@ class TagController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Tags';
-        $bindings['PanelTitle'] = 'Tags';
+        $bindings['PageTitle'] = 'Tags';
 
         $tagService = $serviceContainer->getTagService();
         $bindings['TagList'] = $tagService->getAll();
@@ -41,7 +41,7 @@ class TagController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Tags for game: '.$gameTitle;
-        $bindings['PanelTitle'] = 'Tags for game: '.$gameTitle;
+        $bindings['PageTitle'] = 'Tags for game: '.$gameTitle;
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;

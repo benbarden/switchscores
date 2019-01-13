@@ -50,7 +50,7 @@ class GamesController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Games';
-        $bindings['PanelTitle'] = 'Games';
+        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
@@ -257,7 +257,7 @@ class GamesController extends Controller
         $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
 
         $bindings['TopTitle'] = 'Admin - Games - Add game';
-        $bindings['PanelTitle'] = 'Add game';
+        $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
         $bindings['GenreList'] = $serviceGenre->getAll();
@@ -367,7 +367,7 @@ class GamesController extends Controller
         $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
 
         $bindings['TopTitle'] = 'Admin - Games - Edit game';
-        $bindings['PanelTitle'] = 'Edit game';
+        $bindings['PageTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
@@ -496,7 +496,7 @@ class GamesController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Games - Delete game';
-        $bindings['PanelTitle'] = 'Delete game';
+        $bindings['PageTitle'] = 'Delete game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
         $bindings['ErrorsCustom'] = $customErrors;

@@ -34,8 +34,8 @@ class GamesTitleHashController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Game Title Hashes';
-        $bindings['PanelTitle'] = 'Game Title Hashes';
+        $bindings['TopTitle'] = 'Admin - Game title hashes';
+        $bindings['PageTitle'] = 'Game title hashes';
 
         if ($gameId) {
             $titleHashList = $serviceGameTitleHash->getByGameId($gameId);
@@ -99,7 +99,7 @@ class GamesTitleHashController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Games - Add game title hash';
-        $bindings['PanelTitle'] = 'Add game title hash';
+        $bindings['PageTitle'] = 'Add game title hash';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll($regionCode);
@@ -145,7 +145,7 @@ class GamesTitleHashController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Games - Edit game title hash';
-        $bindings['PanelTitle'] = 'Edit game title hash';
+        $bindings['PageTitle'] = 'Edit game title hash';
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
         $bindings['FormMode'] = 'edit';
@@ -187,7 +187,7 @@ class GamesTitleHashController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - Games - Delete game title hash';
-        $bindings['PanelTitle'] = 'Delete game title hash';
+        $bindings['PageTitle'] = 'Delete game title hash';
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
 

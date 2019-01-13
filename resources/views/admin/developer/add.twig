@@ -1,4 +1,6 @@
-{% extends 'theme/wos/admin/page-wide.twig' %}
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.developer.list'), 'text': 'Developers'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 

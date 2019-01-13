@@ -32,7 +32,7 @@ class NewsController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - News';
-        $bindings['PanelTitle'] = 'News';
+        $bindings['PageTitle'] = 'News';
 
         $newsService = $serviceContainer->getNewsService();
         $newsList = $newsService->getAll();
@@ -71,7 +71,7 @@ class NewsController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - News - Add news';
-        $bindings['PanelTitle'] = 'Add news';
+        $bindings['PageTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll($regionCode);
@@ -119,7 +119,7 @@ class NewsController extends Controller
         }
 
         $bindings['TopTitle'] = 'Admin - News - Edit news';
-        $bindings['PanelTitle'] = 'Edit news';
+        $bindings['PageTitle'] = 'Edit news';
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
 
