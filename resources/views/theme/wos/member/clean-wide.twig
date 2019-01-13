@@ -1,0 +1,24 @@
+{% extends 'theme/wos/member/base.twig' %}
+
+{% block page_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            {% if crumbNav is defined %}
+            <ol class="breadcrumb">
+                <li><a href="{{ route('user.index') }}">Members</a></li>
+                {% for item in crumbNav %}
+                    {% if loop.last %}
+                        <li>{{ item.text }}</li>
+                    {% else %}
+                        <li class="active"><a href="{{ item.url }}">{{ item.text }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+            {% endif %}
+            <h1>{{ PageTitle }}</h1>
+        </div>
+    </div>
+    {% block page_inner %}{% endblock page_inner %}
+</div>
+{% endblock page_body %}

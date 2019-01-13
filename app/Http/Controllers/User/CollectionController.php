@@ -34,8 +34,6 @@ class CollectionController extends Controller
         $bindings['TopTitle'] = 'Collection';
         $bindings['PageTitle'] = 'Collection';
 
-        $bindings['PanelTitle'] = 'Collection';
-
         $userId = Auth::id();
         $bindings['UserId'] = $userId;
 
@@ -78,7 +76,7 @@ class CollectionController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'User - Games collection - Add game';
-        $bindings['PanelTitle'] = 'Add game';
+        $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll($userRegionCode);
@@ -135,7 +133,7 @@ class CollectionController extends Controller
         }
 
         $bindings['TopTitle'] = 'User - Games collection - Edit game';
-        $bindings['PanelTitle'] = 'Edit game';
+        $bindings['PageTitle'] = 'Edit game';
 
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;

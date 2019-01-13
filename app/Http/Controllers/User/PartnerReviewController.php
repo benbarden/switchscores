@@ -84,7 +84,7 @@ class PartnerReviewController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Add review';
-        $bindings['PanelTitle'] = 'Add review';
+        $bindings['PageTitle'] = 'Add review';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll($regionCode);
@@ -113,8 +113,6 @@ class PartnerReviewController extends Controller
 
         $bindings['TopTitle'] = 'Partner reviews';
         $bindings['PageTitle'] = 'Partner reviews';
-
-        $bindings['PanelTitle'] = 'Partner reviews';
 
         $bindings['UserRegion'] = $userRegion;
 

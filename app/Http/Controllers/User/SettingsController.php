@@ -18,8 +18,6 @@ class SettingsController extends Controller
         $bindings['TopTitle'] = 'Settings';
         $bindings['PageTitle'] = 'Settings';
 
-        $bindings['PanelTitle'] = 'Settings';
-
         $bindings['UserRegion'] = Auth::user()->region;
 
         return view('user.settings', $bindings);

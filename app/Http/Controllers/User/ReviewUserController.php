@@ -58,7 +58,7 @@ class ReviewUserController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'Add review';
-        $bindings['PanelTitle'] = 'Add review';
+        $bindings['PageTitle'] = 'Add review';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $gameService->getAll($regionCode);
@@ -83,8 +83,6 @@ class ReviewUserController extends Controller
 
         $bindings['TopTitle'] = 'My reviews';
         $bindings['PageTitle'] = 'My reviews';
-
-        $bindings['PanelTitle'] = 'My reviews';
 
         $bindings['UserRegion'] = Auth::user()->region;
 
