@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
+use Auth;
+
 class StatsController extends Controller
 {
     public function landing()
@@ -152,10 +154,17 @@ class StatsController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
+        $serviceDeveloper = $serviceContainer->getDeveloperService();
 
         $bindings = [];
 
-        $bindings['ItemList'] = $serviceGame->getByDeveloper($regionCode, $developer);
+        $bindings['ItemList'] = $serviceGame->getByDeveloper($developer);
+
+        $bindings['DeveloperName'] = $developer;
+        $developerData = $serviceDeveloper->getByName($developer);
+        if ($developerData) {
+            $bindings['DeveloperData'] = $developerData;
+        }
 
         $bindings['PageTitle'] = 'Old developers - Game list';
         $bindings['TopTitle'] = 'Admin - Stats - Old developers - Game list';
@@ -171,14 +180,89 @@ class StatsController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
+        $servicePublisher = $serviceContainer->getPublisherService();
 
         $bindings = [];
 
-        $bindings['ItemList'] = $serviceGame->getByPublisher($regionCode, $publisher);
+        $bindings['ItemList'] = $serviceGame->getByPublisher($publisher);
+
+        $bindings['PublisherName'] = $publisher;
+        $publisherData = $servicePublisher->getByName($publisher);
+        if ($publisherData) {
+            $bindings['PublisherData'] = $publisherData;
+        }
 
         $bindings['PageTitle'] = 'Old publishers - by count';
         $bindings['TopTitle'] = 'Admin - Stats - Old publishers - by count';
 
         return view('admin.stats.games.old-publisher-game-list', $bindings);
+    }
+
+    public function clearOldDeveloperField()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$gameId) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $serviceGame->clearOldDeveloperField($game);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function clearOldPublisherField()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$gameId) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $serviceGame->clearOldPublisherField($game);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
     }
 }

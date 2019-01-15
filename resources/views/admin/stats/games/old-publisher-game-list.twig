@@ -8,15 +8,26 @@
 
     <div class="col-md-12">
 
+        {% if PublisherData is not defined %}
+            <div class="alert alert-warning" role="alert">
+                There isn't a record in the publisher list for <strong>{{ PublisherName }}</strong>.
+                <a href="{{ route('admin.publisher.add') }}">Add one now</a>.
+            </div>
+        {% endif %}
+
+        <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
         {% if ItemList %}
 
-            <table class="table table-striped data-sortable">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-left">Title</th>
-                        <th class="text-left">Publisher</th>
+                        <th class="text-left">Publisher (old)</th>
+                        <th class="text-left">Publisher (new)</th>
                         <th class="text-center">Options</th>
+                        <th class="text-center">Finalise</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,9 +42,22 @@
                         <td class="text-left">
                             {{ item.publisher }}
                         </td>
+                        <td class="text-left">
+                            {{ item.gamePublishers.length }}
+                            {% if item.gamePublishers is defined %}
+                                {% for gamePub in item.gamePublishers %}
+                                    {{ gamePub.publisher.name }}<br>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                         <td class="text-center">
                             <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit game</a> :
                             <a href="{{ route('admin.publisher.game.list', {'gameId': item.id}) }}">Publishers</a>
+                        </td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" id="lnk-clear-old-publisher-{{ item.id }}" class="lnk-clear-old-publisher">Clear old publisher</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -45,5 +69,39 @@
     </div>
 
 </div>
+
+<script>
+    $('.lnk-clear-old-publisher').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        gameId = elemId.replace('lnk-clear-old-publisher-', '');
+
+        if (gameId == '') {
+            $('#js-admin-notify').text('Missing gameId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('CLear the old publisher field for this game? There is NO undo!')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.stats.games.clearOldPublisherField') }}', {'gameId': gameId}, function(data) {
+            $('#lnk-clear-old-publisher-' + gameId).parent().html('<em>Old pub cleared</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+</script>
 
 {% endblock page_inner %}

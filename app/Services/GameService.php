@@ -93,6 +93,18 @@ class GameService
         $game->save();
     }
 
+    public function clearOldDeveloperField(Game $game)
+    {
+        $game->developer = null;
+        $game->save();
+    }
+
+    public function clearOldPublisherField(Game $game)
+    {
+        $game->publisher = null;
+        $game->save();
+    }
+
     public function deleteGame($gameId)
     {
         Game::where('id', $gameId)->delete();
@@ -231,40 +243,16 @@ class GameService
         return $this->getListLikeText($region, '%mahjong%');
     }
 
-    public function getByDeveloper($region, $developer)
+    // Used for admin only
+    public function getByDeveloper($developer)
     {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->where('games.developer', $developer)
-            ->orderBy('games.title', 'asc');
-        $games = $games->get();
-
-        return $games;
+        return Game::where('developer', $developer)->orderBy('title', 'asc')->get();
     }
 
-    public function getByPublisher($region, $publisher)
+    // Used for admin only
+    public function getByPublisher($publisher)
     {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->where('games.publisher', $publisher)
-            ->orderBy('games.title', 'asc');
-        $games = $games->get();
-
-        return $games;
+        return Game::where('publisher', $publisher)->orderBy('title', 'asc')->get();
     }
 
     public function getByIdList($idList)

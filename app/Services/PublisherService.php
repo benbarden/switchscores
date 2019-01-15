@@ -71,4 +71,9 @@ class PublisherService
     {
         return Publisher::where('link_title', $linkTitle)->first();
     }
+
+    public function getByName($name)
+    {
+        return Publisher::where('name', $name)->first();
+    }
 }

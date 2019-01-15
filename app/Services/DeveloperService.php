@@ -71,4 +71,9 @@ class DeveloperService
     {
         return Developer::where('link_title', $linkTitle)->first();
     }
+
+    public function getByName($name)
+    {
+        return Developer::where('name', $name)->first();
+    }
 }
