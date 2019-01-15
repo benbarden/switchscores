@@ -24,6 +24,8 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Name</th>
+                <th>Url</th>
+                <th>Twitter ID</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -35,6 +37,20 @@
                     </td>
                     <td>
                         <a href="{{ route('publishers.page', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
+                    </td>
+                    <td>
+                        {% if item.website_url %}
+                            <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.twitter_id %}
+                            <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.publisher.edit', {'publisherId': item.id}) }}">Edit</a> :
@@ -60,6 +76,8 @@
             "columns": [
                 null,
                 null,
+                { "orderable": false },
+                { "orderable": false },
                 { "orderable": false }
             ]
         });
