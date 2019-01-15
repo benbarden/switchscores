@@ -567,7 +567,7 @@ class GameService
             select developer, count(*) AS count
             from games
             group by developer
-            order by count(*) desc;
+            order by count(*) desc, developer asc;
         ");
 
         return $games;
@@ -579,7 +579,7 @@ class GameService
             select publisher, count(*) AS count
             from games
             group by publisher
-            order by count(*) desc;
+            order by count(*) desc, publisher asc;
         ");
 
         return $games;

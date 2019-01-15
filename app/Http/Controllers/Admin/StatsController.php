@@ -71,7 +71,7 @@ class StatsController extends Controller
         $bindings['ReviewSitesArray'] = $reviewSitesRender;
 
         $bindings['PageTitle'] = 'Review site stats';
-        $bindings['TopTitle'] = 'Admin - Review site stats';
+        $bindings['TopTitle'] = 'Admin - Stats - Review sites';
 
         return view('admin.stats.review.site', $bindings);
     }
@@ -88,7 +88,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getOldDevelopersMultiple();
 
         $bindings['PageTitle'] = 'Old developers - multiple records';
-        $bindings['TopTitle'] = 'Admin - Games - Old developers - multiple records';
+        $bindings['TopTitle'] = 'Admin - Stats - Old developers - multiple records';
 
         return view('admin.stats.games.old-developer-multiple', $bindings);
     }
@@ -105,7 +105,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getOldPublishersMultiple();
 
         $bindings['PageTitle'] = 'Old publishers - multiple records';
-        $bindings['TopTitle'] = 'Admin - Games - Old publishers - multiple records';
+        $bindings['TopTitle'] = 'Admin - Stats - Old publishers - multiple records';
 
         return view('admin.stats.games.old-publisher-multiple', $bindings);
     }
@@ -122,7 +122,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getOldDevelopersByCount();
 
         $bindings['PageTitle'] = 'Old developers - by count';
-        $bindings['TopTitle'] = 'Admin - Games - Old developers - by count';
+        $bindings['TopTitle'] = 'Admin - Stats - Old developers - by count';
 
         return view('admin.stats.games.old-developer-by-count', $bindings);
     }
@@ -139,7 +139,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getOldPublishersByCount();
 
         $bindings['PageTitle'] = 'Old publishers - by count';
-        $bindings['TopTitle'] = 'Admin - Games - Old publishers - by count';
+        $bindings['TopTitle'] = 'Admin - Stats - Old publishers - by count';
 
         return view('admin.stats.games.old-publisher-by-count', $bindings);
     }
@@ -158,7 +158,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getByDeveloper($regionCode, $developer);
 
         $bindings['PageTitle'] = 'Old developers - Game list';
-        $bindings['TopTitle'] = 'Admin - Games - Old developers - Game list';
+        $bindings['TopTitle'] = 'Admin - Stats - Old developers - Game list';
 
         return view('admin.stats.games.old-developer-game-list', $bindings);
     }
@@ -177,7 +177,7 @@ class StatsController extends Controller
         $bindings['ItemList'] = $serviceGame->getByPublisher($regionCode, $publisher);
 
         $bindings['PageTitle'] = 'Old publishers - by count';
-        $bindings['TopTitle'] = 'Admin - Games - Old publishers - by count';
+        $bindings['TopTitle'] = 'Admin - Stats - Old publishers - by count';
 
         return view('admin.stats.games.old-publisher-game-list', $bindings);
     }
