@@ -48,8 +48,11 @@
                 </td>
                 <td class="text-left">
                     <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    <br>
+                    <small>
+                        User: {{ item.user.email }} | ID: {{ item.user.id }}
+                    </small>
                 </td>
-
                 <td class="text-left">
                     {{ item.site.name }}
                 </td>
