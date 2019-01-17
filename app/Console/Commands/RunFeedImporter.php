@@ -91,6 +91,8 @@ class RunFeedImporter extends Command
                     $historicReviewsAllowed = [
                         ReviewSite::SITE_SWITCHWATCH,
                         ReviewSite::SITE_TWO_BEARD_GAMING,
+                        ReviewSite::SITE_NINTENDAD,
+                        ReviewSite::SITE_RAPID_REVIEWS_UK,
                     ];
 
                     if ($feedItemReview->isHistoric() && !in_array($siteId, $historicReviewsAllowed)) {

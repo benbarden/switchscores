@@ -29,6 +29,9 @@ class ReviewSite extends Model
     const SITE_NINTENDO_NOMAD = 24;
     const SITE_TWO_BEARD_GAMING = 25;
     const SITE_SWITCH_INDIE_FIX = 26;
+    const SITE_SIDE_QUEST_VGM = 27;
+    const SITE_NINTENDAD = 28;
+    const SITE_RAPID_REVIEWS_UK = 29;
 
     /**
      * @var string
