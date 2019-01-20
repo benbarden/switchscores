@@ -13,13 +13,16 @@
                 There isn't a record in the publisher list for <strong>{{ PublisherName }}</strong>.
                 <a href="{{ route('admin.publisher.add') }}">Add one now</a>.
             </div>
+        {% else %}
+            <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new pub to all">
+            <input type="button" id="js-btn-remove-all-old" class="btn btn-default" value="Clear old pub from all">
         {% endif %}
 
         <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
         {% if ItemList %}
 
-            <table class="table table-striped">
+            <table id="table-publisher-list" class="table table-striped">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
@@ -71,6 +74,9 @@
 </div>
 
 <script>
+
+    var publisherName = '{{ PublisherName }}';
+
     $('.lnk-clear-old-publisher').on('click', function() {
 
         $('#js-admin-notify').hide();
@@ -96,6 +102,60 @@
 
         $.getJSON('{{ route('admin.stats.games.clearOldPublisherField') }}', {'gameId': gameId}, function(data) {
             $('#lnk-clear-old-publisher-' + gameId).parent().html('<em>Old pub cleared</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#js-btn-add-all-new').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        if (!window.confirm('Add all new publisher records for the listed games? There is NO undo!')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.stats.games.addAllNewPublishers') }}', {'publisherName': publisherName}, function(data) {
+            $('#table-publisher-list tbody').children('tr').each(function() {
+                // id 3 is the Publisher (new) column
+                var $requiredCell = $(this).children('td').eq(3);
+                $($requiredCell).html('<em>Updated</em>');
+            });
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#js-btn-remove-all-old').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        if (!window.confirm('Clear the old publisher field for the listed games? There is NO undo!')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.stats.games.removeAllOldPublishers') }}', {'publisherName': publisherName}, function(data) {
+            $('#table-publisher-list tbody').children('tr').each(function() {
+                // id 3 is the Publisher (old) column
+                var $requiredCell = $(this).children('td').eq(2);
+                $($requiredCell).html('<em>Cleared</em>');
+            });
         })
         .fail(function(data) {
             $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);

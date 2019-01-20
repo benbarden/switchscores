@@ -265,4 +265,198 @@ class StatsController extends Controller
         );
         return response()->json($data, 200);
     }
+
+    public function addAllNewDevelopers()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $developerName = $request->developerName;
+        if (!$developerName) {
+            return response()->json(['error' => 'Missing data: developerName'], 400);
+        }
+
+        $developerData = $serviceDeveloper->getByName($developerName);
+        if (!$developerData) {
+            return response()->json(['error' => 'No developer record found'], 400);
+        }
+
+        $developerId = $developerData->id;
+
+        $gamesWithOldDeveloper = $serviceGame->getByDeveloper($developerName);
+        foreach ($gamesWithOldDeveloper as $game) {
+
+            $gameId = $game->id;
+
+            if ($serviceGameDeveloper->gameHasDeveloper($gameId, $developerId)) {
+                continue;
+            }
+
+            $serviceGameDeveloper->createGameDeveloper($gameId, $developerId);
+
+        }
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function removeAllOldDevelopers()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $developerName = $request->developerName;
+        if (!$developerName) {
+            return response()->json(['error' => 'Missing data: developerName'], 400);
+        }
+
+        $developerData = $serviceDeveloper->getByName($developerName);
+        if (!$developerData) {
+            return response()->json(['error' => 'No developer record found'], 400);
+        }
+
+        $developerId = $developerData->id;
+
+        $gamesWithOldDeveloper = $serviceGame->getByDeveloper($developerName);
+        foreach ($gamesWithOldDeveloper as $game) {
+
+            $gameId = $game->id;
+
+            if (!$serviceGameDeveloper->gameHasDeveloper($gameId, $developerId)) {
+                // Failsafe for games that might not have the new record assigned yet
+                continue;
+            }
+
+            $serviceGame->clearOldDeveloperField($game);
+
+        }
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function addAllNewPublishers()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $servicePublisher = $serviceContainer->getPublisherService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $publisherName = $request->publisherName;
+        if (!$publisherName) {
+            return response()->json(['error' => 'Missing data: publisherName'], 400);
+        }
+
+        $publisherData = $servicePublisher->getByName($publisherName);
+        if (!$publisherData) {
+            return response()->json(['error' => 'No publisher record found'], 400);
+        }
+
+        $publisherId = $publisherData->id;
+
+        $gamesWithOldPublisher = $serviceGame->getByPublisher($publisherName);
+        foreach ($gamesWithOldPublisher as $game) {
+
+            $gameId = $game->id;
+
+            if (!$serviceGamePublisher->gameHasPublisher($gameId, $publisherId)) {
+                $serviceGamePublisher->createGamePublisher($gameId, $publisherId);
+            }
+
+        }
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function removeAllOldPublishers()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $servicePublisher = $serviceContainer->getPublisherService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $publisherName = $request->publisherName;
+        if (!$publisherName) {
+            return response()->json(['error' => 'Missing data: publisherName'], 400);
+        }
+
+        $publisherData = $servicePublisher->getByName($publisherName);
+        if (!$publisherData) {
+            return response()->json(['error' => 'No publisher record found'], 400);
+        }
+
+        $publisherId = $publisherData->id;
+
+        $gamesWithOldPublisher = $serviceGame->getByPublisher($publisherName);
+        foreach ($gamesWithOldPublisher as $game) {
+
+            $gameId = $game->id;
+
+            if ($serviceGamePublisher->gameHasPublisher($gameId, $publisherId)) {
+                // Failsafe for games that might not have the new record assigned yet
+                $serviceGame->clearOldPublisherField($game);
+            }
+
+        }
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
 }

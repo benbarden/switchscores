@@ -13,13 +13,16 @@
                 There isn't a record in the developer list for <strong>{{ DeveloperName }}</strong>.
                 <a href="{{ route('admin.developer.add') }}">Add one now</a>.
             </div>
+        {% else %}
+            <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new dev to all">
+            <input type="button" id="js-btn-remove-all-old" class="btn btn-default" value="Clear old dev from all">
         {% endif %}
 
         <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
         {% if ItemList %}
 
-            <table class="table table-striped">
+            <table id="table-developer-list" class="table table-striped">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
@@ -71,6 +74,9 @@
 </div>
 
 <script>
+
+    var developerName = '{{ DeveloperName }}';
+
     $('.lnk-clear-old-developer').on('click', function() {
 
         $('#js-admin-notify').hide();
@@ -84,7 +90,7 @@
             return false;
         }
 
-        if (!window.confirm('CLear the old developer field for this game? There is NO undo!')) {
+        if (!window.confirm('Clear the old developer field for this game? There is NO undo!')) {
             return false;
         }
 
@@ -96,6 +102,60 @@
 
         $.getJSON('{{ route('admin.stats.games.clearOldDeveloperField') }}', {'gameId': gameId}, function(data) {
             $('#lnk-clear-old-developer-' + gameId).parent().html('<em>Old dev cleared</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#js-btn-add-all-new').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        if (!window.confirm('Add all new developer records for the listed games? There is NO undo!')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.stats.games.addAllNewDevelopers') }}', {'developerName': developerName}, function(data) {
+            $('#table-developer-list tbody').children('tr').each(function() {
+                // id 3 is the Developer (new) column
+                var $requiredCell = $(this).children('td').eq(3);
+                $($requiredCell).html('<em>Updated</em>');
+            });
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#js-btn-remove-all-old').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        if (!window.confirm('Clear the old developer field for the listed games? There is NO undo!')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.stats.games.removeAllOldDevelopers') }}', {'developerName': developerName}, function(data) {
+            $('#table-developer-list tbody').children('tr').each(function() {
+                // id 3 is the Developer (old) column
+                var $requiredCell = $(this).children('td').eq(2);
+                $($requiredCell).html('<em>Cleared</em>');
+            });
         })
         .fail(function(data) {
             $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
