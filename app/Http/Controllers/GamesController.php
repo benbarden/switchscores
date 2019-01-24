@@ -70,20 +70,14 @@ class GamesController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
+        $serviceGame = $serviceContainer->getGameService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $bindings = [];
 
-        $upcomingLists = [];
+        $bindings['UpcomingGames'] = $serviceGameReleaseDate->getUpcoming($regionCode);
 
-        // All
-        $upcomingLists[] = [
-            'MainTitle' => 'All upcoming games',
-            'ShortTitle' => 'All upcoming games',
-            'List' => $serviceGameReleaseDate->getUpcoming($regionCode)
-        ];
-
-        $bindings['UpcomingLists'] = $upcomingLists;
+        $bindings['FeaturedGame'] = $serviceGame->find(1237);
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';

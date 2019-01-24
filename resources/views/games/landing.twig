@@ -24,17 +24,7 @@
         {% if NewReleases|length %}
             <div class="row">
                 {% for item in NewReleases %}
-                    <div class="col-sm-4 col-md-4 col-lg-4" style="min-height: 160px; padding: 5px 2px; text-align: center;">
-                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
-                        <br>
-                        <p class="h5">
-                            <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
-                            <br>
-                            <small>{{ item.release_date|date('jS M') }}</small>
-                        </p>
-                        <p class="h5">
-                        </p>
-                    </div>
+                    {% include 'games/layouts/miniGridItem.twig' with {'item': item} %}
                 {% endfor %}
             </div>
         {% else %}
@@ -50,15 +40,7 @@
         {% if UpcomingReleases|length %}
             <div class="row">
                 {% for item in UpcomingReleases %}
-                    <div class="col-sm-4 col-md-4 col-lg-4" style="min-height: 160px; padding: 5px 2px; text-align: center;">
-                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
-                        <br>
-                        <p class="h5">
-                            <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
-                            <br>
-                            <small>{{ item.release_date|date('jS M') }}</small>
-                        </p>
-                    </div>
+                    {% include 'games/layouts/miniGridItem.twig' with {'item': item} %}
                 {% endfor %}
             </div>
         {% else %}

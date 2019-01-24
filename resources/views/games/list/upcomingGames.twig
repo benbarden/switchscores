@@ -5,19 +5,39 @@
 {% block page_body %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-9">
+    <div class="col-xs-8 col-sm-8">
         <p>
             This page lists Nintendo Switch games that are planned but not yet released.
             As games are released, they’ll move to the
             <a href="{{ route('games.list.released') }}">released Switch games index</a>.
         </p>
 
-        {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
-
-        {% for item in UpcomingLists %}
-            <h2>{{ item.MainTitle }}</h2>
-            {% include 'common/tables/upcoming-games.twig' with {'GamesList': item.List} %}
+        <h2>{{ item.MainTitle }}</h2>
+        {% for item in UpcomingGames %}
+            {% include 'games/layouts/miniGridItem.twig' with {'item': item} %}
         {% endfor %}
+    </div>
+    <div class="col-xs-4 col-sm-4">
+
+        <h2>Featured</h2>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12" style="min-height: 200px; padding: 5px 2px; text-align: center;">
+                        {%
+                        include 'games/layouts/cleanGridItem.twig'
+                        with {
+                        'item': FeaturedGame,
+                        'ShowPageRank': false,
+                        'PageRank': 0
+                        }
+                        %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
     </div>
 </div>
 
