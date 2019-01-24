@@ -19,25 +19,28 @@
     </div>
     <div class="col-xs-4 col-sm-4">
 
+        {% if FeaturedGames|length %}
         <h2>Featured</h2>
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="row">
+                    {% for item in FeaturedGames %}
                     <div class="col-sm-12 col-md-12 col-lg-12" style="min-height: 200px; padding: 5px 2px; text-align: center;">
                         {%
                         include 'games/layouts/cleanGridItem.twig'
                         with {
-                        'item': FeaturedGame,
+                        'item': item,
                         'ShowPageRank': false,
                         'PageRank': 0
                         }
                         %}
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
 
-        {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
     </div>
 </div>
 
