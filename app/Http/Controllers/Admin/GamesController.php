@@ -73,6 +73,7 @@ class GamesController extends Controller
                 case 'action-list-games-for-release':
                     if ($regionOverride) {
                         $regionCode = $regionOverride;
+                        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
                     }
                     $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
