@@ -78,6 +78,14 @@ class ToolsController extends Controller
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0425',
             ],
+            'EshopEuropeRedownloadPackshots' => [
+                'command' => 'EshopEuropeRedownloadPackshots',
+                'group' => 'Eshop',
+                'title' => 'Eshop Europe Redownload Packshots',
+                'desc' => 'Redownloads missing packshots from the European eShop',
+                'scheduleFreq' => 'Manual',
+                'scheduleTime' => 'N/A',
+            ],
             /* *** Reviews *** */
             'RunFeedImporter' => [
                 'command' => 'RunFeedImporter',
