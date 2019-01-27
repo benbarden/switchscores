@@ -67,12 +67,11 @@ class EshopEuropeDownloadPackshots extends Command
 
             $gameId = $game->id;
             $gameTitle = $game->title;
-            $gamePackshot = $game->boxart_url;
             $gamePackshotSquare = $game->boxart_square_url;
 
             $fsId = $game->eshop_europe_fs_id;
 
-            if ($gamePackshot || $gamePackshotSquare) {
+            if ($gamePackshotSquare) {
                 //$this->warn($gameTitle.': record already has a packshot; skipping');
                 continue;
             }

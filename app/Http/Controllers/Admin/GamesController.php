@@ -226,7 +226,7 @@ class GamesController extends Controller
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url,
-                $request->boxart_url, $request->boxart_square_url,
+                $request->boxart_square_url,
                 $request->vendor_page_url, $request->nintendo_page_url,
                 $request->twitter_id, $request->eshop_europe_fs_id
             );
@@ -330,7 +330,7 @@ class GamesController extends Controller
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url,
-                $request->boxart_url, $request->boxart_square_url,
+                $request->boxart_square_url,
                 $request->vendor_page_url, $request->nintendo_page_url,
                 $request->twitter_id, $request->eshop_europe_fs_id
             );

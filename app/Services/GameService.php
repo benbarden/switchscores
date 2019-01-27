@@ -26,7 +26,6 @@ class GameService
      * @param null $overview
      * @param null $mediaFolder
      * @param null $videoUrl
-     * @param null $boxartUrl
      * @param null $boxartSquareUrl
      * @param null $vendorPageUrl
      * @param null $nintendoPageUrl
@@ -37,7 +36,7 @@ class GameService
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null,
+        $boxartSquareUrl = null, $vendorPageUrl = null,
         $nintendoPageUrl = null, $twitterId = null, $eshopEuropeFsId = null
     )
     {
@@ -53,7 +52,6 @@ class GameService
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
-            'boxart_url' => $boxartUrl,
             'boxart_square_url' => $boxartSquareUrl,
             'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
@@ -66,7 +64,7 @@ class GameService
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartUrl = null, $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null,
+        $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null,
         $twitterId = null, $eshopEuropeFsId = null
     )
     {
@@ -81,7 +79,6 @@ class GameService
             'media_folder' => $mediaFolder,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
-            'boxart_url' => $boxartUrl,
             'boxart_square_url' => $boxartSquareUrl,
             'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
@@ -365,7 +362,6 @@ class GameService
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
             ->whereNotNull('games.nintendo_page_url')
-            ->whereNull('boxart_url')
             ->whereNull('boxart_square_url');
 
         $games = $games->orderBy('game_release_dates.release_date', 'asc')
@@ -389,7 +385,6 @@ class GameService
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
-            ->where('boxart_url', null)
             ->where('boxart_square_url', null)
             ->orderBy('game_release_dates.release_date', 'asc')
             //->orderBy('game_release_dates.upcoming_date', 'asc')
