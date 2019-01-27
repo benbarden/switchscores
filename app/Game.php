@@ -23,8 +23,7 @@ class Game extends Model
         'title', 'link_title', 'price_eshop', 'players',
         'rating_avg', 'review_count', 'overview', 'image_count', 'developer', 'publisher',
         'media_folder', 'amazon_uk_link', 'game_rank', 'video_url',
-        'boxart_square_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id',
-        'eshop_europe_fs_id',
+        'boxart_square_url', 'nintendo_page_url', 'eshop_europe_fs_id',
     ];
 
     public function charts()

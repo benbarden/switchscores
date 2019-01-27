@@ -105,16 +105,12 @@ class IndexController extends Controller
         // Missing data - others
         $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
-        $missingVendorPageUrl = $serviceGame->getByNullField('vendor_page_url', $regionCode);
         $missingVideoUrl = $serviceGame->getByNullField('video_url', $regionCode);
-        $missingTwitterId = $serviceGame->getByNullField('twitter_id', $regionCode);
         $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
 
         $bindings['MissingTagsCount'] = count($missingTags);
         $bindings['MissingGenresCount'] = count($missingGenres);
-        $bindings['MissingVendorPageUrlCount'] = count($missingVendorPageUrl);
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
-        $bindings['MissingTwitterIdCount'] = count($missingTwitterId);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
 
 

@@ -27,17 +27,14 @@ class GameService
      * @param null $mediaFolder
      * @param null $videoUrl
      * @param null $boxartSquareUrl
-     * @param null $vendorPageUrl
      * @param null $nintendoPageUrl
-     * @param null $twitterId
      * @param null $eshopEuropeFsId
      * @return Game
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $vendorPageUrl = null,
-        $nintendoPageUrl = null, $twitterId = null, $eshopEuropeFsId = null
+        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null
     )
     {
         return Game::create([
@@ -53,9 +50,7 @@ class GameService
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
             'boxart_square_url' => $boxartSquareUrl,
-            'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
-            'twitter_id' => $twitterId,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
         ]);
     }
@@ -64,8 +59,7 @@ class GameService
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $vendorPageUrl = null, $nintendoPageUrl = null,
-        $twitterId = null, $eshopEuropeFsId = null
+        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null
     )
     {
         $values = [
@@ -80,9 +74,7 @@ class GameService
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
             'boxart_square_url' => $boxartSquareUrl,
-            'vendor_page_url' => $vendorPageUrl,
             'nintendo_page_url' => $nintendoPageUrl,
-            'twitter_id' => $twitterId,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
         ];
 
@@ -403,7 +395,7 @@ class GameService
     public function getByNullField($field, $region)
     {
         $allowedFields = [
-            'video_url', 'vendor_page_url', 'nintendo_page_url', 'twitter_id', 'eshop_europe_fs_id'
+            'video_url', 'nintendo_page_url', 'eshop_europe_fs_id'
         ];
 
         if (!in_array($field, $allowedFields)) {
@@ -451,9 +443,6 @@ class GameService
             case 'action-list-nintendo-url-no-packshots':
                 $gameList = $this->getActionListNintendoUrlNoPackshots($regionCode);
                 break;
-            case 'no-dev-or-pub':
-                $gameList = $this->getWithoutDevOrPub();
-                break;
             case 'no-boxart':
                 $gameList = $this->getWithoutBoxart($regionCode);
                 break;
@@ -463,14 +452,8 @@ class GameService
             case 'no-video-url':
                 $gameList = $this->getByNullField('video_url', $regionCode);
                 break;
-            case 'no-vendor-page-url':
-                $gameList = $this->getByNullField('vendor_page_url', $regionCode);
-                break;
             case 'no-nintendo-page-url':
                 $gameList = $this->getByNullField('nintendo_page_url', $regionCode);
-                break;
-            case 'no-twitter-id':
-                $gameList = $this->getByNullField('twitter_id', $regionCode);
                 break;
             case 'no-amazon-uk-link':
                 $gameList = $this->getWithoutAmazonUkLink();

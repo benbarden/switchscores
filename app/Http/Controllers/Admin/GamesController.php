@@ -145,20 +145,12 @@ class GamesController extends Controller
                     $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
-                case 'no-vendor-page-url':
-                    $gameList = $serviceGame->getByNullField('vendor_page_url', $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
                 case 'no-boxart':
                     $gameList = $serviceGame->getWithoutBoxart($regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-video-url':
                     $gameList = $serviceGame->getByNullField('video_url', $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-twitter-id':
-                    $gameList = $serviceGame->getByNullField('twitter_id', $regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-amazon-uk-link':
@@ -225,10 +217,8 @@ class GamesController extends Controller
             $game = $serviceGame->create(
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url,
-                $request->boxart_square_url,
-                $request->vendor_page_url, $request->nintendo_page_url,
-                $request->twitter_id, $request->eshop_europe_fs_id
+                $request->media_folder, $request->video_url, $request->boxart_square_url,
+                $request->nintendo_page_url, $request->eshop_europe_fs_id
             );
             $gameId = $game->id;
 
@@ -329,10 +319,8 @@ class GamesController extends Controller
                 $gameData,
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url,
-                $request->boxart_square_url,
-                $request->vendor_page_url, $request->nintendo_page_url,
-                $request->twitter_id, $request->eshop_europe_fs_id
+                $request->media_folder, $request->video_url, $request->boxart_square_url,
+                $request->nintendo_page_url, $request->eshop_europe_fs_id
             );
 
             // Update release dates

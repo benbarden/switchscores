@@ -153,28 +153,12 @@
         </td>
     </tr>
     {% endif %}
-    {% if GameData.vendor_page_url %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Official site</span>
-            </td>
-            <td><a href="{{ GameData.vendor_page_url }}" target="_blank">Visit official site</a></td>
-        </tr>
-    {% endif %}
     {% if GameData.nintendo_page_url %}
         <tr>
             <td>
                 <span style="font-weight: bold;">Nintendo eShop page</span>
             </td>
             <td><a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a></td>
-        </tr>
-    {% endif %}
-    {% if GameData.twitter_id %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Twitter account</span>
-            </td>
-            <td><a href="https://twitter.com/{{ GameData.twitter_id }}" target="_blank">{{ GameData.twitter_id }}</a></td>
         </tr>
     {% endif %}
     {% if GameData.amazon_uk_link %}
