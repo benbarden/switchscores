@@ -1,0 +1,72 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('partners.landing'), 'text': 'Partners'}, {'text': 'Review sites'}] %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <p>
+            If you have a site where you publish Switch reviews and you're not already a reviewer,
+            we'd love to hear from you.
+        </p>
+
+        <p>
+            Please note the following criteria:
+        </p>
+
+        <ul>
+            <li>We need your reviews to contain a numeric rating - either a score out of 5, or out of 10.</li>
+            <li>We need an RSS feed containing only your Switch reviews. There should not be games for other
+                platforms in the feed. There should only be reviews in the feed - no news posts, previews,
+                or features.</li>
+            <li>If you can't provide an RSS feed or we are unable to process it, you can submit
+                your reviews individually via our "Partner reviews" screen in the members area.
+            </li>
+            <li>You'll get extra brownie points if your feed contains post titles formatted in a consistent way,
+                so our title-matching tool can automatically link your reviews to games in our database.</li>
+            <li>You'll get even more brownie points if your feed contains the review score in a field that
+                we can easily pick up. Very few reviewers are able to do this -
+                you'll save us a lot of manual work if you can include it.</li>
+        </ul>
+        <p>
+            If that all sounds ok, we'll need some details from you:
+        </p>
+
+        <ol>
+            <li>the name and URL of your site</li>
+            <li>your name and role at the site - if you're not the owner,
+                make sure they're ok with you approaching us</li>
+            <li>a rough idea of how many Switch reviews you have - don't worry, if you're not sure,
+                we can tell you this if we sign you up</li>
+            <li>a link to your Switch reviews feed - again, if you're not sure, we can have a look for this
+                if we know where your site is</li>
+        </ol>
+
+        <p>
+            To apply, contact
+            <a href="mailto:hello@worldofswitch.com?subject=Partner application - Review site">hello@worldofswitch.com</a>.
+        </p>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>Optional: RSS feed requirements</h2>
+        <p>
+            If you're able to provide a custom RSS feed, we need the following fields for each review:
+        </p>
+        <ul>
+            <li>Name of game</li>
+            <li>Date of review</li>
+            <li>Link to the review</li>
+            <li>Rating</li>
+        </ul>
+        <p>
+            Sample feeds:
+        </p>
+        <ul>
+            <li><a href="http://www.nintendolife.com/feeds/reviews" target="_blank">Nintendo Life</a></li>
+            <li><a href="http://www.cubed3.com/nintendo-switch.xml" target="_blank">Cubed3</a></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock page_body %}

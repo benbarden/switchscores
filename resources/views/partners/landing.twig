@@ -1,0 +1,110 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'text': 'Partners'}] %}
+
+{% block page_body %}
+
+<p>
+    World of Switch works with a variety of different partners to import review scores and keep the games
+    database updated. Interested in joining? See below for further details.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Review sites</h2>
+
+        <p>
+            If you have a site where you review Nintendo Switch games, we'd love to hear from you.
+        </p>
+
+        <h3>
+            Benefits:
+        </h3>
+
+        <ul>
+            <li>A dedicated profile page for your site with some overall stats</li>
+            <li>Your reviews will be linked from our game pages</li>
+            <li>Your scores will be included in our ranking calculations</li>
+            <li>Coming soon: Connect with indie developers and publishers</li>
+            <li>Coming soon: Partner dashboard with additional stats and info on your reviews</li>
+        </ul>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
+
+        <h2>Developers</h2>
+
+        <p>
+            Developers with one or more games on the Switch can join as a partner.
+        </p>
+
+        <h3>
+            Benefits:
+        </h3>
+
+        <ul>
+            <li>A dedicated page with your company's details, website URL, Twitter profile link,
+                and links to the games of yours we've got on the site</li>
+            <li>Links back from our game pages to your on-site profile page</li>
+            <li>Coming soon: Connect with review partners</li>
+            <li>Coming soon: Partner dashboard with additional stats and info on your games</li>
+        </ul>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
+
+        <h2>Publishers</h2>
+
+        <p>
+            Publishers with one or more games on the Switch can join as a partner.
+        </p>
+
+        <h3>
+            Benefits:
+        </h3>
+
+        <ul>
+            <li>A dedicated page with your company's details, website URL, Twitter profile link,
+                and links to the games of yours we've got on the site</li>
+            <li>Links back from our game pages to your on-site profile page</li>
+            <li>Coming soon: Connect with review partners</li>
+            <li>Coming soon: Partner dashboard with additional stats and info on your games</li>
+        </ul>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.review-sites') }}';">Find out more &gt;</button>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.developers-publishers') }}';">Find out more &gt;</button>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.developers-publishers') }}';">Find out more &gt;</button>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

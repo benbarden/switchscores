@@ -86,6 +86,11 @@ Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('r
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
 Route::get('/reviews/not-ranked/{mode}/{filter}', 'ReviewsController@notRanked')->name('reviews.notRanked');
 
+/* Partners */
+Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
+Route::get('/partners/review-sites', 'PartnersController@reviewSites')->name('partners.review-sites');
+Route::get('/partners/developers-publishers', 'PartnersController@developersPublishers')->name('partners.developers-publishers');
+
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
