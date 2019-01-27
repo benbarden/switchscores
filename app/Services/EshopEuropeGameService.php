@@ -9,17 +9,29 @@ use App\EshopEuropeGame;
 
 class EshopEuropeGameService
 {
+    /**
+     * @param $id
+     * @return EshopEuropeGame
+     */
     public function find($id)
     {
         return EshopEuropeGame::find($id);
     }
 
+    /**
+     * @param $title
+     * @return EshopEuropeGame
+     */
     public function getByTitle($title)
     {
         $eshopGame = EshopEuropeGame::where('title', $title)->first();
         return $eshopGame;
     }
 
+    /**
+     * @param $fsId
+     * @return EshopEuropeGame
+     */
     public function getByFsId($fsId)
     {
         $eshopGame = EshopEuropeGame::where('fs_id', $fsId)->first();

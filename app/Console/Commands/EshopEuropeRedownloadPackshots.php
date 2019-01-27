@@ -8,21 +8,21 @@ use App\Services\GameService;
 use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\PackshotEurope;
 
-class EshopEuropeDownloadPackshots extends Command
+class EshopEuropeRedownloadPackshots extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'EshopEuropeDownloadPackshots';
+    protected $signature = 'EshopEuropeRedownloadPackshots';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Finds packshots from the European eShop, downloads them and links them to games.';
+    protected $description = 'Re-downloads all packshots from the European eShop.';
 
     /**
      * Create a new command instance.
@@ -52,7 +52,7 @@ class EshopEuropeDownloadPackshots extends Command
 
         $this->info('Loading data...');
 
-        $gameList = $gameService->getActionListNintendoUrlNoPackshots('eu');
+        $gameList = $eshopEuropeGameService->getAllWithLink();
 
         if (count($gameList) == 0) {
             $this->warn('No items found; exiting');
@@ -63,22 +63,22 @@ class EshopEuropeDownloadPackshots extends Command
 
         foreach ($gameList as $item) {
 
-            $game = $gameService->find($item->id);
+            $game = $gameService->find($item->game_id);
 
-            $gameId = $game->id;
-            $gameTitle = $game->title;
-            $gamePackshot = $game->boxart_url;
-            $gamePackshotSquare = $game->boxart_square_url;
-
-            $fsId = $game->eshop_europe_fs_id;
-
-            if ($gamePackshot || $gamePackshotSquare) {
-                //$this->warn($gameTitle.': record already has a packshot; skipping');
+            if (!$game) {
+                $this->warn('Error loading data');
+                $this->info('**************************************************');
                 continue;
             }
 
+            $gameId = $game->id;
+            $gameTitle = $game->title;
+
+            $fsId = $game->eshop_europe_fs_id;
+
             if (!$fsId) {
-                //$this->warn($gameTitle.': record is not linked to an fs_id; skipping');
+                $this->warn($gameTitle.': record is not linked to an fs_id; skipping');
+                $this->info('**************************************************');
                 continue;
             }
 
@@ -91,12 +91,12 @@ class EshopEuropeDownloadPackshots extends Command
 
             $eshopPackshotEuropeService->downloadPackshot($eshopEuropeGame, $game);
             $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            $this->info('Saving packshot: '.$destFilename);
-
-            $game->boxart_square_url = $destFilename;
-            $game->save();
-            $this->info('Packshot saved!');
-            $this->info('**************************************************');
+            if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                $game->boxart_square_url = $destFilename;
+                $game->save();
+                $this->info('Packshot saved!: '.$destFilename);
+                $this->info('**************************************************');
+            }
         }
     }
 }
