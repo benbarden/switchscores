@@ -84,7 +84,6 @@ Route::get('/top-rated/by-month/{date}', 'TopRatedController@byMonthPage')->name
 Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
 Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
 Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingReviews')->name('reviews.gamesNeedingReviews');
-Route::get('/reviews/not-ranked/{mode}/{filter}', 'ReviewsController@notRanked')->name('reviews.notRanked');
 
 /* Partners */
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
@@ -128,6 +127,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
     Route::post('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
     Route::get('/user/partner-reviews/{report?}', 'User\PartnerReviewController@showList')->name('user.partner-reviews.list');
+
+    // Review partners: Unranked games
+    Route::get('/user/review-partner/unranked', 'User\ReviewPartnerUnrankedController@landing')->name('user.review-partner.unranked.landing');
+    Route::get('/user/review-partner/unranked/{mode}/{filter}', 'User\ReviewPartnerUnrankedController@showList')->name('user.review-partner.unranked.list');
 
 });
 

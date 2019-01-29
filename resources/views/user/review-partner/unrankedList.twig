@@ -1,0 +1,28 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('user.review-partner.unranked.landing'), 'text': 'Unranked games'}, {'text': 'Games list'}] %}
+
+{% block page_inner %}
+
+<p>
+    Below is a list of the unranked games on the site. As a review partner, you can help by
+    reviewing some of these games. Once a game has 3 reviews, it will disappear from this list.
+</p>
+
+{% if PageMode == 'by-count' %}
+    <h2>Unranked games - {{ PageFilter }} review(s)</h2>
+{% elseif PageMode == 'by-year' %}
+    <h2>Unranked games - released in {{ PageFilter }}</h2>
+{% elseif PageMode == 'by-list' %}
+    {% if PageFilter == 'aca-neogeo' %}
+        <h2>Unranked games - ACA NeoGeo</h2>
+    {% elseif PageFilter == 'arcade-archives' %}
+        <h2>Unranked games - Arcade Archives</h2>
+    {% elseif PageFilter == 'all-others' %}
+        <h2>Unranked games - All others</h2>
+    {% endif %}
+{% endif %}
+
+{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+
+{% endblock page_inner %}

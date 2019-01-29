@@ -40,6 +40,10 @@ class ImageHelper
                 $sizeInPixels = 75;
                 $showEmptyCell = true;
                 break;
+            case 'reviews-tiny':
+                $sizeInPixels = 60;
+                $showEmptyCell = true;
+                break;
             default:
                 $sizeInPixels = 125;
                 $showEmptyCell = false;

@@ -22,12 +22,12 @@ class ReviewsController extends Controller
 
         $bindings = [];
 
-        //$reviewList = $serviceReviewLinks->getLatestNaturalOrder(10);
+        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(20);
         $reviewPartnerList = $serviceReviewSites->getActive();
 
         $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getNotableRecent(20);
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
-        //$bindings['ReviewList'] = $reviewList;
+        $bindings['ReviewList'] = $reviewList;
         $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($regionCode, 30, 15);
         $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 10);
 
@@ -35,54 +35,6 @@ class ReviewsController extends Controller
         $bindings['PageTitle'] = 'Reviews';
 
         return view('reviews.landing', $bindings);
-    }
-
-    public function notRanked($mode, $filter)
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-
-        $bindings = [];
-
-        switch ($mode) {
-
-            case 'by-count':
-                if (!in_array($filter, ['0', '1', '2'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $regionCode);
-                $tableSort = "[1, 'asc']";
-                break;
-
-            case 'by-year':
-                if (!in_array($filter, ['2017', '2018', '2019'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $regionCode);
-                $tableSort = "[1, 'asc']";
-                break;
-
-            case 'by-list':
-                if (!in_array($filter, ['aca-neogeo', 'arcade-archives', 'all-others'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $regionCode);
-                $tableSort = "[1, 'asc']";
-                break;
-
-            default:
-                abort(404);
-
-        }
-
-        $bindings['GamesList'] = $gamesList;
-        $bindings['GamesTableSort'] = $tableSort;
-
-        $bindings['TopTitle'] = 'Nintendo Switch - Unranked games';
-        $bindings['PageTitle'] = 'Unranked Nintendo Switch games';
-
-        $bindings['PageMode'] = $mode;
-        $bindings['PageFilter'] = $filter;
-
-        return view('reviews.notRanked', $bindings);
     }
 
     public function gamesNeedingReviews()
