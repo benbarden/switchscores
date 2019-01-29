@@ -1,31 +1,93 @@
 {% extends 'theme/wos/member/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': 'Index'}] %}
+{% set crumbNav = [{'text': 'Dashboard'}] %}
 
 {% block page_inner %}
 
     <div class="row">
-        <div class="col-md-6">
-            <h2>Welcome {{ auth_user().display_name }}</h2>
-            <p>
-                Got a question? Need help? Tweet us via
-                <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
-                You can also follow us for the latest updates.
-            </p>
-            <h3>Member navigation</h3>
+
+        <div id="tabs">
             <ul>
-                <li><a href="{{ route('user.collection.landing') }}">Games collection</a> - New!</li>
-                <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
-                {% if auth_user().site_id != 0 %}
-                <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>
+                <li><a href="#tabs-welcome">Welcome</a></li>
+                <li><a href="#tabs-reviews">Reviews</a></li>
+                {% if auth_user().developer_id != 0 %}
+                    <li><a href="#tabs-developers">Developers</a></li>
                 {% endif %}
-                <li><a href="{{ route('user.settings') }}">Settings</a></li>
+                {% if auth_user().publisher_id != 0 %}
+                    <li><a href="#tabs-publishers">Publishers</a></li>
+                {% endif %}
             </ul>
-
+            <div id="tabs-welcome">
+                <h2>Welcome {{ auth_user().display_name }}</h2>
+                <p>
+                    Got a question? Need help? Tweet us via
+                    <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
+                    You can also follow us for the latest updates.
+                </p>
+                <a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-lg">Games collection</a>
+                <a href="{{ route('user.settings') }}" class="btn btn-primary btn-lg">Settings</a>
+            </div>
+            <div id="tabs-reviews">
+                {% if auth_user().site_id != 0 %}
+                    <h2>Partner reviews</h2>
+                    <p>
+                        As one of our privileged review partners, you can submit reviews from your
+                        site for inclusion in our database via the partner reviews feature.
+                    </p>
+                    <p>
+                        <a href="{{ route('user.partner-reviews.list') }}" class="btn btn-primary btn-lg">Partner reviews</a>
+                    </p>
+                    <h2>Quick user reviews</h2>
+                    <p>
+                        You can also submit a quick user review directly to the site.
+                        <br>
+                        <strong>If you want to submit a review posted on your own site,
+                        use partner reviews instead</strong>.
+                    </p>
+                    <p>
+                        <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-lg">Quick user reviews</a>
+                    </p>
+                {% else %}
+                    <h2>Quick user reviews</h2>
+                    <p>
+                        Write a quick review of any Switch game on the site.
+                    </p>
+                    <p>
+                        <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-lg">Quick user reviews</a>
+                    </p>
+                    <p>
+                        <strong>Got a website with Switch reviews?</strong>
+                        You might be better off with our partner reviews feature, as you can submit
+                        a link and a score to be included in our site rankings.
+                        Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+                        more details.
+                    </p>
+                {% endif %}
+            </div>
+            {% if auth_user().developer_id != 0 %}
+            <div id="tabs-developers">
+                <h2>Developer dashboard: {{ auth_user().developer.name }}</h2>
+                <p>
+                    We're in the early stages of building a dedicated dashboard for
+                    Switch game developers. Check back soon for more!
+                </p>
+            </div>
+            {% endif %}
+            {% if auth_user().publisher_id != 0 %}
+            <div id="tabs-publishers">
+                <h2>Publisher dashboard: {{ auth_user().publisher.name }}</h2>
+                <p>
+                    We're in the early stages of building a dedicated dashboard for
+                    Switch game publishers. Check back soon for more!
+                </p>
+            </div>
+            {% endif %}
         </div>
-        <div class="col-md-6">
 
-        </div>
     </div>
+
+<script>
+    $('#tabs').tabs();
+</script>
 
 {% endblock page_inner %}

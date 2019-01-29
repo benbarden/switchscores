@@ -5,3 +5,6 @@ h4, .h4 {font-size: 16px;}
 h5, .h5 {font-size: 14px;}
 h6, .h6 {font-size: 12px;}
 .breadcrumb {font-size: 13px; font-weight: 500;}
+
+.ui-widget-content a {color: #337ab7;}
+.ui-widget-content a.btn {color: #ffffff;}

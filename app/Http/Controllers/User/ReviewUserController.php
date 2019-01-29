@@ -81,8 +81,8 @@ class ReviewUserController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'My reviews';
-        $bindings['PageTitle'] = 'My reviews';
+        $bindings['TopTitle'] = 'Quick user reviews';
+        $bindings['PageTitle'] = 'Quick user reviews';
 
         $bindings['UserRegion'] = Auth::user()->region;
 
