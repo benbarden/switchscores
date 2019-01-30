@@ -85,13 +85,6 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminGamesListNoDevOrPub()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/no-dev-or-pub');
-        $response->assertStatus(200);
-    }
-
     public function testAdminGamesListNoVideoUrl()
     {
         $this->be($this->userAdmin);

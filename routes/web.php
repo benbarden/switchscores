@@ -246,7 +246,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
     Route::post('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
     Route::get('/admin/developer/game/{gameId}/list', 'Admin\DeveloperController@showGameList')->name('admin.developer.game.list');
-    Route::get('/admin/developer/game/{gameId}/add', 'Admin\DeveloperController@addGameDeveloper')->name('admin.developer.game.add');
+//    Route::get('/admin/developer/game/{gameId}/add', 'Admin\DeveloperController@addGameDeveloper')->name('admin.developer.game.add');
     Route::get('/admin/developer/game/{gameId}/remove', 'Admin\DeveloperController@removeGameDeveloper')->name('admin.developer.game.remove');
 
     // Publishers

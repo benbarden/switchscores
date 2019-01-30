@@ -9,6 +9,8 @@
     and allows you to add or remove developers.
 </p>
 
+
+
 {% if UnusedDeveloperList %}
     <h3>Choose a developer to add</h3>
     <select id="developer-list" name="developer-list">
@@ -53,6 +55,9 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
+
+    var gameId = '{{ GameId }}';
+
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [0, 'desc'],
@@ -81,7 +86,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.developer.game.add', {'gameId': GameId}) }}', {developerId: developerId}, function(data) {
+        $.getJSON('/api/admin/developer/add-game-developer', {gameId: gameId, developerId: developerId}, function(data) {
             $('#js-developer-notify').text('Developer added!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
