@@ -1,12 +1,28 @@
 <h2>Action lists</h2>
 
-<h3>User data</h3>
+<h3>Updates requiring approval</h3>
 
-<table class="table table-striped data-sortable">
+<table class="table table-striped">
     <tbody>
     <tr>
         <td>
-            <a href="{{ route('admin.reviews.user.list') }}">Pending user reviews</a>
+            <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.reviews.partner.list') }}" class="h4">{{ PendingPartnerReviewCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.reviews.user.list') }}">Quick user reviews</a>
         </td>
         <td class="text-right">
             <a href="{{ route('admin.reviews.user.list') }}" class="h4">{{ PendingReviewUserCount }}</a>
@@ -14,10 +30,10 @@
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.reviews.partner.list') }}">Pending partner reviews</a>
+            <a href="{{ route('admin.feed-items.games.list') }}">Feeds: Game updates</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.reviews.partner.list') }}" class="h4">{{ PendingPartnerReviewCount }}</a>
+            <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
         </td>
     </tr>
     </tbody>
@@ -25,7 +41,7 @@
 
 <h3>Games to release</h3>
 
-<table class="table table-striped data-sortable">
+<table class="table table-striped">
     <tbody>
     <tr>
         <td>
@@ -54,32 +70,9 @@
     </tbody>
 </table>
 
-<h3>Feed updates</h3>
-
-<table class="table table-striped data-sortable">
-    <tbody>
-    <tr>
-        <td>
-            <a href="{{ route('admin.feed-items.reviews.list') }}">Pending feed reviews</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.feed-items.games.list') }}">Pending game updates</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
 <h3>Developers and Publishers</h3>
 
-<table class="table table-striped data-sortable">
+<table class="table table-striped">
     <tbody>
     <tr>
         <td>
@@ -131,34 +124,10 @@
     </tr>
 </table>
 
-<h3>Action lists: others</h3>
+<h3>Missing data</h3>
 
-<table class="table table-striped data-sortable">
+<table class="table table-striped">
     <tbody>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">With Nintendo URL, no packshot</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots" class="h4">{{ ActionListNintendoUrlNoPackshotsCount }}</a>
-        </td>
-    </tr>
     <tr>
         <td>
             <a href="{{ route('admin.games.list')}}/action-list-recent-no-nintendo-url">Recent, no Nintendo URL</a>
@@ -175,13 +144,30 @@
             <a href="{{ route('admin.games.list')}}/action-list-upcoming-no-nintendo-url" class="h4">{{ ActionListUpcomingNoNintendoUrlCount }}</a>
         </td>
     </tr>
-    </tbody>
-</table>
-
-<h3>Missing data (Low priority)</h3>
-
-<table class="table table-striped data-sortable">
-    <tbody>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots">With Nintendo URL, no packshot</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/action-list-nintendo-url-no-packshots" class="h4">{{ ActionListNintendoUrlNoPackshotsCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
+        </td>
+    </tr>
     <tr>
         <td>
             <a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a>
