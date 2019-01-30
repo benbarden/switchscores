@@ -57,12 +57,19 @@ class PartnerReviewController extends Controller
                     ->withInput();
             }
 
+            $validator->after(function ($validator) use ($reviewLinkService, $gameId, $userSiteId, $itemDate) {
 
-            $validator->after(function ($validator) use ($reviewLinkService, $gameId, $userSiteId) {
+                // Check for an existing review
                 $reviewLinkExisting = $reviewLinkService->getByGameAndSite($gameId, $userSiteId);
                 if ($reviewLinkExisting) {
                     $validator->errors()->add('game_id', 'We already have a review from your site for this game. Please try a different game.');
                 }
+
+                // Block zero dates
+                if ($itemDate == '0000-00-00') {
+                    $validator->errors()->add('item_date', 'Please enter a valid date.');
+                }
+
             });
 
             if ($validator->fails()) {
