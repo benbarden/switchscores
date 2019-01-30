@@ -95,6 +95,7 @@ class LoaderEurope
         'mii_support',
         'voice_chat_b',
         'download_play',
+        'wishlist_email_square_image_url_s',
     ];
 
     /**
