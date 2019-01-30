@@ -405,9 +405,10 @@ class GameReleaseDateService
     /**
      * @param $reviewCount
      * @param $region
+     * @param $gameIdsReviewedBySite
      * @return mixed
      */
-    public function getUnrankedByReviewCount($reviewCount, $region)
+    public function getUnrankedByReviewCount($reviewCount, $region, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
@@ -419,6 +420,7 @@ class GameReleaseDateService
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 1)
             ->where('review_count', '=', $reviewCount)
+            ->whereNotIn('games.id', $gameIdsReviewedBySite)
             ->orderBy('game_release_dates.release_date', 'desc')
             ->orderBy('games.title', 'asc')
             ->get();
@@ -429,9 +431,10 @@ class GameReleaseDateService
     /**
      * @param $year
      * @param $region
+     * @param $gameIdsReviewedBySite
      * @return mixed
      */
-    public function getUnrankedByYear($year, $region)
+    public function getUnrankedByYear($year, $region, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
@@ -444,6 +447,7 @@ class GameReleaseDateService
             ->where('game_release_dates.is_released', 1)
             ->where('game_release_dates.release_year', '=', $year)
             ->where('review_count', '<', '3')
+            ->whereNotIn('games.id', $gameIdsReviewedBySite)
             ->orderBy('game_release_dates.release_date', 'desc')
             ->orderBy('games.title', 'asc')
             ->get();
@@ -454,10 +458,11 @@ class GameReleaseDateService
     /**
      * @param $filter
      * @param $region
+     * @param $gameIdsReviewedBySite
      * @return mixed
      * @throws \Exception
      */
-    public function getUnrankedByList($filter, $region)
+    public function getUnrankedByList($filter, $region, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
@@ -468,7 +473,8 @@ class GameReleaseDateService
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 1)
-            ->where('review_count', '<', '3');
+            ->where('review_count', '<', '3')
+            ->whereNotIn('games.id', $gameIdsReviewedBySite);
 
         switch ($filter) {
             case 'aca-neogeo':

@@ -8,6 +8,10 @@
     Below is a list of the unranked games on the site. As a review partner, you can help by
     reviewing some of these games. Once a game has 3 reviews, it will disappear from this list.
 </p>
+<p>
+    We've also excluded any games you've already reviewed. Currently, you've reviewed
+    {{ GamesReviewedCount }} games.
+</p>
 
 {% if PageMode == 'by-count' %}
     <h2>Unranked games - {{ PageFilter }} review(s)</h2>

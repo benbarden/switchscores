@@ -91,6 +91,20 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function getAllGameIdsReviewedBySite($siteId)
+    {
+        $gameIds = ReviewLink::select('review_links.game_id')
+            ->where('site_id', $siteId);
+        return $gameIds;
+    }
+
+    public function countAllGameIdsReviewedBySite($siteId)
+    {
+        $gameIds = ReviewLink::select('review_links.game_id')
+            ->where('site_id', $siteId)->count();
+        return $gameIds;
+    }
+
     public function countBySite($siteId)
     {
         return ReviewLink::where('site_id', $siteId)->count();

@@ -37,6 +37,10 @@ class ReviewPartnerUnrankedController extends Controller
         }
 
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+
+        $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($userSiteId);
+        $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($userSiteId);
 
         $bindings = [];
 
@@ -44,19 +48,19 @@ class ReviewPartnerUnrankedController extends Controller
 
             case 'by-count':
                 if (!in_array($filter, ['0', '1', '2'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $regionCode);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $regionCode, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 
             case 'by-year':
                 if (!in_array($filter, ['2017', '2018', '2019'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $regionCode);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $regionCode, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 
             case 'by-list':
                 if (!in_array($filter, ['aca-neogeo', 'arcade-archives', 'all-others'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $regionCode);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $regionCode, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 
@@ -67,6 +71,8 @@ class ReviewPartnerUnrankedController extends Controller
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = $tableSort;
+
+        $bindings['GamesReviewedCount'] = $totalGameIdsReviewedBySite;
 
         $bindings['PageMode'] = $mode;
         $bindings['PageFilter'] = $filter;
