@@ -41,7 +41,13 @@ class TitleMatch
 
         if (count($matches) == 0) return null;
 
-        if (array_key_exists($this->matchIndex, $matches)) return $matches[$this->matchIndex][0];
+        if (array_key_exists($this->matchIndex, $matches)) {
+            if (array_key_exists(0, $matches[$this->matchIndex])) {
+                return $matches[$this->matchIndex][0];
+            } else {
+                return null;
+            }
+        }
 
         return null;
     }
