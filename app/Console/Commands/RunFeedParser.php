@@ -126,7 +126,7 @@ class RunFeedParser extends Command
                 $feedItem->parse_status = $parseStatus;
                 $feedItem->parsed = 1;
 
-                //$feedItem->save();
+                $feedItem->save();
 
             } catch (\Exception $e) {
                 $this->error('Got error: '.$e->getMessage().'; skipping');
