@@ -55,6 +55,7 @@ class ReviewSiteController extends Controller
             $this->validate($request, $this->validationRules);
 
             $isActive = $request->active == 'on' ? 'Y' : 'N';
+            $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
 
             if (isset($request->rating_scale)) {
                 $ratingScale = $request->rating_scale;
@@ -64,7 +65,10 @@ class ReviewSiteController extends Controller
 
             $serviceReviewSite->create(
                 $request->name, $request->link_title, $request->url, $request->feed_url,
-                $isActive, $ratingScale
+                $isActive, $ratingScale,
+                $allowHistoricContent,
+                $request->title_match_rule_pattern,
+                $request->title_match_index
             );
 
             return redirect(route('admin.reviews.site.list'));
@@ -99,6 +103,7 @@ class ReviewSiteController extends Controller
             $this->validate($request, $this->validationRules);
 
             $isActive = $request->active == 'on' ? 'Y' : 'N';
+            $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
 
             if (isset($request->rating_scale)) {
                 $ratingScale = $request->rating_scale;
@@ -109,7 +114,10 @@ class ReviewSiteController extends Controller
             $serviceReviewSite->edit(
                 $reviewSiteData,
                 $request->name, $request->link_title, $request->url, $request->feed_url,
-                $isActive, $ratingScale
+                $isActive, $ratingScale,
+                $allowHistoricContent,
+                $request->title_match_rule_pattern,
+                $request->title_match_index
             );
 
             return redirect(route('admin.reviews.site.list'));

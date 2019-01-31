@@ -12,6 +12,9 @@
         formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
         formVals['active'] = "{{ ReviewSiteData.active }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
+        formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
+        formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern }}";
+        formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
 
     } else {
 
@@ -23,6 +26,9 @@
         formVals['feed_url'] = "{{ old('feed_url') }}";
         formVals['active'] = "{{ old('active') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
+        formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
+        formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern') }}";
+        formVals['title_match_index'] = "{{ old('title_match_index') }}";
 
     }
 
@@ -35,6 +41,13 @@
     } else {
         $('#active').attr('checked', false);
     }
+    if (formVals['allow_historic_content'] == '1') {
+        $('#allow_historic_content').attr('checked', true);
+    } else {
+        $('#allow_historic_content').attr('checked', false);
+    }
     $('#rating_scale').val(formVals['rating_scale']);
+    $('#title_match_rule_pattern').val(formVals['title_match_rule_pattern']);
+    $('#title_match_index').val(formVals['title_match_index']);
 
 </script>

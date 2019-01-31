@@ -8,6 +8,9 @@ use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
 use App\Services\FeedItemReviewService;
 use App\Services\GameService;
+use App\Services\ReviewSiteService;
+
+use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
 class RunFeedParser extends Command
 {
@@ -46,8 +49,12 @@ class RunFeedParser extends Command
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         $gameService = resolve('Services\GameService');
+        $serviceReviewSite = resolve('Services\ReviewSiteService');
         /* @var FeedItemReviewService $feedItemReviewService */
         /* @var GameService $gameService */
+        /* @var ReviewSiteService $serviceReviewSite */
+
+        $serviceTitleMatch = new ServiceTitleMatch();
 
         $feedItems = $feedItemReviewService->getItemsToParse();
 
@@ -66,16 +73,44 @@ class RunFeedParser extends Command
             $itemUrl = $feedItem->item_url;
             $itemTitle = $feedItem->item_title;
 
+            $reviewSite = $serviceReviewSite->find($siteId);
+            if (!$reviewSite) {
+                $this->error('Cannot find review site! ['.$siteId.']');
+                continue;
+            }
+
+            $siteName = $reviewSite->name;
+            $titleMatchRulePattern = $reviewSite->title_match_rule_pattern;
+            $titleMatchIndex = $reviewSite->title_match_index;
+
             try {
 
+                $this->info('*************************************************');
+                $this->info("Site: $siteName ($siteId)");
                 $this->info('Processing item: '.$itemTitle);
 
-                $parser->setSiteId($siteId);
-                $parser->getTitleParser()->setTitle($itemTitle);
-                $parser->parseBySiteRules();
-                $parsedTitle = $parser->getTitleParser()->getTitle();
+                if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
+
+                    // New method
+                    $serviceTitleMatch->setMatchRule($titleMatchRulePattern);
+                    $serviceTitleMatch->prepareMatchRule();
+                    $serviceTitleMatch->setMatchIndex($titleMatchIndex);
+                    $parsedTitle = $serviceTitleMatch->generate($itemTitle);
+                    $this->info('Using new parser');
+
+                } else {
+
+                    // Old method
+                    $parser->setSiteId($siteId);
+                    $parser->getTitleParser()->setTitle($itemTitle);
+                    $parser->parseBySiteRules();
+                    $parsedTitle = $parser->getTitleParser()->getTitle();
+                    $this->warn('Using old parser');
+
+                }
 
                 $feedItem->parsed_title = $parsedTitle;
+                $this->info("Parsed title: $parsedTitle");
 
                 // Can we find a game from this title?
                 $game = $gameService->getByTitle($parsedTitle);
@@ -91,7 +126,7 @@ class RunFeedParser extends Command
                 $feedItem->parse_status = $parseStatus;
                 $feedItem->parsed = 1;
 
-                $feedItem->save();
+                //$feedItem->save();
 
             } catch (\Exception $e) {
                 $this->error('Got error: '.$e->getMessage().'; skipping');

@@ -47,11 +47,18 @@ class ReviewSite extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'link_title', 'url', 'feed_url', 'active', 'rating_scale'
+        'name', 'link_title', 'url', 'feed_url', 'active', 'rating_scale',
+        'allow_historic_content', 'title_match_rule_pattern', 'title_match_index',
     ];
+
+    public function allowHistoric()
+    {
+        return $this->allow_historic_content == 1;
+    }
 
     public function links()
     {
         return $this->hasMany('App\ReviewLink', 'id', 'site_id');
     }
+
 }

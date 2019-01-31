@@ -8,7 +8,10 @@ use App\ReviewSite;
 
 class ReviewSiteService
 {
-    public function create($name, $linkTitle, $url, $feedUrl, $active, $ratingScale)
+    public function create(
+        $name, $linkTitle, $url, $feedUrl, $active, $ratingScale,
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
+    )
     {
         ReviewSite::create([
             'name' => $name,
@@ -17,12 +20,16 @@ class ReviewSiteService
             'feed_url' => $feedUrl,
             'active' => $active,
             'rating_scale' => $ratingScale,
+            'allow_historic_content' => $allowHistoricContent,
+            'title_match_rule_pattern' => $titleMatchRulePattern,
+            'title_match_index' => $titleMatchIndex,
         ]);
     }
 
     public function edit(
         ReviewSite $reviewSiteData,
-        $name, $linkTitle, $url, $feedUrl, $active, $ratingScale
+        $name, $linkTitle, $url, $feedUrl, $active, $ratingScale,
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
     )
     {
         $values = [
@@ -32,6 +39,9 @@ class ReviewSiteService
             'feed_url' => $feedUrl,
             'active' => $active,
             'rating_scale' => $ratingScale,
+            'allow_historic_content' => $allowHistoricContent,
+            'title_match_rule_pattern' => $titleMatchRulePattern,
+            'title_match_index' => $titleMatchIndex,
         ];
 
         $reviewSiteData->fill($values);

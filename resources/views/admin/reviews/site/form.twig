@@ -35,7 +35,25 @@
     <div class="form-group">
         <label for="rating_scale" class="col-md-4 control-label">Rating scale</label>
         <div class="col-md-6">
-            <input id="rating_scale" type="text" class="form-control" name="rating_scale" value="{{ old('rating_scale') }}" size="5" maxlength="2" required>
+            <input id="rating_scale" type="text" class="form-control" name="rating_scale" size="5" maxlength="2" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="allow_historic_content" class="col-md-4 control-label">Allow historic content</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="allow_historic_content" name="allow_historic_content">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="title_match_rule_pattern" class="col-md-4 control-label">Title match rule pattern</label>
+        <div class="col-md-6">
+            <input id="title_match_rule_pattern" type="text" class="form-control" name="title_match_rule_pattern">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="title_match_index" class="col-md-4 control-label">Title match index</label>
+        <div class="col-md-6">
+            <input id="title_match_index" type="text" class="form-control" name="title_match_index" size="5" maxlength="2">
         </div>
     </div>
     <div class="form-group">

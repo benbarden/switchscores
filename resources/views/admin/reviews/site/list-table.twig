@@ -5,8 +5,10 @@
             <th class="text-center">#</th>
             <th>Name</th>
             <th>URLs</th>
-            <th class="text-center">Active</th>
             <th class="text-center">Rating scale</th>
+            <th class="text-center">Active</th>
+            <th class="text-center">Allow historic?</th>
+            <th class="text-center">Match rule set?</th>
             <th class="text-center">Reviews</th>
             <th class="text-center">Options</th>
         </tr>
@@ -33,10 +35,40 @@
                     </small>
                 </td>
                 <td class="text-center">
-                    {{ item.active }}
+                    {{ item.rating_scale }}
                 </td>
                 <td class="text-center">
-                    {{ item.rating_scale }}
+                    {% if item.active == 'Y' %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.allow_historic_content == '1' %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.title_match_rule_pattern is defined %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('admin.reviews.link.list') }}?siteId={{ item.id }}">View</a>
