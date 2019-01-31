@@ -17,6 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/* Game */
+Route::get('/game/title-match', 'Api\Game\TitleMatch@getByTitle');
+
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
 Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
