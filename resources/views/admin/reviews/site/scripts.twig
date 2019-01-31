@@ -13,7 +13,7 @@
         formVals['active'] = "{{ ReviewSiteData.active }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
         formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
-        formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern }}";
+        formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern|e('js') }}";
         formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
 
     } else {
@@ -27,7 +27,7 @@
         formVals['active'] = "{{ old('active') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
         formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
-        formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern') }}";
+        formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
         formVals['title_match_index'] = "{{ old('title_match_index') }}";
 
     }
