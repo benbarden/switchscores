@@ -68,7 +68,7 @@ class Importer
     public function loadRemoteFeedData($feedUrl)
     {
         try {
-            $client = new GuzzleClient();
+            $client = new GuzzleClient(['verify' => false]);
             $response = $client->request('GET', $feedUrl);
         } catch (\Exception $e) {
             throw new \Exception('Failed to load feed URL! Error: '.$e->getMessage());
