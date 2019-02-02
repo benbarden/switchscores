@@ -131,18 +131,6 @@ class TitleMatchTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testNintendadTravisStrikesAgain()
-    {
-        $title = '[Review] Travis Strikes Again &#8211; Nintendo Switch';
-        $matchRule = "/^\[Review\] (.*) &#8211; Nintendo Switch$/";
-        $expected = 'Travis Strikes Again';
-
-        $this->gameTitleMatch->setMatchRule($matchRule);
-        $this->gameTitleMatch->setMatchIndex(1);
-        $actual = $this->gameTitleMatch->generate($title);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testNintendoInsiderBigCrownShowdown()
     {
         $title = 'Big Crown Showdown Review';
@@ -284,6 +272,30 @@ class TitleMatchTest extends TestCase
         $title = 'ACA NeoGeo: Twinkle Star Sprites Review';
         $matchRule = "/^(.*) Review$/";
         $expected = 'ACA NeoGeo: Twinkle Star Sprites';
+
+        $this->gameTitleMatch->setMatchRule($matchRule);
+        $this->gameTitleMatch->setMatchIndex(1);
+        $actual = $this->gameTitleMatch->generate($title);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testNintendadTravisStrikesAgain()
+    {
+        $title = '[Review] Travis Strikes Again &#8211; Nintendo Switch';
+        $matchRule = "/^\[Review\] (.*) (&#8211;|–) Nintendo Switch$/";
+        $expected = 'Travis Strikes Again';
+
+        $this->gameTitleMatch->setMatchRule($matchRule);
+        $this->gameTitleMatch->setMatchIndex(1);
+        $actual = $this->gameTitleMatch->generate($title);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testNintendadTheRaven()
+    {
+        $title = '[Review] The Raven Remastered – Nintendo Switch';
+        $matchRule = "/^\[Review\] (.*) (&#8211;|–) Nintendo Switch$/";
+        $expected = 'The Raven Remastered';
 
         $this->gameTitleMatch->setMatchRule($matchRule);
         $this->gameTitleMatch->setMatchIndex(1);
