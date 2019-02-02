@@ -63,12 +63,16 @@
                     <a href="{{ item.item_url }}" target="_blank">View</a>
                 </td>
                 <td class="text-center">
-                    {{ item.item_rating }}
-                </td>
-                <td class="text-center">
                     {% if item.site.rating_scale == 5 %}
                         {% set OriginalRating = item.item_rating * 2 %}
                         {{ OriginalRating|number_format(1, '.', ',') }}
+                    {% else %}
+                        {{ item.item_rating }}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.site.rating_scale == 5 %}
+                        {{ item.item_rating }}
                     {% else %}
                         -
                     {% endif %}

@@ -50,10 +50,10 @@
                         <br>
                         <small>
                             {% if item.movement > 0 %}
-                                <span style="color: #090;">Up {{ item.movement }} place(s)</span>,
+                                <span style="color: #090;">Up {{ item.movement }} places</span>,
                                 from {{ item.rank_old }} to {{ item.rank_new }}
                             {% elseif item.movement < 0 %}
-                                <span style="color: #900;">Down {{ item.movement|replace('-', ' ') }} place(s)</span>,
+                                <span style="color: #900;">Down {{ item.movement|replace('-', ' ') }} places</span>,
                                 from {{ item.rank_old }} to {{ item.rank_new }}
                             {% else %}
                                 Initial rank: {{ item.rank_new }}
