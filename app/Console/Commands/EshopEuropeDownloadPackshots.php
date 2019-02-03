@@ -68,10 +68,11 @@ class EshopEuropeDownloadPackshots extends Command
             $gameId = $game->id;
             $gameTitle = $game->title;
             $gamePackshotSquare = $game->boxart_square_url;
+            $gamePackshotHeader = $game->boxart_header_image;
 
             $fsId = $game->eshop_europe_fs_id;
 
-            if ($gamePackshotSquare) {
+            if (($gamePackshotSquare) && ($gamePackshotHeader)) {
                 //$this->warn($gameTitle.': record already has a packshot; skipping');
                 continue;
             }
@@ -88,13 +89,20 @@ class EshopEuropeDownloadPackshots extends Command
                 continue;
             }
 
-            $eshopPackshotEuropeService->downloadPackshot($eshopEuropeGame, $game);
+            // Square packshot
+            $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
             $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            $this->info('Saving packshot: '.$destFilename);
-
+            $this->info('Saving square packshot: '.$destFilename);
             $game->boxart_square_url = $destFilename;
+
+            // Header
+            $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
+            $destFilename = $eshopPackshotEuropeService->getDestFilename();
+            $this->info('Saving header packshot: '.$destFilename);
+            $game->boxart_header_image = $destFilename;
+
             $game->save();
-            $this->info('Packshot saved!');
+            $this->info('Packshot(s) saved!');
             $this->info('**************************************************');
         }
     }

@@ -15,8 +15,12 @@
         formVals['is_released_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'is_released') }}";
         {% endfor %}
         // *** eShop *** //
+        formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
+        formVals['nintendo_page_url'] = "{{ GameData.nintendo_page_url }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
+        formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
+        formVals['boxart_header_image'] = "{{ GameData.boxart_header_image }}";
         // *** Additional *** //
         formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
@@ -25,9 +29,6 @@
         // *** Media *** //
         formVals['media_folder'] = "{{ GameData.media_folder }}";
         formVals['video_url'] = "{{ GameData.video_url }}";
-        formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
-        formVals['nintendo_page_url'] = "{{ GameData.nintendo_page_url }}";
-        formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
 
     } else {
 
@@ -43,8 +44,12 @@
         formVals['is_released_{{ key }}'] = "{{ old('is_released_'~key) }}";
         {% endfor %}
         // *** eShop *** //
+        formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
+        formVals['nintendo_page_url'] = "{{ old('nintendo_page_url') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
+        formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
+        formVals['boxart_header_image'] = "{{ old('boxart_header_image') }}";
         // *** Additional *** //
         formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
@@ -53,9 +58,6 @@
         // *** Media *** //
         formVals['media_folder'] = "{{ old('media_folder') }}";
         formVals['video_url'] = "{{ old('video_url') }}";
-        formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
-        formVals['nintendo_page_url'] = "{{ old('nintendo_page_url') }}";
-        formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
 
     }
 
@@ -74,8 +76,12 @@
     }
     {% endfor %}
     // *** eShop *** //
+    $('#eshop_europe_fs_id').val(formVals['eshop_europe_fs_id']);
+    $('#nintendo_page_url').val(formVals['nintendo_page_url']);
     $('#price_eshop').val(formVals['price_eshop']);
     $('#players').val(formVals['players']);
+    $('#boxart_square_url').val(formVals['boxart_square_url']);
+    $('#boxart_header_image').val(formVals['boxart_header_image']);
     // *** Additional *** //
     $('#developer').val(formVals['developer']);
     $('#publisher').val(formVals['publisher']);
@@ -84,9 +90,6 @@
     // *** Media *** //
     $('#media_folder').val(formVals['media_folder']);
     $('#video_url').val(formVals['video_url']);
-    $('#boxart_square_url').val(formVals['boxart_square_url']);
-    $('#nintendo_page_url').val(formVals['nintendo_page_url']);
-    $('#eshop_europe_fs_id').val(formVals['eshop_europe_fs_id']);
 
     // *** Genres *** //
     {% if GameGenreList %}

@@ -89,12 +89,23 @@ class EshopEuropeRedownloadPackshots extends Command
                 continue;
             }
 
-            $eshopPackshotEuropeService->downloadPackshot($eshopEuropeGame, $game);
+            // Square
+            $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
             $destFilename = $eshopPackshotEuropeService->getDestFilename();
             if ($eshopPackshotEuropeService->getIsAborted() == false) {
                 $game->boxart_square_url = $destFilename;
                 $game->save();
-                $this->info('Packshot saved!: '.$destFilename);
+                $this->info('Square packshot saved!: '.$destFilename);
+                $this->info('**************************************************');
+            }
+
+            // Header
+            $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
+            $destFilename = $eshopPackshotEuropeService->getDestFilename();
+            if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                $game->boxart_header_image = $destFilename;
+                $game->save();
+                $this->info('Header packshot saved!: '.$destFilename);
                 $this->info('**************************************************');
             }
         }

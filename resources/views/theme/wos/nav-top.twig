@@ -35,29 +35,36 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 {% else %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ auth_user().display_name }} <span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ route('user.index') }}">Members dashboard</a></li>
-                            <li>
-                                <a href="{{ route('logout') }}"
-                                   onclick="
+                    <li><a href="{{ route('user.index') }}">Members</a></li>
+                    <li>
+                        <a href="{{ route('logout') }}"
+                           onclick="
                                      event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
+                            Logout
+                        </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
                     </li>
                     {% if auth_user().isAdmin() %}
-                        <li><a href="{{ route('admin.index') }}">Admin</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Admin <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+                                <li><a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop - Europe</a></li>
+                                <li><a href="{{ route('admin.feed-items.games.list') }}">Feeds: Games</a></li>
+                                <li><a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a></li>
+                                <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
+                                <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
+                                <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>
+                                <li><a href="{{ route('admin.stats.landing') }}">Stats</a></li>
+                                <li><a href="{{ route('admin.index') }}">Admin index</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
                 {% endif %}
             </ul>

@@ -12,8 +12,8 @@
     <title>{{ TopTitle }} | World of Switch</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=20181007" rel="stylesheet">
-    <link href="{{ asset('css/design.css') }}?v=20181007" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=20190203" rel="stylesheet">
+    <link href="{{ asset('css/design.css') }}?v=20190203" rel="stylesheet">
 
     <!-- Bootstrap -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -44,17 +44,8 @@
     <div class="container">
         <div class="row">
             <div id="wos-body" class="col-sm-12">
-                {% if auth_user() %}
-                <div class="pull-right">
-                <ol class="breadcrumb" style="background: #dedede; margin-bottom: 10px !important;">
-                    <li>Members</li>
-                    <li><a href="{{ route('user.index') }}">Dashboard</a></li>
-                    <li><a href="{{ route('user.reviews.list') }}">My reviews</a></li>
-                </ol>
-                </div>
-                {% endif %}
                 {% if crumbNav is defined %}
-                <ol class="breadcrumb">
+                <ol class="breadcrumb" style="border: 0; margin-bottom: 5px !important;">
                     <li><a href="{{ route('welcome') }}">Home</a></li>
                     {% for item in crumbNav %}
                         {% if loop.last %}

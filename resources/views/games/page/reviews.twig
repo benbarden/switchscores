@@ -1,10 +1,24 @@
 {% if GameReviews %}
-    <h2>Reviews</h2>
+    <h2>
+        {% if GameReviews.count == 1 %}
+            {{ GameReviews.count }} partner review
+        {% elseif GameReviews.count == 0 %}
+            No partner reviews yet
+        {% else %}
+            {{ GameReviews.count }} partner reviews
+        {% endif %}
+        {% if GameData.rating_avg %}
+            <span class="h4 pull-right">
+                <span>Average rating</span>
+                <strong>{{ GameData.rating_avg }}</strong>
+            </span>
+        {% endif %}
+    </h2>
     {% if GameReviews.count > 0 %}
-        <table class="table table-striped table-condensed table-responsive">
+        <table class="table table-condensed table-responsive">
             <tr>
                 <th>Site</th>
-                <th class="text-center">Rating<br>(out of 10)</th>
+                <th class="text-center">Rating</th>
                 <th class="text-center">Review date</th>
                 <th class="text-center">Link</th>
             </tr>
@@ -16,12 +30,14 @@
                     <td class="text-center">
                         {% if Review.rating_normalised %}
                             {{ Review.rating_normalised }}
+                            {#
                             {% if Review.site.rating_scale != 10 %}
                             <br>
                             <small>
                                 Actual: {{ Review.rating_original }}/{{ Review.site.rating_scale }}
                             </small>
                             {% endif %}
+                            #}
                         {% else %}
                             N/A
                         {% endif %}
@@ -37,17 +53,5 @@
         </table>
 
     {% endif %}
-
-    <p>
-        <small>
-        {% if GameReviews.count == 1 %}
-            {{ GameReviews.count }} review.
-        {% elseif GameReviews.count == 0 %}
-            No reviews yet.
-        {% else %}
-            {{ GameReviews.count }} reviews.
-        {% endif %}
-        </small>
-    </p>
 
 {% endif %}

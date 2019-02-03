@@ -34,7 +34,8 @@ class GameService
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null
+        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
+        $boxartHeaderImage = null
     )
     {
         return Game::create([
@@ -52,6 +53,7 @@ class GameService
             'boxart_square_url' => $boxartSquareUrl,
             'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
+            'boxart_header_image' => $boxartHeaderImage,
         ]);
     }
 
@@ -59,7 +61,8 @@ class GameService
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null
+        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
+        $boxartHeaderImage = null
     )
     {
         $values = [
@@ -76,6 +79,7 @@ class GameService
             'boxart_square_url' => $boxartSquareUrl,
             'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
+            'boxart_header_image' => $boxartHeaderImage,
         ];
 
         $game->fill($values);
@@ -354,7 +358,9 @@ class GameService
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
             ->whereNotNull('games.nintendo_page_url')
-            ->whereNull('boxart_square_url');
+            ->where(function($q) {
+                $q->whereNull('boxart_square_url')->orWhereNull('boxart_header_image');
+            });
 
         $games = $games->orderBy('game_release_dates.release_date', 'asc')
             ->orderBy('games.title', 'asc');

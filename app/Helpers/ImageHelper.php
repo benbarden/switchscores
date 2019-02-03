@@ -28,6 +28,10 @@ class ImageHelper
     static function packshotHtml($game, $page)
     {
         switch ($page) {
+            case 'game-square-header':
+                $sizeInPixels = 250;
+                $showEmptyCell = true;
+                break;
             case 'game-show':
                 $sizeInPixels = 125;
                 $showEmptyCell = true;
@@ -72,6 +76,29 @@ class ImageHelper
                 'height: '.$sizeInPixels.'px; width: '.$sizeInPixels.'px; '.
                 'text-align: center; margin: 0 auto;"></div>';
             */
+
+        } else {
+            // do nothing
+        }
+
+        return $htmlOutput;
+    }
+
+    static function packshotHeaderHtml($game)
+    {
+        if ($game->boxart_header_image) {
+            $boxartPath = '/img/games/header/';
+            $boxartUrl = $boxartPath.$game->boxart_header_image;
+        } else {
+            $boxartPath = null;
+            $boxartUrl = null;
+        }
+
+        $htmlOutput = '';
+
+        if (!is_null($boxartPath) && !is_null($boxartUrl)) {
+
+            $htmlOutput = '<img src="'.$boxartUrl.'" style="border: 0;" alt="'.$game->title.'">';
 
         } else {
             // do nothing

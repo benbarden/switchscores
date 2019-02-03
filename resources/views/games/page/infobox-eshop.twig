@@ -1,0 +1,61 @@
+<table class="table table-condensed table-responsive">
+    <tr>
+        <th colspan="2" style="background: #dedede;">eShop details</th>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">eShop price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                &pound;{{ GameData.price_eshop }}
+            {% endif %}
+        </td>
+    </tr>
+    {% if ReleaseDates %}
+        {% for item in ReleaseDates %}
+            {% if item.region == 'eu' %}
+                {% set RegionDesc = 'Europe' %}
+            {% elseif item.region == 'us' %}
+                {% set RegionDesc = 'US' %}
+            {% elseif item.region == 'jp' %}
+                {% set RegionDesc = 'Japan' %}
+            {% else %}
+                {% set RegionDesc = item.region %}
+            {% endif %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">{{ RegionDesc }} release</span>
+                </td>
+                <td>
+                    {% if item.release_date and item.is_released == 1 %}
+                        {{ item.release_date|date('jS M Y') }}
+                    {% else %}
+                        {{ item.upcoming_date }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    {% if GameGenres|length > 0 %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Genres</span>
+            </td>
+            <td>
+                {% for item in GameGenres %}
+                    <a href="{{ route('games.genres.item', {'linkTitle': item.genre.link_title }) }}">{{ item.genre.genre }}</a>
+                    {% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+    {% endif %}
+    {% if GameData.nintendo_page_url %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Link to eShop</span>
+            </td>
+            <td><a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a></td>
+        </tr>
+    {% endif %}
+</table>

@@ -218,7 +218,8 @@ class GamesController extends Controller
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url, $request->boxart_square_url,
-                $request->nintendo_page_url, $request->eshop_europe_fs_id
+                $request->nintendo_page_url, $request->eshop_europe_fs_id,
+                $request->boxart_header_image
             );
             $gameId = $game->id;
 
@@ -320,7 +321,8 @@ class GamesController extends Controller
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url, $request->boxart_square_url,
-                $request->nintendo_page_url, $request->eshop_europe_fs_id
+                $request->nintendo_page_url, $request->eshop_europe_fs_id,
+                $request->boxart_header_image
             );
 
             // Update release dates

@@ -1,0 +1,178 @@
+<table class="table table-striped table-condensed table-responsive">
+    <tr>
+        <td class="text-center" colspan="2">
+            <strong>
+                Infobox
+            </strong>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Title</span>
+        </td>
+        <td>{{ GameData.title }}</td>
+    </tr>
+    {% if ReleaseDates %}
+        {% for item in ReleaseDates %}
+            {% if item.region == 'eu' %}
+                {% set RegionDesc = 'Europe' %}
+            {% elseif item.region == 'us' %}
+                {% set RegionDesc = 'US' %}
+            {% elseif item.region == 'jp' %}
+                {% set RegionDesc = 'Japan' %}
+            {% else %}
+                {% set RegionDesc = item.region %}
+            {% endif %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Release date: {{ RegionDesc }}</span>
+                </td>
+                <td>
+                    {% if item.release_date and item.is_released == 1 %}
+                        {{ item.release_date|date('jS M Y') }}
+                    {% else %}
+                        {{ item.upcoming_date }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">eShop price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                &pound;{{ GameData.price_eshop }}
+            {% endif %}
+        </td>
+    </tr>
+    {% if GameData.game_rank %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Rank</span>
+        </td>
+        <td>{{ GameData.game_rank }}/{{ RankMaximum }}</td>
+    </tr>
+    {% endif %}
+    {% if GameData.rating_avg %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Average rating</span>
+        </td>
+        <td>{{ GameData.rating_avg }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+
+    {% if GameDevelopers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('developers.page', {'linkTitle': item.developer.link_title}) }}">{{ item.developer.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>{{ GameData.developer }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GamePublishers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>
+                {% for item in GamePublishers %}
+                    <a href="{{ route('publishers.page', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>{{ GameData.publisher }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GameTags|length > 0 and item.is_released == 1 %}
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Tag(s)</span>
+        </td>
+        <td>
+            {% for item in GameTags %}
+                <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">{{ item.tag.tag_name }}</a>
+                <br>
+            {% endfor %}
+        </td>
+    </tr>
+
+    {% endif %}
+
+    {% if GameGenres|length > 0 %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">eShop genres</span>
+        </td>
+        <td>
+            {% for item in GameGenres %}
+                <a href="{{ route('games.genres.item', {'linkTitle': item.genre.link_title }) }}">{{ item.genre.genre }}</a>
+                {% if not loop.last %}<br>{% endif %}
+            {% endfor %}
+        </td>
+    </tr>
+    {% endif %}
+    {% if GameData.nintendo_page_url %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Nintendo eShop page</span>
+            </td>
+            <td><a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a></td>
+        </tr>
+    {% endif %}
+    {% if GameData.amazon_uk_link %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Buy this game</span>
+            </td>
+            <td>
+                <a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a>
+            </td>
+        </tr>
+    {% endif %}
+    {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
+    <tr>
+        <td class="text-center" colspan="2">
+            <strong>
+                <a href="{{ GameShowUrl }}">More details: {{ GameData.title }} &gt;&gt;</a>
+            </strong>
+        </td>
+    </tr>
+</table>
