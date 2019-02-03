@@ -3,7 +3,7 @@
         {% if GameReviews.count == 1 %}
             {{ GameReviews.count }} partner review
         {% elseif GameReviews.count == 0 %}
-            No partner reviews yet
+            Partner reviews
         {% else %}
             {{ GameReviews.count }} partner reviews
         {% endif %}
@@ -51,7 +51,8 @@
                 </tr>
             {% endfor %}
         </table>
-
+    {% else %}
+        <p>No partner reviews yet. Check back soon!</p>
     {% endif %}
 
 {% endif %}
