@@ -6,7 +6,7 @@
 
 <ul>
     <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-    <li><a href="{{ route('games.calendar.landing') }}">Switch release calendar</a></li>
+    <li><a href="{{ route('calendar.landing') }}">Switch release calendar</a></li>
     <li><a href="{{ route('games.genres.landing') }}">Games by genre</a></li>
     <li><a href="{{ route('games.list.unreleased') }}">Unreleased games</a></li>
 </ul>
@@ -17,7 +17,7 @@
         <h2>
             Newest
             <span class="h4">
-                (<a href="{{ route('games.calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
+                (<a href="{{ route('calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
                 (<a href="{{ route('games.list.released') }}">all released</a>)
             </span>
         </h2>

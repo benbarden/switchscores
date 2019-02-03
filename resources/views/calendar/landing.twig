@@ -31,7 +31,7 @@
                 {% for item in DateList %}
                     <div class="col-sm-4 col-md-2 col-lg-2" style="border: 1px solid #dedede; padding: 15px 2px; text-align: center;">
                         <span class="h3">
-                        <a href="{{ route('games.calendar.page', {'date': item.DateRaw}) }}">
+                        <a href="{{ route('calendar.page', {'date': item.DateRaw}) }}">
                             <strong>{{ item.DateRaw|date('M Y') }}</strong>
                         </a>
                         </span>

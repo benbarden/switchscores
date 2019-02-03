@@ -35,13 +35,14 @@ Route::get('/games/released', 'GamesController@listReleased')->name('games.list.
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 Route::get('/games/unreleased', 'GamesController@listUnreleased')->name('games.list.unreleased');
 
-Route::get('/games/calendar', 'GamesController@calendarLanding')->name('games.calendar.landing');
-Route::get('/games/calendar/{date}', 'GamesController@calendarPage')->name('games.calendar.page');
-
 Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
 Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
 
 Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
+
+// Calendar
+Route::get('/games/calendar', 'CalendarController@landing')->name('calendar.landing');
+Route::get('/games/calendar/{date}', 'CalendarController@page')->name('calendar.page');
 
 // Old pages - redirects
 Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');

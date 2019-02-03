@@ -1,0 +1,47 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('calendar.landing'), 'text': 'Release calendar'}, {'text': CalendarDateDesc}] %}
+
+{% block page_body %}
+
+<p>
+    This page lists all of the Nintendo Switch games released in {{ CalendarDateDesc }}.
+    You can also <a href="{{ route('topRated.byMonthPage', {'date': CalendarDateUrl}) }}">view this month's
+    games ordered by rating</a>.
+</p>
+
+<p>
+    <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
+</p>
+
+{% if CalendarGamesList %}
+<table class="table table-striped data-sortable">
+    {% for key,item in CalendarGamesList %}
+        <tr>
+            <td class="text-center" style="max-width: 200px; min-width: 100px;">
+                <span class="h3">{{ key|date('jS') }}</span>
+            </td>
+            <td>
+                {% if item.games|length %}
+                    <div class="row">
+                        {% for item in item.games %}
+                            <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1" style="padding: 5px 2px; text-align: center;">
+                                <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
+                            </div>
+                            {#
+                            <div class="col-sm-6 col-md-8 col-lg-10" style="padding: 5px 2px; text-align: left;">
+                                <span class="h5">
+                                    <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
+                                </span>
+                            </div>
+                            #}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock page_body %}

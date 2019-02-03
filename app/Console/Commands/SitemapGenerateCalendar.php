@@ -51,7 +51,7 @@ class SitemapGenerateCalendar extends Command
         $sitemapPages = [];
 
         $sitemapPages[] = array(
-            'url' => route('games.calendar.landing'),
+            'url' => route('calendar.landing'),
             'lastmod' => $timestamp,
             'changefreq' => 'weekly',
             'priority' => '0.8'
@@ -62,7 +62,7 @@ class SitemapGenerateCalendar extends Command
         foreach ($dateList as $dateListItem) {
 
             $sitemapPages[] = array(
-                'url' => route('games.calendar.page', ['date' => $dateListItem]),
+                'url' => route('calendar.page', ['date' => $dateListItem]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
                 'priority' => '0.8'
