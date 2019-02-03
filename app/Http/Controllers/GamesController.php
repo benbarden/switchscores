@@ -251,7 +251,7 @@ class GamesController extends Controller
         $gamePublishers = $serviceGamePublisher->getByGame($gameId);
         $gameTags = $serviceGameTag->getByGame($gameId);
 
-        $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game details';
+        $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game ratings, reviews and information';
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;

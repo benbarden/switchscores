@@ -16,6 +16,10 @@
                     <span>Rank</span>
                     <strong>{{ GameData.game_rank }}<small>/{{ RankMaximum }}</small></strong>
                 </span>
+            {% else %}
+                <span class="h4 pull-right" style="margin: 5px 0;">
+                    <em>Rank pending</em>
+                </span>
             {% endif %}
         </h1>
     </div>
