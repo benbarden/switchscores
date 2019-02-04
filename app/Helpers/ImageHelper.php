@@ -98,7 +98,7 @@ class ImageHelper
 
         if (!is_null($boxartPath) && !is_null($boxartUrl)) {
 
-            $htmlOutput = '<img src="'.$boxartUrl.'" style="border: 0;" alt="'.$game->title.'">';
+            $htmlOutput = '<img src="'.$boxartUrl.'" class="img-responsive" style="border: 0;" alt="'.$game->title.'">';
 
         } else {
             // do nothing
