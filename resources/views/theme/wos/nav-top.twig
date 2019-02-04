@@ -54,6 +54,7 @@
                                 Admin <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('admin.index') }}">Admin index</a></li>
                                 <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                 <li><a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop - Europe</a></li>
                                 <li><a href="{{ route('admin.feed-items.games.list') }}">Feeds: Games</a></li>
@@ -62,7 +63,6 @@
                                 <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
                                 <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>
                                 <li><a href="{{ route('admin.stats.landing') }}">Stats</a></li>
-                                <li><a href="{{ route('admin.index') }}">Admin index</a></li>
                             </ul>
                         </li>
                     {% endif %}
