@@ -49,6 +49,7 @@ class ReviewSite extends Model
     protected $fillable = [
         'name', 'link_title', 'url', 'feed_url', 'active', 'rating_scale',
         'allow_historic_content', 'title_match_rule_pattern', 'title_match_index',
+        'feed_url_prefix'
     ];
 
     public function allowHistoric()

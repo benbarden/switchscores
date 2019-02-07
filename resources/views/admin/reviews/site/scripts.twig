@@ -9,12 +9,13 @@
         formVals['name'] = "{{ ReviewSiteData.name }}";
         formVals['link_title'] = "{{ ReviewSiteData.link_title }}";
         formVals['url'] = "{{ ReviewSiteData.url }}";
-        formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
-        formVals['active'] = "{{ ReviewSiteData.active }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
-        formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
+        formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
+        formVals['feed_url_prefix'] = "{{ ReviewSiteData.feed_url_prefix }}";
         formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern|e('js') }}";
         formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
+        formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
+        formVals['active'] = "{{ ReviewSiteData.active }}";
 
     } else {
 
@@ -23,31 +24,33 @@
         formVals['name'] = "{{ old('name') }}";
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['url'] = "{{ old('url') }}";
-        formVals['feed_url'] = "{{ old('feed_url') }}";
-        formVals['active'] = "{{ old('active') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
-        formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
+        formVals['feed_url'] = "{{ old('feed_url') }}";
+        formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
         formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
         formVals['title_match_index'] = "{{ old('title_match_index') }}";
+        formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
+        formVals['active'] = "{{ old('active') }}";
 
     }
 
     $('#name').val(formVals['name']);
     $('#link_title').val(formVals['link_title']);
     $('#url').val(formVals['url']);
+    $('#rating_scale').val(formVals['rating_scale']);
     $('#feed_url').val(formVals['feed_url']);
-    if (formVals['active'] == 'Y') {
-        $('#active').attr('checked', true);
-    } else {
-        $('#active').attr('checked', false);
-    }
+    $('#feed_url_prefix').val(formVals['feed_url_prefix']);
+    $('#title_match_rule_pattern').val(formVals['title_match_rule_pattern']);
+    $('#title_match_index').val(formVals['title_match_index']);
     if (formVals['allow_historic_content'] == '1') {
         $('#allow_historic_content').attr('checked', true);
     } else {
         $('#allow_historic_content').attr('checked', false);
     }
-    $('#rating_scale').val(formVals['rating_scale']);
-    $('#title_match_rule_pattern').val(formVals['title_match_rule_pattern']);
-    $('#title_match_index').val(formVals['title_match_index']);
+    if (formVals['active'] == 'Y') {
+        $('#active').attr('checked', true);
+    } else {
+        $('#active').attr('checked', false);
+    }
 
 </script>

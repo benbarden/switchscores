@@ -68,7 +68,8 @@ class ReviewSiteController extends Controller
                 $isActive, $ratingScale,
                 $allowHistoricContent,
                 $request->title_match_rule_pattern,
-                $request->title_match_index
+                $request->title_match_index,
+                $request->feed_url_prefix
             );
 
             return redirect(route('admin.reviews.site.list'));
@@ -117,7 +118,8 @@ class ReviewSiteController extends Controller
                 $isActive, $ratingScale,
                 $allowHistoricContent,
                 $request->title_match_rule_pattern,
-                $request->title_match_index
+                $request->title_match_index,
+                $request->feed_url_prefix
             );
 
             return redirect(route('admin.reviews.site.list'));

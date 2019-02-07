@@ -10,7 +10,8 @@ class ReviewSiteService
 {
     public function create(
         $name, $linkTitle, $url, $feedUrl, $active, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        $feedUrlPrefix
     )
     {
         ReviewSite::create([
@@ -23,13 +24,15 @@ class ReviewSiteService
             'allow_historic_content' => $allowHistoricContent,
             'title_match_rule_pattern' => $titleMatchRulePattern,
             'title_match_index' => $titleMatchIndex,
+            'feed_url_prefix' => $feedUrlPrefix,
         ]);
     }
 
     public function edit(
         ReviewSite $reviewSiteData,
         $name, $linkTitle, $url, $feedUrl, $active, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        $feedUrlPrefix
     )
     {
         $values = [
@@ -42,6 +45,7 @@ class ReviewSiteService
             'allow_historic_content' => $allowHistoricContent,
             'title_match_rule_pattern' => $titleMatchRulePattern,
             'title_match_index' => $titleMatchIndex,
+            'feed_url_prefix' => $feedUrlPrefix,
         ];
 
         $reviewSiteData->fill($values);

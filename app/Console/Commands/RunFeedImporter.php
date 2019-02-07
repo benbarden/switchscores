@@ -87,6 +87,19 @@ class RunFeedImporter extends Command
                         continue;
                     }
 
+                    // Check if a feed URL prefix is set, and if so, compare it
+                    $feedUrlPrefix = $reviewSite->feed_url_prefix;
+                    if ($feedUrlPrefix) {
+                        $fullPrefix = $reviewSite->url.$feedUrlPrefix;
+                        if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+                            $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                            continue;
+                        } else {
+                            //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                            //continue;
+                        }
+                    }
+
                     // Check that it's not a historic review
                     if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
                         $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
