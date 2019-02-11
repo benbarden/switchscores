@@ -25,7 +25,7 @@ class ImageHelper
         return self::packshotHtml($game, $page);
     }
 
-    static function packshotHtml($game, $page)
+    static function packshotHtml($game, $page, $isReleased = 1)
     {
         switch ($page) {
             case 'game-square-header':
@@ -66,7 +66,13 @@ class ImageHelper
 
         if (!is_null($boxartPath) && !is_null($boxartUrl)) {
 
-            $htmlOutput = '<img src="'.$boxartUrl.'" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
+            if ($isReleased == 1) {
+                $opacityStyle = '';
+            } else {
+                $opacityStyle = ' opacity: 0.4;';
+            }
+
+            $htmlOutput = '<img src="'.$boxartUrl.'" style="border: 0; height: '.$sizeInPixels.'px;'.$opacityStyle.'" alt="'.$game->title.'">';
 
         } elseif ($showEmptyCell) {
 

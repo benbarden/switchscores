@@ -9,10 +9,17 @@
     You can also <a href="{{ route('topRated.byMonthPage', {'date': CalendarDateUrl}) }}">view this month's
     games ordered by rating</a>.
 </p>
+<p>
+    Faded images indicate games that have yet to be released, or have not been marked as released
+    in our database. This is a manual task, so please allow a couple of days for releases to
+    show up.
+</p>
 
+{#
 <p>
     <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
 </p>
+#}
 
 {% if CalendarGamesList %}
 <table class="table table-striped data-sortable">
@@ -26,7 +33,7 @@
                     <div class="row">
                         {% for item in item.games %}
                             <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1" style="padding: 5px 2px; text-align: center;">
-                                <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
+                                <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini', item.is_released) }}</a>
                             </div>
                             {#
                             <div class="col-sm-6 col-md-8 col-lg-10" style="padding: 5px 2px; text-align: left;">
