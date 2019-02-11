@@ -141,6 +141,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Index
     Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
 
+    // Action lists
+    Route::get('/admin/action-lists', 'Admin\ActionListController@landing')->name('admin.action-lists.landing');
+    Route::get('/admin/action-lists/developer-not-set', 'Admin\ActionListController@developerNotSet')->name('admin.action-lists.developer-not-set');
+    Route::get('/admin/action-lists/old-developers-to-migrate', 'Admin\ActionListController@oldDevelopersToMigrate')->name('admin.action-lists.old-developers-to-migrate');
+
     // Games
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
     Route::get('/admin/games/add', 'Admin\GamesController@add')->name('admin.games.add');

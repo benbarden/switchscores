@@ -1,0 +1,12 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<ul>
+    <li><a href="{{ route('admin.action-lists.developer-not-set') }}">Developers not set</a></li>
+    <li><a href="{{ route('admin.action-lists.old-developers-to-migrate') }}">Old developers to migrate</a></li>
+</ul>
+
+{% endblock page_inner %}

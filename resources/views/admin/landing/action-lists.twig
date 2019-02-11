@@ -70,26 +70,32 @@
     </tbody>
 </table>
 
-<h3>Developers and Publishers</h3>
+<h3>Action lists <span class="h5">(<a href="{{ route('admin.action-lists.landing') }}">view all</a>)</span></h3>
 
 <table class="table table-striped">
     <tbody>
     <tr>
         <td>
-            <a href="{{ route('admin.games.list')}}/no-developer-set">No developer set</a>
+            <a href="{{ route('admin.action-lists.developer-not-set') }}">No developer set</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-developer-set" class="h4">{{ NoDeveloperCount }}</a>
+            <a href="{{ route('admin.action-lists.developer-not-set') }}" class="h4">{{ NoDeveloperCount }}</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.games.list')}}/old-developers-to-migrate">Old developers to migrate</a>
+            <a href="{{ route('admin.action-lists.old-developers-to-migrate') }}">Old developers to migrate</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/old-developers-to-migrate" class="h4">{{ OldDevelopersToMigrate }}</a>
+            <a href="{{ route('admin.action-lists.old-developers-to-migrate') }}" class="h4">{{ OldDevelopersToMigrate }}</a>
         </td>
     </tr>
+</table>
+
+<h3>Developers and Publishers</h3>
+
+<table class="table table-striped">
+    <tbody>
     <tr>
         <td>
             <a href="{{ route('admin.games.list')}}/game-developer-links">Game/developer links created</a>
