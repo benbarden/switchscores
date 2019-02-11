@@ -72,14 +72,10 @@ class Importer
             $region = $gameReleaseDate->region;
 
             $releaseDateField = 'release_date_'.$region;
-            $isReleasedField = 'is_released_'.$region;
             $upcomingDateField = 'upcoming_date_'.$region;
 
             if ($newFeedItem->{$releaseDateField} != $gameReleaseDate->release_date) {
                 $modifiedFields[] = $releaseDateField;
-            }
-            if ($newFeedItem->{$isReleasedField} != $gameReleaseDate->is_released) {
-                $modifiedFields[] = $isReleasedField;
             }
             if ($newFeedItem->{$upcomingDateField} != $gameReleaseDate->upcoming_date) {
                 $modifiedFields[] = $upcomingDateField;
@@ -96,9 +92,9 @@ class Importer
 
         $fieldList = [
             'item_genre', 'item_developers', 'item_publishers',
-            'release_date_eu', 'upcoming_date_eu', 'is_released_eu',
-            'release_date_us', 'upcoming_date_us', 'is_released_us',
-            'release_date_jp', 'upcoming_date_jp', 'is_released_jp',
+            'release_date_eu', 'upcoming_date_eu',
+            'release_date_us', 'upcoming_date_us',
+            'release_date_jp', 'upcoming_date_jp',
         ];
 
         foreach ($fieldList as $field) {

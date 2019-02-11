@@ -121,10 +121,6 @@ class WikipediaUpdateGamesList extends Command
                         $gameReleaseDate->upcoming_date = $feedItem->{$fieldUpcomingDate};
                         $gameReleaseDateChanged = true;
                     }
-                    if ($gameReleaseDate->is_released != $feedItem->{$fieldIsReleased}) {
-                        $gameReleaseDate->is_released = $feedItem->{$fieldIsReleased};
-                        $gameReleaseDateChanged = true;
-                    }
 
                     if ($gameReleaseDateChanged) {
                         $this->info('Saving updates to region: '.$region);
