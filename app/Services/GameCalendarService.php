@@ -46,7 +46,7 @@ class GameCalendarService
                 // Start from March 2017
                 if ($i == 2017 && $j < 3) continue;
                 // Don't go beyond the current month and year
-                if ($i == date('Y') && $j > date('m')) break;
+                if ($i == date('Y') && $j > date('m')+1) break;
                 // Good to go
                 $dateToAdd = $i.'-'.str_pad($j, 2, '0', STR_PAD_LEFT);
                 $dates[] = $dateToAdd;
