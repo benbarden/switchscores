@@ -3,12 +3,22 @@
         <th colspan="2" style="background: #dedede;">eShop details</th>
     </tr>
     <tr>
-        <td>
+        <td style="width: 150px;">
             <span style="font-weight: bold;">eShop price</span>
         </td>
         <td>
             {% if GameData.price_eshop %}
-                &pound;{{ GameData.price_eshop }}
+                {% if GameData.eshopEuropeGame.fs_id is null %}
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% elseif GameData.eshopEuropeGame.price_discount_percentage_f == '0.00' %}
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% else %}
+                    <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.eshopEuropeGame.price_lowest_f }}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span style="color: #f00;">{{ GameData.eshopEuropeGame.price_discount_percentage_f }}% off</span>
+                {% endif %}
             {% endif %}
         </td>
     </tr>
@@ -55,7 +65,14 @@
             <td>
                 <span style="font-weight: bold;">Link to eShop</span>
             </td>
-            <td><a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a></td>
+            <td>
+                {% if GameData.eshopEuropeGame.fs_id is null %}
+                    This game may have been removed from the eShop.
+                    The link below might not work.
+                    <br>
+                {% endif %}
+                <a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a>
+            </td>
         </tr>
     {% endif %}
 </table>
