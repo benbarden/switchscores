@@ -28,7 +28,7 @@ class ActionListController extends Controller
         return $regionCode;
     }
 
-    public function developerNotSet()
+    public function developerMissing()
     {
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
@@ -50,7 +50,7 @@ class ActionListController extends Controller
         return view('admin.action-lists.game-developers.list', $bindings);
     }
 
-    public function oldDevelopersToMigrate()
+    public function newDeveloperToSet()
     {
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
@@ -61,14 +61,102 @@ class ActionListController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Old developers to migrate - Action lists - Admin';
-        $bindings['PageTitle'] = 'Old developers to migrate';
+        $bindings['TopTitle'] = 'New developer to set (old developer set) - Action lists - Admin';
+        $bindings['PageTitle'] = 'New developer to set (old developer set)';
 
-        $bindings['GameList'] = $serviceGameDeveloper->getOldDevelopersToMigrate();
+        $bindings['GameList'] = $serviceGameDeveloper->getNewDevelopersToSet();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
         $bindings['RegionCode'] = $regionCode;
 
         return view('admin.action-lists.game-developers.list', $bindings);
+    }
+
+    public function oldDeveloperToClear()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Old developer to clear (new developer set) - Action lists - Admin';
+        $bindings['PageTitle'] = 'Old developer to clear (new developer set)';
+
+        $bindings['GameList'] = $serviceGameDeveloper->getOldDevelopersToClear();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.game-developers.list', $bindings);
+    }
+
+    public function publisherMissing()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Games with no publisher - Action lists - Admin';
+        $bindings['PageTitle'] = 'Games with no publisher';
+
+        $bindings['GameList'] = $serviceGamePublisher->getGamesWithNoPublisher();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.game-publishers.list', $bindings);
+    }
+
+    public function newPublisherToSet()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'New publisher to set (old publisher set) - Action lists - Admin';
+        $bindings['PageTitle'] = 'New publisher to set (old publisher set)';
+
+        $bindings['GameList'] = $serviceGamePublisher->getNewPublishersToSet();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.game-publishers.list', $bindings);
+    }
+
+    public function oldPublisherToClear()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Old publisher to clear (new publisher set) - Action lists - Admin';
+        $bindings['PageTitle'] = 'Old publisher to clear (new publisher set)';
+
+        $bindings['GameList'] = $serviceGamePublisher->getOldPublishersToClear();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.game-publishers.list', $bindings);
     }
 }

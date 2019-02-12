@@ -143,8 +143,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Action lists
     Route::get('/admin/action-lists', 'Admin\ActionListController@landing')->name('admin.action-lists.landing');
-    Route::get('/admin/action-lists/developer-not-set', 'Admin\ActionListController@developerNotSet')->name('admin.action-lists.developer-not-set');
-    Route::get('/admin/action-lists/old-developers-to-migrate', 'Admin\ActionListController@oldDevelopersToMigrate')->name('admin.action-lists.old-developers-to-migrate');
+    Route::get('/admin/action-lists/developer-missing', 'Admin\ActionListController@developerMissing')->name('admin.action-lists.developer-missing');
+    Route::get('/admin/action-lists/new-developer-to-set', 'Admin\ActionListController@newDeveloperToSet')->name('admin.action-lists.new-developer-to-set');
+    Route::get('/admin/action-lists/old-developer-to-clear', 'Admin\ActionListController@oldDeveloperToClear')->name('admin.action-lists.old-developer-to-clear');
+    Route::get('/admin/action-lists/publisher-missing', 'Admin\ActionListController@publisherMissing')->name('admin.action-lists.publisher-missing');
+    Route::get('/admin/action-lists/new-publisher-to-set', 'Admin\ActionListController@newPublisherToSet')->name('admin.action-lists.new-publisher-to-set');
+    Route::get('/admin/action-lists/old-publisher-to-clear', 'Admin\ActionListController@oldPublisherToClear')->name('admin.action-lists.old-publisher-to-clear');
 
     // Games
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');

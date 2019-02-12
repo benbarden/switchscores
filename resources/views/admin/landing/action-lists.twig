@@ -76,56 +76,50 @@
     <tbody>
     <tr>
         <td>
-            <a href="{{ route('admin.action-lists.developer-not-set') }}">No developer set</a>
+            <a href="{{ route('admin.action-lists.developer-missing') }}">Developer missing (all fields)</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.action-lists.developer-not-set') }}" class="h4">{{ NoDeveloperCount }}</a>
+            <a href="{{ route('admin.action-lists.developer-missing') }}" class="h4">{{ DeveloperMissingCount }}</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.action-lists.old-developers-to-migrate') }}">Old developers to migrate</a>
+            <a href="{{ route('admin.action-lists.new-developer-to-set') }}">New developer to set (old developer set)</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.action-lists.old-developers-to-migrate') }}" class="h4">{{ OldDevelopersToMigrate }}</a>
-        </td>
-    </tr>
-</table>
-
-<h3>Developers and Publishers</h3>
-
-<table class="table table-striped">
-    <tbody>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/game-developer-links">Game/developer links created</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/game-developer-links" class="h4">{{ GameDeveloperLinks }}</a>
+            <a href="{{ route('admin.action-lists.new-developer-to-set') }}" class="h4">{{ NewDeveloperToSetCount }}</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.games.list')}}/no-publisher-set">No publisher set</a>
+            <a href="{{ route('admin.action-lists.old-developer-to-clear') }}">Old developer to clear (new developer set)</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-publisher-set" class="h4">{{ NoPublisherCount }}</a>
+            <a href="{{ route('admin.action-lists.old-developer-to-clear') }}" class="h4">{{ OldDeveloperToClearCount }}</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.games.list')}}/old-publishers-to-migrate">Old publishers to migrate</a>
+            <a href="{{ route('admin.action-lists.publisher-missing') }}">Publisher missing (all fields)</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/old-publishers-to-migrate" class="h4">{{ OldPublishersToMigrate }}</a>
+            <a href="{{ route('admin.action-lists.publisher-missing') }}" class="h4">{{ PublisherMissingCount }}</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ route('admin.games.list')}}/game-publisher-links">Game/publisher links created</a>
+            <a href="{{ route('admin.action-lists.new-publisher-to-set') }}">New publisher to set (old publisher set)</a>
         </td>
         <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/game-publisher-links" class="h4">{{ GamePublisherLinks }}</a>
+            <a href="{{ route('admin.action-lists.new-publisher-to-set') }}" class="h4">{{ NewPublisherToSetCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.action-lists.old-publisher-to-clear') }}">Old publisher to clear (new publisher set)</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.action-lists.old-publisher-to-clear') }}" class="h4">{{ OldPublisherToClearCount }}</a>
         </td>
     </tr>
 </table>

@@ -5,8 +5,12 @@
 {% block page_inner %}
 
 <ul>
-    <li><a href="{{ route('admin.action-lists.developer-not-set') }}">Developers not set</a></li>
-    <li><a href="{{ route('admin.action-lists.old-developers-to-migrate') }}">Old developers to migrate</a></li>
+    <li><a href="{{ route('admin.action-lists.developer-missing') }}">Developer missing (all fields)</a></li>
+    <li><a href="{{ route('admin.action-lists.new-developer-to-set') }}">New developer to set (old developer set)</a></li>
+    <li><a href="{{ route('admin.action-lists.old-developer-to-clear') }}">Old developer to clear (new developer set)</a></li>
+    <li><a href="{{ route('admin.action-lists.publisher-missing') }}">Publisher missing (all fields)</a></li>
+    <li><a href="{{ route('admin.action-lists.new-publisher-to-set') }}">New publisher to set (old publisher set)</a></li>
+    <li><a href="{{ route('admin.action-lists.old-publisher-to-clear') }}">Old publisher to clear (new publisher set)</a></li>
 </ul>
 
 {% endblock page_inner %}

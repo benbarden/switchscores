@@ -121,7 +121,7 @@ class GameDeveloperService
         return $games[0]->count;
     }
 
-    public function getOldDevelopersToMigrate()
+    public function getNewDevelopersToSet()
     {
         $games = DB::table('games')
             ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
@@ -135,7 +135,7 @@ class GameDeveloperService
         return $games;
     }
 
-    public function countOldDevelopersToMigrate()
+    public function countNewDevelopersToSet()
     {
         $games = DB::select('
             select count(*) AS count
@@ -143,6 +143,33 @@ class GameDeveloperService
             left join game_developers gd on g.id = gd.game_id
             left join developers d on d.id = gd.developer_id
             where d.id is null and g.developer is not null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getOldDevelopersToClear()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
+            ->leftJoin('developers', 'game_developers.developer_id', '=', 'developers.id')
+            ->select('games.*', 'developers.name')
+            ->whereNotNull('developers.id')
+            ->whereNotNull('games.developer')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countOldDevelopersToClear()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_developers gd on g.id = gd.game_id
+            left join developers d on d.id = gd.developer_id
+            where d.id is not null and g.developer is not null;
         ');
 
         return $games[0]->count;

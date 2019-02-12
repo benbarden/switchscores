@@ -64,43 +64,47 @@ class IndexController extends Controller
         $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();
         $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, true);
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
+        $bindings['GameDeveloperLinks'] = $serviceGameDeveloper->countGameDeveloperLinks();
+        $bindings['GamePublisherLinks'] = $serviceGamePublisher->countGamePublisherLinks();
 
 
-        // Action lists
+        // Updates requiring approval
+        $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
+        $pendingPartnerReview = $partnerReviewService->getByStatus(PartnerReview::STATUS_PENDING);
+        $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
+        $pendingFeedGameItems = $feedItemGameService->getPending();
+        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
+        $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
+        $bindings['PendingReviewUserCount'] = count($pendingReviewUser);
+        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
+
+
+        // Games to release
         $actionListGamesForReleaseCountEu = $serviceGame->getActionListGamesForRelease('eu');
         $actionListGamesForReleaseCountUs = $serviceGame->getActionListGamesForRelease('us');
         $actionListGamesForReleaseCountJp = $serviceGame->getActionListGamesForRelease('jp');
-        $pendingFeedGameItems = $feedItemGameService->getPending();
-        $unprocessedFeedReviewItems = $feedItemReviewService->getUnprocessed();
-        $pendingReviewUser = $reviewUserService->getByStatus(ReviewUser::STATUS_PENDING);
-        $pendingPartnerReview = $partnerReviewService->getByStatus(PartnerReview::STATUS_PENDING);
-
         $bindings['ActionListGamesForReleaseCountEu'] = count($actionListGamesForReleaseCountEu);
         $bindings['ActionListGamesForReleaseCountUs'] = count($actionListGamesForReleaseCountUs);
         $bindings['ActionListGamesForReleaseCountJp'] = count($actionListGamesForReleaseCountJp);
-        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
-        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
-        $bindings['PendingReviewUserCount'] = count($pendingReviewUser);
-        $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
+
 
         // Action lists
+        $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
+        $bindings['NewDeveloperToSetCount'] = $serviceGameDeveloper->countNewDevelopersToSet();
+        $bindings['OldDeveloperToClearCount'] = $serviceGameDeveloper->countOldDevelopersToClear();
+        $bindings['PublisherMissingCount'] = $serviceGamePublisher->countGamesWithNoPublisher();
+        $bindings['NewPublisherToSetCount'] = $serviceGamePublisher->countNewPublishersToSet();
+        $bindings['OldPublisherToClearCount'] = $serviceGamePublisher->countOldPublishersToClear();
+
+
+        // Action lists (to be replaced)
         $actionListNintendoUrlNoPackshotCount = $serviceGame->getActionListNintendoUrlNoPackshots($regionCode);
         $actionListRecentNoNintendoUrlCount = $serviceGame->getActionListRecentNoNintendoUrl($regionCode);
         $actionListUpcomingNoNintendoUrlCount = $serviceGame->getActionListUpcomingNoNintendoUrl($regionCode);
-
         $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
         $bindings['ActionListRecentNoNintendoUrlCount'] = count($actionListRecentNoNintendoUrlCount);
         $bindings['ActionListUpcomingNoNintendoUrlCount'] = count($actionListUpcomingNoNintendoUrlCount);
 
-
-        // Developers and Publishers
-        $bindings['NoDeveloperCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
-        $bindings['OldDevelopersToMigrate'] = $serviceGameDeveloper->countOldDevelopersToMigrate();
-        $bindings['GameDeveloperLinks'] = $serviceGameDeveloper->countGameDeveloperLinks();
-
-        $bindings['NoPublisherCount'] = $serviceGamePublisher->countGamesWithNoPublisher();
-        $bindings['OldPublishersToMigrate'] = $serviceGamePublisher->countOldPublishersToMigrate();
-        $bindings['GamePublisherLinks'] = $serviceGamePublisher->countGamePublisherLinks();
 
         // Missing data - others
         $missingTags = $gameTagService->getGamesWithoutTags($regionCode);

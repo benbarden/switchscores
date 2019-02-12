@@ -11,7 +11,7 @@
                 <th class="text-right">#</th>
                 <th>Title</th>
                 <th class="text-center">eShop: EU</th>
-                <th class="text-left">Developer (old)</th>
+                <th class="text-left">Publisher (old)</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -32,11 +32,11 @@
                         {% endif %}
                     </td>
                     <td class="text-left">
-                        {{ item.developer }}
+                        {{ item.publisher }}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit game</a> :
-                        <a href="{{ route('admin.developer.game.list', {'gameId': item.id}) }}">Edit developers</a>
+                        <a href="{{ route('admin.publisher.game.list', {'gameId': item.id}) }}">Edit publisher</a>
                     </td>
                 </tr>
             {% endfor %}

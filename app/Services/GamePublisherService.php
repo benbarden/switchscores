@@ -121,7 +121,7 @@ class GamePublisherService
         return $games[0]->count;
     }
 
-    public function getOldPublishersToMigrate()
+    public function getNewPublishersToSet()
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
@@ -135,7 +135,7 @@ class GamePublisherService
         return $games;
     }
 
-    public function countOldPublishersToMigrate()
+    public function countNewPublishersToSet()
     {
         $games = DB::select('
             select count(*) AS count
@@ -143,6 +143,33 @@ class GamePublisherService
             left join game_publishers gp on g.id = gp.game_id
             left join publishers p on p.id = gp.publisher_id
             where p.id is null and g.publisher is not null;
+        ');
+
+        return $games[0]->count;
+    }
+
+    public function getOldPublishersToClear()
+    {
+        $games = DB::table('games')
+            ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->select('games.*', 'publishers.name')
+            ->whereNotNull('publishers.id')
+            ->whereNotNull('games.publisher')
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function countOldPublishersToClear()
+    {
+        $games = DB::select('
+            select count(*) AS count
+            from games g
+            left join game_publishers gp on g.id = gp.game_id
+            left join publishers p on p.id = gp.publisher_id
+            where p.id is not null and g.publisher is not null;
         ');
 
         return $games[0]->count;
