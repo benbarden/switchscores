@@ -149,6 +149,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/action-lists/publisher-missing', 'Admin\ActionListController@publisherMissing')->name('admin.action-lists.publisher-missing');
     Route::get('/admin/action-lists/new-publisher-to-set', 'Admin\ActionListController@newPublisherToSet')->name('admin.action-lists.new-publisher-to-set');
     Route::get('/admin/action-lists/old-publisher-to-clear', 'Admin\ActionListController@oldPublisherToClear')->name('admin.action-lists.old-publisher-to-clear');
+    Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
 
     // Games
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');

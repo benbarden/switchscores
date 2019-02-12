@@ -556,4 +556,20 @@ class GameService
 
         return $games;
     }
+
+    // ** ACTION LISTS (New) ** //
+
+    public function countWithoutPrices()
+    {
+        return Game::whereNull('price_eshop')
+            ->orderBy('id', 'asc')
+            ->count();
+    }
+
+    public function getWithoutPrices()
+    {
+        return Game::whereNull('price_eshop')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
 }

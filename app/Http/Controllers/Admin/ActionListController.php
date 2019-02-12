@@ -159,4 +159,26 @@ class ActionListController extends Controller
 
         return view('admin.action-lists.game-publishers.list', $bindings);
     }
+
+    public function noPrice()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Games without prices - Action lists - Admin';
+        $bindings['PageTitle'] = 'Games without prices';
+
+        $bindings['GameList'] = $serviceGame->getWithoutPrices();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.game-prices.list', $bindings);
+    }
 }

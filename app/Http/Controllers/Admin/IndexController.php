@@ -89,6 +89,7 @@ class IndexController extends Controller
 
 
         // Action lists
+        $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
         $bindings['NewDeveloperToSetCount'] = $serviceGameDeveloper->countNewDevelopersToSet();
         $bindings['OldDeveloperToClearCount'] = $serviceGameDeveloper->countOldDevelopersToClear();
