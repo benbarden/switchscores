@@ -62,6 +62,7 @@
                         <th class="text-center">Review total</th>
                         <th class="text-center">WOS review share</th>
                         <th class="text-center">Games reviewed</th>
+                        <th class="text-center">Latest review</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,6 +81,9 @@
                         </td>
                         <td class="text-center">
                             {{ item.review_game_completion_total }}%
+                        </td>
+                        <td class="text-center">
+                            {{ item.latest_review_date }}
                         </td>
                     </tr>
                 {% endfor %}

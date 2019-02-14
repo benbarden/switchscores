@@ -56,6 +56,12 @@ class StatsController extends Controller
             $linkTitle = $reviewSite->link_title;
 
             $reviewCount = $serviceReviewLinks->countBySite($id);
+            $reviewLatest = $serviceReviewLinks->getLatestBySite($id, 1);
+            if (count($reviewLatest) > 0) {
+                $latestReviewDate = $reviewLatest[0]['review_date'];
+            } else {
+                $latestReviewDate = null;
+            }
             $reviewLinkContribTotal = $serviceReviewStats->calculateContributionPercentage($reviewCount, $reviewLinkCount);
             $reviewGameCompletionTotal = $serviceReviewStats->calculateContributionPercentage($reviewCount, $releasedGameCount);
 
@@ -66,6 +72,7 @@ class StatsController extends Controller
                 'review_count' => $reviewCount,
                 'review_link_contrib_total' => $reviewLinkContribTotal,
                 'review_game_completion_total' => $reviewGameCompletionTotal,
+                'latest_review_date' => $latestReviewDate,
             ];
 
         }
