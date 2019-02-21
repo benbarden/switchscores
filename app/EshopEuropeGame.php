@@ -98,7 +98,7 @@ class EshopEuropeGame extends Model
         'voice_chat_b',
         'download_play',
         'wishlist_email_square_image_url_s',
-
+        'hits_i',
     ];
 
     public function game()
