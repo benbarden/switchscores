@@ -48,12 +48,14 @@
                     </td>
                     <td class="text-left">
                         {% if item.game.title is not defined %}
-                        <span style="color: #f00;">Game not linked</span>
+                            <span style="color: #f00;">Game not linked</span>
+                        {% elseif item.game.title is null %}
+                            <span style="color: #f00;">Error: NULL link</span>
                         {% else %}
-                        {{ item.game.title }}
+                            {{ item.game.title }}
                             <br>
                             [<a href="{{ route('admin.games.edit', {'gameId': item.game.id}) }}" target="_blank">edit</a>]
-                            [<a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">view</a>]
+                            [<a href="{{ route('game.show', {'id': item.game.id, 'link_title': item.game.link_title}) }}" target="_blank">view</a>]
                         {% endif %}
                     </td>
                     <td class="text-left">
