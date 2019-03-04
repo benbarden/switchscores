@@ -8,6 +8,7 @@ use App\Services\GameService;
 use App\Services\GenreService;
 use App\Services\GameGenreService;
 use App\Services\EshopEuropeGameService;
+use App\Services\Eshop\Europe\UpdateGameData;
 
 class EshopEuropeUpdateGameData extends Command
 {
@@ -53,6 +54,8 @@ class EshopEuropeUpdateGameData extends Command
         $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
         /* @var EshopEuropeGameService $eshopEuropeGameService */
 
+        $serviceUpdateGameData = new UpdateGameData();
+
         $this->info('Loading data...');
 
         $eshopList = $eshopEuropeGameService->getAllWithLink();
@@ -67,6 +70,38 @@ class EshopEuropeUpdateGameData extends Command
             $fsId = $eshopItem->fs_id;
             $eshopTitle = $eshopItem->title;
             $eshopUrl = $eshopItem->url;
+
+            $game = $gameService->getByFsId('eu', $fsId);
+
+            if (!$game) {
+                $this->error($eshopTitle.' - no game linked to fs_id: '.$fsId.'; skipping');
+                continue;
+            }
+
+            if (!$eshopUrl) {
+                $this->error($eshopTitle.' - no URL found for this record. Skipping');
+                continue;
+            }
+
+            // GAME CORE DATA
+            $gameId = $game->id;
+            $gameTitle = $game->title;
+            $gameReleaseDate = $game->regionReleaseDate('eu');
+            $gameGenres = $gameGenreService->getByGame($gameId);
+
+            // SETUP
+            $serviceUpdateGameData->setEshopItem($eshopItem);
+            $serviceUpdateGameData->setGame($game);
+            $serviceUpdateGameData->resetLogMessages();
+
+            // UPDATES
+            $serviceUpdateGameData->updateNintendoPageUrl();
+            if ($serviceUpdateGameData->getLogMessageInfo()) {
+                $this->info($gameTitle.' - no existing nintendo_page_url. Updating.');
+            }
+
+            // ***************************************************** //
+
             $eshopPlayersFrom = $eshopItem->players_from;
             $eshopPlayersTo = $eshopItem->players_to;
             $eshopPublisher = $eshopItem->publisher;
@@ -80,39 +115,6 @@ class EshopEuropeUpdateGameData extends Command
                 $eshopPublisher = ucwords(strtolower($eshopPublisher));
             } else {
                 // Leave it alone
-            }
-
-            if (!$eshopUrl) {
-                $this->error($eshopTitle.' - no URL found for this record. Skipping');
-                continue;
-            }
-
-            $game = $gameService->getByFsId('eu', $fsId);
-            $gameId = $game->id;
-            $gameReleaseDate = $game->regionReleaseDate('eu');
-            $gameGenres = $gameGenreService->getByGame($gameId);
-
-            if (!$game) {
-                $this->error($eshopTitle.' - no game linked to fs_id: '.$fsId.'; skipping');
-                continue;
-            }
-
-            $gameTitle = $game->title;
-
-            // *** FIELD UPDATES:
-            // Nintendo page URL
-            if ($game->nintendo_page_url == null) {
-                // No URL set, so let's update it
-                $this->info($gameTitle.' - no existing nintendo_page_url. Updating.');
-                $game->nintendo_page_url = $eshopUrl;
-                $saveChanges = true;
-                $showSplitter = true;
-            } elseif ($game->nintendo_page_url != $eshopUrl) {
-                // URL set to something else
-                //$this->warn($gameTitle.' - No change made. Game URL already set to: '.$game->nintendo_page_url.' - eShop record has: '.$eshopUrl);
-            } else {
-                // It's the same, so nothing to do
-                //$this->warn($gameTitle.' - URL set and matches eShop data. Nothing to do.');
             }
 
             // *** FIELD UPDATES:
@@ -343,7 +345,7 @@ class EshopEuropeUpdateGameData extends Command
 
             // *********************************************** //
 
-            if ($saveChanges) {
+            if ($saveChanges || $serviceUpdateGameData->hasGameChanged()) {
                 $game->save();
             }
 
