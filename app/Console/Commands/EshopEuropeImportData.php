@@ -68,6 +68,11 @@ class EshopEuropeImportData extends Command
             $importedItemCount = $eshopLoader->getImportedCount();
             $this->info('Complete! Imported '.$importedItemCount.' item(s).');
 
+            $channel = env('SLACK_ALERT_CHANNEL', '');
+            if ($channel) {
+                \Slack::to('#'.$channel)->send('EshopEuropeImportData: imported '.$importedItemCount.' records');
+            }
+
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

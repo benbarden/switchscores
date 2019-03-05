@@ -51,6 +51,11 @@ class UpdateGameRanks extends Command
             ORDER BY rating_avg DESC
         ");
 
+        $channel = env('SLACK_ALERT_CHANNEL', '');
+        if ($channel) {
+            \Slack::to('#'.$channel)->send('UpdateGameRanks: '.count($gameRankList).' ranked games');
+        }
+
         $this->info('Checking '.count($gameRankList).' games');
 
         $rankCounter = 1;
