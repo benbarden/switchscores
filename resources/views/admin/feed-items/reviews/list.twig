@@ -52,7 +52,7 @@
                         {{ item.item_date|date('Y-m-d') }}
                     </td>
                     <td class="text-center">
-                        {% if item.game.title is not defined %}
+                        {% if item.game.title is null %}
                             <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
                                 <i class="fas fa-times"></i>
                             </div>
