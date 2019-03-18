@@ -52,15 +52,34 @@ class GamesController extends Controller
 
         $bindings = [];
 
-        $gamesList = $serviceGameReleaseDate->getReleased($regionCode);
-
-        $bindings['GamesList'] = $gamesList;
-        $bindings['GamesTableSort'] = "[[3, 'desc'], [1, 'asc']]";
-
         $bindings['TopTitle'] = 'Nintendo Switch released games';
         $bindings['PageTitle'] = 'Nintendo Switch released games';
 
-        return view('games.list.releasedGames', $bindings);
+        $bindings['LetterList'] = range('A', 'Z');
+
+        return view('games.list.releasedIndex', $bindings);
+    }
+
+    public function listReleasedByLetter($letter)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+
+        $bindings = [];
+
+        $gamesList = $serviceGameReleaseDate->getReleasedByLetter($regionCode, $letter);
+
+        $bindings['GamesList'] = $gamesList;
+        $bindings['GameLetter'] = $letter;
+
+        $bindings['TopTitle'] = 'Nintendo Switch released games: '.$letter;
+        $bindings['PageTitle'] = 'Nintendo Switch released games: '.$letter;
+
+        return view('games.list.releasedByLetter', $bindings);
     }
 
     public function listUpcoming()

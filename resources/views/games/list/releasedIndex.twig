@@ -9,8 +9,14 @@
 <p>All prices correct at time of publication. Any changes may not be reflected immediately.
     Check prices prior to purchase.</p>
 
-{% include 'games/list/moreLists.twig' with {'thisPage': 'released'} %}
-
-{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+<div class="row">
+    {% for item in LetterList %}
+        <div class="col-sm-4 col-md-3 col-lg-2 text-center" style="padding: 15px 0;">
+            <span class="h1" style="font-weight: bold;">
+                <a href="{{ route('games.list.releasedByLetter', {'letter': item}) }}">{{ item }}</a>
+            </span>
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock page_body %}

@@ -1,0 +1,22 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.list.released'), 'text': 'Released games index'}, {'text': 'Games: '~GameLetter}] %}
+
+{% block page_body %}
+
+<p>A list of Nintendo Switch games currently available to buy from the Nintendo eShop.</p>
+
+<p>All prices correct at time of publication. Any changes may not be reflected immediately.
+    Check prices prior to purchase.</p>
+
+{% if GamesList|length %}
+    <div class="row">
+        {% for item in GamesList %}
+            {% include 'games/layouts/miniGridItemFourCol.twig' with {'item': item} %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% endblock page_body %}

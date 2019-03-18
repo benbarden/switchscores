@@ -32,6 +32,7 @@ Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 // Main game pages
 Route::get('/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
+Route::get('/games/released/{letter}', 'GamesController@listReleasedByLetter')->name('games.list.releasedByLetter');
 Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 Route::get('/games/unreleased', 'GamesController@listUnreleased')->name('games.list.unreleased');
 
