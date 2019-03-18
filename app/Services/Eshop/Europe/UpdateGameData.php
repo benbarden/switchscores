@@ -123,7 +123,39 @@ class UpdateGameData
         } else {
             // It's the same, so nothing to do
         }
+    }
 
+    public function updateNoOfPlayers()
+    {
+        $gameTitle = $this->game->title;
+        $gamePlayers = $this->game->players;
+        $eshopPlayersFrom = $this->eshopItem->players_from;
+        $eshopPlayersTo = $this->eshopItem->players_to;
 
+        if (!$eshopPlayersFrom) {
+            $eshopPlayersFrom = "1";
+        }
+        if ($eshopPlayersTo == 1) {
+            $expectedPlayers = "1";
+        } elseif (($eshopPlayersTo == "") || ($eshopPlayersTo == null)) {
+            $expectedPlayers = "";
+        } else {
+            $expectedPlayers = $eshopPlayersFrom."-".$eshopPlayersTo;
+        }
+
+        if ($gamePlayers == null) {
+            // Not set, so let's update it
+            $this->logMessageInfo = $gameTitle.' - no player info. '.
+                'Expected: '.$expectedPlayers.' - Updating.';
+            $this->game->players = $expectedPlayers;
+            $this->hasGameChanged = true;
+        } elseif ($gamePlayers != $expectedPlayers) {
+            // Different
+            $this->logMessageWarning = $gameTitle.' - different player info. '.
+                'Game data: '.$gamePlayers.' - '.
+                'Expected: '.$expectedPlayers;
+        } else {
+            // Same value, nothing to do
+        }
     }
 }

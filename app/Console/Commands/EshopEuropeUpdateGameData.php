@@ -94,16 +94,24 @@ class EshopEuropeUpdateGameData extends Command
             $serviceUpdateGameData->setGame($game);
             $serviceUpdateGameData->resetLogMessages();
 
-            // UPDATES
+            // UPDATES: Nintendo page URL
             $serviceUpdateGameData->updateNintendoPageUrl();
             if ($serviceUpdateGameData->getLogMessageInfo()) {
-                $this->info($gameTitle.' - no existing nintendo_page_url. Updating.');
+                $this->info($serviceUpdateGameData->getLogMessageInfo());
             }
+            $serviceUpdateGameData->resetLogMessages();
+
+            // UPDATES: No of players
+            $serviceUpdateGameData->updateNoOfPlayers();
+            if ($serviceUpdateGameData->getLogMessageWarning()) {
+                $this->warn($serviceUpdateGameData->getLogMessageWarning());
+            } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
+                $this->info($serviceUpdateGameData->getLogMessageInfo());
+            }
+            $serviceUpdateGameData->resetLogMessages();
 
             // ***************************************************** //
 
-            $eshopPlayersFrom = $eshopItem->players_from;
-            $eshopPlayersTo = $eshopItem->players_to;
             $eshopPublisher = $eshopItem->publisher;
             $eshopReleaseDateRaw = $eshopItem->pretty_date_s;
             $eshopGenreList = $eshopItem->pretty_game_categories_txt;
@@ -115,36 +123,6 @@ class EshopEuropeUpdateGameData extends Command
                 $eshopPublisher = ucwords(strtolower($eshopPublisher));
             } else {
                 // Leave it alone
-            }
-
-            // *** FIELD UPDATES:
-            // No of players
-            if (!$eshopPlayersFrom) {
-                $eshopPlayersFrom = "1";
-            }
-            if ($eshopPlayersTo == 1) {
-                $expectedPlayers = "1";
-            } elseif (($eshopPlayersTo == "") || ($eshopPlayersTo == null)) {
-                $expectedPlayers = "";
-            } else {
-                $expectedPlayers = $eshopPlayersFrom."-".$eshopPlayersTo;
-            }
-
-            if ($game->players == null) {
-                // Not set, so let's update it
-                $this->info($gameTitle.' - no player info. '.
-                    'Expected: '.$expectedPlayers.' - Updating.');
-                $game->players = $expectedPlayers;
-                $saveChanges = true;
-                $showSplitter = true;
-            } elseif ($game->players != $expectedPlayers) {
-                // Different
-                $this->warn($gameTitle.' - different player info. '.
-                    'Game data: '.$game->players.' - '.
-                    'Expected: '.$expectedPlayers);
-                $showSplitter = true;
-            } else {
-                // Same value, nothing to do
             }
 
             // *** FIELD UPDATES:
@@ -298,29 +276,7 @@ class EshopEuropeUpdateGameData extends Command
                     $okToAddGenres = false;
                     $showSplitter = true;
                 } else {
-                    //$this->info($gameTitle.' - Game and eShop have same number of genres. Check for differences.');
                     $okToAddGenres = false;
-                    //$showSplitter = true;
-
-                    // Same number of genres, but do they match?
-                    /*
-                    $genreListMatchCount = 0;
-                    foreach ($gameGenres as $gameGenre) {
-                        $gg = $gameGenre->genre;
-                        foreach ($eshopGenres as $eshopGenre) {
-                            $eg = $eshopGenre;
-                            if ($gg == $eg) {
-                                $genreListMatchCount++;
-                                break;
-                            }
-                        }
-                    }
-                    if ($genreListMatchCount == count($gameGenres)) {
-                        $this->info('Genre lists match - No update necessary. Skipping');
-                        $okToAddGenres = false;
-                        $showSplitter = true;
-                    }
-                    */
                 }
 
                 if ($okToAddGenres) {

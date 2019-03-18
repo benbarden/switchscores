@@ -77,4 +77,167 @@ class UpdateGameDataTest extends TestCase
         $this->assertEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
     }
 
+    public function testNintendoPageUrlSame()
+    {
+        $gameTitle = 'Yoshi\'s Crafted World';
+        $game = new Game;
+        $game->title = $gameTitle;
+
+        $eshopItemUrl = 'https://nintendo.co.uk/abc';
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->url = $eshopItemUrl;
+        $game->nintendo_page_url = $eshopItemUrl;
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNintendoPageUrl();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
+    }
+
+    public function testNintendoPageUrlDifferent()
+    {
+        $gameTitle = 'Yoshi\'s Crafted World';
+        $game = new Game;
+        $game->title = $gameTitle;
+        $game->nintendo_page_url = 'https://nintendo.co.uk/def';
+
+        $eshopItemUrl = 'https://nintendo.co.uk/abc';
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->url = $eshopItemUrl;
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNintendoPageUrl();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertNotEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
+    }
+
+    public function testUpdateNoOfPlayersNoValuesSet()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+
+        $eshopItem = new EshopEuropeGame;
+        //$eshopItem->players_from
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertTrue($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("", $serviceGameItem->players);
+    }
+
+    public function testUpdateNoOfPlayersNoValuesSetNoChange()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+        $game->players = "1";
+
+        $eshopItem = new EshopEuropeGame;
+        //$eshopItem->players_from
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("1", $serviceGameItem->players);
+    }
+
+    public function testUpdateNoOfPlayersDefaultEshopValues()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->players_from = "1";
+        $eshopItem->players_to = "1";
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertTrue($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("1", $serviceGameItem->players);
+    }
+
+    public function testUpdateNoOfPlayersDefaultEshopValuesNoChange()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+        $game->players = "1";
+
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->players_from = "1";
+        $eshopItem->players_to = "1";
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("1", $serviceGameItem->players);
+    }
+
+    public function testUpdateNoOfPlayersFromTo()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->players_from = "1";
+        $eshopItem->players_to = "4";
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertTrue($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("1-4", $serviceGameItem->players);
+    }
+
+    public function testUpdateNoOfPlayersFromToNoChange()
+    {
+        $gameTitle = 'Mario Kart 8 Deluxe';
+        $game = new Game;
+        $game->title = $gameTitle;
+        $game->players = "1-4";
+
+        $eshopItem = new EshopEuropeGame;
+        $eshopItem->players_from = "2";
+        $eshopItem->players_to = "8";
+
+        $this->serviceUpdateGameData->setGame($game);
+        $this->serviceUpdateGameData->setEshopItem($eshopItem);
+        $this->serviceUpdateGameData->updateNoOfPlayers();
+
+        $serviceGameItem = $this->serviceUpdateGameData->getGame();
+
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertEquals("1-4", $serviceGameItem->players);
+    }
+
 }
