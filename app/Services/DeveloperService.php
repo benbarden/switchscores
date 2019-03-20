@@ -9,25 +9,6 @@ use App\Developer;
 class DeveloperService
 {
     /**
-     * @param $name
-     * @param $linkTitle
-     * @param $websiteUrl
-     * @param $twitterId
-     * @return Developer
-     */
-    public function create(
-        $name, $linkTitle, $websiteUrl, $twitterId
-    )
-    {
-        return Developer::create([
-            'name' => $name,
-            'link_title' => $linkTitle,
-            'website_url' => $websiteUrl,
-            'twitter_id' => $twitterId,
-        ]);
-    }
-
-    /**
      * @param Developer $developerData
      * @param $name
      * @param $linkTitle

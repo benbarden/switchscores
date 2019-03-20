@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Factories\DeveloperFactory;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -54,9 +55,10 @@ class DeveloperController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $developer = $serviceDeveloper->create(
+            $developer = DeveloperFactory::create(
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id
             );
+            $developer->save();
 
             return redirect(route('admin.developer.list'));
 
