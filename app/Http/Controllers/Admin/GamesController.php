@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Builders\GameBuilder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Services\ServiceContainer;
-
 use App\Events\GameCreated;
 
 use Auth;
@@ -206,13 +206,24 @@ class GamesController extends Controller
             }
 
             // Add game
-            $game = $serviceGame->create(
-                $request->title, $request->link_title, $request->price_eshop, $request->players,
-                $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url, $request->boxart_square_url,
-                $request->nintendo_page_url, $request->eshop_europe_fs_id,
-                $request->boxart_header_image
-            );
+            $gameBuilder = new GameBuilder();
+            $game = $gameBuilder->setTitle($request->title)
+                ->setLinkTitle($request->link_title)
+                ->setPriceEshop($request->price_eshop)
+                ->setPlayers($request->players)
+                ->setDeveloper($request->developer)
+                ->setPublisher($request->publisher)
+                ->setAmazonUkLink($request->amazon_uk_link)
+                ->setOverview($request->overview)
+                ->setMediaFolder($request->media_folder)
+                ->setVideoUrl($request->video_url)
+                ->setBoxartSquareUrl($request->boxart_square_url)
+                ->setNintendoPageUrl($request->nintendo_page_url)
+                ->setEshopEuropeFsId($request->eshop_europe_fs_id)
+                ->setBoxartHeaderImage($request->boxart_header_image)
+                ->setReviewCount(0) // Needed for new games
+                ->build();
+            $game->save();
             $gameId = $game->id;
 
             // Add title hash

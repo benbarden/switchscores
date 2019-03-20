@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Factories;
+
+use App\Game;
+
+class GameFactory
+{
+    /**
+     * @param $title
+     * @param $linkTitle
+     * @param $priceEshop
+     * @param $players
+     * @param $developer
+     * @param $publisher
+     * @param null $amazonUkLink
+     * @param null $overview
+     * @param null $mediaFolder
+     * @param null $videoUrl
+     * @param null $boxartSquareUrl
+     * @param null $nintendoPageUrl
+     * @param null $eshopEuropeFsId
+     * @param null $boxartHeaderImage
+     * @return Game
+     */
+    public static function create(
+        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
+        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
+        $boxartHeaderImage = null
+    )
+    {
+        return new Game(
+            [
+                'title' => $title,
+                'link_title' => $linkTitle,
+                'price_eshop' => $priceEshop,
+                'players' => $players,
+                'overview' => $overview,
+                'developer' => $developer,
+                'publisher' => $publisher,
+                'media_folder' => $mediaFolder,
+                'review_count' => 0,
+                'amazon_uk_link' => $amazonUkLink,
+                'video_url' => $videoUrl,
+                'boxart_square_url' => $boxartSquareUrl,
+                'nintendo_page_url' => $nintendoPageUrl,
+                'eshop_europe_fs_id' => $eshopEuropeFsId,
+                'boxart_header_image' => $boxartHeaderImage,
+            ]
+        );
+    }
+}
