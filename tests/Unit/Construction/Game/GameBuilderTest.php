@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
-use App\Builders\GameBuilder;
+use App\Construction\Game\GameBuilder;
 
 class GameBuilderTest extends TestCase
 {
@@ -13,7 +13,7 @@ class GameBuilderTest extends TestCase
         $title = 'Yoshi';
 
         $gameBuilder = new GameBuilder();
-        $game = $gameBuilder->setTitle($title)->build();
+        $game = $gameBuilder->setTitle($title)->getGame();
         $this->assertEquals($title, $game->title);
     }
 }
