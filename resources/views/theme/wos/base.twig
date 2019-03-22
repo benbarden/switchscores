@@ -22,6 +22,20 @@
     <link href="/js/select2/css/select2.min.css" rel="stylesheet" />
     <script src="/js/select2/js/select2.min.js"></script>
 
+    {% if GameData.boxart_header_image %}
+        <meta name="twitter:card" content="summary_large_image" />
+    {% else %}
+        <meta name="twitter:card" content="summary" />
+    {% endif %}
+    <meta name="twitter:site" content="@worldofswitch" />
+    <meta name="twitter:creator" content="@benbarden" />
+    <meta property="og:url" content="{{ url().current() }}" />
+    <meta property="og:title" content="{{ PageTitle }}" />
+    {#<meta property="og:description" content="" />#}
+    {% if GameData.boxart_header_image %}
+        <meta property="og:image" content="{{ url('/') }}/img/games/header/{{ GameData.boxart_header_image }}" />
+    {% endif %}
+
 </head>
 
 <body>
