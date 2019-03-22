@@ -12,6 +12,8 @@ use App\Services\GameReleaseDateService;
 use App\Services\GameTitleHashService;
 use App\Services\FeedItemGameService;
 use App\Events\GameCreated;
+use App\Construction\Game\GameDirector;
+use App\Construction\Game\GameBuilder;
 
 class WikipediaUpdateGamesList extends Command
 {
@@ -47,6 +49,9 @@ class WikipediaUpdateGamesList extends Command
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
         $this->info('Loading source data...');
+
+        $gameDirector = new GameDirector();
+        $gameBuilder = new GameBuilder();
 
         $feedItemGameService = resolve('Services\FeedItemGameService');
         /* @var FeedItemGameService $feedItemGameService */
@@ -166,8 +171,19 @@ class WikipediaUpdateGamesList extends Command
                 $newPublisher = str_replace("\n", ' ', $newPublisher);
                 $publishers = $newPublisher;
 
-                $game = $gameService->create($title, $linkTitle, null, null, $developers, $publishers);
-
+                // Add game
+                $gameBuilder->reset();
+                $gameDirector->setBuilder($gameBuilder);
+                $newGameParams = [
+                    'title' => $title,
+                    'link_title' => $linkTitle,
+                    'developer' => $developers,
+                    'publisher' => $publishers,
+                ];
+                // Check price_eshop and players are both set to null
+                $gameDirector->buildNewGame($newGameParams);
+                $game = $gameBuilder->getGame();
+                $game->save();
                 $gameId = $game->id;
 
                 // Create title hash
