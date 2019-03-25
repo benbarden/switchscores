@@ -47,10 +47,8 @@
                         {{ item.item_title }}
                     </td>
                     <td class="text-left">
-                        {% if item.game.title is not defined %}
+                        {% if item.game.title is null %}
                             <span style="color: #f00;">Game not linked</span>
-                        {% elseif item.game.title is null %}
-                            <span style="color: #f00;">Error: NULL link</span>
                         {% else %}
                             {{ item.game.title }}
                             <br>
