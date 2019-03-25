@@ -167,6 +167,7 @@ return [
         App\Providers\CrawlerWikipediaGamesListSourceServiceProvider::class,
         App\Providers\DeveloperServiceProvider::class,
         App\Providers\EshopEuropeGameServiceProvider::class,
+        App\Providers\EshopUSGameServiceProvider::class,
         App\Providers\FeedItemGameServiceProvider::class,
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,
