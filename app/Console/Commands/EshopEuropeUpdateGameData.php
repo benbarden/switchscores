@@ -195,6 +195,7 @@ class EshopEuropeUpdateGameData extends Command
             // Check for bad dates
             $badDatesArray = [
                 'TBD',
+                '2019',
                 'Spring 2019',
                 'January 2019',
             ];
