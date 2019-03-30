@@ -108,6 +108,17 @@ class ReviewUserService
         return $gameReviews;
     }
 
+    public function getActiveByGame($gameId)
+    {
+        $gameReviews = ReviewUser::select('review_user.*', 'review_quick_rating.rating_desc')
+            ->leftJoin('review_quick_rating', 'review_user.quick_rating', '=', 'review_quick_rating.id')
+            ->where('game_id', $gameId)
+            ->where('item_status', ReviewUser::STATUS_ACTIVE)
+            ->orderBy('review_user.created_at', 'desc')
+            ->get();
+        return $gameReviews;
+    }
+
     public function getByGameAndUser($gameId, $userId)
     {
         $gameReview = ReviewUser::where('game_id', $gameId)

@@ -263,7 +263,7 @@ class GamesController extends Controller
         $gameGenres = $serviceGameGenres->getByGame($gameId);
 
         // Get user reviews
-        $gameUserReviews = $serviceReviewUser->getByGame($gameId);
+        $gameUserReviews = $serviceReviewUser->getActiveByGame($gameId);
 
         // Get game metadata
         $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
