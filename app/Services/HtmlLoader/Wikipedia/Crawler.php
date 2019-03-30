@@ -10,6 +10,7 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 class Crawler
 {
     const WIKI_PAGE_LIST = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games';
+    const WIKI_PAGE_LIST_2 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(M-Z)';
 
     /**
      * @var GoutteClient
@@ -71,6 +72,11 @@ class Crawler
     public function crawlPage()
     {
         $this->domCrawler = $this->goutteClient->request('GET', self::WIKI_PAGE_LIST);
+    }
+
+    public function crawlPage2()
+    {
+        $this->domCrawler = $this->goutteClient->request('GET', self::WIKI_PAGE_LIST_2);
     }
 
     public function extractRows()

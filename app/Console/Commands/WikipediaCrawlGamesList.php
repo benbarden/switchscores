@@ -49,8 +49,18 @@ class WikipediaCrawlGamesList extends Command
 
         try {
 
-            $this->info('Crawling page...');
+            $this->info('Crawling page 1...');
             $wikiCrawler->crawlPage();
+
+            $this->info('Extracting row data...');
+            $wikiCrawler->extractRows();
+            $tableData = $wikiCrawler->getTableData();
+
+            $this->info('Processing table data...');
+            $wikiParser->processTableData($tableData);
+
+            $this->info('Crawling page 2...');
+            $wikiCrawler->crawlPage2();
 
             $this->info('Extracting row data...');
             $wikiCrawler->extractRows();
