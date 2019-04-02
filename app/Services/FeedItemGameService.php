@@ -78,6 +78,15 @@ class FeedItemGameService
         return $list;
     }
 
+    public function getPendingAndOkToUpdate()
+    {
+        $list = FeedItemGame::
+        whereIn('status_code', [FeedItemGame::STATUS_PENDING, FeedItemGame::STATUS_OK_TO_UPDATE])
+            ->orderBy('id', 'asc')
+            ->get();
+        return $list;
+    }
+
     public function getPendingWithGameId()
     {
         $list = FeedItemGame::

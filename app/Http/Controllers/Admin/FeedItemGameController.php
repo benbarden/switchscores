@@ -26,7 +26,7 @@ class FeedItemGameController extends BaseController
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
-            $feedItems = $feedItemGameService->getPending();
+            $feedItems = $feedItemGameService->getPendingAndOkToUpdate();
             $jsInitialSort = "[ 0, 'asc']";
         } else {
             $bindings['ActiveNav'] = $report;
