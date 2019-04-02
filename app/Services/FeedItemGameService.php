@@ -18,6 +18,15 @@ class FeedItemGameService
         $feedItemGame->save();
     }
 
+    public function updateStatus(
+        FeedItemGame $feedItemGame, $statusCode
+    )
+    {
+        $feedItemGame->status_code = $statusCode;
+        $feedItemGame->status_desc = $this->getStatusDesc($statusCode);
+        $feedItemGame->save();
+    }
+
     public function deleteByGameId($gameId)
     {
         FeedItemGame::where('game_id', $gameId)->delete();

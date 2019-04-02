@@ -78,22 +78,41 @@ class FeedItemGameController extends BaseController
         $request = request();
         $bindings = [];
 
-        $statusList = [];
+        $statusPending = [
+            'id' => FeedItemGame::STATUS_PENDING,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_PENDING)
+        ];
+        $statusOkToUpdate = [
+            'id' => FeedItemGame::STATUS_OK_TO_UPDATE,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_OK_TO_UPDATE)
+        ];
+        $statusComplete = [
+            'id' => FeedItemGame::STATUS_COMPLETE,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_COMPLETE)
+        ];
+        $statusNoUpdateNeeded = [
+            'id' => FeedItemGame::STATUS_NO_UPDATE_NEEDED,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_NO_UPDATE_NEEDED)
+        ];
+        $statusSkippedByUser = [
+            'id' => FeedItemGame::STATUS_SKIPPED_BY_USER,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_USER)
+        ];
+        $statusSkippedByGameRules = [
+            'id' => FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES,
+            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES)
+        ];
 
-        $statusCode = FeedItemGame::STATUS_PENDING;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
-        $statusCode = FeedItemGame::STATUS_OK_TO_UPDATE;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
-        $statusCode = FeedItemGame::STATUS_COMPLETE;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
-        $statusCode = FeedItemGame::STATUS_NO_UPDATE_NEEDED;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
-        $statusCode = FeedItemGame::STATUS_SKIPPED_BY_USER;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
-        $statusCode = FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES;
-        $statusList[] = ['id' => $statusCode, 'title' => $feedItemGameService->getStatusDesc($statusCode)];
+        $statusList = [
+            $statusPending, $statusOkToUpdate, $statusComplete,
+            $statusNoUpdateNeeded, $statusSkippedByUser, $statusSkippedByGameRules,
+        ];
+        $quickStatusList = [
+            $statusPending, $statusOkToUpdate, $statusSkippedByUser,
+        ];
 
         $bindings['StatusList'] = $statusList;
+        $bindings['QuickStatusList'] = $quickStatusList;
 
         if ($request->isMethod('post')) {
 

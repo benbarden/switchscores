@@ -3,6 +3,8 @@
     var formMode = '{{ FormMode }}';
     var formVals = [];
 
+    var feedItemGameId = '{{ FeedItemData.id }}';
+
     if (formMode == 'edit') {
 
         // This is used when editing existing items.
@@ -22,5 +24,20 @@
     $('#status_code').val(formVals['status_code']);
 
     $('#game_id').select2();
+
+    $('.btn-quick-status').on('click', function() {
+        quickStatusElemId = $(this).attr('id');
+        quickStatusId = quickStatusElemId.replace('btn-quick-status-', '');
+        if (quickStatusId == '') {
+            return false;
+        }
+
+        $.getJSON('/api/admin/feed-item-game/update-status', {itemId: feedItemGameId, newStatusId: quickStatusId}, function(data) {
+            apiMessage = data.message;
+            console.log(apiMessage);
+            top.location.href = '{{ route('admin.feed-items.games.list') }}';
+            //$('#link_title').val(linkText);
+        });
+    });
 
 </script>

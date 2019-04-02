@@ -32,4 +32,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/admin/developer/add-game-developer', 'Api\Admin\Developer@addGameDeveloper');
 
+    Route::get('/admin/feed-item-game/update-status', 'Api\Admin\FeedItemGame@updateStatus');
+
 });

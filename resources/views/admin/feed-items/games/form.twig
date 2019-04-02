@@ -42,6 +42,16 @@
             </select>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Quick status change</label>
+        <div class="col-md-6">
+            {% for item in QuickStatusList %}
+                {% if FeedItemData.status_code != item.id %}
+                    <input type="button" class="btn btn-primary btn-quick-status" id="btn-quick-status-{{ item.id }}" value="{{ item.title }}">
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
     <hr>
 
