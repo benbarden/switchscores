@@ -97,6 +97,7 @@ class LoaderEurope
         'download_play',
         'wishlist_email_square_image_url_s',
         'hits_i',
+        'dlc_shown_b',
     ];
 
     /**
@@ -198,6 +199,7 @@ class LoaderEurope
             'mii_support',
             'voice_chat_b',
             'download_play',
+            'dlc_shown_b',
         ];
 
         $jsonFields = [
