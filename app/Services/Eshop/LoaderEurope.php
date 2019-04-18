@@ -100,6 +100,8 @@ class LoaderEurope
         'wishlist_email_square_image_url_s',
         'hits_i',
         'dlc_shown_b',
+        'wishlist_email_banner460w_image_url_s',
+        'wishlist_email_banner640w_image_url_s',
     ];
 
     /**
