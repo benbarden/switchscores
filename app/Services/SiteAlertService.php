@@ -37,9 +37,18 @@ class SiteAlertService
     {
         $itemList = SiteAlert::
             where('type', $type)
-            ->orderBy('id', 'dsc')
+            ->orderBy('id', 'desc')
             ->get();
         return $itemList;
+    }
+
+    public function getLatest($type)
+    {
+        $item = SiteAlert::
+        where('type', $type)
+            ->orderBy('id', 'asc')
+            ->first();
+        return $item;
     }
 
     public function countByType($type)
