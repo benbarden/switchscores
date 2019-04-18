@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\SiteAlert;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Services\ServiceContainer;
@@ -180,5 +181,27 @@ class ActionListController extends Controller
         $bindings['RegionCode'] = $regionCode;
 
         return view('admin.action-lists.game-prices.list', $bindings);
+    }
+
+    public function siteAlertErrors()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceSiteAlert = $serviceContainer->getSiteAlertService();
+
+        $regionCode = $this->getRegionCodeOverride();
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Site alerts: Errors - Action lists - Admin';
+        $bindings['PageTitle'] = 'Site alerts: Errors';
+
+        $bindings['ItemList'] = $serviceSiteAlert->getByType(SiteAlert::TYPE_ERROR);
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        $bindings['RegionCode'] = $regionCode;
+
+        return view('admin.action-lists.site-alerts.list', $bindings);
     }
 }

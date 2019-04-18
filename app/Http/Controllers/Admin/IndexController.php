@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\SiteAlert;
 use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
@@ -47,6 +48,8 @@ class IndexController extends Controller
         $gameGenreService = $serviceContainer->getGameGenreService();
         $serviceGame = $serviceContainer->getGameService();
 
+        $serviceSiteAlert = $serviceContainer->getSiteAlertService();
+
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin index';
@@ -89,6 +92,7 @@ class IndexController extends Controller
 
 
         // Action lists
+        $bindings['SiteAlertErrorCount'] = $serviceSiteAlert->countByType(SiteAlert::TYPE_ERROR);
         $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
         $bindings['NewDeveloperToSetCount'] = $serviceGameDeveloper->countNewDevelopersToSet();

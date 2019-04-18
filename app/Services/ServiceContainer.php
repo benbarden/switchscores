@@ -33,6 +33,7 @@ class ServiceContainer
     const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
     const KEY_REVIEW_USER_SERVICE = 'ReviewUserService';
+    const KEY_SITE_ALERT_SERVICE = 'SiteAlertService';
     const KEY_TAG_SERVICE = 'TagService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
@@ -307,6 +308,14 @@ class ServiceContainer
     public function getReviewUserService()
     {
         return $this->load(self::KEY_REVIEW_USER_SERVICE);
+    }
+
+    /**
+     * @return SiteAlertService
+     */
+    public function getSiteAlertService()
+    {
+        return $this->load(self::KEY_SITE_ALERT_SERVICE);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Services\Eshop;
 
+use App\Services\SiteAlertService;
+use App\SiteAlert;
 use GuzzleHttp\Client as GuzzleClient;
 
 use App\EshopEuropeGame;
@@ -224,7 +226,10 @@ class LoaderEurope
         ];
 
         if (!in_array($field, $this->expectedFields)) {
-            throw new \Exception(sprintf('Cannot find field: %s - Value: %s', $field, $value));
+            $errorMsg = 'Cannot find field: '.$field;
+            $serviceSiteAlert = new SiteAlertService();
+            $serviceSiteAlert->create(SiteAlert::TYPE_ERROR, __CLASS__, $errorMsg);
+            return false;
         }
 
         if (in_array($field, $booleanFields)) {
