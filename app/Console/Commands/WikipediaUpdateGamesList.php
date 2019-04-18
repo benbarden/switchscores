@@ -3,17 +3,24 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\FeedItemGame;
+
 use App\Game;
 use App\GameTitleHash;
+use App\FeedItemGame;
+
+use App\Events\GameCreated;
+
 use App\Services\UrlService;
 use App\Services\GameService;
 use App\Services\GameReleaseDateService;
 use App\Services\GameTitleHashService;
 use App\Services\FeedItemGameService;
-use App\Events\GameCreated;
+use App\Services\GameChangeHistoryService;
+
 use App\Construction\Game\GameDirector;
 use App\Construction\Game\GameBuilder;
+use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
+use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 
 class WikipediaUpdateGamesList extends Command
 {
@@ -61,6 +68,9 @@ class WikipediaUpdateGamesList extends Command
         /* @var GameTitleHashService $gameTitleHashService */
         $gameReleaseDateService = resolve('Services\GameReleaseDateService');
         /* @var GameReleaseDateService $gameReleaseDateService */
+
+        $serviceGameChangeHistory = resolve('Services\GameChangeHistoryService');
+        /* @var GameChangeHistoryService $serviceGameChangeHistory */
 
         $feedItemsList = $feedItemGameService->getForProcessing();
 
@@ -135,8 +145,27 @@ class WikipediaUpdateGamesList extends Command
                 }
 
                 if ($gameChanged) {
+
+                    // Recreate objects each time to avoid issues
+                    $gameChangeHistoryDirector = new GameChangeHistoryDirector();
+                    $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
+
+                    // Get original version before saving
+                    $gameOrig = $game->fresh();
+
                     $this->info('Saving updates to game');
                     $game->save();
+
+                    // Game change history
+                    //$gameChangeHistoryBuilder->reset(); // not needed when reinstantiating
+                    $gameChangeHistoryBuilder->setGame($game);
+                    $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
+                    $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
+                    $gameChangeHistoryDirector->setTableNameGames();
+                    $gameChangeHistoryDirector->buildWikipediaUpdate();
+                    $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
+                    $gameChangeHistory->save();
+
                 }
 
                 $this->info('Marking feed item as complete');
@@ -205,6 +234,16 @@ class WikipediaUpdateGamesList extends Command
 
                 }
 
+                // Game change history
+                $gameChangeHistoryBuilder->reset();
+                $gameChangeHistoryBuilder->setGame($game);
+                $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
+                $gameChangeHistoryDirector->setTableNameGames();
+                $gameChangeHistoryDirector->buildWikipediaInsert();
+                $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
+                $gameChangeHistory->save();
+
+                // Wrapping up
                 $this->info('Marking feed item as complete');
                 $feedItem->game_id = $gameId;
                 $feedItem->setStatusComplete();

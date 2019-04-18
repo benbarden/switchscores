@@ -10,6 +10,9 @@ use App\Services\GameGenreService;
 use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\Europe\UpdateGameData;
 
+use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
+use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
+
 class EshopEuropeUpdateGameData extends Command
 {
     /**
@@ -38,8 +41,7 @@ class EshopEuropeUpdateGameData extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
+     * @throws \Exception
      */
     public function handle()
     {
@@ -53,6 +55,9 @@ class EshopEuropeUpdateGameData extends Command
         /* @var GameGenreService $gameGenreService */
         $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
         /* @var EshopEuropeGameService $eshopEuropeGameService */
+
+        $serviceGameChangeHistory = resolve('Services\GameChangeHistoryService');
+        /* @var GameChangeHistoryService $serviceGameChangeHistory */
 
         $serviceUpdateGameData = new UpdateGameData();
 
@@ -303,7 +308,25 @@ class EshopEuropeUpdateGameData extends Command
             // *********************************************** //
 
             if ($saveChanges || $serviceUpdateGameData->hasGameChanged()) {
+
+                // Recreate objects each time to avoid issues
+                $gameChangeHistoryDirector = new GameChangeHistoryDirector();
+                $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
+
+                // Get original version before saving
+                $gameOrig = $game->fresh();
+
                 $game->save();
+
+                // Game change history
+                $gameChangeHistoryBuilder->setGame($game);
+                $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
+                $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
+                $gameChangeHistoryDirector->setTableNameGames();
+                $gameChangeHistoryDirector->buildEshopEuropeUpdate();
+                $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
+                $gameChangeHistory->save();
+
             }
 
             if ($showSplitter) {

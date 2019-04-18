@@ -17,6 +17,9 @@ use App\Events\GameCreated;
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
+use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
+use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
+
 use Auth;
 
 class GamesController extends Controller
@@ -251,6 +254,18 @@ class GamesController extends Controller
                 $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
 
+            // Game change history
+            $gameChangeHistoryDirector = new GameChangeHistoryDirector();
+            $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
+
+            $gameChangeHistoryBuilder->setGame($game);
+            $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
+            $gameChangeHistoryDirector->setTableNameGames();
+            $gameChangeHistoryDirector->buildAdminInsert();
+            $gameChangeHistoryDirector->setUserId(Auth::user()->id);
+            $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
+            $gameChangeHistory->save();
+
             // Done
 
             // Trigger event
@@ -293,6 +308,8 @@ class GamesController extends Controller
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
+
+        $gameOrig = $gameData->fresh();
 
         // Filters and next game id
         $bindings['GameListFilter'] = $gameListFilter;
@@ -355,6 +372,21 @@ class GamesController extends Controller
             if (count($gameGenres) > 0) {
                 $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
+
+            // Game change history
+            $gameData->refresh();
+
+            $gameChangeHistoryDirector = new GameChangeHistoryDirector();
+            $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
+
+            $gameChangeHistoryBuilder->setGame($gameData);
+            $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
+            $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
+            $gameChangeHistoryDirector->setTableNameGames();
+            $gameChangeHistoryDirector->buildAdminUpdate();
+            $gameChangeHistoryDirector->setUserId(Auth::user()->id);
+            $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
+            $gameChangeHistory->save();
 
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
