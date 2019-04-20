@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameReleaseDate extends Model
 {
+    const REGION_EU = 'eu';
+    const REGION_US = 'us';
+    const REGION_JP = 'jp';
+
     /**
      * @var string
      */

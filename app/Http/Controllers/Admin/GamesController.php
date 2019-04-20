@@ -20,6 +20,9 @@ use App\Construction\Game\GameDirector;
 use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
 use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 
+use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
+use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
+
 use Auth;
 
 class GamesController extends Controller
@@ -223,20 +226,18 @@ class GamesController extends Controller
             $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
 
             // Update release dates
-            $regionsToUpdate = ['eu', 'us', 'jp'];
+            $gameReleaseDateDirector = new GameReleaseDateDirector();
+
+            $regionsToUpdate = $gameReleaseDateDirector->getRegionList();
 
             foreach ($regionsToUpdate as $region) {
 
-                $releaseDateField = 'release_date_'.$region;
-                $isReleasedField = 'is_released_'.$region;
-                $upcomingDateField = 'upcoming_date_'.$region;
+                $gameReleaseDateBuilder = new GameReleaseDateBuilder();
+                $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
+                $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, $request->post());
+                $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
+                $gameReleaseDate->save();
 
-                $releaseDate = $request->{$releaseDateField};
-                $released = $request->{$isReleasedField};
-                $upcomingDate = $request->{$upcomingDateField};
-
-                // As this is a new game, we should create all of the regional data
-                $serviceGameReleaseDate->createGameReleaseDate($gameId, $region, $releaseDate, $released, $upcomingDate);
             }
 
             // Update genres
@@ -336,26 +337,25 @@ class GamesController extends Controller
             );
 
             // Update release dates
+            $gameReleaseDateDirector = new GameReleaseDateDirector();
+
+            $regionsToUpdate = $gameReleaseDateDirector->getRegionList();
 
             foreach ($regionsToUpdate as $region) {
 
-                $releaseDateField = 'release_date_'.$region;
-                $isReleasedField = 'is_released_'.$region;
-                $upcomingDateField = 'upcoming_date_'.$region;
+                $gameReleaseDateBuilder = new GameReleaseDateBuilder();
+                $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
 
-                $releaseDate = $request->{$releaseDateField};
-                $released = $request->{$isReleasedField};
-                $upcomingDate = $request->{$upcomingDateField};
-
-                // Check if existing data is available before updating!
-                $regionData = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
-                if ($regionData) {
-                    // Edit existing
-                    $serviceGameReleaseDate->editGameReleaseDate($regionData, $releaseDate, $released, $upcomingDate);
+                // Check if existing data is available before updating
+                $gameReleaseDateExisting = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
+                if ($gameReleaseDateExisting) {
+                    $gameReleaseDateDirector->buildExistingReleaseDate($gameReleaseDateExisting, $request->post());
                 } else {
-                    // Create new
-                    $serviceGameReleaseDate->createGameReleaseDate($gameId, $region, $releaseDate, $released, $upcomingDate);
+                    $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, $request->post());
                 }
+
+                $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
+                $gameReleaseDate->save();
 
             }
 
