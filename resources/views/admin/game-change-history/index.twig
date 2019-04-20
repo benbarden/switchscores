@@ -84,8 +84,8 @@
         top.location.href = '{{ route('admin.game-change-history.index')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
-        var activeNav = '{{ ActiveNav }}';
-        $('#admin-nav-filter').val(activeNav);
+        var selFilter = '{{ SelectedFilter }}';
+        $('#admin-nav-filter').val(selFilter);
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25

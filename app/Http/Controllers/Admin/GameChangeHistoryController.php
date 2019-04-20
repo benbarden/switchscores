@@ -39,6 +39,9 @@ class GameChangeHistoryController extends Controller
 
         $bindings['ItemList'] = $changeHistory;
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
+        if ($filter) {
+            $bindings['SelectedFilter'] = $filter;
+        }
 
         return view('admin.game-change-history.index', $bindings);
     }
