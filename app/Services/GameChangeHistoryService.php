@@ -56,6 +56,15 @@ class GameChangeHistoryService
         return $itemList;
     }
 
+    public function getByTable($table)
+    {
+        $itemList = GameChangeHistory::
+            where('affected_table_name', $table)
+            ->orderBy('id', 'desc')
+            ->get();
+        return $itemList;
+    }
+
     public function getByUserId($userId)
     {
         $itemList = GameChangeHistory::

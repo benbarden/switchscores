@@ -1,0 +1,106 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-md-3">
+        <label for="admin-nav-filter">Filters:</label>
+        <select id="admin-nav-filter" name="admin-nav-filter" class="form-control">
+            <option value="">All</option>
+            <option value="table-games">Table: games</option>
+            <option value="source-eshop-europe">Source: eShop Europe</option>
+            <option value="source-wikipedia">Source: Wikipedia</option>
+            <option value="source-admin">Source: Admin</option>
+        </select>
+    </div>
+</div>
+
+<hr>
+
+{% if ItemList.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Game</th>
+                <th>Table</th>
+                <th class="text-center">Source</th>
+                <th class="text-center">Change type</th>
+                <th class="text-center">Date</th>
+                <th>Changes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ItemList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {% if item.game %}
+                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                        {% else %}
+                            {{ item.game_id }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ item.affected_table_name }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.source }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.change_type }}
+                    </td>
+                    <td class="text-center">
+                        <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
+                    </td>
+                    <td>
+                        {% if item.data_changed %}
+                            {% set dataChanged = JsonHelper.jsonDecode(item.data_changed) %}
+                            <p>
+                                <small>
+                                    {% for field,value in dataChanged %}
+                                        {{ field }}: {{ value }}<br>
+                                    {% endfor %}
+                                </small>
+                            </p>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#admin-nav-filter').on('change', function() {
+        selectedFilter = $(this).val();
+        top.location.href = '{{ route('admin.game-change-history.index')}}' + '/' + selectedFilter;
+    });
+    $(document).ready(function() {
+        var activeNav = '{{ ActiveNav }}';
+        $('#admin-nav-filter').val(activeNav);
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25
+            /*
+            "columns": [
+                null,
+                null,
+                { "orderable": false },
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+            */
+        });
+    });
+</script>
+
+{% endblock page_inner %}

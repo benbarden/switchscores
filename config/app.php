@@ -257,6 +257,7 @@ return [
         'ImageHelper' => App\Helpers\ImageHelper::class,
         'LinkHelper' => App\Helpers\LinkHelper::class,
         'SerialHelper' => App\Helpers\SerialHelper::class,
+        'JsonHelper' => App\Helpers\JsonHelper::class,
 
     ],
 

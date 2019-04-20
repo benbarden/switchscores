@@ -166,6 +166,11 @@ return [
                 'is_safe' => [
                     'unserialize'
                 ]
+            ],
+            'JsonHelper' => [
+                'is_safe' => [
+                    'jsonDecode'
+                ]
             ]
         ],
 
