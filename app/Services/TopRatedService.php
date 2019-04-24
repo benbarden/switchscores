@@ -94,29 +94,6 @@ class TopRatedService
     }
 
     /**
-     * Top Rated - All-time
-     * Just a counter. Used on Game pages
-     * @param $region
-     * @return integer
-     */
-    public function getCount($region)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('games.review_count', '>', '2')
-            ->orderBy('games.rating_avg', 'desc');
-
-        $topRatedCounter = $games->get()->count();
-        return $topRatedCounter;
-    }
-
-    /**
      * @param $region
      * @return integer
      */

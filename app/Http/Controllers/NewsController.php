@@ -33,7 +33,7 @@ class NewsController extends BaseController
 
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
         $serviceNews = $serviceContainer->getNewsService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
@@ -51,7 +51,7 @@ class NewsController extends BaseController
         $bindings['NewsItem'] = $newsItem;
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceTopRated->getCount($regionCode);
+        $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();
 
         // Next/Previous links
         $newsNext = $serviceNews->getNext($newsItem);

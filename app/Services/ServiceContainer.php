@@ -19,7 +19,9 @@ class ServiceContainer
     const KEY_GAME_DEVELOPER_SERVICE = 'GameDeveloperService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
     const KEY_GAME_PUBLISHER_SERVICE = 'GamePublisherService';
+    const KEY_GAME_RANK_ALLTIME_SERVICE = 'GameRankAllTimeService';
     const KEY_GAME_RANK_UPDATE_SERVICE = 'GameRankUpdateService';
+    const KEY_GAME_RANK_YEAR_SERVICE = 'GameRankYearService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
     const KEY_GAME_SERVICE = 'GameService';
     const KEY_GAME_TAG_SERVICE = 'GameTagService';
@@ -200,11 +202,27 @@ class ServiceContainer
     }
 
     /**
+     * @return GameRankAllTimeService
+     */
+    public function getGameRankAllTimeService()
+    {
+        return $this->load(self::KEY_GAME_RANK_ALLTIME_SERVICE);
+    }
+
+    /**
      * @return GameRankUpdateService
      */
     public function getGameRankUpdateService()
     {
         return $this->load(self::KEY_GAME_RANK_UPDATE_SERVICE);
+    }
+
+    /**
+     * @return GameRankYearService
+     */
+    public function getGameRankYearService()
+    {
+        return $this->load(self::KEY_GAME_RANK_YEAR_SERVICE);
     }
 
     /**

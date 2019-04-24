@@ -231,7 +231,7 @@ class GamesController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
         $serviceChartsRankingGlobal = $serviceContainer->getChartsRankingGlobalService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
@@ -285,7 +285,7 @@ class GamesController extends Controller
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceTopRated->getCount($regionCode);
+        $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();
 
         // Check if game is on lists
         if (Auth::id()) {

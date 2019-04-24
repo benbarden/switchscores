@@ -4,61 +4,63 @@
 
 {% block page_body %}
 
-<p>
-    This page lists the top rated Nintendo Switch games split across a few categories.
-    You can see the "All-time" top rated games, new games released in the last 30 days,
-    and games released in the current year. This is to create some diversity in the lists,
-    so you don't always see the same games at the top.
-</p>
-<p>
-    Ratings are calculated from the reviews we store from our carefully selected review partners.
-    Games need to have at least 3 review scores to be included in these lists.
-</p>
-<p>
-    Check out our <a href="{{ route('topRated.byMonthLanding') }}">Top Rated - by month</a> page
-    to see the top games for each month since the Switch launched.
-</p>
+<div class="row">
+
+    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+        <p>
+            This page lists the top rated Nintendo Switch games split across a few categories.
+            You can see the Top 100 games by year of release (in Europe), and the Top 100 since the Switch launched.
+        </p>
+        <p>
+            Ratings are calculated from the reviews we store from our carefully selected review partners.
+            Games need to have at least 3 ratings to be included in these lists.
+        </p>
+    </div>
+
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <h2>More lists</h2>
+        <ul>
+            <li><a href="{{ route('topRated.allTime') }}">Top 100 - all-time</a></li>
+            <li><a href="{{ route('topRated.byYear', {'year': 2019}) }}">Top 100 - released in 2019</a></li>
+            <li><a href="{{ route('topRated.byYear', {'year': 2018}) }}">Top 100 - released in 2018</a></li>
+            <li><a href="{{ route('topRated.byYear', {'year': 2017}) }}">Top 100 - released in 2017</a></li>
+            <li><a href="{{ route('topRated.byMonthLanding') }}">Top Rated - by calendar month</a></li>
+        </ul>
+    </div>
+
+</div>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-4">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <h2>
-            Top rated - {{ Year }}
+            Top 100 Switch games - released in {{ Year }}
             <span class="h4">(<a href="{{ route('topRated.byYear', {'year': Year}) }}">view all</a>)</span>
         </h2>
-        {% if TopRatedThisYear.count > 0 %}
-            <p>
-                Top rated games released in {{ Year }}.
-            </p>
-            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedThisYear} %}
+        {% if TopRatedThisYear|length %}
+            <div class="row">
+                {% for item in TopRatedThisYear %}
+                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
+                {% endfor %}
+            </div>
         {% else %}
             <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
         {% endif %}
     </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
         <h2>
-            Top rated - New
-        </h2>
-        {% if TopRatedNewReleases.count %}
-            <p>
-                Top rated games released in the last 30 days.
-            </p>
-            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedNewReleases} %}
-        {% else %}
-            <p>Could not display Top rated.</p>
-        {% endif %}
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>
-            Top rated - All-time
+            Top 100 Switch games - all-time
             <span class="h4">(<a href="{{ route('topRated.allTime') }}">view all</a>)</span>
         </h2>
-        {% if TopRatedAllTime.count %}
-            <p>
-                Top rated Switch games of all-time.
-            </p>
-            {% include 'topRated/topRatedTable.twig' with {'topRatedList': TopRatedAllTime} %}
+        {% if TopRatedAllTime|length %}
+            <div class="row">
+                {% for item in TopRatedAllTime %}
+                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
+                {% endfor %}
+            </div>
         {% else %}
-            <p>Could not display Top rated.</p>
+            <p>No games found!</p>
         {% endif %}
     </div>
 </div>

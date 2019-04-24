@@ -15,15 +15,15 @@ class TopRatedController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+        $serviceGameRankYear = $serviceContainer->getGameRankYearService();
 
         $bindings = [];
 
         $thisYear = date('Y');
         $bindings['Year'] = $thisYear;
-        $bindings['TopRatedThisYear'] = $serviceTopRated->getByYear($regionCode, $thisYear, 15);
-        $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($regionCode, 30, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 15);
+        $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
+        $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
@@ -42,13 +42,13 @@ class TopRatedController extends Controller
 
         $bindings = [];
 
-        $gamesList = $serviceTopRated->getList($regionCode);
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+        $gamesList = $serviceGameRankAllTime->getList(100);
 
-        $bindings['GamesList'] = $gamesList;
-        $bindings['GamesTableSort'] = "[5, 'desc']";
+        $bindings['TopRatedAllTime'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games';
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
+        $bindings['TopTitle'] = 'Nintendo Switch Top 100 games';
+        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
 
         return view('topRated.allTime', $bindings);
     }
@@ -60,7 +60,7 @@ class TopRatedController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameRankYear = $serviceContainer->getGameRankYearService();
 
         $allowedYears = [2017, 2018, 2019];
         if (!in_array($year, $allowedYears)) {
@@ -69,14 +69,14 @@ class TopRatedController extends Controller
 
         $bindings = [];
 
-        $gamesList = $serviceTopRated->getByYear($regionCode, $year);
+        $gamesList = $serviceGameRankYear->getList($year, 100);
 
-        $bindings['GamesList'] = $gamesList;
+        $bindings['TopRatedByYear'] = $gamesList;
         $bindings['GamesTableSort'] = "[5, 'desc']";
         $bindings['Year'] = $year;
 
-        $bindings['TopTitle'] = 'Nintendo Switch Top Rated games - '.$year;
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games - '.$year;
+        $bindings['TopTitle'] = 'Nintendo Switch Top 100 games - released in '.$year;
+        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
 
         return view('topRated.byYear', $bindings);
     }

@@ -33,6 +33,7 @@ class IndexController extends Controller
 
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
         $serviceTopRated = $serviceContainer->getTopRatedService();
         $serviceUser = $serviceContainer->getUserService();
         $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
@@ -60,7 +61,7 @@ class IndexController extends Controller
         $bindings['TotalGameCount'] = $serviceGame->getCount();
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
-        $bindings['RankedGameCount'] = $serviceTopRated->getCount($regionCode);
+        $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount($regionCode);
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
         $bindings['RegisteredUserCount'] = $serviceUser->getCount();

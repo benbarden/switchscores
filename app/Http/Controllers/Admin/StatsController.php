@@ -34,10 +34,11 @@ class StatsController extends Controller
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
         $serviceReviewSite = $serviceContainer->getReviewSiteService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
         $serviceTopRated = $serviceContainer->getTopRatedService();
         $serviceReviewStats = $serviceContainer->getReviewStatsService();
 
-        $bindings['RankedGameCount'] = $serviceTopRated->getCount($regionCode);
+        $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount($regionCode);
 
         $releasedGameCount = $serviceGameReleaseDate->countReleased($regionCode);

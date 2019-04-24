@@ -8,13 +8,26 @@
     A list of Nintendo Switch games released in Europe, sorted to show the highest
     average rating across the reviews we've collated at World of Switch.
     This list only contains games released in {{ Year }}.
+    Games need to have 3 or more reviews to be ranked.
 </p>
 
-<p>
-    Games with fewer than 3 reviews are not listed below. These can be found on the
-    <a href="{{ route('reviews.landing') }}">Reviews page</a>, under Unranked games.
-</p>
+<div class="row">
 
-{% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            Top 100 Switch games - released in {{ Year }}
+        </h2>
+        {% if TopRatedByYear|length %}
+            <div class="row">
+                {% for item in TopRatedByYear %}
+                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
+        {% endif %}
+    </div>
+
+</div>
 
 {% endblock page_body %}
