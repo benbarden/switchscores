@@ -62,6 +62,17 @@ class GamesController extends Controller
         $bindings['TopTitle'] = 'Admin - Games';
         $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
 
+
+        $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
+
+        $lastGameId = \Request::get('lastgameid');
+        if ($lastGameId) {
+            $lastGame = $serviceGame->find($lastGameId);
+            if ($lastGame) {
+                $bindings['LastGame'] = $lastGame;
+            }
+        }
+
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
             $gameList = $serviceGame->getAll($regionCode);
@@ -272,7 +283,7 @@ class GamesController extends Controller
             // Trigger event
             event(new GameCreated($game));
 
-            return redirect(route('admin.games.list'));
+            return redirect('/admin/games/list?lastaction=add&lastgameid='.$gameId);
 
         }
 
@@ -390,11 +401,11 @@ class GamesController extends Controller
 
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
-                return redirect('/admin/games/list/'.$gameListFilter);
+                return redirect('/admin/games/list/'.$gameListFilter.'?lastaction=edit&lastgameid='.$gameId);
             } elseif ($gameListFilter && $nextId) {
                 return redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
             } else {
-                return redirect(route('admin.games.list'));
+                return redirect('/admin/games/list?lastaction=edit&lastgameid='.$gameId);
             }
 
         } else {
