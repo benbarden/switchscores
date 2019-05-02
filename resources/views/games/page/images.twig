@@ -1,4 +1,7 @@
 {% if GameImages or VideoUrl %}
+    {% if VideoUrl != '' and GameData.video_header_text != '' %}
+        <h3>{{ GameData.video_header_text }}</h3>
+    {% endif %}
     {# http://fotorama.io/customize/ #}
     <link href="//cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
@@ -11,11 +14,11 @@
          data-maxheight="100%"
          data-nav="thumbs">
         {% if VideoUrl %}
-        <a href="{{ VideoUrl }}">{{ GameTitle }}</a>
+        <a href="{{ VideoUrl }}">{{ GameData.title }}</a>
         {% endif %}
         {% if GameImages %}
         {% for image in GameImages %}
-            <img src="{{ MediaFolder }}{{ image.url }}" width="150" height="125">
+            <img src="{{ GameData.media_folder }}{{ image.url }}" width="150" height="125">
         {% endfor %}
         {% endif %}
     </div>

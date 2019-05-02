@@ -62,6 +62,9 @@ class GameDirector
         if (array_key_exists('video_url', $params)) {
             $this->builder->setVideoUrl($params['video_url']);
         }
+        if (array_key_exists('video_header_text', $params)) {
+            $this->builder->setVideoHeaderText($params['video_header_text']);
+        }
         if (array_key_exists('boxart_square_url', $params)) {
             $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
         }

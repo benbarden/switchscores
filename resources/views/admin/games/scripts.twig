@@ -29,6 +29,7 @@
         // *** Media *** //
         formVals['media_folder'] = "{{ GameData.media_folder }}";
         formVals['video_url'] = "{{ GameData.video_url }}";
+        formVals['video_header_text'] = "{{ GameData.video_header_text }}";
 
     } else {
 
@@ -58,6 +59,7 @@
         // *** Media *** //
         formVals['media_folder'] = "{{ old('media_folder') }}";
         formVals['video_url'] = "{{ old('video_url') }}";
+        formVals['video_header_text'] = "{{ old('video_header_text') }}";
 
     }
 
@@ -90,6 +92,7 @@
     // *** Media *** //
     $('#media_folder').val(formVals['media_folder']);
     $('#video_url').val(formVals['video_url']);
+    $('#video_header_text').val(formVals['video_header_text']);
 
     // *** Genres *** //
     {% if GameGenreList %}

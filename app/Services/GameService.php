@@ -29,13 +29,15 @@ class GameService
      * @param null $boxartSquareUrl
      * @param null $nintendoPageUrl
      * @param null $eshopEuropeFsId
+     * @param null $boxartHeaderImage
+     * @param null $videoHeaderText
      * @return Game
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
         $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null
+        $boxartHeaderImage = null, $videoHeaderText = null
     )
     {
         return Game::create([
@@ -54,6 +56,7 @@ class GameService
             'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
+            'video_header_text' => $videoHeaderText,
         ]);
     }
 
@@ -62,7 +65,7 @@ class GameService
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
         $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null
+        $boxartHeaderImage = null, $videoHeaderText = null
     )
     {
         $values = [
@@ -80,6 +83,7 @@ class GameService
             'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
+            'video_header_text' => $videoHeaderText,
         ];
 
         $game->fill($values);

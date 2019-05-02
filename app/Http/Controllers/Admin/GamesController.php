@@ -333,7 +333,7 @@ class GamesController extends Controller
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url, $request->boxart_square_url,
                 $request->nintendo_page_url, $request->eshop_europe_fs_id,
-                $request->boxart_header_image
+                $request->boxart_header_image, $request->video_header_text
             );
 
             // Update release dates
