@@ -63,7 +63,8 @@ class Director
 
         $isReleasedField = 'is_released_'.$region;
         if (array_key_exists($isReleasedField, $params)) {
-            $this->builder->setIsReleased($params[$isReleasedField]);
+            $isReleased = $params[$isReleasedField] == 'on' ? 1 : 0;
+            $this->builder->setIsReleased($isReleased);
         }
 
         $upcomingDateField = 'upcoming_date_'.$region;
