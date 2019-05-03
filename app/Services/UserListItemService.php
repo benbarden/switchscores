@@ -8,6 +8,11 @@ use App\UserListItem;
 
 class UserListItemService
 {
+    public function deleteByList($listId)
+    {
+        UserListItem::where('list_id', $listId)->delete();
+    }
+
     public function find($id)
     {
         return UserListItem::find($id);

@@ -44,6 +44,11 @@ class UserGamesCollectionService
         UserGamesCollection::where('id', $collectionId)->delete();
     }
 
+    public function deleteByUserId($userId)
+    {
+        UserGamesCollection::where('user_id', $userId)->delete();
+    }
+
     public function find($id)
     {
         return UserGamesCollection::find($id);

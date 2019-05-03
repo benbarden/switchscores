@@ -52,7 +52,8 @@
                         {{ item.created_at|date('Y-m-d') }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.user.edit', {'userId': item.id}) }}">Edit</a>
+                        <a href="{{ route('admin.user.edit', {'userId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('admin.user.delete', {'userId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -38,6 +38,11 @@ class UserService
         return User::find($id);
     }
 
+    public function deleteUser($userId)
+    {
+        User::where('id', $userId)->delete();
+    }
+
     public function getAll()
     {
         return User::orderBy('created_at', 'desc')->get();

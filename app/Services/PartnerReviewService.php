@@ -115,4 +115,13 @@ class PartnerReviewService
             ->first();
         return $gameReview;
     }
+
+    public function getByUser($userId)
+    {
+        $gameReviews = PartnerReview::select('partner_reviews.*')
+            ->where('user_id', $userId)
+            ->orderBy('partner_reviews.created_at', 'desc')
+            ->get();
+        return $gameReviews;
+    }
 }

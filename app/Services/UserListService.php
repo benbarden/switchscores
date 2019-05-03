@@ -8,6 +8,11 @@ use App\UserList;
 
 class UserListService
 {
+    public function delete($listId)
+    {
+        UserList::where('id', $listId)->delete();
+    }
+
     public function find($id)
     {
         return UserList::find($id);

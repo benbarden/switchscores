@@ -118,4 +118,84 @@ class UserController extends Controller
 
         return view('admin.user.edit', $bindings);
     }
+
+    public function deleteUser($userId)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        // Core
+        $serviceUser = $serviceContainer->getUserService();
+
+        // Validation
+        $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
+        $servicePartnerReview = $serviceContainer->getPartnerReviewService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceReviewUser = $serviceContainer->getReviewUserService();
+
+        // Deletion
+        $serviceUserGamesCollection = $serviceContainer->getUserGamesCollectionService();
+        $serviceUserListItem = $serviceContainer->getUserListItemService();
+        $serviceUserList = $serviceContainer->getUserListService();
+
+        $userData = $serviceUser->find($userId);
+        if (!$userData) abort(404);
+
+        $bindings = [];
+        $customErrors = [];
+
+        $request = request();
+
+        // Validation: check for any reason we should not allow the user to be deleted.
+        $gameChangeHistory = $serviceGameChangeHistory->getByUserId($userId);
+        if (count($gameChangeHistory) > 0) {
+            $customErrors[] = 'User has authored '.count($gameChangeHistory).' game change history record(s) and cannot be deleted';
+        }
+        $partnerReviews = $servicePartnerReview->getByUser($userId);
+        if (count($partnerReviews) > 0) {
+            $customErrors[] = 'User has created '.count($partnerReviews).' partner review(s)';
+        }
+        $reviewLinks = $serviceReviewLink->getByUser($userId);
+        if (count($reviewLinks) > 0) {
+            $customErrors[] = 'User has created '.count($reviewLinks).' review link(s)';
+        }
+        $quickReviews = $serviceReviewUser->getAllByUser($userId);
+        if (count($quickReviews) > 0) {
+            $customErrors[] = 'User has created '.count($quickReviews).' quick review(s)';
+        }
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'delete-post';
+
+            $serviceUserGamesCollection->deleteByUserId($userId);
+            $userLists = $serviceUserList->getAllByUser($userId);
+            if ($userLists) {
+                foreach ($userLists as $list) {
+                    $listId = $list->id;
+                    $serviceUserListItem->deleteByList($listId);
+                    $serviceUserList->delete($listId);
+                }
+            }
+            $serviceUser->deleteUser($userId);
+
+            // Done
+
+            return redirect(route('admin.user.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'delete';
+
+        }
+
+        $bindings['TopTitle'] = 'Admin - Users - Delete user';
+        $bindings['PageTitle'] = 'Delete user';
+        $bindings['UserData'] = $userData;
+        $bindings['UserId'] = $userId;
+        $bindings['ErrorsCustom'] = $customErrors;
+
+        return view('admin.user.delete', $bindings);
+    }
+
 }

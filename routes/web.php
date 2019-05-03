@@ -245,6 +245,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/user/view/{userId}', 'Admin\UserController@showUser')->name('admin.user.view');
     Route::get('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
     Route::post('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
+    Route::get('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
+    Route::post('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
 
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
