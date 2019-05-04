@@ -46,7 +46,7 @@ class SiteAlertService
     {
         $item = SiteAlert::
         where('type', $type)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->first();
         return $item;
     }
