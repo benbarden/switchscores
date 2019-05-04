@@ -8,6 +8,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
+                    <p>
+                        Register for the site using the below form.
+                        <br>
+                        Already a member? <a href="{{ route('login') }}">Login here</a>.
+                    </p>
+                    <h3>Enter your details</h3>
                     {% if errors.any %}
                         {% for error in errors.all %}
                             <p>{{ error }}</p>
