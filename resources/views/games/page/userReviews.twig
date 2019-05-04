@@ -35,14 +35,24 @@
             {% endif %}
         {% endfor %}
     </table>
+
     <p>
-        <a href="{{ route('user.reviews.list') }}">Add yours</a>.
+    {% if auth_user() %}
+        <a href="{{ route('user.reviews.list') }}">Why not submit a quick review</a>?
+    {% else %}
+        <a href="{{ route('register') }}">Register</a> to add a quick review.
+    {% endif %}
     </p>
+
 {% else %}
+
     <p>
         None yet.
         {% if auth_user() %}
             Why not <a href="{{ route('user.reviews.list') }}">write the first quick review</a>?
+        {% else %}
+            Why not <a href="{{ route('register') }}">register</a> and submit a quick review?
         {% endif %}
     </p>
+
 {% endif %}
