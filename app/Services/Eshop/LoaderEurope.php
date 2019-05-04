@@ -102,6 +102,7 @@ class LoaderEurope
         'dlc_shown_b',
         'wishlist_email_banner460w_image_url_s',
         'wishlist_email_banner640w_image_url_s',
+        'labo_b',
     ];
 
     /**
@@ -204,6 +205,7 @@ class LoaderEurope
             'voice_chat_b',
             'download_play',
             'dlc_shown_b',
+            'labo_b',
         ];
 
         $jsonFields = [

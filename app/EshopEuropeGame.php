@@ -102,6 +102,7 @@ class EshopEuropeGame extends Model
         'dlc_shown_b',
         'wishlist_email_banner460w_image_url_s',
         'wishlist_email_banner640w_image_url_s',
+        'labo_b',
     ];
 
     public function game()

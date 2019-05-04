@@ -49,7 +49,7 @@ class EshopEuropeImportData extends Command
 
         try {
 
-            if (\App::environment() == 'local') {
+            if (\App::environment() == 'localx') {
                 $this->info('Loading local data from JSON file');
                 $eshopLoader->loadLocalData('europe-test-1500-games.json');
             } else {
