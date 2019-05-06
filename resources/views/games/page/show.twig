@@ -11,16 +11,6 @@
     <div class="col-xs-12 col-sm-8 col-md-6">
         <h1 style="margin: 10px 0;">
             {{ GameData.title }}
-            {% if GameData.game_rank %}
-                <span class="h3 pull-right" style="margin: 5px 0;">
-                    <span>Rank</span>
-                    <strong>{{ GameData.game_rank }}<small>/{{ RankMaximum }}</small></strong>
-                </span>
-            {% else %}
-                <span class="h4 pull-right" style="margin: 5px 0;">
-                    <em>Rank pending</em>
-                </span>
-            {% endif %}
         </h1>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-6">
@@ -42,6 +32,22 @@
         {% endif %}
     </div>
     <div class="col-xs-12 col-sm-4 col-md-6" style="vertical-align: middle;">
+        {% if GameData.game_rank %}
+            <span class="h3 pull-left" style="margin: 5px 0;">
+                <span><a href="{{ route('topRated.allTime') }}">All-time rank</a></span>
+                <strong>{{ GameData.game_rank }}<small>/{{ RankMaximum }}</small></strong>
+            </span>
+        {% else %}
+            <span class="h4 pull-left" style="margin: 5px 0;">
+                <em>All-time rank pending</em>
+            </span>
+        {% endif %}
+        {% if GameData.gameRankYear.game_rank != '' %}
+            <span class="h3 pull-right" style="margin: 5px 0;">
+                <span><a href="{{ route('topRated.byYear', {'year': GameData.gameRankYear.release_year}) }}">{{ GameData.gameRankYear.release_year }} Rank</a></span>
+                <strong>{{ GameData.gameRankYear.game_rank }}<small>/100</small></strong>
+            </span>
+        {% endif %}
         {% include 'games/page/infobox-eshop.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N', 'ReleaseDateInfo': ReleaseDateInfo} %}
     </div>
 </div>

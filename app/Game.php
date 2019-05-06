@@ -27,6 +27,11 @@ class Game extends Model
         'boxart_header_image', 'eshop_us_nsuid', 'video_header_text',
     ];
 
+    public function gameRankYear()
+    {
+        return $this->hasOne('App\GameRankYear', 'game_id', 'id');
+    }
+
     public function charts()
     {
         return $this->hasMany('App\ChartsRanking', 'game_id', 'id');
