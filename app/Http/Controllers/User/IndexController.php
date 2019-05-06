@@ -13,6 +13,8 @@ class IndexController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
+        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+
         $bindings = [];
 
         $bindings['TopTitle'] = 'Members dashboard';
@@ -22,21 +24,12 @@ class IndexController extends Controller
 
         $userId = Auth::id();
 
-        $userListService = $serviceContainer->getUserListService();
-        $userListItemService = $serviceContainer->getUserListItemService();
-
-        $ownedList = $userListService->getOwnedListByUser($userId);
-        $wishList = $userListService->getWishListByUser($userId);
-
-        if ($ownedList) {
-            $listId = $ownedList->id;
-            $bindings['OwnedList'] = $ownedList;
-            $bindings['OwnedListItems'] = $userListItemService->getByList($listId);
-        }
-        if ($wishList) {
-            $listId = $wishList->id;
-            $bindings['WishList'] = $wishList;
-            $bindings['WishListItems'] = $userListItemService->getByList($listId);
+        $siteId = Auth::user()->site_id;
+        if ($siteId) {
+            $reviewSite = $serviceReviewSite->find($siteId);
+            if ($reviewSite) {
+                $bindings['ReviewSite'] = $reviewSite;
+            }
         }
 
         return view('user.index', $bindings);

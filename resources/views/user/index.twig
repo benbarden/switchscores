@@ -28,15 +28,45 @@
                 <a href="{{ route('user.settings') }}" class="btn btn-primary btn-lg">Settings</a>
             </div>
             <div id="tabs-reviews">
-                {% if auth_user().site_id != 0 %}
+
+                {% if ReviewSite %}
+
                     <h2>Partner reviews</h2>
+
                     <p>
-                        As one of our privileged review partners, you can submit reviews from your
-                        site for inclusion in our database via the partner reviews feature.
+                        As one of our privileged review partners, your ratings are included
+                        in our site rankings.
                     </p>
-                    <p>
-                        <a href="{{ route('user.partner-reviews.list') }}" class="btn btn-primary btn-lg">Partner reviews</a>
-                    </p>
+
+                    {% if ReviewSite.feed_url == '' %}
+
+                        {# No feed URL - partner should submit their own reviews #}
+                        <p>
+                            However, as we don't have a usable feed for your site, you'll need to
+                            submit reviews manually so we can include them at World of Switch.
+                            You can do this using the Partner reviews feature, below.
+                        </p>
+                        <p>
+                            <a href="{{ route('user.partner-reviews.list') }}" class="btn btn-primary btn-lg">Partner reviews</a>
+                        </p>
+
+                    {% else %}
+
+                        {# We have a feed URL - no need to submit anything (yet) #}
+                        <p>
+                            We're importing reviews from your feed at the URL:
+                            <strong><a href="{{ ReviewSite.feed_url }}" target="_blank">{{ ReviewSite.feed_url }}</a></strong>
+                        </p>
+                        <p>
+                            Your reviews usually appear on World of Switch within a day or two of them
+                            coming through in your feed. You don't need to do anything else.
+                        </p>
+                        <p>
+                            Please contact us if your feed URL changes.
+                        </p>
+
+                    {% endif %}
+
                     <h2>Unranked games - We need your help!</h2>
                     <p>
                         Games need to have 3 reviews to be ranked. As a review partner,
