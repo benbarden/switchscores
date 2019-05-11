@@ -99,101 +99,41 @@ class EshopEuropeUpdateGameData extends Command
             $serviceUpdateGameData->setGame($game);
             $serviceUpdateGameData->resetLogMessages();
 
-            // UPDATES: Nintendo page URL
-            $serviceUpdateGameData->updateNintendoPageUrl();
-            if ($serviceUpdateGameData->getLogMessageInfo()) {
-                $this->info($serviceUpdateGameData->getLogMessageInfo());
-            }
-            $serviceUpdateGameData->resetLogMessages();
+            // STORE METHOD NAMES FOR LOOPING LATER
+            $updateGameDataMethods = [
+                'updateNintendoPageUrl',
+                'updateNoOfPlayers',
+                'updatePublisher',
+                'updatePrice',
+            ];
 
-            // UPDATES: No of players
-            $serviceUpdateGameData->updateNoOfPlayers();
-            if ($serviceUpdateGameData->getLogMessageWarning()) {
-                $this->warn($serviceUpdateGameData->getLogMessageWarning());
-            } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
-                $this->info($serviceUpdateGameData->getLogMessageInfo());
+            // UPDATES
+            foreach ($updateGameDataMethods as $method) {
+
+                call_user_func([$serviceUpdateGameData, $method]);
+
+                if ($serviceUpdateGameData->getLogMessageError()) {
+
+                    $this->error($serviceUpdateGameData->getLogMessageError());
+
+                } elseif ($serviceUpdateGameData->getLogMessageWarning()) {
+
+                    $this->warn($serviceUpdateGameData->getLogMessageWarning());
+
+                } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
+
+                    $this->info($serviceUpdateGameData->getLogMessageInfo());
+
+                }
+
+                $serviceUpdateGameData->resetLogMessages();
+
             }
-            $serviceUpdateGameData->resetLogMessages();
 
             // ***************************************************** //
 
-            $eshopPublisher = $eshopItem->publisher;
             $eshopReleaseDateRaw = $eshopItem->pretty_date_s;
             $eshopGenreList = $eshopItem->pretty_game_categories_txt;
-            $eshopPriceLowest = $eshopItem->price_lowest_f;
-            $eshopPriceDiscount = $eshopItem->price_discount_percentage_f;
-
-            if (strtoupper($eshopPublisher) == $eshopPublisher) {
-                // It's all uppercase, so make it title case
-                $eshopPublisher = ucwords(strtolower($eshopPublisher));
-            } else {
-                // Leave it alone
-            }
-
-            // *** FIELD UPDATES:
-            // Publisher
-            if ($game->gamePublishers()->count() == 0) {
-                // Only proceed if new publisher db entries do not exist
-                if ($game->publisher == null) {
-                    // Not set, so let's update it
-                    $this->info($gameTitle.' - no publisher. '.
-                        'Expected: '.$eshopPublisher.' - Updating.');
-                    $game->publisher = $eshopPublisher;
-                    $saveChanges = true;
-                    $showSplitter = true;
-                } elseif ($game->publisher != $eshopPublisher) {
-                    // Different
-                    $this->warn($gameTitle.' - different publisher. '.
-                        'Game data: '.$game->publisher.' - '.
-                        'Expected: '.$eshopPublisher);
-                    $showSplitter = true;
-                } else {
-                    // Same value, nothing to do
-                }
-            }
-
-            // *** FIELD UPDATES:
-            // Price
-            if ($eshopPriceLowest < 0) {
-
-                // Skip negative prices. This is an error in the API!
-                $this->error($gameTitle.' - Price is negative - skipping. '.
-                    'Price: '.$eshopPriceLowest);
-                $showSplitter = true;
-
-            } elseif ($eshopPriceDiscount != '0.0') {
-
-                // Skip discounts. For most games, we'll do this silently so as to save log noise.
-                // If there's no price set, we'll mention it.
-                if ($game->price_eshop == null) {
-                    $this->info($gameTitle.' - Price is discounted - skipping. '.
-                        'Price: '.$eshopPriceLowest.'; Discount: '.$eshopPriceDiscount);
-                    $showSplitter = true;
-                }
-
-            } elseif ($game->price_eshop == null) {
-
-                // Not set, so let's update it
-                $this->info($gameTitle.' - no price set. '.
-                    'Expected: '.$eshopPriceLowest.' - Updating.');
-                $game->price_eshop = $eshopPriceLowest;
-                $saveChanges = true;
-                $showSplitter = true;
-
-            } elseif ($game->price_eshop != $eshopPriceLowest) {
-
-                // Different
-                $this->warn($gameTitle.' - different price. '.
-                    'Game data: '.$game->price_eshop.' - '.
-                    'Expected: '.$eshopPriceLowest);
-
-                $showSplitter = true;
-
-            } else {
-
-                // Same value, nothing to do
-
-            }
 
             // *** FIELD UPDATES:
             // European release date

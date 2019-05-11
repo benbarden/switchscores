@@ -158,4 +158,80 @@ class UpdateGameData
             // Same value, nothing to do
         }
     }
+
+    public function updatePublisher()
+    {
+        $gameTitle = $this->game->title;
+        $eshopPublisher = $this->eshopItem->publisher;
+
+        if (strtoupper($eshopPublisher) == $eshopPublisher) {
+            // It's all uppercase, so make it title case
+            $eshopPublisher = ucwords(strtolower($eshopPublisher));
+        } else {
+            // Leave it alone
+        }
+
+        if ($this->game->gamePublishers()->count() == 0) {
+            // Only proceed if new publisher db entries do not exist
+            if ($this->game->publisher == null) {
+                // Not set, so let's update it
+                $this->logMessageInfo = $gameTitle.' - no publisher. '.
+                    'Expected: '.$eshopPublisher.' - Updating.';
+                $this->game->publisher = $eshopPublisher;
+                $this->hasGameChanged = true;
+            } elseif ($this->game->publisher != $eshopPublisher) {
+                // Different
+                $this->logMessageWarning = $gameTitle.' - different publisher. '.
+                    'Game data: '.$this->game->publisher.' - '.
+                    'Expected: '.$eshopPublisher;
+            } else {
+                // Same value, nothing to do
+            }
+        }
+    }
+
+    public function updatePrice()
+    {
+        $gameTitle = $this->game->title;
+        $eshopPriceLowest = $this->eshopItem->price_lowest_f;
+        $eshopPriceDiscount = $this->eshopItem->price_discount_percentage_f;
+
+        if ($eshopPriceLowest < 0) {
+
+            // Skip negative prices. This is an error in the API!
+            $this->logMessageError = $gameTitle.' - Price is negative - skipping. '.
+                'Price: '.$eshopPriceLowest;
+
+        } elseif ($eshopPriceDiscount != '0.0') {
+
+            // Skip discounts. For most games, we'll do this silently so as to save log noise.
+            // If there's no price set, we'll mention it.
+            if ($this->game->price_eshop == null) {
+                $this->logMessageInfo = $gameTitle.' - Price is discounted - skipping. '.
+                    'Price: '.$eshopPriceLowest.'; Discount: '.$eshopPriceDiscount;
+            }
+
+        } elseif ($this->game->price_eshop == null) {
+
+            // Not set, so let's update it
+            $this->logMessageInfo = $gameTitle.' - no price set. '.
+                'Expected: '.$eshopPriceLowest.' - Updating.';
+            $this->game->price_eshop = $eshopPriceLowest;
+            $this->hasGameChanged = true;
+
+        } elseif ($this->game->price_eshop != $eshopPriceLowest) {
+
+            // Different
+            $this->logMessageInfo = $gameTitle.' - different price. '.
+                'Game data: '.$this->game->price_eshop.' - '.
+                'Expected: '.$eshopPriceLowest.' - Updating.';
+            $this->game->price_eshop = $eshopPriceLowest;
+            $this->hasGameChanged = true;
+
+        } else {
+
+            // Same value, nothing to do
+
+        }
+    }
 }
