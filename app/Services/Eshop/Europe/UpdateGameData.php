@@ -144,11 +144,14 @@ class UpdateGameData
         }
 
         if ($gamePlayers == null) {
-            // Not set, so let's update it
-            $this->logMessageInfo = $gameTitle.' - no player info. '.
-                'Expected: '.$expectedPlayers.' - Updating.';
-            $this->game->players = $expectedPlayers;
-            $this->hasGameChanged = true;
+            // Check there's actually something to update
+            if ($expectedPlayers != "") {
+                // Not set, so let's update it
+                $this->logMessageInfo = $gameTitle.' - no player info. '.
+                    'Expected: '.$expectedPlayers.' - Updating.';
+                $this->game->players = $expectedPlayers;
+                $this->hasGameChanged = true;
+            }
         } elseif ($gamePlayers != $expectedPlayers) {
             // Different
             $this->logMessageWarning = $gameTitle.' - different player info. '.
