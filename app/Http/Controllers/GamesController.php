@@ -284,6 +284,8 @@ class GamesController extends Controller
 
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
 
+        $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
+
         // Total rank count
         $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();
 
