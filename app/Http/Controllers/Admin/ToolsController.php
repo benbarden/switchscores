@@ -43,6 +43,10 @@ class ToolsController extends Controller
                 'desc' => 'Processes feed items (games) that are marked as OK to update',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0320',
+                'relatedLink' => [
+                    'url' => route('admin.feed-items.games.list'),
+                    'text' => 'Feed Items - Games'
+                ],
             ],
             /* *** eShop *** */
             'EshopEuropeImportData' => [
@@ -61,6 +65,7 @@ class ToolsController extends Controller
                 'desc' => 'Attempts to link data from the European eShop to games in the WOS database',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0420',
+                'nextStep' => 'EshopEuropeUpdateGameData',
             ],
             'EshopEuropeUpdateGameData' => [
                 'command' => 'EshopEuropeUpdateGameData',
@@ -69,6 +74,7 @@ class ToolsController extends Controller
                 'desc' => 'Updates data for games linked to eShop Europe data records',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0422',
+                'nextStep' => 'EshopEuropeDownloadPackshots',
             ],
             'EshopEuropeDownloadPackshots' => [
                 'command' => 'EshopEuropeDownloadPackshots',
