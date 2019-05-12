@@ -1,0 +1,80 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<p>
+    This page lists all of the reviews we've imported for your site, along with the date of each
+    review, and the rating. If anything is wrong, let us know.
+</p>
+
+{% if ReviewLinks.count > 0 %}
+    <table class="table table-striped data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-left">Game</th>
+                <th class="text-left">Site</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Link</th>
+                <th class="text-center">Rating</th>
+                <th class="text-center">Original</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReviewLinks %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    </td>
+                    <td class="text-left">
+                        {{ item.site.name }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.review_date }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ item.url }}" target="_blank">View</a>
+                    </td>
+                    <td class="text-center">
+                        {{ item.rating_normalised }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.rating_original != item.rating_normalised %}
+                            {{ item.rating_original }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No review links found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false },
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

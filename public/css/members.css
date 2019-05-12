@@ -32,3 +32,14 @@ h6, .h6 {font-size: 14px;}
 
 .ui-widget-content a {color: #337ab7;}
 .ui-widget-content a.btn {color: #ffffff;}
+
+.member-dashboard h2 {
+    background: #c7ddef;
+    color: #000000;
+    font-size: 24px;
+    padding: 5px;
+}
+
+.member-dashboard table thead tr th {
+    background: #dedede;
+}

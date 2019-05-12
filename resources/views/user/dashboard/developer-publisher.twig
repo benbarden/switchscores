@@ -1,0 +1,30 @@
+<div class="row member-dashboard">
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Coming soon</h2>
+        <p>
+            We're in the early stages of building a dedicated dashboard for
+            Switch game developers and publishers. Check back soon for more!
+        </p>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/developer-publisher-info.twig' %}
+
+        <h2>Member tools</h2>
+        {% include 'modules/user/dashboard/games-collection-button.twig' %}
+        {% include 'modules/user/dashboard/settings-button.twig' %}
+        {% include 'modules/user/dashboard/quick-reviews-button.twig' with {'siteRole': 'developer-publisher'} %}
+
+    </div>
+
+</div>

@@ -1,0 +1,26 @@
+<h2>Submitting reviews</h2>
+
+{% if ReviewSite.feed_url == '' %}
+
+    {# No feed URL - partner should submit their own reviews #}
+    <p>
+        <strong>Currently, we don't have a feed URL for your site</strong>.
+        You'll need to submit your reviews manually using the Partner reviews feature.
+    </p>
+    <p>
+        <a href="{{ route('user.partner-reviews.list') }}" class="btn btn-primary btn-md">Partner reviews</a>
+    </p>
+
+{% else %}
+
+    {# We have a feed URL - no need to submit anything (yet) #}
+    <p>
+        <strong>We're importing reviews from your feed:</strong>
+        <br>
+        <a href="{{ ReviewSite.feed_url }}" target="_blank">{{ ReviewSite.feed_url }}</a>
+    </p>
+    <p>
+        Reviews usually appear on World of Switch within 24-48 hours. You don't need to do anything else.
+    </p>
+
+{% endif %}

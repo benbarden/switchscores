@@ -1,0 +1,29 @@
+<h2>Score distribution</h2>
+<table class="table table-condensed table-responsive">
+    <thead>
+    <tr>
+        <th class="text-center">Score</th>
+        <th class="text-center">Review count</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key, value in ScoreDistribution %}
+        <tr>
+            <td class="text-center">
+                {{ key }}
+            </td>
+            <td class="text-center">
+                {{ value }}
+            </td>
+            <td class="text-left col-sm-12 col-md-5">
+                {% set TopScoreCount = MostUsedScore['topScoreCount'] %}
+                {% if TopScoreCount > 0 %}
+                    {% set BarWidth = (value/TopScoreCount)*100 %}
+                    <div style="background: #009; width: {{ BarWidth }}%;">&nbsp;</div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

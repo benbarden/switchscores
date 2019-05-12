@@ -1,0 +1,44 @@
+<h2>Your recent reviews</h2>
+{% if SiteReviewsLatest %}
+    <p>
+        These are the reviews we've recently imported for your site.
+        <a href="{{ route('user.review-link.landing') }}">View all</a>
+    </p>
+    {% if ReviewSite.rating_scale != 10 %}
+        <p>
+            <small>
+                As your site does not rank games out of 10, we have converted all ratings to
+                the equivalent score out of 10.
+            </small>
+        </p>
+    {% endif %}
+    <table class="table table-condensed table-responsive">
+        <thead>
+        <tr>
+            <th class="text-left">Game</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Link</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in SiteReviewsLatest %}
+            <tr>
+                <td class="text-left">
+                    <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                    <br><small>Posted: {{ item.review_date }}</small>
+                </td>
+                <td class="text-center">{{ item.rating_normalised }}</td>
+                <td class="text-center">
+                    <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
+                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+<p>
+    We have not yet imported any reviews for your site.
+</p>
+{% endif %}

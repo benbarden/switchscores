@@ -1,0 +1,29 @@
+<div class="row member-dashboard">
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/review-partner.twig' %}
+        {% include 'modules/user/dashboard/review-partner-recent.twig' %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/unranked-games.twig' %}
+        {% include 'modules/review-site/score-distribution.twig' with {'ScoreDistribution': ScoreDistribution} %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/review-site/infobox.twig' with {'SourcePage': 'member-dashboard'} %}
+        {% include 'modules/user/dashboard/review-partner-info.twig' %}
+
+        <h2>Member tools</h2>
+        {% include 'modules/user/dashboard/games-collection-button.twig' %}
+        {% include 'modules/user/dashboard/settings-button.twig' %}
+        {% include 'modules/user/dashboard/quick-reviews-button.twig' with {'siteRole': 'review-partner'} %}
+
+    </div>
+
+</div>

@@ -1,0 +1,31 @@
+<h2>Quick user reviews</h2>
+<p>
+    Post a quick review directly to World of Switch. Currently, these are not included as part of our
+    game rankings. Quick reviews are a handy way to show other members what you thought of a game.
+</p>
+
+{% if siteRole == 'review-partner' %}
+    <p>
+        <strong>
+            If you want to link to a review from your own site, use partner reviews instead.
+        </strong>
+    </p>
+{% elseif siteRole == 'developer-publisher' %}
+    <p>
+        <strong>
+            Please don't submit reviews of your own games - thank you :)
+        </strong>
+    </p>
+{% else %}
+    <p>
+        <strong>Got a website with Switch reviews?</strong>
+        You might be better off with our partner reviews feature, as you can submit
+        a link and a score to be included in our site rankings.
+        Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+        more details.
+    </p>
+{% endif %}
+
+<p>
+    <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-md">Quick reviews</a>
+</p>

@@ -1,131 +1,26 @@
 {% extends 'theme/wos/member/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': 'Dashboard'}] %}
-
 {% block page_inner %}
 
-    <div class="row">
+    <h2>Welcome {{ auth_user().display_name }}</h2>
+    <p>
+        Got a question? Need help? Tweet us via
+        <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
+        You can also follow us for the latest updates.
+    </p>
 
-        <div id="tabs">
-            <ul>
-                <li><a href="#tabs-welcome">Welcome</a></li>
-                <li><a href="#tabs-reviews">Reviews</a></li>
-                {% if auth_user().developer_id != 0 %}
-                    <li><a href="#tabs-developers">Developers</a></li>
-                {% endif %}
-                {% if auth_user().publisher_id != 0 %}
-                    <li><a href="#tabs-publishers">Publishers</a></li>
-                {% endif %}
-            </ul>
-            <div id="tabs-welcome">
-                <h2>Welcome {{ auth_user().display_name }}</h2>
-                <p>
-                    Got a question? Need help? Tweet us via
-                    <a href="http://twitter.com/worldofswitch" target="_blank">@worldofswitch</a>.
-                    You can also follow us for the latest updates.
-                </p>
-                <a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-lg">Games collection</a>
-                <a href="{{ route('user.settings') }}" class="btn btn-primary btn-lg">Settings</a>
-            </div>
-            <div id="tabs-reviews">
+    {% if SiteRole == 'review-partner' %}
 
-                {% if ReviewSite %}
+        {% include 'user/dashboard/review-partner.twig' with {'AuthUser': auth_user(), 'ReviewSite': ReviewSite, 'ScoreDistribution': ScoreDistribution} %}
 
-                    <h2>Partner reviews</h2>
+    {% elseif SiteRole == 'developer-publisher' %}
 
-                    <p>
-                        As one of our privileged review partners, your ratings are included
-                        in our site rankings.
-                    </p>
+        {% include 'user/dashboard/developer-publisher.twig' with {'AuthUser': auth_user()} %}
 
-                    {% if ReviewSite.feed_url == '' %}
+    {% else %}
 
-                        {# No feed URL - partner should submit their own reviews #}
-                        <p>
-                            However, as we don't have a usable feed for your site, you'll need to
-                            submit reviews manually so we can include them at World of Switch.
-                            You can do this using the Partner reviews feature, below.
-                        </p>
-                        <p>
-                            <a href="{{ route('user.partner-reviews.list') }}" class="btn btn-primary btn-lg">Partner reviews</a>
-                        </p>
+        {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
 
-                    {% else %}
-
-                        {# We have a feed URL - no need to submit anything (yet) #}
-                        <p>
-                            We're importing reviews from your feed at the URL:
-                            <strong><a href="{{ ReviewSite.feed_url }}" target="_blank">{{ ReviewSite.feed_url }}</a></strong>
-                        </p>
-                        <p>
-                            Your reviews usually appear on World of Switch within a day or two of them
-                            coming through in your feed. You don't need to do anything else.
-                        </p>
-                        <p>
-                            Please contact us if your feed URL changes.
-                        </p>
-
-                    {% endif %}
-
-                    <h2>Unranked games - We need your help!</h2>
-                    <p>
-                        Games need to have 3 reviews to be ranked. As a review partner,
-                        you can help to get more of our database ranked.
-                    </p>
-                    <p>
-                        <a href="{{ route('user.review-partner.unranked.landing') }}" class="btn btn-primary btn-lg">Unranked games</a>
-                    </p>
-                    <h2>Quick user reviews</h2>
-                    <p>
-                        You can also submit a quick user review directly to the site.
-                        <br>
-                        <strong>If you want to submit a review posted on your own site,
-                        use partner reviews instead</strong>.
-                    </p>
-                    <p>
-                        <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-lg">Quick user reviews</a>
-                    </p>
-                {% else %}
-                    <h2>Quick user reviews</h2>
-                    <p>
-                        Write a quick review of any Switch game on the site.
-                    </p>
-                    <p>
-                        <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-lg">Quick user reviews</a>
-                    </p>
-                    <p>
-                        <strong>Got a website with Switch reviews?</strong>
-                        You might be better off with our partner reviews feature, as you can submit
-                        a link and a score to be included in our site rankings.
-                        Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
-                        more details.
-                    </p>
-                {% endif %}
-            </div>
-            {% if auth_user().developer_id != 0 %}
-            <div id="tabs-developers">
-                <h2>Developer dashboard: {{ auth_user().developer.name }}</h2>
-                <p>
-                    We're in the early stages of building a dedicated dashboard for
-                    Switch game developers. Check back soon for more!
-                </p>
-            </div>
-            {% endif %}
-            {% if auth_user().publisher_id != 0 %}
-            <div id="tabs-publishers">
-                <h2>Publisher dashboard: {{ auth_user().publisher.name }}</h2>
-                <p>
-                    We're in the early stages of building a dedicated dashboard for
-                    Switch game publishers. Check back soon for more!
-                </p>
-            </div>
-            {% endif %}
-        </div>
-
-    </div>
-
-<script>
-    $('#tabs').tabs();
-</script>
+    {% endif %}
 
 {% endblock page_inner %}

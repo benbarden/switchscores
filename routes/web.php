@@ -134,6 +134,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/review-partner/unranked', 'User\ReviewPartnerUnrankedController@landing')->name('user.review-partner.unranked.landing');
     Route::get('/user/review-partner/unranked/{mode}/{filter}', 'User\ReviewPartnerUnrankedController@showList')->name('user.review-partner.unranked.list');
 
+    // Review partners: Review links
+    Route::get('/user/review-link/{report?}', 'User\ReviewLinkController@landing')->name('user.review-link.landing');
+
 });
 
 /* Admin */

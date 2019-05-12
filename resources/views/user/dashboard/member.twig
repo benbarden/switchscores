@@ -1,0 +1,21 @@
+<div class="row member-dashboard">
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/games-collection-member.twig' %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/quick-reviews-member.twig' with {'siteRole': 'member'} %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% include 'modules/user/dashboard/settings-member.twig' %}
+
+    </div>
+
+</div>

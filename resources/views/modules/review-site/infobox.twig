@@ -1,0 +1,35 @@
+{% if SourcePage == 'member-dashboard' %}
+    <h2>Infobox</h2>
+{% endif %}
+<table class="table table-condensed table-responsive">
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Site URL</span>
+        </td>
+        <td>
+            <a href="{{ ReviewSite.url }}" target="_blank">{{ ReviewSite.url }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Review count</span>
+        </td>
+        <td>{{ ReviewCount }}</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Average score</span>
+        </td>
+        <td>{{ ReviewAvg }}</td>
+    </tr>
+    {% if SourcePage == 'member-dashboard' %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">WOS profile page</span>
+            </td>
+            <td>
+                <a href="{{ route('reviews.site', {'linkTitle': ReviewSite.link_title}) }}" target="_blank">Click to view</a>
+            </td>
+        </tr>
+    {% endif %}
+</table>
