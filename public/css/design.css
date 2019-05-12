@@ -9,7 +9,7 @@ body {background: url('../img/background.jpg') fixed center bottom repeat-x;}
 
 /* Typography */
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-weight: 400;
 }
 h1, h2, h3, h4, h5, h6,
@@ -64,5 +64,5 @@ blockquote {
 .game-rating span {display: block; font-size: 12px; text-transform: uppercase; padding: 5px; margin: 0 -5px; background: #f5f5f5;}
 
 /* Blog */
-#wos-blog {font-size: 15px; line-height: 1.4em;}
+#wos-blog {font-size: 15px; line-height: 1.6em;}
 #wos-blog p, #wos-blog ul, #wos-blog ol, #wos-blog img {margin-bottom: 20px;}
