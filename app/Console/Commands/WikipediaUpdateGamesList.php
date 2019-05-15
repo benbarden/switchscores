@@ -234,6 +234,10 @@ class WikipediaUpdateGamesList extends Command
 
                 }
 
+                // Recreate objects each time to avoid issues
+                $gameChangeHistoryDirector = new GameChangeHistoryDirector();
+                $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
+                
                 // Game change history
                 $gameChangeHistoryBuilder->reset();
                 $gameChangeHistoryBuilder->setGame($game);
