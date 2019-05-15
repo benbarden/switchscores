@@ -15,6 +15,7 @@ class IndexController extends Controller
 
         $serviceReviewSite = $serviceContainer->getReviewSiteService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceCollection = $serviceContainer->getUserGamesCollectionService();
 
         $bindings = [];
 
@@ -27,6 +28,8 @@ class IndexController extends Controller
         $authUser = Auth::user();
 
         $onPageTitle = 'Member dashboard';
+
+        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
         $siteId = $authUser->site_id;
         if ($siteId) {

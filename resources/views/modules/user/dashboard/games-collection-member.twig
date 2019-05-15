@@ -1,7 +1,5 @@
 <h2>Games collection</h2>
 
-<p>
-    Add games that you own to your collection.
-</p>
+{% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
 
-<a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-md">Games collection</a>
+<a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-md">Manage collection</a>
