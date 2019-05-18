@@ -104,15 +104,6 @@ class IndexController extends Controller
         $bindings['OldPublisherToClearCount'] = $serviceGamePublisher->countOldPublishersToClear();
 
 
-        // Action lists (to be replaced)
-        $actionListNintendoUrlNoPackshotCount = $serviceGame->getActionListNintendoUrlNoPackshots($regionCode);
-        $actionListRecentNoNintendoUrlCount = $serviceGame->getActionListRecentNoNintendoUrl($regionCode);
-        $actionListUpcomingNoNintendoUrlCount = $serviceGame->getActionListUpcomingNoNintendoUrl($regionCode);
-        $bindings['ActionListNintendoUrlNoPackshotsCount'] = count($actionListNintendoUrlNoPackshotCount);
-        $bindings['ActionListRecentNoNintendoUrlCount'] = count($actionListRecentNoNintendoUrlCount);
-        $bindings['ActionListUpcomingNoNintendoUrlCount'] = count($actionListUpcomingNoNintendoUrlCount);
-
-
         // Missing data - others
         $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);

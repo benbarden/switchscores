@@ -16,7 +16,6 @@
         {% endfor %}
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
-        formVals['nintendo_page_url'] = "{{ GameData.nintendo_page_url }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
         formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
@@ -46,7 +45,6 @@
         {% endfor %}
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
-        formVals['nintendo_page_url'] = "{{ old('nintendo_page_url') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
         formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
@@ -79,7 +77,6 @@
     {% endfor %}
     // *** eShop *** //
     $('#eshop_europe_fs_id').val(formVals['eshop_europe_fs_id']);
-    $('#nintendo_page_url').val(formVals['nintendo_page_url']);
     $('#price_eshop').val(formVals['price_eshop']);
     $('#players').val(formVals['players']);
     $('#boxart_square_url').val(formVals['boxart_square_url']);

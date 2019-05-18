@@ -27,7 +27,6 @@ class GameService
      * @param null $mediaFolder
      * @param null $videoUrl
      * @param null $boxartSquareUrl
-     * @param null $nintendoPageUrl
      * @param null $eshopEuropeFsId
      * @param null $boxartHeaderImage
      * @param null $videoHeaderText
@@ -36,7 +35,7 @@ class GameService
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
+        $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
     {
@@ -53,7 +52,6 @@ class GameService
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
             'boxart_square_url' => $boxartSquareUrl,
-            'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
             'video_header_text' => $videoHeaderText,
@@ -64,7 +62,7 @@ class GameService
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
-        $boxartSquareUrl = null, $nintendoPageUrl = null, $eshopEuropeFsId = null,
+        $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
     {
@@ -80,7 +78,6 @@ class GameService
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
             'boxart_square_url' => $boxartSquareUrl,
-            'nintendo_page_url' => $nintendoPageUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
             'video_header_text' => $videoHeaderText,
@@ -292,76 +289,18 @@ class GameService
      * @param int $limit
      * @return mixed
      */
-    public function getActionListRecentNoNintendoUrl($region, $limit = null)
+    public function getEshopEuropeNoPackshots($region, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->join('eshop_europe_games', 'games.eshop_europe_fs_id', '=', 'eshop_europe_games.fs_id')
             ->select('games.*',
                 'game_release_dates.release_date',
                 'game_release_dates.is_released',
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->whereNull('games.nintendo_page_url');
-
-        $games = $games->orderBy('game_release_dates.release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @param $region
-     * @param int $limit
-     * @return mixed
-     */
-    public function getActionListUpcomingNoNintendoUrl($region, $limit = null)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 0)
-            ->whereNull('games.nintendo_page_url')
-            ->whereNotNull('game_release_dates.release_date');
-
-        $games = $games->orderBy('game_release_dates.release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @param $region
-     * @param int $limit
-     * @return mixed
-     */
-    public function getActionListNintendoUrlNoPackshots($region, $limit = null)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->whereNotNull('games.nintendo_page_url')
+            ->whereNotNull('games.eshop_europe_fs_id')
             ->where(function($q) {
                 $q->whereNull('boxart_square_url')->orWhereNull('boxart_header_image');
             });
@@ -405,7 +344,7 @@ class GameService
     public function getByNullField($field, $region)
     {
         $allowedFields = [
-            'video_url', 'nintendo_page_url', 'eshop_europe_fs_id'
+            'video_url', 'eshop_europe_fs_id'
         ];
 
         if (!in_array($field, $allowedFields)) {
@@ -444,15 +383,6 @@ class GameService
                 // Shouldn't be needed anymore as we can release via a quick AJAX link.
                 //$gameList = $this->getActionListGamesForRelease($regionCode);
                 break;
-            case 'action-list-recent-no-nintendo-url':
-                $gameList = $this->getActionListRecentNoNintendoUrl($regionCode);
-                break;
-            case 'action-list-upcoming-no-nintendo-url':
-                $gameList = $this->getActionListUpcomingNoNintendoUrl($regionCode);
-                break;
-            case 'action-list-nintendo-url-no-packshots':
-                $gameList = $this->getActionListNintendoUrlNoPackshots($regionCode);
-                break;
             case 'no-boxart':
                 $gameList = $this->getWithoutBoxart($regionCode);
                 break;
@@ -461,9 +391,6 @@ class GameService
                 break;
             case 'no-video-url':
                 $gameList = $this->getByNullField('video_url', $regionCode);
-                break;
-            case 'no-nintendo-page-url':
-                $gameList = $this->getByNullField('nintendo_page_url', $regionCode);
                 break;
             case 'no-amazon-uk-link':
                 $gameList = $this->getWithoutAmazonUkLink();

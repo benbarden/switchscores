@@ -18,7 +18,7 @@ class DirectorTest extends TestCase
         $params = [
             'release_date_eu' => '2019-12-05',
             'upcoming_date_eu' => '2019-XX',
-            'is_released_eu' => '1'
+            'is_released_eu' => 'on' // we are expecting a checkbox value
         ];
         $releaseYear = '2019';
 
@@ -33,7 +33,7 @@ class DirectorTest extends TestCase
         $this->assertEquals($gameId, $gameReleaseDate->game_id);
         $this->assertEquals($params['release_date_eu'], $gameReleaseDate->release_date);
         $this->assertEquals($params['upcoming_date_eu'], $gameReleaseDate->upcoming_date);
-        $this->assertEquals($params['is_released_eu'], $gameReleaseDate->is_released);
+        $this->assertEquals('1', $gameReleaseDate->is_released);
         $this->assertEquals($releaseYear, $gameReleaseDate->release_year);
     }
 
@@ -50,7 +50,7 @@ class DirectorTest extends TestCase
         $params = [
             'release_date_us' => '2019-02-10',
             'upcoming_date_us' => '2019-02-10',
-            'is_released_us' => '1'
+            'is_released_us' => 'on'
         ];
         $releaseYear = '2019';
 

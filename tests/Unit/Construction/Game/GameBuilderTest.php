@@ -160,19 +160,6 @@ class GameBuilderTest extends TestCase
         $this->assertEquals($boxartSquareUrl, $game->boxart_square_url);
     }
 
-    public function testNintendoPageUrl()
-    {
-        $title = 'Yoshi';
-        $nintendoPageUrl = 'https://nintendo.co.uk/yoshi-commits-tax-fraud';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setNintendoPageUrl($nintendoPageUrl)
-            ->getGame();
-        $this->assertEquals($nintendoPageUrl, $game->nintendo_page_url);
-    }
-
     public function testEshopEuropeFsId()
     {
         $title = 'Yoshi';

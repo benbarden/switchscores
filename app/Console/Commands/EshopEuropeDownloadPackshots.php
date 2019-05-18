@@ -52,7 +52,7 @@ class EshopEuropeDownloadPackshots extends Command
 
         $this->info('Loading data...');
 
-        $gameList = $gameService->getActionListNintendoUrlNoPackshots('eu');
+        $gameList = $gameService->getEshopEuropeNoPackshots('eu');
 
         if (count($gameList) == 0) {
             $this->warn('No items found; exiting');

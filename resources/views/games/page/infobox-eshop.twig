@@ -60,18 +60,13 @@
             </td>
         </tr>
     {% endif %}
-    {% if GameData.nintendo_page_url %}
+    {% if GameData.eshopEuropeGame.fs_id is not null %}
         <tr>
             <td>
                 <span style="font-weight: bold;">Link to eShop</span>
             </td>
             <td>
-                {% if GameData.eshopEuropeGame.fs_id is null %}
-                    This game may have been removed from the eShop.
-                    The link below might not work.
-                    <br>
-                {% endif %}
-                <a href="{{ LinkHelper.eshopUrl('eu', GameData.nintendo_page_url) }}" target="_blank">Visit eShop page</a>
+                <a href="{{ LinkHelper.eshopUrl('eu', GameData.eshopEuropeGame.url) }}" target="_blank">Visit eShop page</a>
             </td>
         </tr>
     {% endif %}

@@ -109,12 +109,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setNintendoPageUrl($nintendoPageUrl): GameBuilder
-    {
-        $this->game->nintendo_page_url = $nintendoPageUrl;
-        return $this;
-    }
-
     public function setEshopEuropeFsId($eshopEuropeFsId): GameBuilder
     {
         $this->game->eshop_europe_fs_id = $eshopEuropeFsId;

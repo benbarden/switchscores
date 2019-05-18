@@ -108,23 +108,6 @@ class UpdateGameData
         }
     }
 
-    public function updateNintendoPageUrl()
-    {
-        $gameTitle = $this->game->title;
-        $eshopUrl = $this->eshopItem->url;
-
-        if ($this->game->nintendo_page_url == null) {
-            // No URL set, so let's update it
-            $this->logMessageInfo = $gameTitle.' - no existing nintendo_page_url. Updating.';
-            $this->game->nintendo_page_url = $eshopUrl;
-            $this->hasGameChanged = true;
-        } elseif ($this->game->nintendo_page_url != $eshopUrl) {
-            // URL set to something else
-        } else {
-            // It's the same, so nothing to do
-        }
-    }
-
     public function updateNoOfPlayers()
     {
         $gameTitle = $this->game->title;

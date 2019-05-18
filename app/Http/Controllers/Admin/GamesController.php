@@ -97,18 +97,6 @@ class GamesController extends Controller
                     $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
-                case 'action-list-recent-no-nintendo-url':
-                    $gameList = $serviceGame->getActionListRecentNoNintendoUrl($regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'action-list-upcoming-no-nintendo-url':
-                    $gameList = $serviceGame->getActionListUpcomingNoNintendoUrl($regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'action-list-nintendo-url-no-packshots':
-                    $gameList = $serviceGame->getActionListNintendoUrlNoPackshots($regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
                 // Upcoming
                 case 'upcoming':
                     $gameList = $serviceGameReleaseDate->getUpcoming($regionCode);
@@ -150,10 +138,6 @@ class GamesController extends Controller
                     break;
                 case 'no-eshop-europe-link':
                     $gameList = $serviceGame->getByNullField('eshop_europe_fs_id', $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-nintendo-page-url':
-                    $gameList = $serviceGame->getByNullField('nintendo_page_url', $regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-boxart':
@@ -343,7 +327,7 @@ class GamesController extends Controller
                 $request->title, $request->link_title, $request->price_eshop, $request->players,
                 $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
                 $request->media_folder, $request->video_url, $request->boxart_square_url,
-                $request->nintendo_page_url, $request->eshop_europe_fs_id,
+                $request->eshop_europe_fs_id,
                 $request->boxart_header_image, $request->video_header_text
             );
 

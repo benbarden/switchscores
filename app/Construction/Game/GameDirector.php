@@ -68,9 +68,6 @@ class GameDirector
         if (array_key_exists('boxart_square_url', $params)) {
             $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
         }
-        if (array_key_exists('nintendo_page_url', $params)) {
-            $this->builder->setNintendoPageUrl($params['nintendo_page_url']);
-        }
         if (array_key_exists('eshop_europe_fs_id', $params)) {
             $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
         }

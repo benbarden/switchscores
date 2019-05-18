@@ -57,68 +57,6 @@ class UpdateGameDataTest extends TestCase
         $this->assertEquals($gameLinkTitle, $serviceGameItem->link_title);
     }
 
-    public function testNintendoPageUrlNull()
-    {
-        $gameTitle = 'Yoshi\'s Crafted World';
-        $game = new Game;
-        $game->title = $gameTitle;
-
-        $eshopItemUrl = 'https://nintendo.co.uk/abc';
-        $eshopItem = new EshopEuropeGame;
-        $eshopItem->url = $eshopItemUrl;
-
-        $this->serviceUpdateGameData->setGame($game);
-        $this->serviceUpdateGameData->setEshopItem($eshopItem);
-        $this->serviceUpdateGameData->updateNintendoPageUrl();
-
-        $serviceGameItem = $this->serviceUpdateGameData->getGame();
-
-        $this->assertTrue($this->serviceUpdateGameData->hasGameChanged());
-        $this->assertEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
-    }
-
-    public function testNintendoPageUrlSame()
-    {
-        $gameTitle = 'Yoshi\'s Crafted World';
-        $game = new Game;
-        $game->title = $gameTitle;
-
-        $eshopItemUrl = 'https://nintendo.co.uk/abc';
-        $eshopItem = new EshopEuropeGame;
-        $eshopItem->url = $eshopItemUrl;
-        $game->nintendo_page_url = $eshopItemUrl;
-
-        $this->serviceUpdateGameData->setGame($game);
-        $this->serviceUpdateGameData->setEshopItem($eshopItem);
-        $this->serviceUpdateGameData->updateNintendoPageUrl();
-
-        $serviceGameItem = $this->serviceUpdateGameData->getGame();
-
-        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
-        $this->assertEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
-    }
-
-    public function testNintendoPageUrlDifferent()
-    {
-        $gameTitle = 'Yoshi\'s Crafted World';
-        $game = new Game;
-        $game->title = $gameTitle;
-        $game->nintendo_page_url = 'https://nintendo.co.uk/def';
-
-        $eshopItemUrl = 'https://nintendo.co.uk/abc';
-        $eshopItem = new EshopEuropeGame;
-        $eshopItem->url = $eshopItemUrl;
-
-        $this->serviceUpdateGameData->setGame($game);
-        $this->serviceUpdateGameData->setEshopItem($eshopItem);
-        $this->serviceUpdateGameData->updateNintendoPageUrl();
-
-        $serviceGameItem = $this->serviceUpdateGameData->getGame();
-
-        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
-        $this->assertNotEquals($eshopItemUrl, $serviceGameItem->nintendo_page_url);
-    }
-
     public function testUpdateNoOfPlayersNoValuesSet()
     {
         $gameTitle = 'Mario Kart 8 Deluxe';
@@ -134,7 +72,7 @@ class UpdateGameDataTest extends TestCase
 
         $serviceGameItem = $this->serviceUpdateGameData->getGame();
 
-        $this->assertTrue($this->serviceUpdateGameData->hasGameChanged());
+        $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
         $this->assertEquals("", $serviceGameItem->players);
     }
 

@@ -101,7 +101,6 @@ class EshopEuropeUpdateGameData extends Command
 
             // STORE METHOD NAMES FOR LOOPING LATER
             $updateGameDataMethods = [
-                'updateNintendoPageUrl',
                 'updateNoOfPlayers',
                 'updatePublisher',
                 'updatePrice',
