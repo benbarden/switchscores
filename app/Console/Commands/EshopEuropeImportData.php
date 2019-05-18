@@ -41,15 +41,11 @@ class EshopEuropeImportData extends Command
     {
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
-        $this->info('Clearing previous data');
-
-        \DB::statement("TRUNCATE TABLE eshop_europe_games");
-
         $eshopLoader = new LoaderEurope();
 
         try {
 
-            if (\App::environment() == 'localx') {
+            if (\App::environment() == 'local') {
                 $this->info('Loading local data from JSON file');
                 $eshopLoader->loadLocalData('europe-test-1500-games.json');
             } else {
@@ -62,6 +58,13 @@ class EshopEuropeImportData extends Command
             if (!is_array($gameData)) {
                 throw new \Exception('Cannot load game data');
             }
+            $this->info('Successfully loaded game data into temporary storage.');
+
+            // Only clear previous data after passing the load game data check.
+            // We already handle errors for missing fields, so the whole import won't fail
+            // when a new field is added to the feed.
+            $this->info('Clearing previous data...');
+            \DB::statement("TRUNCATE TABLE eshop_europe_games");
 
             $this->info('Importing data...');
             $eshopLoader->importToDb();
