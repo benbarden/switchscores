@@ -189,54 +189,6 @@ class GameService
         return $games;
     }
 
-    private function getListLikeText($region, $likeText)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->where('games.title', 'LIKE', $likeText)
-            ->orderBy('games.title', 'asc');
-        $games = $games->get();
-
-        return $games;
-    }
-
-    public function getListAcaNeoGeo($region)
-    {
-        return $this->getListLikeText($region, 'ACA NeoGeo %');
-    }
-
-    public function getListArcadeArchives($region)
-    {
-        return $this->getListLikeText($region, 'Arcade Archives %');
-    }
-
-    public function getListGolfGames($region)
-    {
-        return $this->getListLikeText($region, '%golf%');
-    }
-
-    public function getListLegoGames($region)
-    {
-        return $this->getListLikeText($region, 'Lego %');
-    }
-
-    public function getListPinballGames($region)
-    {
-        return $this->getListLikeText($region, '%pinball%');
-    }
-
-    public function getListMahjongGames($region)
-    {
-        return $this->getListLikeText($region, '%mahjong%');
-    }
-
     // Used for admin only
     public function getByDeveloper($developer)
     {
