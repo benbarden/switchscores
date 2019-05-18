@@ -103,6 +103,7 @@ class LoaderEurope
         'wishlist_email_banner460w_image_url_s',
         'wishlist_email_banner640w_image_url_s',
         'labo_b',
+        'nintendo_switch_online_exclusive_b',
     ];
 
     /**
@@ -206,6 +207,7 @@ class LoaderEurope
             'download_play',
             'dlc_shown_b',
             'labo_b',
+            'nintendo_switch_online_exclusive_b',
         ];
 
         $jsonFields = [

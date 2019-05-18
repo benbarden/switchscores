@@ -8,7 +8,7 @@
 
     <div class="col-md-12">
         <div class="alert alert-warning" role="alert">
-            Latest site alert:
+            <a href="{{ route('admin.action-lists.site-alert-errors') }}">Latest site alert</a>:
             {{ SiteAlertLatest.created_at|date('d-M-Y @ H:i') }}:
             <strong>{{ SiteAlertLatest.detail }}</strong> - Source: {{ SiteAlertLatest.source }}
         </div>
