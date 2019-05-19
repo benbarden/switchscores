@@ -21,9 +21,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Display name</th>
-                <th class="text-left">Review site</th>
-                <th class="text-left">Developer</th>
-                <th class="text-left">Publisher</th>
+                <th class="text-left">Partner name</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -40,13 +38,18 @@
                         <small>{{ item.email }}</small>
                     </td>
                     <td class="text-left">
-                        {{ item.site.name }}
-                    </td>
-                    <td class="text-left">
-                        {{ item.developer.name }}
-                    </td>
-                    <td class="text-left">
-                        {{ item.publisher.name }}
+                        {% if item.site.name is not null %}
+                            <strong>Review site</strong>
+                            <br>{{ item.site.name }}
+                        {% endif %}
+                        {% if item.developer.name is not null %}
+                            <strong>Developer</strong>
+                            <br>{{ item.developer.name }}
+                        {% endif %}
+                        {% if item.publisher.name is not null %}
+                            <strong>Publisher</strong>
+                            <br>{{ item.publisher.name }}
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {{ item.created_at|date('Y-m-d') }}
