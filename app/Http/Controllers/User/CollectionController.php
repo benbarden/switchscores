@@ -28,6 +28,7 @@ class CollectionController extends Controller
         /* @var $serviceContainer ServiceContainer */
 
         $collectionService = $serviceContainer->getUserGamesCollectionService();
+        $serviceUserReview = $serviceContainer->getReviewUserService();
 
         $bindings = [];
 
@@ -39,6 +40,9 @@ class CollectionController extends Controller
 
         $bindings['CollectionList'] = $collectionService->getByUser($userId);
         $bindings['CollectionStats'] = $collectionService->getStats($userId);
+
+        $userReviewGameIdList = $serviceUserReview->getAllByUserGameIdList($userId);
+        $bindings['UserReviewGameIdList'] = $userReviewGameIdList;
 
         return view('user.collection.index', $bindings);
     }

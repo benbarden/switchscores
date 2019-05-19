@@ -38,7 +38,7 @@
 
     <p>
     {% if auth_user() %}
-        <a href="{{ route('user.reviews.list') }}">Why not submit a quick review</a>?
+        Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">write a quick review</a>?
     {% else %}
         <a href="{{ route('register') }}">Register</a> to add a quick review.
     {% endif %}
@@ -49,7 +49,7 @@
     <p>
         None yet.
         {% if auth_user() %}
-            Why not <a href="{{ route('user.reviews.list') }}">write the first quick review</a>?
+            Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}">write the first quick review</a>?
         {% else %}
             Why not <a href="{{ route('register') }}">register</a> and submit a quick review?
         {% endif %}

@@ -5,6 +5,9 @@
         <tr>
             <th class="text-left">Game</th>
             <th class="text-center">
+                Review
+            </th>
+            <th class="text-center">
                 Players
             </th>
             <th class="text-center">
@@ -32,9 +35,19 @@
         </thead>
         <tbody>
         {% for item in CollectionList %}
+            {% set RowGameId = item.game.id %}
             <tr id="js-collection-row-{{ item.id }}">
                 <td class="text-left">
                     <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                </td>
+                <td class="text-center">
+                    {% if AsRole == 'user' %}
+                        {% if RowGameId in UserReviewGameIdList %}
+                            <em>Added</em>
+                        {% else %}
+                            <a href="{{ route('user.reviews.add', {'gameId': RowGameId}) }}">Add</a>
+                        {% endif %}
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {{ item.game.players }}

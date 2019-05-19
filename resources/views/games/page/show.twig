@@ -16,7 +16,8 @@
     <div class="col-xs-12 col-sm-4 col-md-6">
         {% if auth_user() %}
             <span class="pull-right">
-                <a class="btn btn-default btn-primary btn-xs" href="{{ route('user.collection.add', {'gameId': GameId}) }}">Add to Games collection</a>
+                <a href="{{ route('user.collection.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">Add to Games collection</a>
+                <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">Add a quick review</a>
             </span>
         {% endif %}
     </div>

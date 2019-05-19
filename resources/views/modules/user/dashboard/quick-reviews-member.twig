@@ -1,7 +1,6 @@
-<h2>Quick user reviews</h2>
+<h2>Quick reviews</h2>
 <p>
-    Post a quick review directly to World of Switch. Currently, these are not included as part of our
-    game rankings. Quick reviews are a handy way to show other members what you thought of a game.
+    Tell other members what you think of a game by posting a quick review.
 </p>
 
 {% if siteRole == 'review-partner' %}
@@ -27,5 +26,6 @@
 {% endif %}
 
 <p>
-    <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-md">Quick reviews</a>
+    <a href="{{ route('user.reviews.add') }}" class="btn btn-primary btn-md">Add a quick review</a>
+    <a href="{{ route('user.reviews.list') }}" class="btn btn-primary btn-md">View your reviews</a>
 </p>

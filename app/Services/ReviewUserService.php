@@ -90,6 +90,14 @@ class ReviewUserService
         return $reviewList;
     }
 
+    public function getAllByUserGameIdList($userId)
+    {
+        $reviewList = ReviewUser::where('user_id', $userId)
+            ->orderBy('id', 'desc')
+            ->pluck('game_id');
+        return $reviewList;
+    }
+
     public function getLatestNaturalOrder($limit = 10)
     {
         $reviewList = ReviewUser::orderBy('created_at', 'desc')

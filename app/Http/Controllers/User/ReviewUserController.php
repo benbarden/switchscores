@@ -65,6 +65,11 @@ class ReviewUserController extends Controller
 
         $bindings['QuickRatingList'] = $reviewQuickRatingService->getAll();
 
+        $urlGameId = $request->gameId;
+        if ($urlGameId) {
+            $bindings['UrlGameId'] = $urlGameId;
+        }
+
         return view('user.reviews.add', $bindings);
     }
 
