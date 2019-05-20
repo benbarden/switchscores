@@ -32,6 +32,11 @@ class Game extends Model
         return $this->hasOne('App\GameRankYear', 'game_id', 'id');
     }
 
+    public function gameRankYearMonth()
+    {
+        return $this->hasOne('App\GameRankYearMonth', 'game_id', 'id');
+    }
+
     public function charts()
     {
         return $this->hasMany('App\ChartsRanking', 'game_id', 'id');

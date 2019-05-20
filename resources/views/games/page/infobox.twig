@@ -67,8 +67,10 @@
         </td>
         <td>
             {% for item in GameTags %}
-                <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">{{ item.tag.tag_name }}</a>
-                <br>
+                <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">
+                    <nobr>{{ item.tag.tag_name }}</nobr>
+                </a>
+                {% if not loop.last %}, {% endif %}
             {% endfor %}
         </td>
     </tr>

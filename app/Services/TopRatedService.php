@@ -148,6 +148,7 @@ class TopRatedService
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->select('games.*',
+                'games.id AS game_id',
                 'game_release_dates.release_date',
                 'game_release_dates.is_released',
                 'game_release_dates.upcoming_date',

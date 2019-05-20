@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Services\GameRankUpdateService;
+use App\Services\ServiceContainer;
 
 class UpdateGameRanks extends Command
 {
@@ -39,6 +40,7 @@ class UpdateGameRanks extends Command
      */
     public function handle()
     {
+        // This is only used for all-time ranks
         $serviceGameRankUpdate = resolve('Services\GameRankUpdateService');
         /* @var GameRankUpdateService $serviceGameRankUpdate */
 
@@ -187,6 +189,72 @@ class UpdateGameRanks extends Command
                 $rankCounter++;
 
             }
+        }
+
+        // *** 3. YEAR/MONTH RANK *** //
+
+        \DB::statement("TRUNCATE TABLE game_rank_yearmonth");
+
+        $serviceContainer = new ServiceContainer();
+
+        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
+        $serviceTopRated = $serviceContainer->getTopRatedService();
+
+        $dateList = $serviceGameCalendar->getAllowedDates(false);
+
+        $region = 'eu';
+
+        foreach ($dateList as $date) {
+
+            $dtDate = new \DateTime($date);
+            $dtDateDesc = $dtDate->format('M Y');
+
+            $calendarYear = $dtDate->format('Y');
+            $calendarMonth = $dtDate->format('m');
+
+            $yearMonth = $calendarYear.$calendarMonth;
+
+            $gameRatings = $serviceTopRated->getByMonthWithRanks($region, $calendarYear, $calendarMonth);
+
+            $this->info('Yearmonth ['.$yearMonth.']: checking '.count($gameRatings).' games');
+
+            $rankCounter = 1;
+            $actualRank = 1;
+            $lastRatingAvg = -1;
+            $lastRank = -1;
+
+            foreach ($gameRatings as $game) {
+
+                $gameId = $game->game_id;
+                $ratingAvg = $game->rating_avg;
+
+                if ($lastRatingAvg == -1) {
+                    // First record
+                    $actualRank = $rankCounter;
+                } elseif ($lastRatingAvg == $ratingAvg) {
+                    // Same as previous rank
+                    $actualRank = $lastRank;
+                } else {
+                    // Go to next rank
+                    $actualRank = $rankCounter;
+                }
+
+                $lastRatingAvg = $ratingAvg;
+                $lastRank = $actualRank;
+
+                if ($actualRank > 100) break;
+
+                // Save to year rank table
+                \DB::insert("
+                    INSERT INTO game_rank_yearmonth(release_yearmonth, game_rank, game_id, created_at, updated_at)
+                    VALUES(?, ?, ?, NOW(), NOW())
+                ", [$yearMonth, $actualRank, $gameId]);
+
+                // This is always incremented by 1
+                $rankCounter++;
+
+            }
+
         }
 
     }
