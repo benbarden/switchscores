@@ -73,4 +73,13 @@ class GameChangeHistoryService
             ->get();
         return $itemList;
     }
+
+    public function getByGameId($gameId)
+    {
+        $itemList = GameChangeHistory::
+            where('game_id', $gameId)
+            ->orderBy('id', 'desc')
+            ->get();
+        return $itemList;
+    }
 }

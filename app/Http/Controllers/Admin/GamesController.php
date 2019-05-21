@@ -267,7 +267,8 @@ class GamesController extends Controller
             // Trigger event
             event(new GameCreated($game));
 
-            return redirect('/admin/games/list?lastaction=add&lastgameid='.$gameId);
+            //return redirect('/admin/games/list?lastaction=add&lastgameid='.$gameId);
+            return redirect('/admin/games/detail/'.$gameId);
 
         }
 

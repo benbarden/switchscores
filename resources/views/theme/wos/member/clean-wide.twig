@@ -9,9 +9,14 @@
                 <li><a href="{{ route('user.index') }}">Dashboard</a></li>
                 {% for item in crumbNav %}
                     {% if loop.last %}
-                        <li>{{ item.text }}</li>
+                        {% set crumbClass = ' class="active"' %}
                     {% else %}
-                        <li class="active"><a href="{{ item.url }}">{{ item.text }}</a></li>
+                        {% set crumbClass = '' %}
+                    {% endif %}
+                    {% if item.url %}
+                        <li{{ crumbClass|raw }}><a href="{{ item.url }}">{{ item.text }}</a></li>
+                    {% else %}
+                        <li{{ crumbClass|raw }}>{{ item.text }}</li>
                     {% endif %}
                 {% endfor %}
             </ol>

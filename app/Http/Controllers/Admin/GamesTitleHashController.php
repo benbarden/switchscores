@@ -47,6 +47,8 @@ class GamesTitleHashController extends Controller
         $bindings['TitleHashList'] = $titleHashList;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
+        $bindings['GameId'] = $gameId;
+
         return view('admin.games-title-hash.list', $bindings);
     }
 

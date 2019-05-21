@@ -38,7 +38,7 @@
 
     <p>
     {% if auth_user() %}
-        Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">write a quick review</a>?
+        Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
     {% else %}
         <a href="{{ route('register') }}">Register</a> to add a quick review.
     {% endif %}
