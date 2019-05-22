@@ -41,12 +41,12 @@
 
 {% if LastAction == 'add' and LastGame is not null %}
     <div class="alert alert-warning" role="alert">
-        Successfully added <a href="{{ LinkHelper.gameShow(LastGame) }}" target="_blank">{{ LastGame.title }}</a>.
+        Successfully added <a href="{{ route('admin.games.detail', {'gameId': LastGame.id}) }}" target="_blank">{{ LastGame.title }}</a>.
         <a href="{{ route('admin.games.edit', {'gameId': LastGame.id}) }}?filter={{ ActiveNav }}">Continue editing</a>.
     </div>
 {% elseif LastAction == 'edit' and LastGame is not null %}
     <div class="alert alert-warning" role="alert">
-        Successfully edited <a href="{{ LinkHelper.gameShow(LastGame) }}" target="_blank">{{ LastGame.title }}</a>.
+        Successfully edited <a href="{{ route('admin.games.detail', {'gameId': LastGame.id}) }}" target="_blank">{{ LastGame.title }}</a>.
         <a href="{{ route('admin.games.edit', {'gameId': LastGame.id}) }}?filter={{ ActiveNav }}">Continue editing</a>.
     </div>
 {% endif %}

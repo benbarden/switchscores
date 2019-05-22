@@ -47,9 +47,19 @@ class Game extends Model
         return $this->hasMany('App\GameImage', 'game_id', 'id');
     }
 
+    public function titleHashes()
+    {
+        return $this->hasMany('App\GameTitleHash', 'game_id', 'id');
+    }
+
     public function reviews()
     {
         return $this->hasMany('App\ReviewLink', 'game_id', 'id');
+    }
+
+    public function gameTags()
+    {
+        return $this->hasMany('App\GameTag', 'game_id', 'id');
     }
 
     public function gameGenres()

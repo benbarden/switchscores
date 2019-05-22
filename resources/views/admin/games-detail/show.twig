@@ -33,32 +33,72 @@
                 <td>
                     <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}">Tags</a>
                 </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}" class="h4">tbc</a>
+                <td class="text-center">
+                    {% if GameData.gameTags.count > 0 %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="{{ route('admin.developer.game.list', {'gameId': GameId}) }}">Developers</a>
                 </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.developer.game.list', {'gameId': GameId}) }}" class="h4">tbc</a>
+                <td class="text-center">
+                    {% if GameData.developer != '' %}
+                        <span class="h4" style="color: #ffcc00; font-weight: bold;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                    {% elseif GameData.gameDevelopers.count > 0 %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="{{ route('admin.publisher.game.list', {'gameId': GameId}) }}">Publishers</a>
                 </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.publisher.game.list', {'gameId': GameId}) }}" class="h4">tbc</a>
+                <td class="text-center">
+                    {% if GameData.publisher != '' %}
+                        <span class="h4" style="color: #ffcc00; font-weight: bold;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                    {% elseif GameData.gamePublishers.count > 0 %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}">Hashes</a>
                 </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}" class="h4">tbc</a>
+                <td class="text-center">
+                    {% if GameData.titleHashes.count > 0 %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
                 </td>
             </tr>
         </table>
