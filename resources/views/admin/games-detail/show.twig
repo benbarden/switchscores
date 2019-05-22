@@ -31,7 +31,7 @@
         <table class="table table-condensed table-responsive">
             <tr>
                 <td>
-                    <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}">Tags</a>
+                    <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.gameTags.count > 0 %}
@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.developer.game.list', {'gameId': GameId}) }}">Developers</a>
+                    <a href="{{ route('admin.developer.game.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.developer != '' %}
@@ -67,7 +67,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.publisher.game.list', {'gameId': GameId}) }}">Publishers</a>
+                    <a href="{{ route('admin.publisher.game.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.publisher != '' %}
@@ -87,7 +87,39 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}">Hashes</a>
+                    <strong>Genres</strong>
+                </td>
+                <td class="text-center">
+                    {% if GameData.gameGenres.count > 0 %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Video URL</strong>
+                </td>
+                <td class="text-center">
+                    {% if GameData.video_url != '' %}
+                        <span class="h4" style="color: #009900; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="color: #cc0000; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}"><strong>Hashes</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.titleHashes.count > 0 %}
