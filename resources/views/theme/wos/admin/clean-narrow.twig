@@ -4,23 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2 col-sm-12">
-            {% if crumbNav is defined %}
-            <ol class="breadcrumb">
-                <li><a href="{{ route('admin.index') }}">Admin</a></li>
-                {% for item in crumbNav %}
-                    {% if loop.last %}
-                        {% set crumbClass = ' class="active"' %}
-                    {% else %}
-                        {% set crumbClass = '' %}
-                    {% endif %}
-                    {% if item.url %}
-                        <li{{ crumbClass|raw }}><a href="{{ item.url }}">{{ item.text }}</a></li>
-                    {% else %}
-                        <li{{ crumbClass|raw }}>{{ item.text }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ol>
-            {% endif %}
+            {% include 'theme/wos/admin/breadcrumbs.twig' %}
             <h1>{{ PageTitle }}</h1>
             {% block page_inner %}{% endblock page_inner %}
         </div>

@@ -1,0 +1,13 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<ul>
+    <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
+    <li><a href="{{ route('admin.developer.list') }}">Developers</a></li>
+    <li><a href="{{ route('admin.publisher.list') }}">Publishers</a></li>
+</ul>
+
+{% endblock page_inner %}

@@ -135,7 +135,7 @@ class DeveloperController extends Controller
         // Validation: check for any reason we should not allow the game to be deleted.
         $gameDevelopers = $serviceGameDeveloper->getByDeveloperId($developerId);
         if (count($gameDevelopers) > 0) {
-            $customErrors[] = 'Game is linked to '.count($gameDevelopers).' developer(s)';
+            $customErrors[] = 'Developer is linked to '.count($gameDevelopers).' game(s)';
         }
 
         if ($request->isMethod('post')) {

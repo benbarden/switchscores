@@ -193,13 +193,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
     Route::post('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
 
-    // Reviews: Sites
-    Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
-    Route::get('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
-    Route::post('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
-    Route::get('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
-    Route::post('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
-
     // Reviews: Links
     Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
     Route::post('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
@@ -243,12 +236,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
     Route::post('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
 
-    // Tools
-    Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
-    Route::get('/admin/tools/tool/landing/modular/{commandName}', 'Admin\ToolsController@toolLandingModular')->name('admin.tools.toolLandingModular');
-    Route::get('/admin/tools/tool/process/modular/{commandName}', 'Admin\ToolsController@toolProcessModular')->name('admin.tools.toolProcessModular');
-
-    // News
+    // Users
     Route::get('/admin/user/list', 'Admin\UserController@showList')->name('admin.user.list');
     Route::get('/admin/user/view/{userId}', 'Admin\UserController@showUser')->name('admin.user.view');
     Route::get('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
@@ -263,7 +251,17 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tag/game/{gameId}/add', 'Admin\TagController@addGameTag')->name('admin.tag.game.add');
     Route::get('/admin/tag/game/{gameId}/remove', 'Admin\TagController@removeGameTag')->name('admin.tag.game.remove');
 
-    // Developers
+    // Partners
+    Route::get('/admin/partners', 'Admin\PartnersController@landing')->name('admin.partners.landing');
+
+    // Partners: Review sites
+    Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
+    Route::get('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
+    Route::post('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
+    Route::get('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
+    Route::post('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
+
+    // Partners: Developers
     Route::get('/admin/developer/list', 'Admin\DeveloperController@showList')->name('admin.developer.list');
     Route::get('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
     Route::post('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
@@ -275,7 +273,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 //    Route::get('/admin/developer/game/{gameId}/add', 'Admin\DeveloperController@addGameDeveloper')->name('admin.developer.game.add');
     Route::get('/admin/developer/game/{gameId}/remove', 'Admin\DeveloperController@removeGameDeveloper')->name('admin.developer.game.remove');
 
-    // Publishers
+    // Partners: Publishers
     Route::get('/admin/publisher/list', 'Admin\PublisherController@showList')->name('admin.publisher.list');
     Route::get('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
     Route::post('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
@@ -286,6 +284,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/publisher/game/{gameId}/list', 'Admin\PublisherController@showGameList')->name('admin.publisher.game.list');
     Route::get('/admin/publisher/game/{gameId}/add', 'Admin\PublisherController@addGamePublisher')->name('admin.publisher.game.add');
     Route::get('/admin/publisher/game/{gameId}/remove', 'Admin\PublisherController@removeGamePublisher')->name('admin.publisher.game.remove');
+
+    // Tools
+    Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
+    Route::get('/admin/tools/tool/landing/modular/{commandName}', 'Admin\ToolsController@toolLandingModular')->name('admin.tools.toolLandingModular');
+    Route::get('/admin/tools/tool/process/modular/{commandName}', 'Admin\ToolsController@toolProcessModular')->name('admin.tools.toolProcessModular');
 
     // Stats
     Route::get('/admin/stats', 'Admin\StatsController@landing')->name('admin.stats.landing');

@@ -131,7 +131,7 @@ class PublisherController extends Controller
         // Validation: check for any reason we should not allow the game to be deleted.
         $gamePublishers = $serviceGamePublisher->getByPublisherId($publisherId);
         if (count($gamePublishers) > 0) {
-            $customErrors[] = 'Game is linked to '.count($gamePublishers).' publisher(s)';
+            $customErrors[] = 'Publisher is linked to '.count($gamePublishers).' game(s)';
         }
 
         if ($request->isMethod('post')) {
