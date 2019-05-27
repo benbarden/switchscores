@@ -11,8 +11,8 @@ class ReviewPartnerUnrankedController extends Controller
 {
     public function landing()
     {
-        $userSiteId = Auth::user()->site_id;
-        if ($userSiteId == 0) {
+        $partnerId = Auth::user()->partner_id;
+        if ($partnerId == 0) {
             abort(403);
         }
 
@@ -31,16 +31,16 @@ class ReviewPartnerUnrankedController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
-        $userSiteId = Auth::user()->site_id;
-        if ($userSiteId == 0) {
+        $partnerId = Auth::user()->partner_id;
+        if ($partnerId == 0) {
             abort(403);
         }
 
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
-        $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($userSiteId);
-        $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($userSiteId);
+        $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($partnerId);
+        $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($partnerId);
 
         $bindings = [];
 

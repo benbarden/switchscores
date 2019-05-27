@@ -8,7 +8,7 @@ use App\ReviewLink;
 use App\Services\FeedItemReviewService;
 use App\Services\GameService;
 use App\Services\ReviewLinkService;
-use App\Services\ReviewSiteService;
+use App\Services\PartnerService;
 use App\Services\ReviewStatsService;
 use App\Events\ReviewLinkCreated;
 
@@ -50,13 +50,14 @@ class RunFeedReviewGenerator extends Command
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         $gameService = resolve('Services\GameService');
         $reviewLinkService = resolve('Services\ReviewLinkService');
-        $reviewSiteService = resolve('Services\ReviewSiteService');
         $reviewStatsService = resolve('Services\ReviewStatsService');
         /* @var FeedItemReviewService $feedItemReviewService */
         /* @var GameService $gameService */
         /* @var ReviewLinkService $reviewLinkService */
-        /* @var ReviewSiteService $reviewSiteService */
         /* @var ReviewStatsService $reviewStatsService */
+
+        $partnerService = resolve('Services\PartnerService');
+        /* @var PartnerService $partnerService */
 
         $feedItems = $feedItemReviewService->getUnprocessed();
 
@@ -123,7 +124,7 @@ class RunFeedReviewGenerator extends Command
                 $this->info('Reformatting date: '.$itemDate.' as short date: '.$itemDateShort);
 
                 // We're good to go - let's create the review
-                $reviewSite = $reviewSiteService->find($siteId);
+                $reviewSite = $partnerService->find($siteId);
                 $ratingNormalised = $reviewLinkService->getNormalisedRating($itemRating, $reviewSite);
 
                 $reviewLink = $reviewLinkService->create(

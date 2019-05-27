@@ -74,9 +74,7 @@ class UserController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceUser = $serviceContainer->getUserService();
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
-        $serviceDeveloper = $serviceContainer->getDeveloperService();
-        $servicePublisher = $serviceContainer->getPublisherService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);
@@ -93,11 +91,9 @@ class UserController extends Controller
 
             $displayName = $request->display_name;
             $email = $request->email;
-            $siteId = $request->site_id;
-            $developerId = $request->developer_id;
-            $publisherId = $request->publisher_id;
+            $partnerId = $request->partner_id;
 
-            $serviceUser->edit($userData, $displayName, $email, $siteId, $developerId, $publisherId);
+            $serviceUser->edit($userData, $displayName, $email, $partnerId);
 
             return redirect(route('admin.user.list'));
 
@@ -112,9 +108,7 @@ class UserController extends Controller
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 
-        $bindings['ReviewSites'] = $serviceReviewSite->getAll();
-        $bindings['Developers'] = $serviceDeveloper->getAll();
-        $bindings['Publishers'] = $servicePublisher->getAll();
+        $bindings['PartnerList'] = $servicePartner->getAllForUserAssignment();
 
         return view('admin.user.edit', $bindings);
     }

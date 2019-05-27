@@ -2,6 +2,19 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
+    {% if FormMode != 'add' %}
+        <div class="form-group">
+            <label for="status" class="col-md-4 control-label">Status</label>
+            <div class="col-md-6">
+                <select id="status" class="form-control" name="status">
+                    <option value="">&nbsp;</option>
+                    {% for item in StatusList %}
+                        <option value="{{ item.id }}">{{ item.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endif %}
     <div class="form-group">
         <label for="name" class="col-md-4 control-label">Name</label>
         <div class="col-md-6">
@@ -15,9 +28,19 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="url" class="col-md-4 control-label">Site URL (include http://)</label>
+        <label for="website_url" class="col-md-4 control-label">Site URL (include http://)</label>
         <div class="col-md-6">
-            <input id="url" type="text" class="form-control" name="url" required>
+            <input id="website_url" type="text" class="form-control" name="website_url" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="twitter_id" class="col-md-4 control-label">
+            Twitter ID
+            <br><small>https://twitter.com/</small>
+        </label>
+        <div class="col-md-6">
+            <input id="twitter_id" type="text" class="form-control" name="twitter_id" maxlength="20">
+            <small>Don't include full URL - just the username</small>
         </div>
     </div>
     <div class="form-group">
@@ -54,12 +77,6 @@
         <label for="allow_historic_content" class="col-md-4 control-label">Allow historic content</label>
         <div class="col-md-6">
             <input type="checkbox" id="allow_historic_content" name="allow_historic_content">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="active" class="col-md-4 control-label">Active</label>
-        <div class="col-md-6">
-            <input id="active" type="checkbox" name="active" checked>
         </div>
     </div>
     <div class="form-group">

@@ -10,11 +10,11 @@
 
 <h2>Active sites</h2>
 
-{% include 'admin/reviews/site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
+{% include 'admin/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
 
 <h2>Inactive sites</h2>
 
-{% include 'admin/reviews/site/list-table.twig' with {'ReviewSites': ReviewSitesInactive} %}
+{% include 'admin/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesInactive} %}
 
 <script>
     $('#js-btn-add').on('click', function() {

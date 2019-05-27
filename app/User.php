@@ -14,7 +14,7 @@ class User extends Authenticatable
      */
     // is_admin has to be fillable or unit tests will fail
     protected $fillable = [
-        'display_name', 'email', 'password', 'region', 'site_id', 'developer_id', 'publisher_id', 'is_admin',
+        'display_name', 'email', 'password', 'region', 'partner_id', 'is_admin',
     ];
 
     /**
@@ -39,18 +39,8 @@ class User extends Authenticatable
         return $this->is_admin == 1;
     }
 
-    public function site()
+    public function partner()
     {
-        return $this->hasOne('App\ReviewSite', 'id', 'site_id');
-    }
-
-    public function developer()
-    {
-        return $this->hasOne('App\Developer', 'id', 'developer_id');
-    }
-
-    public function publisher()
-    {
-        return $this->hasOne('App\Publisher', 'id', 'publisher_id');
+        return $this->hasOne('App\Partner', 'id', 'partner_id');
     }
 }

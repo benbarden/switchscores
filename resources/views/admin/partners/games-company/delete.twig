@@ -1,21 +1,21 @@
 {% extends 'theme/wos/admin/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.partners.landing'), 'text': 'Partners'}, {'url': route('admin.developer.list'), 'text': 'Developers'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('admin.partners.landing'), 'text': 'Partners'}, {'url': route('admin.partners.games-company.list'), 'text': 'Games companies'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
 {% if ErrorsCustom %}
     {% include 'common/form-errors.twig' %}
     <div class="alert alert-warning" role="alert">
-        Cannot delete the developer: <strong>{{ DeveloperData.name }}</strong> (id: {{ DeveloperId }}) due to the above errors.
+        Cannot delete the games company: <strong>{{ PartnerData.name }}</strong> (id: {{ PartnerId }}) due to the above errors.
     </div>
 {% else %}
     <div class="alert alert-warning" role="alert">
-        <strong>Warning!</strong> You are about to delete the developer: <strong>{{ DeveloperData.name }}</strong> (id: {{ DeveloperId }})
+        <strong>Warning!</strong> You are about to delete the games company: <strong>{{ PartnerData.name }}</strong> (id: {{ PartnerId }})
         <br>Please ensure this is what you want to do before proceeding. There is no option to undo the deletion if you proceed!
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.developer.delete', {'developerId': DeveloperId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.partners.games-company.delete', {'partnerId': PartnerId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

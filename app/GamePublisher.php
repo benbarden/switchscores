@@ -30,6 +30,6 @@ class GamePublisher extends Model
 
     public function publisher()
     {
-        return $this->hasOne('App\Publisher', 'id', 'publisher_id');
+        return $this->hasOne('App\Partner', 'id', 'publisher_id');
     }
 }

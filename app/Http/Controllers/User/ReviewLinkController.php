@@ -13,7 +13,7 @@ class ReviewLinkController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
         $bindings = [];
@@ -24,18 +24,18 @@ class ReviewLinkController extends Controller
 
         $authUser = Auth::user();
 
-        $siteId = $authUser->site_id;
+        $partnerId = $authUser->partner_id;
 
-        if (!$siteId) abort(403);
+        if (!$partnerId) abort(403);
 
-        $reviewSite = $serviceReviewSite->find($siteId);
+        $reviewSite = $servicePartner->find($partnerId);
 
         if (!$reviewSite) abort(403);
 
         $bindings['ReviewSite'] = $reviewSite;
 
         // Recent reviews
-        $bindings['ReviewLinks'] = $serviceReviewLink->getAllBySite($siteId);
+        $bindings['ReviewLinks'] = $serviceReviewLink->getAllBySite($partnerId);
         $bindings['jsInitialSort'] = "[ 3, 'desc']";
 
         $bindings['TopTitle'] = 'Review links';

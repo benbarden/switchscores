@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\ReviewSite;
-use App\Services\ReviewSiteService;
+use App\Partner;
+use App\Services\PartnerService;
 use App\Services\FeedItemReviewService;
 use App\Services\Feed\Importer;
 
@@ -44,11 +44,11 @@ class RunFeedImporter extends Command
     {
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
-        $reviewSiteService = resolve('Services\ReviewSiteService');
+        $partnerService = resolve('Services\PartnerService');
+        /* @var PartnerService $partnerService */
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var ReviewSiteService $reviewSiteService */
         /* @var FeedItemReviewService $feedItemReviewService */
-        $reviewSites = $reviewSiteService->getFeedUrls();
+        $reviewSites = $partnerService->getReviewSiteFeedUrls();
 
         if (!$reviewSites) {
             $this->info('No sites found with feed URLs. Aborting.');

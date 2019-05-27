@@ -1,0 +1,109 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'text': 'Games companies'}, {'text': PageTitle}] %}
+
+{% block page_body %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <p>
+                Our games company pages are a work in progress. Check back soon for more!
+            </p>
+            <h2>Games company info</h2>
+            <table class="table table-striped table-condensed table-responsive">
+                {% if NewsInfoBox == 'Y' %}
+                    <tr>
+                        <td class="text-center" colspan="2">
+                            <strong>
+                                Infobox
+                            </strong>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Name</span>
+                    </td>
+                    <td>{{ PartnerData.name }}</td>
+                </tr>
+                {% if PartnerData.website_url %}
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Official site</span>
+                        </td>
+                        <td><a href="{{ PartnerData.website_url }}" target="_blank">Visit official site</a></td>
+                    </tr>
+                {% endif %}
+                {% if PartnerData.twitter_id %}
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Twitter account</span>
+                        </td>
+                        <td><a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a></td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            {% if GameDevList.count > 0 %}
+                <h2>Games (as a developer)</h2>
+                <table class="table table-striped table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Release date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in GameDevList %}
+                            <tr>
+                                <td>
+                                    <a href="{{ LinkHelper.gameShow(item) }}">
+                                        {{ item.title }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if item.release_date and item.is_released == 1 %}
+                                        {{ item.release_date|date('jS M Y') }}
+                                    {% else %}
+                                        {{ item.upcoming_date }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            {% if GamePubList.count > 0 %}
+                <h2>Games (as a publisher)</h2>
+                <table class="table table-striped table-condensed table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Release date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in GamePubList %}
+                        <tr>
+                            <td>
+                                <a href="{{ LinkHelper.gameShow(item) }}">
+                                    {{ item.title }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if item.release_date and item.is_released == 1 %}
+                                    {{ item.release_date|date('jS M Y') }}
+                                {% else %}
+                                    {{ item.upcoming_date }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock page_body %}

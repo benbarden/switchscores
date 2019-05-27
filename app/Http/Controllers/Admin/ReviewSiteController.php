@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Services\ServiceContainer;
+use App\Partner;
 
 class ReviewSiteController extends Controller
 {
@@ -18,7 +19,7 @@ class ReviewSiteController extends Controller
      */
     private $validationRules = [
         'name' => 'required|max:50',
-        'url' => 'required',
+        'website_url' => 'required',
         'feed_url' => 'max:255',
         'link_title' => 'required|max:100',
     ];
@@ -28,17 +29,17 @@ class ReviewSiteController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Review sites';
         $bindings['PageTitle'] = 'Review sites';
 
-        $bindings['ReviewSitesActive'] = $serviceReviewSite->getActive();
-        $bindings['ReviewSitesInactive'] = $serviceReviewSite->getInactive();
+        $bindings['ReviewSitesActive'] = $servicePartner->getActiveReviewSites();
+        $bindings['ReviewSitesInactive'] = $servicePartner->getInactiveReviewSites();
 
-        return view('admin.reviews.site.list', $bindings);
+        return view('admin.partners.review-site.list', $bindings);
     }
 
     public function add()
@@ -46,7 +47,7 @@ class ReviewSiteController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $request = request();
 
@@ -54,7 +55,6 @@ class ReviewSiteController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $isActive = $request->active == 'on' ? 'Y' : 'N';
             $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
 
             if (isset($request->rating_scale)) {
@@ -63,13 +63,13 @@ class ReviewSiteController extends Controller
                 $ratingScale = 10;
             }
 
-            $serviceReviewSite->create(
-                $request->name, $request->link_title, $request->url, $request->feed_url,
-                $isActive, $ratingScale,
-                $allowHistoricContent,
+            $servicePartner->createReviewSite(
+                Partner::STATUS_ACTIVE,
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id,
+                $request->feed_url, $request->feed_url_prefix,
+                $ratingScale, $allowHistoricContent,
                 $request->title_match_rule_pattern,
-                $request->title_match_index,
-                $request->feed_url_prefix
+                $request->title_match_index
             );
 
             return redirect(route('admin.reviews.site.list'));
@@ -82,7 +82,7 @@ class ReviewSiteController extends Controller
         $bindings['PageTitle'] = 'Add site';
         $bindings['FormMode'] = 'add';
 
-        return view('admin.reviews.site.add', $bindings);
+        return view('admin.partners.review-site.add', $bindings);
     }
 
     public function edit($siteId)
@@ -90,10 +90,10 @@ class ReviewSiteController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
-        $reviewSiteData = $serviceReviewSite->find($siteId);
-        if (!$reviewSiteData) abort(404);
+        $partnerData = $servicePartner->find($siteId);
+        if (!$partnerData) abort(404);
 
         $request = request();
 
@@ -103,7 +103,6 @@ class ReviewSiteController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $isActive = $request->active == 'on' ? 'Y' : 'N';
             $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
 
             if (isset($request->rating_scale)) {
@@ -112,14 +111,14 @@ class ReviewSiteController extends Controller
                 $ratingScale = 10;
             }
 
-            $serviceReviewSite->edit(
-                $reviewSiteData,
-                $request->name, $request->link_title, $request->url, $request->feed_url,
-                $isActive, $ratingScale,
-                $allowHistoricContent,
+            $servicePartner->editReviewSite(
+                $partnerData,
+                $request->status,
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id,
+                $request->feed_url, $request->feed_url_prefix,
+                $ratingScale, $allowHistoricContent,
                 $request->title_match_rule_pattern,
-                $request->title_match_index,
-                $request->feed_url_prefix
+                $request->title_match_index
             );
 
             return redirect(route('admin.reviews.site.list'));
@@ -130,11 +129,18 @@ class ReviewSiteController extends Controller
 
         $bindings['TopTitle'] = 'Admin - Review sites - Edit site';
         $bindings['PageTitle'] = 'Edit site';
-        $bindings['ReviewSiteData'] = $reviewSiteData;
+        $bindings['ReviewSiteData'] = $partnerData;
         $bindings['SiteId'] = $siteId;
+
+        $statusList = [];
+        $statusList[] = ['id' => 0, 'title' => 'Pending'];
+        $statusList[] = ['id' => 1, 'title' => 'Active'];
+        $statusList[] = ['id' => 9, 'title' => 'Inactive'];
+
+        $bindings['StatusList'] = $statusList;
 
         $bindings['FormMode'] = 'edit';
 
-        return view('admin.reviews.site.edit', $bindings);
+        return view('admin.partners.review-site.edit', $bindings);
     }
 }

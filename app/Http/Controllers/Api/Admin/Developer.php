@@ -24,7 +24,7 @@ class Developer
         }
 
         $serviceGame = $serviceContainer->getGameService();
-        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
 
         // Validation
@@ -33,8 +33,8 @@ class Developer
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
 
-        $developer = $serviceDeveloper->find($developerId);
-        if (!$developer) {
+        $partner = $servicePartner->find($developerId);
+        if (!$partner) {
             return response()->json(['error' => 'Developer not found: '.$developerId], 400);
         }
 

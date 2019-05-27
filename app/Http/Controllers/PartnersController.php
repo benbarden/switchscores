@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Services\ServiceContainer;
 
+use App\Partner;
+
 class PartnersController extends Controller
 {
     public function landing()
@@ -39,5 +41,40 @@ class PartnersController extends Controller
         $bindings['PageTitle'] = 'Developers and Publishers';
 
         return view('partners.developersPublishers', $bindings);
+    }
+
+    public function showGamesCompany($linkTitle)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $servicePartner = $serviceContainer->getPartnerService();
+
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $partnerData = $servicePartner->getByLinkTitle($linkTitle);
+        if (!$partnerData) abort(404);
+        if ($partnerData->type_id != Partner::TYPE_GAMES_COMPANY) abort(404);
+
+        $partnerId = $partnerData->id;
+
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId);
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Games company - '.$partnerData->name;
+        $bindings['PageTitle'] = 'Games company - '.$partnerData->name;
+
+        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerId'] = $partnerId;
+
+        $bindings['GameDevList'] = $gameDevList;
+        $bindings['GamePubList'] = $gamePubList;
+
+        return view('partners.detail.gamesCompany', $bindings);
     }
 }

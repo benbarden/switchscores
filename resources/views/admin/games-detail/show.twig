@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.developer.game.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+                    <a href="{{ route('admin.game.developer.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.developer != '' %}
@@ -67,7 +67,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.publisher.game.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+                    <a href="{{ route('admin.game.publisher.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.publisher != '' %}
@@ -156,7 +156,7 @@
                     </td>
                     <td>
                         {% for item in GameDevelopers %}
-                            <a href="{{ route('developers.page', {'linkTitle': item.developer.link_title}) }}">{{ item.developer.name }}</a>
+                            <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}" target="_blank">{{ item.developer.name }}</a>
                             <br>
                         {% endfor %}
                     </td>
@@ -181,7 +181,7 @@
                     </td>
                     <td>
                         {% for item in GamePublishers %}
-                            <a href="{{ route('publishers.page', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                            <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" target="_blank">{{ item.publisher.name }}</a>
                             <br>
                         {% endfor %}
                     </td>

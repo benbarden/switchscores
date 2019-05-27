@@ -22,7 +22,7 @@ class ReviewLinkController extends Controller
      */
     private $validationRules = [
         'game_id' => 'required|exists:games,id',
-        'site_id' => 'required|exists:review_sites,id',
+        'site_id' => 'required|exists:partners,id',
         'url' => 'required',
         'rating_original' => 'required'
     ];
@@ -33,13 +33,13 @@ class ReviewLinkController extends Controller
         /* @var $serviceContainer ServiceContainer */
 
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $bindings = [];
 
         $siteId = request()->siteId;
 
-        $reviewSites = $serviceReviewSite->getAll();
+        $reviewSites = $servicePartner->getAllReviewSites();
 
         $bindings['TopTitle'] = 'Admin - Review links';
         $bindings['PageTitle'] = 'Review links';
@@ -75,7 +75,7 @@ class ReviewLinkController extends Controller
         $serviceGame = $serviceContainer->getGameService();
         $serviceReviewStats = $serviceContainer->getReviewStatsService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         if ($request->isMethod('post')) {
 
@@ -84,7 +84,7 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $serviceReviewSite->find($siteId);
+            $reviewSite = $servicePartner->find($siteId);
 
             $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
@@ -113,7 +113,7 @@ class ReviewLinkController extends Controller
 
         $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
-        $bindings['ReviewSites'] = $serviceReviewSite->getAll();
+        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
         return view('admin.reviews.link.add', $bindings);
     }
@@ -128,7 +128,7 @@ class ReviewLinkController extends Controller
         $serviceGame = $serviceContainer->getGameService();
         $serviceReviewStats = $serviceContainer->getReviewStatsService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $reviewLinkData = $serviceReviewLink->find($linkId);
         if (!$reviewLinkData) abort(404);
@@ -146,7 +146,7 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $serviceReviewSite->find($siteId);
+            $reviewSite = $servicePartner->find($siteId);
 
             $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
@@ -179,7 +179,7 @@ class ReviewLinkController extends Controller
 
         $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
-        $bindings['ReviewSites'] = $serviceReviewSite->getAll();
+        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
         return view('admin.reviews.link.edit', $bindings);
     }

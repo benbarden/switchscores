@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\ReviewLink;
 use App\ReviewSite;
+use App\Partner;
 
 class ReviewLinkService
 {
@@ -113,8 +114,8 @@ class ReviewLinkService
     public function countActive()
     {
         $listReviews = ReviewLink::select('review_links.*', 'review_sites.name')
-            ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
-            ->where('review_sites.active', '=', 'Y')
+            ->join('partners', 'review_links.site_id', '=', 'partners.id')
+            ->where('partners.status', '=', Partner::STATUS_ACTIVE)
             ->count();
         return $listReviews;
     }
@@ -147,12 +148,12 @@ class ReviewLinkService
 
     public function getByGame($gameId)
     {
-        $gameReviews = ReviewLink::select('review_links.*', 'review_sites.name')
-            ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
+        $gameReviews = ReviewLink::select('review_links.*', 'partners.name')
+            ->join('partners', 'review_links.site_id', '=', 'partners.id')
             ->where('game_id', $gameId)
-            ->where('review_sites.active', '=', 'Y')
+            ->where('partners.status', '=', Partner::STATUS_ACTIVE)
             ->orderBy('review_links.review_date', 'desc')
-            ->orderBy('review_sites.name', 'asc')
+            ->orderBy('partners.name', 'asc')
             ->get();
         return $gameReviews;
     }
@@ -174,7 +175,7 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
-    public function getNormalisedRating($ratingOriginal, ReviewSite $reviewSite)
+    public function getNormalisedRating($ratingOriginal, Partner $reviewSite)
     {
         $normalisedScaleLimit = 10;
 
@@ -196,8 +197,8 @@ class ReviewLinkService
             sum(rl.rating_normalised) AS ReviewSum,
             avg(rl.rating_normalised) AS ReviewAvg
             FROM review_links rl
-            LEFT JOIN review_sites rs ON rl.site_id = rs.id
-            WHERE rs.id = ?
+            LEFT JOIN partners p ON rl.site_id = p.id
+            WHERE p.id = ?
         ", array($siteId));
 
         return $reviewAverage;

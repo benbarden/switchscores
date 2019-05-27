@@ -29,7 +29,7 @@ class ReviewLink extends Model
 
     public function site()
     {
-        return $this->hasOne('App\ReviewSite', 'id', 'site_id');
+        return $this->hasOne('App\Partner', 'id', 'site_id');
     }
 
     public function game()

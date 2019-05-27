@@ -20,7 +20,7 @@
     <select id="developer-list" name="developer-list">
         <option value=""></option>
         {% for item in UnusedDeveloperList %}
-            <option value="{{ item.id }}">{{ item.name }}</option>
+            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
         {% endfor %}
     </select>
     <input id="btn-add-developer" type="button" value="Add to game">
@@ -123,7 +123,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.developer.game.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
+        $.getJSON('{{ route('admin.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
             $('#js-developer-notify').text('Developer removed!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');

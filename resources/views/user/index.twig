@@ -13,9 +13,9 @@
 
         {% include 'user/dashboard/review-partner.twig' with {'AuthUser': auth_user(), 'ReviewSite': ReviewSite, 'ScoreDistribution': ScoreDistribution} %}
 
-    {% elseif SiteRole == 'developer-publisher' %}
+    {% elseif SiteRole == 'games-company' %}
 
-        {% include 'user/dashboard/developer-publisher.twig' with {'AuthUser': auth_user()} %}
+        {% include 'user/dashboard/games-company.twig' with {'AuthUser': auth_user()} %}
 
     {% else %}
 

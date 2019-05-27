@@ -8,14 +8,15 @@
         // This is used when editing existing records.
         formVals['name'] = "{{ ReviewSiteData.name }}";
         formVals['link_title'] = "{{ ReviewSiteData.link_title }}";
-        formVals['url'] = "{{ ReviewSiteData.url }}";
+        formVals['website_url'] = "{{ ReviewSiteData.website_url }}";
+        formVals['twitter_id'] = "{{ ReviewSiteData.twitter_id }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
         formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
         formVals['feed_url_prefix'] = "{{ ReviewSiteData.feed_url_prefix }}";
         formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern|e('js') }}";
         formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
         formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
-        formVals['active'] = "{{ ReviewSiteData.active }}";
+        formVals['status'] = "{{ ReviewSiteData.status }}";
 
     } else {
 
@@ -23,20 +24,27 @@
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
         formVals['name'] = "{{ old('name') }}";
         formVals['link_title'] = "{{ old('link_title') }}";
-        formVals['url'] = "{{ old('url') }}";
+        formVals['website_url'] = "{{ old('website_url') }}";
+        formVals['twitter_id'] = "{{ old('twitter_id') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
         formVals['feed_url'] = "{{ old('feed_url') }}";
         formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
         formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
         formVals['title_match_index'] = "{{ old('title_match_index') }}";
         formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
-        formVals['active'] = "{{ old('active') }}";
+        if (formMode != 'add') {
+            formVals['status'] = "{{ old('status') }}";
+        }
 
     }
 
+    if (formMode != 'add') {
+        $('#status').val(formVals['status']);
+    }
     $('#name').val(formVals['name']);
     $('#link_title').val(formVals['link_title']);
-    $('#url').val(formVals['url']);
+    $('#website_url').val(formVals['website_url']);
+    $('#twitter_id').val(formVals['twitter_id']);
     $('#rating_scale').val(formVals['rating_scale']);
     $('#feed_url').val(formVals['feed_url']);
     $('#feed_url_prefix').val(formVals['feed_url_prefix']);
@@ -46,11 +54,6 @@
         $('#allow_historic_content').attr('checked', true);
     } else {
         $('#allow_historic_content').attr('checked', false);
-    }
-    if (formVals['active'] == 'Y') {
-        $('#active').attr('checked', true);
-    } else {
-        $('#active').attr('checked', false);
     }
 
 </script>

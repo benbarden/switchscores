@@ -12,21 +12,17 @@ class UserService
      * @param User $userData
      * @param $displayName
      * @param $email
-     * @param $siteId
-     * @param $developerId
-     * @param $publisherId
+     * @param $partnerId
      * @return void
      */
     public function edit(
-        User $userData, $displayName, $email, $siteId, $developerId, $publisherId
+        User $userData, $displayName, $email, $partnerId
     )
     {
         $values = [
             'display_name' => $displayName,
             'email' => $email,
-            'site_id' => $siteId,
-            'developer_id' => $developerId,
-            'publisher_id' => $publisherId,
+            'partner_id' => $partnerId,
         ];
 
         $userData->fill($values);

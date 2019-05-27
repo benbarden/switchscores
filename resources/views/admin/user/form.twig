@@ -17,36 +17,19 @@
     </div>
 
     <div class="form-group">
-        <label for="site_id" class="col-md-4 control-label">Review site</label>
+        <label for="site_id" class="col-md-4 control-label">Partner access</label>
         <div class="col-md-6">
-            <select id="site_id" class="form-control" name="site_id">
+            <select id="partner_id" class="form-control" name="partner_id">
                 <option value="">&nbsp;</option>
-                {% for item in ReviewSites %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="developer_id" class="col-md-4 control-label">Developer</label>
-        <div class="col-md-6">
-            <select id="developer_id" class="form-control" name="developer_id">
-                <option value="">&nbsp;</option>
-                {% for item in Developers %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="publisher_id" class="col-md-4 control-label">Publisher</label>
-        <div class="col-md-6">
-            <select id="publisher_id" class="form-control" name="publisher_id">
-                <option value="">&nbsp;</option>
-                {% for item in Publishers %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% for item in PartnerList %}
+                    {% if item.isReviewSite() == true %}
+                        {% set PartnerPrefix = 'Review site' %}
+                    {% elseif item.isGamesCompany() == true %}
+                        {% set PartnerPrefix = 'Games company' %}
+                    {% else %}
+                        {% set PartnerPrefix = 'UNKNOWN' %}
+                    {% endif %}
+                    <option value="{{ item.id }}">[{{ PartnerPrefix }}] {{ item.name }}</option>
                 {% endfor %}
             </select>
         </div>

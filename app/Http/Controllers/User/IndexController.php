@@ -13,7 +13,7 @@ class IndexController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
         $serviceCollection = $serviceContainer->getUserGamesCollectionService();
 
@@ -31,54 +31,53 @@ class IndexController extends Controller
 
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        $siteId = $authUser->site_id;
+        $siteId = $authUser->partner_id;
+
         if ($siteId) {
-            $reviewSite = $serviceReviewSite->find($siteId);
-            if ($reviewSite) {
 
-                $bindings['ReviewSite'] = $reviewSite;
-                $siteRole = 'review-partner';
-                $onPageTitle = 'Review partner dashboard: '.$reviewSite->name;
+            $partnerData = $servicePartner->find($siteId);
 
-                // Review stats (for infobox)
-                $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
-                $bindings['ReviewCount'] = $reviewStats[0]->ReviewCount;
-                $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
+            if ($partnerData) {
 
-                // Recent reviews
-                $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($siteId, 5);
+                $bindings['PartnerData'] = $partnerData;
 
-                // Score distribution
-                $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+                if ($partnerData->isReviewSite()) {
 
-                $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
-                if ($reviewScoreDistribution) {
-                    foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
-                        if ($scoreVal > $mostUsedScore['topScoreCount']) {
-                            $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
+                    $siteRole = 'review-partner';
+                    $onPageTitle = 'Review partner dashboard: '.$partnerData->name;
+
+                    // Review stats (for infobox)
+                    $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
+                    $bindings['ReviewCount'] = $reviewStats[0]->ReviewCount;
+                    $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
+
+                    // Recent reviews
+                    $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($siteId, 5);
+
+                    // Score distribution
+                    $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+
+                    $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
+                    if ($reviewScoreDistribution) {
+                        foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
+                            if ($scoreVal > $mostUsedScore['topScoreCount']) {
+                                $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
+                            }
                         }
                     }
+                    $bindings['ScoreDistribution'] = $reviewScoreDistribution;
+                    $bindings['MostUsedScore'] = $mostUsedScore;
+
+                } elseif ($partnerData->isGamesCompany()) {
+
+                    $siteRole = 'games-company';
+
+                    $onPageTitle = 'Games company dashboard: '.$partnerData->name;
+
                 }
-                $bindings['ScoreDistribution'] = $reviewScoreDistribution;
-                $bindings['MostUsedScore'] = $mostUsedScore;
 
             }
 
-        }
-
-        $userDevId = $authUser->developer_id;
-        $userPubId = $authUser->publisher_id;
-
-        if ($userDevId != 0 || $userPubId != 0) {
-
-            // this will override review-partner if both are set
-            $siteRole = 'developer-publisher';
-
-            if ($userDevId != 0) {
-                $onPageTitle = 'Developer dashboard: '.$authUser->developer->name;
-            } elseif ($userPubId != 0) {
-                $onPageTitle = 'Publisher dashboard: '.$authUser->publisher->name;
-            }
         }
 
         $bindings['TopTitle'] = $onPageTitle;

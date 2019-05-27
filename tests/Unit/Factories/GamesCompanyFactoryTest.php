@@ -4,15 +4,15 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
-use App\Factories\DeveloperFactory;
+use App\Factories\GamesCompanyFactory;
 
-class DeveloperFactoryTest extends TestCase
+class GamesCompanyFactoryTest extends TestCase
 {
     public function testSetNameAndLinkTitle()
     {
         $name = 'A Very Good Game Developer';
         $linkTitle = 'a-very-good-game-developer';
-        $developer = DeveloperFactory::create($name, $linkTitle);
+        $developer = GamesCompanyFactory::create(1, $name, $linkTitle);
         $this->assertEquals($name, $developer->name);
         $this->assertEquals($linkTitle, $developer->link_title);
     }
@@ -22,7 +22,7 @@ class DeveloperFactoryTest extends TestCase
         $name = 'A Very Good Game Developer';
         $linkTitle = 'a-very-good-game-developer';
         $websiteUrl = 'https://www.worldofswitch.com';
-        $developer = DeveloperFactory::create($name, $linkTitle, $websiteUrl);
+        $developer = GamesCompanyFactory::create(1, $name, $linkTitle, $websiteUrl);
         $this->assertEquals($websiteUrl, $developer->website_url);
     }
 
@@ -32,7 +32,7 @@ class DeveloperFactoryTest extends TestCase
         $linkTitle = 'a-very-good-game-developer';
         $websiteUrl = 'https://www.worldofswitch.com';
         $twitterId = 'worldofswitch';
-        $developer = DeveloperFactory::create($name, $linkTitle, $websiteUrl, $twitterId);
+        $developer = GamesCompanyFactory::create(1, $name, $linkTitle, $websiteUrl, $twitterId);
         $this->assertEquals($twitterId, $developer->twitter_id);
     }
 }

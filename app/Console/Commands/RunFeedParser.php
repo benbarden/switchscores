@@ -8,7 +8,7 @@ use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
 use App\Services\FeedItemReviewService;
 use App\Services\GameService;
-use App\Services\ReviewSiteService;
+use App\Services\PartnerService;
 
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
@@ -48,11 +48,13 @@ class RunFeedParser extends Command
         $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        $gameService = resolve('Services\GameService');
-        $serviceReviewSite = resolve('Services\ReviewSiteService');
         /* @var FeedItemReviewService $feedItemReviewService */
+
+        $gameService = resolve('Services\GameService');
         /* @var GameService $gameService */
-        /* @var ReviewSiteService $serviceReviewSite */
+
+        $partnerService = resolve('Services\PartnerService');
+        /* @var PartnerService $partnerService */
 
         $serviceTitleMatch = new ServiceTitleMatch();
 
@@ -73,7 +75,7 @@ class RunFeedParser extends Command
             $itemUrl = $feedItem->item_url;
             $itemTitle = $feedItem->item_title;
 
-            $reviewSite = $serviceReviewSite->find($siteId);
+            $reviewSite = $partnerService->find($siteId);
             if (!$reviewSite) {
                 $this->error('Cannot find review site! ['.$siteId.']');
                 continue;

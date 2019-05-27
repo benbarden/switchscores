@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="+ New publisher">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="+ Add games company">
     </div>
     <div class="col-xs-12 col-sm-9">
     </div>
@@ -14,11 +14,9 @@
 
 <hr>
 
-<h2>Publishers</h2>
-
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
-{% if PublisherList.count > 0 %}
+{% if GamesCompanyList.count > 0 %}
     <table class="table table-striped data-sortable">
         <thead>
             <tr>
@@ -30,13 +28,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in PublisherList %}
+            {% for item in GamesCompanyList %}
                 <tr>
                     <td class="text-right">
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('publishers.page', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
+                        <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
                     </td>
                     <td>
                         {% if item.website_url %}
@@ -53,8 +51,8 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.publisher.edit', {'publisherId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('admin.publisher.delete', {'publisherId': item.id}) }}">Delete</a>
+                        <a href="{{ route('admin.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('admin.partners.games-company.delete', {'partnerId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -67,7 +65,7 @@
 {% include 'common/table-sorting.twig' %}
 <script>
     $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('admin.publisher.add') }}';
+        top.location.href = '{{ route('admin.partners.games-company.add') }}';
     });
     $(document).ready(function() {
         $('.data-sortable').DataTable({

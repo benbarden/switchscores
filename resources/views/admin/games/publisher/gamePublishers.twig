@@ -20,7 +20,7 @@
     <select id="publisher-list" name="publisher-list">
         <option value=""></option>
         {% for item in UnusedPublisherList %}
-            <option value="{{ item.id }}">{{ item.name }}</option>
+            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
         {% endfor %}
     </select>
     <input id="btn-add-publisher" type="button" value="Add to game">
@@ -87,7 +87,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.publisher.game.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
+        $.getJSON('{{ route('admin.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher added!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');
@@ -120,7 +120,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.publisher.game.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
+        $.getJSON('{{ route('admin.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher removed!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');

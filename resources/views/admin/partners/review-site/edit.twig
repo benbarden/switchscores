@@ -4,9 +4,9 @@
 
 {% block page_inner %}
 
-{% set formSubmitAction = route('admin.reviews.site.add') %}
-{% include 'admin/reviews/site/form.twig' with {'formSubmitAction': formSubmitAction} %}
+{% set formSubmitAction = route('admin.reviews.site.edit', {'siteId': SiteId}) %}
+{% include 'admin/partners/review-site/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
-{% include 'admin/reviews/site/scripts.twig' %}
+{% include 'admin/partners/review-site/scripts.twig' %}
 
 {% endblock page_inner %}

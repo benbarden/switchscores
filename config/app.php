@@ -185,6 +185,7 @@ return [
         App\Providers\GenreServiceProvider::class,
         App\Providers\NewsCategoryServiceProvider::class,
         App\Providers\NewsServiceProvider::class,
+        App\Providers\PartnerServiceProvider::class,
         App\Providers\PartnerReviewServiceProvider::class,
         App\Providers\PublisherServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,

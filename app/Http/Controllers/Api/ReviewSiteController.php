@@ -16,8 +16,8 @@ class ReviewSiteController extends BaseController
             return response()->json(['error' => 'Missing data: reviewUrl'], 404);
         }
 
-        $serviceReviewSite = resolve('Services\ReviewSiteService');
-        /* @var \App\Services\ReviewSiteService $serviceReviewSite */
+        $servicePartner = resolve('Services\PartnerService');
+        /* @var \App\Services\PartnerService $servicePartner */
 
         // Convert to domain URL
         $domainUrl = $reviewUrl;
@@ -26,7 +26,7 @@ class ReviewSiteController extends BaseController
         $domainUrlArray = explode('/', $domainUrl);
         $domainUrl = $domainUrlArray[0].'/';
 
-        $reviewSite = $serviceReviewSite->getByDomain($domainUrl);
+        $reviewSite = $servicePartner->getByDomain($domainUrl);
 
         if ($reviewSite) {
             $data = array(

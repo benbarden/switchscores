@@ -38,17 +38,14 @@
                         <small>{{ item.email }}</small>
                     </td>
                     <td class="text-left">
-                        {% if item.site.name is not null %}
-                            <strong>Review site</strong>
-                            <br>{{ item.site.name }}
-                        {% endif %}
-                        {% if item.developer.name is not null %}
-                            <strong>Developer</strong>
-                            <br>{{ item.developer.name }}
-                        {% endif %}
-                        {% if item.publisher.name is not null %}
-                            <strong>Publisher</strong>
-                            <br>{{ item.publisher.name }}
+                        {% if item.partner.name is not null %}
+                            {% if item.partner.isReviewSite() == true %}
+                                <strong>Review site</strong>
+                                <br>{{ item.partner.name }}
+                            {% elseif item.partner.isGamesCompany() == true %}
+                                <strong>Games company</strong>
+                                <br>{{ item.partner.name }}
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="text-center">

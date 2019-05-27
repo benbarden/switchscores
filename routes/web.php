@@ -59,10 +59,6 @@ Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 Route::get('/tags', 'TagsController@landing')->name('tags.landing');
 Route::get('/tags/{linkTitle}', 'TagsController@page')->name('tags.page');
 
-/* Developers and publishers */
-Route::get('/developers/{linkTitle}', 'DevelopersController@page')->name('developers.page');
-Route::get('/publishers/{linkTitle}', 'PublishersController@page')->name('publishers.page');
-
 /* Charts */
 Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
 Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name('charts.mostAppearances');
@@ -91,6 +87,8 @@ Route::get('/reviews/games-needing-reviews', 'ReviewsController@gamesNeedingRevi
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
 Route::get('/partners/review-sites', 'PartnersController@reviewSites')->name('partners.review-sites');
 Route::get('/partners/developers-publishers', 'PartnersController@developersPublishers')->name('partners.developers-publishers');
+
+Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesCompany')->name('partners.detail.games-company');
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
@@ -171,6 +169,14 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/games-title-hash/edit/{itemId}', 'Admin\GamesTitleHashController@edit')->name('admin.games-title-hash.edit');
     Route::get('/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
     Route::post('/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
+
+    // Games partner links
+    Route::get('/admin/game/developer/{gameId}/list', 'Admin\GamePartnerController@showGameDevelopers')->name('admin.game.developer.list');
+//    Route::get('/admin/developer/game/{gameId}/add', 'Admin\GamePartnerController@addGameDeveloper')->name('admin.developer.game.add');
+    Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');
+    Route::get('/admin/game/publisher/{gameId}/list', 'Admin\GamePartnerController@showGamePublishers')->name('admin.game.publisher.list');
+    Route::get('/admin/game/publisher/{gameId}/add', 'Admin\GamePartnerController@addGamePublisher')->name('admin.game.publisher.add');
+    Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
 
     // Action lists
     Route::get('/admin/action-lists', 'Admin\ActionListController@landing')->name('admin.action-lists.landing');
@@ -261,29 +267,14 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
     Route::post('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
 
-    // Partners: Developers
-    Route::get('/admin/developer/list', 'Admin\DeveloperController@showList')->name('admin.developer.list');
-    Route::get('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
-    Route::post('/admin/developer/add', 'Admin\DeveloperController@add')->name('admin.developer.add');
-    Route::get('/admin/developer/edit/{developerId}', 'Admin\DeveloperController@edit')->name('admin.developer.edit');
-    Route::post('/admin/developer/edit/{developerId}', 'Admin\DeveloperController@edit')->name('admin.developer.edit');
-    Route::get('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
-    Route::post('/admin/developer/delete/{developerId}', 'Admin\DeveloperController@delete')->name('admin.developer.delete');
-    Route::get('/admin/developer/game/{gameId}/list', 'Admin\DeveloperController@showGameList')->name('admin.developer.game.list');
-//    Route::get('/admin/developer/game/{gameId}/add', 'Admin\DeveloperController@addGameDeveloper')->name('admin.developer.game.add');
-    Route::get('/admin/developer/game/{gameId}/remove', 'Admin\DeveloperController@removeGameDeveloper')->name('admin.developer.game.remove');
-
-    // Partners: Publishers
-    Route::get('/admin/publisher/list', 'Admin\PublisherController@showList')->name('admin.publisher.list');
-    Route::get('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
-    Route::post('/admin/publisher/add', 'Admin\PublisherController@add')->name('admin.publisher.add');
-    Route::get('/admin/publisher/edit/{publisherId}', 'Admin\PublisherController@edit')->name('admin.publisher.edit');
-    Route::post('/admin/publisher/edit/{publisherId}', 'Admin\PublisherController@edit')->name('admin.publisher.edit');
-    Route::get('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
-    Route::post('/admin/publisher/delete/{publisherId}', 'Admin\PublisherController@delete')->name('admin.publisher.delete');
-    Route::get('/admin/publisher/game/{gameId}/list', 'Admin\PublisherController@showGameList')->name('admin.publisher.game.list');
-    Route::get('/admin/publisher/game/{gameId}/add', 'Admin\PublisherController@addGamePublisher')->name('admin.publisher.game.add');
-    Route::get('/admin/publisher/game/{gameId}/remove', 'Admin\PublisherController@removeGamePublisher')->name('admin.publisher.game.remove');
+    // Partners: Games companies
+    Route::get('/admin/partners/games-company/list', 'Admin\GamesCompanyController@showList')->name('admin.partners.games-company.list');
+    Route::get('/admin/partners/games-company/add', 'Admin\GamesCompanyController@add')->name('admin.partners.games-company.add');
+    Route::post('/admin/partners/games-company/add', 'Admin\GamesCompanyController@add')->name('admin.partners.games-company.add');
+    Route::get('/admin/partners/games-company/edit/{partnerId}', 'Admin\GamesCompanyController@edit')->name('admin.partners.games-company.edit');
+    Route::post('/admin/partners/games-company/edit/{partnerId}', 'Admin\GamesCompanyController@edit')->name('admin.partners.games-company.edit');
+    Route::get('/admin/partners/games-company/delete/{partnerId}', 'Admin\GamesCompanyController@delete')->name('admin.partners.games-company.delete');
+    Route::post('/admin/partners/games-company/delete/{partnerId}', 'Admin\GamesCompanyController@delete')->name('admin.partners.games-company.delete');
 
     // Tools
     Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');

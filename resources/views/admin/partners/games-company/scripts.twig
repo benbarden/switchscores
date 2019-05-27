@@ -5,10 +5,11 @@
     if (formMode == 'edit') {
 
         // This is used when editing existing items.
-        formVals['name'] = "{{ PublisherData.name|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['link_title'] = "{{ PublisherData.link_title }}";
-        formVals['website_url'] = "{{ PublisherData.website_url }}";
-        formVals['twitter_id'] = "{{ PublisherData.twitter_id }}";
+        formVals['name'] = "{{ PartnerData.name|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
+        formVals['link_title'] = "{{ PartnerData.link_title }}";
+        formVals['website_url'] = "{{ PartnerData.website_url }}";
+        formVals['twitter_id'] = "{{ PartnerData.twitter_id }}";
+        formVals['status'] = "{{ PartnerData.status }}";
 
     } else {
 
@@ -18,9 +19,15 @@
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['website_url'] = "{{ old('website_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
+        if (formMode != 'add') {
+            formVals['status'] = "{{ old('status') }}";
+        }
 
     }
 
+    if (formMode != 'add') {
+        $('#status').val(formVals['status']);
+    }
     $('#name').val(formVals['name']);
     $('#link_title').val(formVals['link_title']);
     $('#website_url').val(formVals['website_url']);

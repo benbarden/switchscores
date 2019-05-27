@@ -55,11 +55,12 @@ class GamePublisherService
     /**
      * Helper method to get all of the publishers that haven't been applied to the current game yet.
      * @param $gameId
+     * @return array
      */
     public function getPublishersNotOnGame($gameId)
     {
         $games = DB::select('
-            select * from publishers where id not in (select publisher_id from game_publishers where game_id = ?) ORDER BY name
+            select * from partners where id not in (select publisher_id from game_publishers where game_id = ?) ORDER BY name
         ', [$gameId]);
 
         return $games;
@@ -75,14 +76,14 @@ class GamePublisherService
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->join('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
+            ->join('partners', 'game_publishers.publisher_id', '=', 'partners.id')
             ->select('games.*',
                 'game_release_dates.release_date',
                 'game_release_dates.is_released',
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year',
                 'game_publishers.publisher_id',
-                'publishers.name')
+                'partners.name')
             ->where('game_publishers.publisher_id', $publisherId)
             ->where('game_release_dates.region', $region)
             //->where('game_release_dates.is_released', '1')
@@ -98,9 +99,9 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
-            ->select('games.*', 'publishers.name')
-            ->whereNull('publishers.id')
+            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->select('games.*', 'partners.name')
+            ->whereNull('partners.id')
             ->whereNull('games.publisher')
             ->orderBy('games.id', 'desc');
 
@@ -114,7 +115,7 @@ class GamePublisherService
             select count(*) AS count
             from games g
             left join game_publishers gp on g.id = gp.game_id
-            left join publishers p on p.id = gp.publisher_id
+            left join partners p on p.id = gp.publisher_id
             where p.id is null and g.publisher is null;
         ');
 
@@ -125,9 +126,9 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
-            ->select('games.*', 'publishers.name')
-            ->whereNull('publishers.id')
+            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->select('games.*', 'partners.name')
+            ->whereNull('partners.id')
             ->whereNotNull('games.publisher')
             ->orderBy('games.id', 'desc');
 
@@ -141,7 +142,7 @@ class GamePublisherService
             select count(*) AS count
             from games g
             left join game_publishers gp on g.id = gp.game_id
-            left join publishers p on p.id = gp.publisher_id
+            left join partners p on p.id = gp.publisher_id
             where p.id is null and g.publisher is not null;
         ');
 
@@ -152,9 +153,9 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
-            ->select('games.*', 'publishers.name')
-            ->whereNotNull('publishers.id')
+            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->select('games.*', 'partners.name')
+            ->whereNotNull('partners.id')
             ->whereNotNull('games.publisher')
             ->orderBy('games.id', 'desc');
 
@@ -168,7 +169,7 @@ class GamePublisherService
             select count(*) AS count
             from games g
             left join game_publishers gp on g.id = gp.game_id
-            left join publishers p on p.id = gp.publisher_id
+            left join partners p on p.id = gp.publisher_id
             where p.id is not null and g.publisher is not null;
         ');
 
@@ -179,9 +180,9 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('publishers', 'game_publishers.publisher_id', '=', 'publishers.id')
-            ->select('games.*', 'publishers.name')
-            ->whereNotNull('publishers.id')
+            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->select('games.*', 'partners.name')
+            ->whereNotNull('partners.id')
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -194,7 +195,7 @@ class GamePublisherService
             select count(*) AS count
             from games g
             left join game_publishers gp on g.id = gp.game_id
-            left join publishers p on p.id = gp.publisher_id
+            left join partners p on p.id = gp.publisher_id
             where p.id is not null;
         ');
 

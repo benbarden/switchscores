@@ -32,7 +32,7 @@ class PartnerReviewController extends Controller
 
         $userId = Auth::id();
         $regionCode = Auth::user()->region;
-        $userSiteId = Auth::user()->site_id;
+        $partnerId = Auth::user()->partner_id;
 
         $request = request();
 
@@ -57,10 +57,10 @@ class PartnerReviewController extends Controller
                     ->withInput();
             }
 
-            $validator->after(function ($validator) use ($reviewLinkService, $gameId, $userSiteId, $itemDate) {
+            $validator->after(function ($validator) use ($reviewLinkService, $gameId, $partnerId, $itemDate) {
 
                 // Check for an existing review
-                $reviewLinkExisting = $reviewLinkService->getByGameAndSite($gameId, $userSiteId);
+                $reviewLinkExisting = $reviewLinkService->getByGameAndSite($gameId, $partnerId);
                 if ($reviewLinkExisting) {
                     $validator->errors()->add('game_id', 'We already have a review from your site for this game. Please try a different game.');
                 }
@@ -81,7 +81,7 @@ class PartnerReviewController extends Controller
             // OK to proceed
 
             $partnerReview = $partnerReviewService->create(
-                $userId, $userSiteId, $gameId, $itemUrl, $itemDate, $itemRating
+                $userId, $partnerId, $gameId, $itemUrl, $itemDate, $itemRating
             );
 
             return redirect(route('user.partner-reviews.list').'?msg=success');
@@ -110,9 +110,9 @@ class PartnerReviewController extends Controller
 
         $userId = Auth::id();
         $userRegion = Auth::user()->region;
-        $userSiteId = Auth::user()->site_id;
+        $partnerId = Auth::user()->partner_id;
 
-        if ($userSiteId == 0) {
+        if ($partnerId == 0) {
             abort(403);
         }
 
@@ -127,7 +127,7 @@ class PartnerReviewController extends Controller
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewPartnerList'] = $partnerReviewService->getAllBySite($userSiteId);
+        $bindings['ReviewPartnerList'] = $partnerReviewService->getAllBySite($partnerId);
 
         return view('user.partner-reviews.list', $bindings);
     }

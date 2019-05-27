@@ -14,7 +14,7 @@
             <select id="admin-nav-site-filter" name="admin-nav-site-filter" class="form-control">
                 <option value="">All reviews</option>
                 {% for item in ReviewSites %}
-                    <option value="{{ item.id }}">{% if item.active == 'N' %}[INACTIVE]{% endif %} {{ item.name }}</option>
+                    <option value="{{ item.id }}">{% if item.status == '9' %}[INACTIVE]{% endif %} {{ item.name }}</option>
                 {% endfor %}
             </select>
         </div>

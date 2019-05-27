@@ -17,13 +17,13 @@ class ReviewsController extends Controller
 
         $serviceTopRated = $serviceContainer->getTopRatedService();
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
-        $serviceReviewSites = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGameRankUpdate = $serviceContainer->getGameRankUpdateService();
 
         $bindings = [];
 
         $reviewList = $serviceReviewLinks->getLatestNaturalOrder(20);
-        $reviewPartnerList = $serviceReviewSites->getActive();
+        $reviewPartnerList = $servicePartner->getActiveReviewSites();
 
         $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getNotableRecent(20);
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
@@ -49,10 +49,10 @@ class ReviewsController extends Controller
 
         $bindings = [];
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
-        $reviewSite = $serviceReviewSite->getByLinkTitle($linkTitle);
+        $reviewSite = $servicePartner->getByLinkTitle($linkTitle);
 
         if (!$reviewSite) {
             abort(404);
@@ -63,7 +63,7 @@ class ReviewsController extends Controller
         $bindings['TopTitle'] = $reviewSite->name.' - Site profile';
         $bindings['PageTitle'] = $reviewSite->name.' - Site profile';
 
-        $bindings['ReviewSite'] = $reviewSite;
+        $bindings['PartnerData'] = $reviewSite;
 
         $siteReviewsLatest = $serviceReviewLink->getLatestBySite($siteId);
         $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);

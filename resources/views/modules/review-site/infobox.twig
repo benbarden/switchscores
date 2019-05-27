@@ -7,7 +7,7 @@
             <span style="font-weight: bold;">Site URL</span>
         </td>
         <td>
-            <a href="{{ ReviewSite.url }}" target="_blank">{{ ReviewSite.url }}</a>
+            <a href="{{ PartnerData.website_url }}" target="_blank">{{ PartnerData.website_url }}</a>
         </td>
     </tr>
     <tr>
@@ -28,7 +28,7 @@
                 <span style="font-weight: bold;">WOS profile page</span>
             </td>
             <td>
-                <a href="{{ route('reviews.site', {'linkTitle': ReviewSite.link_title}) }}" target="_blank">Click to view</a>
+                <a href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">Click to view</a>
             </td>
         </tr>
     {% endif %}
