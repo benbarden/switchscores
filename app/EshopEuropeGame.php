@@ -104,6 +104,7 @@ class EshopEuropeGame extends Model
         'wishlist_email_banner640w_image_url_s',
         'labo_b',
         'nintendo_switch_online_exclusive_b',
+        'product_code_ss',
     ];
 
     public function game()

@@ -104,6 +104,7 @@ class LoaderEurope
         'wishlist_email_banner640w_image_url_s',
         'labo_b',
         'nintendo_switch_online_exclusive_b',
+        'product_code_ss',
     ];
 
     /**
@@ -225,6 +226,7 @@ class LoaderEurope
             'nsuid_txt',
             'game_series_txt',
             'datasize_readable_txt',
+            'product_code_ss',
         ];
 
         $specialFields = [
@@ -232,7 +234,10 @@ class LoaderEurope
         ];
 
         if (!in_array($field, $this->expectedFields)) {
-            $errorMsg = 'Cannot find field: '.$field;
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
+            $errorMsg = 'Cannot find field: '.$field.' - Value: '.$value;
             $serviceSiteAlert = new SiteAlertService();
             $serviceSiteAlert->create(SiteAlert::TYPE_ERROR, __CLASS__, $errorMsg);
             return false;
