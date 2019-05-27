@@ -80,7 +80,7 @@ class PartnerReviewController extends Controller
 
             if ($itemStatus == PartnerReview::STATUS_ACTIVE) {
 
-                $reviewSiteService = $serviceContainer->getReviewSiteService();
+                $partnerService = $serviceContainer->getPartnerService();
                 $reviewLinkService = $serviceContainer->getReviewLinkService();
                 $reviewStatsService = $serviceContainer->getReviewStatsService();
                 $gameService = $serviceContainer->getGameService();
@@ -93,7 +93,7 @@ class PartnerReviewController extends Controller
                 $itemUrl = $reviewData->item_url;
                 $itemDateShort = date('Y-m-d', strtotime($reviewData->item_date));
 
-                $reviewSite = $reviewSiteService->find($siteId);
+                $reviewSite = $partnerService->find($siteId);
                 $ratingNormalised = $reviewLinkService->getNormalisedRating($itemRating, $reviewSite);
 
                 $reviewLink = $reviewLinkService->create(
