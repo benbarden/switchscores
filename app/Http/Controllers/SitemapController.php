@@ -201,7 +201,7 @@ class SitemapController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $bindings = [];
         $timestamp = $this->getTimestampNow();
@@ -215,7 +215,7 @@ class SitemapController extends Controller
             'priority' => '0.8'
         );
 
-        $reviewSiteList = $serviceReviewSite->getActive();
+        $reviewSiteList = $servicePartner->getActiveReviewSites();
         foreach ($reviewSiteList as $reviewSite) {
             $sitemapPages[] = array(
                 'url' => route('reviews.site', ['linkTitle' => $reviewSite->link_title]),
