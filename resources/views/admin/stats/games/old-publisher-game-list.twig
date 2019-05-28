@@ -11,7 +11,7 @@
         {% if PublisherData is not defined %}
             <div class="alert alert-warning" role="alert">
                 There isn't a record in the publisher list for <strong>{{ PublisherName }}</strong>.
-                <a href="{{ route('admin.publisher.add') }}">Add one now</a>.
+                <a href="{{ route('admin.partners.games-company.add') }}">Add one now</a>.
             </div>
         {% else %}
             <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new pub to all">
@@ -57,7 +57,7 @@
                         </td>
                         <td class="text-center">
                             <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit game</a> :
-                            <a href="{{ route('admin.publisher.game.list', {'gameId': item.id}) }}">Publishers</a>
+                            <a href="{{ route('admin.game.publisher.list', {'gameId': item.id}) }}">Publishers</a>
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-clear-old-publisher-{{ item.id }}" class="lnk-clear-old-publisher">Clear old publisher</a>

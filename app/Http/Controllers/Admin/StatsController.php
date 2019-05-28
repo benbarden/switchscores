@@ -32,7 +32,7 @@ class StatsController extends Controller
         $bindings = [];
 
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
-        $serviceReviewSite = $serviceContainer->getReviewSiteService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
         $serviceTopRated = $serviceContainer->getTopRatedService();
@@ -47,7 +47,7 @@ class StatsController extends Controller
         $bindings['ReleasedGameCount'] = $releasedGameCount;
         $bindings['ReviewLinkCount'] = $reviewLinkCount;
 
-        $reviewSitesActive = $serviceReviewSite->getActive();
+        $reviewSitesActive = $servicePartner->getActiveReviewSites();
         $reviewSitesRender = [];
 
         foreach ($reviewSitesActive as $reviewSite) {
@@ -162,14 +162,14 @@ class StatsController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
-        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $bindings = [];
 
         $bindings['ItemList'] = $serviceGame->getByDeveloper($developer);
 
         $bindings['DeveloperName'] = $developer;
-        $developerData = $serviceDeveloper->getByName($developer);
+        $developerData = $servicePartner->getByName($developer);
         if ($developerData) {
             $bindings['DeveloperData'] = $developerData;
         }
@@ -188,14 +188,14 @@ class StatsController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
-        $servicePublisher = $serviceContainer->getPublisherService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
         $bindings = [];
 
         $bindings['ItemList'] = $serviceGame->getByPublisher($publisher);
 
         $bindings['PublisherName'] = $publisher;
-        $publisherData = $servicePublisher->getByName($publisher);
+        $publisherData = $servicePartner->getByName($publisher);
         if ($publisherData) {
             $bindings['PublisherData'] = $publisherData;
         }
