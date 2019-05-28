@@ -51,7 +51,7 @@
     </div>
 {% endif %}
 
-<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a game">
+<a href="{{ route('admin.games.add') }}" class="btn outline btn-primary">Add a game</a>
 <br>
 <br>
 
@@ -117,9 +117,6 @@
 {% include 'common/table-sorting.twig' %}
 <script>
     var regionCode = '{{ RegionCode }}';
-    $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('admin.games.add') }}';
-    });
     $('#admin-nav-game-filter').on('change', function() {
         selectedGameFilter = $(this).val();
         top.location.href = '{{ route('admin.games.list')}}' + '/' + selectedGameFilter;
