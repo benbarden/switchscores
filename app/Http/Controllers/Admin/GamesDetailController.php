@@ -35,6 +35,16 @@ class GamesDetailController extends Controller
         $bindings['TopTitle'] = $gameTitle.' - Game detail - Admin';
         $bindings['PageTitle'] = $gameTitle;
 
+        $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
+
+        $lastGameId = \Request::get('lastgameid');
+        if ($lastGameId) {
+            $lastGame = $serviceGame->find($lastGameId);
+            if ($lastGame) {
+                $bindings['LastGame'] = $lastGame;
+            }
+        }
+
         // Get all the data
         $gameReviews = $serviceReviewLink->getByGame($gameId);
         $gameGenres = $serviceGameGenres->getByGame($gameId);

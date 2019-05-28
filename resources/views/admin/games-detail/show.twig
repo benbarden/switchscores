@@ -4,6 +4,16 @@
 
 {% block page_inner %}
 
+{% if LastAction == 'add' and LastGame is not null %}
+    <div class="alert alert-warning" role="alert">
+        Successfully added <strong>{{ LastGame.title }}</strong>.
+    </div>
+{% elseif LastAction == 'edit' and LastGame is not null %}
+    <div class="alert alert-warning" role="alert">
+        Successfully edited <strong>{{ LastGame.title }}</strong>.
+    </div>
+{% endif %}
+
 <div class="row">
 
     <div class="col-md-8">
