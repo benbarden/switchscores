@@ -27,6 +27,11 @@ class GameChangeHistoryService
         return GameChangeHistory::find($id);
     }
 
+    public function deleteByGameId($gameId)
+    {
+        GameChangeHistory::where('game_id', $gameId)->delete();
+    }
+
     /**
      * @return mixed
      */

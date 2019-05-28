@@ -23,6 +23,11 @@ class GamePublisherService
         GamePublisher::where('id', $gamePublisherId)->delete();
     }
 
+    public function deleteByGameId($gameId)
+    {
+        GamePublisher::where('game_id', $gameId)->delete();
+    }
+
     public function find($id)
     {
         return GamePublisher::find($id);

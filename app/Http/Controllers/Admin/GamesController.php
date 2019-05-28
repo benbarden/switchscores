@@ -268,7 +268,7 @@ class GamesController extends Controller
             event(new GameCreated($game));
 
             //return redirect('/admin/games/list?lastaction=add&lastgameid='.$gameId);
-            return redirect('/admin/games/detail/'.$gameId);
+            return redirect('/admin/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
 
         }
 
@@ -386,7 +386,8 @@ class GamesController extends Controller
 
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
-                return redirect('/admin/games/list/'.$gameListFilter.'?lastaction=edit&lastgameid='.$gameId);
+                //return redirect('/admin/games/list/'.$gameListFilter.'?lastaction=edit&lastgameid='.$gameId);
+                return redirect('/admin/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
             } elseif ($gameListFilter && $nextId) {
                 return redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
             } else {
@@ -471,6 +472,10 @@ class GamesController extends Controller
         $serviceActivityFeed = $serviceContainer->getActivityFeedService();
         $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
         $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
+        $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
         // No service for game_images
         $serviceGameGenres = $serviceContainer->getGameGenreService();
         $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
@@ -518,6 +523,9 @@ class GamesController extends Controller
             $serviceGameGenres->deleteGameGenres($gameId);
             $serviceGameTitleHashes->deleteByGameId($gameId);
             $serviceGameTags->deleteGameTags($gameId);
+            $serviceGameChangeHistory->deleteByGameId($gameId);
+            $serviceGameDeveloper->deleteByGameId($gameId);
+            $serviceGamePublisher->deleteByGameId($gameId);
             $serviceGame->deleteGame($gameId);
 
             // Done
