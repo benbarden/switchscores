@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\FeedItemReviewService;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class FeedItemReviewController extends \App\Http\Controllers\BaseController
+use App\Services\ServiceContainer;
+
+class FeedItemReviewController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var array
      */
@@ -16,23 +22,25 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
 
     public function showList($report = null)
     {
-        $bindings = array();
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Feed items';
         $bindings['PageTitle'] = 'Feed items';
 
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $feedItemReviewService */
+        $serviceFeedItemReview = $serviceContainer->getFeedItemReviewService();
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
-            $feedItems = $feedItemReviewService->getUnprocessed();
+            $feedItems = $serviceFeedItemReview->getUnprocessed();
             $jsInitialSort = "[ 2, 'asc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'processed':
-                    $feedItems = $feedItemReviewService->getProcessed();
+                    $feedItems = $serviceFeedItemReview->getProcessed();
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 default:
@@ -49,20 +57,21 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
 
     public function edit($itemId)
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $regionCode = \Request::get('regionCode');
 
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $feedItemReviewService */
+        $serviceFeedItemReview = $serviceContainer->getFeedItemReviewService();
+        $serviceGame = $serviceContainer->getGameService();
+        $servicePartner = $serviceContainer->getPartnerService();
 
-        $feedItemData = $feedItemReviewService->find($itemId);
+        $feedItemData = $serviceFeedItemReview->find($itemId);
         if (!$feedItemData) abort(404);
 
-        $gameService = $this->serviceContainer->getGameService();
-
-        $reviewSiteService = resolve('Services\ReviewSiteService');
+        $bindings = [];
 
         $request = request();
-        $bindings = array();
 
         if ($request->isMethod('post')) {
 
@@ -70,7 +79,7 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
 
             $this->validate($request, $this->validationRules);
 
-            $feedItemReviewService->edit(
+            $serviceFeedItemReview->edit(
                 $feedItemData, $request->site_id, $request->game_id, $request->item_rating,
                 $request->processed, $request->process_status
             );
@@ -89,9 +98,9 @@ class FeedItemReviewController extends \App\Http\Controllers\BaseController
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
-        $bindings['ReviewSites'] = $reviewSiteService->getAll();
+        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
         return view('admin.feed-items.reviews.edit', $bindings);
     }
