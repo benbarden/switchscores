@@ -10,6 +10,16 @@
             <a href="{{ PartnerData.website_url }}" target="_blank">{{ PartnerData.website_url }}</a>
         </td>
     </tr>
+    {% if PartnerData.twitter_id %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Twitter ID</span>
+        </td>
+        <td>
+            <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+        </td>
+    </tr>
+    {% endif %}
     <tr>
         <td>
             <span style="font-weight: bold;">Review count</span>
