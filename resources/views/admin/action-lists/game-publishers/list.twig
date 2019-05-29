@@ -22,7 +22,10 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ LinkHelper.gameShow(item) }}" target="_blank">{{ item.title }}</a>
+                        <a href="{{ route('admin.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        </a>
                     </td>
                     <td class="text-center">
                         {% if item.eshop_europe_fs_id %}
