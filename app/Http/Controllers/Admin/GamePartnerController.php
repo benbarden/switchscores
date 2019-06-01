@@ -3,13 +3,44 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as Controller;
+use Auth;
 
 use App\Services\ServiceContainer;
+use App\Factories\GameDirectorFactory;
+use App\Factories\GameChangeHistoryFactory;
 
-use Auth;
 
 class GamePartnerController extends Controller
 {
+    public function showGamePartners($gameId)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) abort(404);
+
+        $gameTitle = $game->title;
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Admin - Partners for game: '.$gameTitle;
+        $bindings['PageTitle'] = 'Partners for game: '.$gameTitle;
+
+        $bindings['GameId'] = $gameId;
+        $bindings['GameData'] = $game;
+        $bindings['GameDeveloperList'] = $serviceGameDeveloper->getByGame($gameId);
+        $bindings['GamePublisherList'] = $serviceGamePublisher->getByGame($gameId);
+        $bindings['UnusedPublisherList'] = $serviceGamePublisher->getPublishersNotOnGame($gameId);
+        $bindings['UnusedDeveloperList'] = $serviceGameDeveloper->getDevelopersNotOnGame($gameId);
+
+        return view('admin.games.partner.gamePartners', $bindings);
+    }
+
     public function showGameDevelopers($gameId)
     {
         $serviceContainer = \Request::get('serviceContainer');
@@ -217,6 +248,46 @@ class GamePartnerController extends Controller
         }
 
         $serviceGamePublisher->delete($gamePublisherId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function saveDevPub()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        // Expected fields
+        //$gameDeveloper = $request->developer;
+        //$gamePublisher = $request->publisher;
+
+        // Save details
+        $gameOrig = $game->fresh();
+        GameDirectorFactory::updateExisting($game, $request->post());
+
+        // Game change history
+        $game->refresh();
+        GameChangeHistoryFactory::makeHistory($game, $gameOrig, Auth::user()->id, 'games');
 
         $data = array(
             'status' => 'OK'

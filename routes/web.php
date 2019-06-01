@@ -171,6 +171,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
 
     // Games partner links
+    Route::get('/admin/game/partner/{gameId}/list', 'Admin\GamePartnerController@showGamePartners')->name('admin.game.partner.list');
+    Route::get('/admin/game/partner/{gameId}/save-dev-pub', 'Admin\GamePartnerController@saveDevPub')->name('admin.game.partner.saveDevPub');
     Route::get('/admin/game/developer/{gameId}/list', 'Admin\GamePartnerController@showGameDevelopers')->name('admin.game.developer.list');
 //    Route::get('/admin/developer/game/{gameId}/add', 'Admin\GamePartnerController@addGameDeveloper')->name('admin.developer.game.add');
     Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');

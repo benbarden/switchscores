@@ -38,7 +38,13 @@ class GamePublisherService
 
     public function getByGame($gameId)
     {
-        return GamePublisher::where('game_id', $gameId)->get();
+        $gamePublishers = GamePublisher::where('game_id', '=', $gameId)->get();
+
+        $gamePublishers = $gamePublishers->sortBy(function($gamePub) {
+            return $gamePub->publisher->name;
+        });
+
+        return $gamePublishers;
     }
 
     public function getByPublisherId($publisherId)

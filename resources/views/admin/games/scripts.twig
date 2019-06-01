@@ -21,8 +21,6 @@
         formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
         formVals['boxart_header_image'] = "{{ GameData.boxart_header_image }}";
         // *** Additional *** //
-        formVals['developer'] = "{{ GameData.developer|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['publisher'] = "{{ GameData.publisher|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
         formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         // *** Media *** //
@@ -50,8 +48,6 @@
         formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
         formVals['boxart_header_image'] = "{{ old('boxart_header_image') }}";
         // *** Additional *** //
-        formVals['developer'] = "{{ old('developer')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['publisher'] = "{{ old('publisher')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
         formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         // *** Media *** //
@@ -82,8 +78,6 @@
     $('#boxart_square_url').val(formVals['boxart_square_url']);
     $('#boxart_header_image').val(formVals['boxart_header_image']);
     // *** Additional *** //
-    $('#developer').val(formVals['developer']);
-    $('#publisher').val(formVals['publisher']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
     $('#overview').val(formVals['overview']);
     // *** Media *** //

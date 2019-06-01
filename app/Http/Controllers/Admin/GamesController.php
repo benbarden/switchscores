@@ -37,8 +37,6 @@ class GamesController extends Controller
         'link_title' => 'required|max:100',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
-        'developer' => 'max:100',
-        'publisher' => 'max:100',
         'media_folder' => 'max:100',
     ];
 

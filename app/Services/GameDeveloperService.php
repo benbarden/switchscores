@@ -38,7 +38,13 @@ class GameDeveloperService
 
     public function getByGame($gameId)
     {
-        return GameDeveloper::where('game_id', $gameId)->get();
+        $gameDevelopers = GameDeveloper::where('game_id', '=', $gameId)->get();
+
+        $gameDevelopers = $gameDevelopers->sortBy(function($gameDev) {
+            return $gameDev->developer->name;
+        });
+
+        return $gameDevelopers;
     }
 
     public function getByDeveloperId($developerId)

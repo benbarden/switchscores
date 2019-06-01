@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.game.developer.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.developer != '' %}
@@ -77,7 +77,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.game.publisher.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
                 </td>
                 <td class="text-center">
                     {% if GameData.publisher != '' %}
