@@ -57,10 +57,8 @@ class GamesCompanyController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $status = Partner::STATUS_ACTIVE;
-
-            $partner = GamesCompanyFactory::create(
-                $status, $request->name, $request->link_title, $request->website_url, $request->twitter_id
+            $partner = GamesCompanyFactory::createActive(
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id
             );
             $partner->save();
 

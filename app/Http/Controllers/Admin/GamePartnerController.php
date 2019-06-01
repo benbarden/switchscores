@@ -8,6 +8,7 @@ use Auth;
 use App\Services\ServiceContainer;
 use App\Factories\GameDirectorFactory;
 use App\Factories\GameChangeHistoryFactory;
+use App\Factories\GamesCompanyFactory;
 
 
 class GamePartnerController extends Controller
@@ -288,6 +289,51 @@ class GamePartnerController extends Controller
         // Game change history
         $game->refresh();
         GameChangeHistoryFactory::makeHistory($game, $gameOrig, Auth::user()->id, 'games');
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function createNewCompany()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        // Expected fields
+        $name = $request->name;
+        $linkTitle = $request->linkTitle;
+        if (!$name) {
+            return response()->json(['error' => 'Missing data: name'], 400);
+        } elseif (!$linkTitle) {
+            return response()->json(['error' => 'Missing data: linkTitle'], 400);
+        }
+
+        // De-dupe
+        $partner = $servicePartner->getByName($name);
+        if ($partner) {
+            return response()->json(['error' => 'Partner already exists with that name'], 400);
+        }
+        $partner = $servicePartner->getByLinkTitle($linkTitle);
+        if ($partner) {
+            return response()->json(['error' => 'Partner already exists with that linkTitle'], 400);
+        }
+
+        // OK to proceed
+        $partner = GamesCompanyFactory::createActive($name, $linkTitle);
+        $partner->save();
 
         $data = array(
             'status' => 'OK'

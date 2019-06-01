@@ -15,6 +15,30 @@
 
 <div class="row">
 
+    <div class="col-md-12">
+
+        <h3>Quick create</h3>
+        <div id="js-quick-create-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+        <div class="form-group">
+            <label for="quick-create-games-company-name" class="col-md-2 control-label">Name</label>
+            <div class="col-md-3">
+                <input id="quick-create-games-company-name" name="quick-create-games-company-name" type="text" class="form-control" size="50" maxlength="100">
+            </div>
+            <label for="quick-create-games-company-link-title" class="col-md-2 control-label">Link title</label>
+            <div class="col-md-3">
+                <input id="quick-create-games-company-link-title" name="quick-create-games-company-link-title" type="text" class="form-control" size="50" maxlength="100">
+            </div>
+            <div class="col-md-2">
+                <input id="btn-quick-create-games-company" type="button" class="btn-primary btn-sm" value="+ Add">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
     <div class="col-md-6 col-sm-12">
 
         <h2>Developers</h2>
@@ -282,6 +306,32 @@
         });
     });
 
+    // Quick create
+    $('#btn-quick-create-games-company').on('click', function() {
+
+        newName = $('#quick-create-games-company-name').val();
+        newLinkTitle = $('#quick-create-games-company-link-title').val();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game.partner.createNewCompany') }}', {name: newName, linkTitle: newLinkTitle}, function(data) {
+            $('#js-quick-create-notify').text('Saved!');
+            $('#js-quick-create-notify').show();
+            $('#quick-create-games-company-name').val('');
+            $('#quick-create-games-company-link-title').val('');
+            setTimeout("$('#js-quick-create-notify').fadeOut(); window.location.reload(true);", 500);
+        })
+        .fail(function(data) {
+            $('#js-quick-create-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-quick-create-notify').show();
+        });
+
+    });
+
     // Legacy
     var formVals = [];
     formVals['developer'] = "{{ GameData.developer|e('js') }}";
@@ -303,6 +353,7 @@
         $.getJSON('{{ route('admin.game.partner.saveDevPub', {'gameId': GameId}) }}', {developer: gameDeveloper, publisher: gamePublisher}, function(data) {
             $('#js-legacy-notify').text('Saved!');
             $('#js-legacy-notify').show();
+            setTimeout("$('#js-legacy-notify').fadeOut();", 500);
         })
         .fail(function(data) {
             $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
