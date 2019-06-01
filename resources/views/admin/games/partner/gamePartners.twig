@@ -1,0 +1,316 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('admin.games.list'), 'text': 'Games'},
+    {'url': route('admin.games.detail', {'gameId': GameId}), 'text': 'Detail'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<p>
+    This page lists the partners used for the game <strong>{{ GameData.title }}</strong>
+    and allows you to add or remove records.
+</p>
+
+<div class="row">
+
+    <div class="col-md-6 col-sm-12">
+
+        <h2>Developers</h2>
+
+        <div id="js-developer-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+        {% if UnusedDeveloperList %}
+            <div class="form-group">
+                <label for="developer-list" class="col-md-4 control-label">Assign a developer</label>
+                <div class="col-md-6">
+                    <select id="developer-list" name="developer-list">
+                        <option value=""></option>
+                        {% for item in UnusedDeveloperList %}
+                            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input id="btn-add-developer" type="button" class="btn-primary btn-sm" value="Assign">
+                </div>
+            </div>
+        {% endif %}
+
+        <br>
+        <br>
+
+        {% if GameDeveloperList.count > 0 %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Developer</th>
+                    <th class="text-center">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in GameDeveloperList %}
+                    <tr>
+                        <td>
+                            {{ item.developer.name }}
+                        </td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" id="lnk-remove-developer-{{ item.id }}" class="lnk-remove-developer">Unassign</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>This game has no developers assigned.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-6 col-sm-12">
+
+        <h2>Publishers</h2>
+
+        <div id="js-publisher-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+        {% if UnusedPublisherList %}
+            <div class="form-group">
+                <label for="publisher-list" class="col-md-4 control-label">Assign a publisher</label>
+                <div class="col-md-6">
+                    <select id="publisher-list" name="publisher-list">
+                        <option value=""></option>
+                        {% for item in UnusedPublisherList %}
+                            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input id="btn-add-publisher" type="button" class="btn-primary btn-sm" value="Assign">
+                </div>
+            </div>
+        {% endif %}
+
+        <br>
+        <br>
+
+        {% if GamePublisherList.count > 0 %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Publisher</th>
+                    <th class="text-center">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in GamePublisherList %}
+                    <tr>
+                        <td>
+                            {{ item.publisher.name }}
+                        </td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" id="lnk-remove-publisher-{{ item.id }}" class="lnk-remove-publisher">Unassign</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>This game has no publishers assigned.</p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<h2>Legacy</h2>
+
+<div class="row">
+
+    <div id="js-legacy-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+    <div class="form-group">
+        <label for="developer" class="col-md-2 control-label">Developer</label>
+        <div class="col-md-3">
+            <input id="developer" type="text" class="form-control" name="developer" size="50" maxlength="100">
+        </div>
+        <label for="publisher" class="col-md-2 control-label">Publisher</label>
+        <div class="col-md-3">
+            <input id="publisher" type="text" class="form-control" name="publisher" size="50" maxlength="100">
+        </div>
+        <div class="col-md-2">
+            <input id="btn-save-game-details" type="button" class="btn-primary btn-sm" value="Save game details">
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    var gameId = '{{ GameId }}';
+
+    // Lists
+
+    $('#developer-list').select2();
+    $('#publisher-list').select2();
+
+
+    $('#btn-add-developer').on('click', function() {
+
+        developerName = $('#developer-list option:selected').text();
+        developerId = $('#developer-list option:selected').val();
+
+        if (developerId == '') {
+            $('#js-developer-notify').text('No developer selected.');
+            $('#js-developer-notify').show();
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/api/admin/developer/add-game-developer', {gameId: gameId, developerId: developerId}, function(data) {
+            $('#js-developer-notify').text('Developer added!');
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 500);
+        })
+        .fail(function(data) {
+            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+        });
+    });
+
+    $('.lnk-remove-developer').on('click', function() {
+
+        elemId = $(this).attr('id');
+        gameDeveloperId = elemId.replace('lnk-remove-developer-', '');
+
+        if (gameDeveloperId == '') {
+            $('#js-developer-notify').text('Failed to load gameDeveloperId');
+            $('#js-developer-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Remove this developer from the game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
+            $('#js-developer-notify').text('Developer removed!');
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 500);
+        })
+        .fail(function(data) {
+            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-developer-notify').show();
+            $('#developer-list option:selected').val('');
+        });
+    });
+    $('#btn-add-publisher').on('click', function() {
+
+        publisherName = $('#publisher-list option:selected').text();
+        publisherId = $('#publisher-list option:selected').val();
+
+        if (publisherId == '') {
+            $('#js-publisher-notify').text('No publisher selected.');
+            $('#js-publisher-notify').show();
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
+            $('#js-publisher-notify').text('Publisher added!');
+            $('#js-publisher-notify').show();
+            $('#publisher-list option:selected').val('');
+            setTimeout("$('#js-publisher-notify').fadeOut(); window.location.reload(true);", 500);
+        })
+        .fail(function(data) {
+            $('#js-publisher-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-publisher-notify').show();
+            $('#publisher-list option:selected').val('');
+        });
+    });
+
+    $('.lnk-remove-publisher').on('click', function() {
+
+        elemId = $(this).attr('id');
+        gamePublisherId = elemId.replace('lnk-remove-publisher-', '');
+
+        if (gamePublisherId == '') {
+            $('#js-publisher-notify').text('Failed to load gamePublisherId');
+            $('#js-publisher-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Remove this publisher from the game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
+            $('#js-publisher-notify').text('Publisher removed!');
+            $('#js-publisher-notify').show();
+            $('#publisher-list option:selected').val('');
+            setTimeout("$('#js-publisher-notify').fadeOut(); window.location.reload(true);", 500);
+        })
+        .fail(function(data) {
+            $('#js-publisher-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-publisher-notify').show();
+            $('#publisher-list option:selected').val('');
+        });
+    });
+
+    // Legacy
+    var formVals = [];
+    formVals['developer'] = "{{ GameData.developer|e('js') }}";
+    formVals['publisher'] = "{{ GameData.publisher|e('js') }}";
+    $('#developer').val(formVals['developer']);
+    $('#publisher').val(formVals['publisher']);
+
+    $('#btn-save-game-details').on('click', function() {
+
+        gameDeveloper = $('#developer').val();
+        gamePublisher = $('#publisher').val();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game.partner.saveDevPub', {'gameId': GameId}) }}', {developer: gameDeveloper, publisher: gamePublisher}, function(data) {
+            $('#js-legacy-notify').text('Saved!');
+            $('#js-legacy-notify').show();
+        })
+        .fail(function(data) {
+            $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-legacy-notify').show();
+        });
+
+    });
+
+</script>
+
+{% endblock page_inner %}
