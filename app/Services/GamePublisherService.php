@@ -6,6 +6,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 use App\GamePublisher;
+use App\Partner;
 
 
 class GamePublisherService
@@ -65,8 +66,11 @@ class GamePublisherService
     public function getPublishersNotOnGame($gameId)
     {
         $games = DB::select('
-            select * from partners where id not in (select publisher_id from game_publishers where game_id = ?) ORDER BY name
-        ', [$gameId]);
+            select * from partners
+            where type_id = ?
+            and id not in (select publisher_id from game_publishers where game_id = ?)
+            ORDER BY name
+        ', [Partner::TYPE_GAMES_COMPANY, $gameId]);
 
         return $games;
     }
