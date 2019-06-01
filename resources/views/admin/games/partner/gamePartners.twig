@@ -52,7 +52,7 @@
                     <select id="developer-list" name="developer-list">
                         <option value=""></option>
                         {% for item in UnusedDeveloperList %}
-                            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
+                            <option value="{{ item.id }}">{{ item.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -105,7 +105,7 @@
                     <select id="publisher-list" name="publisher-list">
                         <option value=""></option>
                         {% for item in UnusedPublisherList %}
-                            <option value="{{ item.id }}">[{{ item.id }}] {{ item.name }}</option>
+                            <option value="{{ item.id }}">{{ item.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
