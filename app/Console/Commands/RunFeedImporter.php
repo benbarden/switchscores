@@ -145,7 +145,7 @@ class RunFeedImporter extends Command
                         $feedItemLinks = $feedItem['link'];
                         foreach ($feedItemLinks as $itemLinkTemp) {
                             $itemLinkTempData = $itemLinkTemp['@attributes'];
-                            if ($itemLinkTempData['rel'] == 'self') {
+                            if ($itemLinkTempData['rel'] == 'alternate') {
                                 $itemUrl = $itemLinkTempData['href'];
                                 break;
                             }
