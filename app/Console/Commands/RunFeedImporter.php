@@ -9,6 +9,11 @@ use App\Services\PartnerService;
 use App\Services\FeedItemReviewService;
 use App\Services\Feed\Importer;
 
+use App\FeedItemReview;
+use Carbon\Carbon;
+
+use App\Services\Game\TitleMatch as ServiceTitleMatch;
+
 class RunFeedImporter extends Command
 {
     /**
@@ -50,6 +55,9 @@ class RunFeedImporter extends Command
         /* @var FeedItemReviewService $feedItemReviewService */
         $reviewSites = $partnerService->getReviewSiteFeedUrls();
 
+        $gameService = resolve('Services\GameService');
+        /* @var GameService $gameService */
+
         if (!$reviewSites) {
             $this->info('No sites found with feed URLs. Aborting.');
             return true;
@@ -72,46 +80,147 @@ class RunFeedImporter extends Command
                 $feedImporter->setSiteId($siteId);
                 $feedData = $feedImporter->getFeedData();
 
-                foreach ($feedData['channel']['item'] as $feedItem) {
+                if (array_key_exists('channel', $feedData)) {
 
-                    // Generate the model
-                    $feedItemReview = $feedImporter->generateModel($feedItem);
-                    $itemTitle = $feedItemReview->item_title;
-                    $itemUrl = $feedItemReview->item_url;
-                    $itemDate = $feedItemReview->item_date;
+                    foreach ($feedData['channel']['item'] as $feedItem) {
 
-                    // Check if it's already been imported
-                    $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
-                    if ($dbExistingItem) {
-                        //$this->warn('Already imported: '.$itemUrl);
-                        continue;
-                    }
+                        // RSS
 
-                    // Check if a feed URL prefix is set, and if so, compare it
-                    $feedUrlPrefix = $reviewSite->feed_url_prefix;
-                    if ($feedUrlPrefix) {
-                        $fullPrefix = $reviewSite->url.$feedUrlPrefix;
-                        if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
-                            $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                        // Generate the model
+                        $feedItemReview = $feedImporter->generateModel($feedItem);
+                        $itemTitle = $feedItemReview->item_title;
+                        $itemUrl = $feedItemReview->item_url;
+                        $itemDate = $feedItemReview->item_date;
+
+                        // Check if it's already been imported
+                        $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
+                        if ($dbExistingItem) {
+                            //$this->warn('Already imported: '.$itemUrl);
                             continue;
-                        } else {
-                            //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
-                            //continue;
                         }
+
+                        // Check if a feed URL prefix is set, and if so, compare it
+                        $feedUrlPrefix = $reviewSite->feed_url_prefix;
+                        if ($feedUrlPrefix) {
+                            $fullPrefix = $reviewSite->url.$feedUrlPrefix;
+                            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+                                $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                                continue;
+                            } else {
+                                //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                                //continue;
+                            }
+                        }
+
+                        // Check that it's not a historic review
+                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
+                            $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+                            continue;
+                        }
+
+                        // Output some details
+                        $this->info('Importing item: '.$itemUrl);
+
+                        // All good - add it as a feed item
+                        $feedItemReview->load_status = 'Loaded OK';
+                        $feedItemReview->save();
+
                     }
 
-                    // Check that it's not a historic review
-                    if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
-                        $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
-                        continue;
+                } elseif (array_key_exists('entry', $feedData)) {
+
+                    // Atom
+
+                    foreach ($feedData['entry'] as $feedItem) {
+
+                        $feedItemReview = new FeedItemReview();
+
+                        // Basic fields
+                        $feedItemReview->site_id = $siteId;
+                        $itemTitle = $feedItem['title'];
+                        $feedItemReview->item_title = $itemTitle;
+
+                        // URL
+                        $itemUrl = null;
+                        $feedItemLinks = $feedItem['link'];
+                        foreach ($feedItemLinks as $itemLinkTemp) {
+                            $itemLinkTempData = $itemLinkTemp['@attributes'];
+                            if ($itemLinkTempData['rel'] == 'self') {
+                                $itemUrl = $itemLinkTempData['href'];
+                                break;
+                            }
+                        }
+                        if ($itemUrl != null) {
+                            $feedItemReview->item_url = $itemUrl;
+                        }
+
+                        // Date
+                        $itemDateModel = new Carbon($feedItem['published']);
+                        $itemDate = $itemDateModel->format('Y-m-d H:i:s');
+                        $feedItemReview->item_date = $itemDate;
+
+                        // Check if it's already been imported
+                        $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
+                        if ($dbExistingItem) {
+                            //$this->warn('Already imported: '.$itemUrl);
+                            continue;
+                        }
+
+                        // Special rules for Digitally Downloaded
+                        if ($reviewSite->name == 'Digitally Downloaded') {
+
+                            $serviceTitleMatch = new ServiceTitleMatch();
+
+                            $titleMatchRulePattern = $reviewSite->title_match_rule_pattern;
+                            $titleMatchIndex = $reviewSite->title_match_index;
+                            if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
+
+                                // New method
+                                $serviceTitleMatch->setMatchRule($titleMatchRulePattern);
+                                $serviceTitleMatch->prepareMatchRule();
+                                $serviceTitleMatch->setMatchIndex($titleMatchIndex);
+                                $parsedTitle = $serviceTitleMatch->generate($itemTitle);
+
+                                // Can we find a game from this title?
+                                // NB. If there's no match, we'll skip this item altogether
+                                //$this->info('Title: '.$itemTitle);
+                                //$this->info('Parsed title: '.$parsedTitle);
+                                if (!$parsedTitle) {
+                                    $parseStatus = 'Does not match title rule; skipping';
+                                    $this->warn($parseStatus);
+                                    continue;
+                                }
+
+                            }
+                        }
+
+                        // Check if a feed URL prefix is set, and if so, compare it
+                        $feedUrlPrefix = $reviewSite->feed_url_prefix;
+                        if ($feedUrlPrefix) {
+                            $fullPrefix = $reviewSite->url.$feedUrlPrefix;
+                            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+                                $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                                continue;
+                            } else {
+                                //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                                //continue;
+                            }
+                        }
+
+                        // Check that it's not a historic review
+                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
+                            $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+                            continue;
+                        }
+
+                        // Output some details
+                        $this->info('Importing item: '.$itemUrl);
+
+                        // All good - add it as a feed item
+                        $feedItemReview->load_status = 'Loaded OK';
+                        $feedItemReview->save();
+
                     }
-
-                    // Output some details
-                    $this->info('Importing item: '.$itemUrl);
-
-                    // All good - add it as a feed item
-                    $feedItemReview->load_status = 'Loaded OK';
-                    $feedItemReview->save();
 
                 }
 
