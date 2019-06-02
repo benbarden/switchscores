@@ -32,4 +32,14 @@ class News extends Model
     {
         return $this->hasOne('App\Game', 'id', 'game_id');
     }
+
+    public function isHistoric()
+    {
+        // If the content is older than 30 days from today, it's history!
+        if (date('Y-m-d', strtotime('-30 days')) > $this->created_at) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
