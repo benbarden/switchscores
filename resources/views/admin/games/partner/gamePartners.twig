@@ -168,200 +168,26 @@
 
 </div>
 
+<hr>
 
-<script>
+<div class="row">
 
-    var gameId = '{{ GameId }}';
+    <div class="form-group">
+        <label class="col-md-2 control-label">Legacy tools</label>
+        <div class="col-md-3">
+            <input id="btn-legacy-fix-developer" type="button" class="btn-primary btn-sm" value="Fix developer">
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-3">
+            <input id="btn-legacy-fix-publisher" type="button" class="btn-primary btn-sm" value="Fix publisher">
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
 
-    // Lists
+</div>
 
-    $('#developer-list').select2();
-    $('#publisher-list').select2();
-
-
-    $('#btn-add-developer').on('click', function() {
-
-        developerName = $('#developer-list option:selected').text();
-        developerId = $('#developer-list option:selected').val();
-
-        if (developerId == '') {
-            $('#js-developer-notify').text('No developer selected.');
-            $('#js-developer-notify').show();
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('/api/admin/developer/add-game-developer', {gameId: gameId, developerId: developerId}, function(data) {
-            $('#js-developer-notify').text('Developer added!');
-            $('#js-developer-notify').show();
-            $('#developer-list option:selected').val('');
-            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function(data) {
-            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-developer-notify').show();
-            $('#developer-list option:selected').val('');
-        });
-    });
-
-    $('.lnk-remove-developer').on('click', function() {
-
-        elemId = $(this).attr('id');
-        gameDeveloperId = elemId.replace('lnk-remove-developer-', '');
-
-        if (gameDeveloperId == '') {
-            $('#js-developer-notify').text('Failed to load gameDeveloperId');
-            $('#js-developer-notify').show();
-            return false;
-        }
-
-        if (!window.confirm('Remove this developer from the game?')) {
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
-            $('#js-developer-notify').text('Developer removed!');
-            $('#js-developer-notify').show();
-            $('#developer-list option:selected').val('');
-            setTimeout("$('#js-developer-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function(data) {
-            $('#js-developer-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-developer-notify').show();
-            $('#developer-list option:selected').val('');
-        });
-    });
-    $('#btn-add-publisher').on('click', function() {
-
-        publisherName = $('#publisher-list option:selected').text();
-        publisherId = $('#publisher-list option:selected').val();
-
-        if (publisherId == '') {
-            $('#js-publisher-notify').text('No publisher selected.');
-            $('#js-publisher-notify').show();
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
-            $('#js-publisher-notify').text('Publisher added!');
-            $('#js-publisher-notify').show();
-            $('#publisher-list option:selected').val('');
-            setTimeout("$('#js-publisher-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function(data) {
-            $('#js-publisher-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-publisher-notify').show();
-            $('#publisher-list option:selected').val('');
-        });
-    });
-
-    $('.lnk-remove-publisher').on('click', function() {
-
-        elemId = $(this).attr('id');
-        gamePublisherId = elemId.replace('lnk-remove-publisher-', '');
-
-        if (gamePublisherId == '') {
-            $('#js-publisher-notify').text('Failed to load gamePublisherId');
-            $('#js-publisher-notify').show();
-            return false;
-        }
-
-        if (!window.confirm('Remove this publisher from the game?')) {
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
-            $('#js-publisher-notify').text('Publisher removed!');
-            $('#js-publisher-notify').show();
-            $('#publisher-list option:selected').val('');
-            setTimeout("$('#js-publisher-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function(data) {
-            $('#js-publisher-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-publisher-notify').show();
-            $('#publisher-list option:selected').val('');
-        });
-    });
-
-    // Quick create
-    $('#btn-quick-create-games-company').on('click', function() {
-
-        newName = $('#quick-create-games-company-name').val();
-        newLinkTitle = $('#quick-create-games-company-link-title').val();
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.partner.createNewCompany') }}', {name: newName, linkTitle: newLinkTitle}, function(data) {
-            $('#js-quick-create-notify').text('Saved!');
-            $('#js-quick-create-notify').show();
-            $('#quick-create-games-company-name').val('');
-            $('#quick-create-games-company-link-title').val('');
-            setTimeout("$('#js-quick-create-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function(data) {
-            $('#js-quick-create-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-quick-create-notify').show();
-        });
-
-    });
-
-    // Legacy
-    var formVals = [];
-    formVals['developer'] = "{{ GameData.developer|e('js') }}";
-    formVals['publisher'] = "{{ GameData.publisher|e('js') }}";
-    $('#developer').val(formVals['developer']);
-    $('#publisher').val(formVals['publisher']);
-
-    $('#btn-save-game-details').on('click', function() {
-
-        gameDeveloper = $('#developer').val();
-        gamePublisher = $('#publisher').val();
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.partner.saveDevPub', {'gameId': GameId}) }}', {developer: gameDeveloper, publisher: gamePublisher}, function(data) {
-            $('#js-legacy-notify').text('Saved!');
-            $('#js-legacy-notify').show();
-            setTimeout("$('#js-legacy-notify').fadeOut();", 500);
-        })
-        .fail(function(data) {
-            $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-legacy-notify').show();
-        });
-
-    });
-
-</script>
+{% include 'admin/games/partner/gamePartners-scripts.twig' %}
 
 {% endblock page_inner %}

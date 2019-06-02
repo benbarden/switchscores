@@ -173,6 +173,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Games partner links
     Route::get('/admin/game/partner/{gameId}/list', 'Admin\GamePartnerController@showGamePartners')->name('admin.game.partner.list');
     Route::get('/admin/game/partner/{gameId}/save-dev-pub', 'Admin\GamePartnerController@saveDevPub')->name('admin.game.partner.saveDevPub');
+    Route::get('/admin/game/partner/{gameId}/legacy-fix-dev', 'Admin\GamePartnerController@legacyFixDev')->name('admin.game.partner.legacyFixDev');
+    Route::get('/admin/game/partner/{gameId}/legacy-fix-pub', 'Admin\GamePartnerController@legacyFixPub')->name('admin.game.partner.legacyFixPub');
     Route::get('/admin/game/partner/create-new-company', 'Admin\GamePartnerController@createNewCompany')->name('admin.game.partner.createNewCompany');
     Route::get('/admin/game/developer/{gameId}/list', 'Admin\GamePartnerController@showGameDevelopers')->name('admin.game.developer.list');
 //    Route::get('/admin/developer/game/{gameId}/add', 'Admin\GamePartnerController@addGameDeveloper')->name('admin.developer.game.add');

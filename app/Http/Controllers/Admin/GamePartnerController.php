@@ -341,4 +341,112 @@ class GamePartnerController extends Controller
         return response()->json($data, 200);
     }
 
+    public function legacyFixDev()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        // Expected fields
+        $gameId = $request->gameId;
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        // Legacy field check
+        $legacyDev = $game->developer;
+        if (!$legacyDev) {
+            return response()->json(['error' => 'Developer field not set'], 400);
+        }
+
+        // Get partner
+        $partner = $servicePartner->getByName($legacyDev);
+        if (!$partner) {
+            return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
+        }
+        $partnerId = $partner->id;
+
+        // Check partner association doesn't exist
+        if ($serviceGameDeveloper->gameHasDeveloper($gameId, $partnerId)) {
+            return response()->json(['error' => 'Partner already assigned to game.'], 400);
+        }
+
+        // OK to proceed
+        $serviceGameDeveloper->createGameDeveloper($gameId, $partnerId);
+        $game->developer = null;
+        $game->save();
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function legacyFixPub()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        // Expected fields
+        $gameId = $request->gameId;
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        // Legacy field check
+        $legacyPub = $game->publisher;
+        if (!$legacyPub) {
+            return response()->json(['error' => 'Publisher field not set'], 400);
+        }
+
+        // Get partner
+        $partner = $servicePartner->getByName($legacyPub);
+        if (!$partner) {
+            return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
+        }
+        $partnerId = $partner->id;
+
+        // Check partner association doesn't exist
+        if ($serviceGamePublisher->gameHasPublisher($gameId, $partnerId)) {
+            return response()->json(['error' => 'Partner already assigned to game.'], 400);
+        }
+
+        // OK to proceed
+        $serviceGamePublisher->createGamePublisher($gameId, $partnerId);
+        $game->publisher = null;
+        $game->save();
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
 }
