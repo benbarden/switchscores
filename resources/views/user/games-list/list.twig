@@ -1,0 +1,66 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<p>
+    This page lists all of games we have linked to your company. If anything is wrong, let us know.
+</p>
+
+{% if PartnerGameList.count > 0 %}
+    <table class="table table-condensed table-responsive data-sortable">
+        <thead>
+        <tr>
+            <th class="text-left">Game</th>
+            <th class="text-center">Release date</th>
+            <th class="text-center">Reviews</th>
+            <th class="text-center">Rating</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in PartnerGameList %}
+            <tr>
+                <td class="text-left">
+                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
+                </td>
+                <td class="text-center">
+                    {{ item.release_date }}
+                </td>
+                <td class="text-center">
+                    {{ item.review_count }}
+                </td>
+                <td class="text-center">
+                    {% if item.rating_avg %}
+                        {{ item.rating_avg }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>
+        We don't currently have any games linked to your company.
+    </p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

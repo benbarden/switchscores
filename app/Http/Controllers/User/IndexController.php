@@ -13,9 +13,13 @@ class IndexController extends Controller
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
 
+        $regionCode = \Request::get('regionCode');
+
         $servicePartner = $serviceContainer->getPartnerService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
         $serviceCollection = $serviceContainer->getUserGamesCollectionService();
+        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
 
         $bindings = [];
 
@@ -31,11 +35,11 @@ class IndexController extends Controller
 
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        $siteId = $authUser->partner_id;
+        $partnerId = $authUser->partner_id;
 
-        if ($siteId) {
+        if ($partnerId) {
 
-            $partnerData = $servicePartner->find($siteId);
+            $partnerData = $servicePartner->find($partnerId);
 
             if ($partnerData) {
 
@@ -47,15 +51,15 @@ class IndexController extends Controller
                     $onPageTitle = 'Review partner dashboard: '.$partnerData->name;
 
                     // Review stats (for infobox)
-                    $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
+                    $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
                     $bindings['ReviewCount'] = $reviewStats[0]->ReviewCount;
                     $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
                     // Recent reviews
-                    $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($siteId, 5);
+                    $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 5);
 
                     // Score distribution
-                    $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+                    $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($partnerId);
 
                     $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
                     if ($reviewScoreDistribution) {
@@ -73,6 +77,12 @@ class IndexController extends Controller
                     $siteRole = 'games-company';
 
                     $onPageTitle = 'Games company dashboard: '.$partnerData->name;
+
+                    // Recent games
+                    $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, 5);
+                    $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, 5);
+                    $bindings['GameDevList'] = $gameDevList;
+                    $bindings['GamePubList'] = $gamePubList;
 
                 }
 

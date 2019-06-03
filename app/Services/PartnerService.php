@@ -79,16 +79,28 @@ class PartnerService
 
     // ********************************************************** //
 
+    /**
+     * @param $id
+     * @return Partner
+     */
     public function find($id)
     {
         return Partner::find($id);
     }
 
+    /**
+     * @param $name
+     * @return Partner
+     */
     public function getByName($name)
     {
         return Partner::where('name', $name)->first();
     }
 
+    /**
+     * @param $linkTitle
+     * @return Partner
+     */
     public function getByLinkTitle($linkTitle)
     {
         return Partner::
@@ -97,6 +109,10 @@ class PartnerService
             ->first();
     }
 
+    /**
+     * @param $domainUrl
+     * @return Partner
+     */
     public function getByDomain($domainUrl)
     {
         return Partner::

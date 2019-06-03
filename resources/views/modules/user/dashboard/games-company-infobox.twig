@@ -1,0 +1,43 @@
+<h2>Infobox</h2>
+<table class="table table-condensed table-responsive">
+    {% if PartnerData.website_url %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Site URL</span>
+        </td>
+        <td>
+            <a href="{{ PartnerData.website_url }}" target="_blank">{{ PartnerData.website_url }}</a>
+        </td>
+    </tr>
+    {% endif %}
+    {% if PartnerData.twitter_id %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Twitter ID</span>
+        </td>
+        <td>
+            <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+        </td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Developed games</span>
+        </td>
+        <td>{{ PartnerData.developerGames.count }}</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Published games</span>
+        </td>
+        <td>{{ PartnerData.publisherGames.count }}</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">WOS profile page</span>
+        </td>
+        <td>
+            <a href="{{ route('partners.detail.games-company', {'linkTitle': PartnerData.link_title}) }}" target="_blank">Click to view</a>
+        </td>
+    </tr>
+</table>

@@ -135,6 +135,9 @@ Route::group(['middleware' => ['auth']], function() {
     // Review partners: Review links
     Route::get('/user/review-link/{report?}', 'User\ReviewLinkController@landing')->name('user.review-link.landing');
 
+    // Review partners: Games list
+    Route::get('/user/games-list/{report}', 'User\GamesListController@landing')->name('user.games-list.landing');
+
 });
 
 /* Admin */

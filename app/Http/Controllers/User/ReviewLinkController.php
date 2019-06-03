@@ -28,11 +28,13 @@ class ReviewLinkController extends Controller
 
         if (!$partnerId) abort(403);
 
-        $reviewSite = $servicePartner->find($partnerId);
+        $partner = $servicePartner->find($partnerId);
 
-        if (!$reviewSite) abort(403);
+        if (!$partner) abort(403);
 
-        $bindings['ReviewSite'] = $reviewSite;
+        if (!$partner->isReviewSite()) abort(403);
+
+        $bindings['ReviewSite'] = $partner;
 
         // Recent reviews
         $bindings['ReviewLinks'] = $serviceReviewLink->getAllBySite($partnerId);

@@ -2,23 +2,37 @@
 
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-        <h2>Coming soon</h2>
+        {% if GameDevList.count > 0 or GamePubList.count > 0 %}
+            <h2>Your games</h2>
+            <p>
+                Your games are listed below. Let us know if any are missing or incorrect.
+            </p>
+        {% endif %}
+        {% if GameDevList.count > 0 %}
+            <h2>As a developer</h2>
+            {% include 'modules/user/dashboard/games-company-recent.twig' with {'PartnerGameList': GameDevList, 'ViewAllSuffix': 'developer'} %}
+        {% endif %}
+        {% if GamePubList.count > 0 %}
+            <h2>As a publisher</h2>
+            {% include 'modules/user/dashboard/games-company-recent.twig' with {'PartnerGameList': GamePubList, 'ViewAllSuffix': 'publisher'} %}
+        {% endif %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2>Review codes</h2>
+
         <p>
-            We're in the early stages of building a dedicated dashboard for
-            Switch game developers and publishers. Check back soon for more!
+            Coming soon - we'll be giving you a way to share review codes with our partners.
         </p>
 
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-
-
-    </div>
-
-    <div class="col-xs-12 col-sm-4 col-md-4">
-
-        {% include 'modules/user/dashboard/games-company-info.twig' %}
+        {% include 'modules/user/dashboard/games-company-infobox.twig' %}
+        {% include 'modules/user/dashboard/games-company-intro.twig' %}
 
         <h2>Member tools</h2>
         {% include 'modules/user/dashboard/games-collection-button.twig' %}

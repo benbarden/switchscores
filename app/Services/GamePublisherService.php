@@ -84,9 +84,10 @@ class GamePublisherService
     /**
      * @param $region
      * @param $publisherId
-     * @return mixed
+     * @param null $limit
+     * @return \Illuminate\Database\Query\Builder|\Illuminate\Support\Collection
      */
-    public function getGamesByPublisher($region, $publisherId)
+    public function getGamesByPublisher($region, $publisherId, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
@@ -103,6 +104,9 @@ class GamePublisherService
             ->where('game_release_dates.region', $region)
             //->where('game_release_dates.is_released', '1')
             ->orderBy('game_release_dates.release_date', 'desc');
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
 
         $games = $games->get();
         return $games;
