@@ -49,6 +49,16 @@ class Partner extends Model
 
     public function links()
     {
-        return $this->hasMany('App\ReviewLink', 'id', 'site_id');
+        return $this->hasMany('App\ReviewLink', 'site_id', 'id');
+    }
+
+    public function developerGames()
+    {
+        return $this->hasMany('App\GameDeveloper', 'developer_id', 'id');
+    }
+
+    public function publisherGames()
+    {
+        return $this->hasMany('App\GamePublisher', 'publisher_id', 'id');
     }
 }

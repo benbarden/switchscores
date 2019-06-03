@@ -22,8 +22,9 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Name</th>
-                <th>Url</th>
                 <th>Twitter ID</th>
+                <th class="text-center">Assigned games<br>(developer)</th>
+                <th class="text-center">Assigned games<br>(publisher)</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -35,12 +36,11 @@
                     </td>
                     <td>
                         <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
-                    </td>
-                    <td>
                         {% if item.website_url %}
-                            <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
-                        {% else %}
-                            -
+                            <br>
+                            <small>
+                                <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
+                            </small>
                         {% endif %}
                     </td>
                     <td>
@@ -49,6 +49,12 @@
                         {% else %}
                             -
                         {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.developerGames().count }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.publisherGames().count }}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
@@ -75,7 +81,8 @@
                 null,
                 null,
                 { "orderable": false },
-                { "orderable": false },
+                null,
+                null,
                 { "orderable": false }
             ]
         });
