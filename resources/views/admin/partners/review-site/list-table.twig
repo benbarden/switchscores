@@ -3,12 +3,13 @@
         <thead>
         <tr>
             <th class="text-center">#</th>
-            <th>Name</th>
-            <th>URLs</th>
+            <th>Site</th>
+            <th>URL</th>
+            <th class="text-left">Twitter</th>
             <th class="text-center">Rating scale</th>
             <th class="text-center">Active</th>
-            <th class="text-center">Allow historic?</th>
-            <th class="text-center">Match rule set?</th>
+            <th class="text-center">Feed?</th>
+            <th class="text-center">Match rule?</th>
             <th class="text-center">Reviews</th>
             <th class="text-center">Options</th>
         </tr>
@@ -26,13 +27,15 @@
                 </td>
                 <td>
                     <small>
-                        Site: <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
-                        {% if item.feed_url %}
-                            <br>
-                            Feed:
-                            <a href="{{ item.feed_url }}" target="_blank">{{ item.feed_url }}</a>
-                        {% endif %}
+                        <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
                     </small>
+                </td>
+                <td>
+                    {% if item.twitter_id %}
+                        <small>
+                            <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
+                        </small>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {{ item.rating_scale }}
@@ -49,7 +52,7 @@
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    {% if item.allow_historic_content == '1' %}
+                    {% if item.feed_url %}
                         <div style="color: #009900; font-size: 18px; font-weight: bold;">
                             <i class="fas fa-check"></i>
                         </div>
