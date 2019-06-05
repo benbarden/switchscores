@@ -27,7 +27,7 @@
     </div>
     <div class="col-sm-12 col-md-7">
         {% if SiteReviewsLatest %}
-            <h2>Latest reviews from {{ ReviewSite.name }}</h2>
+            <h2>Latest reviews from {{ PartnerData.name }}</h2>
             <p>
                 Click the <span class="glyphicon glyphicon-share" aria-hidden="true"></span> icon
                 to read the review. This will open in a new tab.
@@ -81,10 +81,10 @@
                     {% endfor %}
                 </tbody>
             </table>
-            {% if ReviewSite.rating_scale != 10 %}
+            {% if PartnerData.rating_scale != 10 %}
             <p>
                 <small>
-                    As {{ ReviewSite.name }} does not rank games out of 10, we have converted all ratings to
+                    As {{ PartnerData.name }} does not rank games out of 10, we have converted all ratings to
                     the equivalent score out of 10.
                 </small>
             </p>
