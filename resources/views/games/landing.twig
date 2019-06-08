@@ -5,10 +5,9 @@
 {% block page_body %}
 
 <ul>
+    <li><a href="{{ route('games.list.released') }}">All released games - A-Z</a></li>
     <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-    <li><a href="{{ route('calendar.landing') }}">Switch release calendar</a></li>
     <li><a href="{{ route('games.genres.landing') }}">Games by genre</a></li>
-    <li><a href="{{ route('games.list.unreleased') }}">Unreleased games</a></li>
 </ul>
 
 <div class="row">
@@ -18,15 +17,12 @@
             Newest
             <span class="h4">
                 (<a href="{{ route('calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
-                (<a href="{{ route('games.list.released') }}">all released</a>)
             </span>
         </h2>
         {% if NewReleases|length %}
-            <div class="row">
-                {% for item in NewReleases %}
-                    {% include 'games/layouts/miniGridItem.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in NewReleases %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item} %}
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}
@@ -38,11 +34,9 @@
             <span class="h4">(<a href="{{ route('games.list.upcoming') }}">all upcoming</a>)</span>
         </h2>
         {% if UpcomingReleases|length %}
-            <div class="row">
-                {% for item in UpcomingReleases %}
-                    {% include 'games/layouts/miniGridItem.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in UpcomingReleases %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item} %}
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}
