@@ -27,7 +27,11 @@
 
     <div class="col-md-4">
 
-        <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-md" target="_blank">Update eShop data (EU)</a>
+        {% if GameData.eshop_europe_fs_id is not null %}
+            {% if GameData.eshopEuropeGame.fs_id is not null %}
+                <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-md" target="_blank">Update eShop data (EU)</a>
+            {% endif %}
+        {% endif %}
 
     </div>
 
