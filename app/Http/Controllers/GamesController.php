@@ -97,11 +97,14 @@ class GamesController extends Controller
 
         $featuredIdList = [
             1237, // Ninjala
-            319, // Yoshi's Crafted World
-            1544, // Final Fantasy XII
             1224, // Killer Queen Black
             86, // Fire Emblem Three Houses
             1222, // Daemon X Machina
+            2126, // Super Mario Maker 2
+            1487, // Dragon Quest Builders 2
+            2146, // Astral Chain
+            2147, // Dragon Quest XI S
+            2578, // Zelda Link's Awakening
         ];
         $bindings['FeaturedGames'] = $serviceGameReleaseDate->getByIdList($featuredIdList, $regionCode);
 
