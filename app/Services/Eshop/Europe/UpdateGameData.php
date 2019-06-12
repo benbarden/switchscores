@@ -2,8 +2,14 @@
 
 namespace App\Services\Eshop\Europe;
 
+use Illuminate\Support\Collection;
+
 use App\EshopEuropeGame;
 use App\Game;
+use App\GameReleaseDate;
+
+use App\Services\GenreService;
+use App\Services\GameGenreService;
 
 class UpdateGameData
 {
@@ -18,9 +24,24 @@ class UpdateGameData
     private $game;
 
     /**
+     * @var GameReleaseDate
+     */
+    private $gameReleaseDate;
+
+    /**
+     * @var Collection
+     */
+    private $gameGenres;
+
+    /**
      * @var boolean
      */
     private $hasGameChanged;
+
+    /**
+     * @var boolean
+     */
+    private $hasGameReleaseDateChanged;
 
     /**
      * @var string
@@ -59,9 +80,35 @@ class UpdateGameData
         $this->hasGameChanged = false;
     }
 
+    public function getGameReleaseDate()
+    {
+        return $this->gameReleaseDate;
+    }
+
+    public function setGameReleaseDate($gameReleaseDate)
+    {
+        $this->gameReleaseDate = $gameReleaseDate;
+        $this->hasGameReleaseDateChanged = false;
+    }
+
+    public function getGameGenres()
+    {
+        return $this->gameGenres;
+    }
+
+    public function setGameGenres($gameGenres)
+    {
+        $this->gameGenres = $gameGenres;
+    }
+
     public function hasGameChanged()
     {
         return $this->hasGameChanged;
+    }
+
+    public function hasGameReleaseDateChanged()
+    {
+        return $this->hasGameReleaseDateChanged;
     }
 
     public function resetLogMessages()
@@ -218,6 +265,133 @@ class UpdateGameData
 
             // Same value, nothing to do
 
+        }
+    }
+
+    public function updateReleaseDate()
+    {
+        $nowDate = new \DateTime('now');
+
+        $gameTitle = $this->game->title;
+        $eshopReleaseDateRaw = $this->eshopItem->pretty_date_s;
+
+        // *** FIELD UPDATES:
+        // European release date
+        // Check for bad dates
+        $badDatesArray = [
+            'TBD',
+            '2019',
+            'Spring 2019',
+            'January 2019',
+        ];
+        try {
+            if (in_array($eshopReleaseDateRaw, $badDatesArray)) {
+                $isBadDate = true;
+            } else {
+                $isBadDate = false;
+                $eshopReleaseDateObj = \DateTime::createFromFormat('d/m/Y', $eshopReleaseDateRaw);
+                $eshopReleaseDate = $eshopReleaseDateObj->format('Y-m-d');
+            }
+        } catch (\Throwable $e) {
+            $this->logMessageError = 'ERROR: ['.$eshopReleaseDateRaw.'] - '.$e->getMessage();
+            return;
+        }
+
+        if (!$isBadDate) {
+
+            if ($this->gameReleaseDate->release_date == null) {
+
+                // Not set
+                $this->logMessageInfo = $gameTitle.' - no release date. '.
+                    'eShop data: '.$eshopReleaseDate.' - Updating.';
+
+                $this->gameReleaseDate->release_date = $eshopReleaseDate;
+                $this->gameReleaseDate->upcoming_date = $eshopReleaseDate;
+
+                if ($eshopReleaseDateObj > $nowDate) {
+                    $this->gameReleaseDate->is_released = 0;
+                } else {
+                    $this->gameReleaseDate->is_released = 1;
+                }
+
+                $this->hasGameReleaseDateChanged = true;
+                //$gameReleaseDate->save();
+
+            } elseif ($this->gameReleaseDate->release_date != $eshopReleaseDate) {
+
+                // Different
+                $this->logMessageWarning = $gameTitle.' - different release date. '.
+                    'Game data: '.$this->gameReleaseDate->release_date.' - '.
+                    'eShop data: '.$eshopReleaseDate;
+
+            } else {
+
+                // Same value, nothing to do
+
+            }
+
+        }
+    }
+
+    public function updateGenres()
+    {
+        $serviceGenre = new GenreService();
+        $serviceGameGenre = new GameGenreService();
+
+        $gameTitle = $this->game->title;
+        $gameId = $this->game->id;
+        $gameGenres = $this->gameGenres;
+
+        $eshopGenreList = $this->eshopItem->pretty_game_categories_txt;
+
+        if (!$eshopGenreList) return;
+
+        $eshopGenres = json_decode($eshopGenreList);
+        $gameGenresArray = [];
+        foreach ($gameGenres as $gameGenre) {
+            $gameGenresArray[] = $gameGenre->genre->genre;
+        }
+        //$this->logMessageInfo = $gameTitle.' - Found '.count($eshopGenres).' genre(s) in eShop data';
+
+        $okToAddGenres = false;
+
+        if (count($eshopGenres) == 0) {
+
+            $this->logMessageInfo = $gameTitle.' - No eShop genres. Skipping';
+            $okToAddGenres = false;
+
+        } elseif (count($gameGenres) == 0) {
+
+            $this->logMessageInfo = $gameTitle.' - No existing genres. Adding new genres.';
+            $okToAddGenres = true;
+
+        } elseif (count($gameGenres) != count($eshopGenres)) {
+
+            $this->logMessageWarning = $gameTitle.' - '.
+                'Game has '.count($gameGenres).' ['.implode(',', $gameGenresArray).']; '.
+                'eShop has '.count($eshopGenres).' ['.implode(',', $eshopGenres).']. '.
+                'Check for differences.';
+            $okToAddGenres = false;
+
+        } else {
+
+            $okToAddGenres = false;
+
+        }
+
+        if (!$okToAddGenres) return;
+
+        if (count($gameGenres) > 0) {
+            $serviceGameGenre->deleteGameGenres($gameId);
+        }
+        foreach ($eshopGenres as $eshopGenre) {
+            $genreItem = $serviceGenre->getByGenreTitle($eshopGenre);
+            if (!$genreItem) {
+                $this->logMessageError = 'Genre not found: '.$genreItem.'; skipping';
+                continue;
+            }
+            $genreId = $genreItem->id;
+            $serviceGameGenre->create($gameId, $genreId);
         }
     }
 }

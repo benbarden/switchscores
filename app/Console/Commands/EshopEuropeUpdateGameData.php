@@ -56,16 +56,11 @@ class EshopEuropeUpdateGameData extends Command
         $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
         /* @var EshopEuropeGameService $eshopEuropeGameService */
 
-        $serviceGameChangeHistory = resolve('Services\GameChangeHistoryService');
-        /* @var GameChangeHistoryService $serviceGameChangeHistory */
-
         $serviceUpdateGameData = new UpdateGameData();
 
         $this->info('Loading data...');
 
         $eshopList = $eshopEuropeGameService->getAllWithLink();
-
-        $nowDate = new \DateTime('now');
 
         foreach ($eshopList as $eshopItem) {
 
@@ -97,6 +92,8 @@ class EshopEuropeUpdateGameData extends Command
             // SETUP
             $serviceUpdateGameData->setEshopItem($eshopItem);
             $serviceUpdateGameData->setGame($game);
+            $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
+            $serviceUpdateGameData->setGameGenres($gameGenres);
             $serviceUpdateGameData->resetLogMessages();
 
             // STORE METHOD NAMES FOR LOOPING LATER
@@ -104,6 +101,8 @@ class EshopEuropeUpdateGameData extends Command
                 'updateNoOfPlayers',
                 'updatePublisher',
                 'updatePrice',
+                'updateReleaseDate',
+                'updateGenres',
             ];
 
             // UPDATES
@@ -114,14 +113,17 @@ class EshopEuropeUpdateGameData extends Command
                 if ($serviceUpdateGameData->getLogMessageError()) {
 
                     $this->error($serviceUpdateGameData->getLogMessageError());
+                    $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageWarning()) {
 
                     $this->warn($serviceUpdateGameData->getLogMessageWarning());
+                    $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
 
                     $this->info($serviceUpdateGameData->getLogMessageInfo());
+                    $showSplitter = true;
 
                 }
 
@@ -130,121 +132,6 @@ class EshopEuropeUpdateGameData extends Command
             }
 
             // ***************************************************** //
-
-            $eshopReleaseDateRaw = $eshopItem->pretty_date_s;
-            $eshopGenreList = $eshopItem->pretty_game_categories_txt;
-
-            // *** FIELD UPDATES:
-            // European release date
-            // Check for bad dates
-            $badDatesArray = [
-                'TBD',
-                '2019',
-                'Spring 2019',
-                'January 2019',
-            ];
-            try {
-                if (in_array($eshopReleaseDateRaw, $badDatesArray)) {
-                    $isBadDate = true;
-                } else {
-                    $isBadDate = false;
-                    $eshopReleaseDateObj = \DateTime::createFromFormat('d/m/Y', $eshopReleaseDateRaw);
-                    $eshopReleaseDate = $eshopReleaseDateObj->format('Y-m-d');
-                }
-            } catch (\Throwable $e) {
-                $this->error('ERROR: ['.$eshopReleaseDateRaw.'] - '.$e->getMessage());
-                return;
-            }
-
-            if (!$isBadDate) {
-
-                if ($gameReleaseDate->release_date == null) {
-
-                    // Not set
-                    $this->info($gameTitle.' - no release date. '.
-                        'eShop data: '.$eshopReleaseDate.' - Updating.');
-
-                    $gameReleaseDate->release_date = $eshopReleaseDate;
-                    $gameReleaseDate->upcoming_date = $eshopReleaseDate;
-
-                    if ($eshopReleaseDateObj > $nowDate) {
-                        $gameReleaseDate->is_released = 0;
-                    } else {
-                        $gameReleaseDate->is_released = 1;
-                    }
-
-                    $gameReleaseDate->save();
-                    $showSplitter = true;
-
-                } elseif ($gameReleaseDate->release_date != $eshopReleaseDate) {
-
-                    // Different
-                    $this->warn($gameTitle.' - different release date. '.
-                        'Game data: '.$gameReleaseDate->release_date.' - '.
-                        'eShop data: '.$eshopReleaseDate);
-
-                    $showSplitter = true;
-
-                } else {
-                    // Same value, nothing to do
-                }
-
-            }
-
-
-            // *** FIELD UPDATES:
-            // Genres / Categories
-            if ($eshopGenreList) {
-
-                $eshopGenres = json_decode($eshopGenreList);
-                $gameGenresArray = [];
-                foreach ($gameGenres as $gameGenre) {
-                    $gameGenresArray[] = $gameGenre->genre->genre;
-                }
-                //$this->info($gameTitle.' - Found '.count($eshopGenres).' genre(s) in eShop data');
-
-                $okToAddGenres = false;
-                if (count($eshopGenres) == 0) {
-                    $this->info($gameTitle.' - No eShop genres. Skipping');
-                    $okToAddGenres = false;
-                    $showSplitter = true;
-                } elseif (count($gameGenres) == 0) {
-                    $this->info($gameTitle.' - No existing genres. Adding new genres.');
-                    $okToAddGenres = true;
-                    $showSplitter = true;
-                } elseif (count($gameGenres) != count($eshopGenres)) {
-                    $this->warn($gameTitle.' - Game has '.count($gameGenres).
-                        ' ['.implode(',', $gameGenresArray).'] '.
-                        '; eShop has '.count($eshopGenres).
-                        ' ['.implode(',', $eshopGenres).'] '.
-                        '. Check for differences.');
-                    $okToAddGenres = false;
-                    $showSplitter = true;
-                } else {
-                    $okToAddGenres = false;
-                }
-
-                if ($okToAddGenres) {
-                    if (count($gameGenres) > 0) {
-                        $gameGenreService->deleteGameGenres($gameId);
-                    }
-                    foreach ($eshopGenres as $eshopGenre) {
-                        $genreItem = $genreService->getByGenreTitle($eshopGenre);
-                        if (!$genreItem) {
-                            $this->error('Genre not found: '.$genreItem.'; skipping');
-                            continue;
-                        }
-                        $genreId = $genreItem->id;
-                        $gameGenreService->create($gameId, $genreId);
-                    }
-                }
-
-            } else {
-                //$this->info($gameTitle.' - No genres found in eShop data. Skipping');
-                //$showSplitter = true;
-            }
-
-            // *********************************************** //
 
             if ($saveChanges || $serviceUpdateGameData->hasGameChanged()) {
 
@@ -266,6 +153,11 @@ class EshopEuropeUpdateGameData extends Command
                 $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
                 $gameChangeHistory->save();
 
+            }
+
+            if ($serviceUpdateGameData->hasGameReleaseDateChanged()) {
+                $gameReleaseDate = $serviceUpdateGameData->getGameReleaseDate();
+                $gameReleaseDate->save();
             }
 
             if ($showSplitter) {
