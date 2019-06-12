@@ -105,6 +105,7 @@ class GamesController extends Controller
             2146, // Astral Chain
             2147, // Dragon Quest XI S
             2578, // Zelda Link's Awakening
+            2148, // Marvel Ultimate Alliance
         ];
         $bindings['FeaturedGames'] = $serviceGameReleaseDate->getByIdList($featuredIdList, $regionCode);
 
