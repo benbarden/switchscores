@@ -13,7 +13,9 @@ class GameChangeHistoryFactory
         $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
 
         $gameChangeHistoryBuilder->setGame($game);
-        $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
+        if ($gameOrig) {
+            $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
+        }
         $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
         if ($table == 'games') {
             $gameChangeHistoryDirector->setTableNameGames();

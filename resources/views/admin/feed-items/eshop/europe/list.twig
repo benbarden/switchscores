@@ -28,7 +28,6 @@
                 <th class="text-left">Link</th>
                 <th class="text-center">Change date</th>
                 <th class="text-center">Nintendo Url</th>
-                <th class="text-center">Square image</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -61,14 +60,10 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {% if item.image_url_sq_s %}
-                            <a href="{{ item.image_url_sq_s }}" target="_blank">View</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td class="text-center">
                         <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.fs_id}) }}">View</a>
+                        {% if item.game.id is null or item.game.id == '0' %}
+                            : <a href="{{ route('admin.feed-items.eshop.europe.add-game', {'itemId': item.fs_id}) }}">Add game</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -94,7 +89,6 @@
                 null,
                 null,
                 null,
-                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false }

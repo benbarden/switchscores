@@ -240,8 +240,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Feed items: eShop (Europe)
     Route::get('/admin/feed-items/eshop/europe/{report?}', 'Admin\FeedItemEshopEuropeController@showList')->name('admin.feed-items.eshop.europe.list');
     Route::get('/admin/feed-items/eshop/europe/view/{itemId}', 'Admin\FeedItemEshopEuropeController@view')->name('admin.feed-items.eshop.europe.view');
-    Route::get('/admin/feed-items/eshop/europe/edit/{itemId}', 'Admin\FeedItemEshopEuropeController@edit')->name('admin.feed-items.eshop.europe.edit');
-    Route::post('/admin/feed-items/eshop/europe/edit/{itemId}', 'Admin\FeedItemEshopEuropeController@edit')->name('admin.feed-items.eshop.europe.edit');
+    Route::get('/admin/feed-items/eshop/europe/add-game/{itemId}', 'Admin\FeedItemEshopEuropeController@addGame')->name('admin.feed-items.eshop.europe.add-game');
+    Route::post('/admin/feed-items/eshop/europe/add-game/{itemId}', 'Admin\FeedItemEshopEuropeController@addGame')->name('admin.feed-items.eshop.europe.add-game');
 
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');
