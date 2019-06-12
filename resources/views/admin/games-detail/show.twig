@@ -14,12 +14,20 @@
     </div>
 {% endif %}
 
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-4">
 
         <a href="{{ route('admin.games.edit', {'gameId': GameId}) }}" class="btn btn-primary btn-md">Edit game</a>
         <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-md" target="_blank">View game page</a>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-md" target="_blank">Update eShop data (EU)</a>
 
     </div>
 
@@ -399,5 +407,44 @@
     </div>
 
 </div>
+
+<script>
+
+    var gameId = '{{ GameId }}';
+
+    $('#btn-update-eu-eshop-data').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+
+        if (gameId == '') {
+            $('#js-admin-notify').text('Missing gameId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Update the eShop data for this game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.games.updateEshopData') }}', {'gameId': gameId, 'regionCode': 'eu'}, function(data) {
+            $('#js-admin-notify').text('Updated!');
+            $('#js-admin-notify').show();
+            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+</script>
 
 {% endblock page_inner %}

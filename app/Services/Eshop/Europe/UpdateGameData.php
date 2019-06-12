@@ -29,11 +29,6 @@ class UpdateGameData
     private $gameReleaseDate;
 
     /**
-     * @var Collection
-     */
-    private $gameGenres;
-
-    /**
      * @var boolean
      */
     private $hasGameChanged;
@@ -89,16 +84,6 @@ class UpdateGameData
     {
         $this->gameReleaseDate = $gameReleaseDate;
         $this->hasGameReleaseDateChanged = false;
-    }
-
-    public function getGameGenres()
-    {
-        return $this->gameGenres;
-    }
-
-    public function setGameGenres($gameGenres)
-    {
-        $this->gameGenres = $gameGenres;
     }
 
     public function hasGameChanged()
@@ -340,7 +325,7 @@ class UpdateGameData
 
         $gameTitle = $this->game->title;
         $gameId = $this->game->id;
-        $gameGenres = $this->gameGenres;
+        $gameGenres = $serviceGameGenre->getByGame($gameId);
 
         $eshopGenreList = $this->eshopItem->pretty_game_categories_txt;
 

@@ -160,6 +160,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/games/delete/{gameId}', 'Admin\GamesController@delete')->name('admin.games.delete');
     Route::post('/admin/games/delete/{gameId}', 'Admin\GamesController@delete')->name('admin.games.delete');
     Route::get('/admin/games/release', 'Admin\GamesController@releaseGame')->name('admin.games.release');
+    Route::get('/admin/games/update-eshop-data', 'Admin\GamesController@updateEshopData')->name('admin.games.updateEshopData');
 
     // Game change history
     Route::get('/admin/game-change-history/{filter?}', 'Admin\GameChangeHistoryController@index')->name('admin.game-change-history.index');

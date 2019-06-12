@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Services\GameService;
-use App\Services\GenreService;
-use App\Services\GameGenreService;
 use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\Europe\UpdateGameData;
 
@@ -49,10 +47,6 @@ class EshopEuropeUpdateGameData extends Command
 
         $gameService = resolve('Services\GameService');
         /* @var GameService $gameService */
-        $genreService = resolve('Services\GenreService');
-        /* @var GenreService $genreService */
-        $gameGenreService = resolve('Services\GameGenreService');
-        /* @var GameGenreService $gameGenreService */
         $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
         /* @var EshopEuropeGameService $eshopEuropeGameService */
 
@@ -64,7 +58,6 @@ class EshopEuropeUpdateGameData extends Command
 
         foreach ($eshopList as $eshopItem) {
 
-            $saveChanges = false;
             $showSplitter = false;
 
             $fsId = $eshopItem->fs_id;
@@ -84,16 +77,12 @@ class EshopEuropeUpdateGameData extends Command
             }
 
             // GAME CORE DATA
-            $gameId = $game->id;
-            $gameTitle = $game->title;
             $gameReleaseDate = $game->regionReleaseDate('eu');
-            $gameGenres = $gameGenreService->getByGame($gameId);
 
             // SETUP
             $serviceUpdateGameData->setEshopItem($eshopItem);
             $serviceUpdateGameData->setGame($game);
             $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
-            $serviceUpdateGameData->setGameGenres($gameGenres);
             $serviceUpdateGameData->resetLogMessages();
 
             // STORE METHOD NAMES FOR LOOPING LATER
@@ -133,7 +122,7 @@ class EshopEuropeUpdateGameData extends Command
 
             // ***************************************************** //
 
-            if ($saveChanges || $serviceUpdateGameData->hasGameChanged()) {
+            if ($serviceUpdateGameData->hasGameChanged()) {
 
                 // Recreate objects each time to avoid issues
                 $gameChangeHistoryDirector = new GameChangeHistoryDirector();

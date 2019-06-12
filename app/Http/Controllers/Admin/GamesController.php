@@ -23,6 +23,8 @@ use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
 use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
 
+use App\Factories\EshopEuropeUpdateGameFactory;
+
 use Auth;
 
 class GamesController extends Controller
@@ -577,6 +579,48 @@ class GamesController extends Controller
         }
 
         $gameReleaseDateService->markAsReleased($gameReleaseDate);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function updateEshopData()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $regionCode = $request->regionCode;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+        if (!$regionCode) {
+            return response()->json(['error' => 'Missing data: regionCode'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        try {
+            EshopEuropeUpdateGameFactory::updateGame($game);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Exception: '.$e->getMessage()], 400);
+        }
 
         $data = array(
             'status' => 'OK'
