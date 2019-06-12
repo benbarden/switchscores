@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -618,6 +619,48 @@ class GamesController extends Controller
 
         try {
             EshopEuropeUpdateGameFactory::updateGame($game);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Exception: '.$e->getMessage()], 400);
+        }
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function redownloadPackshots()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceUser = $serviceContainer->getUserService();
+
+        $userId = Auth::id();
+
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        $regionCode = $request->regionCode;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+        if (!$regionCode) {
+            return response()->json(['error' => 'Missing data: regionCode'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        try {
+            EshopEuropeRedownloadPackshotsFactory::redownloadPackshots($game);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Exception: '.$e->getMessage()], 400);
         }

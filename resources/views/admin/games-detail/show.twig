@@ -30,6 +30,7 @@
         {% if GameData.eshop_europe_fs_id is not null %}
             {% if GameData.eshopEuropeGame.fs_id is not null %}
                 <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-md" target="_blank">Update eShop data (EU)</a>
+                <a id="btn-redownload-packshots" class="btn btn-primary btn-md" target="_blank">Update packshots</a>
             {% endif %}
         {% endif %}
 
@@ -439,6 +440,39 @@
         });
 
         $.getJSON('{{ route('admin.games.updateEshopData') }}', {'gameId': gameId, 'regionCode': 'eu'}, function(data) {
+            $('#js-admin-notify').text('Updated!');
+            $('#js-admin-notify').show();
+            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#btn-redownload-packshots').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+
+        if (gameId == '') {
+            $('#js-admin-notify').text('Missing gameId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Update the packshots for this game?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.games.redownloadPackshots') }}', {'gameId': gameId, 'regionCode': 'eu'}, function(data) {
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
