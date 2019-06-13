@@ -44,7 +44,7 @@ return [
 
         'cron' => [
             'driver' => 'stack',
-            'channels' => ['cron-single', 'stdout'],
+            'channels' => ['cron-daily', 'stdout'],
             'ignore_exceptions' => false,
         ],
 
@@ -54,10 +54,11 @@ return [
             'level' => 'debug',
         ],
 
-        'cron-single' => [
-            'driver' => 'single',
+        'cron-daily' => [
+            'driver' => 'daily',
             'path' => storage_path('logs/cron.log'),
             'level' => 'debug',
+            'days' => 7,
         ],
 
         'daily' => [
