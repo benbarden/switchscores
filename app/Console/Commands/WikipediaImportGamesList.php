@@ -112,6 +112,13 @@ class WikipediaImportGamesList extends Command
                         ')');
                     */
                     continue;
+                } elseif ($countRealDates == 1) {
+                    // Check if we only have a Japanese release date
+                    if ($dateHandler->getUpcomingDate($feedItemGame->upcoming_date_jp) == null) {
+                        // This is the only record - skip for now
+                        $logger->error('Skipping as game only has a Japanese date');
+                        continue;
+                    }
                 }
                 
                 // See if we can locate the game
