@@ -123,6 +123,11 @@ class WikipediaUpdateGamesList extends Command
 
                 foreach ($gameReleaseDates as $gameReleaseDate) {
 
+                    if ($gameReleaseDate->is_locked == 1) {
+                        $logger->info('Release date is marked as locked; skipping');
+                        continue;
+                    }
+
                     $region = $gameReleaseDate->region;
 
                     $fieldReleaseDate = 'release_date_'.$region;

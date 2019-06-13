@@ -284,6 +284,11 @@ class UpdateGameData
 
         if (!$isBadDate) {
 
+            if ($this->gameReleaseDate->is_locked == 1) {
+                //$this->logMessageInfo = $gameTitle.' - Release date locked. Skipping.';
+                return;
+            }
+
             if ($this->gameReleaseDate->release_date == null) {
 
                 // Not set

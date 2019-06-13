@@ -80,6 +80,11 @@ class Builder
         $this->gameReleaseDate->is_released = $isReleased;
     }
 
+    public function setIsLocked($isLocked): void
+    {
+        $this->gameReleaseDate->is_locked = $isLocked;
+    }
+
     public function setUpcomingDate($upcomingDate): void
     {
         $this->gameReleaseDate->upcoming_date = $upcomingDate;

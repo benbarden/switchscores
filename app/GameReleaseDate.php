@@ -24,7 +24,7 @@ class GameReleaseDate extends Model
      * @var array
      */
     protected $fillable = [
-        'game_id', 'region', 'release_date', 'is_released', 'upcoming_date', 'release_year'
+        'game_id', 'region', 'release_date', 'is_released', 'upcoming_date', 'release_year', 'is_locked'
     ];
 
     public function game()

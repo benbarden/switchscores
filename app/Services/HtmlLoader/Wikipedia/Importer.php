@@ -69,6 +69,9 @@ class Importer
 
         foreach ($gameReleaseDates as $gameReleaseDate) {
 
+            // Skip if locked
+            if ($gameReleaseDate->is_locked == 1) continue;
+
             $region = $gameReleaseDate->region;
 
             $releaseDateField = 'release_date_'.$region;

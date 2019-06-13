@@ -67,6 +67,12 @@ class Director
             $this->builder->setIsReleased($isReleased);
         }
 
+        $isLockedField = 'is_locked_'.$region;
+        if (array_key_exists($isLockedField, $params)) {
+            $isLocked = $params[$isLockedField] == 'on' ? 1 : 0;
+            $this->builder->setIsLocked($isLocked);
+        }
+
         $upcomingDateField = 'upcoming_date_'.$region;
         if (array_key_exists($upcomingDateField, $params)) {
             $this->builder->setUpcomingDate($params[$upcomingDateField]);
