@@ -41,5 +41,8 @@ class LoggerTest extends Command
         $logger = Log::channel('cron');
         $logger->info(' *************** '.$this->signature.' *************** ');
         $logger->debug('Test debug');
+
+        $logger = Log::channel('dev-debug');
+        $logger->info('Dev debug logger');
     }
 }

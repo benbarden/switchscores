@@ -20,9 +20,21 @@ class GameChangeHistoryFactory
         if ($table == 'games') {
             $gameChangeHistoryDirector->setTableNameGames();
         }
-        $gameChangeHistoryDirector->buildAdminUpdate();
+        if ($gameOrig) {
+            $gameChangeHistoryDirector->buildAdminUpdate();
+        } else {
+            $gameChangeHistoryDirector->buildAdminInsert();
+        }
         $gameChangeHistoryDirector->setUserId($userId);
         $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
-        $gameChangeHistory->save();
+
+        // Only save if there were changes made
+        $dataChanged = $gameChangeHistory->data_changed;
+        if ($dataChanged) {
+            $dataChangedArray = json_decode($dataChanged);
+            if ($dataChangedArray) {
+                $gameChangeHistory->save();
+            }
+        }
     }
 }

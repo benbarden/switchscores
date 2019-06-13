@@ -36,6 +36,9 @@ return [
     */
 
     'channels' => [
+
+        // Stacks
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
@@ -45,6 +48,12 @@ return [
         'cron' => [
             'driver' => 'stack',
             'channels' => ['cron-daily', 'stdout'],
+            'ignore_exceptions' => false,
+        ],
+
+        'dev-debug' => [
+            'driver' => 'stack',
+            'channels' => ['dev-debug-single'],
             'ignore_exceptions' => false,
         ],
 
@@ -59,6 +68,12 @@ return [
             'path' => storage_path('logs/cron.log'),
             'level' => 'debug',
             'days' => 7,
+        ],
+
+        'dev-debug-single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/dev-debug.log'),
+            'level' => 'debug',
         ],
 
         'daily' => [

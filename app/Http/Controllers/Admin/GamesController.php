@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +23,10 @@ use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
 use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
 
+use App\Factories\GameDirectorFactory;
+use App\Factories\GameChangeHistoryFactory;
 use App\Factories\EshopEuropeUpdateGameFactory;
+use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 
 use Auth;
 
@@ -324,14 +326,7 @@ class GamesController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceGame->edit(
-                $gameData,
-                $request->title, $request->link_title, $request->price_eshop, $request->players,
-                $request->developer, $request->publisher, $request->amazon_uk_link, $request->overview,
-                $request->media_folder, $request->video_url, $request->boxart_square_url,
-                $request->eshop_europe_fs_id,
-                $request->boxart_header_image, $request->video_header_text
-            );
+            GameDirectorFactory::updateExisting($gameData, $request->post());
 
             // Update release dates
             $gameReleaseDateDirector = new GameReleaseDateDirector();
@@ -373,17 +368,7 @@ class GamesController extends Controller
             // Game change history
             $gameData->refresh();
 
-            $gameChangeHistoryDirector = new GameChangeHistoryDirector();
-            $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
-
-            $gameChangeHistoryBuilder->setGame($gameData);
-            $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
-            $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
-            $gameChangeHistoryDirector->setTableNameGames();
-            $gameChangeHistoryDirector->buildAdminUpdate();
-            $gameChangeHistoryDirector->setUserId(Auth::user()->id);
-            $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
-            $gameChangeHistory->save();
+            GameChangeHistoryFactory::makeHistory($gameData, $gameOrig, Auth::user()->id, 'games');
 
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
