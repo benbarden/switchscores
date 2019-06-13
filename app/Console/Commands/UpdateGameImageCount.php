@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateGameImageCount extends Command
 {
@@ -37,10 +38,12 @@ class UpdateGameImageCount extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         // Review count
-        $this->info('Game image counts');
+        $logger->info('Game image counts');
 
         $imageCountList = \DB::select("
             SELECT g.id AS game_id, g.title, count(gi.game_id) AS image_count
@@ -49,7 +52,7 @@ class UpdateGameImageCount extends Command
             GROUP BY g.id;
         ");
 
-        $this->info('Updating '.count($imageCountList).' games');
+        $logger->info('Updating '.count($imageCountList).' games');
 
         foreach ($imageCountList as $item) {
             $gameId = $item->game_id;

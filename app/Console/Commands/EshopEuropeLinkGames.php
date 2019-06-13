@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Game;
 use App\Services\GameService;
@@ -42,9 +43,11 @@ class EshopEuropeLinkGames extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
 
-        $this->info('Loading data...');
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
+        $logger->info('Loading data...');
 
         $gameService = resolve('Services\GameService');
         /* @var GameService $gameService */
@@ -56,7 +59,7 @@ class EshopEuropeLinkGames extends Command
         //$gameData = $gameService->getAllWithoutEshopId('eu');
         $gameData = $gameService->getAllModels();
 
-        $this->info('Found records: '.count($gameData));
+        $logger->info('Found records: '.count($gameData));
 
         try {
 
@@ -68,7 +71,7 @@ class EshopEuropeLinkGames extends Command
                 $eshopGame = $eshopEuropeGameService->getByTitle($title);
 
                 if (!$eshopGame) {
-                    //$this->warn('No match for title: '.$title);
+                    //$logger->warn('No match for title: '.$title);
                     continue;
                 }
 
@@ -76,12 +79,12 @@ class EshopEuropeLinkGames extends Command
 
                 if ($game->eshop_europe_fs_id != null) {
                     if ($game->eshop_europe_fs_id == $fsId) {
-                        //$this->warn($title.' - already linked to '.$fsId.'; skipping');
+                        //$logger->warn($title.' - already linked to '.$fsId.'; skipping');
                         continue;
                     }
                 }
 
-                $this->info('Found title: '.$title.' - updating game with fs_id: '.$fsId);
+                $logger->info('Found title: '.$title.' - updating game with fs_id: '.$fsId);
 
                 $game->eshop_europe_fs_id = $fsId;
                 $game->save();
@@ -89,7 +92,7 @@ class EshopEuropeLinkGames extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $logger->error($e->getMessage());
         }
     }
 }

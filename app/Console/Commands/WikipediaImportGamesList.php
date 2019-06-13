@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\GameService;
@@ -44,9 +45,11 @@ class WikipediaImportGamesList extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
 
-        $this->info('Loading source data...');
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
+        $logger->info('Loading source data...');
 
         $crawlerService = resolve('Services\CrawlerWikipediaGamesListSourceService');
         /* @var CrawlerWikipediaGamesListSourceService $crawlerService */
@@ -64,7 +67,7 @@ class WikipediaImportGamesList extends Command
 
         $gamesList = $crawlerService->getAll();
 
-        $this->info('Found '.count($gamesList).' item(s)');
+        $logger->info('Found '.count($gamesList).' item(s)');
 
         try {
 
@@ -76,7 +79,7 @@ class WikipediaImportGamesList extends Command
 
                 $i++;
 
-                $this->line('Processing item: '.$i.' - '.$crawlerModel->title);
+                $logItemPrefix = "Item {$i}: {$crawlerModel->title} - ";
 
                 $importer->setCrawlerModel($crawlerModel);
                 $feedItemGame = $importer->generateFeedModel();
@@ -85,26 +88,29 @@ class WikipediaImportGamesList extends Command
                 // Discard games with only TBA/Unreleased dates
                 $countTBAOrUnreleased = $wikiSkipper->countDatesTBAOrUnreleased($feedItemGame);
                 if ($countTBAOrUnreleased == 3) {
-                    $this->error('All dates are TBA or Unreleased; skipping');
+                    //$logger->error($logItemPrefix.'All dates are TBA or Unreleased; skipping');
                     continue;
                 }
 
                 // Discard games containing certain text
                 $skipText = $wikiSkipper->getSkipText($title);
                 if ($skipText != null) {
-                    $this->error('Found ignore text: '.$skipText.'; skipping');
+                    //$logger->error($logItemPrefix.'Found ignore text: '.$skipText.'; skipping');
                     continue;
                 }
 
                 // Discard games without any dates
                 $countRealDates = $wikiSkipper->countRealDates($feedItemGame, $dateHandler);
                 if ($countRealDates == 0) {
-                    $this->error(
+                    /*
+                    $logger->error(
+                        $logItemPrefix.
                         'Found no real dates; skipping ('.
                         'EU: '.$feedItemGame->upcoming_date_eu.'; '.
                         'US: '.$feedItemGame->upcoming_date_us.'; '.
                         'JP: '.$feedItemGame->upcoming_date_jp.
                         ')');
+                    */
                     continue;
                 }
                 
@@ -125,7 +131,7 @@ class WikipediaImportGamesList extends Command
                     // Otherwise, the list will keep adding duplicates each time the importer runs.
                     $activeFeedItem = $feedItemGameService->getActiveByGameId($gameId);
                     if ($activeFeedItem) {
-                        $this->warn('Found an active, unprocessed entry; skipping');
+                        $logger->warn($logItemPrefix.'Found an active, unprocessed entry; skipping');
                         continue;
                     }
 
@@ -134,10 +140,10 @@ class WikipediaImportGamesList extends Command
                     $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
                     $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
                     if (count($modifiedFieldList) == 0) {
-                        $this->line('No changes; skipping');
+                        //$logger->info('No changes; skipping');
                         continue;
                     } else {
-                        $this->info('Changes found');
+                        $logger->info($logItemPrefix.'Changes found');
                         $feedItemGame->modified_fields = serialize($modifiedFieldList);
                     }
                 } else {
@@ -146,7 +152,7 @@ class WikipediaImportGamesList extends Command
                     // This check will stop those duplicates if an update is pending.
                     $activeFeedItem = $feedItemGameService->getActiveByTitle($title);
                     if ($activeFeedItem) {
-                        $this->warn('Found an active, unprocessed entry; skipping');
+                        $logger->warn($logItemPrefix.'Found an active, unprocessed entry; skipping');
                         continue;
                     }
                 }
@@ -161,7 +167,7 @@ class WikipediaImportGamesList extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $logger->error($e->getMessage());
         }
     }
 }

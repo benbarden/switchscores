@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\GameRankUpdateService;
 use App\Services\ServiceContainer;
@@ -36,15 +37,18 @@ class UpdateGameRanks extends Command
     /**
      * Execute the console command.
      *
+     * @throws \Exception
      * @return mixed
      */
     public function handle()
     {
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
         // This is only used for all-time ranks
         $serviceGameRankUpdate = resolve('Services\GameRankUpdateService');
         /* @var GameRankUpdateService $serviceGameRankUpdate */
-
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
 
         // *** 1. ALL-TIME RANK *** //
 
@@ -62,7 +66,7 @@ class UpdateGameRanks extends Command
             \Slack::to('#'.$channel)->send('UpdateGameRanks: '.count($gameRankList).' ranked games');
         }
 
-        $this->info('All-time rank: checking '.count($gameRankList).' games');
+        $logger->info('All-time rank: checking '.count($gameRankList).' games');
 
         $rankCounter = 1;
         $actualRank = 1;
@@ -91,7 +95,7 @@ class UpdateGameRanks extends Command
             if (!$prevRank) {
 
                 // No previous rank - notification needed
-                $this->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
+                $logger->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
                     $gameTitle, $ratingAvg, $actualRank));
 
                 // Store rank update
@@ -102,7 +106,7 @@ class UpdateGameRanks extends Command
                 // Log all rank changes, even though we might hide some on the site
 
                 // Rank has changed - notification needed
-                $this->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
+                $logger->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
                     $gameTitle, $ratingAvg, $prevRank, $actualRank));
 
                 // Store rank update
@@ -152,7 +156,7 @@ class UpdateGameRanks extends Command
                 order by rating_avg desc
             ", [$year]);
 
-            $this->info('Year rank ['.$year.']: checking '.count($gameRankList).' games');
+            $logger->info('Year rank ['.$year.']: checking '.count($gameRankList).' games');
 
             $rankCounter = 1;
             $actualRank = 1;
@@ -216,7 +220,7 @@ class UpdateGameRanks extends Command
 
             $gameRatings = $serviceTopRated->getByMonthWithRanks($region, $calendarYear, $calendarMonth);
 
-            $this->info('Yearmonth ['.$yearMonth.']: checking '.count($gameRatings).' games');
+            $logger->info('Yearmonth ['.$yearMonth.']: checking '.count($gameRatings).' games');
 
             $rankCounter = 1;
             $actualRank = 1;

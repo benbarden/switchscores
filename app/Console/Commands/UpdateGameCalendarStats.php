@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\ServiceContainer;
 
@@ -35,11 +36,14 @@ class UpdateGameCalendarStats extends Command
     /**
      * Execute the console command.
      *
+     * @throws \Exception
      * @return mixed
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $serviceContainer = new ServiceContainer();
 
@@ -63,7 +67,7 @@ class UpdateGameCalendarStats extends Command
 
                 $monthCount = $serviceGameCalendar->getListCount($region, $calendarYear, $calendarMonth);
 
-                $this->info($region.' // '.$date.' // '.$monthCount.' game(s)');
+                $logger->info($region.' // '.$date.' // '.$monthCount.' game(s)');
 
                 \DB::insert('
                     INSERT INTO game_calendar_stats(region, month_name, released_count, created_at, updated_at)

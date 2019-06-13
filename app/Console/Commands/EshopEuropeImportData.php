@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\Eshop\LoaderEurope;
 
@@ -39,17 +40,19 @@ class EshopEuropeImportData extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $eshopLoader = new LoaderEurope();
 
         try {
 
             if (\App::environment() == 'localx') {
-                $this->info('Loading local data from JSON file');
+                $logger->info('Loading local data from JSON file');
                 $eshopLoader->loadLocalData('europe-test-1500-games.json');
             } else {
-                $this->warn('Loading LIVE data from eShop. Do not abuse!');
+                $logger->warn('Loading LIVE data from eShop. Do not abuse!');
                 $eshopLoader->loadGames();
             }
             $responseArray = $eshopLoader->getResponseData();
@@ -58,18 +61,18 @@ class EshopEuropeImportData extends Command
             if (!is_array($gameData)) {
                 throw new \Exception('Cannot load game data');
             }
-            $this->info('Successfully loaded game data into temporary storage.');
+            $logger->info('Successfully loaded game data into temporary storage.');
 
             // Only clear previous data after passing the load game data check.
             // We already handle errors for missing fields, so the whole import won't fail
             // when a new field is added to the feed.
-            $this->info('Clearing previous data...');
+            $logger->info('Clearing previous data...');
             \DB::statement("TRUNCATE TABLE eshop_europe_games");
 
-            $this->info('Importing data...');
+            $logger->info('Importing data...');
             $eshopLoader->importToDb();
             $importedItemCount = $eshopLoader->getImportedCount();
-            $this->info('Complete! Imported '.$importedItemCount.' item(s).');
+            $logger->info('Complete! Imported '.$importedItemCount.' item(s).');
 
             $channel = env('SLACK_ALERT_CHANNEL', '');
             if ($channel) {
@@ -77,7 +80,7 @@ class EshopEuropeImportData extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $logger->error($e->getMessage());
         }
     }
 }

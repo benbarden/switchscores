@@ -104,6 +104,15 @@ class DateHandler
 
         }
 
+        // Special cases for junk dates we can't use
+        switch ($releaseDateRaw) {
+
+            case 'Fall 2019':
+                return '2019-Q3';
+                break;
+
+        }
+
         // Should be a real date - ok to continue
         $upcomingDate = null;
 

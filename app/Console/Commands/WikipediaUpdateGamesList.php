@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Game;
 use App\GameTitleHash;
@@ -53,9 +54,11 @@ class WikipediaUpdateGamesList extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
 
-        $this->info('Loading source data...');
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
+        $logger->info('Loading source data...');
 
         $gameDirector = new GameDirector();
         $gameBuilder = new GameBuilder();
@@ -75,11 +78,11 @@ class WikipediaUpdateGamesList extends Command
         $feedItemsList = $feedItemGameService->getForProcessing();
 
         if (count($feedItemsList) == 0) {
-            $this->info('No items found - aborting');
+            $logger->info('No items found - aborting');
             return;
         }
 
-        $this->info('Found '.count($feedItemsList).' item(s)');
+        $logger->info('Found '.count($feedItemsList).' item(s)');
 
         foreach ($feedItemsList as $feedItem) {
 
@@ -90,7 +93,7 @@ class WikipediaUpdateGamesList extends Command
                 // Existing game
                 $game = $gameService->find($gameId);
                 if (!$game) {
-                    $this->info('Game not found: '.$gameId.' ; skipping');
+                    $logger->info('Game not found: '.$gameId.' ; skipping');
                     continue;
                 }
 
@@ -114,7 +117,7 @@ class WikipediaUpdateGamesList extends Command
                 // Release dates
                 $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
                 if (!$gameReleaseDates) {
-                    $this->info('No release dates for game: '.$gameId.' ; skipping');
+                    $logger->info('No release dates for game: '.$gameId.' ; skipping');
                     continue;
                 }
 
@@ -138,7 +141,7 @@ class WikipediaUpdateGamesList extends Command
                     }
 
                     if ($gameReleaseDateChanged) {
-                        $this->info('Saving updates to region: '.$region);
+                        $logger->info('Saving updates to region: '.$region);
                         $gameReleaseDate->save();
                     }
 
@@ -153,7 +156,7 @@ class WikipediaUpdateGamesList extends Command
                     // Get original version before saving
                     $gameOrig = $game->fresh();
 
-                    $this->info('Saving updates to game');
+                    $logger->info('Saving updates to game');
                     $game->save();
 
                     // Game change history
@@ -168,13 +171,13 @@ class WikipediaUpdateGamesList extends Command
 
                 }
 
-                $this->info('Marking feed item as complete');
+                $logger->info('Marking feed item as complete');
                 $feedItem->setStatusComplete();
                 $feedItem->save();
 
             } else {
 
-                $this->info('Creating game...');
+                $logger->info('Creating game...');
 
                 $serviceUrl = new UrlService();
 
@@ -183,7 +186,7 @@ class WikipediaUpdateGamesList extends Command
                 $titleHash = $gameTitleHashService->generateHash($title);
                 $gameTitleHash = $gameTitleHashService->getByHash($titleHash);
                 if ($gameTitleHash) {
-                    $this->warn('Title hash already exists - cannot create game: '.$title.'; skipping');
+                    $logger->warn('Title hash already exists - cannot create game: '.$title.'; skipping');
                     continue;
                 }
 
@@ -248,7 +251,7 @@ class WikipediaUpdateGamesList extends Command
                 $gameChangeHistory->save();
 
                 // Wrapping up
-                $this->info('Marking feed item as complete');
+                $logger->info('Marking feed item as complete');
                 $feedItem->game_id = $gameId;
                 $feedItem->setStatusComplete();
                 $feedItem->save();

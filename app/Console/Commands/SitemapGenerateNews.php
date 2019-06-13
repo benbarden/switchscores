@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\NewsService;
 
@@ -35,10 +36,15 @@ class SitemapGenerateNews extends Command
     /**
      * Execute the console command.
      *
+     * @throws \Exception
      * @return mixed
      */
     public function handle()
     {
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
         $bindings = [];
 
         $now = new \DateTime('now');

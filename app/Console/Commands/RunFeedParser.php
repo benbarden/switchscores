@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
@@ -45,7 +46,9 @@ class RunFeedParser extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         /* @var FeedItemReviewService $feedItemReviewService */
@@ -61,7 +64,7 @@ class RunFeedParser extends Command
         $feedItems = $feedItemReviewService->getItemsToParse();
 
         if (!$feedItems) {
-            $this->info('No items to parse. Aborting.');
+            $logger->info('No items to parse. Aborting.');
             return true;
         }
 
@@ -77,7 +80,7 @@ class RunFeedParser extends Command
 
             $reviewSite = $partnerService->find($siteId);
             if (!$reviewSite) {
-                $this->error('Cannot find review site! ['.$siteId.']');
+                $logger->error('Cannot find review site! ['.$siteId.']');
                 continue;
             }
 
@@ -87,9 +90,9 @@ class RunFeedParser extends Command
 
             try {
 
-                $this->info('*************************************************');
-                $this->info("Site: $siteName ($siteId)");
-                $this->info('Processing item: '.$itemTitle);
+                $logger->info('*************************************************');
+                $logger->info("Site: $siteName ($siteId)");
+                $logger->info('Processing item: '.$itemTitle);
 
                 if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
 
@@ -98,7 +101,7 @@ class RunFeedParser extends Command
                     $serviceTitleMatch->prepareMatchRule();
                     $serviceTitleMatch->setMatchIndex($titleMatchIndex);
                     $parsedTitle = $serviceTitleMatch->generate($itemTitle);
-                    $this->info('Using new parser');
+                    $logger->info('Using new parser');
 
                 } else {
 
@@ -107,22 +110,22 @@ class RunFeedParser extends Command
                     $parser->getTitleParser()->setTitle($itemTitle);
                     $parser->parseBySiteRules();
                     $parsedTitle = $parser->getTitleParser()->getTitle();
-                    $this->warn('Using old parser');
+                    $logger->warn('Using old parser');
 
                 }
 
                 $feedItem->parsed_title = $parsedTitle;
-                $this->info("Parsed title: $parsedTitle");
+                $logger->info("Parsed title: $parsedTitle");
 
                 // Can we find a game from this title?
                 $game = $gameService->getByTitle($parsedTitle);
                 if ($game) {
                     $feedItem->game_id = $game->id;
                     $parseStatus = 'Matched item to game '.$game->id;
-                    $this->info($parseStatus);
+                    $logger->info($parseStatus);
                 } else {
                     $parseStatus = 'Could not locate game';
-                    $this->warn($parseStatus);
+                    $logger->warn($parseStatus);
                 }
 
                 $feedItem->parse_status = $parseStatus;
@@ -131,7 +134,7 @@ class RunFeedParser extends Command
                 $feedItem->save();
 
             } catch (\Exception $e) {
-                $this->error('Got error: '.$e->getMessage().'; skipping');
+                $logger->error('Got error: '.$e->getMessage().'; skipping');
             }
 
         }

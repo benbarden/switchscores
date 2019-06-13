@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Partner;
 use App\Services\PartnerService;
@@ -47,7 +48,9 @@ class RunFeedImporter extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $partnerService = resolve('Services\PartnerService');
         /* @var PartnerService $partnerService */
@@ -59,7 +62,7 @@ class RunFeedImporter extends Command
         /* @var GameService $gameService */
 
         if (!$reviewSites) {
-            $this->info('No sites found with feed URLs. Aborting.');
+            $logger->info('No sites found with feed URLs. Aborting.');
             return true;
         }
 
@@ -70,7 +73,7 @@ class RunFeedImporter extends Command
             $feedUrl = $reviewSite->feed_url;
             if (!$feedUrl) continue;
 
-            $this->info(sprintf('Site: %s - Feed URL: %s', $siteName, $feedUrl));
+            $logger->info(sprintf('Site: %s - Feed URL: %s', $siteName, $feedUrl));
 
             try {
 
@@ -95,7 +98,13 @@ class RunFeedImporter extends Command
                         // Check if it's already been imported
                         $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
                         if ($dbExistingItem) {
-                            //$this->warn('Already imported: '.$itemUrl);
+                            //$logger->warn('Already imported: '.$itemUrl);
+                            continue;
+                        }
+
+                        // Silently bypass historic reviews - removes some log noise
+                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
+                            //$logger->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                             continue;
                         }
 
@@ -104,22 +113,16 @@ class RunFeedImporter extends Command
                         if ($feedUrlPrefix) {
                             $fullPrefix = $reviewSite->url.$feedUrlPrefix;
                             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
-                                $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                                $logger->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
                                 continue;
                             } else {
-                                //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                                //$logger->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
                                 //continue;
                             }
                         }
 
-                        // Check that it's not a historic review
-                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
-                            $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
-                            continue;
-                        }
-
                         // Output some details
-                        $this->info('Importing item: '.$itemUrl);
+                        $logger->info('Importing item: '.$itemUrl);
 
                         // All good - add it as a feed item
                         $feedItemReview->load_status = 'Loaded OK';
@@ -162,7 +165,7 @@ class RunFeedImporter extends Command
                         // Check if it's already been imported
                         $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
                         if ($dbExistingItem) {
-                            //$this->warn('Already imported: '.$itemUrl);
+                            //$logger->warn('Already imported: '.$itemUrl);
                             continue;
                         }
 
@@ -183,11 +186,11 @@ class RunFeedImporter extends Command
 
                                 // Can we find a game from this title?
                                 // NB. If there's no match, we'll skip this item altogether
-                                //$this->info('Title: '.$itemTitle);
-                                //$this->info('Parsed title: '.$parsedTitle);
+                                //$logger->info('Title: '.$itemTitle);
+                                //$logger->info('Parsed title: '.$parsedTitle);
                                 if (!$parsedTitle) {
                                     $parseStatus = 'Does not match title rule; skipping';
-                                    $this->warn($parseStatus);
+                                    $logger->warn($parseStatus);
                                     continue;
                                 }
 
@@ -199,22 +202,22 @@ class RunFeedImporter extends Command
                         if ($feedUrlPrefix) {
                             $fullPrefix = $reviewSite->url.$feedUrlPrefix;
                             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
-                                $this->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                                $logger->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
                                 continue;
                             } else {
-                                //$this->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                                //$logger->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
                                 //continue;
                             }
                         }
 
                         // Check that it's not a historic review
                         if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
-                            $this->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+                            $logger->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                             continue;
                         }
 
                         // Output some details
-                        $this->info('Importing item: '.$itemUrl);
+                        $logger->info('Importing item: '.$itemUrl);
 
                         // All good - add it as a feed item
                         $feedItemReview->load_status = 'Loaded OK';
@@ -225,7 +228,7 @@ class RunFeedImporter extends Command
                 }
 
             } catch (\Exception $e) {
-                $this->error('Got error: '.$e->getMessage().'; skipping');
+                $logger->error('Got error: '.$e->getMessage().'; skipping');
             }
 
         }

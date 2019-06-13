@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\HtmlLoader\Wikipedia\Crawler as WikiCrawler;
 use App\Services\HtmlLoader\Wikipedia\Parser as WikiParser;
@@ -38,9 +39,11 @@ class WikipediaCrawlGamesList extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
 
-        $this->info('Clearing previous source data');
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
+        $logger->info('Clearing previous source data');
 
         \DB::statement("TRUNCATE TABLE crawler_wikipedia_games_list_source");
 
@@ -49,28 +52,28 @@ class WikipediaCrawlGamesList extends Command
 
         try {
 
-            $this->info('Crawling page 1...');
+            $logger->info('Crawling page 1...');
             $wikiCrawler->crawlPage();
 
-            $this->info('Extracting row data...');
+            $logger->info('Extracting row data...');
             $wikiCrawler->extractRows();
             $tableData = $wikiCrawler->getTableData();
 
-            $this->info('Processing table data...');
+            $logger->info('Processing table data...');
             $wikiParser->processTableData($tableData);
 
-            $this->info('Crawling page 2...');
+            $logger->info('Crawling page 2...');
             $wikiCrawler->crawlPage2();
 
-            $this->info('Extracting row data...');
+            $logger->info('Extracting row data...');
             $wikiCrawler->extractRows();
             $tableData = $wikiCrawler->getTableData();
 
-            $this->info('Processing table data...');
+            $logger->info('Processing table data...');
             $wikiParser->processTableData($tableData);
 
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $logger->error($e->getMessage());
         }
     }
 }

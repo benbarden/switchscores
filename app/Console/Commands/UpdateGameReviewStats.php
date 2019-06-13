@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateGameReviewStats extends Command
 {
@@ -37,11 +38,11 @@ class UpdateGameReviewStats extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         // Review count
-        $this->info('Review counts');
-
         $reviewCountList = \DB::select("
             SELECT g.id AS game_id, g.title, g.review_count, count(rl.game_id) AS review_count_new
             FROM games g
@@ -51,7 +52,7 @@ class UpdateGameReviewStats extends Command
             GROUP BY g.id;
         ");
 
-        $this->info('Checking '.count($reviewCountList).' games');
+        $logger->info('Review counts: checking '.count($reviewCountList).' games');
 
         foreach ($reviewCountList as $item) {
 
@@ -62,7 +63,7 @@ class UpdateGameReviewStats extends Command
 
             if ($reviewCount != $reviewCountNew) {
 
-                $this->info(sprintf('Game: %s - Previous review count: %s - New review count: %s',
+                $logger->info(sprintf('Game: %s - Previous review count: %s - New review count: %s',
                     $gameTitle, $reviewCount, $reviewCountNew));
 
                 \DB::update("
@@ -74,8 +75,6 @@ class UpdateGameReviewStats extends Command
         }
 
         // Average rating
-        $this->info('Average ratings');
-
         $avgRatingList = \DB::select("
             SELECT g.id AS game_id, g.title, g.review_count, g.rating_avg,
             sum(rl.rating_normalised) AS rating_sum,
@@ -87,7 +86,7 @@ class UpdateGameReviewStats extends Command
             GROUP BY g.id;
         ");
 
-        $this->info('Checking '.count($avgRatingList).' games');
+        $logger->info('Average ratings: checking '.count($avgRatingList).' games');
 
         foreach ($avgRatingList as $item) {
 
@@ -103,7 +102,7 @@ class UpdateGameReviewStats extends Command
 
             if ($ratingAvg != $ratingAvgNew) {
 
-                $this->info(sprintf('Game: %s - Previous average: %s - New average: %s',
+                $logger->info(sprintf('Game: %s - Previous average: %s - New average: %s',
                     $gameTitle, $ratingAvg, $ratingAvgNew));
 
                 \DB::update("

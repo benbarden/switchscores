@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\ReviewLink;
 use App\Services\FeedItemReviewService;
@@ -45,7 +46,9 @@ class RunFeedReviewGenerator extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         $gameService = resolve('Services\GameService');
@@ -62,7 +65,7 @@ class RunFeedReviewGenerator extends Command
         $feedItems = $feedItemReviewService->getUnprocessed();
 
         if (!$feedItems) {
-            $this->info('No items to process. Aborting.');
+            $logger->info('No items to process. Aborting.');
             return true;
         }
 
@@ -71,7 +74,7 @@ class RunFeedReviewGenerator extends Command
             try {
 
                 $itemId = $feedItem->id;
-                $this->info('Processing item: '.$itemId. ' with date: '.$feedItem->item_date);
+                //$logger->info('Processing item: '.$itemId. ' with date: '.$feedItem->item_date);
                 $processStatus = '';
 
                 // Check the fields we need to create a review
@@ -86,7 +89,7 @@ class RunFeedReviewGenerator extends Command
                 if ($gameId && $siteId) {
                     $existingReview = $reviewLinkService->getByGameAndSite($gameId, $siteId);
                     if ($existingReview) {
-                        $this->warn('Existing review found for this game/site. Marking as a duplicate.');
+                        $logger->warn('Existing review found for this game/site. Marking as a duplicate.');
                         $feedItem->process_status = 'Duplicate';
                         $feedItem->processed = 1;
                         $feedItem->save();
@@ -113,15 +116,15 @@ class RunFeedReviewGenerator extends Command
                 }
 
                 if ($missingFields) {
-                    $this->error('Unable to process due to missing field(s): '.implode($missingFields, ', '));
-                    $feedItem->process_status = $processStatus;
-                    $feedItem->save();
+                    //$logger->error('Unable to process due to missing field(s): '.implode($missingFields, ', '));
+                    //$feedItem->process_status = $processStatus;
+                    //$feedItem->save();
                     continue;
                 }
 
                 // Reformat the date
                 $itemDateShort = date('Y-m-d', strtotime($itemDate));
-                $this->info('Reformatting date: '.$itemDate.' as short date: '.$itemDateShort);
+                //$logger->info('Reformatting date: '.$itemDate.' as short date: '.$itemDateShort);
 
                 // We're good to go - let's create the review
                 $reviewSite = $partnerService->find($siteId);
@@ -141,13 +144,13 @@ class RunFeedReviewGenerator extends Command
                 $feedItem->processed = 1;
                 $feedItem->save();
 
-                $this->info('Successfully created review with id: '.$reviewLink->id);
+                $logger->info("Item {$itemId}: Successfully created review with id: {$reviewLink->id}; date: {$feedItem->item_date}");
 
                 // Trigger event
                 event(new ReviewLinkCreated($reviewLink));
 
             } catch (\Exception $e) {
-                $this->error('Got error: '.$e->getMessage().'; skipping');
+                $logger->error('Got error: '.$e->getMessage().'; skipping');
             }
 
         }
