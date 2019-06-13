@@ -61,8 +61,6 @@ class EshopEuropeUpdateGameData extends Command
 
         foreach ($eshopList as $eshopItem) {
 
-            $showSplitter = false;
-
             $fsId = $eshopItem->fs_id;
             $eshopTitle = $eshopItem->title;
             $eshopUrl = $eshopItem->url;
@@ -105,17 +103,14 @@ class EshopEuropeUpdateGameData extends Command
                 if ($serviceUpdateGameData->getLogMessageError()) {
 
                     $logger->error($serviceUpdateGameData->getLogMessageError());
-                    $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageWarning()) {
 
                     $logger->warn($serviceUpdateGameData->getLogMessageWarning());
-                    $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
 
                     $logger->info($serviceUpdateGameData->getLogMessageInfo());
-                    $showSplitter = true;
 
                 }
 
