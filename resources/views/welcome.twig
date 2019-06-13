@@ -94,21 +94,9 @@
             New releases
         </h2>
         {% if NewReleases|length %}
-            <div class="row">
-                {% for item in NewReleases %}
-                    <div class="col-sm-6 col-md-6 col-lg-6" style="min-height: 160px; padding: 5px 2px; text-align: center;">
-                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
-                        <br>
-                        <p class="h5">
-                            <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
-                            <br>
-                            <small>{{ item.release_date|date('jS M') }}</small>
-                        </p>
-                        <p class="h6">
-                        </p>
-                    </div>
-                {% endfor %}
-            </div>
+            {% for item in NewReleases %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}
@@ -119,17 +107,9 @@
             Top Rated games
         </h2>
         {% if TopRatedAllTime|length %}
-            <div class="row">
-                {% for item in TopRatedAllTime %}
-                    <div class="col-sm-6 col-md-6 col-lg-6" style="min-height: 160px; padding: 5px 2px; text-align: center;">
-                        <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini') }}</a>
-                        <br>
-                        <p class="h5">
-                            <a href="{{ LinkHelper.gameShow(item) }}">{{ item.title }}</a>
-                        </p>
-                    </div>
-                {% endfor %}
-            </div>
+            {% for item in TopRatedAllTime %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'Y'} %}
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}

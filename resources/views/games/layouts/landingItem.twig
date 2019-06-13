@@ -1,3 +1,20 @@
+{# CONFIG #}
+
+{% if cfgSmallTitles is not defined %}
+    {% set cfgSmallTitles = 'N' %}
+{% endif %}
+{% if cfgSmallTitles == 'Y' %}
+    {% set titleClass = 'h4' %}
+{% else %}
+    {% set titleClass = 'h3' %}
+{% endif %}
+
+{% if cfgHideDate is not defined %}
+    {% set cfgHideDate = 'N' %}
+{% endif %}
+
+{# PACKSHOTS #}
+
 {% if item.boxart_header_image %}
     {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
 {% endif %}
@@ -13,8 +30,9 @@
         </a>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-        <p class="h3">
+        <p class="{{ titleClass }}">
             <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+            {% if cfgHideDate != 'Y' %}
             <br>
             <span class="h5">
                 {% if item.is_released == 1 %}
@@ -25,6 +43,7 @@
                     {{ item.upcoming_date }}
                 {% endif %}
             </span>
+            {% endif %}
         </p>
     </div>
 </div>

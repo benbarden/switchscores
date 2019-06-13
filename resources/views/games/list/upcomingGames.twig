@@ -4,52 +4,20 @@
 
 {% block page_body %}
 
-    <p>
-        This page lists Nintendo Switch games that are planned but not yet released.
-        As games are released, they’ll move to the
-        <a href="{{ route('games.list.released') }}">released Switch games index</a>.
-    </p>
+<p>
+    This page lists Nintendo Switch games that are planned but not yet released.
+    As games are released, they’ll move to the
+    <a href="{{ route('games.list.released') }}">released Switch games index</a>.
+</p>
 
-    <h2>{{ item.MainTitle }}</h2>
+<h2>{{ item.MainTitle }}</h2>
+
 <div class="row">
     {% for item in UpcomingGames %}
         <div class="col-xs-12 col-sm-12 col-md-6">
-            {% include 'games/layouts/landingItem.twig' with {'item': item} %}
+            {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
         </div>
     {% endfor %}
-
-    {#
-<div class="col-xs-12 col-sm-12 col-md-6" style="background: #f9f9f9;">
-
-<h2>Featured</h2>
-{% if FeaturedGames|length %}
-    {% for item in FeaturedGames %}
-        {% include 'games/layouts/landingItem.twig' with {'item': item} %}
-    {% endfor %}
-<h2>Featured</h2>
-<div class="row">
-    <div class="col-sm-12 col-md-12">
-        <div class="row">
-            {% for item in FeaturedGames %}
-            <div class="col-sm-12 col-md-12 col-lg-12" style="min-height: 200px; padding: 5px 2px; text-align: center;">
-                {%
-                include 'games/layouts/cleanGridItem.twig'
-                with {
-                'item': item,
-                'ShowPageRank': false,
-                'PageRank': 0
-                }
-                %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
 </div>
-        {% endif %}
-
-    </div>
-    #}
-</div>
-
 
 {% endblock page_body %}
