@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\GameService;
 use App\Services\EshopEuropeGameService;
@@ -43,7 +44,9 @@ class EshopEuropeUpdateGameData extends Command
      */
     public function handle()
     {
-        $this->info(' *** '.$this->signature.' ['.date('Y-m-d H:i:s').']'.' *** ');
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->signature.' *************** ');
 
         $gameService = resolve('Services\GameService');
         /* @var GameService $gameService */
@@ -52,7 +55,7 @@ class EshopEuropeUpdateGameData extends Command
 
         $serviceUpdateGameData = new UpdateGameData();
 
-        $this->info('Loading data...');
+        $logger->info('Loading data...');
 
         $eshopList = $eshopEuropeGameService->getAllWithLink();
 
@@ -67,12 +70,12 @@ class EshopEuropeUpdateGameData extends Command
             $game = $gameService->getByFsId('eu', $fsId);
 
             if (!$game) {
-                $this->error($eshopTitle.' - no game linked to fs_id: '.$fsId.'; skipping');
+                $logger->error($eshopTitle.' - no game linked to fs_id: '.$fsId.'; skipping');
                 continue;
             }
 
             if (!$eshopUrl) {
-                $this->error($eshopTitle.' - no URL found for this record. Skipping');
+                $logger->error($eshopTitle.' - no URL found for this record. Skipping');
                 continue;
             }
 
@@ -101,17 +104,17 @@ class EshopEuropeUpdateGameData extends Command
 
                 if ($serviceUpdateGameData->getLogMessageError()) {
 
-                    $this->error($serviceUpdateGameData->getLogMessageError());
+                    $logger->error($serviceUpdateGameData->getLogMessageError());
                     $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageWarning()) {
 
-                    $this->warn($serviceUpdateGameData->getLogMessageWarning());
+                    $logger->warn($serviceUpdateGameData->getLogMessageWarning());
                     $showSplitter = true;
 
                 } elseif ($serviceUpdateGameData->getLogMessageInfo()) {
 
-                    $this->info($serviceUpdateGameData->getLogMessageInfo());
+                    $logger->info($serviceUpdateGameData->getLogMessageInfo());
                     $showSplitter = true;
 
                 }
@@ -147,10 +150,6 @@ class EshopEuropeUpdateGameData extends Command
             if ($serviceUpdateGameData->hasGameReleaseDateChanged()) {
                 $gameReleaseDate = $serviceUpdateGameData->getGameReleaseDate();
                 $gameReleaseDate->save();
-            }
-
-            if ($showSplitter) {
-                $this->info('***********************************************************');
             }
         }
     }

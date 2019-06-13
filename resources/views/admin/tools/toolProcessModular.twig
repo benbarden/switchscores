@@ -8,11 +8,13 @@
         {{ ToolDetails.command }} has completed.
     </p>
 
+    <h2>Output</h2>
     {% if CommandOutput %}
-        <h2>Output</h2>
         <pre style="height: 300px; overflow: scroll;">
         {{ CommandOutput }}
-    </pre>
+        </pre>
+    {% else %}
+        <p>Check the logfile for output.</p>
     {% endif %}
 
     <h2>Where next?</h2>

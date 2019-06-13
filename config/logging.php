@@ -3,6 +3,8 @@
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 
+use Monolog\Formatter\LineFormatter;
+
 return [
 
     /*
@@ -40,9 +42,21 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'cron' => [
+            'driver' => 'stack',
+            'channels' => ['cron-single', 'stdout'],
+            'ignore_exceptions' => false,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+        ],
+
+        'cron-single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/cron.log'),
             'level' => 'debug',
         ],
 
@@ -78,6 +92,11 @@ return [
             'with' => [
                 'stream' => 'php://stderr',
             ],
+        ],
+
+        'stdout' => [
+            'driver' => 'custom',
+            'via' => \App\Logging\CustomConsoleLogger::class
         ],
 
         'syslog' => [
