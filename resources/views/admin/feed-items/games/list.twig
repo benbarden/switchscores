@@ -45,6 +45,20 @@
                     </td>
                     <td class="text-left">
                         {{ item.item_title }}
+                        <small>
+                            {% if item.hasRealEuUpcomingDate() %}
+                                <br>
+                                <strong>upcoming_date_eu: {{ item.upcoming_date_eu }}</strong>
+                            {% endif %}
+                            {% if item.hasRealUsUpcomingDate() %}
+                                <br>
+                                upcoming_date_us: {{ item.upcoming_date_us }}
+                            {% endif %}
+                            {% if item.hasRealJpUpcomingDate() %}
+                                <br>
+                                upcoming_date_jp: {{ item.upcoming_date_jp }}
+                            {% endif %}
+                        </small>
                     </td>
                     <td class="text-left">
                         {% if item.game.title is null %}

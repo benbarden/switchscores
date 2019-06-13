@@ -52,4 +52,29 @@ class FeedItemGame extends Model
         $this->status_code = self::STATUS_COMPLETE;
         $this->status_desc = 'Complete';
     }
+
+    public function hasRealUpcomingDate($date)
+    {
+        if (!$date) return false;
+        if (is_null($date)) return false;
+
+        if (in_array($date, ['TBA', 'Unreleased'])) return false;
+
+        return true;
+    }
+
+    public function hasRealEuUpcomingDate()
+    {
+        return $this->hasRealUpcomingDate($this->upcoming_date_eu);
+    }
+
+    public function hasRealUsUpcomingDate()
+    {
+        return $this->hasRealUpcomingDate($this->upcoming_date_us);
+    }
+
+    public function hasRealJpUpcomingDate()
+    {
+        return $this->hasRealUpcomingDate($this->upcoming_date_jp);
+    }
 }
