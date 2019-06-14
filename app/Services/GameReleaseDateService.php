@@ -213,6 +213,41 @@ class GameReleaseDateService
     }
 
     /**
+     * This returns a list of released titles, with ranks, and above a minimum average rating.
+     * Sorted to show the newest titles first.
+     * @param $region
+     * @param int $minimumRating
+     * @param int $dateInterval
+     * @param int $limit
+     * @return mixed
+     */
+    public function getRecentWithGoodRanks($region, $minimumRating = 7, $dateInterval = 30, $limit = 15)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->whereRaw('game_release_dates.release_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $dateInterval)
+            ->whereNotNull('games.game_rank')
+            ->where('games.rating_avg', '>', $minimumRating)
+            ->orderBy('games.rating_avg', 'desc')
+            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
      * @param $region
      * @param int $limit
      * @return mixed

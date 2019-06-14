@@ -21,10 +21,15 @@ class WelcomeController extends Controller
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceTopRated = $serviceContainer->getTopRatedService();
         $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+        $serviceGameRankYear = $serviceContainer->getGameRankYearService();
 
+        $thisYear = date('Y');
+        $bindings['Year'] = $thisYear;
+        $bindings['RecentWithGoodRanks'] = $serviceGameReleaseDate->getRecentWithGoodRanks($regionCode, 7, 42, 18);
         $bindings['ReviewList'] = $serviceReviewLinks->getLatestNaturalOrder(20);
         $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 20);
         $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 20);
+        $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 20);
 
         // Quick stats
         $bindings['TotalReleasedGames'] = $serviceGameReleaseDate->countReleased($regionCode);

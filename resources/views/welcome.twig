@@ -5,91 +5,43 @@
 {% block page_body %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-4">
 
+    <div class="col-xs-12 col-sm-12 col-md-12">
         <!-- Logo + featured link -->
         <div class="row">
-            <div class="col-md-4 text-center">
-                <img src="/img/logo.png" style="height: 125px; width: 125px;" alt="World of Switch">
+            <div class="col-md-5 text-left">
+                <h1 style="margin-top: 10px;">
+                    World of Switch
+                </h1>
             </div>
-            <div class="col-md-8 text-left">
-                <h2>World of Switch</h2>
-                <p><a href="{{ route('games.onSale') }}">Games on sale</a></p>
-                <a class="twitter-share-button"
-                   href="https://twitter.com/intent/tweet?text=World of Switch - Nintendo Switch games database&via=worldofswitch"
-                   data-size="medium">
-                    Tweet</a>
+            <div class="col-md-2 text-center">
+                <h4>
+                    <a href="{{ route('games.list.released') }}">{{ TotalReleasedGames }} releases</a>
+                </h4>
             </div>
-        </div>
-
-        <hr>
-
-        <!-- Quick stats -->
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <p>
-                    <span class="home-stat">
-                    <a href="{{ route('games.list.released') }}">{{ TotalReleasedGames }}</a>
-                    </span>
-                    <br>
-                    <span class="home-stat-desc">
-                    <a href="{{ route('games.list.released') }}">released games</a>
-                    </span>
-                </p>
+            <div class="col-md-2 text-center">
+                <h4>
+                    <a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a>
+                </h4>
             </div>
-            <div class="col-md-4 text-center">
-                <p>
-                    <span class="home-stat">
-                        <a href="{{ route('topRated.landing') }}">{{ TotalRanked }}</a>
-                    </span>
-                    <br>
-                    <span class="home-stat-desc">
-                    <a href="{{ route('topRated.landing') }}">ranked games</a>
-                    </span>
-                </p>
+            <div class="col-md-2 text-center">
+                <h4>
+                    <a href="{{ route('reviews.landing') }}">{{ TotalReviews }} ratings</a>
+                </h4>
             </div>
-            <div class="col-md-4 text-center">
-                <p>
-                    <span class="home-stat">
-                    <a href="{{ route('reviews.landing') }}">{{ TotalReviews }}</a>
-                    </span>
-                    <br>
-                    <span class="home-stat-desc">
-                    <a href="{{ route('reviews.landing') }}">review scores</a>
-                    </span>
-                </p>
+            <div class="col-md-1 col-lg-1 text-center">
+                <img src="/img/logo.png" alt="World of Switch" class="img-responsive" style="max-height: 50px; max-width: 50px;">
             </div>
         </div>
-
-        <!-- Latest reviews -->
-        <h2>
-            Latest reviews
-        </h2>
-        {% if ReviewList.count %}
-            {% for item in ReviewList %}
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" style="padding-bottom: 5px;">
-                        <a href="{{ LinkHelper.gameShow(item.game) }}">
-                            {{ ImageHelper.packshotHtml(item.game, 'reviews-tiny') }}
-                        </a>
-                    </div>
-                    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10" style="padding-bottom: 5px;">
-                        <strong>{{ item.review_date|date('jS M') }}</strong>:
-                        <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
-                        <br>
-                        <small>
-                            Source: <a href="{{ route('reviews.site', {'linkTitle': item.site.link_title}) }}">{{ item.site.name }}</a>;
-                            Rating: {{ item.rating_normalised }}
-                        </small>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews to display.</p>
-        {% endif %}
     </div>
 
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
+</div>
+
+<hr style="border: 1px solid #c9c9c9; margin-top: 5px; margin-bottom: 5px;">
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
         <h2>
             New releases
         </h2>
@@ -102,13 +54,26 @@
         {% endif %}
     </div>
 
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
         <h2>
-            Top Rated games
+            Recent top rated
         </h2>
-        {% if TopRatedAllTime|length %}
-            {% for item in TopRatedAllTime %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'Y'} %}
+        {% if RecentWithGoodRanks|length %}
+            {% for item in RecentWithGoodRanks %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideRating': 'N'} %}
+            {% endfor %}
+        {% else %}
+            <p>No games found!</p>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+        <h2>
+            Best of {{ Year }}
+        </h2>
+        {% if TopRatedThisYear|length %}
+            {% for item in TopRatedThisYear %}
+                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'Y', 'cfgHideRating': 'N'} %}
             {% endfor %}
         {% else %}
             <p>No games found!</p>
@@ -120,12 +85,12 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h3 class="text-center">
-            <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
+            <a href="{{ route('games.landing') }}">View all games &gt;</a>
         </h3>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
         <h3 class="text-center">
-            <a href="{{ route('games.landing') }}">View all games &gt;</a>
+            <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
