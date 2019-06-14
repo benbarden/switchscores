@@ -61,6 +61,7 @@ class GameReleaseDateService
 
     /**
      * @param $releaseDate
+     * @throws \Exception
      * @return null|string
      */
     public function getReleaseYear($releaseDate)
@@ -301,6 +302,7 @@ class GameReleaseDateService
     /**
      * @param $year
      * @param $region
+     * @throws \Exception
      * @return \Illuminate\Support\Collection
      */
     public function getUpcomingYearWithDates($year, $region)
@@ -311,6 +313,7 @@ class GameReleaseDateService
     /**
      * @param $year
      * @param $region
+     * @throws \Exception
      * @return \Illuminate\Support\Collection
      */
     public function getUpcomingYearQuarters($year, $region)
@@ -321,6 +324,7 @@ class GameReleaseDateService
     /**
      * @param $year
      * @param $region
+     * @throws \Exception
      * @return \Illuminate\Support\Collection
      */
     public function getUpcomingYearXs($year, $region)
