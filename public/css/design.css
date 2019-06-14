@@ -63,6 +63,11 @@ blockquote {
 .game-rating p {margin-top: 5px; display: inline-block; text-align: center; padding: 0 5px; border: 1px solid #ddd;}
 .game-rating span {display: block; font-size: 12px; text-transform: uppercase; padding: 5px; margin: 0 -5px; background: #f5f5f5;}
 
-/* Blog */
-#wos-blog {font-size: 15px; line-height: 1.6em;}
-#wos-blog p, #wos-blog ul, #wos-blog ol, #wos-blog img {margin-bottom: 20px;}
+/* Blog and content pages */
+.wos-content-page {
+    font-size: 15px;
+    line-height: 1.6em;
+}
+.wos-content-page p, .wos-content-page ul, .wos-content-page ol, .wos-content-page img {
+    margin-bottom: 20px;
+}
