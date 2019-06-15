@@ -1,0 +1,61 @@
+{# CONFIG #}
+
+{% if cfgSmallTitles is not defined %}
+    {% set cfgSmallTitles = 'N' %}
+{% endif %}
+{% if cfgSmallTitles == 'Y' %}
+    {% set titleClass = 'h4' %}
+{% else %}
+    {% set titleClass = 'h3' %}
+{% endif %}
+
+{% if cfgRankPos is not defined %}
+    {% set cfgRankPos = 'right' %}
+{% endif %}
+
+{# PACKSHOTS #}
+
+{% if item.boxart_header_image %}
+    {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
+{% endif %}
+
+<div class="row">
+    {% if cfgRankPos == 'left' %}
+        <div class="col-sm-12 col-md-2 col-lg-2 bg-primary">
+            <span class="h2 text-left pull-left" style="margin-top: 10px;">
+                {{ item.game_rank }}
+            </span>
+        </div>
+    {% endif %}
+    <div class="col-sm-12 col-md-5 col-lg-5">
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+            {% if boxartUrl %}
+                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}">
+            {% else %}
+                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+            {% endif %}
+        </a>
+    </div>
+    <div class="col-sm-12 col-md-5 col-lg-5">
+        <p class="{{ titleClass }}">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+            {% if item.rating_avg %}
+            <br>
+            <span class="small">
+                Rating: {{ item.rating_avg }}
+            </span>
+            {% endif %}
+        </p>
+    </div>
+    {% if cfgRankPos == 'right' %}
+        <div class="col-sm-12 col-md-2 col-lg-2 bg-primary">
+            <span class="h2 text-right pull-right" style="margin-top: 10px;">
+                {{ item.game_rank }}
+            </span>
+        </div>
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+    </div>
+</div>

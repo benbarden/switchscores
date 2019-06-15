@@ -17,11 +17,11 @@
             Top 100 Switch games - all-time
         </h2>
         {% if TopRatedAllTime|length %}
-            <div class="row">
-                {% for item in TopRatedAllTime %}
-                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in TopRatedAllTime %}
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
+                </div>
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}

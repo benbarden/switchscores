@@ -9,11 +9,23 @@
     Games not listed do not have enough reviews to receive a rank.
 </p>
 
-<p>
-    <strong>Not in Europe?</strong>
-    <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
-</p>
+<div class="row">
 
-{% include 'topRated/byMonthPageGrid.twig' with {'GamesList': GamesRatingsWithRanks, 'MinHeight': '350px', 'ShowPageRank': true} %}
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            {{ SubTitle }}
+        </h2>
+        {% if GamesRatingsWithRanks|length %}
+            {% for item in GamesRatingsWithRanks %}
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No Top Rated games this month... yet. It's early days. Come back soon for more!</p>
+        {% endif %}
+    </div>
+
+</div>
 
 {% endblock page_body %}

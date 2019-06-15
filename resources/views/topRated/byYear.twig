@@ -18,11 +18,11 @@
             Top 100 Switch games - released in {{ Year }}
         </h2>
         {% if TopRatedByYear|length %}
-            <div class="row">
-                {% for item in TopRatedByYear %}
-                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in TopRatedByYear %}
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
+                </div>
+            {% endfor %}
         {% else %}
             <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
         {% endif %}

@@ -147,7 +147,7 @@ class TopRatedController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameRankYearMonth = $serviceContainer->getGameRankYearMonthService();
 
         $dates = $serviceGameCalendar->getAllowedDates();
         if (!in_array($date, $dates)) {
@@ -161,13 +161,13 @@ class TopRatedController extends Controller
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        //$bindings['GamesByMonthRatings'] = $serviceTopRated->getByMonthAllRatings($regionCode, $calendarYear, $calendarMonth);
-        $bindings['GamesRatingsWithRanks'] = $serviceTopRated->getByMonthWithRanks($regionCode, $calendarYear, $calendarMonth);
-        $bindings['GamesRatingsLowReviewCount'] = $serviceTopRated->getByMonthLowReviewCount($regionCode, $calendarYear, $calendarMonth);
-        $bindings['GamesRatingsNoReviews'] = $serviceTopRated->getByMonthNoReviews($regionCode, $calendarYear, $calendarMonth);
+        $yearMonth = $calendarYear.$calendarMonth;
+
+        $bindings['GamesRatingsWithRanks'] = $serviceGameRankYearMonth->getList($yearMonth);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games - By month: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games - By month: '.$dtDateDesc;
+        $bindings['SubTitle'] = 'Top Rated games in '.$dtDateDesc;
 
         $bindings['CalendarDateDesc'] = $dtDateDesc;
 

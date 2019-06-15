@@ -34,31 +34,27 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <h2>
-            Top 100 Switch games - released in {{ Year }}
+            Top 100 Switch games - {{ Year }}
             <span class="h4">(<a href="{{ route('topRated.byYear', {'year': Year}) }}">view all</a>)</span>
         </h2>
         {% if TopRatedThisYear|length %}
-            <div class="row">
-                {% for item in TopRatedThisYear %}
-                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in TopRatedThisYear %}
+                {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
+            {% endfor %}
         {% else %}
             <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
         {% endif %}
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #ffffff;">
         <h2>
             Top 100 Switch games - all-time
             <span class="h4">(<a href="{{ route('topRated.allTime') }}">view all</a>)</span>
         </h2>
         {% if TopRatedAllTime|length %}
-            <div class="row">
-                {% for item in TopRatedAllTime %}
-                    {% include 'games/layouts/miniGridItemWithRank.twig' with {'item': item} %}
-                {% endfor %}
-            </div>
+            {% for item in TopRatedAllTime %}
+                {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'left'} %}
+            {% endfor %}
         {% else %}
             <p>No games found!</p>
         {% endif %}
