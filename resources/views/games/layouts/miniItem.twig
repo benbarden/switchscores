@@ -18,9 +18,9 @@
             <br>
             <small>
                 {% if item.is_released == 1 %}
-                    {{ item.release_date|date('jS M') }}
+                    {{ item.release_date|date('jS M Y') }}
                 {% elseif item.release_date is not null %}
-                    {{ item.release_date|date('jS M') }}
+                    {{ item.release_date|date('jS M Y') }}
                 {% else %}
                     {{ item.upcoming_date }}
                 {% endif %}
