@@ -4,15 +4,16 @@
 
 {% block page_body %}
 
-<p>A list of Nintendo Switch games currently available to buy from the Nintendo eShop.</p>
-
-<p>All prices correct at time of publication. Any changes may not be reflected immediately.
-    Check prices prior to purchase.</p>
+<p>
+    A list of Nintendo Switch games, starting with {{ GameLetter }} and sorted alphabetically.
+</p>
 
 {% if GamesList|length %}
     <div class="row">
         {% for item in GamesList %}
-            {% include 'games/layouts/miniGridItemFourCol.twig' with {'item': item} %}
+            <div class="col-xs-12 col-sm-12 col-md-4">
+                {% include 'games/layouts/miniItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
+            </div>
         {% endfor %}
     </div>
 {% else %}
