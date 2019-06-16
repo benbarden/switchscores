@@ -419,10 +419,13 @@ class GameService
     public function getOldDevelopersByCount()
     {
         $games = DB::select("
-            select developer, count(*) AS count
-            from games
-            group by developer
-            order by count(*) desc, developer asc;
+            select g.developer, count(*) AS count
+            from games g
+            left join game_developers gd on g.id = gd.game_id
+            left join partners d on gd.developer_id = d.id
+            where d.id is null or g.developer is not null
+            group by g.developer
+            order by count(*) desc, g.developer asc
         ");
 
         return $games;
@@ -431,10 +434,13 @@ class GameService
     public function getOldPublishersByCount()
     {
         $games = DB::select("
-            select publisher, count(*) AS count
-            from games
-            group by publisher
-            order by count(*) desc, publisher asc;
+            select g.publisher, count(*) AS count
+            from games g
+            left join game_publishers gp on g.id = gp.game_id
+            left join partners p on p.id = gp.publisher_id
+            where p.id is null or g.publisher is not null
+            group by g.publisher
+            order by count(*) desc, g.publisher asc
         ");
 
         return $games;
