@@ -50,7 +50,7 @@ class WikipediaUpdateGamesList extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @throws \Exception
      */
     public function handle()
     {
@@ -97,21 +97,28 @@ class WikipediaUpdateGamesList extends Command
                     continue;
                 }
 
-                // Check standard fields
                 $gameChanged = false;
-                if ($game->developer != $feedItem->item_developers) {
-                    $newDeveloper = $feedItem->item_developers;
-                    $newDeveloper = str_replace("\r", ' ', $newDeveloper);
-                    $newDeveloper = str_replace("\n", ' ', $newDeveloper);
-                    $game->developer = $newDeveloper;
-                    $gameChanged = true;
+
+                // Partner fields
+                if ($game->gameDevelopers()->count() == 0) {
+                    // Only proceed if new developer db entries do not exist
+                    if ($game->developer != $feedItem->item_developers) {
+                        $newDeveloper = $feedItem->item_developers;
+                        $newDeveloper = str_replace("\r", ' ', $newDeveloper);
+                        $newDeveloper = str_replace("\n", ' ', $newDeveloper);
+                        $game->developer = $newDeveloper;
+                        $gameChanged = true;
+                    }
                 }
-                if ($game->publisher != $feedItem->item_publishers) {
-                    $newPublisher = $feedItem->item_publishers;
-                    $newPublisher = str_replace("\r", ' ', $newPublisher);
-                    $newPublisher = str_replace("\n", ' ', $newPublisher);
-                    $game->publisher = $newPublisher;
-                    $gameChanged = true;
+                if ($game->gamePublishers()->count() == 0) {
+                    // Only proceed if new publisher db entries do not exist
+                    if ($game->publisher != $feedItem->item_publishers) {
+                        $newPublisher = $feedItem->item_publishers;
+                        $newPublisher = str_replace("\r", ' ', $newPublisher);
+                        $newPublisher = str_replace("\n", ' ', $newPublisher);
+                        $game->publisher = $newPublisher;
+                        $gameChanged = true;
+                    }
                 }
 
                 // Release dates
