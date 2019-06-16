@@ -66,8 +66,8 @@ class PartnersController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Games company - '.$partnerData->name;
-        $bindings['PageTitle'] = 'Games company - '.$partnerData->name;
+        $bindings['TopTitle'] = $partnerData->name;
+        $bindings['PageTitle'] = $partnerData->name;
 
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;

@@ -5,23 +5,10 @@
 {% block page_body %}
 
     <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <p>
-                Our games company pages are a work in progress. Check back soon for more!
-            </p>
-            <h2>Games company info</h2>
+        <div class="col-sm-12 col-md-6 col-lg-6">
             <table class="table table-condensed table-responsive">
-                {% if NewsInfoBox == 'Y' %}
-                    <tr>
-                        <td class="text-center" colspan="2">
-                            <strong>
-                                Infobox
-                            </strong>
-                        </td>
-                    </tr>
-                {% endif %}
                 <tr>
-                    <td>
+                    <td style="max-width: 150px;">
                         <span style="font-weight: bold;">Name</span>
                     </td>
                     <td>{{ PartnerData.name }}</td>
@@ -44,66 +31,30 @@
                 {% endif %}
             </table>
         </div>
-        <div class="col-sm-12 col-md-6">
-            {% if GameDevList.count > 0 %}
-                <h2>Games (as a developer)</h2>
-                <table class="table table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Release date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in GameDevList %}
-                            <tr>
-                                <td>
-                                    <a href="{{ LinkHelper.gameShow(item) }}">
-                                        {{ item.title }}
-                                    </a>
-                                </td>
-                                <td>
-                                    {% if item.release_date and item.is_released == 1 %}
-                                        {{ item.release_date|date('jS M Y') }}
-                                    {% else %}
-                                        {{ item.upcoming_date }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-            {% if GamePubList.count > 0 %}
-                <h2>Games (as a publisher)</h2>
-                <table class="table table-condensed table-responsive">
-                    <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Release date</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in GamePubList %}
-                        <tr>
-                            <td>
-                                <a href="{{ LinkHelper.gameShow(item) }}">
-                                    {{ item.title }}
-                                </a>
-                            </td>
-                            <td>
-                                {% if item.release_date and item.is_released == 1 %}
-                                    {{ item.release_date|date('jS M Y') }}
-                                {% else %}
-                                    {{ item.upcoming_date }}
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
     </div>
+    {% if GameDevList.count > 0 %}
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <h2>Nintendo Switch games developed by {{ PartnerData.name }}</h2>
+            </div>
+            {% for item in GameDevList %}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    {% include 'games/layouts/miniItem.twig' with {'item': item} %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if GamePubList.count > 0 %}
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <h2>Nintendo Switch games published by {{ PartnerData.name }}</h2>
+            </div>
+            {% for item in GamePubList %}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    {% include 'games/layouts/miniItem.twig' with {'item': item} %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 {% endblock page_body %}
