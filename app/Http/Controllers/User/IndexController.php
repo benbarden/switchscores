@@ -79,8 +79,8 @@ class IndexController extends Controller
                     $onPageTitle = 'Games company dashboard: '.$partnerData->name;
 
                     // Recent games
-                    $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, 5);
-                    $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, 5);
+                    $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, false, 5);
+                    $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, false, 5);
                     $bindings['GameDevList'] = $gameDevList;
                     $bindings['GamePubList'] = $gamePubList;
 

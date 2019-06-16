@@ -42,9 +42,9 @@ class GamesListController extends Controller
         if (!in_array($report, ['developer', 'publisher'])) abort(404);
 
         if ($report == 'developer') {
-            $gamesList = $serviceGameDeveloper->getGamesByDeveloper($region, $partnerId);
+            $gamesList = $serviceGameDeveloper->getGamesByDeveloper($region, $partnerId, false);
         } elseif ($report == 'publisher') {
-            $gamesList = $serviceGamePublisher->getGamesByPublisher($region, $partnerId);
+            $gamesList = $serviceGamePublisher->getGamesByPublisher($region, $partnerId, false);
         }
 
         $bindings['PartnerGameList'] = $gamesList;

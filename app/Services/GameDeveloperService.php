@@ -84,10 +84,11 @@ class GameDeveloperService
     /**
      * @param $region
      * @param $developerId
+     * @param bool $releasedOnly
      * @param null $limit
      * @return \Illuminate\Database\Query\Builder|\Illuminate\Support\Collection
      */
-    public function getGamesByDeveloper($region, $developerId, $limit = null)
+    public function getGamesByDeveloper($region, $developerId, $releasedOnly = false, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
@@ -101,9 +102,14 @@ class GameDeveloperService
                 'game_developers.developer_id',
                 'partners.name')
             ->where('game_developers.developer_id', $developerId)
-            ->where('game_release_dates.region', $region)
-            //->where('game_release_dates.is_released', '1')
-            ->orderBy('game_release_dates.release_date', 'desc');
+            ->where('game_release_dates.region', $region);
+
+        if ($releasedOnly) {
+            $games = $games->where('game_release_dates.is_released', '1');
+        }
+
+        $games = $games->orderBy('game_release_dates.release_date', 'desc');
+
         if ($limit) {
             $games = $games->limit($limit);
         }

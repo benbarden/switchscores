@@ -61,8 +61,8 @@ class PartnersController extends Controller
 
         $partnerId = $partnerData->id;
 
-        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId);
-        $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId);
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, true);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, true);
 
         $bindings = [];
 
