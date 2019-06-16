@@ -118,8 +118,8 @@ class ActivityFeed extends Model
         $reviewLink = $serviceReviewLink->find($reviewId);
 
         $reviewRating = $reviewLink->rating_normalised;
-        $reviewSite = $reviewLink->site->name;
+        $partnerName = $reviewLink->site->name;
 
-        return sprintf($message, $reviewSite, $reviewRating);
+        return sprintf($message, $partnerName, $reviewRating);
     }
 }
