@@ -1,0 +1,34 @@
+{% if item.boxart_header_image %}
+    {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
+{% endif %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+            {% if boxartUrl %}
+                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}">
+            {% else %}
+                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+            {% endif %}
+        </a>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <p class="h5">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+            <br>
+            <small>
+                {% if item.is_released == 1 %}
+                    {{ item.release_date|date('jS M') }}
+                {% elseif item.release_date is not null %}
+                    {{ item.release_date|date('jS M') }}
+                {% else %}
+                    {{ item.upcoming_date }}
+                {% endif %}
+            </small>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+    </div>
+</div>
