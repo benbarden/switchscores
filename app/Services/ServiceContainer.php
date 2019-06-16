@@ -10,7 +10,6 @@ class ServiceContainer
     const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
     const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
-    const KEY_DEVELOPER_SERVICE = 'DeveloperService';
     const KEY_ESHOP_EUROPE_GAME_SERVICE = 'EshopEuropeGameService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
@@ -32,7 +31,6 @@ class ServiceContainer
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_PARTNER_SERVICE = 'PartnerService';
     const KEY_PARTNER_REVIEW_SERVICE = 'PartnerReviewService';
-    const KEY_PUBLISHER_SERVICE = 'PublisherService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
@@ -128,14 +126,6 @@ class ServiceContainer
     public function getCrawlerWikipediaGamesListSourceService()
     {
         return $this->load(self::KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE);
-    }
-
-    /**
-     * @return DeveloperService
-     */
-    public function getDeveloperService()
-    {
-        return $this->load(self::KEY_DEVELOPER_SERVICE);
     }
 
     /**
@@ -304,14 +294,6 @@ class ServiceContainer
     public function getPartnerReviewService()
     {
         return $this->load(self::KEY_PARTNER_REVIEW_SERVICE);
-    }
-
-    /**
-     * @return PublisherService
-     */
-    public function getPublisherService()
-    {
-        return $this->load(self::KEY_PUBLISHER_SERVICE);
     }
 
     /**
