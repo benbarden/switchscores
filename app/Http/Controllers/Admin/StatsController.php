@@ -280,7 +280,7 @@ class StatsController extends Controller
         /* @var $serviceContainer ServiceContainer */
         $serviceUser = $serviceContainer->getUserService();
         $serviceGame = $serviceContainer->getGameService();
-        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
 
         $userId = Auth::id();
@@ -297,7 +297,7 @@ class StatsController extends Controller
             return response()->json(['error' => 'Missing data: developerName'], 400);
         }
 
-        $developerData = $serviceDeveloper->getByName($developerName);
+        $developerData = $servicePartner->getByName($developerName);
         if (!$developerData) {
             return response()->json(['error' => 'No developer record found'], 400);
         }
@@ -329,7 +329,7 @@ class StatsController extends Controller
         /* @var $serviceContainer ServiceContainer */
         $serviceUser = $serviceContainer->getUserService();
         $serviceGame = $serviceContainer->getGameService();
-        $serviceDeveloper = $serviceContainer->getDeveloperService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
 
         $userId = Auth::id();
@@ -346,7 +346,7 @@ class StatsController extends Controller
             return response()->json(['error' => 'Missing data: developerName'], 400);
         }
 
-        $developerData = $serviceDeveloper->getByName($developerName);
+        $developerData = $servicePartner->getByName($developerName);
         if (!$developerData) {
             return response()->json(['error' => 'No developer record found'], 400);
         }
@@ -379,7 +379,7 @@ class StatsController extends Controller
         /* @var $serviceContainer ServiceContainer */
         $serviceUser = $serviceContainer->getUserService();
         $serviceGame = $serviceContainer->getGameService();
-        $servicePublisher = $serviceContainer->getPublisherService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGamePublisher = $serviceContainer->getGamePublisherService();
 
         $userId = Auth::id();
@@ -396,7 +396,7 @@ class StatsController extends Controller
             return response()->json(['error' => 'Missing data: publisherName'], 400);
         }
 
-        $publisherData = $servicePublisher->getByName($publisherName);
+        $publisherData = $servicePartner->getByName($publisherName);
         if (!$publisherData) {
             return response()->json(['error' => 'No publisher record found'], 400);
         }
@@ -426,7 +426,7 @@ class StatsController extends Controller
         /* @var $serviceContainer ServiceContainer */
         $serviceUser = $serviceContainer->getUserService();
         $serviceGame = $serviceContainer->getGameService();
-        $servicePublisher = $serviceContainer->getPublisherService();
+        $servicePartner = $serviceContainer->getPartnerService();
         $serviceGamePublisher = $serviceContainer->getGamePublisherService();
 
         $userId = Auth::id();
@@ -443,7 +443,7 @@ class StatsController extends Controller
             return response()->json(['error' => 'Missing data: publisherName'], 400);
         }
 
-        $publisherData = $servicePublisher->getByName($publisherName);
+        $publisherData = $servicePartner->getByName($publisherName);
         if (!$publisherData) {
             return response()->json(['error' => 'No publisher record found'], 400);
         }
