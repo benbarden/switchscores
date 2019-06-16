@@ -169,6 +169,13 @@ class SitemapController extends Controller
             );
 
             $sitemapPages[] = array(
+                'url' => route('topRated.byYear', ['year' => '2019']),
+                'lastmod' => $timestamp,
+                'changefreq' => 'weekly',
+                'priority' => '0.8'
+            );
+
+            $sitemapPages[] = array(
                 'url' => route('topRated.byMonthLanding'),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
