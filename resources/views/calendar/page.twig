@@ -15,14 +15,8 @@
     show up.
 </p>
 
-{#
-<p>
-    <a href="{{ route('register') }}">Register</a> and you can set your region to Europe, US, or Japan.
-</p>
-#}
-
 {% if CalendarGamesList %}
-<table class="table table-striped data-sortable">
+<table class="table data-sortable">
     {% for key,item in CalendarGamesList %}
         <tr>
             <td class="text-center" style="max-width: 200px; min-width: 100px;">
