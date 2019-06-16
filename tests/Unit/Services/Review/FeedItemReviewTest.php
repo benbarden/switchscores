@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\FeedItemReview;
-use App\ReviewSite;
+use App\Partner;
 use Carbon\Carbon;
 
 class FeedItemReviewTest extends TestCase
@@ -18,7 +18,7 @@ class FeedItemReviewTest extends TestCase
         $feedItemReview = new FeedItemReview();
 
         // Basic fields
-        $feedItemReview->site_id = ReviewSite::SITE_WOS;
+        $feedItemReview->site_id = Partner::SITE_WOS;
         $feedItemReview->item_url = '/abc';
         $feedItemReview->item_title = 'Test Abc';
 

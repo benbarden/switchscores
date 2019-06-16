@@ -35,7 +35,6 @@ class ServiceContainer
     const KEY_PUBLISHER_SERVICE = 'PublisherService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
     const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
-    const KEY_REVIEW_SITE_SERVICE = 'ReviewSiteService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
     const KEY_REVIEW_USER_SERVICE = 'ReviewUserService';
     const KEY_SITE_ALERT_SERVICE = 'SiteAlertService';
@@ -329,14 +328,6 @@ class ServiceContainer
     public function getReviewQuickRatingService()
     {
         return $this->load(self::KEY_REVIEW_QUICK_RATING_SERVICE);
-    }
-
-    /**
-     * @return ReviewSiteService
-     */
-    public function getReviewSiteService()
-    {
-        return $this->load(self::KEY_REVIEW_SITE_SERVICE);
     }
 
     /**

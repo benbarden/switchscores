@@ -2,7 +2,7 @@
 
 namespace App\Services\Feed;
 
-use App\ReviewSite;
+use App\Partner;
 use App\Services\Feed\TitleParser;
 
 
@@ -62,54 +62,48 @@ class Parser
     public function parseBySiteRules()
     {
         switch ($this->siteId) {
-            case ReviewSite::SITE_CUBED3:
+            case Partner::SITE_CUBED3:
                 $this->titleParser->stripPlatformText();
                 $this->titleParser->cleanupText();
                 break;
-            case ReviewSite::SITE_DESTRUCTOID:
+            case Partner::SITE_DESTRUCTOID:
                 // No feed URL yet
                 break;
-            case ReviewSite::SITE_DIGITALLY_DOWNLOADED:
+            case Partner::SITE_DIGITALLY_DOWNLOADED:
                 // No feed URL yet
                 break;
-            case ReviewSite::SITE_GAMESPEW:
+            case Partner::SITE_GAMESPEW:
                 // Titles too inconsistent; will have to match these manually.
                 break;
-            case ReviewSite::SITE_GAMESPOT:
-                // No feed URL yet
-                break;
-            case ReviewSite::SITE_GOD_IS_A_GEEK:
+            case Partner::SITE_GOD_IS_A_GEEK:
                 // Titles too inconsistent; will have to match these manually.
                 break;
-            case ReviewSite::SITE_IGN:
-                // No feed URL yet
-                break;
-            case ReviewSite::SITE_NINTENDO_INSIDER:
+            case Partner::SITE_NINTENDO_INSIDER:
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
-            case ReviewSite::SITE_NINTENDO_WORLD_REPORT:
+            case Partner::SITE_NINTENDO_WORLD_REPORT:
                 // No feed URL yet
                 break;
-            case ReviewSite::SITE_SWITCH_PLAYER:
+            case Partner::SITE_SWITCH_PLAYER:
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
-            case ReviewSite::SITE_VIDEO_CHUMS:
+            case Partner::SITE_VIDEO_CHUMS:
                 $this->titleParser->stripReviewText();
                 $this->titleParser->cleanupText();
                 break;
-            case ReviewSite::SITE_THE_NEW_ODYSSEY:
+            case Partner::SITE_THE_NEW_ODYSSEY:
                 // Titles too inconsistent; will have to match these manually.
                 break;
-            case ReviewSite::SITE_WOS:
+            case Partner::SITE_WOS:
                 // N/A
                 break;
-            case ReviewSite::SITE_MIKETENDO64:
-            case ReviewSite::SITE_NINDIE_SPOTLIGHT:
-            case ReviewSite::SITE_NINTENDO_LIFE:
-            case ReviewSite::SITE_PURE_NINTENDO:
-            case ReviewSite::SITE_THE_SWITCH_EFFECT:
+            case Partner::SITE_MIKETENDO64:
+            case Partner::SITE_NINDIE_SPOTLIGHT:
+            case Partner::SITE_NINTENDO_LIFE:
+            case Partner::SITE_PURE_NINTENDO:
+            case Partner::SITE_THE_SWITCH_EFFECT:
             default:
                 // Default settings that work for most sites
                 $this->titleParser->stripPlatformText();

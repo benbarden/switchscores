@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Feed;
 
 use App\FeedItemReview;
-use App\ReviewSite;
+use App\Partner;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 #use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -23,7 +23,7 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->feedImporter = new Importer();
 
         $this->feedImporter->loadLocalFeedData('nintendo-life.xml');
-        $this->feedImporter->setSiteId(ReviewSite::SITE_NINTENDO_LIFE);
+        $this->feedImporter->setSiteId(Partner::SITE_NINTENDO_LIFE);
 
         parent::setUp();
     }

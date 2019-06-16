@@ -2,19 +2,19 @@
 
 namespace Tests\Feature\Api;
 
-use App\ReviewSite;
+use App\Partner;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ReviewSiteTest extends TestCase
+class PartnerTest extends TestCase
 {
     const API_URL_REVIEW_SITE = '/api/review/site';
 
     private $siteSwitchPlayer = [
-        'siteId' => ReviewSite::SITE_SWITCH_PLAYER,
+        'siteId' => Partner::SITE_SWITCH_PLAYER,
         'siteName' => 'Switch Player'
     ];
 

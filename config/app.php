@@ -190,7 +190,6 @@ return [
         App\Providers\PublisherServiceProvider::class,
         App\Providers\ReviewLinkServiceProvider::class,
         App\Providers\ReviewQuickRatingServiceProvider::class,
-        App\Providers\ReviewSiteServiceProvider::class,
         App\Providers\ReviewStatsServiceProvider::class,
         App\Providers\ReviewUserServiceProvider::class,
         App\Providers\SiteAlertServiceProvider::class,
