@@ -28,7 +28,11 @@
                             {{ item.count }}
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('admin.stats.games.oldDeveloperGameList', {'developer': item.developer}) }}">View games</a>
+                            {% if item.developer %}
+                                <a href="{{ route('admin.stats.games.oldDeveloperGameList', {'developer': item.developer}) }}">View games</a>
+                            {% else %}
+                                <a href="{{ route('admin.action-lists.developer-missing') }}">View games</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
