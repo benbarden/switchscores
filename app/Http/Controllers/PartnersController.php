@@ -64,6 +64,45 @@ class PartnersController extends Controller
         $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, true);
         $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, true);
 
+        $mergedGameList = [];
+        $usedGameIds = [];
+
+        if ($gameDevList && $gamePubList) {
+
+            foreach ($gameDevList as $item) {
+                $gameId = $item->id;
+                $item->PartnerType = 'developer';
+                $mergedGameList[$gameId] = $item;
+                $usedGameIds[] = $gameId;
+            }
+            foreach ($gamePubList as $item) {
+                $gameId = $item->id;
+                if (in_array($gameId, $usedGameIds)) {
+                    $mergedGameList[$gameId]->PartnerType = 'dev/pub';
+                } else {
+                    $item->PartnerType = 'publisher';
+                    $mergedGameList[] = $item;
+                }
+            }
+
+        } elseif ($gameDevList) {
+
+            $mergedGameList = $gameDevList;
+            foreach ($gameDevList as $item) {
+                $item->PartnerType = 'developer';
+                $mergedGameList[] = $item;
+            }
+
+        } elseif ($gamePubList) {
+
+            $mergedGameList = $gamePubList;
+            foreach ($gamePubList as $item) {
+                $item->PartnerType = 'publisher';
+                $mergedGameList[] = $item;
+            }
+
+        }
+
         $bindings = [];
 
         $bindings['TopTitle'] = $partnerData->name;
@@ -72,8 +111,9 @@ class PartnersController extends Controller
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;
 
-        $bindings['GameDevList'] = $gameDevList;
-        $bindings['GamePubList'] = $gamePubList;
+        //$bindings['GameDevList'] = $gameDevList;
+        //$bindings['GamePubList'] = $gamePubList;
+        $bindings['MergedGameList'] = $mergedGameList;
 
         return view('partners.detail.gamesCompany', $bindings);
     }

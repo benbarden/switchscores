@@ -25,6 +25,10 @@
                     {{ item.upcoming_date }}
                 {% endif %}
             </small>
+            {% if ExtraDetailLine is defined %}
+            <br>
+            <small>{{ ExtraDetailLine }}</small>
+            {% endif %}
         </p>
     </div>
 </div>
