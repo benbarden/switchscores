@@ -40,7 +40,9 @@ class FeedItemReviewController extends Controller
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'processed':
-                    $feedItems = $serviceFeedItemReview->getProcessed();
+                    $itemLimit = 250;
+                    $bindings['TableLimit'] = $itemLimit;
+                    $feedItems = $serviceFeedItemReview->getProcessed($itemLimit);
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 default:

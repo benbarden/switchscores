@@ -66,30 +66,27 @@ class FeedItemReviewService
         return $feedItemReview;
     }
 
-    public function getUnprocessed($limit = null)
+    public function getUnprocessed()
     {
-        $limit = (int) $limit;
-        if ($limit) {
-            $feedItemReview = FeedItemReview::
-                whereNull('processed')
-                ->orderBy('item_date', 'asc')
-                ->limit($limit)
-                ->get();
-        } else {
-            $feedItemReview = FeedItemReview::
-                whereNull('processed')
-                ->orderBy('id', 'asc')
-                ->get();
-        }
+        $feedItemReview = FeedItemReview::
+            whereNull('processed')
+            ->orderBy('id', 'asc');
+
+        $feedItemReview = $feedItemReview->get();
         return $feedItemReview;
     }
 
-    public function getProcessed()
+    public function getProcessed($limit = 25)
     {
         $feedItemReview = FeedItemReview::
             where('processed', 1)
-            ->orderBy('id', 'desc')
-            ->get();
+            ->orderBy('id', 'desc');
+
+        if ($limit) {
+            $feedItemReview = $feedItemReview->limit($limit);
+        }
+
+        $feedItemReview = $feedItemReview->get();
         return $feedItemReview;
     }
 }
