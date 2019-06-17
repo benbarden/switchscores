@@ -375,7 +375,10 @@ class GamePartnerController extends Controller
         // Get partner
         $partner = $servicePartner->getByName($legacyDev);
         if (!$partner) {
-            return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
+            // Well, let's be helpful and create it!
+            $partner = GamesCompanyFactory::createActiveNameOnly($legacyDev);
+            $partner->save();
+            //return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
         }
         $partnerId = $partner->id;
 
@@ -429,7 +432,10 @@ class GamePartnerController extends Controller
         // Get partner
         $partner = $servicePartner->getByName($legacyPub);
         if (!$partner) {
-            return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
+            // Well, let's be helpful and create it!
+            $partner = GamesCompanyFactory::createActiveNameOnly($legacyPub);
+            $partner->save();
+            //return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
         }
         $partnerId = $partner->id;
 

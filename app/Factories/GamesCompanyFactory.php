@@ -3,6 +3,7 @@
 namespace App\Factories;
 
 use App\Partner;
+use App\Services\UrlService;
 
 class GamesCompanyFactory
 {
@@ -28,5 +29,12 @@ class GamesCompanyFactory
                 'twitter_id' => $twitterId,
             ]
         );
+    }
+
+    public static function createActiveNameOnly($name)
+    {
+        $serviceUrl = new UrlService();
+        $linkText = $serviceUrl->generateLinkText($name);
+        return self::createActive($name, $linkText);
     }
 }
