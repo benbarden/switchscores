@@ -25,6 +25,6 @@ class Tag extends Model
 
     public function gameTags()
     {
-        return $this->hasMany('App\GameTag', 'id', 'tag_id');
+        return $this->hasMany('App\GameTag', 'tag_id', 'id');
     }
 }
