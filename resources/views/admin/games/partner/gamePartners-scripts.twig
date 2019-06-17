@@ -11,6 +11,9 @@
     $('#developer').val(formVals['developer']);
     $('#publisher').val(formVals['publisher']);
 
+    $('#quick-create-games-company-name').on('blur', function() {
+        wosAdminTools.convertToLinkTitle('quick-create-games-company-name', 'quick-create-games-company-link-title');
+    });
 
     // Lists
     $('#btn-add-developer').on('click', function() {
