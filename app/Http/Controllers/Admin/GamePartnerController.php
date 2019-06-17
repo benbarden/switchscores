@@ -42,60 +42,6 @@ class GamePartnerController extends Controller
         return view('admin.games.partner.gamePartners', $bindings);
     }
 
-    public function showGameDevelopers($gameId)
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-
-        $game = $serviceGame->find($gameId);
-        if (!$game) abort(404);
-
-        $gameTitle = $game->title;
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Developers for game: '.$gameTitle;
-        $bindings['PageTitle'] = 'Developers for game: '.$gameTitle;
-
-        $bindings['GameId'] = $gameId;
-        $bindings['GameData'] = $game;
-        $bindings['GameDeveloperList'] = $serviceGameDeveloper->getByGame($gameId);
-
-        $bindings['UnusedDeveloperList'] = $serviceGameDeveloper->getDevelopersNotOnGame($gameId);
-
-        return view('admin.games.developer.gameDevelopers', $bindings);
-    }
-
-    public function showGamePublishers($gameId)
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-
-        $game = $serviceGame->find($gameId);
-        if (!$game) abort(404);
-
-        $gameTitle = $game->title;
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Publishers for game: '.$gameTitle;
-        $bindings['PageTitle'] = 'Publishers for game: '.$gameTitle;
-
-        $bindings['GameId'] = $gameId;
-        $bindings['GameData'] = $game;
-        $bindings['GamePublisherList'] = $serviceGamePublisher->getByGame($gameId);
-
-        $bindings['UnusedPublisherList'] = $serviceGamePublisher->getPublishersNotOnGame($gameId);
-
-        return view('admin.games.publisher.gamePublishers', $bindings);
-    }
-
     public function addGameDeveloper()
     {
         $serviceContainer = \Request::get('serviceContainer');

@@ -33,7 +33,7 @@
             }
         });
 
-        $.getJSON('/api/admin/developer/add-game-developer', {gameId: gameId, developerId: developerId}, function(data) {
+        $.getJSON('{{ route('admin.game.developer.add', {'gameId': GameId}) }}', {gameId: gameId, developerId: developerId}, function(data) {
             $('#js-developer-notify').text('Developer added!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
