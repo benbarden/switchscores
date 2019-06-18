@@ -111,7 +111,7 @@ class RunFeedImporter extends Command
                         // Check if a feed URL prefix is set, and if so, compare it
                         $feedUrlPrefix = $reviewSite->feed_url_prefix;
                         if ($feedUrlPrefix) {
-                            $fullPrefix = $reviewSite->url.$feedUrlPrefix;
+                            $fullPrefix = $reviewSite->website_url.$feedUrlPrefix;
                             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
                                 $logger->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
                                 continue;

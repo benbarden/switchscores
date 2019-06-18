@@ -61,9 +61,8 @@ class Importer
     }
 
     /**
-     * @param string $feedUrl
-     * @throws \Exception
-     * @return void
+     * @param $feedUrl
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function loadRemoteFeedData($feedUrl)
     {
@@ -87,10 +86,22 @@ class Importer
         }
 
         try {
-            $this->feedData = json_decode(json_encode(simplexml_load_string($body)), true);
+            $this->feedData = $this->convertResponseToJson($body);
         } catch (\Exception $e) {
             throw new \Exception('Error loading data! Error details: '.$e->getMessage().'; Raw data: '.$body);
         }
+    }
+
+    /**
+     * @param $body
+     * @return mixed
+     */
+    public function convertResponseToJson($body)
+    {
+        $xmlObject = simplexml_load_string($body);
+        $encodedJson = json_encode($xmlObject);
+        $decodedJson = json_decode($encodedJson, true);
+        return $decodedJson;
     }
 
     /**
@@ -104,7 +115,14 @@ class Importer
         // Basic fields
         $feedItemReview->site_id = $this->siteId;
         $feedItemReview->item_url = $feedItem['link'];
-        $feedItemReview->item_title = $feedItem['title'];
+
+        // Clean up the title
+        $itemTitle = $feedItem['title'];
+        $itemTitle = str_replace('<![CDATA[', '', $itemTitle);
+        $itemTitle = str_replace(']]>', '', $itemTitle);
+        $itemTitle = str_replace("\r", '', $itemTitle);
+        $itemTitle = str_replace("\n", '', $itemTitle);
+        $feedItemReview->item_title = $itemTitle;
 
         // Date
         $pubDate = $feedItem['pubDate'];

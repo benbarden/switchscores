@@ -302,4 +302,16 @@ class TitleMatchTest extends TestCase
         $actual = $this->gameTitleMatch->generate($title);
         $this->assertEquals($expected, $actual);
     }
+
+    public function testJpsSwitchmaniaSelmaAndTheWisp()
+    {
+        $title = 'Game Review #312: Selma and the Wisp (Nintendo Switch)';
+        $matchRule = "/^Game Review #(.*): (.*) \(Nintendo Switch\)$/";
+        $expected = 'Selma and the Wisp';
+
+        $this->gameTitleMatch->setMatchRule($matchRule);
+        $this->gameTitleMatch->setMatchIndex(2);
+        $actual = $this->gameTitleMatch->generate($title);
+        $this->assertEquals($expected, $actual);
+    }
 }
