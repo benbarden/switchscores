@@ -8,6 +8,8 @@
         // *** Main *** //
         formVals['title'] = "{{ GameData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ GameData.link_title }}";
+        formVals['primary_type_id'] = "{{ GameData.primary_type_id }}";
+        formVals['series_id'] = "{{ GameData.series_id }}";
         // *** Dates *** //
         {% for key,value in RegionList %}
         formVals['release_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'release_date') }}";
@@ -36,6 +38,8 @@
         // *** Main *** //
         formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['primary_type_id'] = "{{ old('primary_type_id') }}";
+        formVals['series_id'] = "{{ old('series_id') }}";
         // *** Dates *** //
         {% for key,value in RegionList %}
         formVals['release_date_{{ key }}'] = "{{ old('release_date_'~key) }}";
@@ -65,6 +69,8 @@
     // *** Main *** //
     $('#title').val(formVals['title']);
     $('#link_title').val(formVals['link_title']);
+    $('#primary_type_id').val(formVals['primary_type_id']);
+    $('#series_id').val(formVals['series_id']);
     // *** Dates *** //
     {% for key,value in RegionList %}
     $('#release_date_{{ key }}').val(formVals['release_date_{{ key }}']);

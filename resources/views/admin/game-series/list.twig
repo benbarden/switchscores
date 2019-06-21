@@ -1,0 +1,93 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<h2>Add a game series</h2>
+<label for="txt-new-game-series-name">Name</label>
+<input id="txt-new-game-series-name" type="text" maxlength="50">
+<input id="btn-save-game-series" type="button" class="btn btn-primary" value="Save">
+<div id="js-new-game-series-notify" class="alert alert-success" role="alert" style="display: none;">
+</div>
+
+<h2>All game series</h2>
+{% if GameSeriesList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Game series</th>
+                <th class="text-center">Games with series</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameSeriesList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.series }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.games().count }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.games().count == 0 %}
+                            Delete
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No game series found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+    $('#btn-save-game-series').on('click', function() {
+
+        seriesName = $('#txt-new-game-series-name').val();
+        if (seriesName == '') {
+            $('#js-new-game-series-notify').text('No series name set.');
+            $('#js-new-game-series-notify').show();
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('admin.game-series.add') }}', {seriesName: seriesName}, function(data) {
+            $('#js-new-game-series-notify').text('Game series saved!');
+            $('#js-new-game-series-notify').show();
+            $('#txt-new-game-series-name').val('');
+            setTimeout("$('#js-new-game-series-notify').fadeOut(); window.location.reload(true);", 1000);
+        })
+        .fail(function(data) {
+            $('#js-new-game-series-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-new-game-series-notify').show();
+            $('#txt-new-game-series-name').val('');
+        });
+    });
+</script>
+
+{% endblock page_inner %}

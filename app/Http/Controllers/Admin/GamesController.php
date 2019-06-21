@@ -181,6 +181,8 @@ class GamesController extends Controller
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
         $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
+        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
+        $serviceGameSeries = $serviceContainer->getGameSeriesService();
 
         if ($request->isMethod('post')) {
 
@@ -285,6 +287,8 @@ class GamesController extends Controller
 
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
+        $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
+        $bindings['PrimaryTypeList'] = $servicePrimaryTypes->getAll();
 
         return view('admin.games.add', $bindings);
     }
@@ -305,6 +309,8 @@ class GamesController extends Controller
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
+        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
+        $serviceGameSeries = $serviceContainer->getGameSeriesService();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
@@ -438,6 +444,8 @@ class GamesController extends Controller
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
         $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
+        $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
+        $bindings['PrimaryTypeList'] = $servicePrimaryTypes->getAll();
 
         return view('admin.games.edit', $bindings);
     }

@@ -17,12 +17,14 @@ class ServiceContainer
     const KEY_GAME_CHANGE_HISTORY_SERVICE = 'GameChangeHistoryService';
     const KEY_GAME_DEVELOPER_SERVICE = 'GameDeveloperService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
+    const KEY_GAME_PRIMARY_TYPE_SERVICE = 'GamePrimaryTypeService';
     const KEY_GAME_PUBLISHER_SERVICE = 'GamePublisherService';
     const KEY_GAME_RANK_ALLTIME_SERVICE = 'GameRankAllTimeService';
     const KEY_GAME_RANK_UPDATE_SERVICE = 'GameRankUpdateService';
     const KEY_GAME_RANK_YEAR_SERVICE = 'GameRankYearService';
     const KEY_GAME_RANK_YEARMONTH_SERVICE = 'GameRankYearMonthService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
+    const KEY_GAME_SERIES_SERVICE = 'GameSeriesService';
     const KEY_GAME_SERVICE = 'GameService';
     const KEY_GAME_TAG_SERVICE = 'GameTagService';
     const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
@@ -185,6 +187,14 @@ class ServiceContainer
     }
 
     /**
+     * @return GamePrimaryTypeService
+     */
+    public function getGamePrimaryTypeService()
+    {
+        return $this->load(self::KEY_GAME_PRIMARY_TYPE_SERVICE);
+    }
+
+    /**
      * @return GamePublisherService
      */
     public function getGamePublisherService()
@@ -230,6 +240,14 @@ class ServiceContainer
     public function getGameReleaseDateService()
     {
         return $this->load(self::KEY_GAME_RELEASE_DATE_SERVICE);
+    }
+
+    /**
+     * @return GameSeriesService
+     */
+    public function getGameSeriesService()
+    {
+        return $this->load(self::KEY_GAME_SERIES_SERVICE);
     }
 
     /**

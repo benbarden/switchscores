@@ -258,6 +258,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
     Route::post('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
 
+    // Categorisation
+    Route::get('/admin/game-primary-types/list', 'Admin\GamePrimaryTypesController@showList')->name('admin.game-primary-types.list');
+    Route::get('/admin/game-primary-types/add', 'Admin\GamePrimaryTypesController@addPrimaryType')->name('admin.game-primary-types.add');
+    Route::get('/admin/game-series/list', 'Admin\GameSeriesController@showList')->name('admin.game-series.list');
+    Route::get('/admin/game-series/add', 'Admin\GameSeriesController@addGameSeries')->name('admin.game-series.add');
+
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
     Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');

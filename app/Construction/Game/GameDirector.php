@@ -74,5 +74,11 @@ class GameDirector
         if (array_key_exists('boxart_header_image', $params)) {
             $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
         }
+        if (array_key_exists('primary_type_id', $params)) {
+            $this->builder->setPrimaryTypeId($params['primary_type_id']);
+        }
+        if (array_key_exists('series_id', $params)) {
+            $this->builder->setGameSeriesId($params['series_id']);
+        }
     }
 }

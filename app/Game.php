@@ -25,6 +25,7 @@ class Game extends Model
         'media_folder', 'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid', 'video_header_text',
+        'primary_type_id', 'series_id',
     ];
 
     public function gameRankYear()
@@ -35,6 +36,16 @@ class Game extends Model
     public function gameRankYearMonth()
     {
         return $this->hasOne('App\GameRankYearMonth', 'game_id', 'id');
+    }
+
+    public function primaryType()
+    {
+        return $this->hasOne('App\GamePrimaryType', 'id', 'primary_type_id');
+    }
+
+    public function series()
+    {
+        return $this->hasOne('App\GameSeries', 'id', 'series_id');
     }
 
     public function charts()

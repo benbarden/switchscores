@@ -121,6 +121,18 @@ class GameBuilder
         return $this;
     }
 
+    public function setPrimaryTypeId($primaryTypeId): GameBuilder
+    {
+        $this->game->primary_type_id = $primaryTypeId;
+        return $this;
+    }
+
+    public function setGameSeriesId($gameSeriesId): GameBuilder
+    {
+        $this->game->series_id = $gameSeriesId;
+        return $this;
+    }
+
     public function setRatingAvg($ratingAvg): GameBuilder
     {
         $this->game->rating_avg = $ratingAvg;
