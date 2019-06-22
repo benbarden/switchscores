@@ -1,0 +1,21 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Browse by tag'}] %}
+
+{% block page_body %}
+
+{% include 'games/browse/browse-wip-alert.twig' %}
+
+{% if TagList %}
+    <ul>
+        {% for item in TagList %}
+        <li>
+            <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}">{{ item.tag_name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tags found!</p>
+{% endif %}
+
+{% endblock page_body %}

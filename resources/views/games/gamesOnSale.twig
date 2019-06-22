@@ -18,8 +18,6 @@
         </p>
         {% endif %}
 
-        {% include 'games/list/moreLists.twig' with {'thisPage': 'upcoming'} %}
-
         <h2>{{ item.MainTitle }}</h2>
         {% if GamesList %}
             <p><em>{{ GamesList.count }} games currently on sale.</em></p>

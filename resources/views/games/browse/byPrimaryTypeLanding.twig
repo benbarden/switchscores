@@ -1,0 +1,21 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Browse by primary type'}] %}
+
+{% block page_body %}
+
+{% include 'games/browse/browse-wip-alert.twig' %}
+
+{% if PrimaryTypeList %}
+    <ul>
+        {% for item in PrimaryTypeList %}
+        <li>
+            <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': item.link_title}) }}">{{ item.primary_type }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No primary types found!</p>
+{% endif %}
+
+{% endblock page_body %}

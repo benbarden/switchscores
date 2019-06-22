@@ -67,13 +67,35 @@
         </td>
         <td>
             {% for item in GameTags %}
-                <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">
+                <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
                     <nobr>{{ item.tag.tag_name }}</nobr>
                 </a>
                 {% if not loop.last %}, {% endif %}
             {% endfor %}
         </td>
     </tr>
+
+    {% if GameData.primary_type_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Primary type</span>
+            </td>
+            <td>
+                <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}">{{ GameData.primaryType.primary_type }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if GameData.series_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Series</span>
+            </td>
+            <td>
+                <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+            </td>
+        </tr>
+    {% endif %}
 
     {% endif %}
     {% if GameData.amazon_uk_link %}

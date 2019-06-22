@@ -1,11 +1,13 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('tags.landing'), 'text': 'Tags'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.byPrimaryType.landing'), 'text': 'Browse by primary type'}, {'text': PageTitle}] %}
 
 {% block page_body %}
 
+{% include 'games/browse/browse-wip-alert.twig' %}
+
 {% if GameList|length %}
-<p><small>{{ GameList|length }} games with this tag.</small></p>
+<p><small>{{ GameList|length }} games with this primary type.</small></p>
 {% endif %}
 
 <div class="row">
@@ -16,7 +18,9 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>No games found!</p>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <p>No games found!</p>
+        </div>
     {% endif %}
 </div>
 

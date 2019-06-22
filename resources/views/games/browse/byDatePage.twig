@@ -1,0 +1,41 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.byDate.landing'), 'text': 'Browse by date'}, {'text': CalendarDateDesc}] %}
+
+{% block page_body %}
+
+<p>
+    This page lists all of the Nintendo Switch games released in {{ CalendarDateDesc }}.
+    You can also <a href="{{ route('topRated.byMonthPage', {'date': CalendarDateUrl}) }}">view this month's
+        games ordered by rating</a>.
+</p>
+<p>
+    Faded images indicate games that have yet to be released, or have not been marked as released
+    in our database. This is a manual task, so please allow a couple of days for releases to
+    show up.
+</p>
+
+{% if CalendarGamesList %}
+    <table class="table data-sortable">
+        {% for key,item in CalendarGamesList %}
+            <tr>
+                <td class="text-center" style="max-width: 200px; min-width: 100px;">
+                    <span class="h3">{{ key|date('jS') }}</span>
+                </td>
+                <td>
+                    {% if item.games|length %}
+                        <div class="row">
+                            {% for item in item.games %}
+                                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1" style="padding: 5px 2px; text-align: center;">
+                                    <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini', item.is_released) }}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+
+{% endblock page_body %}

@@ -19,11 +19,11 @@
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
-                <li><a href="{{ route('games.landing') }}">Games</a></li>
-                <li><a href="{{ route('calendar.landing') }}">Calendar</a></li>
+                <li><a href="{{ route('games.landing') }}">Browse all games</a></li>
+                <li><a href="{{ route('games.recentReleases') }}">Recent</a></li>
+                <li><a href="{{ route('games.upcomingReleases') }}">Upcoming</a></li>
                 <li><a href="{{ route('topRated.landing') }}">Top Rated</a></li>
                 <li><a href="{{ route('reviews.landing') }}">Reviews</a></li>
-                <li><a href="{{ route('tags.landing') }}">Tags</a></li>
                 <li><a href="{{ route('news.landing') }}">News</a></li>
                 <li><a href="{{ route('partners.landing') }}">Partners</a></li>
             </ul>
@@ -39,8 +39,8 @@
                     <li>
                         <a href="{{ route('logout') }}"
                            onclick="
-                                     event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
+                             event.preventDefault();
+                             document.getElementById('logout-form').submit();">
                             Logout
                         </a>
 

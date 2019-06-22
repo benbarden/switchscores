@@ -160,6 +160,64 @@ class GameReleaseDateService
     }
 
     /**
+     * @param $primaryTypeId
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getReleasedByPrimaryType($primaryTypeId, $region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->where('games.primary_type_id', $primaryTypeId)
+            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * @param $seriesId
+     * @param $region
+     * @param int $limit
+     * @return mixed
+     */
+    public function getReleasedBySeries($seriesId, $region, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year')
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
+            ->where('games.series_id', $seriesId)
+            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
      * @param $region
      * @param string $letter
      * @param int $limit

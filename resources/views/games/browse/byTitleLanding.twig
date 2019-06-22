@@ -1,6 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Released games'}] %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Browse by title'}] %}
 
 {% block page_body %}
 
@@ -13,7 +13,7 @@
     {% for item in LetterList %}
         <div class="col-sm-4 col-md-3 col-lg-2 text-center" style="padding: 15px 0;">
             <span class="h1" style="font-weight: bold;">
-                <a href="{{ route('games.list.releasedByLetter', {'letter': item}) }}">{{ item }}</a>
+                <a href="{{ route('games.browse.byTitle.page', {'letter': item}) }}">{{ item }}</a>
             </span>
         </div>
     {% endfor %}

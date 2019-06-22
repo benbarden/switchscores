@@ -7,10 +7,8 @@
 <p>
     This page lists Nintendo Switch games that are planned but not yet released.
     As games are released, they’ll move to the
-    <a href="{{ route('games.list.released') }}">released Switch games index</a>.
+    <a href="{{ route('games.recentReleases') }}">recent releases</a> page.
 </p>
-
-<h2>{{ item.MainTitle }}</h2>
 
 <div class="row">
     {% for item in UpcomingGames %}

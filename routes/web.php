@@ -18,46 +18,33 @@ Route::get('/', 'WelcomeController@show')->name('welcome');
 Route::get('/about', 'AboutController@show')->name('about');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
-// Sitemaps
-Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
-Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
-Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
-Route::get('/sitemap/calendar', 'SitemapController@calendar')->name('sitemap.calendar');
-Route::get('/sitemap/top-rated', 'SitemapController@topRated')->name('sitemap.topRated');
-Route::get('/sitemap/reviews', 'SitemapController@reviews')->name('sitemap.reviews');
-Route::get('/sitemap/genres', 'SitemapController@genres')->name('sitemap.genres');
-Route::get('/sitemap/tags', 'SitemapController@tags')->name('sitemap.tags');
-Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
-
 // Main game pages
 Route::get('/games', 'GamesController@landing')->name('games.landing');
-Route::get('/games/released', 'GamesController@listReleased')->name('games.list.released');
-Route::get('/games/released/{letter}', 'GamesController@listReleasedByLetter')->name('games.list.releasedByLetter');
-Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
-Route::get('/games/unreleased', 'GamesController@listUnreleased')->name('games.list.unreleased');
-
-Route::get('/games/genres', 'GamesController@genresLanding')->name('games.genres.landing');
-Route::get('/games/genres/{linkTitle}', 'GamesController@genreByName')->name('games.genres.item');
+Route::get('/games/recent', 'GamesController@recentReleases')->name('games.recentReleases');
+Route::get('/games/upcoming', 'GamesController@upcomingReleases')->name('games.upcomingReleases');
+//Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 
 Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
 
-// Calendar
-Route::get('/games/calendar', 'CalendarController@landing')->name('calendar.landing');
-Route::get('/games/calendar/{date}', 'CalendarController@page')->name('calendar.page');
+// Browse by...
+Route::get('/games/by-title', 'GamesBrowseController@byTitleLanding')->name('games.browse.byTitle.landing');
+Route::get('/games/by-title/{letter}', 'GamesBrowseController@byTitlePage')->name('games.browse.byTitle.page');
 
-// Old pages - redirects
-Route::get('/games/top-rated', 'GamesController@listTopRated')->name('games.list.topRated');
-Route::get('/games/reviews-needed', 'GamesController@listReviewsNeeded')->name('games.list.reviewsNeeded');
+Route::get('/games/by-type', 'GamesBrowseController@byPrimaryTypeLanding')->name('games.browse.byPrimaryType.landing');
+Route::get('/games/by-type/{primaryType}', 'GamesBrowseController@byPrimaryTypePage')->name('games.browse.byPrimaryType.page');
+
+Route::get('/games/by-series', 'GamesBrowseController@bySeriesLanding')->name('games.browse.bySeries.landing');
+Route::get('/games/by-series/{series}', 'GamesBrowseController@bySeriesPage')->name('games.browse.bySeries.page');
+
+Route::get('/games/by-tag', 'GamesBrowseController@byTagLanding')->name('games.browse.byTag.landing');
+Route::get('/games/by-tag/{tag}', 'GamesBrowseController@byTagPage')->name('games.browse.byTag.page');
+
+Route::get('/games/by-date', 'GamesBrowseController@byDateLanding')->name('games.browse.byDate.landing');
+Route::get('/games/by-date/{date}', 'GamesBrowseController@byDatePage')->name('games.browse.byDate.page');
 
 // These must be after the game redirects
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
-
-/* Tags */
-//Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
-//Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
-Route::get('/tags', 'TagsController@landing')->name('tags.landing');
-Route::get('/tags/{linkTitle}', 'TagsController@page')->name('tags.page');
 
 /* Charts */
 Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
@@ -93,6 +80,16 @@ Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesC
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
+
+// Sitemaps
+Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
+Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
+Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
+Route::get('/sitemap/calendar', 'SitemapController@calendar')->name('sitemap.calendar');
+Route::get('/sitemap/top-rated', 'SitemapController@topRated')->name('sitemap.topRated');
+Route::get('/sitemap/reviews', 'SitemapController@reviews')->name('sitemap.reviews');
+Route::get('/sitemap/tags', 'SitemapController@tags')->name('sitemap.tags');
+Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 
 /* Logged in */
 Route::group(['middleware' => ['auth']], function() {

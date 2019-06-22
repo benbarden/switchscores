@@ -1,0 +1,27 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.bySeries.landing'), 'text': 'Browse by series'}, {'text': PageTitle}] %}
+
+{% block page_body %}
+
+{% include 'games/browse/browse-wip-alert.twig' %}
+
+{% if GameList|length %}
+<p><small>{{ GameList|length }} games with this series.</small></p>
+{% endif %}
+
+<div class="row">
+    {% if GameList|length %}
+        {% for item in GameList %}
+            <div class="col-xs-12 col-sm-12 col-md-6">
+                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'N', 'cfgHideRating': 'N'} %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <p>No games found!</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock page_body %}

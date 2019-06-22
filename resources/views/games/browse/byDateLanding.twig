@@ -1,11 +1,11 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Release calendar'}] %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Browse by date'}] %}
 
 {% block page_body %}
 
 <p>
-    The Release Calendar allows you to find which games were released in every month since
+    This page allows you to find which games were released in every month since
     the Nintendo Switch launched back in March 2017. You'll find a full list of games based
     on their release date. This may be helpful if you'd like to catch up on a previous month's
     releases, particularly in some of the busier months.
@@ -31,7 +31,7 @@
                 {% for item in DateList %}
                     <div class="col-sm-4 col-md-2 col-lg-2" style="border: 1px solid #dedede; padding: 15px 2px; text-align: center;">
                         <span class="h3">
-                        <a href="{{ route('calendar.page', {'date': item.DateRaw}) }}">
+                        <a href="{{ route('games.browse.byDate.page', {'date': item.DateRaw}) }}">
                             <strong>{{ item.DateRaw|date('M Y') }}</strong>
                         </a>
                         </span>

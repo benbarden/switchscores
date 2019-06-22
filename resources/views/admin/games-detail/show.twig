@@ -229,7 +229,7 @@
                     </td>
                     <td>
                         {% for item in GameTags %}
-                            <a href="{{ route('tags.page', {'linkTitle': item.tag.link_title}) }}">
+                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
                                 <nobr>{{ item.tag.tag_name }}</nobr>
                             </a>
                             {% if not loop.last %}, {% endif %}
@@ -243,13 +243,22 @@
                 <td>
                     <span style="font-weight: bold;">Primary type</span>
                 </td>
-                <td>{{ GameData.primaryType.primary_type }}</td>
+                <td>
+                    {% if GameData.primary_type_id %}
+                        <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}" target="_blank">{{ GameData.primaryType.primary_type }}</a>
+                    {% endif %}
+                </td>
             </tr>
+
             <tr>
                 <td>
                     <span style="font-weight: bold;">Series</span>
                 </td>
-                <td>{{ GameData.series.series }}</td>
+                <td>
+                    {% if GameData.series_id %}
+                        <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+                    {% endif %}
+                </td>
             </tr>
 
             {% if GameData.amazon_uk_link %}
@@ -343,9 +352,7 @@
                     </td>
                     <td>
                         {% for item in GameGenres %}
-                            <a href="{{ route('games.genres.item', {'linkTitle': item.genre.link_title }) }}">
-                                <nobr>{{ item.genre.genre }}</nobr>
-                            </a>
+                            <nobr>{{ item.genre.genre }}</nobr>
                             {% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>

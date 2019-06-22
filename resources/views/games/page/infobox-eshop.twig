@@ -54,9 +54,7 @@
             </td>
             <td>
                 {% for item in GameGenres %}
-                    <a href="{{ route('games.genres.item', {'linkTitle': item.genre.link_title }) }}">
-                        <nobr>{{ item.genre.genre }}</nobr>
-                    </a>
+                    <nobr>{{ item.genre.genre }}</nobr>
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
             </td>

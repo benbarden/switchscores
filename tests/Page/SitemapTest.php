@@ -23,13 +23,6 @@ class SitemapTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testSitemapGenres()
-    {
-        $response = $this->get('/sitemap/genres');
-
-        $response->assertStatus(200);
-    }
-
     public function testSitemapTags()
     {
         $response = $this->get('/sitemap/tags');

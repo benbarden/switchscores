@@ -4,11 +4,33 @@
 
 {% block page_body %}
 
-<ul>
-    <li><a href="{{ route('games.list.released') }}">All released games - A-Z</a></li>
-    <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-    <li><a href="{{ route('games.genres.landing') }}">Games by genre</a></li>
-</ul>
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>Browse all Nintendo Switch games</h2>
+        <ul>
+            <li><a href="{{ route('games.browse.byTitle.landing') }}">Browse by title (A-Z)</a></li>
+            <li><a href="{{ route('games.browse.byDate.landing') }}">Browse by date (calendar)</a></li>
+            <li><a href="{{ route('games.browse.byTag.landing') }}">Browse by tag</a> - <em>work in progress</em></li>
+            <li><a href="{{ route('games.browse.bySeries.landing') }}">Browse by series</a> - <em>work in progress</em></li>
+            <li><a href="{{ route('games.browse.byPrimaryType.landing') }}">Browse by primary type</a> - <em>work in progress</em></li>
+        </ul>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>Additional links</h2>
+        <ul>
+            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+            <li><a href="{{ route('games.recentReleases') }}">Recent releases</a></li>
+            <li><a href="{{ route('games.upcomingReleases') }}">Upcoming releases</a></li>
+        </ul>
+
+    </div>
+
+</div>
 
 <div class="row">
 
@@ -16,7 +38,8 @@
         <h2>
             Newest
             <span class="h4">
-                (<a href="{{ route('calendar.page', {'date': CalendarThisMonth}) }}">this month</a>)
+                (<a href="{{ route('games.recentReleases') }}">view more</a>)
+                (<a href="{{ route('games.browse.byDate.landing', {'date': CalendarThisMonth}) }}">all this month</a>)
             </span>
         </h2>
         {% if NewReleases|length %}
@@ -31,7 +54,7 @@
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
         <h2>
             Upcoming
-            <span class="h4">(<a href="{{ route('games.list.upcoming') }}">all upcoming</a>)</span>
+            <span class="h4">(<a href="{{ route('games.upcomingReleases') }}">all upcoming</a>)</span>
         </h2>
         {% if UpcomingReleases|length %}
             {% for item in UpcomingReleases %}

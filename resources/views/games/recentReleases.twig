@@ -1,0 +1,19 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Recent releases'}] %}
+
+{% block page_body %}
+
+<p>
+    This page lists recently released Nintendo Switch games.
+</p>
+
+<div class="row">
+    {% for item in NewReleases %}
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock page_body %}
