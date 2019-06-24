@@ -29,7 +29,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('tags.page', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
+                        <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
                     </td>
                     <td class="text-center">
                         {{ item.gameTags().count }}
