@@ -146,6 +146,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Games: Core
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
 
+    // Games: Filter list
+    Route::get('/admin/games/filter-list/with-tag/{linkTitle}', 'Admin\GamesFilterListController@gamesWithTag')->name('admin.games-filter.games-with-tag');
+
     // Games: Detail
     Route::get('/admin/games/detail/{gameId}', 'Admin\GamesDetailController@show')->name('admin.games.detail');
 

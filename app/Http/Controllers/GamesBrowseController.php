@@ -157,7 +157,7 @@ class GamesBrowseController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceTag = $serviceContainer->getTagService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
+        $serviceGameFilter = $serviceContainer->getGameFilterListService();
 
         $bindings = [];
 
@@ -168,7 +168,7 @@ class GamesBrowseController extends Controller
         $tagId = $tag->id;
         $tagName = $tag->tag_name;
 
-        $gameList = $serviceGameTag->getGamesByTag($regionCode, $tagId);
+        $gameList = $serviceGameFilter->getByTagWithDates($regionCode, $tagId);
 
         $bindings['GameList'] = $gameList;
 

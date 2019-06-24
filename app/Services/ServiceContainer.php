@@ -17,6 +17,8 @@ class ServiceContainer
     const KEY_GAME_CHANGE_HISTORY_SERVICE = 'GameChangeHistoryService';
     const KEY_GAME_DEVELOPER_SERVICE = 'GameDeveloperService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
+    const KEY_GAME_ACTION_LIST_SERVICE = 'GameActionListService';
+    const KEY_GAME_FILTER_LIST_SERVICE = 'GameFilterListService';
     const KEY_GAME_PRIMARY_TYPE_SERVICE = 'GamePrimaryTypeService';
     const KEY_GAME_PUBLISHER_SERVICE = 'GamePublisherService';
     const KEY_GAME_RANK_ALLTIME_SERVICE = 'GameRankAllTimeService';
@@ -184,6 +186,22 @@ class ServiceContainer
     public function getGameGenreService()
     {
         return $this->load(self::KEY_GAME_GENRE_SERVICE);
+    }
+
+    /**
+     * @return GameActionListService
+     */
+    public function getGameActionListService()
+    {
+        return $this->load(self::KEY_GAME_ACTION_LIST_SERVICE);
+    }
+
+    /**
+     * @return GameFilterListService
+     */
+    public function getGameFilterListService()
+    {
+        return $this->load(self::KEY_GAME_FILTER_LIST_SERVICE);
     }
 
     /**

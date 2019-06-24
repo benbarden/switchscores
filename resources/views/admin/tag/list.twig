@@ -8,7 +8,7 @@
 <label for="txt-new-tag-name">Name of tag</label>
 <input id="txt-new-tag-name" type="text" maxlength="50">
 <input id="btn-save-tag" type="button" class="btn btn-primary" value="Save">
-<div id="js-new-tag-notify" class="alert alert-success" role="alert" style="display: none;">
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;">
 </div>
 
 <h2>All tags</h2>
@@ -37,6 +37,8 @@
                     <td class="text-center">
                         {% if item.gameTags().count == 0 %}
                             Delete
+                        {% else %}
+                            <a href="{{ route('admin.games-filter.games-with-tag', {'linkTitle': item.link_title}) }}">View games</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -65,8 +67,8 @@
 
         tagName = $('#txt-new-tag-name').val();
         if (tagName == '') {
-            $('#js-new-tag-notify').text('No tag name set.');
-            $('#js-new-tag-notify').show();
+            $('#js-admin-notify').text('No tag name set.');
+            $('#js-admin-notify').show();
             return false;
         }
 
@@ -77,14 +79,14 @@
         });
 
         $.getJSON('{{ route('admin.tag.add') }}', {tagName: tagName}, function(data) {
-            $('#js-new-tag-notify').text('Tag saved!');
-            $('#js-new-tag-notify').show();
+            $('#js-admin-notify').text('Tag saved!');
+            $('#js-admin-notify').show();
             $('#txt-new-tag-name').val('');
-            setTimeout("$('#js-new-tag-notify').fadeOut(); window.location.reload(true);", 1000);
+            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1000);
         })
         .fail(function(data) {
-            $('#js-new-tag-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-new-tag-notify').show();
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
             $('#txt-new-tag-name').val('');
         });
     });

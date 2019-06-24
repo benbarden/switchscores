@@ -67,6 +67,7 @@ class GameTagService
     /**
      * Helper method to get all of the tags that haven't been applied to the current game yet.
      * @param $gameId
+     * @return mixed
      */
     public function getTagsNotOnGame($gameId)
     {
@@ -74,34 +75,6 @@ class GameTagService
             select * from tags where id not in (select tag_id from game_tags where game_id = ?) ORDER BY tag_name
         ', [$gameId]);
 
-        return $games;
-    }
-
-    /**
-     * @param $region
-     * @param $tagId
-     * @return mixed
-     */
-    public function getGamesByTag($region, $tagId)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
-            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year',
-                'game_tags.tag_id',
-                'tags.tag_name')
-            ->where('game_tags.tag_id', $tagId)
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', '1')
-            ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('game_release_dates.release_date', 'desc');
-
-        $games = $games->get();
         return $games;
     }
 

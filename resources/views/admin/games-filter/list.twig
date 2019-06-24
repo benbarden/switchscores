@@ -1,0 +1,80 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+{% if GameList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Title</th>
+                <th class="text-center">eShop: EU</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        <a href="{{ route('admin.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        {% if item.eshop_europe_fs_id %}
+                            <i class="fas fa-link"></i>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if FilterName == 'games-with-tag' %}
+                            <a href="javascript:void(0);" id="lnk-remove-tag-{{ item.game_id }}-{{ item.game_tag_id }}" class="lnk-remove-tag">Remove tag</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    var gameId = '{{ GameId }}';
+    var filterName = '{{ FilterName }}';
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+    $('.lnk-remove-tag').on('click', function() {
+
+        elemId = $(this).attr('id');
+        gameTagData = elemId.replace('lnk-remove-tag-', '');
+
+        var tagFields = gameTagData.split(/-/);
+        var gameId = tagFields[0];
+        var gameTagId = tagFields[1];
+
+        wosAdminTools.removeGameTag(gameId, elemId, gameTagId);
+    });
+</script>
+
+{% endblock page_inner %}
