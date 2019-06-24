@@ -102,8 +102,10 @@ class FeedItemEshopEuropeController extends Controller
 
         if ($request->isMethod('post')) {
 
+            $title = $eshopGameData->title;
+
             // Check title hash is unique
-            $titleHash = $serviceGameTitleHash->generateHash($request->title);
+            $titleHash = $serviceGameTitleHash->generateHash($title);
             $existingTitleHash = $serviceGameTitleHash->getByHash($titleHash);
 
             // Check for duplicates
@@ -115,7 +117,6 @@ class FeedItemEshopEuropeController extends Controller
             if ($okToProceed) {
 
                 // Generate usable game data
-                $title = $eshopGameData->title;
                 $linkText = $serviceUrl->generateLinkText($title);
 
                 $gameData = [
@@ -127,6 +128,9 @@ class FeedItemEshopEuropeController extends Controller
                 // Save details
                 $game = GameDirectorFactory::createNew($gameData);
                 $gameId = $game->id;
+
+                // Add title hash
+                $gameTitleHash = $serviceGameTitleHash->create($title, $titleHash, $gameId);
 
                 // Update release dates
                 $gameReleaseDateDirector = new GameReleaseDateDirector();
