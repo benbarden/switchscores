@@ -16,6 +16,11 @@ class TagService
         ]);
     }
 
+    public function deleteTag($tagId)
+    {
+        Tag::where('id', $tagId)->delete();
+    }
+
     public function find($tagId)
     {
         return Tag::find($tagId);

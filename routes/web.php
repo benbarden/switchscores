@@ -267,6 +267,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
     Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');
+    Route::get('/admin/tag/delete/{tagId}', 'Admin\TagController@deleteTag')->name('admin.tag.delete');
     Route::get('/admin/tag/game/{gameId}/list', 'Admin\TagController@showGameTagList')->name('admin.tag.game.list');
     Route::get('/admin/tag/game/{gameId}/add', 'Admin\TagController@addGameTag')->name('admin.tag.game.add');
     Route::get('/admin/tag/game/{gameId}/remove', 'Admin\TagController@removeGameTag')->name('admin.tag.game.remove');

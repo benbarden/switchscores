@@ -169,4 +169,43 @@ class TagController extends Controller
         );
         return response()->json($data, 200);
     }
+
+    public function deleteTag()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+        $tagService = $serviceContainer->getTagService();
+        $userService = $serviceContainer->getUserService();
+        $urlService = $serviceContainer->getUrlService();
+
+        $userId = Auth::id();
+
+        $user = $userService->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
+        }
+
+        $request = request();
+
+        $tagId = $request->tagId;
+        if (!$tagId) {
+            return response()->json(['error' => 'Missing data: tagId'], 400);
+        }
+
+        $existingTag = $tagService->find($tagId);
+        if (!$existingTag) {
+            return response()->json(['error' => 'Tag does not exist!'], 400);
+        }
+
+        if ($existingTag->gameTags()->count() > 0) {
+            return response()->json(['error' => 'Found '.$existingTag->gameTags()->count().' game(s) with this tag'], 400);
+        }
+
+        $tagService->deleteTag($tagId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
 }
