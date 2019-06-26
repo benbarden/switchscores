@@ -79,6 +79,7 @@ class GamesBrowseController extends Controller
 
         $gameList = $serviceGameReleaseDate->getReleasedByPrimaryType($primaryTypeId, $regionCode);
 
+        $bindings['PrimaryType'] = $primaryType;
         $bindings['GameList'] = $gameList;
 
         $bindings['PageTitle'] = 'Browse Switch games by primary type: '.$primaryTypeName;
