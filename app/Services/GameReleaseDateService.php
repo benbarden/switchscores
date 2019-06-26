@@ -177,7 +177,8 @@ class GameReleaseDateService
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 1)
             ->where('games.primary_type_id', $primaryTypeId)
-            ->orderBy('game_release_dates.release_date', 'desc')
+            //->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -206,7 +207,8 @@ class GameReleaseDateService
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 1)
             ->where('games.series_id', $seriesId)
-            ->orderBy('game_release_dates.release_date', 'desc')
+            //->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
