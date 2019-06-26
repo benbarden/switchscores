@@ -29,7 +29,9 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {{ item.primary_type }}
+                        <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': item.link_title}) }}" target="_blank">
+                            {{ item.primary_type }}
+                        </a>
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}

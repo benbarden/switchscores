@@ -3,12 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 use App\Services\ServiceContainer;
 
 use Auth;
 
 class TagController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @var array
+     */
+    private $validationRules = [
+        'tag_name' => 'required',
+        'link_title' => 'required',
+    ];
+
     public function showList()
     {
         $serviceContainer = \Request::get('serviceContainer');
@@ -50,6 +64,53 @@ class TagController extends Controller
         $bindings['UnusedTagList'] = $gameTagService->getTagsNotOnGame($gameId);
 
         return view('admin.tag.gameTags', $bindings);
+    }
+
+    public function editTag($tagId)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $regionCode = \Request::get('regionCode');
+
+        $serviceTag = $serviceContainer->getTagService();
+        $servicePrimaryType = $serviceContainer->getGamePrimaryTypeService();
+
+        $tagData = $serviceTag->find($tagId);
+        if (!$tagData) abort(404);
+
+        $request = request();
+
+        $bindings = [];
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+            $this->validate($request, $this->validationRules);
+
+            $tagName = $request->tag_name;
+            $linkTitle = $request->link_title;
+            $primaryTypeId = $request->primary_type_id;
+
+            $serviceTag->edit($tagData, $tagName, $linkTitle, $primaryTypeId);
+
+            return redirect(route('admin.tag.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
+        }
+
+        $bindings['TopTitle'] = 'Admin - Edit tag';
+        $bindings['PageTitle'] = 'Edit tag';
+        $bindings['TagData'] = $tagData;
+        $bindings['TagId'] = $tagId;
+
+        $bindings['PrimaryTypeList'] = $servicePrimaryType->getAll();
+
+        return view('admin.tag.edit', $bindings);
     }
 
     public function addGameTag()

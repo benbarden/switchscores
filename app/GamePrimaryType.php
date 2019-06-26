@@ -27,4 +27,9 @@ class GamePrimaryType extends Model
     {
         return $this->hasMany('App\Game', 'primary_type_id', 'id');
     }
+
+    public function tags()
+    {
+        return $this->hasMany('App\GameTag', 'primary_type_id', 'id');
+    }
 }

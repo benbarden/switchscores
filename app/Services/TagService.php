@@ -16,6 +16,18 @@ class TagService
         ]);
     }
 
+    public function edit(Tag $tagData, $tagName, $linkTitle, $primaryTypeId)
+    {
+        $values = [
+            'tag_name' => $tagName,
+            'link_title' => $linkTitle,
+            'primary_type_id' => $primaryTypeId
+        ];
+
+        $tagData->fill($values);
+        $tagData->save();
+    }
+
     public function deleteTag($tagId)
     {
         Tag::where('id', $tagId)->delete();

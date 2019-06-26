@@ -1,0 +1,12 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('admin.tag.list'), 'text': 'Tags'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('admin.tag.edit', {'tagId': TagId}) %}
+{% include 'admin/tag/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'admin/tag/scripts.twig' %}
+
+{% endblock page_inner %}

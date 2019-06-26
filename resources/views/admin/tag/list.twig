@@ -18,6 +18,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Tag</th>
+                <th>Primary type</th>
                 <th class="text-center">Games with tag</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -31,10 +32,18 @@
                     <td>
                         <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
                     </td>
+                    <td>
+                        {% if item.primaryType.id is not null %}
+                            <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': item.primaryType.link_title}) }}" target="_blank">
+                                {{ item.primaryType.primary_type }}
+                            </a>
+                        {% endif %}
+                    </td>
                     <td class="text-center">
                         {{ item.gameTags().count }}
                     </td>
                     <td class="text-center">
+                        <a href="{{ route('admin.tag.edit', {'tagId': item.id}) }}">Edit</a> :
                         {% if item.gameTags().count == 0 %}
                             <a href="javascript:void(0);" id="lnk-delete-tag-{{ item.id }}" class="lnk-delete-tag">Delete</a>
                         {% else %}
@@ -56,6 +65,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,
