@@ -77,28 +77,4 @@ class GameTagService
 
         return $games;
     }
-
-    /**
-     * @param $region
-     * @return mixed
-     */
-    public function getGamesWithoutTags($region)
-    {
-        $games = DB::table('games')
-            ->leftJoin('game_tags', 'games.id', '=', 'game_tags.game_id')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.id', 'games.title', 'games.link_title',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year',
-                'game_tags.tag_id')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', '1')
-            ->whereNull('game_tags.tag_id')
-            ->orderBy('games.title', 'asc');
-
-        $games = $games->get();
-        return $games;
-    }
 }

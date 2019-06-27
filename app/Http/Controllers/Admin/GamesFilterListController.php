@@ -36,4 +36,48 @@ class GamesFilterListController extends Controller
 
         return view('admin.games-filter.list', $bindings);
     }
+
+    public function gamesWithNoTag()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGameList = $serviceContainer->getGameFilterListService();
+
+        $bindings = [];
+
+        $pageTitle = 'Games with no tag';
+        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $gameList = $serviceGameList->getGamesWithoutTags();
+        $bindings['GameList'] = $gameList;
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['FilterName'] = 'games-with-no-tag';
+
+        return view('admin.games-filter.list', $bindings);
+    }
+
+    public function gamesWithNoTypeOrTag()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGameList = $serviceContainer->getGameFilterListService();
+
+        $bindings = [];
+
+        $pageTitle = 'Games with no type or tag';
+        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $gameList = $serviceGameList->getGamesWithoutTypesOrTags();
+        $bindings['GameList'] = $gameList;
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['FilterName'] = 'games-with-no-type-or-tag';
+
+        return view('admin.games-filter.list', $bindings);
+    }
 }

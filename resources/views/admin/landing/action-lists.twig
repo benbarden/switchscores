@@ -92,6 +92,22 @@
     </tr>
     <tr>
         <td>
+            <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}">No type or tag</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}" class="h4">{{ NoTypeOrTagCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('admin.games-filter.games-with-no-tag')}}">No tag</a>
+        </td>
+        <td class="text-right">
+            <a href="{{ route('admin.games-filter.games-with-no-tag')}}" class="h4">{{ NoTagCount }}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
             <a href="{{ route('admin.action-lists.developer-missing') }}">Developer missing <small>(all fields)</small></a>
         </td>
         <td class="text-right">
@@ -150,14 +166,6 @@
         </td>
         <td class="text-right">
             <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ route('admin.games.list')}}/no-tags">No tag</a>
-        </td>
-        <td class="text-right">
-            <a href="{{ route('admin.games.list')}}/no-tags" class="h4">{{ MissingTagsCount }}</a>
         </td>
     </tr>
     <tr>

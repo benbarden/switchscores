@@ -148,6 +148,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Games: Filter list
     Route::get('/admin/games/filter-list/with-tag/{linkTitle}', 'Admin\GamesFilterListController@gamesWithTag')->name('admin.games-filter.games-with-tag');
+    Route::get('/admin/games/filter-list/no-tag', 'Admin\GamesFilterListController@gamesWithNoTag')->name('admin.games-filter.games-with-no-tag');
+    Route::get('/admin/games/filter-list/no-type-or-tag', 'Admin\GamesFilterListController@gamesWithNoTypeOrTag')->name('admin.games-filter.games-with-no-type-or-tag');
 
     // Games: Detail
     Route::get('/admin/games/detail/{gameId}', 'Admin\GamesDetailController@show')->name('admin.games.detail');

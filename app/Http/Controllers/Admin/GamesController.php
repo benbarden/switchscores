@@ -131,10 +131,6 @@ class GamesController extends Controller
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 // Missing data
-                case 'no-tags':
-                    $gameList = $serviceGameTag->getGamesWithoutTags($regionCode);
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
                 case 'no-genre':
                     $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
                     $jsInitialSort = "[ 0, 'desc']";

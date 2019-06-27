@@ -31,6 +31,8 @@ class IndexController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
+        $serviceGameList = $serviceContainer->getGameFilterListService();
+
         $serviceReviewLinks = $serviceContainer->getReviewLinkService();
         $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
@@ -96,6 +98,10 @@ class IndexController extends Controller
         $bindings['SiteAlertErrorCount'] = $serviceSiteAlert->countByType(SiteAlert::TYPE_ERROR);
         $bindings['SiteAlertLatest'] = $serviceSiteAlert->getLatest(SiteAlert::TYPE_ERROR);
         $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
+        $missingTags = $serviceGameList->getGamesWithoutTags();
+        $bindings['NoTagCount'] = count($missingTags);
+        $missingTypesAndTags = $serviceGameList->getGamesWithoutTypesOrTags();
+        $bindings['NoTypeOrTagCount'] = count($missingTypesAndTags);
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
         $bindings['NewDeveloperToSetCount'] = $serviceGameDeveloper->countNewDevelopersToSet();
         $bindings['OldDeveloperToClearCount'] = $serviceGameDeveloper->countOldDevelopersToClear();
@@ -105,12 +111,10 @@ class IndexController extends Controller
 
 
         // Missing data - others
-        $missingTags = $gameTagService->getGamesWithoutTags($regionCode);
         $missingGenres = $gameGenreService->getGamesWithoutGenres($regionCode);
         $missingVideoUrl = $serviceGame->getByNullField('video_url', $regionCode);
         $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
 
-        $bindings['MissingTagsCount'] = count($missingTags);
         $bindings['MissingGenresCount'] = count($missingGenres);
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);

@@ -38,6 +38,8 @@
                     <td class="text-center">
                         {% if FilterName == 'games-with-tag' %}
                             <a href="javascript:void(0);" id="lnk-remove-tag-{{ item.game_id }}-{{ item.game_tag_id }}" class="lnk-remove-tag">Remove tag</a>
+                        {% else %}
+                            <a href="{{ route('admin.games.edit', {'GameId': item.game_id}) }}">Edit</a>
                         {% endif %}
                     </td>
                 </tr>
