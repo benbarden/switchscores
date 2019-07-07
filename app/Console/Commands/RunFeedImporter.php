@@ -9,6 +9,7 @@ use App\Partner;
 use App\Services\PartnerService;
 use App\Services\FeedItemReviewService;
 use App\Services\Feed\Importer;
+use App\Services\UrlService;
 
 use App\FeedItemReview;
 use Carbon\Carbon;
@@ -43,8 +44,8 @@ class RunFeedImporter extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handle()
     {
@@ -65,6 +66,8 @@ class RunFeedImporter extends Command
             $logger->info('No sites found with feed URLs. Aborting.');
             return true;
         }
+
+        $serviceUrl = new UrlService();
 
         foreach ($reviewSites as $reviewSite) {
 
@@ -94,6 +97,10 @@ class RunFeedImporter extends Command
                         $itemTitle = $feedItemReview->item_title;
                         $itemUrl = $feedItemReview->item_url;
                         $itemDate = $feedItemReview->item_date;
+
+                        // Clean up URL
+                        $itemUrl = $serviceUrl->cleanReviewFeedUrl($itemUrl);
+                        $feedItemReview->item_url = $itemUrl;
 
                         // Check if it's already been imported
                         $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);

@@ -24,4 +24,24 @@ class UrlService
 
         return $linkText;
     }
+
+    public function cleanReviewFeedUrl($url)
+    {
+        if (strpos($url, '?') === false) return $url;
+
+        $baseUrl = explode('?', $url);
+
+        $parsed = parse_url($url);
+        $query = $parsed['query'];
+
+        parse_str($query, $params);
+
+        unset($params['utm_source']);
+        unset($params['utm_medium']);
+        unset($params['utm_campaign']);
+        $cleanQueryString = http_build_query($params);
+
+        $fullUrl = $baseUrl[0].$cleanQueryString;
+        return $fullUrl;
+    }
 }
