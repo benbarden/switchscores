@@ -42,17 +42,23 @@ class UpdateGameReviewStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
+        // Zero all counts
+        $logger->info('Zeroing all review counts');
+        \DB::update("UPDATE games SET review_count = 0");
+
         // Review count
+        $logger->info('Calculating review counts');
         $reviewCountList = \DB::select("
             SELECT g.id AS game_id, g.title, g.review_count, count(rl.game_id) AS review_count_new
             FROM games g
             LEFT JOIN review_links rl ON g.id = rl.game_id
             LEFT JOIN partners p ON rl.site_id = p.id
             WHERE p.type_id = 1 AND p.status = 1
-            GROUP BY g.id;
+            GROUP BY g.id
+            ORDER BY g.title ASC
         ");
 
-        $logger->info('Review counts: checking '.count($reviewCountList).' games');
+        $logger->info('Updating '.count($reviewCountList).' games');
 
         foreach ($reviewCountList as $item) {
 
@@ -61,20 +67,14 @@ class UpdateGameReviewStats extends Command
             $reviewCount = $item->review_count;
             $reviewCountNew = $item->review_count_new;
 
-            if ($reviewCount != $reviewCountNew) {
-
-                $logger->info(sprintf('Game: %s - Previous review count: %s - New review count: %s',
-                    $gameTitle, $reviewCount, $reviewCountNew));
-
-                \DB::update("
-                    UPDATE games SET review_count = ? WHERE id = ?
-                ", array($reviewCountNew, $gameId));
-
-            }
+            \DB::update("
+                UPDATE games SET review_count = ? WHERE id = ?
+            ", array($reviewCountNew, $gameId));
 
         }
 
         // Average rating
+        $logger->info('Calculating average ratings');
         $avgRatingList = \DB::select("
             SELECT g.id AS game_id, g.title, g.review_count, g.rating_avg,
             sum(rl.rating_normalised) AS rating_sum,
@@ -83,10 +83,11 @@ class UpdateGameReviewStats extends Command
             LEFT JOIN review_links rl ON g.id = rl.game_id
             LEFT JOIN partners p ON rl.site_id = p.id
             WHERE p.type_id = 1 AND p.status = 1
-            GROUP BY g.id;
+            GROUP BY g.id
+            ORDER BY g.title ASC
         ");
 
-        $logger->info('Average ratings: checking '.count($avgRatingList).' games');
+        $logger->info('Updating '.count($avgRatingList).' games');
 
         foreach ($avgRatingList as $item) {
 
@@ -97,8 +98,8 @@ class UpdateGameReviewStats extends Command
             if ($reviewCount == 0) {
 
                 \DB::update("
-                    UPDATE games SET rating_avg = ? WHERE id = ?
-                ", array(0, $gameId));
+                    UPDATE games SET rating_avg = 0 WHERE id = ?
+                ", $gameId);
 
                 continue;
 
@@ -120,6 +121,10 @@ class UpdateGameReviewStats extends Command
             }
 
         }
+
+        // Cleanup
+        $logger->info('Cleanup: zeroing rating average for games with no reviews');
+        \DB::update("UPDATE games SET rating_avg = NULL WHERE review_count = 0");
 
     }
 }
