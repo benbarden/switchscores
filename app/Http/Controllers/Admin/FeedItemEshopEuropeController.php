@@ -17,6 +17,9 @@ use App\Services\UrlService;
 
 use App\Events\GameCreated;
 
+use App\Factories\EshopEuropeUpdateGameFactory;
+use App\Factories\EshopEuropeRedownloadPackshotsFactory;
+
 class FeedItemEshopEuropeController extends Controller
 {
     public function showList($report = null)
@@ -149,6 +152,10 @@ class FeedItemEshopEuropeController extends Controller
 
                 // Game change history
                 GameChangeHistoryFactory::makeHistory($game, null, Auth::user()->id, 'games');
+
+                // Update eShop data
+                EshopEuropeUpdateGameFactory::updateGame($game);
+                EshopEuropeRedownloadPackshotsFactory::redownloadPackshots($game);
 
                 // Trigger event
                 event(new GameCreated($game));
