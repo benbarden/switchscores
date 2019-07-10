@@ -150,6 +150,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/games/filter-list/with-tag/{linkTitle}', 'Admin\GamesFilterListController@gamesWithTag')->name('admin.games-filter.games-with-tag');
     Route::get('/admin/games/filter-list/no-tag', 'Admin\GamesFilterListController@gamesWithNoTag')->name('admin.games-filter.games-with-no-tag');
     Route::get('/admin/games/filter-list/no-type-or-tag', 'Admin\GamesFilterListController@gamesWithNoTypeOrTag')->name('admin.games-filter.games-with-no-type-or-tag');
+    Route::get('/admin/games/filter-list/with-genre/{linkTitle}', 'Admin\GamesFilterListController@gamesWithGenre')->name('admin.games-filter.games-with-genre');
 
     // Games: Detail
     Route::get('/admin/games/detail/{gameId}', 'Admin\GamesDetailController@show')->name('admin.games.detail');
@@ -265,6 +266,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/game-primary-types/add', 'Admin\GamePrimaryTypesController@addPrimaryType')->name('admin.game-primary-types.add');
     Route::get('/admin/game-series/list', 'Admin\GameSeriesController@showList')->name('admin.game-series.list');
     Route::get('/admin/game-series/add', 'Admin\GameSeriesController@addGameSeries')->name('admin.game-series.add');
+    Route::get('/admin/genre/list', 'Admin\GenreController@showList')->name('admin.genre.list');
 
     // Tags
     Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');

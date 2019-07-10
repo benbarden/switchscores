@@ -80,4 +80,35 @@ class GamesFilterListController extends Controller
 
         return view('admin.games-filter.list', $bindings);
     }
+
+    public function gamesWithGenre($linkTitle)
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGameList = $serviceContainer->getGameFilterListService();
+        $serviceGenre = $serviceContainer->getGenreService();
+
+        $genre = $serviceGenre->getByLinkTitle($linkTitle);
+        if (!$genre) abort(404);
+
+        $genreId = $genre->id;
+        $genreName = $genre->genre;
+
+        $bindings = [];
+
+        $pageTitle = 'Games with genre: '.$genreName;
+        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $gameList = $serviceGameList->getGamesByGenre($genreId);
+        $bindings['GameList'] = $gameList;
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        $bindings['FilterName'] = 'games-with-genre';
+        $bindings['FilterValue'] = $genreName;
+
+        return view('admin.games-filter.list', $bindings);
+    }
+
 }

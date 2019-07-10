@@ -1,0 +1,41 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<h2>All genres</h2>
+{% if GenreList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Genre</th>
+                <th class="text-center">Games with genre</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GenreList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.genre }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.gameGenres().count }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('admin.games-filter.games-with-genre', {'linkTitle': item.link_title}) }}">View games</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No genres found!</p>
+{% endif %}
+
+{% endblock page_inner %}

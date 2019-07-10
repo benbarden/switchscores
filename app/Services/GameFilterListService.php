@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Game;
+
 class GameFilterListService
 {
     /**
@@ -85,4 +87,47 @@ class GameFilterListService
         $games = $games->get();
         return $games;
     }
+
+    /**
+     * @param $genreId
+     * @return mixed
+     */
+    public function getGamesByGenre($genreId)
+    {
+        // First get a list of the game IDs that have this genre
+        $games = Game::with('gameGenres')
+            ->whereHas('gameGenres', function($query) use ($genreId) {
+                $query->where('game_genres.genre_id', '=', $genreId);
+            })
+            ->orderBy('games.title', 'asc');
+        return $games->get();
+    }
+
+    /**
+     * @param $region
+     * @param $genreId
+     * @return mixed
+     */
+    public function getGamesByGenreWithDates($region, $genreId)
+    {
+        $games = DB::table('games')
+            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
+            ->join('game_genres', 'games.id', '=', 'game_genres.game_id')
+            ->join('genres', 'game_genres.genre_id', '=', 'genres.id')
+            ->select('games.*',
+                'game_release_dates.release_date',
+                'game_release_dates.is_released',
+                'game_release_dates.upcoming_date',
+                'game_release_dates.release_year',
+                'game_genres.genre_id',
+                'genres.genre')
+            ->where('game_genres.genre_id', $genreId)
+            ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', '1')
+            ->orderBy('games.title', 'asc');
+
+        $games = $games->get();
+        return $games;
+    }
+
 }
