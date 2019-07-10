@@ -50,118 +50,6 @@
 
     <div class="col-md-4">
 
-        <h2>Manage</h2>
-        <table class="table table-condensed table-responsive">
-            <tr>
-                <td>
-                    <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
-                </td>
-                <td class="text-center">
-                    {% if GameData.gameTags.count > 0 %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
-                </td>
-                <td class="text-center">
-                    {% if GameData.developer != '' %}
-                        <span class="h4" style="color: #ffcc00; font-weight: bold;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-                    {% elseif GameData.gameDevelopers.count > 0 %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
-                </td>
-                <td class="text-center">
-                    {% if GameData.publisher != '' %}
-                        <span class="h4" style="color: #ffcc00; font-weight: bold;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-                    {% elseif GameData.gamePublishers.count > 0 %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Genres</strong>
-                </td>
-                <td class="text-center">
-                    {% if GameData.gameGenres.count > 0 %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Video URL</strong>
-                </td>
-                <td class="text-center">
-                    {% if GameData.video_url != '' %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}"><strong>Hashes</strong></a>
-                </td>
-                <td class="text-center">
-                    {% if GameData.titleHashes.count > 0 %}
-                        <span class="h4" style="color: #009900; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    {% else %}
-                        <span class="h4" style="color: #cc0000; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-
-    </div>
-
-    <div class="col-md-4">
-
         <h2>General info</h2>
         <table class="table table-condensed table-responsive">
             <tr>
@@ -171,11 +59,130 @@
                 <td>{{ GameData.players }}</td>
             </tr>
 
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Reviews</span>
+                </td>
+                <td>
+                    {{ GameData.review_count }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Average rating</span>
+                </td>
+                <td>
+                    {{ GameData.rating_avg }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Rank</span>
+                </td>
+                <td>
+                    {{ GameData.game_rank }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Video URL</strong>
+                </td>
+                <td class="text-left">
+                    {% if GameData.video_url != '' %}
+                        <em>OK</em>
+                    {% else %}
+                        <em>None set.</em>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games-title-hash.list', {'gameId': GameId}) }}"><strong>Hashes</strong></a>
+                </td>
+                <td class="text-left">
+                    {% if GameData.titleHashes.count > 0 %}
+                        <em>OK</em>
+                    {% else %}
+                        <em>None set.</em>
+                    {% endif %}
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Categorisation</h2>
+
+        <table class="table table-condensed table-responsive">
+
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Primary type</span>
+                </td>
+                <td>
+                    {% if GameData.primary_type_id %}
+                        <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}" target="_blank">{{ GameData.primaryType.primary_type }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Series</span>
+                </td>
+                <td>
+                    {% if GameData.series_id %}
+                        <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
+                </td>
+                <td>
+                    {% if GameTags|length > 0 %}
+                        {% for item in GameTags %}
+                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
+                                <nobr>{{ item.tag.tag_name }}</nobr>
+                            </a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <em>None set.</em>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Genres</span>
+                </td>
+                <td>
+                    {% if GameGenres|length > 0 %}
+                        {% for item in GameGenres %}
+                            <nobr>{{ item.genre.genre }}</nobr>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <em>None set.</em>
+                    {% endif %}
+                </td>
+            </tr>
+
             {% if GameDevelopers|length > 0 %}
 
                 <tr>
                     <td>
-                        <span style="font-weight: bold;">Developer(s)</span>
+                        <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
                     </td>
                     <td>
                         {% for item in GameDevelopers %}
@@ -200,7 +207,7 @@
 
                 <tr>
                     <td>
-                        <span style="font-weight: bold;">Publisher(s)</span>
+                        <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
                     </td>
                     <td>
                         {% for item in GamePublishers %}
@@ -221,63 +228,13 @@
 
             {% endif %}
 
-            {% if GameTags|length > 0 and ReleaseDateInfo.is_released == 1 %}
-
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Tag(s)</span>
-                    </td>
-                    <td>
-                        {% for item in GameTags %}
-                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
-                                <nobr>{{ item.tag.tag_name }}</nobr>
-                            </a>
-                            {% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                </tr>
-
-            {% endif %}
-
-            <tr>
-                <td>
-                    <span style="font-weight: bold;">Primary type</span>
-                </td>
-                <td>
-                    {% if GameData.primary_type_id %}
-                        <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}" target="_blank">{{ GameData.primaryType.primary_type }}</a>
-                    {% endif %}
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <span style="font-weight: bold;">Series</span>
-                </td>
-                <td>
-                    {% if GameData.series_id %}
-                        <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
-                    {% endif %}
-                </td>
-            </tr>
-
-            {% if GameData.amazon_uk_link %}
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Buy link</span>
-                    </td>
-                    <td>
-                        <a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a>
-                    </td>
-                </tr>
-            {% endif %}
         </table>
 
     </div>
 
     <div class="col-md-4">
 
-        <h2>eShop</h2>
+        <h2>External</h2>
         <table class="table table-condensed table-responsive">
             <tr>
                 <td style="width: 150px;">
@@ -345,19 +302,6 @@
                     </tr>
                 {% endfor %}
             {% endif %}
-            {% if GameGenres|length > 0 %}
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Genres</span>
-                    </td>
-                    <td>
-                        {% for item in GameGenres %}
-                            <nobr>{{ item.genre.genre }}</nobr>
-                            {% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endif %}
             {% if GameData.eshopEuropeGame.fs_id is not null %}
                 <tr>
                     <td>
@@ -365,6 +309,16 @@
                     </td>
                     <td>
                         <a href="{{ LinkHelper.eshopUrl('eu', GameData.eshopEuropeGame.url) }}" target="_blank">Visit eShop page</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if GameData.amazon_uk_link %}
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Buy link</span>
+                    </td>
+                    <td>
+                        <a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a>
                     </td>
                 </tr>
             {% endif %}
