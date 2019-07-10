@@ -94,7 +94,15 @@ class UpdateGameReviewStats extends Command
             $gameTitle = $item->title;
             $reviewCount = $item->review_count;
 
-            if ($reviewCount == 0) continue;
+            if ($reviewCount == 0) {
+
+                \DB::update("
+                    UPDATE games SET rating_avg = ? WHERE id = ?
+                ", array(0, $gameId));
+
+                continue;
+
+            }
 
             //$ratingSum = $item->rating_sum;
             $ratingAvg = $item->rating_avg;
