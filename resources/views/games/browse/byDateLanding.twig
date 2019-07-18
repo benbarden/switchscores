@@ -15,6 +15,19 @@
     page to see the top rated games for each month.
 </p>
 
+{% if DateList2019|length %}
+    {% include 'games/browse/byDateLandingYearItem.twig' with {'Year': '2019', 'DateList': DateList2019} %}
+{% endif %}
+
+{% if DateList2018|length %}
+    {% include 'games/browse/byDateLandingYearItem.twig' with {'Year': '2018', 'DateList': DateList2018} %}
+{% endif %}
+
+{% if DateList2017|length %}
+    {% include 'games/browse/byDateLandingYearItem.twig' with {'Year': '2017', 'DateList': DateList2017} %}
+{% endif %}
+
+{#
 <div class="row">
     <div class="col-sm-10 col-md-10 col-md-offset-1">
         {% if RegionCodeDesc %}
@@ -45,5 +58,6 @@
         {% endif %}
     </div>
 </div>
+#}
 
 {% endblock page_body %}

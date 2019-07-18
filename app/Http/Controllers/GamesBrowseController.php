@@ -212,8 +212,12 @@ class GamesBrowseController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
 
-        $dateList = $serviceGameCalendar->getAllowedDates();
+        $dateList = $serviceGameCalendar->getAllowedDates(false);
         $dateListArray = [];
+
+        $dateListArray2017 = [];
+        $dateListArray2018 = [];
+        $dateListArray2019 = [];
 
         if ($dateList) {
 
@@ -233,11 +237,35 @@ class GamesBrowseController extends Controller
                     'GameCount' => $dateCount,
                 ];
 
+                switch ($dateYear) {
+                    case 2017:
+                        $dateListArray2017[] = [
+                            'DateRaw' => $date,
+                            'GameCount' => $dateCount,
+                        ];
+                        break;
+                    case 2018:
+                        $dateListArray2018[] = [
+                            'DateRaw' => $date,
+                            'GameCount' => $dateCount,
+                        ];
+                        break;
+                    case 2019:
+                        $dateListArray2019[] = [
+                            'DateRaw' => $date,
+                            'GameCount' => $dateCount,
+                        ];
+                        break;
+                }
+
             }
 
         }
 
         $bindings['DateList'] = $dateListArray;
+        $bindings['DateList2017'] = $dateListArray2017;
+        $bindings['DateList2018'] = $dateListArray2018;
+        $bindings['DateList2019'] = $dateListArray2019;
 
         return view('games.browse.byDateLanding', $bindings);
     }
