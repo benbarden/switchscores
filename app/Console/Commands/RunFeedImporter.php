@@ -10,11 +10,15 @@ use App\Services\PartnerService;
 use App\Services\FeedItemReviewService;
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
-
 use App\FeedItemReview;
+
 use Carbon\Carbon;
 
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
+
+use App\Exceptions\Review\AlreadyImported;
+use App\Exceptions\Review\HistoricEntry;
+use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 
 class RunFeedImporter extends Command
 {
@@ -23,7 +27,7 @@ class RunFeedImporter extends Command
      *
      * @var string
      */
-    protected $signature = 'RunFeedImporter';
+    protected $signature = 'RunFeedImporter {siteId?}';
 
     /**
      * The console command description.
@@ -49,18 +53,17 @@ class RunFeedImporter extends Command
      */
     public function handle()
     {
+        $argSiteId = $this->argument('siteId');
+
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $partnerService = resolve('Services\PartnerService');
         /* @var PartnerService $partnerService */
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $feedItemReviewService */
+        $serviceFeedItemReview = resolve('Services\FeedItemReviewService');
+        /* @var FeedItemReviewService $serviceFeedItemReview */
         $reviewSites = $partnerService->getReviewSiteFeedUrls();
-
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
 
         if (!$reviewSites) {
             $logger->info('No sites found with feed URLs. Aborting.');
@@ -76,64 +79,67 @@ class RunFeedImporter extends Command
             $feedUrl = $reviewSite->feed_url;
             if (!$feedUrl) continue;
 
+            if ($argSiteId && ($siteId != $argSiteId)) continue;
+
             $logger->info(sprintf('Site: %s - Feed URL: %s', $siteName, $feedUrl));
 
             try {
 
                 // Set up the importer for this site
                 $feedImporter = new Importer();
-                $feedImporter->loadRemoteFeedData($feedUrl);
+                // Dirty hack for Wix
+                if ($siteId == 30) {
+                    $isWix = true;
+                } else {
+                    $isWix = false;
+                }
+                $feedImporter->loadRemoteFeedData($feedUrl, $isWix);
                 $feedImporter->setSiteId($siteId);
                 $feedData = $feedImporter->getFeedData();
 
-                if (array_key_exists('channel', $feedData)) {
+                // Make feed item array
+                $feedItemsToProcess = [];
+                if ($isWix) {
+
+                    foreach ($feedData->channel->item as $feedItem) {
+
+                        $feedItemsToProcess[] = $feedItem;
+
+                    }
+
+                } elseif (array_key_exists('channel', $feedData)) {
 
                     foreach ($feedData['channel']['item'] as $feedItem) {
 
-                        // RSS
+                        $feedItemsToProcess[] = $feedItem;
 
-                        // Generate the model
-                        $feedItemReview = $feedImporter->generateModel($feedItem);
-                        $itemTitle = $feedItemReview->item_title;
-                        $itemUrl = $feedItemReview->item_url;
-                        $itemDate = $feedItemReview->item_date;
+                    }
 
-                        // Clean up URL
-                        $itemUrl = $serviceUrl->cleanReviewFeedUrl($itemUrl);
-                        $feedItemReview->item_url = $itemUrl;
+                }
 
-                        // Check if it's already been imported
-                        $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
-                        if ($dbExistingItem) {
-                            //$logger->warn('Already imported: '.$itemUrl);
-                            continue;
+                if (count($feedItemsToProcess) > 0) {
+
+                    foreach ($feedItemsToProcess as $feedItem) {
+
+                        try {
+
+                            $feedItemReview = $feedImporter->processItemRss($isWix, $feedItem, $reviewSite, $serviceUrl, $serviceFeedItemReview);
+                            $logger->info('Importing item: '.$feedItemReview->item_url);
+                            $feedItemReview->save();
+
+                        } catch (AlreadyImported $e) {
+
+                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+
+                        } catch (HistoricEntry $e) {
+
+                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+
+                        } catch (FeedUrlPrefixNotMatched $e) {
+
+                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+
                         }
-
-                        // Silently bypass historic reviews - removes some log noise
-                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
-                            //$logger->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
-                            continue;
-                        }
-
-                        // Check if a feed URL prefix is set, and if so, compare it
-                        $feedUrlPrefix = $reviewSite->feed_url_prefix;
-                        if ($feedUrlPrefix) {
-                            $fullPrefix = $reviewSite->website_url.$feedUrlPrefix;
-                            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
-                                $logger->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
-                                continue;
-                            } else {
-                                //$logger->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
-                                //continue;
-                            }
-                        }
-
-                        // Output some details
-                        $logger->info('Importing item: '.$itemUrl);
-
-                        // All good - add it as a feed item
-                        $feedItemReview->load_status = 'Loaded OK';
-                        $feedItemReview->save();
 
                     }
 
@@ -170,7 +176,7 @@ class RunFeedImporter extends Command
                         $feedItemReview->item_date = $itemDate;
 
                         // Check if it's already been imported
-                        $dbExistingItem = $feedItemReviewService->getByItemUrl($itemUrl);
+                        $dbExistingItem = $serviceFeedItemReview->getByItemUrl($itemUrl);
                         if ($dbExistingItem) {
                             //$logger->warn('Already imported: '.$itemUrl);
                             continue;
