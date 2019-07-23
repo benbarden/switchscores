@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\BaseController;
+use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-class LoginController extends BaseController
+use Laravel\Socialite\Facades\Socialite;
+
+use App\Services\ServiceContainer;
+
+class LoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -35,5 +39,44 @@ class LoginController extends BaseController
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Redirect the user to the authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToProviderTwitter()
+    {
+        return Socialite::driver('twitter')->redirect();
+    }
+
+    /**
+     * Obtain the user information.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleProviderCallbackTwitter()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceUser = $serviceContainer->getUserService();
+
+        $user = Socialite::driver('twitter')->user();
+        $twitterUserId = $user->id;
+        $twitterName = $user->nickname;
+
+        $wosUser = $serviceUser->getByTwitterId($twitterUserId);
+
+        if (!$wosUser) {
+            $wosUser = $serviceUser->createFromTwitterLogin($twitterUserId, $twitterName);
+        }
+
+        // we should have a user by now
+        if (!$wosUser) abort(400);
+
+        auth()->login($wosUser);
+        return redirect(route('welcome'));
     }
 }

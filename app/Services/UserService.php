@@ -8,21 +8,36 @@ use App\User;
 
 class UserService
 {
+    public function createFromTwitterLogin(
+        $twitterUserId, $twitterNickname
+    )
+    {
+        $values = [
+            'display_name' => $twitterNickname,
+            'twitter_user_id' => $twitterUserId,
+            'twitter_name' => $twitterNickname,
+            'region' => 'eu',
+        ];
+        $user = User::create($values);
+        return $user;
+    }
+
     /**
      * @param User $userData
      * @param $displayName
      * @param $email
      * @param $partnerId
-     * @return void
+     * @param $twitterUserId
      */
     public function edit(
-        User $userData, $displayName, $email, $partnerId
+        User $userData, $displayName, $email, $partnerId, $twitterUserId
     )
     {
         $values = [
             'display_name' => $displayName,
             'email' => $email,
             'partner_id' => $partnerId,
+            'twitter_user_id' => $twitterUserId,
         ];
 
         $userData->fill($values);
@@ -47,5 +62,10 @@ class UserService
     public function getCount()
     {
         return User::orderBy('created_at', 'desc')->count();
+    }
+
+    public function getByTwitterId($twitterId)
+    {
+        return User::where('twitter_user_id', $twitterId)->first();
     }
 }

@@ -1,3 +1,9 @@
+<p>
+    NOTE: If you copy the Twitter id from one account to another, be sure to
+    remove it from one of the two accounts. Otherwise, when logging in, the first
+    record will always be selected when logging in with Twitter.
+</p>
+
 {% include 'common/form-errors.twig' %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
@@ -12,7 +18,14 @@
     <div class="form-group">
         <label for="email" class="col-md-4 control-label">Email</label>
         <div class="col-md-6">
-            <input id="email" type="text" class="form-control" name="email" required>
+            <input id="email" type="text" class="form-control" name="email">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="twitter_user_id" class="col-md-4 control-label">Twitter Id</label>
+        <div class="col-md-6">
+            <input id="twitter_user_id" type="text" class="form-control" name="twitter_user_id">
         </div>
     </div>
 

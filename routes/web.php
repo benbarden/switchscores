@@ -14,6 +14,10 @@
 // Front page
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
+// Third-party logins
+Route::get('login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->name('auth.login.twitter');
+Route::get('login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
+
 // Static content
 Route::get('/about', 'AboutController@show')->name('about');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');

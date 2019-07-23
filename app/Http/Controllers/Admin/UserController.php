@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     private $validationRules = [
         'display_name' => 'required',
-        'email' => 'required',
+        //'email' => 'required',
     ];
 
     public function showList()
@@ -91,9 +91,10 @@ class UserController extends Controller
 
             $displayName = $request->display_name;
             $email = $request->email;
+            $twitterUserId = $request->twitter_user_id;
             $partnerId = $request->partner_id;
 
-            $serviceUser->edit($userData, $displayName, $email, $partnerId);
+            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId);
 
             return redirect(route('admin.user.list'));
 

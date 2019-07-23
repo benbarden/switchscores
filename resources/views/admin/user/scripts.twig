@@ -8,6 +8,7 @@
         // This is used when editing existing records.
         formVals['display_name'] = "{{ UserData.display_name }}";
         formVals['email'] = "{{ UserData.email }}";
+        formVals['twitter_user_id'] = "{{ UserData.twitter_user_id }}";
         formVals['partner_id'] = "{{ UserData.partner_id }}";
 
     } else {
@@ -16,12 +17,14 @@
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
         formVals['display_name'] = "{{ old('display_name') }}";
         formVals['email'] = "{{ old('email') }}";
+        formVals['twitter_user_id'] = "{{ old('twitter_user_id') }}";
         formVals['partner_id'] = "{{ old('partner_id') }}";
 
     }
 
     $('#display_name').val(formVals['display_name']);
     $('#email').val(formVals['email']);
+    $('#twitter_user_id').val(formVals['twitter_user_id']);
     $('#partner_id').val(formVals['partner_id']);
 
 </script>
