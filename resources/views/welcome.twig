@@ -39,6 +39,12 @@
 
 <hr style="border: 1px solid #c9c9c9; margin-top: 5px; margin-bottom: 5px;">
 
+{% if auth_user() is null %}
+    <a href="{{ route('auth.login.twitter') }}">
+        <img src="/img/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" style="border: 0;">
+    </a>
+{% endif %}
+
 <div class="row">
 
     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
