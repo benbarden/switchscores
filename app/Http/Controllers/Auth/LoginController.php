@@ -29,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/user';
 
     /**
      * Create a new controller instance.
@@ -77,6 +77,6 @@ class LoginController extends Controller
         if (!$wosUser) abort(400);
 
         auth()->login($wosUser);
-        return redirect(route('welcome'));
+        return redirect(route('user.index'));
     }
 }
