@@ -43,8 +43,9 @@ class Director
         $this->buildReleaseDate($params);
     }
 
-    public function buildExistingReleaseDate(GameReleaseDate $gameReleaseDate, $params): void
+    public function buildExistingReleaseDate($region, GameReleaseDate $gameReleaseDate, $params): void
     {
+        $this->builder->setRegion($region);
         $this->builder->setGameReleaseDate($gameReleaseDate);
         $this->buildReleaseDate($params);
     }
@@ -65,12 +66,16 @@ class Director
         if (array_key_exists($isReleasedField, $params)) {
             $isReleased = $params[$isReleasedField] == 'on' ? 1 : 0;
             $this->builder->setIsReleased($isReleased);
+        } else {
+            $this->builder->setIsReleased(0);
         }
 
         $isLockedField = 'is_locked_'.$region;
         if (array_key_exists($isLockedField, $params)) {
             $isLocked = $params[$isLockedField] == 'on' ? 1 : 0;
             $this->builder->setIsLocked($isLocked);
+        } else {
+            $this->builder->setIsLocked(0);
         }
 
         $upcomingDateField = 'upcoming_date_'.$region;

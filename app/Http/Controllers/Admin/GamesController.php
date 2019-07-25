@@ -343,7 +343,7 @@ class GamesController extends Controller
                 // Check if existing data is available before updating
                 $gameReleaseDateExisting = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
                 if ($gameReleaseDateExisting) {
-                    $gameReleaseDateDirector->buildExistingReleaseDate($gameReleaseDateExisting, $request->post());
+                    $gameReleaseDateDirector->buildExistingReleaseDate($region, $gameReleaseDateExisting, $request->post());
                 } else {
                     $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, $request->post());
                 }

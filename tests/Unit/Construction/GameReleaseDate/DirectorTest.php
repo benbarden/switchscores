@@ -39,9 +39,10 @@ class DirectorTest extends TestCase
 
     public function testExistingRecord()
     {
+        $region = GameReleaseDate::REGION_US;
         $gameReleaseDate = new GameReleaseDate;
         $gameReleaseDate->game_id = 1019;
-        $gameReleaseDate->region = GameReleaseDate::REGION_US;
+        $gameReleaseDate->region = $region;
         $gameReleaseDate->release_date = '2020-02-10';
         $gameReleaseDate->upcoming_date = '2020-02-10';
         $gameReleaseDate->is_released = '0';
@@ -57,7 +58,7 @@ class DirectorTest extends TestCase
         $director = new Director();
         $builder = new Builder();
         $director->setBuilder($builder);
-        $director->buildExistingReleaseDate($gameReleaseDate, $params);
+        $director->buildExistingReleaseDate($region, $gameReleaseDate, $params);
 
         $gameReleaseDate = $builder->getGameReleaseDate();
 
@@ -66,6 +67,39 @@ class DirectorTest extends TestCase
         $this->assertEquals('2019-02-10', $gameReleaseDate->release_date);
         $this->assertEquals('2019-02-10', $gameReleaseDate->upcoming_date);
         $this->assertEquals('1', $gameReleaseDate->is_released);
+        $this->assertEquals($releaseYear, $gameReleaseDate->release_year);
+    }
+
+    public function testExistingRecord2()
+    {
+        $region = GameReleaseDate::REGION_US;
+        $gameReleaseDate = new GameReleaseDate;
+        $gameReleaseDate->game_id = 1019;
+        $gameReleaseDate->region = $region;
+        $gameReleaseDate->release_date = '2020-02-10';
+        $gameReleaseDate->upcoming_date = '2020-02-10';
+        $gameReleaseDate->is_released = '1';
+        $gameReleaseDate->release_year = '2020';
+
+        $params = [
+            'release_date_us' => '2019-02-10',
+            'upcoming_date_us' => '2019-02-10',
+            'is_released_us' => ''
+        ];
+        $releaseYear = '2019';
+
+        $director = new Director();
+        $builder = new Builder();
+        $director->setBuilder($builder);
+        $director->buildExistingReleaseDate($region, $gameReleaseDate, $params);
+
+        $gameReleaseDate = $builder->getGameReleaseDate();
+
+        $this->assertEquals(GameReleaseDate::REGION_US, $gameReleaseDate->region);
+        $this->assertEquals(1019, $gameReleaseDate->game_id);
+        $this->assertEquals('2019-02-10', $gameReleaseDate->release_date);
+        $this->assertEquals('2019-02-10', $gameReleaseDate->upcoming_date);
+        $this->assertEquals('0', $gameReleaseDate->is_released);
         $this->assertEquals($releaseYear, $gameReleaseDate->release_year);
     }
 }
