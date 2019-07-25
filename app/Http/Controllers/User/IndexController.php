@@ -52,7 +52,6 @@ class IndexController extends Controller
 
                     // Review stats (for infobox)
                     $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
-                    $bindings['ReviewCount'] = $reviewStats[0]->ReviewCount;
                     $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
                     // Recent reviews

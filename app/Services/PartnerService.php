@@ -168,6 +168,16 @@ class PartnerService
         return $reviewSites;
     }
 
+    public function getReviewSitesWithRecentReviews($days = 30)
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_REVIEW_SITE)
+            ->where('status', Partner::STATUS_ACTIVE)
+            ->whereRaw('last_review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
     // ********************************************************** //
 
     public function getAllGamesCompanies()

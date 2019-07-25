@@ -104,7 +104,7 @@ class Importer
      * @param $isWix
      * @return mixed
      */
-    public function convertResponseToJson($body, $isWix)
+    public function convertResponseToJson($body, $isWix = false)
     {
         if ($isWix) {
             // Don't do the JSON conversion for Wix sites - it breaks the SimpleXMLElements

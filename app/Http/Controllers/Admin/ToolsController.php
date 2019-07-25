@@ -99,7 +99,7 @@ class ToolsController extends Controller
                 'title' => 'Run Feed Importer',
                 'desc' => 'Visits RSS feeds from partner sites, and loads any reviews that have not yet been imported',
                 'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0510',
+                'scheduleTime' => '0500',
                 'nextStep' => 'RunFeedParser',
             ],
             'RunFeedParser' => [
@@ -108,7 +108,7 @@ class ToolsController extends Controller
                 'title' => 'Run Feed Parser',
                 'desc' => 'Attempts to match titles from the feed importer to games in the WOS database',
                 'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0515',
+                'scheduleTime' => '0505',
                 'nextStep' => 'RunFeedReviewGenerator',
                 'relatedLink' => [
                     'url' => route('admin.feed-items.reviews.list'),
@@ -121,6 +121,22 @@ class ToolsController extends Controller
                 'title' => 'Run Feed Review Generator',
                 'desc' => 'Creates review links for feed items linked to games and with ratings',
                 'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0510',
+            ],
+            'PartnerUpdateFields' => [
+                'command' => 'PartnerUpdateFields',
+                'group' => 'Partners',
+                'title' => 'Partner Update Fields',
+                'desc' => 'Updates the review count and last review date fields for review sites',
+                'scheduleFreq' => 'Daily',
+                'scheduleTime' => '0515',
+            ],
+            'UpdateGameRanks' => [
+                'command' => 'UpdateGameRanks',
+                'group' => 'Game updates',
+                'title' => 'Update Game Ranks',
+                'desc' => 'Updates the rank field for each game',
+                'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0520',
             ],
             /* *** Games *** */
@@ -130,15 +146,7 @@ class ToolsController extends Controller
                 'title' => 'Update Game Review Stats',
                 'desc' => 'Updates the Review Count and Average Score fields for each game',
                 'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0525',
-            ],
-            'UpdateGameRanks' => [
-                'command' => 'UpdateGameRanks',
-                'group' => 'Game updates',
-                'title' => 'Update Game Ranks',
-                'desc' => 'Updates the rank field for each game',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0530',
+                'scheduleTime' => '0535',
             ],
             'UpdateGameCalendarStats' => [
                 'command' => 'UpdateGameCalendarStats',
@@ -146,7 +154,7 @@ class ToolsController extends Controller
                 'title' => 'Update Game Calendar Stats',
                 'desc' => 'Updates the released game stats on the Release Calendar page',
                 'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0535',
+                'scheduleTime' => '0540',
             ],
             'UpdateGameImageCount' => [
                 'command' => 'UpdateGameImageCount',
@@ -201,6 +209,11 @@ class ToolsController extends Controller
 
         \Artisan::call($commandName, []);
         $commandOutput = \Artisan::output();
+
+        if ($commandName == 'RunFeedReviewGenerator') {
+            // Also run the PartnerUpdateFields command
+            \Artisan::call('PartnerUpdateFields', []);
+        }
 
         $bindings = [];
 

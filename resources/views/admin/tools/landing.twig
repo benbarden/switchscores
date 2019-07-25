@@ -17,10 +17,8 @@
     <thead>
     <tr>
         <th class="text-left">Group</th>
-        <th class="text-left">Tool</th>
+        <th class="text-left">Command</th>
         <th class="text-left">Details</th>
-        <th class="text-center">Schedule</th>
-        <th class="text-center">Time</th>
         <th class="text-center">Options</th>
     </tr>
     </thead>
@@ -28,12 +26,22 @@
         {% for item in ToolList %}
             <tr>
                 <td class="text-left">{{ item.group }}</td>
-                <td class="text-left">{{ item.title }}</td>
-                <td class="text-left">{{ item.desc }}</td>
-                <td class="text-center">{{ item.scheduleFreq }}</td>
-                <td class="text-center">{{ item.scheduleTime }}</td>
+                <td class="text-left">{{ item.command }}</td>
+                <td class="text-left">
+                    {{ item.desc }}
+                    <br>
+                    {% if item.scheduleFreq == 'Manual' %}
+                        <small>
+                            Not scheduled - manual runs only
+                        </small>
+                    {% else %}
+                        <small>
+                            Runs {{ item.scheduleFreq }} at {{ item.scheduleTime }}
+                        </small>
+                    {% endif %}
+                </td>
                 <td class="text-center">
-                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': item.command}) }}">Launch</a>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': item.command}) }}">Run this command</a>
                 </td>
             </tr>
         {% endfor %}

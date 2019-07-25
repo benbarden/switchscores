@@ -25,7 +25,14 @@ class PartnersController extends Controller
 
     public function reviewSites()
     {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
         $bindings = [];
+
+        $servicePartner = $serviceContainer->getPartnerService();
+        $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
+        $bindings['ReviewPartnerList'] = $reviewPartnerList;
 
         $bindings['TopTitle'] = 'Review partners';
         $bindings['PageTitle'] = 'Review partners';
