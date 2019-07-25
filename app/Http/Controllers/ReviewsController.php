@@ -15,18 +15,16 @@ class ReviewsController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
-        $serviceTopRated = $serviceContainer->getTopRatedService();
-        $serviceReviewLinks = $serviceContainer->getReviewLinkService();
-        $serviceGameRankUpdate = $serviceContainer->getGameRankUpdateService();
+        $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
         $bindings = [];
 
-        $reviewList = $serviceReviewLinks->getLatestNaturalOrder(20);
+        $reviewList = $serviceReviewLink->getLatestGameAggregates(28);
+        $listCount = count($reviewList);
+        $reviewPerfect = $serviceReviewLink->getLatestPerfectScores($listCount);
 
-        $bindings['GameRankUpdates'] = $serviceGameRankUpdate->getNotableRecent(20);
         $bindings['ReviewList'] = $reviewList;
-        $bindings['TopRatedNewReleases'] = $serviceTopRated->getLastXDays($regionCode, 30, 15);
-        $bindings['TopRatedAllTime'] = $serviceTopRated->getList($regionCode, 10);
+        $bindings['ReviewPerfect'] = $reviewPerfect;
 
         $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
         $bindings['PageTitle'] = 'Reviews';

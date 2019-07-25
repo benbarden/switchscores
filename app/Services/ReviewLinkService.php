@@ -4,8 +4,9 @@
 namespace App\Services;
 
 use App\ReviewLink;
-use App\ReviewSite;
 use App\Partner;
+
+use Illuminate\Support\Facades\DB;
 
 class ReviewLinkService
 {
@@ -126,6 +127,28 @@ class ReviewLinkService
             ->limit($limit)
             ->get();
         return $reviewLinks;
+    }
+
+    public function getLatestGameAggregates($days = 20)
+    {
+        return ReviewLink::
+            select('review_links.*', DB::raw('count(*) as count'))
+            ->whereRaw('review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
+            ->groupBy('game_id')
+            ->having('count', '>', 1)
+            ->orderBy('count', 'desc')
+            ->orderBy('review_date', 'desc')
+            ->get();
+    }
+
+    public function getLatestPerfectScores($limit = 30)
+    {
+        return ReviewLink::
+            select('review_links.*')
+            ->where('rating_normalised', 10)
+            ->orderBy('review_date', 'desc')
+            ->limit($limit)
+            ->get();
     }
 
     public function getLatestBySite($siteId, $limit = 20)
