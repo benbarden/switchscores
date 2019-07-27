@@ -21,6 +21,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Display name</th>
+                <th class="text-center">Points</th>
                 <th class="text-left">Partner name</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Options</th>
@@ -36,6 +37,9 @@
                         <a href="{{ route('admin.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
                         <br>
                         <small>{{ item.email }}</small>
+                    </td>
+                    <td class="text-center">
+                        {{ item.points_balance }}
                     </td>
                     <td class="text-left">
                         {% if item.partner.name is not null %}
@@ -70,7 +74,6 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
-                null,
                 null,
                 null,
                 null,
