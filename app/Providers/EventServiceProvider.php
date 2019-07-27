@@ -19,11 +19,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\GameCreated' => [
             'App\Listeners\ActivityFeedNewGame'
         ],
-        'App\Events\ChartsCreated' => [
-            'App\Listeners\ActivityFeedNewCharts'
-        ],
         'App\Events\UserCreated' => [
-            'App\Listeners\CreateListsForNewUser'
+            'App\Listeners\PointsForUserRegistration'
         ],
     ];
 

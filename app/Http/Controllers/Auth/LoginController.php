@@ -71,6 +71,7 @@ class LoginController extends Controller
 
         if (!$wosUser) {
             $wosUser = $serviceUser->createFromTwitterLogin($twitterUserId, $twitterName);
+            event(new UserCreated($wosUser));
         }
 
         // we should have a user by now

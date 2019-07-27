@@ -15,7 +15,7 @@ class User extends Authenticatable
     // is_admin has to be fillable or unit tests will fail
     protected $fillable = [
         'display_name', 'email', 'password', 'region', 'partner_id', 'is_admin',
-        'twitter_user_id', 'twitter_name', 'login_date'
+        'twitter_user_id', 'twitter_name', 'login_date', 'points_balance'
     ];
 
     /**
@@ -43,5 +43,10 @@ class User extends Authenticatable
     public function partner()
     {
         return $this->hasOne('App\Partner', 'id', 'partner_id');
+    }
+
+    public function pointsTransactions()
+    {
+        return $this->hasMany('App\UserPointTransaction', 'user_id', 'id');
     }
 }
