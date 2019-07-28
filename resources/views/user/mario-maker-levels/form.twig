@@ -1,0 +1,63 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="level_code" class="col-md-4 control-label">Level code</label>
+        <div class="col-md-6">
+            <input id="level_code" type="text" class="form-control" name="level_code" maxlength="11" required autofocus>
+            <p>
+                <small>
+                    Enter the 9-character level code here. Include the hyphens.
+                </small>
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="game_style_id" class="col-md-4 control-label">Game style</label>
+        <div class="col-md-6">
+            <select id="game_style_id" class="form-control" name="game_style_id" required>
+                <option value="">&nbsp;</option>
+                {% for item in GameStyleList %}
+                    <option value="{{ item.id }}">{{ item.desc }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="title" class="col-md-4 control-label">Title</label>
+        <div class="col-md-6">
+            <input id="title" type="text" class="form-control" name="title" maxlength="100" required>
+            <p>
+                <small>
+                    The title of your level.
+                </small>
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="description" class="col-md-4 control-label">Description</label>
+        <div class="col-md-6">
+            <textarea id="description" name="description" cols="50" rows="10"></textarea>
+            <p>
+                <small>
+                    If you wish, include a short description of the level here. It's not required,
+                    so leave it blank if you prefer.
+                    <br>Please don't include any special formatting - it will be stripped out.
+                    <br><strong>Maximum 500 characters.</strong> Keep it short and sweet :)
+                </small>
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>

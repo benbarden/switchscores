@@ -1,0 +1,93 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': 'Index'}] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a level">
+    </div>
+</div>
+
+<hr>
+
+{% if MsgSuccess %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Thanks for your submission!</strong> It needs to be approved before it will show on the site.
+        Don't worry, we'll get to it shortly. In the meantime, add more levels if you have them.
+    </div>
+{% endif %}
+<p>
+    This is where you can submit your Mario Maker levels to the site.
+    Please note, we only accept levels for the Switch game (Super Mario Maker 2).
+</p>
+
+{% if LevelList.count > 0 %}
+
+    <table class="table data-sortable table-responsive">
+        <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th class="text-left" style="max-width: 250px;">Details</th>
+            <th class="text-left">Game style</th>
+            <th class="text-center">Code</th>
+            <th class="text-center">Added</th>
+            <th class="text-center">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in LevelList %}
+            <tr>
+                <td class="text-right">
+                    {{ item.id }}
+                </td>
+                <td class="text-left" style="max-width: 250px;">
+                    <strong>{{ item.title }}</strong>
+                    {% if item.description %}
+                        <br>
+                        {{ item.description }}
+                    {% endif %}
+                </td>
+                <td class="text-left">
+                    {{ item.getGameStyleDesc() }}
+                </td>
+                <td class="text-center">
+                    {{ item.level_code }}
+                </td>
+                <td class="text-center">
+                    {{ item.created_at|date('d M Y H:i') }}
+                </td>
+                <td class="text-center">
+                    {{ item.getStatusDesc() }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have not added any levels yet.</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('user.mario-maker-levels.add') }}';
+    });
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [4, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

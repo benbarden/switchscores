@@ -31,6 +31,7 @@ class ServiceContainer
     const KEY_GAME_TAG_SERVICE = 'GameTagService';
     const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
     const KEY_GENRE_SERVICE = 'GenreService';
+    const KEY_MARIO_MAKER_LEVEL_SERVICE = 'MarioMakerLevelService';
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_PARTNER_SERVICE = 'PartnerService';
@@ -298,6 +299,14 @@ class ServiceContainer
     public function getGenreService()
     {
         return $this->load(self::KEY_GENRE_SERVICE);
+    }
+
+    /**
+     * @return MarioMakerLevelService
+     */
+    public function getMarioMakerLevelService()
+    {
+        return $this->load(self::KEY_MARIO_MAKER_LEVEL_SERVICE);
     }
 
     /**

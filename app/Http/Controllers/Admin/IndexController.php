@@ -59,6 +59,11 @@ class IndexController extends Controller
         $bindings['PageTitle'] = 'Admin index';
 
 
+        // Approvals
+        $serviceMarioMakerLevels = $serviceContainer->getMarioMakerLevelService();
+        $bindings['MarioMakerLevelPendingCount'] = $serviceMarioMakerLevels->getPending()->count();
+
+
         // Information and site stats
         $bindings['TotalGameCount'] = $serviceGame->getCount();
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);

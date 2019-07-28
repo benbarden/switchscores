@@ -50,6 +50,9 @@ Route::get('/games/by-date/{date}', 'GamesBrowseController@byDatePage')->name('g
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
 
+// Mario Maker
+Route::get('/mario-maker-levels', 'MarioMakerLevelsController@landing')->name('mario-maker-levels.landing');
+
 /* Charts */
 Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
 Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name('charts.mostAppearances');
@@ -124,6 +127,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
     Route::get('/user/reviews/{report?}', 'User\ReviewUserController@showList')->name('user.reviews.list');
 
+    // Mario Maker levels
+    Route::get('/user/mario-maker-levels/add', 'User\MarioMakerLevelsController@add')->name('user.mario-maker-levels.add');
+    Route::post('/user/mario-maker-levels/add', 'User\MarioMakerLevelsController@add')->name('user.mario-maker-levels.add');
+    Route::get('/user/mario-maker-levels/{report?}', 'User\MarioMakerLevelsController@showList')->name('user.mario-maker-levels.list');
+
     // Partner reviews
     Route::get('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
     Route::post('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
@@ -192,6 +200,11 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');
     Route::get('/admin/game/publisher/{gameId}/add', 'Admin\GamePartnerController@addGamePublisher')->name('admin.game.publisher.add');
     Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
+
+    // Approvals (quick format)
+    Route::get('/admin/approvals/mario-maker-levels', 'Admin\ApprovalsController@marioMakerLevels')->name('admin.approvals.mario-maker-levels');
+    Route::get('/admin/approvals/mario-maker-levels/approve', 'Admin\ApprovalsController@approveMarioMakerLevel')->name('admin.approvals.mario-maker-levels.approve');
+    Route::get('/admin/approvals/mario-maker-levels/reject', 'Admin\ApprovalsController@rejectMarioMakerLevel')->name('admin.approvals.mario-maker-levels.reject');
 
     // Action lists
     Route::get('/admin/action-lists', 'Admin\ActionListController@landing')->name('admin.action-lists.landing');

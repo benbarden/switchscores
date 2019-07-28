@@ -61,6 +61,7 @@
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ route('user.index') }}">Dashboard</a></li>
+                        <li><a href="{{ route('user.mario-maker-levels.list') }}">Mario Maker levels</a></li>
                         <li><a href="{{ route('user.collection.landing') }}">Games collection</a></li>
                         {% if auth_user().site_id != 0 %}
                             <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>
