@@ -1,0 +1,30 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('topRated.landing'), 'text': 'Top rated'}, {'text': 'Multiplayer'}] %}
+
+{% block page_body %}
+
+<p>
+    The Top Rated multiplayer games on the Nintendo Switch.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            Top 100 multiplayer Switch games
+        </h2>
+        {% if TopRatedMultiplayer|length %}
+            {% for item in TopRatedMultiplayer %}
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No Top Rated games here... yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock page_body %}

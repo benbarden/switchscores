@@ -31,6 +31,23 @@ class TopRatedController extends Controller
         return view('topRated.landing', $bindings);
     }
 
+    public function multiplayer()
+    {
+        $serviceContainer = \Request::get('serviceContainer');
+        /* @var $serviceContainer ServiceContainer */
+
+        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+
+        $bindings = [];
+
+        $bindings['TopRatedMultiplayer'] = $serviceGameRankAllTime->getList(100, 'multiplayer');
+
+        $bindings['TopTitle'] = 'Top Rated Nintendo Switch multiplayer games';
+        $bindings['PageTitle'] = 'Top Rated Nintendo Switch multiplayer games';
+
+        return view('topRated.multiplayer', $bindings);
+    }
+
     public function allTime()
     {
         $serviceContainer = \Request::get('serviceContainer');

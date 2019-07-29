@@ -29,15 +29,19 @@ class GameRankAllTimeService
 
     /**
      * @param $maxRank
+     * @param $customFilter
      * @return mixed
      */
-    public function getList($maxRank = null)
+    public function getList($maxRank = null, $customFilter = null)
     {
         $games = DB::table('game_rank_alltime')
             ->join('games', 'game_rank_alltime.game_id', '=', 'games.id')
             ->select('games.*',
                 'game_rank_alltime.game_rank');
 
+        if ($customFilter == 'multiplayer') {
+            $games = $games->where('games.players', '!=', '1');
+        }
         if ($maxRank) {
             $games = $games->where('game_rank_alltime.game_rank', '<=', $maxRank);
         }
@@ -49,5 +53,4 @@ class GameRankAllTimeService
         $games = $games->get();
         return $games;
     }
-
 }
