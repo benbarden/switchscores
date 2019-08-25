@@ -154,7 +154,15 @@ Route::group(['middleware' => ['auth']], function() {
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Index
-    Route::get('/admin', 'Admin\IndexController@show')->name('admin.index');
+    Route::get('/admin', 'Admin\DashboardsController@index')->name('admin.index');
+
+    // Dashboards
+    Route::get('/admin/dashboards/games', 'Admin\DashboardsController@games')->name('admin.dashboards.games');
+    Route::get('/admin/dashboards/reviews', 'Admin\DashboardsController@reviews')->name('admin.dashboards.reviews');
+    Route::get('/admin/dashboards/categorisation', 'Admin\DashboardsController@categorisation')->name('admin.dashboards.categorisation');
+    Route::get('/admin/dashboards/partners', 'Admin\DashboardsController@partners')->name('admin.dashboards.partners');
+    Route::get('/admin/dashboards/eshop', 'Admin\DashboardsController@eshop')->name('admin.dashboards.eshop');
+    Route::get('/admin/dashboards/stats', 'Admin\DashboardsController@stats')->name('admin.dashboards.stats');
 
     // Games: Core
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
@@ -208,7 +216,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/approvals/mario-maker-levels/reject', 'Admin\ApprovalsController@rejectMarioMakerLevel')->name('admin.approvals.mario-maker-levels.reject');
 
     // Action lists
-    Route::get('/admin/action-lists', 'Admin\ActionListController@landing')->name('admin.action-lists.landing');
     Route::get('/admin/action-lists/developer-missing', 'Admin\ActionListController@developerMissing')->name('admin.action-lists.developer-missing');
     Route::get('/admin/action-lists/new-developer-to-set', 'Admin\ActionListController@newDeveloperToSet')->name('admin.action-lists.new-developer-to-set');
     Route::get('/admin/action-lists/old-developer-to-clear', 'Admin\ActionListController@oldDeveloperToClear')->name('admin.action-lists.old-developer-to-clear');
@@ -296,9 +303,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tag/game/{gameId}/add', 'Admin\TagController@addGameTag')->name('admin.tag.game.add');
     Route::get('/admin/tag/game/{gameId}/remove', 'Admin\TagController@removeGameTag')->name('admin.tag.game.remove');
 
-    // Partners
-    Route::get('/admin/partners', 'Admin\PartnersController@landing')->name('admin.partners.landing');
-
     // Partners: Review sites
     Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
     Route::get('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
@@ -321,7 +325,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tools/tool/process/modular/{commandName}', 'Admin\ToolsController@toolProcessModular')->name('admin.tools.toolProcessModular');
 
     // Stats
-    Route::get('/admin/stats', 'Admin\StatsController@landing')->name('admin.stats.landing');
     Route::get('/admin/stats/review/site', 'Admin\StatsController@reviewSite')->name('admin.stats.review.site');
     Route::get('/admin/stats/games/old-developer-multiple', 'Admin\StatsController@oldDeveloperMultiple')->name('admin.stats.games.oldDeveloperMultiple');
     Route::get('/admin/stats/games/old-developer-by-count', 'Admin\StatsController@oldDeveloperByCount')->name('admin.stats.games.oldDeveloperByCount');

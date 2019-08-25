@@ -1,0 +1,117 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': 'Index'}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+            <a href="{{ route('admin.action-lists.site-alert-errors') }}">Latest site alert</a>:
+            {{ SiteAlertLatest.created_at|date('d-M-Y @ H:i') }}:
+            <strong>{{ SiteAlertLatest.detail }}</strong> - Source: {{ SiteAlertLatest.source }}
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <h2>Action lists</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.approvals.mario-maker-levels') }}">Mario Maker levels</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.approvals.mario-maker-levels') }}" class="h4">{{ MarioMakerLevelPendingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.games.list') }}">Feeds: Game updates</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.site-alert-errors') }}">Site alert errors</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.site-alert-errors') }}" class="h4">{{ SiteAlertErrorCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Information</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.user.list') }}">Registered users</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link">eShop Europe: total unlinked items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link" class="h4">{{ EshopEuropeUnlinkedCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Admin dashboards</h2>
+        <ul>
+            <li><a href="{{ route('admin.dashboards.games') }}">Games dashboard</a></li>
+            <li><a href="{{ route('admin.dashboards.reviews') }}">Reviews dashboard</a></li>
+            <li><a href="{{ route('admin.dashboards.categorisation') }}">Categorisation dashboard</a></li>
+            <li><a href="{{ route('admin.dashboards.partners') }}">Partners dashboard</a></li>
+            <li><a href="{{ route('admin.dashboards.eshop') }}">eShop dashboard</a></li>
+            <li><a href="{{ route('admin.dashboards.stats') }}">Stats dashboard</a></li>
+        </ul>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Quick links</h2>
+
+        <ul>
+            <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
+            <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>
+            <li><a href="{{ route('admin.user.list') }}">Users</a></li>
+            <li><a href="{{ route('admin.news.list') }}">News</a></li>
+            <li><a href="{{ route('admin.charts.date.list') }}">Charts</a> (no longer in use)</li>
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

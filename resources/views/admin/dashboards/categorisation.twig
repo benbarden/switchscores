@@ -1,0 +1,61 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Action lists</h2>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}">No type or tag</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}" class="h4">{{ NoTypeOrTagCount }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.games-filter.games-with-no-tag')}}">No tag</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('admin.games-filter.games-with-no-tag')}}" class="h4">{{ NoTagCount }}</a>
+                    </td>
+                </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{{ route('admin.game-primary-types.list') }}">Game primary types</a></li>
+            <li><a href="{{ route('admin.game-series.list') }}">Game series</a></li>
+            <li><a href="{{ route('admin.tag.list') }}">Tags</a></li>
+            <li><a href="{{ route('admin.genre.list') }}">Genres</a></li>
+        </ul>
+
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+</div>
+
+{% endblock page_inner %}

@@ -9,19 +9,6 @@ use Auth;
 
 class StatsController extends Controller
 {
-    public function landing()
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $bindings = [];
-
-        $bindings['PageTitle'] = 'Stats';
-        $bindings['TopTitle'] = 'Admin - Stats';
-
-        return view('admin.stats.landing', $bindings);
-    }
-
     public function reviewSite()
     {
         $serviceContainer = \Request::get('serviceContainer');

@@ -56,13 +56,15 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('admin.index') }}">Admin index</a></li>
-                                <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                 <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
-                                <li><a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop - Europe</a></li>
-                                <li><a href="{{ route('admin.feed-items.games.list') }}">Wikipedia updates</a></li>
-                                <li><a href="{{ route('admin.feed-items.reviews.list') }}">Review feeds</a></li>
-                                <li><a href="{{ route('admin.reviews.link.list') }}">Reviews</a></li>
-                                <li><a href="{{ route('admin.partners.landing') }}">Partners</a></li>
+
+                                <li><a href="{{ route('admin.dashboards.games') }}">Games</a></li>
+                                <li><a href="{{ route('admin.dashboards.reviews') }}">Reviews</a></li>
+                                <li><a href="{{ route('admin.dashboards.categorisation') }}">Categorisation</a></li>
+                                <li><a href="{{ route('admin.dashboards.partners') }}">Partners</a></li>
+                                <li><a href="{{ route('admin.dashboards.eshop') }}">eShop</a></li>
+                                <li><a href="{{ route('admin.dashboards.stats') }}">Stats</a></li>
+
                                 <li><a href="{{ route('admin.tools.landing') }}">Tools</a></li>
                             </ul>
                         </li>

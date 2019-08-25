@@ -1,0 +1,104 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Action lists</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.developer-missing') }}">Developer missing <small>(all fields)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.developer-missing') }}" class="h4">{{ DeveloperMissingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.new-developer-to-set') }}">New developer to set <small>(old developer set)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.new-developer-to-set') }}" class="h4">{{ NewDeveloperToSetCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.old-developer-to-clear') }}">Old developer to clear <small>(new developer set)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.old-developer-to-clear') }}" class="h4">{{ OldDeveloperToClearCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.publisher-missing') }}">Publisher missing <small>(all fields)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.publisher-missing') }}" class="h4">{{ PublisherMissingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.new-publisher-to-set') }}">New publisher to set <small>(old publisher set)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.new-publisher-to-set') }}" class="h4">{{ NewPublisherToSetCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.old-publisher-to-clear') }}">Old publisher to clear <small>(new publisher set)</small></a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.old-publisher-to-clear') }}" class="h4">{{ OldPublisherToClearCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
+            <li><a href="{{ route('admin.partners.games-company.list') }}">Games companies</a></li>
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Stats</h2>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.games.list')}}/game-developer-links">Game/developer links created</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('admin.games.list')}}/game-developer-links" class="h4">{{ GameDeveloperLinks }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.games.list')}}/game-publisher-links">Game/publisher links created</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('admin.games.list')}}/game-publisher-links" class="h4">{{ GamePublisherLinks }}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

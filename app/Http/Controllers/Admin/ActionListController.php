@@ -9,15 +9,6 @@ use App\Services\ServiceContainer;
 
 class ActionListController extends Controller
 {
-    public function landing()
-    {
-        $bindings = [];
-        $bindings['TopTitle'] = 'Action lists - Admin';
-        $bindings['PageTitle'] = 'Action lists';
-
-        return view('admin.action-lists.landing', $bindings);
-    }
-
     private function getRegionCodeOverride()
     {
         $regionCode = \Request::get('regionCode');

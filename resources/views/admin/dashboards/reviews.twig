@@ -1,0 +1,94 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Action lists</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.reviews.partner.list') }}" class="h4">{{ PendingPartnerReviewCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.user.list') }}">Quick user reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.reviews.user.list') }}" class="h4">{{ PendingReviewUserCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+
+        <ul>
+            <li><a href="{{ route('admin.feed-items.reviews.list') }}">Feed items - Reviews</a></li>
+            <li><a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a></li>
+            <li><a href="{{ route('admin.reviews.user.list') }}">User reviews</a></li>
+            <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
+        </ul>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Stats</h2>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.reviews.link.list') }}">Review links</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('admin.reviews.link.list') }}" class="h4">{{ ReviewLinkCount }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Ranked games</span>
+                    </td>
+                    <td class="text-right">
+                        <span class="h4">{{ RankedGameCount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Unranked games</span>
+                    </td>
+                    <td class="text-right">
+                        <span class="h4">{{ UnrankedGameCount }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

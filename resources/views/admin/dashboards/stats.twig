@@ -1,0 +1,61 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Site stats</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}">Total games (All regions)</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}" class="h4">{{ TotalGameCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}/released">Released games</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}/released" class="h4">{{ ReleasedGameCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}/upcoming">Upcoming games</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}/upcoming" class="h4">{{ UpcomingGameCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{{ route('admin.stats.review.site') }}">Review site stats</a></li>
+            <li><a href="{{ route('admin.stats.games.oldDeveloperMultiple') }}">Games - Old developers - Multiple records</a></li>
+            <li><a href="{{ route('admin.stats.games.oldDeveloperByCount') }}">Games - Old developers - By count</a></li>
+            <li><a href="{{ route('admin.stats.games.oldPublisherMultiple') }}">Games - Old publishers - Multiple records</a></li>
+            <li><a href="{{ route('admin.stats.games.oldPublisherByCount') }}">Games - Old publishers - By count</a></li>
+        </ul>
+
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+</div>
+
+{% endblock page_inner %}

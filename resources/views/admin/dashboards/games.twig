@@ -1,0 +1,85 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Action lists</h2>
+        <h3>Games to release</h3>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu">EU games to release</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu" class="h4">{{ GamesForReleaseCountEu }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us">US games to release</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us" class="h4">{{ GamesForReleaseCountUs }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp">JP games to release</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp" class="h4">{{ GamesForReleaseCountJp }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Missing data</h3>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}/no-video-url" class="h4">{{ MissingVideoUrlCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list') }}/no-amazon-uk-link" class="h4">{{ MissingAmazonUkLink }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
+            <li><a href="{{ route('admin.game-change-history.index') }}">Change history</a></li>
+            <li><a href="{{ route('admin.games-title-hash.list') }}">Title hashes</a></li>
+        </ul>
+
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+</div>
+
+{% endblock page_inner %}
