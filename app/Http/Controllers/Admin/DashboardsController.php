@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\SiteAlert;
 use Illuminate\Routing\Controller as Controller;
+
 use App\Services\ServiceContainer;
 
+use App\SiteAlert;
 use App\ReviewUser;
 use App\PartnerReview;
+
+use App\Services\AdminDashboards\CategorisationService;
 
 class DashboardsController extends Controller
 {
@@ -91,20 +94,79 @@ class DashboardsController extends Controller
 
         $regionCode = \Request::get('regionCode');
 
-        $serviceGameList = $serviceContainer->getGameFilterListService();
+        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameFilterList = $serviceContainer->getGameFilterListService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
+        $serviceGameSeries = $serviceContainer->getGameSeriesService();
+
+        $serviceCategorisation = new CategorisationService();
 
         $bindings = [];
 
-        // Action lists
-        $missingTags = $serviceGameList->getGamesWithoutTags();
-        $bindings['NoTagCount'] = count($missingTags);
-        $missingTypesAndTags = $serviceGameList->getGamesWithoutTypesOrTags();
-        $bindings['NoTypeOrTagCount'] = count($missingTypesAndTags);
+        // Used in several calculations below
+        $totalGameCount = $serviceGame->getCount();
 
-        // Missing data
+        // Game stats: Primary type
+        $statsWithPrimaryType = $serviceCategorisation->countGamesWithPrimaryType();
+        $statsWithoutPrimaryType = $serviceCategorisation->countGamesWithoutPrimaryType();
+        $bindings['StatsWithPrimaryType'] = $statsWithPrimaryType;
+        $bindings['StatsWithoutPrimaryType'] = $statsWithoutPrimaryType;
+        $statsPrimaryTypeProgress = ($statsWithPrimaryType) / $totalGameCount * 100;
+        $bindings['StatsPrimaryTypeProgress'] = round($statsPrimaryTypeProgress, 2);
+
+        // Game stats: Tags
+        $missingTags = $serviceGameFilterList->getGamesWithoutTags();
+        $statsWithoutTags = count($missingTags);
+        $statsWithTags = $totalGameCount - $statsWithoutTags;
+        $bindings['StatsWithoutTags'] = $statsWithoutTags;
+        $bindings['StatsWithTags'] = $statsWithTags;
+        $statsTagsProgress = ($statsWithTags) / $totalGameCount * 100;
+        $bindings['StatsTagsProgress'] = round($statsTagsProgress, 2);
+
+        // Game stats: Series
+        $statsWithSeries = $serviceCategorisation->countGamesWithSeries();
+        $statsWithoutSeries = $serviceCategorisation->countGamesWithoutSeries();
+        $bindings['StatsWithSeries'] = $statsWithSeries;
+        $bindings['StatsWithoutSeries'] = $statsWithoutSeries;
+
+        // Genres
         $missingGenres = $serviceGameGenre->getGamesWithoutGenres($regionCode);
         $bindings['MissingGenresCount'] = count($missingGenres);
+
+        // No type or tag
+        $missingTypesAndTags = $serviceGameFilterList->getGamesWithoutTypesOrTags();
+        $bindings['NoTypeOrTagCount'] = count($missingTypesAndTags);
+
+        // Migrations: Genre, no primary type
+        $statsGenresNoPrimaryType = $serviceGameGenre->getGamesWithGenresNoPrimaryType($regionCode);
+        $statsCountGenresNoPrimaryType = count($statsGenresNoPrimaryType);
+        $bindings['StatsCountGenresNoPrimaryType'] = $statsCountGenresNoPrimaryType;
+
+        // Title matches: Series
+        $seriesList = $serviceGameSeries->getAll();
+
+        $seriesArray = [];
+
+        foreach ($seriesList as $series) {
+
+            $seriesId = $series->id;
+            $seriesName = $series->series;
+            $seriesLink = $series->link_title;
+
+            $gameSeriesList = $serviceGame->getSeriesTitleMatch($seriesName);
+
+            $seriesArray[] = [
+                'id' => $seriesId,
+                'name' => $seriesName,
+                'link' => $seriesLink,
+                'gameCount' => count($gameSeriesList),
+            ];
+
+        }
+
+        $bindings['GameSeriesMatchList'] = $seriesArray;
+
+        // Title matches: Tags
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;

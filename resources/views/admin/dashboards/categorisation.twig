@@ -6,34 +6,117 @@
 
 <div class="row">
 
-    <div class="col-md-4">
+    <div class="col-md-6">
 
-        <h2>Action lists</h2>
+        <h2>Stats</h2>
+
+        <p>
+            Not every game is in a series, so the progress % is not relevant.
+        </p>
 
         <table class="table">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th class="text-right">With</th>
+                <th class="text-right">Without</th>
+                <th class="text-right">Progress</th>
+            </tr>
+            </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}">No type or tag</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}" class="h4">{{ NoTypeOrTagCount }}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('admin.games-filter.games-with-no-tag')}}">No tag</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="{{ route('admin.games-filter.games-with-no-tag')}}" class="h4">{{ NoTagCount }}</a>
-                    </td>
-                </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games.list')}}/no-genre">No genre</a>
+                    <a href="{{ route('admin.game-primary-types.list') }}">Primary types</a>
                 </td>
                 <td class="text-right">
+                    <span class="h4">{{ StatsWithPrimaryType }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsWithoutPrimaryType }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsPrimaryTypeProgress }}%</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tag.list') }}">Tags</a>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsWithTags }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4"><a href="{{ route('admin.games-filter.games-with-no-tag')}}" class="h4">{{ StatsWithoutTags }}</a></span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsTagsProgress }}%</span>
+                </td>
+            </tr>
+            <tr>
+                <td>No type or tag</td>
+                <td class="text-right">
+                    <span class="h4"></span>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}" class="h4">{{ NoTypeOrTagCount }}</a>
+                </td>
+                <td class="text-right">
+                    <span class="h4"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.genre.list') }}">Genres</a>
+                </td>
+                <td class="text-right"></td>
+                <td class="text-right">
                     <a href="{{ route('admin.games.list')}}/no-genre" class="h4">{{ MissingGenresCount }}</a>
+                </td>
+                <td class="text-right"></td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.game-series.list') }}">Series</a>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsWithSeries }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsWithoutSeries }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">N/A</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Migrations</h2>
+
+        <p>
+            These are areas to focus on when migrating data to new formats.
+        </p>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th class="text-right">With</th>
+                <th class="text-right">Without</th>
+                <th class="text-right">Progress</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Genres, no primary type</td>
+                <td class="text-right">
+                    <span class="h4"></span>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsCountGenresNoPrimaryType }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="h4"></span>
                 </td>
             </tr>
             </tbody>
@@ -41,21 +124,42 @@
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
 
-        <h2>Navigation</h2>
-        <ul>
-            <li><a href="{{ route('admin.game-primary-types.list') }}">Game primary types</a></li>
-            <li><a href="{{ route('admin.game-series.list') }}">Game series</a></li>
-            <li><a href="{{ route('admin.tag.list') }}">Tags</a></li>
-            <li><a href="{{ route('admin.genre.list') }}">Genres</a></li>
-        </ul>
+        <h2>Title matches</h2>
 
-    </div>
+        <p>
+            These are games that could be quickly categorised based on text in their title.
+        </p>
 
-    <div class="col-md-4">
+        <h3>Series matches</h3>
+        {% if GameSeriesMatchList %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Series</th>
+                    <th class="text-right">Potential matches</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in GameSeriesMatchList %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td class="text-right">
+                        <span class="h4">{{ item.gameCount }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
 
 </div>
+
+<style>
+    a.h4 {color: #337ab7;}
+</style>
 
 {% endblock page_inner %}

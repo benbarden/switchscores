@@ -461,4 +461,13 @@ class GameService
             ->orderBy('id', 'asc')
             ->get();
     }
+
+    // Series
+    public function getSeriesTitleMatch($series)
+    {
+        return Game::where('title', 'LIKE', $series.'%')
+            ->whereNull('series_id')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
 }

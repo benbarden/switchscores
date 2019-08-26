@@ -134,13 +134,6 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminFeedItems()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/feed-items');
-        $response->assertStatus(200);
-    }
-
     public function testAdminFeedItemsGames()
     {
         $this->be($this->userAdmin);
@@ -155,14 +148,12 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** commenting due to page size
     public function testAdminReviewsLink()
     {
         $this->be($this->userAdmin);
         $response = $this->get('/admin/reviews/link');
         $response->assertStatus(200);
     }
-    */
 
     public function testAdminReviewsSite()
     {
