@@ -98,6 +98,8 @@ class DashboardsController extends Controller
         $serviceGameFilterList = $serviceContainer->getGameFilterListService();
         $serviceGameGenre = $serviceContainer->getGameGenreService();
         $serviceGameSeries = $serviceContainer->getGameSeriesService();
+        $serviceTag = $serviceContainer->getTagService();
+        $serviceGameTag = $serviceContainer->getGameTagService();
 
         $serviceCategorisation = new CategorisationService();
 
@@ -154,20 +156,63 @@ class DashboardsController extends Controller
             $seriesLink = $series->link_title;
 
             $gameSeriesList = $serviceGame->getSeriesTitleMatch($seriesName);
+            $gameCount = count($gameSeriesList);
 
-            $seriesArray[] = [
-                'id' => $seriesId,
-                'name' => $seriesName,
-                'link' => $seriesLink,
-                'gameCount' => count($gameSeriesList),
-            ];
+            if ($gameCount > 0) {
+
+                $seriesArray[] = [
+                    'id' => $seriesId,
+                    'name' => $seriesName,
+                    'link' => $seriesLink,
+                    'gameCount' => count($gameSeriesList),
+                ];
+
+            }
 
         }
 
         $bindings['GameSeriesMatchList'] = $seriesArray;
 
         // Title matches: Tags
+        $tagList = $serviceTag->getAll();
 
+        $tagArray = [];
+
+        foreach ($tagList as $tag) {
+
+            $tagId = $tag->id;
+            $tagName = $tag->tag_name;
+            $tagLink = $tag->link_title;
+
+            $gameTagList = $serviceGame->getTagTitleMatch($tagName);
+
+            if ($gameTagList) {
+
+                $gameTagCount = 0;
+                foreach ($gameTagList as $game) {
+                    if (!$serviceGameTag->gameHasTag($game->id, $tagId)) {
+                        $gameTagCount++;
+                    }
+                }
+
+                if ($gameTagCount > 0) {
+
+                    $tagArray[] = [
+                        'id' => $tagId,
+                        'name' => $tagName,
+                        'link' => $tagLink,
+                        'gameCount' => $gameTagCount,
+                    ];
+
+                }
+
+            }
+
+        }
+
+        $bindings['GameTagMatchList'] = $tagArray;
+
+        // Core stuff
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
 

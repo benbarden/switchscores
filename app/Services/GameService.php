@@ -470,4 +470,14 @@ class GameService
             ->orderBy('id', 'asc')
             ->get();
     }
+
+    // Tag
+    // NB. This doesn't de-dupe games that already have the tag - that is done separately
+    public function getTagTitleMatch($tagName)
+    {
+        return Game::where('title', 'LIKE', '%'.$tagName.'%')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
+
 }

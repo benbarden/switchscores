@@ -108,12 +108,19 @@
             </thead>
             <tbody>
             <tr>
-                <td>Genres, no primary type</td>
+                <td>
+                    Genres, no primary type
+                    <br><small>NB: This can be slow to load. Use sparingly.</small>
+                </td>
                 <td class="text-right">
                     <span class="h4"></span>
                 </td>
                 <td class="text-right">
-                    <span class="h4">{{ StatsCountGenresNoPrimaryType }}</span>
+                    <span class="h4">
+                        <a href="{{ route('admin.games-filter.games-with-genre-no-primary-type') }}">
+                            {{ StatsCountGenresNoPrimaryType }}
+                        </a>
+                    </span>
                 </td>
                 <td class="text-right">
                     <span class="h4"></span>
@@ -146,12 +153,42 @@
                 <tr>
                     <td>{{ item.name }}</td>
                     <td class="text-right">
-                        <span class="h4">{{ item.gameCount }}</span>
+                        <span class="h4">
+                            <a href="{{ route('admin.games-filter.game-series-title-matches', {'linkTitle': item.link}) }}">{{ item.gameCount }}</a>
+                        </span>
                     </td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+        {% else %}
+            <p>No outstanding matches to review.</p>
+        {% endif %}
+
+        <h3>Tag matches</h3>
+        {% if GameTagMatchList %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Tag</th>
+                    <th class="text-right">Potential matches</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in GameTagMatchList %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td class="text-right">
+                            <span class="h4">
+                                <a href="{{ route('admin.games-filter.game-tag-title-matches', {'linkTitle': item.link}) }}">{{ item.gameCount }}</a>
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No outstanding matches to review.</p>
         {% endif %}
 
     </div>

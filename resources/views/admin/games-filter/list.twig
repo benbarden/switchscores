@@ -16,7 +16,7 @@
                     {% if FilterName == 'games-with-genre' %}Primary type{% endif %}
                 </th>
                 <th>
-                    {% if FilterName == 'games-with-genre' %}Genres{% endif %}
+                    {% if FilterName == 'games-with-genre' or FilterName == 'games-with-genres-no-primary-type' %}Genres{% endif %}
                 </th>
                 <th class="text-center">eShop: EU</th>
                 <th class="text-center">Options</th>
@@ -39,7 +39,7 @@
                             {{ item.primaryType.primary_type }}
                         {% endif %}
                     <td>
-                        {% if FilterName == 'games-with-genre' %}
+                        {% if FilterName == 'games-with-genre' or FilterName == 'games-with-genres-no-primary-type' %}
                             {% for gameGenre in item.gameGenres %}
                                 {% set printValue = gameGenre.genre.genre %}
                                 {% if FilterValue == printValue %}
