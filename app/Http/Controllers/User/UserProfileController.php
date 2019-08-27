@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Traits\AuthUser;
 use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
-use Auth;
 
 
 class UserProfileController extends Controller
 {
+    use AuthUser;
+
     public function updateRegion()
     {
         $serviceContainer = \Request::get('serviceContainer');
         /* @var $serviceContainer ServiceContainer */
+
         $userService = $serviceContainer->getUserService();
 
         $request = request();
@@ -25,9 +28,7 @@ class UserProfileController extends Controller
             return response()->json(['error' => 'Invalid data for regionCode'], 400);
         }
 
-        $userId = Auth::id();
-
-        $user = $userService->find($userId);
+        $user = $this->getValidUser($userService);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
