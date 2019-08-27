@@ -122,6 +122,7 @@ class ToolsController extends Controller
                 'desc' => 'Creates review links for feed items linked to games and with ratings',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0510',
+                'nextStep' => 'UpdateGameRanks',
             ],
             'PartnerUpdateFields' => [
                 'command' => 'PartnerUpdateFields',
