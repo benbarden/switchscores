@@ -24,6 +24,7 @@ class DashboardsController extends Controller
         $regionCode = \Request::get('regionCode');
 
         $serviceGame = $serviceContainer->getGameService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
 
         $bindings = [];
 
@@ -40,6 +41,11 @@ class DashboardsController extends Controller
         $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
+
+        // Stats
+        $bindings['TotalGameCount'] = $serviceGame->getCount();
+        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
+        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
