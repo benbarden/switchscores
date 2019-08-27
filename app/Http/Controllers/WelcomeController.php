@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\SiteRequestData;
 
 class WelcomeController extends Controller
 {
+    use SiteRequestData;
+
     public function show()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
+        $serviceContainer = $this->getServiceContainer();
+        $regionCode = $this->getRegionCode();
 
         $bindings = [];
 
