@@ -33,13 +33,17 @@ class GameChangeHistoryService
     }
 
     /**
+     * @param null $limit
      * @return mixed
      */
-    public function getAll()
+    public function getAll($limit = null)
     {
         $itemList = GameChangeHistory::
-            orderBy('id', 'desc')
-            ->get();
+            orderBy('id', 'desc');
+        if ($limit) {
+            $itemList = $itemList->limit($limit);
+        }
+        $itemList = $itemList->get();
         return $itemList;
     }
 

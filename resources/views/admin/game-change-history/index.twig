@@ -4,6 +4,7 @@
 
 {% block page_inner %}
 
+{% if FilterGame is not defined %}
 <div class="row">
     <div class="col-md-3">
         <label for="admin-nav-filter">Filters:</label>
@@ -16,8 +17,21 @@
         </select>
     </div>
 </div>
+{% endif %}
 
 <hr>
+
+{% if TableLimit is defined %}
+    <div class="alert alert-warning" role="alert">
+        Page is limited to {{ TableLimit }} review links to minimise performance issues.
+        Use filters to drill down into the records.
+    </div>
+{% endif %}
+{% if FilterGame %}
+    <div class="alert alert-info" role="alert">
+        Showing history records for game: <strong>{{ FilterGame.title }}</strong> (id: {{ FilterGame.id }})
+    </div>
+{% endif %}
 
 {% if ItemList.count > 0 %}
     <table class="table data-sortable">
@@ -40,7 +54,10 @@
                     </td>
                     <td>
                         {% if item.game %}
-                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                            <a href="{{ route('admin.games.detail', {'gameId': item.game.id}) }}">{{ item.game.title }}</a>
+                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank" title="Open game page in a new tab">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
                         {% else %}
                             {{ item.game_id }}
                         {% endif %}

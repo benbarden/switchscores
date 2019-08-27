@@ -333,7 +333,9 @@
     <div class="col-md-12">
 
         {% if GameChangeHistory|length %}
-        <h2>Change history</h2>
+        <h2>
+            Change history <span class="h4">(<a href="{{ route('admin.game-change-history.index') }}?gameId={{ GameId }}">view all</a>)</span>
+        </h2>
         <table class="table table-condensed table-responsive">
             <tr>
             <tr>
