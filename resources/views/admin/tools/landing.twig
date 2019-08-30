@@ -4,48 +4,9 @@
 
 {% block page_inner %}
 
-<p>
-    The below is a list of custom tools and processes to update parts of the WOS website.
-    Clicking on one of the links will provide some additional information on the tool you select.
-    It won't run the tool until you click the next button.
-    Heavy tools or destructive operations will be clearly signposted.
-</p>
-
-<h2>All tools</h2>
-
-<table class="table data-sortable">
-    <thead>
-    <tr>
-        <th class="text-left">Group</th>
-        <th class="text-left">Command</th>
-        <th class="text-left">Details</th>
-        <th class="text-center">Options</th>
-    </tr>
-    </thead>
-    <tbody>
-        {% for item in ToolList %}
-            <tr>
-                <td class="text-left">{{ item.group }}</td>
-                <td class="text-left">{{ item.command }}</td>
-                <td class="text-left">
-                    {{ item.desc }}
-                    <br>
-                    {% if item.scheduleFreq == 'Manual' %}
-                        <small>
-                            Not scheduled - manual runs only
-                        </small>
-                    {% else %}
-                        <small>
-                            Runs {{ item.scheduleFreq }} at {{ item.scheduleTime }}
-                        </small>
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': item.command}) }}">Run this command</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="alert alert-warning" role="alert">
+    This page isn't used anymore. Go to the relevant admin dashboards to find tools relating to
+    each area of the site.
+</div>
 
 {% endblock page_inner %}

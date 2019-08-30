@@ -44,14 +44,71 @@
     <div class="col-md-4">
 
         <h2>Navigation</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feed items - Reviews</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.user.list') }}">User reviews</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.link.list') }}">Review links</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-        <ul>
-            <li><a href="{{ route('admin.feed-items.reviews.list') }}">Feed items - Reviews</a></li>
-            <li><a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a></li>
-            <li><a href="{{ route('admin.reviews.user.list') }}">User reviews</a></li>
-            <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
-        </ul>
-
+        <h2>Tools</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedImporter'}) }}">RunFeedImporter</a>
+                    <br>
+                    <small>Visits RSS feeds from partner sites, and loads any reviews that have not yet been imported</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedParser'}) }}">RunFeedParser</a>
+                    <br>
+                    <small>Attempts to match titles from the feed importer to games in the WOS database</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedReviewGenerator'}) }}">RunFeedReviewGenerator</a>
+                    <br>
+                    <small>Creates review links for feed items linked to games and with ratings</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameRanks'}) }}">UpdateGameRanks</a>
+                    <br>
+                    <small>Updates the rank field for each game</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameReviewStats'}) }}">UpdateGameReviewStats</a>
+                    <br>
+                    <small>Updates the Review Count and Average Score fields for each game</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="col-md-4">

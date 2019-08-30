@@ -67,10 +67,33 @@
     <div class="col-md-4">
 
         <h2>Navigation</h2>
-        <ul>
-            <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
-            <li><a href="{{ route('admin.partners.games-company.list') }}">Games companies</a></li>
-        </ul>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.site.list') }}">Review sites</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.partners.games-company.list') }}">Games companies</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Tools</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'PartnerUpdateFields'}) }}">PartnerUpdateFields</a>
+                    <br>
+                    <small>Updates the review count and last review date fields for review sites</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="col-md-4">

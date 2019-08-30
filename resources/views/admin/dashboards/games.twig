@@ -68,13 +68,71 @@
     <div class="col-md-4">
 
         <h2>Navigation</h2>
-        <ul>
-            <li><a href="{{ route('admin.games.list') }}">All games</a></li>
-            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
-            <li><a href="{{ route('admin.game-change-history.index') }}">Change history</a></li>
-            <li><a href="{{ route('admin.games-title-hash.list') }}">Title hashes</a></li>
-        </ul>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list') }}">All games</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.game-change-history.index') }}">Change history</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games-title-hash.list') }}">Title hashes</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
+        <h2>Tools</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaCrawlGamesList'}) }}">WikipediaCrawlGamesList</a>
+                    <br>
+                    <small>Crawls the Nintendo Switch games list on Wikipedia and saves data to the WOS database</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaImportGamesList'}) }}">WikipediaImportGamesList</a>
+                    <br>
+                    <small>Converts crawler data into Feed Items for creating or updating games</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaUpdateGamesList'}) }}">WikipediaUpdateGamesList</a>
+                    <br>
+                    <small>Processes feed items (games) that are marked as OK to update</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameCalendarStats'}) }}">UpdateGameCalendarStats</a>
+                    <br>
+                    <small>Updates the released game stats on the Release Calendar page</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameImageCount'}) }}">UpdateGameImageCount</a>
+                    <br>
+                    <small>Updates the Image Count field for each game</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="col-md-4">

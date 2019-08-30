@@ -25,10 +25,46 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
-        <ul>
-            <li><a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop - Europe</a></li>
-        </ul>
+        <h2>Tools</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeImportData'}) }}">EshopEuropeImportData</a>
+                    <br>
+                    <small>Imports data from the European eShop</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeLinkGames'}) }}">EshopEuropeLinkGames</a>
+                    <br>
+                    <small>Attempts to link data from the European eShop to games in the WOS database</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeUpdateGameData'}) }}">EshopEuropeUpdateGameData</a>
+                    <br>
+                    <small>Updates data for games linked to eShop Europe data records</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeDownloadPackshots'}) }}">EshopEuropeDownloadPackshots</a>
+                    <br>
+                    <small>Finds packshots from the European eShop, downloads them and links them to games</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeRedownloadPackshots'}) }}">EshopEuropeRedownloadPackshots</a>
+                    <br>
+                    <small>Redownloads missing packshots from the European eShop</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 
@@ -47,18 +83,18 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop Europe: total records</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}" class="h4">{{ EshopEuropeTotalCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="{{ route('admin.feed-items.eshop.europe.list') }}/with-link">eShop Europe: total linked to a WOS record</a>
                 </td>
                 <td class="text-right">
                     <a href="{{ route('admin.feed-items.eshop.europe.list') }}/with-link" class="h4">{{ EshopEuropeLinkedCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}">eShop Europe: total records</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}" class="h4">{{ EshopEuropeTotalCount }}</a>
                 </td>
             </tr>
             </tbody>
