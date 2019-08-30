@@ -105,6 +105,7 @@ class EshopEuropeGame extends Model
         'labo_b',
         'nintendo_switch_online_exclusive_b',
         'product_code_ss',
+        'switch_game_voucher_b',
     ];
 
     public function game()
