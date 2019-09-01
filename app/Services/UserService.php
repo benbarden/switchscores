@@ -30,20 +30,30 @@ class UserService
      * @param $twitterUserId
      */
     public function edit(
-        User $userData, $displayName, $email, $partnerId, $twitterUserId
+        User $userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff
     )
     {
+        if ($isStaff == 'on') {
+            $dbIsStaff = 1;
+        } else {
+            $dbIsStaff = 0;
+        }
         $values = [
             'display_name' => $displayName,
             'email' => $email,
             'partner_id' => $partnerId,
             'twitter_user_id' => $twitterUserId,
+            'is_staff' => $dbIsStaff,
         ];
 
         $userData->fill($values);
         $userData->save();
     }
 
+    /**
+     * @param $id
+     * @return User
+     */
     public function find($id)
     {
         return User::find($id);

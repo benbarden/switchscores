@@ -22,17 +22,17 @@ class AuthTest extends TestCase
     /**
      * @var User
      */
-    private $userAdmin;
+    private $userOwner;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->userStandard = new User(
-            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com', 'is_admin' => '0']
+            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com', 'is_owner' => '0']
         );
-        $this->userAdmin = new User(
-            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_admin' => '1']
+        $this->userOwner = new User(
+            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_owner' => '1']
         );
     }
 
@@ -40,7 +40,7 @@ class AuthTest extends TestCase
     {
         parent::tearDown();
         unset($this->userStandard);
-        unset($this->userAdmin);
+        unset($this->userOwner);
     }
 
     public function testAsNormalUser()
@@ -50,9 +50,9 @@ class AuthTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function testAsAdmin()
+    public function testAsOwner()
     {
-        $this->be($this->userAdmin);
+        $this->be($this->userOwner);
         $response = $this->json('GET', self::API_URL_BASE);
         $response->assertStatus(200);
     }

@@ -12,7 +12,7 @@ class EloquentAdminUserProvider extends EloquentUserProvider
         /** @var $user User */
         $user = parent::retrieveByCredentials($credentials);
 
-        if ($user && $user->isAdmin()) {
+        if ($user && $user->isOwner()) {
             return $user;
         } else {
             return null;

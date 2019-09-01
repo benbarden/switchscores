@@ -1,15 +1,12 @@
 <?php
 
-namespace Tests\Page;
+namespace Tests\Page\Staff;
 
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 use App\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AdminTest extends TestCase
+class LegacyAdminTest extends TestCase
 {
     /**
      * @var User
@@ -26,10 +23,10 @@ class AdminTest extends TestCase
         parent::setUp();
 
         $this->userStandard = new User(
-            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com', 'is_admin' => '0']
+            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com']
         );
         $this->userAdmin = new User(
-            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_admin' => '1']
+            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_owner' => '1']
         );
     }
 

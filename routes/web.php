@@ -150,6 +150,18 @@ Route::group(['middleware' => ['auth']], function() {
 
 });
 
+/* Staff */
+Route::group(['middleware' => ['auth.staff']], function() {
+
+    // Index
+    Route::get('/staff', 'Staff\IndexController@index')->name('staff.index');
+
+    Route::get('/staff/dashboards/categorisation', 'Staff\DashboardsController@categorisation')
+        ->name('staff.dashboards.categorisation')
+        ->middleware('check.user.role:'.\App\UserRole::ROLE_CATEGORY_MANAGER);
+
+});
+
 /* Admin */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 

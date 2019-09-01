@@ -22,6 +22,7 @@
                 <th class="text-right">#</th>
                 <th>Display name</th>
                 <th class="text-center">Points</th>
+                <th class="text-left">Roles</th>
                 <th class="text-left">Partner name</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Options</th>
@@ -42,14 +43,28 @@
                         {{ item.points_balance }}
                     </td>
                     <td class="text-left">
+                        {% if item.is_owner %}
+                            <small>Owner</small>
+                        {% elseif item.is_staff %}
+                            {% for userRole in item.user_roles %}
+                                <small>
+                                    {{ userRole }}
+                                    {% if not loop.last %}<br>{% endif %}
+                                </small>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td class="text-left">
                         {% if item.partner.name is not null %}
-                            {% if item.partner.isReviewSite() == true %}
-                                <strong>Review site</strong>
-                                <br>{{ item.partner.name }}
-                            {% elseif item.partner.isGamesCompany() == true %}
-                                <strong>Games company</strong>
-                                <br>{{ item.partner.name }}
-                            {% endif %}
+                            <small>
+                                {% if item.partner.isReviewSite() == true %}
+                                    <strong>Review site</strong>
+                                    <br>{{ item.partner.name }}
+                                {% elseif item.partner.isGamesCompany() == true %}
+                                    <strong>Games company</strong>
+                                    <br>{{ item.partner.name }}
+                                {% endif %}
+                            </small>
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -74,6 +89,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,

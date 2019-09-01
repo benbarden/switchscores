@@ -49,6 +49,34 @@
     </div>
 
     <div class="form-group">
+        <label for="is_staff" class="col-md-4 control-label">Is staff?</label>
+        <div class="col-md-6">
+            <div class="checkbox">
+                <label>
+                    <input id="is_staff" class="checkbox" name="is_staff" type="checkbox">
+                </label>
+                <br><small>This must be ticked for the roles to work.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label">Roles</label>
+        <div class="col-md-6">
+            {% if RoleList %}
+                {% for key,item in RoleList %}
+                    <div class="checkbox">
+                        <label>
+                            <input id="role_item_{{ key }}" class="role_item" name="role_item[{{ key }}]" type="checkbox">
+                            {{ item }}
+                        </label>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-group">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit

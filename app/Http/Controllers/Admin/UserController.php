@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\UserRole;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -93,8 +94,24 @@ class UserController extends Controller
             $email = $request->email;
             $twitterUserId = $request->twitter_user_id;
             $partnerId = $request->partner_id;
+            $isStaff = $request->is_staff;
 
-            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId);
+            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff);
+
+            // Clear roles
+            $userData->setRoles([]);
+
+            if (isset($request->role_item)) {
+
+                foreach ($request->role_item as $roleKey => $roleValue) {
+
+                    $role = UserRole::getRoleFromId($roleKey);
+                    $userData->addRole($role);
+
+                }
+                $userData->save();
+
+            }
 
             return redirect(route('admin.user.list'));
 
@@ -110,6 +127,18 @@ class UserController extends Controller
         $bindings['UserId'] = $userId;
 
         $bindings['PartnerList'] = $servicePartner->getAllForUserAssignment();
+
+        $bindings['RoleList'] = UserRole::getRoleList();
+
+        $userRoleList = $userData->user_roles;
+        if ($userRoleList) {
+            $userRoleListForView = [];
+            foreach ($userRoleList as $userRole) {
+                $roleId = UserRole::getIdFromName($userRole);
+                $userRoleListForView[] = ['id' => $roleId, 'role' => $userRole];
+            }
+            $bindings['UserRoleList'] = $userRoleListForView;
+        }
 
         return view('admin.user.edit', $bindings);
     }
