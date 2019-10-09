@@ -4,7 +4,7 @@
         These are the reviews we've recently imported for your site.
         <a href="{{ route('user.review-link.landing') }}">View all</a>
     </p>
-    {% if ReviewSite.rating_scale != 10 %}
+    {% if PartnerData.rating_scale != 10 %}
         <p>
             <small>
                 As your site does not rank games out of 10, we have converted all ratings to
