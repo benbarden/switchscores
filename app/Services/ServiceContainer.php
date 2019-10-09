@@ -6,7 +6,6 @@ namespace App\Services;
 
 class ServiceContainer
 {
-    const KEY_ACTIVITY_FEED_SERVICE = 'ActivityFeedService';
     const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
     const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
@@ -102,14 +101,7 @@ class ServiceContainer
     // ** Get specific classes ** //
 
     /**
-     * @return ActivityFeedService
-     */
-    public function getActivityFeedService()
-    {
-        return $this->load(self::KEY_ACTIVITY_FEED_SERVICE);
-    }
-
-    /**
+     * @deprecated
      * @return ChartsDateService
      */
     public function getChartsDateService()
@@ -118,6 +110,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return ChartsRankingGlobalService
      */
     public function getChartsRankingGlobalService()
@@ -126,6 +119,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return CrawlerWikipediaGamesListSourceService
      */
     public function getCrawlerWikipediaGamesListSourceService()

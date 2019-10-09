@@ -11,6 +11,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Traits\WosServices;
+
 use App\Services\ServiceContainer;
 use App\Events\GameCreated;
 
@@ -32,6 +34,7 @@ use Auth;
 
 class GamesController extends Controller
 {
+    use WosServices;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -461,7 +464,6 @@ class GamesController extends Controller
         $serviceChartsRankingGlobal = $serviceContainer->getChartsRankingGlobalService();
 
         // Deletion
-        $serviceActivityFeed = $serviceContainer->getActivityFeedService();
         $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
         $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
         $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
@@ -508,7 +510,7 @@ class GamesController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceActivityFeed->deleteByGameId($gameId);
+            $this->getServiceActivityFeed()->deleteByGameId($gameId);
             $serviceFeedItemGames->deleteByGameId($gameId);
             $serviceGameReleaseDates->deleteByGameId($gameId);
             DB::table('game_images')->where('game_id', $gameId)->delete();
