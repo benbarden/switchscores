@@ -51,6 +51,7 @@ class GamesController extends Controller
         $bindings = [];
 
         $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 50);
+        $bindings['CalendarThisMonth'] = date('Y-m');
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';
         $bindings['PageTitle'] = 'Nintendo Switch recent releases';

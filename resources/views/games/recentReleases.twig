@@ -7,6 +7,9 @@
 <p>
     This page lists recently released Nintendo Switch games.
 </p>
+<p>
+    <a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">View all this month</a>.
+</p>
 
 <div class="row">
     {% for item in NewReleases %}

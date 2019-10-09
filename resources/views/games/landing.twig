@@ -39,7 +39,7 @@
             Newest
             <span class="h4">
                 (<a href="{{ route('games.recentReleases') }}">view more</a>)
-                (<a href="{{ route('games.browse.byDate.landing', {'date': CalendarThisMonth}) }}">all this month</a>)
+                (<a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">all this month</a>)
             </span>
         </h2>
         {% if NewReleases|length %}
