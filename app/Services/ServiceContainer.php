@@ -110,6 +110,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return FeedItemGameService
      */
     public function getFeedItemGameService()
@@ -118,6 +119,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return FeedItemReviewService
      */
     public function getFeedItemReviewService()
@@ -126,6 +128,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameCalendarService
      */
     public function getGameCalendarService()
@@ -134,6 +137,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameChangeHistoryService
      */
     public function getGameChangeHistoryService()
@@ -142,6 +146,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameDeveloperService
      */
     public function getGameDeveloperService()
@@ -150,6 +155,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameGenreService
      */
     public function getGameGenreService()
@@ -158,6 +164,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameActionListService
      */
     public function getGameActionListService()
@@ -166,6 +173,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameFilterListService
      */
     public function getGameFilterListService()
@@ -174,6 +182,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GamePrimaryTypeService
      */
     public function getGamePrimaryTypeService()
@@ -182,6 +191,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GamePublisherService
      */
     public function getGamePublisherService()
@@ -190,6 +200,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameRankAllTimeService
      */
     public function getGameRankAllTimeService()
@@ -198,6 +209,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameRankUpdateService
      */
     public function getGameRankUpdateService()
@@ -206,6 +218,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameRankYearService
      */
     public function getGameRankYearService()
@@ -214,6 +227,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameRankYearMonthService
      */
     public function getGameRankYearMonthService()
@@ -222,6 +236,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameReleaseDateService
      */
     public function getGameReleaseDateService()
@@ -230,6 +245,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameSeriesService
      */
     public function getGameSeriesService()
@@ -238,6 +254,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameService
      */
     public function getGameService()
@@ -246,6 +263,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameTagService
      */
     public function getGameTagService()
@@ -254,6 +272,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GameTitleHashService
      */
     public function getGameTitleHashService()
@@ -262,6 +281,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return GenreService
      */
     public function getGenreService()
@@ -270,6 +290,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return MarioMakerLevelService
      */
     public function getMarioMakerLevelService()
@@ -278,6 +299,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return NewsCategoryService
      */
     public function getNewsCategoryService()
@@ -286,6 +308,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return NewsService
      */
     public function getNewsService()
@@ -294,6 +317,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return PartnerService
      */
     public function getPartnerService()
@@ -302,6 +326,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return PartnerReviewService
      */
     public function getPartnerReviewService()
@@ -310,6 +335,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return ReviewLinkService
      */
     public function getReviewLinkService()
@@ -318,6 +344,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return ReviewQuickRatingService
      */
     public function getReviewQuickRatingService()
@@ -326,6 +353,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return ReviewStatsService
      */
     public function getReviewStatsService()
@@ -334,6 +362,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return ReviewUserService
      */
     public function getReviewUserService()
@@ -405,6 +434,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return UserService
      */
     public function getUserService()

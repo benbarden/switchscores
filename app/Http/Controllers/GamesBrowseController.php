@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
 
 class GamesBrowseController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function byTitleLanding()
     {
         $bindings = [];
@@ -22,16 +26,11 @@ class GamesBrowseController extends Controller
 
     public function byTitlePage($letter)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $regionCode = $this->getRegionCode();
 
         $bindings = [];
 
-        $gamesList = $serviceGameReleaseDate->getReleasedByLetter($regionCode, $letter);
+        $gamesList = $this->getServiceGameReleaseDate()->getReleasedByLetter($regionCode, $letter);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GameLetter'] = $letter;
@@ -44,14 +43,9 @@ class GamesBrowseController extends Controller
 
     public function byPrimaryTypeLanding()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePrimaryType = $serviceContainer->getGamePrimaryTypeService();
-
         $bindings = [];
 
-        $bindings['PrimaryTypeList'] = $servicePrimaryType->getAll();
+        $bindings['PrimaryTypeList'] = $this->getServiceGamePrimaryType()->getAll();
 
         $bindings['PageTitle'] = 'Browse Switch games by primary type';
         $bindings['TopTitle'] = 'Browse Switch games by primary type';
@@ -61,23 +55,17 @@ class GamesBrowseController extends Controller
 
     public function byPrimaryTypePage($primaryType)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $servicePrimaryType = $serviceContainer->getGamePrimaryTypeService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $regionCode = $this->getRegionCode();
 
         $bindings = [];
 
-        $primaryType = $servicePrimaryType->getByLinkTitle($primaryType);
+        $primaryType = $this->getServiceGamePrimaryType()->getByLinkTitle($primaryType);
         if (!$primaryType) abort(404);
 
         $primaryTypeId = $primaryType->id;
         $primaryTypeName = $primaryType->primary_type;
 
-        $gameList = $serviceGameReleaseDate->getReleasedByPrimaryType($primaryTypeId, $regionCode);
+        $gameList = $this->getServiceGameReleaseDate()->getReleasedByPrimaryType($primaryTypeId, $regionCode);
 
         $bindings['PrimaryType'] = $primaryType;
         $bindings['GameList'] = $gameList;
@@ -90,14 +78,9 @@ class GamesBrowseController extends Controller
 
     public function bySeriesLanding()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
-
         $bindings = [];
 
-        $bindings['SeriesList'] = $serviceGameSeries->getAll();
+        $bindings['SeriesList'] = $this->getServiceGameSeries()->getAll();
 
         $bindings['PageTitle'] = 'Browse Switch games by series';
         $bindings['TopTitle'] = 'Browse Switch games by series';
@@ -107,23 +90,17 @@ class GamesBrowseController extends Controller
 
     public function bySeriesPage($series)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $regionCode = $this->getRegionCode();
 
         $bindings = [];
 
-        $gameSeries = $serviceGameSeries->getByLinkTitle($series);
+        $gameSeries = $this->getServiceGameSeries()->getByLinkTitle($series);
         if (!$gameSeries) abort(404);
 
         $seriesId = $gameSeries->id;
         $seriesName = $gameSeries->series;
 
-        $gameList = $serviceGameReleaseDate->getReleasedBySeries($seriesId, $regionCode);
+        $gameList = $this->getServiceGameReleaseDate()->getReleasedBySeries($seriesId, $regionCode);
 
         $bindings['GameList'] = $gameList;
 
@@ -135,14 +112,9 @@ class GamesBrowseController extends Controller
 
     public function byTagLanding()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceTag = $serviceContainer->getTagService();
-
         $bindings = [];
 
-        $bindings['TagList'] = $serviceTag->getAll();
+        $bindings['TagList'] = $this->getServiceTag()->getAll();
 
         $bindings['PageTitle'] = 'Browse Switch games by tag';
         $bindings['TopTitle'] = 'Browse Switch games by tag';
@@ -152,24 +124,18 @@ class GamesBrowseController extends Controller
 
     public function byTagPage($tag)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceTag = $serviceContainer->getTagService();
-        $serviceGameFilter = $serviceContainer->getGameFilterListService();
+        $regionCode = $this->getRegionCode();
 
         $bindings = [];
 
-        $tag = $serviceTag->getByLinkTitle($tag);
+        $tag = $this->getServiceTag()->getByLinkTitle($tag);
 
         if (!$tag) abort(404);
 
         $tagId = $tag->id;
         $tagName = $tag->tag_name;
 
-        $gameList = $serviceGameFilter->getByTagWithDates($regionCode, $tagId);
+        $gameList = $this->getServiceGameFilterList()->getByTagWithDates($regionCode, $tagId);
 
         $bindings['GameList'] = $gameList;
 
@@ -181,10 +147,8 @@ class GamesBrowseController extends Controller
 
     public function byDateLanding()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
         $regionCodeDesc = null;
         switch ($regionCode) {
             case 'eu':
@@ -201,8 +165,6 @@ class GamesBrowseController extends Controller
                 break;
         }
 
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-
         $bindings = [];
 
         if ($regionCodeDesc) {
@@ -212,7 +174,7 @@ class GamesBrowseController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
 
-        $dateList = $serviceGameCalendar->getAllowedDates(false);
+        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
         $dateListArray = [];
 
         $dateListArray2017 = [];
@@ -225,7 +187,7 @@ class GamesBrowseController extends Controller
 
                 list($dateYear, $dateMonth) = explode('-', $date);
 
-                $gameCalendarStat = $serviceGameCalendar->getStat($regionCode, $dateYear, $dateMonth);
+                $gameCalendarStat = $this->getServiceGameCalendar()->getStat($regionCode, $dateYear, $dateMonth);
                 if ($gameCalendarStat) {
                     $dateCount = $gameCalendarStat->released_count;
                 } else {
@@ -272,14 +234,9 @@ class GamesBrowseController extends Controller
 
     public function byDatePage($dateUrl)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-
-        $dates = $serviceGameCalendar->getAllowedDates();
+        $dates = $this->getServiceGameCalendar()->getAllowedDates();
         if (!in_array($dateUrl, $dates)) {
             abort(404);
         }
@@ -291,7 +248,7 @@ class GamesBrowseController extends Controller
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        $gamesByMonthList = $serviceGameCalendar->getList($regionCode, $calendarYear, $calendarMonth);
+        $gamesByMonthList = $this->getServiceGameCalendar()->getList($regionCode, $calendarYear, $calendarMonth);
         $bindings['GamesByMonthList'] = $gamesByMonthList;
 
         // Get all dates
