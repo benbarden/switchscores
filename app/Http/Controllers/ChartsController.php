@@ -3,23 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
-
-use App\Services\ServiceContainer;
-use App\ChartsRankingGlobal;
 use Illuminate\Support\Facades\DB;
+
+use App\Traits\WosServices;
+
+use App\ChartsRankingGlobal;
 
 class ChartsController extends Controller
 {
+    use WosServices;
+
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $chartsDateService = $serviceContainer->getChartsDateService();
-        $chartDatesEu = $chartsDateService->getDateList('eu');
-        $chartDatesUs = $chartsDateService->getDateList('us');
+        $chartDatesEu = $this->getServiceChartsDate()->getDateList('eu');
+        $chartDatesUs = $this->getServiceChartsDate()->getDateList('us');
 
         $bindings['TopTitle'] = 'Nintendo Switch eShop Charts';
         $bindings['PageTitle'] = 'Charts';
@@ -31,13 +30,7 @@ class ChartsController extends Controller
 
     public function show($countryCode, $date)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
-
-        $chartsDateService = $serviceContainer->getChartsDateService();
-        $chartsRankingGlobalService = $serviceContainer->getChartsRankingGlobalService();
 
         $title = '';
         $regionText = '';
@@ -56,7 +49,7 @@ class ChartsController extends Controller
                 break;
         }
 
-        $gamesList = $chartsRankingGlobalService->getByCountryAndDate($countryCode, $date);
+        $gamesList = $this->getServiceChartsRankingGlobal()->getByCountryAndDate($countryCode, $date);
 
         if (count($gamesList) == 0) {
             abort(404);
@@ -75,8 +68,8 @@ class ChartsController extends Controller
         $bindings['CountryCode'] = $countryCode;
 
         // Next/Previous links
-        $dateNext = $chartsDateService->getNext($countryCode, $date);
-        $datePrev = $chartsDateService->getPrevious($countryCode, $date);
+        $dateNext = $this->getServiceChartsDate()->getNext($countryCode, $date);
+        $datePrev = $this->getServiceChartsDate()->getPrevious($countryCode, $date);
         if ($dateNext) {
             $bindings['ChartDateNext'] = $dateNext;
         }

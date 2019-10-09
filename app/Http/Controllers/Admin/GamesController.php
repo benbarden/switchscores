@@ -461,7 +461,6 @@ class GamesController extends Controller
         $serviceNews = $serviceContainer->getNewsService();
         $serviceUserListItem = $serviceContainer->getUserListItemService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceChartsRankingGlobal = $serviceContainer->getChartsRankingGlobalService();
 
         // Deletion
         $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
@@ -499,8 +498,8 @@ class GamesController extends Controller
             $customErrors[] = 'Game is linked to '.count($gameReviews).' review(s)';
         }
 
-        $gameChartsRankingGlobalEu = $serviceChartsRankingGlobal->getByGameEu($gameId);
-        $gameChartsRankingGlobalUs = $serviceChartsRankingGlobal->getByGameUs($gameId);
+        $gameChartsRankingGlobalEu = $this->getServiceChartsRankingGlobal()->getByGameEu($gameId);
+        $gameChartsRankingGlobalUs = $this->getServiceChartsRankingGlobal()->getByGameUs($gameId);
         $totalChartsCount = count($gameChartsRankingGlobalEu) + count($gameChartsRankingGlobalUs);
         if ($totalChartsCount > 0) {
             $customErrors[] = 'Game is linked to '.count($gameReviews).' chart(s)';

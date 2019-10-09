@@ -102,32 +102,6 @@ class ServiceContainer
 
     /**
      * @deprecated
-     * @return ChartsDateService
-     */
-    public function getChartsDateService()
-    {
-        return $this->load(self::KEY_CHARTS_DATE_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return ChartsRankingGlobalService
-     */
-    public function getChartsRankingGlobalService()
-    {
-        return $this->load(self::KEY_CHARTS_RANKING_GLOBAL_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return CrawlerWikipediaGamesListSourceService
-     */
-    public function getCrawlerWikipediaGamesListSourceService()
-    {
-        return $this->load(self::KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE);
-    }
-
-    /**
      * @return EshopEuropeGameService
      */
     public function getEshopEuropeGameService()
@@ -368,6 +342,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return SiteAlertService
      */
     public function getSiteAlertService()
@@ -376,6 +351,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return TagService
      */
     public function getTagService()
@@ -384,6 +360,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return TopRatedService
      */
     public function getTopRatedService()
@@ -392,6 +369,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return UrlService
      */
     public function getUrlService()
@@ -400,6 +378,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return UserGamesCollectionService
      */
     public function getUserGamesCollectionService()
@@ -408,6 +387,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return UserListItemService
      */
     public function getUserListItemService()
@@ -416,6 +396,7 @@ class ServiceContainer
     }
 
     /**
+     * @deprecated
      * @return UserListService
      */
     public function getUserListService()
