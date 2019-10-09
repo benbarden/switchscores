@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Traits\WosServices;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Services\ServiceContainer;
@@ -9,6 +10,8 @@ use Illuminate\Support\Collection;
 
 class GamesFilterListController extends Controller
 {
+    use WosServices;
+
     public function gamesWithTag($tagLinkTitle)
     {
         $serviceContainer = \Request::get('serviceContainer');
@@ -217,6 +220,23 @@ class GamesFilterListController extends Controller
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
         $bindings['FilterName'] = 'games-with-genres-no-primary-type';
+
+        return view('admin.games-filter.list', $bindings);
+    }
+
+    public function gamesWithNoEshopEuropeLink()
+    {
+        $gameList = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId();
+
+        $bindings = [];
+
+        $pageTitle = 'Games with no eShop Europe link';
+        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['GameList'] = $gameList;
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        $bindings['FilterName'] = 'games-with-no-eshop-europe-link';
 
         return view('admin.games-filter.list', $bindings);
     }

@@ -137,10 +137,18 @@
 
     <div class="col-md-4">
 
-        <h2>Site stats</h2>
+        <h2>Stats</h2>
 
         <table class="table">
             <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games-filter.games-no-eshop-europe-link') }}">Games with no eShop Europe link</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games-filter.games-no-eshop-europe-link') }}" class="h4">{{ NoEshopEuropeLinkCount }}</a>
+                </td>
+            </tr>
             <tr>
                 <td>
                     <a href="{{ route('admin.games.list') }}">Total games (All regions)</a>

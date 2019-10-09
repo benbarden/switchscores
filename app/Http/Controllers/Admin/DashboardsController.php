@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Traits\WosServices;
+
 use App\Services\ServiceContainer;
 
 use App\SiteAlert;
@@ -14,6 +16,8 @@ use App\Services\AdminDashboards\CategorisationService;
 
 class DashboardsController extends Controller
 {
+    use WosServices;
+
     public function games()
     {
         $pageTitle = 'Games dashboard';
@@ -46,6 +50,7 @@ class DashboardsController extends Controller
         $bindings['TotalGameCount'] = $serviceGame->getCount();
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
+        $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
@@ -272,9 +277,12 @@ class DashboardsController extends Controller
 
         // Action lists
         $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
+
+        // Stats
         $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();
         $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, true);
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
+        $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
         return view('admin.dashboards.eshop', $bindings);
     }

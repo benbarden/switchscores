@@ -187,6 +187,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/games/filter-list/series-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameSeriesTitleMatches')->name('admin.games-filter.game-series-title-matches');
     Route::get('/admin/games/filter-list/tag-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameTagTitleMatches')->name('admin.games-filter.game-tag-title-matches');
     Route::get('/admin/games/filter-list/with-genre-no-primary-type', 'Admin\GamesFilterListController@gamesWithGenresNoPrimaryType')->name('admin.games-filter.games-with-genre-no-primary-type');
+    Route::get('/admin/games/filter-list/no-eshop-europe-link', 'Admin\GamesFilterListController@gamesWithNoEshopEuropeLink')->name('admin.games-filter.games-no-eshop-europe-link');
 
     // Games: Detail
     Route::get('/admin/games/detail/{gameId}', 'Admin\GamesDetailController@show')->name('admin.games.detail');
