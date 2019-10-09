@@ -93,7 +93,7 @@
                         <select id="eshop_europe_fs_id" class="form-control" name="eshop_europe_fs_id">
                             <option value="">&nbsp;</option>
                             {% for item in EshopEuropeList %}
-                                <option value="{{ item.fs_id }}">{{ item.title }}</option>
+                                <option value="{{ item.fs_id }}">{{ item.title }} (fs_id: {{ item.fs_id }})</option>
                             {% endfor %}
                         </select>
                     </div>
