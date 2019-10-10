@@ -7,17 +7,16 @@
 <p>
     A list of Nintendo Switch games, starting with {{ GameLetter }} and sorted alphabetically.
 </p>
+<p>
+    <small>
+        {{ GamesList|length }} games.
+    </small>
+</p>
 
-{% if GamesList|length %}
-    <div class="row">
-        {% for item in GamesList %}
-            <div class="col-xs-12 col-sm-12 col-md-4">
-                {% include 'games/layouts/miniItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
-            </div>
-        {% endfor %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': GamesList, 'batchOverride': 4} %}
     </div>
-{% else %}
-    <p>No games found!</p>
-{% endif %}
+</div>
 
 {% endblock page_body %}

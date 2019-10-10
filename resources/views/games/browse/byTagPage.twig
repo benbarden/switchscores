@@ -9,15 +9,9 @@
 {% endif %}
 
 <div class="row">
-    {% if GameList|length %}
-        {% for item in GameList %}
-            <div class="col-xs-12 col-sm-12 col-md-6">
-                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'N', 'cfgHideRating': 'N'} %}
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No games found!</p>
-    {% endif %}
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+    </div>
 </div>
 
 {% endblock page_body %}
