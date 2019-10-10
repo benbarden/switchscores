@@ -56,6 +56,13 @@ blockquote {
     font-size: 14px;
     font-weight: 400;
 }
+.standout-header {
+    background: #18C0DF;
+    color: #ffffff;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    text-align: center;
+}
 
 /* Game page */
 .fotorama {margin-top: 0px;}

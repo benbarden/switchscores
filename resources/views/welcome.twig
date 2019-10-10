@@ -47,63 +47,87 @@
 
 <div class="row">
 
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-        <h2>
-            New releases
-        </h2>
-        {% if NewReleases|length %}
-            {% for item in NewReleases %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
-            {% endfor %}
-        {% else %}
-            <p>No games found!</p>
-        {% endif %}
-    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-        <h2>
+        <h2 class="standout-header">
             Recent top rated
         </h2>
-        {% if RecentWithGoodRanks|length %}
-            {% for item in RecentWithGoodRanks %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideRating': 'N'} %}
-            {% endfor %}
-        {% else %}
-            <p>No games found!</p>
-        {% endif %}
-    </div>
-
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-        <h2>
-            Best of {{ Year }}
-        </h2>
-        {% if TopRatedThisYear|length %}
-            {% for item in TopRatedThisYear %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgHideDate': 'Y', 'cfgHideRating': 'N'} %}
-            {% endfor %}
-        {% else %}
-            <p>No games found!</p>
-        {% endif %}
-    </div>
-
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        <h3 class="text-center">
-            <a href="{{ route('games.landing') }}">View all games &gt;</a>
-        </h3>
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        <h3 class="text-center">
-            <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
-        </h3>
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
+        {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': RecentWithGoodRanks} %}
         <h3 class="text-center">
             <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
         </h3>
+
+        <h2 class="standout-header">
+            Best of {{ Year }}
+        </h2>
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': TopRatedThisYear} %}
+        <h3 class="text-center">
+            <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
+        </h3>
+
     </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
+
+        <h2 class="standout-header">
+            Latest reviews
+        </h2>
+
+        {% if ReviewList.count %}
+
+            {% for item in ReviewList %}
+
+                {% if item.game.boxart_header_image %}
+                    {% set boxartUrl = '/img/games/header/'~item.game.boxart_header_image %}
+                {% else %}
+                    {% set boxartUrl = '' %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-4 col-lg-4">
+                        <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
+                            {% if boxartUrl %}
+                                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
+                            {% else %}
+                                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.game.title }}">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <p class="h4">
+                            <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">{{ item.game.title }}</a>
+                            <br>
+                            <span class="small">
+                                Posted by: {{ item.site.name }} on {{ item.review_date|date('jS M') }}
+                            <br>
+                                Rating: {{ item.rating_normalised }}/10
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews to display.</p>
+        {% endif %}
+        <h3 class="text-center">
+            <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
+        </h3>
+
+        <h2 class="standout-header">
+            New releases
+        </h2>
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases} %}
+        <h3 class="text-center">
+            <a href="{{ route('games.landing') }}">View all games &gt;</a>
+        </h3>
+
+
+    </div>
+
 </div>
 
 {% endblock page_body %}

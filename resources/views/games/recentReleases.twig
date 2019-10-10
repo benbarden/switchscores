@@ -12,11 +12,9 @@
 </p>
 
 <div class="row">
-    {% for item in NewReleases %}
-        <div class="col-xs-12 col-sm-12 col-md-6">
-            {% include 'games/layouts/landingItem.twig' with {'item': item, 'cfgSmallTitles': 'Y'} %}
-        </div>
-    {% endfor %}
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases, 'batchOverride': 4} %}
+    </div>
 </div>
 
 {% endblock page_body %}

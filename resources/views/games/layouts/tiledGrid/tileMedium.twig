@@ -1,0 +1,30 @@
+{# PACKSHOTS #}
+{% if item.boxart_header_image %}
+    {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
+{% endif %}
+
+<a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+    {% if boxartUrl %}
+        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}">
+    {% else %}
+        <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+    {% endif %}
+</a>
+<p class="h4">
+    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+    <br>
+    <span class="h5">
+    {% if item.is_released == 1 %}
+        {{ item.release_date|date('jS M Y') }}
+    {% elseif item.release_date is not null %}
+        {{ item.release_date|date('jS M Y') }}
+    {% else %}
+        {{ item.upcoming_date }}
+    {% endif %}
+    </span>
+    {% if item.rating_avg %}
+        <span class="small">
+        Rating: {{ item.rating_avg }}
+        </span>
+    {% endif %}
+</p>

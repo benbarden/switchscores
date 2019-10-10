@@ -42,13 +42,7 @@
                 (<a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">all this month</a>)
             </span>
         </h2>
-        {% if NewReleases|length %}
-            {% for item in NewReleases %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item} %}
-            {% endfor %}
-        {% else %}
-            <p>No games found!</p>
-        {% endif %}
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases} %}
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
@@ -56,13 +50,7 @@
             Upcoming
             <span class="h4">(<a href="{{ route('games.upcomingReleases') }}">all upcoming</a>)</span>
         </h2>
-        {% if UpcomingReleases|length %}
-            {% for item in UpcomingReleases %}
-                {% include 'games/layouts/landingItem.twig' with {'item': item} %}
-            {% endfor %}
-        {% else %}
-            <p>No games found!</p>
-        {% endif %}
+        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': UpcomingReleases} %}
     </div>
 </div>
 
