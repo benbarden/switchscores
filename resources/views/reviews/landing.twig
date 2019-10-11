@@ -17,6 +17,19 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
+        <h2 class="standout-header">
+            Review stats
+        </h2>
+        <p>
+            These graphs show how many reviews we've added to the site each month since
+            the Switch launched back in March 2017.
+        </p>
+        <p>
+            We use the date that a review was published to the partner site, not the date
+            it was added to WOS. So if we add partners with past reviews, those reviews will
+            be incorporated on the appropriate publication dates.
+        </p>
+
         {% if DateList2019|length %}
             {% include 'reviews/reviewYearItem.twig' with {'Year': '2019', 'DateList': DateList2019} %}
         {% endif %}
