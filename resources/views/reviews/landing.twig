@@ -5,110 +5,30 @@
 {% block page_body %}
 
 <div class="row">
+
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <h2>
-            Most reviewed
+
+        <h2 class="standout-header">
+            Latest reviews
         </h2>
-        <p>
-            Games with more than 1 review published in the last 28 days.
-        </p>
-        {% if ReviewList.count %}
+        {% include 'reviews/layouts/standard.twig' with {'ReviewList': ReviewList} %}
 
-            {% for item in ReviewList %}
-
-                {% if item.game.boxart_header_image %}
-                    {% set boxartUrl = '/img/games/header/'~item.game.boxart_header_image %}
-                {% else %}
-                    {% set boxartUrl = '' %}
-                {% endif %}
-
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-4">
-                        <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
-                            {% if boxartUrl %}
-                                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
-                            {% else %}
-                                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.game.title }}">
-                            {% endif %}
-                        </a>
-                    </div>
-                    <div class="col-sm-12 col-md-8 col-lg-8">
-                        <p class="h4">
-                            <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">{{ item.game.title }}</a>
-                            <br>
-                            <span class="small">
-                                {% if item.count == 1 %}
-                                    {{ item.count }} recent review
-                                {% else %}
-                                    {{ item.count }} recent reviews
-                                {% endif %}
-                            </span>
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews to display.</p>
-        {% endif %}
     </div>
+
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <h2>
-            Perfect scores
-        </h2>
-        <p>
-            Recent reviews with a perfect 10/10 score.
-        </p>
-        <p>
-            While we encourage you to take the average rating into account,
-            we think it's worthwhile to check out the 10/10 reviews as they indicate a
-            standout game in the reviewer's eyes.
-        </p>
-        {% if ReviewPerfect.count %}
 
-            {% for item in ReviewPerfect %}
-
-                {% if item.game.boxart_header_image %}
-                    {% set boxartUrl = '/img/games/header/'~item.game.boxart_header_image %}
-                {% else %}
-                    {% set boxartUrl = '' %}
-                {% endif %}
-
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-4">
-                        <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
-                            {% if boxartUrl %}
-                                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
-                            {% else %}
-                                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.game.title }}">
-                            {% endif %}
-                        </a>
-                    </div>
-                    <div class="col-sm-12 col-md-8 col-lg-8">
-                        <p class="h4">
-                            <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">{{ item.game.title }}</a>
-                            <br>
-                            <small>
-                                <a href="{{ item.url }}" target="_blank">Read review</a>
-                                (Source: {{ item.site.name }})
-                                <br>
-                                Game average: {{ item.game.rating_avg }}
-                            </small>
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews to display.</p>
+        {% if DateList2019|length %}
+            {% include 'reviews/reviewYearItem.twig' with {'Year': '2019', 'DateList': DateList2019} %}
         {% endif %}
+        {% if DateList2018|length %}
+            {% include 'reviews/reviewYearItem.twig' with {'Year': '2018', 'DateList': DateList2018} %}
+        {% endif %}
+        {% if DateList2017|length %}
+            {% include 'reviews/reviewYearItem.twig' with {'Year': '2017', 'DateList': DateList2017} %}
+        {% endif %}
+
     </div>
+
 </div>
 
 {% endblock page_body %}

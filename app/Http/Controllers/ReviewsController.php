@@ -4,27 +4,87 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Traits\WosServices;
+
 use App\Services\ServiceContainer;
 
 class ReviewsController extends Controller
 {
+    use WosServices;
+
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-
         $bindings = [];
 
-        $reviewList = $serviceReviewLink->getLatestGameAggregates(28);
-        $listCount = count($reviewList);
-        $reviewPerfect = $serviceReviewLink->getLatestPerfectScores($listCount);
+        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(30);
 
-        $bindings['ReviewList'] = $reviewList;
-        $bindings['ReviewPerfect'] = $reviewPerfect;
+        // Review counts
+        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
+        $dateListArray = [];
+
+        $dateListArray2017 = [];
+        $dateListArray2018 = [];
+        $dateListArray2019 = [];
+
+        $reviewTotal2017 = 0;
+        $reviewTotal2018 = 0;
+        $reviewTotal2019 = 0;
+
+        if ($dateList) {
+
+            foreach ($dateList as $date) {
+
+                list($dateYear, $dateMonth) = explode('-', $date);
+
+                $reviewLinkStat = $this->getServiceReviewLink()->countActiveByYearMonth($dateYear, $dateMonth);
+                if ($reviewLinkStat) {
+                    $dateCount = $reviewLinkStat;
+                } else {
+                    $dateCount = 0;
+                }
+
+                if ($dateCount == 0) continue;
+
+                $dateListArray[] = [
+                    'DateRaw' => $date,
+                    'ReviewCount' => $dateCount,
+                ];
+
+                switch ($dateYear) {
+                    case 2017:
+                        $dateListArray2017[] = [
+                            'DateRaw' => $date,
+                            'ReviewCount' => $dateCount,
+                        ];
+                        $reviewTotal2017 += $dateCount;
+                        break;
+                    case 2018:
+                        $dateListArray2018[] = [
+                            'DateRaw' => $date,
+                            'ReviewCount' => $dateCount,
+                        ];
+                        $reviewTotal2018 += $dateCount;
+                        break;
+                    case 2019:
+                        $dateListArray2019[] = [
+                            'DateRaw' => $date,
+                            'ReviewCount' => $dateCount,
+                        ];
+                        $reviewTotal2019 += $dateCount;
+                        break;
+                }
+
+            }
+
+        }
+
+        $bindings['DateList'] = $dateListArray;
+        $bindings['DateList2017'] = $dateListArray2017;
+        $bindings['DateList2018'] = $dateListArray2018;
+        $bindings['DateList2019'] = $dateListArray2019;
+        $bindings['ReviewTotal2017'] = $reviewTotal2017;
+        $bindings['ReviewTotal2018'] = $reviewTotal2018;
+        $bindings['ReviewTotal2019'] = $reviewTotal2019;
 
         $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
         $bindings['PageTitle'] = 'Reviews';

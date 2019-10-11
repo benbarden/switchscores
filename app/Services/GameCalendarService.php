@@ -33,18 +33,21 @@ class GameCalendarService
 
     /**
      * @param bool $reverse
+     * @param integer $startYear
      * @return array
      */
-    public function getAllowedDates($reverse = true)
+    public function getAllowedDates($reverse = true, $startYear = 2017)
     {
         $dates = [];
 
-        for ($i=2017; $i<date('Y')+1; $i++) {
+        for ($i=$startYear; $i<date('Y')+1; $i++) {
 
             for ($j=1; $j<13; $j++) {
 
                 // Start from March 2017
-                if ($i == 2017 && $j < 3) continue;
+                if ($startYear == 2017) {
+                    if ($i == $startYear && $j < 3) continue;
+                }
                 // Don't go beyond the current month and year
                 if ($i == date('Y') && $j > date('m')+1) break;
                 // Good to go

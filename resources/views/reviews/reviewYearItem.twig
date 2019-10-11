@@ -1,0 +1,36 @@
+<h2 class="standout-header">
+    Review stats: {{ Year }}
+</h2>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <table class="table table-responsive table-condensed">
+            <tr style="background: #cecece;">
+                <th>Date</th>
+                <th class="text-center">Reviews</th>
+            </tr>
+            {% for item in DateList %}
+                <tr>
+                    <td>
+                        {{ item.DateRaw|date('M Y') }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.ReviewCount }}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr style="background: #cecece;">
+                <td>
+                    <strong>TOTAL</strong>
+                </td>
+                <td class="text-center">
+                    <strong>
+                        {{ _context['ReviewTotal'~Year] }}
+                    </strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        {% include 'reviews/reviewYearChart.twig' with {'ChartDataSet': DateList} %}
+    </div>
+</div>
