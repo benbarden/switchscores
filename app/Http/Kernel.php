@@ -34,6 +34,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // WOS custom
+            \App\Http\Middleware\ViewGlobals::class,
             \App\Http\Middleware\RegionCode::class,
             \App\Http\Middleware\ServiceContainerLoader::class,
         ],
