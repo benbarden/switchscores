@@ -49,7 +49,9 @@
                             <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
                         </td>
                         <td class="text-center">{{ item.review_date }}</td>
-                        <td class="text-center">{{ item.rating_normalised }}</td>
+                        <td class="text-center">
+                            {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
+                        </td>
                         <td class="text-center">
                             {% if item.game.review_count >= 3 %}
                                 {% if item.rating_normalised > item.game.rating_avg %}
