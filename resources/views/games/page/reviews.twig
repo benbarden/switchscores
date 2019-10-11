@@ -29,15 +29,7 @@
                     </td>
                     <td class="text-center">
                         {% if Review.rating_normalised %}
-                            {{ Review.rating_normalised }}
-                            {#
-                            {% if Review.site.rating_scale != 10 %}
-                            <br>
-                            <small>
-                                Actual: {{ Review.rating_original }}/{{ Review.site.rating_scale }}
-                            </small>
-                            {% endif %}
-                            #}
+                            {% include 'modules/rating/badge.twig' with {'score': Review.rating_normalised, 'scoreSize': 'h6'} %}
                         {% else %}
                             N/A
                         {% endif %}
