@@ -1,0 +1,9 @@
+{% set displayScore = score %}
+
+{% if displayScore > 7.9 %}
+    <span class="h4 label label-success">{{ displayScore }}</span>
+{% elseif displayScore > 5.9 %}
+    <span class="h4 label label-warning">{{ displayScore }}</span>
+{% else %}
+    <span class="h4 label label-danger">{{ displayScore }}</span>
+{% endif %}

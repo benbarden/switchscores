@@ -93,16 +93,19 @@
                             {% endif %}
                         </a>
                     </div>
-                    <div class="col-sm-12 col-md-8 col-lg-8">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
                         <p class="h4">
                             <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">{{ item.game.title }}</a>
                             <br>
                             <span class="small">
-                                Posted by: {{ item.site.name }} on {{ item.review_date|date('jS M') }}
-                            <br>
-                                Rating: {{ item.rating_normalised }}/10
+                                {{ item.site.name }}
+                                <br>{{ item.review_date|date('jS M') }}
                             </span>
                         </p>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2">
+                        <br>
+                        {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised} %}
                     </div>
                 </div>
                 <div class="row">
