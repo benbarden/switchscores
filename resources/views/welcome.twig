@@ -70,6 +70,11 @@
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
 
         <h2 class="standout-header">
+            Featured game to watch
+        </h2>
+        {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+
+        <h2 class="standout-header">
             Latest reviews
         </h2>
         {% include 'reviews/layouts/standard.twig' with {'ReviewList': ReviewList} %}

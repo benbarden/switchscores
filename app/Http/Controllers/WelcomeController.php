@@ -26,6 +26,10 @@ class WelcomeController extends Controller
         $bindings['TopRatedAllTime'] = $this->getServiceTopRated()->getList($regionCode, 20);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 20);
 
+        // Featured
+        $featuredIdList = [2925]; // Little Town Hero
+        $bindings['FeaturedGameList'] = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
+
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased($regionCode);
         $bindings['TotalRanked'] = $this->getServiceGameRankAllTime()->countRanked();
