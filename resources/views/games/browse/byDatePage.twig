@@ -15,27 +15,50 @@
     show up.
 </p>
 
-{% if CalendarGamesList %}
-    <table class="table data-sortable">
-        {% for key,item in CalendarGamesList %}
-            <tr>
-                <td class="text-center" style="max-width: 200px; min-width: 100px;">
-                    <span class="h3">{{ key|date('jS') }}</span>
-                </td>
-                <td>
-                    {% if item.games|length %}
-                        <div class="row">
-                            {% for item in item.games %}
-                                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1" style="padding: 5px 2px; text-align: center;">
-                                    <a href="{{ LinkHelper.gameShow(item) }}">{{ ImageHelper.packshotHtml(item, 'landing-mini', item.is_released) }}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-{% endif %}
+<div class="row">
+
+    <div class="col-md-9">
+
+        <h2>Games</h2>
+
+        {% if CalendarGamesList %}
+            <table class="table">
+                {% for key,item in CalendarGamesList %}
+                    <tr>
+                        <td class="text-center" style="max-width: 200px; min-width: 100px;">
+                            <span class="h3">{{ key|date('jS') }}</span>
+                        </td>
+                        <td>
+                            {% include 'games/layouts/tiledGrid/layoutCalendar.twig' with {'GameList': item.games, 'batchOverride': 4} %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-3">
+
+        <h2>Totals</h2>
+
+        {% if CalendarGamesList %}
+            <table class="table">
+                {% for key,item in CalendarGamesList %}
+                    <tr>
+                        <td class="text-center">
+                            {{ key|date('jS') }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.games|length }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock page_body %}
