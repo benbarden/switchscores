@@ -6,15 +6,26 @@
 <div class="col-sm-12 col-md-12 col-lg-12">
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
         {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}">
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
         {% else %}
             <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
         {% endif %}
     </a>
 </div>
 <div class="col-sm-12 col-md-12 col-lg-12">
-    <p class="h3">
-        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+    <p>
+        <div class="pull-right">
+            {% if item.rating_avg %}
+                {% if item.game_rank %}
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h4'} %}
+                {% else %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+                {% endif %}
+            {% endif %}
+        </div>
+        <span class="h3">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
         <br>
         <span class="h5">
         {% if item.is_released == 1 %}
@@ -25,10 +36,5 @@
             {{ item.upcoming_date }}
         {% endif %}
         </span>
-        {% if item.rating_avg %}
-            <span class="small">
-            Rating: {{ item.rating_avg }}
-            </span>
-        {% endif %}
     </p>
 </div>
