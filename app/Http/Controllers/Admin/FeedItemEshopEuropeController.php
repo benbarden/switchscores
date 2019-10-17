@@ -88,6 +88,7 @@ class FeedItemEshopEuropeController extends Controller
         $serviceEshopGame = $serviceContainer->getEshopEuropeGameService();
         $serviceGame = $serviceContainer->getGameService();
         $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
+        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
         $serviceUrl = new UrlService();
 
         $eshopGameData = $serviceEshopGame->getByFsId($itemId);
@@ -156,6 +157,26 @@ class FeedItemEshopEuropeController extends Controller
                 // Update eShop data
                 EshopEuropeUpdateGameFactory::updateGame($game);
                 EshopEuropeRedownloadPackshotsFactory::redownloadPackshots($game);
+
+                // Now fix the release year
+                foreach ($regionsToUpdate as $region) {
+
+                    $gameReleaseDateBuilder = new GameReleaseDateBuilder();
+                    $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
+
+                    $gameReleaseDateExisting = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
+                    if ($gameReleaseDateExisting) {
+                        $releaseDate = $gameReleaseDateExisting->release_date;
+                        $releaseYear = $gameReleaseDateExisting->release_year;
+                        if (!$releaseYear) {
+                            $releaseYear = $serviceGameReleaseDate->getReleaseYear($releaseDate);
+                            $gameReleaseDateExisting->release_year = $releaseYear;
+                            $gameReleaseDateExisting->save();
+                        }
+                    }
+
+                }
+
 
                 // Trigger event
                 event(new GameCreated($game));
