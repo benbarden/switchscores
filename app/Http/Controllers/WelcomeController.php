@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Collection;
 
 use App\Traits\WosServices;
 use App\Traits\SiteRequestData;
@@ -27,8 +28,17 @@ class WelcomeController extends Controller
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 20);
 
         // Featured
-        $featuredIdList = [2925]; // Little Town Hero
-        $bindings['FeaturedGameList'] = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
+        $idLittleTownHero = 2925;
+        $idCatQuestII = 3073;
+        $featuredIdList = [
+            //$idLittleTownHero,
+            $idCatQuestII,
+        ];
+        $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
+        $featuredGameId = rand(0, 1);
+        $featuredGamesForView = new Collection();
+        $featuredGamesForView->push($featuredGameList[$featuredGameId]);
+        $bindings['FeaturedGameList'] = $featuredGamesForView;
 
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased($regionCode);
