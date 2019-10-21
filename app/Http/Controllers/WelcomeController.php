@@ -35,7 +35,7 @@ class WelcomeController extends Controller
             $idCatQuestII,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
-        $featuredGameId = rand(0, 1);
+        $featuredGameId = rand(0, count($featuredIdList)-1);
         $featuredGamesForView = new Collection();
         $featuredGamesForView->push($featuredGameList[$featuredGameId]);
         $bindings['FeaturedGameList'] = $featuredGamesForView;
