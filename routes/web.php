@@ -156,8 +156,8 @@ Route::group(['middleware' => ['auth.staff']], function() {
     // Index
     Route::get('/staff', 'Staff\IndexController@index')->name('staff.index');
 
-    Route::get('/staff/dashboards/categorisation', 'Staff\DashboardsController@categorisation')
-        ->name('staff.dashboards.categorisation')
+    Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')
+        ->name('staff.categorisation.dashboard')
         ->middleware('check.user.role:'.\App\UserRole::ROLE_CATEGORY_MANAGER);
 
 });
@@ -171,7 +171,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Dashboards
     Route::get('/admin/dashboards/games', 'Admin\DashboardsController@games')->name('admin.dashboards.games');
     Route::get('/admin/dashboards/reviews', 'Admin\DashboardsController@reviews')->name('admin.dashboards.reviews');
-    Route::get('/admin/dashboards/categorisation', 'Admin\DashboardsController@categorisation')->name('admin.dashboards.categorisation');
+    Route::get('/admin/categorisation/dashboard', 'Admin\Categorisation\DashboardController@show')->name('admin.categorisation.dashboard');
     Route::get('/admin/dashboards/partners', 'Admin\DashboardsController@partners')->name('admin.dashboards.partners');
     Route::get('/admin/dashboards/eshop', 'Admin\DashboardsController@eshop')->name('admin.dashboards.eshop');
     Route::get('/admin/dashboards/stats', 'Admin\DashboardsController@stats')->name('admin.dashboards.stats');

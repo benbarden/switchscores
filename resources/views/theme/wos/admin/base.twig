@@ -66,12 +66,43 @@
 
                         <li><a href="{{ route('admin.dashboards.games') }}">Games</a></li>
                         <li><a href="{{ route('admin.dashboards.reviews') }}">Reviews</a></li>
-                        <li><a href="{{ route('admin.dashboards.categorisation') }}">Categorisation</a></li>
+                        <li><a href="{{ route('admin.categorisation.dashboard') }}">Categorisation</a></li>
                         <li><a href="{{ route('admin.dashboards.partners') }}">Partners</a></li>
                         <li><a href="{{ route('admin.dashboards.eshop') }}">eShop</a></li>
                         <li><a href="{{ route('admin.dashboards.stats') }}">Stats</a></li>
 
-                        <li><a href="{{ route('admin.index') }}">Admin index</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Admin <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('admin.index') }}">Admin index</a></li>
+                                <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.dashboards.games') }}">Games</a></li>
+                                <li><a href="{{ route('admin.dashboards.reviews') }}">Reviews</a></li>
+                                <li><a href="{{ route('admin.categorisation.dashboard') }}">Categorisation</a></li>
+                                <li><a href="{{ route('admin.dashboards.partners') }}">Partners</a></li>
+                                <li><a href="{{ route('admin.dashboards.eshop') }}">eShop</a></li>
+                                <li><a href="{{ route('admin.dashboards.stats') }}">Stats</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.user.list') }}">Users</a></li>
+                                <li><a href="{{ route('admin.news.list') }}">News</a></li>
+                                <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
+                                <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Staff <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('staff.index') }}">Staff index</a></li>
+                                <li><a href="{{ route('staff.categorisation.dashboard') }}">Categorisation</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </div>
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Services\AdminDashboards\CategorisationService;
+
 use App\Services\ActivityFeedService;
 use App\Services\ChartsDateService;
 use App\Services\ChartsRankingGlobalService;
@@ -98,6 +100,14 @@ trait WosServices
     }
 
     // ** Get specific classes ** //
+
+    /**
+     * @return CategorisationService
+     */
+    public function getServiceAdminDashboardsCategorisation()
+    {
+        return $this->loadService("AdminDashboards\\CategorisationService");
+    }
 
     /**
      * @return ActivityFeedService
@@ -244,7 +254,7 @@ trait WosServices
     }
 
     /**
-     * @return
+     * @return GameRankYearMonthService
      */
     public function getServiceGameRankYearMonth()
     {
