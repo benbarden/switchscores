@@ -178,55 +178,37 @@
                 </td>
             </tr>
 
-            {% if GameDevelopers|length > 0 %}
-
-                <tr>
-                    <td>
-                        <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
-                    </td>
-                    <td>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+                </td>
+                <td>
+                    {% if GameDevelopers|length > 0 %}
                         {% for item in GameDevelopers %}
                             <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}" target="_blank">{{ item.developer.name }}</a>
                             <br>
                         {% endfor %}
-                    </td>
-                </tr>
+                    {% else %}
+                        {{ GameData.developer }}
+                    {% endif %}
+                </td>
+            </tr>
 
-            {% else %}
-
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Developer(s)</span>
-                    </td>
-                    <td>{{ GameData.developer }}</td>
-                </tr>
-
-            {% endif %}
-
-            {% if GamePublishers|length > 0 %}
-
-                <tr>
-                    <td>
-                        <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
-                    </td>
-                    <td>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+                </td>
+                <td>
+                    {% if GamePublishers|length > 0 %}
                         {% for item in GamePublishers %}
                             <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" target="_blank">{{ item.publisher.name }}</a>
                             <br>
                         {% endfor %}
-                    </td>
-                </tr>
-
-            {% else %}
-
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Publisher(s)</span>
-                    </td>
-                    <td>{{ GameData.publisher }}</td>
-                </tr>
-
-            {% endif %}
+                    {% else %}
+                        {{ GameData.publisher }}
+                    {% endif %}
+                </td>
+            </tr>
 
         </table>
 
