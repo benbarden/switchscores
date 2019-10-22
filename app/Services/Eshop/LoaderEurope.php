@@ -240,8 +240,11 @@ class LoaderEurope
                 $value = json_encode($value);
             }
             $errorMsg = 'Cannot find field: '.$field.' - Value: '.$value;
+            throw new \Exception($errorMsg);
+            /*
             $serviceSiteAlert = new SiteAlertService();
             $serviceSiteAlert->create(SiteAlert::TYPE_ERROR, __CLASS__, $errorMsg);
+            */
             return false;
         }
 
@@ -273,7 +276,11 @@ class LoaderEurope
         $gameModel = new EshopEuropeGame();
 
         foreach ($eshopGame as $key => $value) {
-            $this->handleModelField($gameModel, $key, $value);
+            try {
+                $this->handleModelField($gameModel, $key, $value);
+            } catch (\Exception $e) {
+                // continue
+            }
         }
 
         return $gameModel;
