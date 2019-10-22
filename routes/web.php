@@ -156,31 +156,73 @@ Route::group(['middleware' => ['auth']], function() {
 
 });
 
-/* Staff */
+
+
+// *************** Staff: General pages *************** //
 Route::group(['middleware' => ['auth.staff']], function() {
 
-    // Index
     Route::get('/staff', 'Staff\IndexController@index')->name('staff.index');
-
-    Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')
-        ->name('staff.categorisation.dashboard')
-        ->middleware('check.user.role:'.\App\UserRole::ROLE_CATEGORY_MANAGER);
 
 });
 
-/* Admin */
+
+// *************** Staff: REVIEWS *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_REVIEWS_MANAGER]], function() {
+
+    Route::get('/staff/reviews/dashboard', 'Staff\Reviews\DashboardController@show')->name('staff.reviews.dashboard');
+
+});
+
+
+// *************** Staff: CATEGORISATION *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_CATEGORY_MANAGER]], function() {
+
+    Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')->name('staff.categorisation.dashboard');
+
+});
+
+
+// *************** Staff: GAMES *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_GAMES_MANAGER]], function() {
+
+    Route::get('/staff/games/dashboard', 'Staff\Games\DashboardController@show')->name('staff.games.dashboard');
+
+});
+
+
+// *************** Staff: PARTNERS *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_PARTNERSHIPS_MANAGER]], function() {
+
+    Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
+
+});
+
+
+// *************** Staff: ESHOP *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_ESHOP_MANAGER]], function() {
+
+    Route::get('/staff/eshop/dashboard', 'Staff\Eshop\DashboardController@show')->name('staff.eshop.dashboard');
+
+});
+
+
+// *************** Staff: Admin-only *************** //
+Route::group(['middleware' => ['auth.admin:admin']], function() {
+
+    Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
+
+});
+
+
+
+/*
+ * Admin - old routes
+ * To be gradually moved into Staff routes
+ */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Index
     Route::get('/admin', 'Admin\DashboardsController@index')->name('admin.index');
-
-    // Dashboards
-    Route::get('/admin/dashboards/games', 'Admin\DashboardsController@games')->name('admin.dashboards.games');
-    Route::get('/admin/dashboards/reviews', 'Admin\DashboardsController@reviews')->name('admin.dashboards.reviews');
-    Route::get('/admin/categorisation/dashboard', 'Admin\Categorisation\DashboardController@show')->name('admin.categorisation.dashboard');
-    Route::get('/admin/dashboards/partners', 'Admin\DashboardsController@partners')->name('admin.dashboards.partners');
-    Route::get('/admin/dashboards/eshop', 'Admin\DashboardsController@eshop')->name('admin.dashboards.eshop');
-    Route::get('/admin/dashboards/stats', 'Admin\DashboardsController@stats')->name('admin.dashboards.stats');
 
     // Games: Core
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');

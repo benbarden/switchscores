@@ -23,6 +23,28 @@
 
     <div class="col-md-4">
 
+        <h2>Staff dashboards</h2>
+        <ul>
+            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+                <li><a href="{{ route('staff.games.dashboard') }}">Games</a></li>
+            {% endif %}
+            {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
+                <li><a href="{{ route('staff.reviews.dashboard') }}">Reviews</a></li>
+            {% endif %}
+            {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
+                <li><a href="{{ route('staff.categorisation.dashboard') }}">Categorisation</a></li>
+            {% endif %}
+            {% if auth_user().hasRole('Partnerships manager') or auth_user().isOwner() %}
+                <li><a href="{{ route('staff.partners.dashboard') }}">Partners</a></li>
+            {% endif %}
+            {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
+                <li><a href="{{ route('staff.eshop.dashboard') }}">eShop</a></li>
+            {% endif %}
+            {% if auth_user().isOwner() %}
+                <li><a href="{{ route('staff.stats.dashboard') }}">Stats</a></li>
+            {% endif %}
+        </ul>
+
     </div>
 
     <div class="col-md-4">

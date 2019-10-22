@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Services\AdminDashboards\CategorisationService;
+use App\Services\StaffDashboards\CategorisationService;
 
 use App\Services\ActivityFeedService;
 use App\Services\ChartsDateService;
@@ -104,9 +104,9 @@ trait WosServices
     /**
      * @return CategorisationService
      */
-    public function getServiceAdminDashboardsCategorisation()
+    public function getServiceStaffDashboardsCategorisation()
     {
-        return $this->loadService("AdminDashboards\\CategorisationService");
+        return $this->loadService("StaffDashboards\\CategorisationService");
     }
 
     /**

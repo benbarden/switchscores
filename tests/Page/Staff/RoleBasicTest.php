@@ -2,13 +2,11 @@
 
 namespace Tests\Page\Staff;
 
-//use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\UserRole;
-use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 
-class RoleAuthTest extends TestCase
+class RoleBasicTest extends TestCase
 {
     /**
      * @var User

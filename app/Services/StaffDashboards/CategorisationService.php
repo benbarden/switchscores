@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\AdminDashboards;
+namespace App\Services\StaffDashboards;
 
 use App\Game;
 

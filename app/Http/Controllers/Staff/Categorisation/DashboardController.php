@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Categorisation;
+namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -18,7 +18,7 @@ class DashboardController extends Controller
 
         $regionCode = $this->getRegionCode();
 
-        $serviceCategorisation = $this->getServiceAdminDashboardsCategorisation();
+        $serviceCategorisation = $this->getServiceStaffDashboardsCategorisation();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameFilterList = $this->getServiceGameFilterList();
@@ -140,6 +140,6 @@ class DashboardController extends Controller
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
 
-        return view('admin.categorisation.dashboard', $bindings);
+        return view('staff.categorisation.dashboard', $bindings);
     }
 }
