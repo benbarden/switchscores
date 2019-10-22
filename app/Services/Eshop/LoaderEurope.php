@@ -109,6 +109,11 @@ class LoaderEurope
     ];
 
     /**
+     * @var array
+     */
+    private $alreadyAlerted = [];
+
+    /**
      * @var integer
      */
     private $loaderMode;
@@ -236,15 +241,22 @@ class LoaderEurope
         ];
 
         if (!in_array($field, $this->expectedFields)) {
+
             if (is_array($value)) {
                 $value = json_encode($value);
             }
             $errorMsg = 'Cannot find field: '.$field.' - Value: '.$value;
-            throw new \Exception($errorMsg);
-            /*
+
+            // We only need one error report per field per run
+            if (in_array($errorMsg, $this->alreadyAlerted)) {
+                return false;
+            } else {
+                $this->alreadyAlerted[] = $errorMsg;
+            }
+
+            // OK to proceed
             $serviceSiteAlert = new SiteAlertService();
             $serviceSiteAlert->create(SiteAlert::TYPE_ERROR, __CLASS__, $errorMsg);
-            */
             return false;
         }
 
@@ -279,7 +291,7 @@ class LoaderEurope
             try {
                 $this->handleModelField($gameModel, $key, $value);
             } catch (\Exception $e) {
-                // continue
+                continue;
             }
         }
 
