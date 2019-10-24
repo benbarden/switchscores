@@ -4,20 +4,103 @@
 
 {% block page_inner %}
 
+{% if auth_user().isOwner() %}
+    {% if SiteAlertLatest %}
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    <a href="{{ route('admin.action-lists.site-alert-errors') }}">Latest site alert</a>:
+                    {{ SiteAlertLatest.created_at|date('d-M-Y @ H:i') }}:
+                    <strong>{{ SiteAlertLatest.detail }}</strong> - Source: {{ SiteAlertLatest.source }}
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+{% endif %}
+
 <div class="row">
 
     <div class="col-md-4">
 
-        <h2>Welcome</h2>
-        <p>
-            Welcome to the Staff index page. We're in the process of building this out -
-            more screens and information will be added in due course.
-        </p>
-        <p>
-            If you have any comments, questions or issues, contact Ben via
-            <a href="https://twitter.com/worldofswitch">Twitter</a> or
-            <a href="mailto:ben.barden@worldofswitch.com">email</a>.
-        </p>
+        {% if auth_user().hasRole('Games manager') or auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
+        <h2>Action lists</h2>
+
+        <table class="table">
+            <tbody>
+            {% if auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.approvals.mario-maker-levels') }}">Mario Maker levels</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.approvals.mario-maker-levels') }}" class="h4">{{ MarioMakerLevelPendingCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.games.list') }}">Feeds: Game updates</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.action-lists.site-alert-errors') }}">Site alert errors</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.action-lists.site-alert-errors') }}" class="h4">{{ SiteAlertErrorCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
+        <h2>Information</h2>
+
+        <table class="table">
+            <tbody>
+            {% if auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.user.list') }}">Registered users</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link">eShop Europe: total unlinked items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.feed-items.eshop.europe.list') }}/no-link" class="h4">{{ EshopEuropeUnlinkedCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
+        {% endif %}
 
     </div>
 
@@ -48,6 +131,25 @@
     </div>
 
     <div class="col-md-4">
+
+        {% if auth_user().isOwner() %}
+        <h2>Quick links</h2>
+
+        <ul>
+            <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
+            <li><a href="{{ route('admin.user.list') }}">Users</a></li>
+            <li><a href="{{ route('admin.news.list') }}">News</a></li>
+            <li><a href="{{ route('admin.charts.date.list') }}">Charts</a> (no longer in use)</li>
+        </ul>
+        {% endif %}
+
+        <h2>Help</h2>
+        <p>
+            Need help with the staff pages? Contact Ben via
+            <a href="https://twitter.com/worldofswitch">Twitter</a> or
+            <a href="mailto:ben.barden@worldofswitch.com">email</a>.
+        </p>
 
     </div>
 

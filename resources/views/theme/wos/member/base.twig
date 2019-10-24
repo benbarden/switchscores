@@ -79,8 +79,8 @@
                         {% endif %}
                         <li><a href="{{ route('user.reviews.list') }}">Quick reviews</a></li>
                         <li><a href="{{ route('user.settings') }}">Settings</a></li>
-                        {% if auth_user().isAdmin() %}
-                        <li><a href="{{ route('admin.index') }}">Admin index</a></li>
+                        {% if auth_user().isStaff() %}
+                        <li><a href="{{ route('staff.index') }}">Staff index</a></li>
                         {% endif %}
                     </ul>
                 </div>

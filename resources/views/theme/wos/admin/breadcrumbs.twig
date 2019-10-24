@@ -1,6 +1,6 @@
 {% if crumbNav is defined %}
     <ol class="breadcrumb">
-        <li><a href="{{ route('admin.index') }}">Admin</a></li>
+        <li><a href="{{ route('staff.index') }}">Staff</a></li>
         {% for item in crumbNav %}
             {% if loop.last %}
                 {% set crumbClass = ' class="active"' %}
