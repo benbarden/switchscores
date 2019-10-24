@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.stats.dashboard'), 'text': 'Stats dashboard'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -13,7 +13,7 @@
             <table class="table data-sortable">
                 <thead>
                     <tr>
-                        <th class="text-left">Publisher</th>
+                        <th class="text-left">Developer</th>
                         <th class="text-center">Count</th>
                         <th class="text-center">Options</th>
                     </tr>
@@ -22,16 +22,16 @@
                 {% for item in ItemList %}
                     <tr>
                         <td class="text-left">
-                            {{ item.publisher }}
+                            {{ item.developer }}
                         </td>
                         <td class="text-center">
                             {{ item.count }}
                         </td>
                         <td class="text-center">
-                            {% if item.publisher %}
-                                <a href="{{ route('admin.stats.games.oldPublisherGameList', {'publisher': item.publisher}) }}">View games</a>
+                            {% if item.developer %}
+                                <a href="{{ route('staff.stats.gamesCompany.oldDeveloperGameList', {'developer': item.developer}) }}">View games</a>
                             {% else %}
-                                <a href="{{ route('admin.action-lists.publisher-missing') }}">View games</a>
+                                <a href="{{ route('admin.action-lists.developer-missing') }}">View games</a>
                             {% endif %}
                         </td>
                     </tr>

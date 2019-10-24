@@ -1,6 +1,9 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.stats.dashboard'), 'text': 'Stats dashboard'},
+    {'url': route('staff.stats.gamesCompany.oldPublisherByCount'), 'text': 'Old publishers - by count (All)'},
+    {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -8,27 +11,27 @@
 
     <div class="col-md-12">
 
-        {% if DeveloperData is not defined %}
+        {% if PublisherData is not defined %}
             <div class="alert alert-warning" role="alert">
-                There isn't a record in the developer list for <strong>{{ DeveloperName }}</strong>.
+                There isn't a record in the publisher list for <strong>{{ PublisherName }}</strong>.
                 <a href="{{ route('admin.partners.games-company.add') }}">Add one now</a>.
             </div>
         {% else %}
-            <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new dev to all">
-            <input type="button" id="js-btn-remove-all-old" class="btn btn-default" value="Clear old dev from all">
+            <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new pub to all">
+            <input type="button" id="js-btn-remove-all-old" class="btn btn-default" value="Clear old pub from all">
         {% endif %}
 
         <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
         {% if ItemList %}
 
-            <table id="table-developer-list" class="table">
+            <table id="table-publisher-list" class="table">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-left">Title</th>
-                        <th class="text-left">Developer (old)</th>
-                        <th class="text-left">Developer (new)</th>
+                        <th class="text-left">Publisher (old)</th>
+                        <th class="text-left">Publisher (new)</th>
                         <th class="text-center">Options</th>
                         <th class="text-center">Finalise</th>
                     </tr>
@@ -43,13 +46,13 @@
                             {{ item.title }}
                         </td>
                         <td class="text-left">
-                            {{ item.developer }}
+                            {{ item.publisher }}
                         </td>
                         <td class="text-left">
-                            {{ item.gameDevelopers.length }}
-                            {% if item.gameDevelopers is defined %}
-                                {% for gameDev in item.gameDevelopers %}
-                                {{ gameDev.developer.name }}<br>
+                            {{ item.gamePublishers.length }}
+                            {% if item.gamePublishers is defined %}
+                                {% for gamePub in item.gamePublishers %}
+                                    {{ gamePub.publisher.name }}<br>
                                 {% endfor %}
                             {% else %}
                                 -
@@ -60,7 +63,7 @@
                             <a href="{{ route('admin.game.partner.list', {'gameId': item.id}) }}">Partners</a>
                         </td>
                         <td class="text-center">
-                            <a href="javascript:void(0);" id="lnk-clear-old-developer-{{ item.id }}" class="lnk-clear-old-developer">Clear old developer</a>
+                            <a href="javascript:void(0);" id="lnk-clear-old-publisher-{{ item.id }}" class="lnk-clear-old-publisher">Clear old publisher</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -75,14 +78,14 @@
 
 <script>
 
-    var developerName = '{{ DeveloperName }}';
+    var publisherName = '{{ PublisherName }}';
 
-    $('.lnk-clear-old-developer').on('click', function() {
+    $('.lnk-clear-old-publisher').on('click', function() {
 
         $('#js-admin-notify').hide();
 
         elemId = $(this).attr('id');
-        gameId = elemId.replace('lnk-clear-old-developer-', '');
+        gameId = elemId.replace('lnk-clear-old-publisher-', '');
 
         if (gameId == '') {
             $('#js-admin-notify').text('Missing gameId');
@@ -90,7 +93,7 @@
             return false;
         }
 
-        if (!window.confirm('Clear the old developer field for this game? There is NO undo!')) {
+        if (!window.confirm('CLear the old publisher field for this game? There is NO undo!')) {
             return false;
         }
 
@@ -100,8 +103,8 @@
             }
         });
 
-        $.getJSON('{{ route('admin.stats.games.clearOldDeveloperField') }}', {'gameId': gameId}, function(data) {
-            $('#lnk-clear-old-developer-' + gameId).parent().html('<em>Old dev cleared</em>');
+        $.getJSON('{{ route('staff.stats.gamesCompany.clearOldPublisherField') }}', {'gameId': gameId}, function(data) {
+            $('#lnk-clear-old-publisher-' + gameId).parent().html('<em>Old pub cleared</em>');
         })
         .fail(function(data) {
             $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
@@ -113,7 +116,7 @@
 
         $('#js-admin-notify').hide();
 
-        if (!window.confirm('Add all new developer records for the listed games? There is NO undo!')) {
+        if (!window.confirm('Add all new publisher records for the listed games? There is NO undo!')) {
             return false;
         }
 
@@ -123,9 +126,9 @@
             }
         });
 
-        $.getJSON('{{ route('admin.stats.games.addAllNewDevelopers') }}', {'developerName': developerName}, function(data) {
-            $('#table-developer-list tbody').children('tr').each(function() {
-                // id 3 is the Developer (new) column
+        $.getJSON('{{ route('staff.stats.gamesCompany.addAllNewPublishers') }}', {'publisherName': publisherName}, function(data) {
+            $('#table-publisher-list tbody').children('tr').each(function() {
+                // id 3 is the Publisher (new) column
                 var $requiredCell = $(this).children('td').eq(3);
                 $($requiredCell).html('<em>Updated</em>');
             });
@@ -140,7 +143,7 @@
 
         $('#js-admin-notify').hide();
 
-        if (!window.confirm('Clear the old developer field for the listed games? There is NO undo!')) {
+        if (!window.confirm('Clear the old publisher field for the listed games? There is NO undo!')) {
             return false;
         }
 
@@ -150,9 +153,9 @@
             }
         });
 
-        $.getJSON('{{ route('admin.stats.games.removeAllOldDevelopers') }}', {'developerName': developerName}, function(data) {
-            $('#table-developer-list tbody').children('tr').each(function() {
-                // id 3 is the Developer (old) column
+        $.getJSON('{{ route('staff.stats.gamesCompany.removeAllOldPublishers') }}', {'publisherName': publisherName}, function(data) {
+            $('#table-publisher-list tbody').children('tr').each(function() {
+                // id 3 is the Publisher (old) column
                 var $requiredCell = $(this).children('td').eq(2);
                 $($requiredCell).html('<em>Cleared</em>');
             });

@@ -64,6 +64,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
                         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+                        <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
                         <li><a href="{{ route('staff.games.dashboard') }}">Games</a></li>
                         {% endif %}
                         {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}

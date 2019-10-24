@@ -211,6 +211,21 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
 
+    Route::get('/staff/stats/review-site', 'Staff\Stats\ReviewSiteController@show')->name('staff.stats.reviewSite');
+
+    Route::get('/staff/stats/games-company/old-developer-multiple', 'Staff\Stats\GamesCompanyController@oldDeveloperMultiple')->name('staff.stats.gamesCompany.oldDeveloperMultiple');
+    Route::get('/staff/stats/games-company/old-developer-by-count', 'Staff\Stats\GamesCompanyController@oldDeveloperByCount')->name('staff.stats.gamesCompany.oldDeveloperByCount');
+    Route::get('/staff/stats/games-company/old-developer/{developer}', 'Staff\Stats\GamesCompanyController@oldDeveloperGameList')->name('staff.stats.gamesCompany.oldDeveloperGameList');
+    Route::get('/staff/stats/games-company/old-publisher-multiple', 'Staff\Stats\GamesCompanyController@oldPublisherMultiple')->name('staff.stats.gamesCompany.oldPublisherMultiple');
+    Route::get('/staff/stats/games-company/old-publisher-by-count', 'Staff\Stats\GamesCompanyController@oldPublisherByCount')->name('staff.stats.gamesCompany.oldPublisherByCount');
+    Route::get('/staff/stats/games-company/old-publisher/{publisher}', 'Staff\Stats\GamesCompanyController@oldPublisherGameList')->name('staff.stats.gamesCompany.oldPublisherGameList');
+    Route::get('/staff/stats/games-company/clear-old-developer', 'Staff\Stats\GamesCompanyController@clearOldDeveloperField')->name('staff.stats.gamesCompany.clearOldDeveloperField');
+    Route::get('/staff/stats/games-company/clear-old-publisher', 'Staff\Stats\GamesCompanyController@clearOldPublisherField')->name('staff.stats.gamesCompany.clearOldPublisherField');
+    Route::get('/staff/stats/games-company/add-all-new-developers', 'Staff\Stats\GamesCompanyController@addAllNewDevelopers')->name('staff.stats.gamesCompany.addAllNewDevelopers');
+    Route::get('/staff/stats/games-company/remove-all-old-developers', 'Staff\Stats\GamesCompanyController@removeAllOldDevelopers')->name('staff.stats.gamesCompany.removeAllOldDevelopers');
+    Route::get('/staff/stats/games-company/add-all-new-publishers', 'Staff\Stats\GamesCompanyController@addAllNewPublishers')->name('staff.stats.gamesCompany.addAllNewPublishers');
+    Route::get('/staff/stats/games-company/remove-all-old-publishers', 'Staff\Stats\GamesCompanyController@removeAllOldPublishers')->name('staff.stats.gamesCompany.removeAllOldPublishers');
+
 });
 
 
@@ -387,21 +402,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
     Route::get('/admin/tools/tool/landing/modular/{commandName}', 'Admin\ToolsController@toolLandingModular')->name('admin.tools.toolLandingModular');
     Route::get('/admin/tools/tool/process/modular/{commandName}', 'Admin\ToolsController@toolProcessModular')->name('admin.tools.toolProcessModular');
-
-    // Stats
-    Route::get('/admin/stats/review/site', 'Admin\StatsController@reviewSite')->name('admin.stats.review.site');
-    Route::get('/admin/stats/games/old-developer-multiple', 'Admin\StatsController@oldDeveloperMultiple')->name('admin.stats.games.oldDeveloperMultiple');
-    Route::get('/admin/stats/games/old-developer-by-count', 'Admin\StatsController@oldDeveloperByCount')->name('admin.stats.games.oldDeveloperByCount');
-    Route::get('/admin/stats/games/old-developer/{developer}', 'Admin\StatsController@oldDeveloperGameList')->name('admin.stats.games.oldDeveloperGameList');
-    Route::get('/admin/stats/games/old-publisher-multiple', 'Admin\StatsController@oldPublisherMultiple')->name('admin.stats.games.oldPublisherMultiple');
-    Route::get('/admin/stats/games/old-publisher-by-count', 'Admin\StatsController@oldPublisherByCount')->name('admin.stats.games.oldPublisherByCount');
-    Route::get('/admin/stats/games/old-publisher/{publisher}', 'Admin\StatsController@oldPublisherGameList')->name('admin.stats.games.oldPublisherGameList');
-    Route::get('/admin/stats/games/clear-old-developer', 'Admin\StatsController@clearOldDeveloperField')->name('admin.stats.games.clearOldDeveloperField');
-    Route::get('/admin/stats/games/clear-old-publisher', 'Admin\StatsController@clearOldPublisherField')->name('admin.stats.games.clearOldPublisherField');
-    Route::get('/admin/stats/games/add-all-new-developers', 'Admin\StatsController@addAllNewDevelopers')->name('admin.stats.games.addAllNewDevelopers');
-    Route::get('/admin/stats/games/remove-all-old-developers', 'Admin\StatsController@removeAllOldDevelopers')->name('admin.stats.games.removeAllOldDevelopers');
-    Route::get('/admin/stats/games/add-all-new-publishers', 'Admin\StatsController@addAllNewPublishers')->name('admin.stats.games.addAllNewPublishers');
-    Route::get('/admin/stats/games/remove-all-old-publishers', 'Admin\StatsController@removeAllOldPublishers')->name('admin.stats.games.removeAllOldPublishers');
 
 });
 
