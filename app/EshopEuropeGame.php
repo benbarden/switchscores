@@ -106,6 +106,7 @@ class EshopEuropeGame extends Model
         'nintendo_switch_online_exclusive_b',
         'product_code_ss',
         'switch_game_voucher_b',
+        'deprioritise_b',
     ];
 
     public function game()
