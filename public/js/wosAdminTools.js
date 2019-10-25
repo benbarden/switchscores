@@ -38,7 +38,7 @@ var wosAdminTools = {
             }
         });
 
-        $.getJSON('/admin/tag/game/' + gameId + '/remove', {gameTagId: gameTagId}, function(data) {
+        $.getJSON('/staff/categorisation/tag/game/' + gameId + '/remove', {gameTagId: gameTagId}, function(data) {
             $('#js-admin-notify').text('Tag removed!');
             $('#js-admin-notify').show();
             $('#tag-list option:selected').val('');

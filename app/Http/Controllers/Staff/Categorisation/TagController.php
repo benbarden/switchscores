@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -11,8 +11,14 @@ use App\Services\ServiceContainer;
 
 use Auth;
 
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
 class TagController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -25,29 +31,24 @@ class TagController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceTag = $this->getServiceTag();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Tags';
         $bindings['PageTitle'] = 'Tags';
 
-        $tagService = $serviceContainer->getTagService();
-        $bindings['TagList'] = $tagService->getAll();
+        $bindings['TagList'] = $serviceTag->getAll();
 
-        return view('admin.tag.list', $bindings);
+        return view('staff.categorisation.tag.list', $bindings);
     }
 
     public function showGameTagList($gameId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $this->getServiceGame();
+        $serviceGameTag = $this->getServiceGameTag();
 
-        $gameService = $serviceContainer->getGameService();
-        $gameTagService = $serviceContainer->getGameTagService();
-
-        $game = $gameService->find($gameId);
+        $game = $serviceGame->find($gameId);
         if (!$game) abort(404);
 
         $gameTitle = $game->title;
@@ -59,22 +60,17 @@ class TagController extends Controller
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
-        $bindings['GameTagList'] = $gameTagService->getByGame($gameId);
+        $bindings['GameTagList'] = $serviceGameTag->getByGame($gameId);
 
-        $bindings['UnusedTagList'] = $gameTagService->getTagsNotOnGame($gameId);
+        $bindings['UnusedTagList'] = $serviceGameTag->getTagsNotOnGame($gameId);
 
-        return view('admin.tag.gameTags', $bindings);
+        return view('staff.categorisation.tag.gameTags', $bindings);
     }
 
     public function editTag($tagId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceTag = $serviceContainer->getTagService();
-        $servicePrimaryType = $serviceContainer->getGamePrimaryTypeService();
+        $serviceTag = $this->getServiceTag();
+        $servicePrimaryType = $this->getServiceGamePrimaryType();
 
         $tagData = $serviceTag->find($tagId);
         if (!$tagData) abort(404);
@@ -95,7 +91,7 @@ class TagController extends Controller
 
             $serviceTag->edit($tagData, $tagName, $linkTitle, $primaryTypeId);
 
-            return redirect(route('admin.tag.list'));
+            return redirect(route('staff.categorisation.tag.list'));
 
         } else {
 
@@ -110,20 +106,18 @@ class TagController extends Controller
 
         $bindings['PrimaryTypeList'] = $servicePrimaryType->getAll();
 
-        return view('admin.tag.edit', $bindings);
+        return view('staff.categorisation.tag.edit', $bindings);
     }
 
     public function addGameTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $tagService = $serviceContainer->getTagService();
-        $gameTagService = $serviceContainer->getGameTagService();
-        $userService = $serviceContainer->getUserService();
+        $serviceTag = $this->getServiceTag();
+        $serviceUser = $this->getServiceUser();
+        $serviceGameTag = $this->getServiceGameTag();
 
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
+        $user = $serviceUser->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -136,17 +130,17 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagId'], 400);
         }
 
-        $tagData = $tagService->find($tagId);
+        $tagData = $serviceTag->find($tagId);
         if (!$tagData) {
             return response()->json(['error' => 'Tag not found!'], 400);
         }
 
-        $existingGameTag = $gameTagService->gameHasTag($gameId, $tagId);
+        $existingGameTag = $serviceGameTag->gameHasTag($gameId, $tagId);
         if ($existingGameTag) {
             return response()->json(['error' => 'Game already has this tag!'], 400);
         }
 
-        $gameTagService->createGameTag($gameId, $tagId);
+        $serviceGameTag->createGameTag($gameId, $tagId);
 
         $data = array(
             'status' => 'OK'
@@ -156,15 +150,12 @@ class TagController extends Controller
 
     public function removeGameTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $tagService = $serviceContainer->getTagService();
-        $gameTagService = $serviceContainer->getGameTagService();
-        $userService = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
+        $serviceGameTag = $this->getServiceGameTag();
 
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
+        $user = $serviceUser->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -177,7 +168,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: gameTagId'], 400);
         }
 
-        $gameTagData = $gameTagService->find($gameTagId);
+        $gameTagData = $serviceGameTag->find($gameTagId);
         if (!$gameTagData) {
             return response()->json(['error' => 'Game tag not found!'], 400);
         }
@@ -186,7 +177,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Game id mismatch on game tag record!'], 400);
         }
 
-        $gameTagService->delete($gameTagId);
+        $serviceGameTag->delete($gameTagId);
 
         $data = array(
             'status' => 'OK'
@@ -196,15 +187,13 @@ class TagController extends Controller
 
     public function addTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $tagService = $serviceContainer->getTagService();
-        $userService = $serviceContainer->getUserService();
-        $urlService = $serviceContainer->getUrlService();
+        $serviceUser = $this->getServiceUser();
+        $serviceTag = $this->getServiceTag();
+        $serviceUrl = $this->getServiceUrl();
 
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
+        $user = $serviceUser->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -216,14 +205,14 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagName'], 400);
         }
 
-        $existingTag = $tagService->getByName($tagName);
+        $existingTag = $serviceTag->getByName($tagName);
         if ($existingTag) {
             return response()->json(['error' => 'Tag already exists!'], 400);
         }
 
-        $linkTitle = $urlService->generateLinkText($tagName);
+        $linkTitle = $serviceUrl->generateLinkText($tagName);
 
-        $tagService->create($tagName, $linkTitle);
+        $serviceTag->create($tagName, $linkTitle);
 
         $data = array(
             'status' => 'OK'
@@ -233,15 +222,12 @@ class TagController extends Controller
 
     public function deleteTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $tagService = $serviceContainer->getTagService();
-        $userService = $serviceContainer->getUserService();
-        $urlService = $serviceContainer->getUrlService();
+        $serviceUser = $this->getServiceUser();
+        $serviceTag = $this->getServiceTag();
 
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
+        $user = $serviceUser->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -253,7 +239,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagId'], 400);
         }
 
-        $existingTag = $tagService->find($tagId);
+        $existingTag = $serviceTag->find($tagId);
         if (!$existingTag) {
             return response()->json(['error' => 'Tag does not exist!'], 400);
         }
@@ -262,7 +248,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Found '.$existingTag->gameTags()->count().' game(s) with this tag'], 400);
         }
 
-        $tagService->deleteTag($tagId);
+        $serviceTag->deleteTag($tagId);
 
         $data = array(
             'status' => 'OK'

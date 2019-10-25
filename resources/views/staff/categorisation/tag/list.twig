@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -43,7 +43,7 @@
                         {{ item.gameTags().count }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.tag.edit', {'tagId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.categorisation.tag.edit', {'tagId': item.id}) }}">Edit</a> :
                         {% if item.gameTags().count == 0 %}
                             <a href="javascript:void(0);" id="lnk-delete-tag-{{ item.id }}" class="lnk-delete-tag">Delete</a>
                         {% else %}
@@ -88,7 +88,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.tag.add') }}', {tagName: tagName}, function(data) {
+        $.getJSON('{{ route('staff.categorisation.tag.add') }}', {tagName: tagName}, function(data) {
             $('#js-admin-notify').text('Tag saved!');
             $('#js-admin-notify').show();
             $('#txt-new-tag-name').val('');
@@ -121,7 +121,7 @@
             }
         });
 
-        $.getJSON('/admin/tag/delete/' + tagId, {}, function(data) {
+        $.getJSON('/staff/categorisation/tag/delete/' + tagId, {}, function(data) {
             $('#js-admin-notify').text('Tag deleted!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1000);

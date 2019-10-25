@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -78,7 +78,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game-primary-types.add') }}', {primaryType: primaryType}, function(data) {
+        $.getJSON('{{ route('staff.categorisation.game-primary-types.add') }}', {primaryType: primaryType}, function(data) {
             $('#js-new-primary-type-notify').text('Primary type saved!');
             $('#js-new-primary-type-notify').show();
             $('#txt-new-primary-type-name').val('');

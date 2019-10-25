@@ -1,37 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
 
 use Auth;
 
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
 class GamePrimaryTypesController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Game primary types';
         $bindings['PageTitle'] = 'Game primary types';
 
-        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
         $bindings['PrimaryTypeList'] = $servicePrimaryTypes->getAll();
 
-        return view('admin.game-primary-types.list', $bindings);
+        return view('staff.categorisation.game-primary-types.list', $bindings);
     }
 
     public function addPrimaryType()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
-        $serviceUser = $serviceContainer->getUserService();
-        $serviceUrl = $serviceContainer->getUrlService();
+        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
+        $serviceUser = $this->getServiceUser();
+        $serviceUrl = $this->getServiceUrl();
 
         $userId = Auth::id();
 

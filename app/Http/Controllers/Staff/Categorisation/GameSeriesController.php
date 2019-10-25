@@ -1,37 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
 
 use Auth;
 
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
 class GameSeriesController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceGameSeries = $this->getServiceGameSeries();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Game series';
         $bindings['PageTitle'] = 'Game series';
 
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
 
-        return view('admin.game-series.list', $bindings);
+        return view('staff.categorisation.game-series.list', $bindings);
     }
 
     public function addGameSeries()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
-        $serviceUser = $serviceContainer->getUserService();
-        $serviceUrl = $serviceContainer->getUrlService();
+        $serviceGameSeries = $this->getServiceGameSeries();
+        $serviceUser = $this->getServiceUser();
+        $serviceUrl = $this->getServiceUrl();
 
         $userId = Auth::id();
 

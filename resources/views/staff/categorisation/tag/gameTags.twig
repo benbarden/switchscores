@@ -88,7 +88,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.tag.game.add', {'gameId': GameId}) }}', {tagId: tagId}, function(data) {
+        $.getJSON('{{ route('staff.categorisation.tag.game.add', {'gameId': GameId}) }}', {tagId: tagId}, function(data) {
             $('#js-admin-notify').text('Tag added!');
             $('#js-admin-notify').show();
             $('#tag-list option:selected').val('');

@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -76,7 +76,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game-series.add') }}', {seriesName: seriesName}, function(data) {
+        $.getJSON('{{ route('staff.categorisation.game-series.add') }}', {seriesName: seriesName}, function(data) {
             $('#js-new-game-series-notify').text('Game series saved!');
             $('#js-new-game-series-notify').show();
             $('#txt-new-game-series-name').val('');

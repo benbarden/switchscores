@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 

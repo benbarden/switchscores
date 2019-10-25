@@ -179,6 +179,27 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')->name('staff.categorisation.dashboard');
 
+    // Primary types
+    Route::get('/staff/categorisation/game-primary-types/list', 'Staff\Categorisation\GamePrimaryTypesController@showList')->name('staff.categorisation.game-primary-types.list');
+    Route::get('/staff/categorisation/game-primary-types/add', 'Staff\Categorisation\GamePrimaryTypesController@addPrimaryType')->name('staff.categorisation.game-primary-types.add');
+
+    // Series
+    Route::get('/staff/categorisation/game-series/list', 'Staff\Categorisation\GameSeriesController@showList')->name('staff.categorisation.game-series.list');
+    Route::get('/staff/categorisation/game-series/add', 'Staff\Categorisation\GameSeriesController@addGameSeries')->name('staff.categorisation.game-series.add');
+
+    // Genres
+    Route::get('/staff/categorisation/genre/list', 'Staff\Categorisation\GenreController@showList')->name('staff.categorisation.genre.list');
+
+    // Tags
+    Route::get('/staff/categorisation/tag/list', 'Staff\Categorisation\TagController@showList')->name('staff.categorisation.tag.list');
+    Route::get('/staff/categorisation/tag/add', 'Staff\Categorisation\TagController@addTag')->name('staff.categorisation.tag.add');
+    Route::get('/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
+    Route::post('/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
+    Route::get('/staff/categorisation/tag/delete/{tagId}', 'Staff\Categorisation\TagController@deleteTag')->name('staff.categorisation.tag.delete');
+    Route::get('/staff/categorisation/tag/game/{gameId}/list', 'Staff\Categorisation\TagController@showGameTagList')->name('staff.categorisation.tag.game.list');
+    Route::get('/staff/categorisation/tag/game/{gameId}/add', 'Staff\Categorisation\TagController@addGameTag')->name('staff.categorisation.tag.game.add');
+    Route::get('/staff/categorisation/tag/game/{gameId}/remove', 'Staff\Categorisation\TagController@removeGameTag')->name('staff.categorisation.tag.game.remove');
+
 });
 
 
@@ -364,23 +385,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
     Route::get('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
     Route::post('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
-
-    // Categorisation
-    Route::get('/admin/game-primary-types/list', 'Admin\GamePrimaryTypesController@showList')->name('admin.game-primary-types.list');
-    Route::get('/admin/game-primary-types/add', 'Admin\GamePrimaryTypesController@addPrimaryType')->name('admin.game-primary-types.add');
-    Route::get('/admin/game-series/list', 'Admin\GameSeriesController@showList')->name('admin.game-series.list');
-    Route::get('/admin/game-series/add', 'Admin\GameSeriesController@addGameSeries')->name('admin.game-series.add');
-    Route::get('/admin/genre/list', 'Admin\GenreController@showList')->name('admin.genre.list');
-
-    // Tags
-    Route::get('/admin/tag/list', 'Admin\TagController@showList')->name('admin.tag.list');
-    Route::get('/admin/tag/add', 'Admin\TagController@addTag')->name('admin.tag.add');
-    Route::get('/admin/tag/edit/{tagId}', 'Admin\TagController@editTag')->name('admin.tag.edit');
-    Route::post('/admin/tag/edit/{tagId}', 'Admin\TagController@editTag')->name('admin.tag.edit');
-    Route::get('/admin/tag/delete/{tagId}', 'Admin\TagController@deleteTag')->name('admin.tag.delete');
-    Route::get('/admin/tag/game/{gameId}/list', 'Admin\TagController@showGameTagList')->name('admin.tag.game.list');
-    Route::get('/admin/tag/game/{gameId}/add', 'Admin\TagController@addGameTag')->name('admin.tag.game.add');
-    Route::get('/admin/tag/game/{gameId}/remove', 'Admin\TagController@removeGameTag')->name('admin.tag.game.remove');
 
     // Partners: Review sites
     Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
