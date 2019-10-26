@@ -149,6 +149,7 @@ class GameReleaseDateService
             ->where('game_release_dates.region', $region)
             ->where('game_release_dates.is_released', 1)
             ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.updated_at', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {

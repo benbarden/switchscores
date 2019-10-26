@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
 use App\Services\ServiceContainer;
@@ -34,7 +35,7 @@ use Auth;
 
 class GamesController extends Controller
 {
-    use WosServices;
+    use WosServices, SiteRequestData;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -542,15 +543,13 @@ class GamesController extends Controller
 
     public function releaseGame()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $gameService = $serviceContainer->getGameService();
-        $userService = $serviceContainer->getUserService();
-        $gameReleaseDateService = $serviceContainer->getGameReleaseDateService();
+        $serviceUser = $this->getServiceUser();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
+        $user = $serviceUser->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -566,12 +565,18 @@ class GamesController extends Controller
             return response()->json(['error' => 'Missing data: regionCode'], 400);
         }
 
-        $gameReleaseDate = $gameReleaseDateService->getByGameAndRegion($gameId, $regionCode);
+        $gameData = $serviceGame->find($gameId);
+        if (!$gameId) {
+            return response()->json(['error' => 'Game not found: '.$gameId], 400);
+        }
+
+        $gameReleaseDate = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
         if (!$gameReleaseDate) {
             return response()->json(['error' => 'gameReleaseDate not found for game: '.$gameId.'; region: '.$regionCode], 400);
         }
 
-        $gameReleaseDateService->markAsReleased($gameReleaseDate);
+        $serviceGameReleaseDate->markAsReleased($gameReleaseDate);
+        $gameData->touch();
 
         $data = array(
             'status' => 'OK'
