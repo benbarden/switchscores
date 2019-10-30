@@ -30,9 +30,11 @@ class WelcomeController extends Controller
         // Featured
         $idLittleTownHero = 2925;
         $idCatQuestII = 3073;
+        $idLuigisMansion = 2706;
         $featuredIdList = [
             //$idLittleTownHero,
-            $idCatQuestII,
+            //$idCatQuestII,
+            $idLuigisMansion,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
         $featuredGameId = rand(0, count($featuredIdList)-1);
