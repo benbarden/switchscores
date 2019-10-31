@@ -14,6 +14,7 @@ class FeedItemGame extends Model
     const STATUS_NO_UPDATE_NEEDED = 901;
     const STATUS_SKIPPED_BY_USER = 902;
     const STATUS_SKIPPED_BY_GAME_RULES = 903; // future use
+    const STATUS_SKIPPED_SUPERSEDED = 904;
 
     /**
      * @var string
@@ -51,6 +52,12 @@ class FeedItemGame extends Model
     {
         $this->status_code = self::STATUS_COMPLETE;
         $this->status_desc = 'Complete';
+    }
+
+    public function setStatusSkippedSuperseded()
+    {
+        $this->status_code = self::STATUS_SKIPPED_SUPERSEDED;
+        $this->status_desc = 'Skipped - superseded';
     }
 
     public function hasRealUpcomingDate($date)

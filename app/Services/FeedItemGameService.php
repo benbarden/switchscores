@@ -149,6 +149,10 @@ class FeedItemGameService
         return $list;
     }
 
+    /**
+     * @param $gameId
+     * @return FeedItemGame
+     */
     public function getLastEntryByGameId($gameId)
     {
         $feedItem = FeedItemGame::
@@ -167,6 +171,10 @@ class FeedItemGameService
         }
     }
 
+    /**
+     * @param $title
+     * @return FeedItemGame
+     */
     public function getActiveByTitle($title)
     {
         $feedItem = FeedItemGame::
@@ -184,6 +192,10 @@ class FeedItemGameService
         }
     }
 
+    /**
+     * @param $gameId
+     * @return FeedItemGame
+     */
     public function getActiveByGameId($gameId)
     {
         $feedItem = FeedItemGame::

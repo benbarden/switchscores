@@ -134,25 +134,43 @@ class WikipediaImportGamesList extends Command
                 // Check if anything's changed since the last record, if one exists
                 if ($gameId) {
 
-                    // We need to skip anything that's already waiting to be reviewed.
-                    // Otherwise, the list will keep adding duplicates each time the importer runs.
-                    $activeFeedItem = $feedItemGameService->getActiveByGameId($gameId);
-                    if ($activeFeedItem) {
-                        $logger->warn($logItemPrefix.'Found an active, unprocessed entry; skipping');
-                        continue;
-                    }
-
-                    // There isn't a previous entry in feed items, but has the game actually changed?
+                    // Let's start by checking if the game has actually changed
                     $game = $gameService->find($gameId);
                     $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
                     $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
+
                     if (count($modifiedFieldList) == 0) {
-                        //$logger->info('No changes; skipping');
+
+                        // No changes - skip and move right along
                         continue;
+
                     } else {
+
+                        // Something's changed!
                         $logger->info($logItemPrefix.'Changes found');
-                        $feedItemGame->modified_fields = serialize($modifiedFieldList);
+
+                        // What has changed, exactly?
+                        $sModifiedFields = serialize($modifiedFieldList);
+
+                        // Now, before we continue... is there an existing record?
+                        $activeFeedItem = $feedItemGameService->getActiveByGameId($gameId);
+                        if ($activeFeedItem) {
+                            // Yes there is... is it the same as the latest changes?
+                            if ($activeFeedItem->modified_fields == $sModifiedFields) {
+                                $logger->warn($logItemPrefix.'Found a pending entry with the same details; skipping');
+                                continue;
+                            } else {
+                                // We should close off the old one before continuing
+                                $logger->warn($logItemPrefix.'Found a pending entry with different details - closing it off.');
+                                $activeFeedItem->setStatusSkippedSuperseded();
+                                $activeFeedItem->save();
+                            }
+                        }
+
+                        $feedItemGame->modified_fields = $sModifiedFields;
+
                     }
+
                 } else {
                     // If we don't know the game id and we haven't dealt with the imported data yet,
                     // duplicates will be added each time the importer is run.
