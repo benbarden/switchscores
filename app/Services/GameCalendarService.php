@@ -106,6 +106,7 @@ class GameCalendarService
                 'game_release_dates.upcoming_date',
                 'game_release_dates.release_year')
             ->where('game_release_dates.region', $region)
+            ->where('game_release_dates.is_released', 1)
             ->whereYear('game_release_dates.release_date', '=', $year)
             ->whereMonth('game_release_dates.release_date', '=', $month)
             ->orderBy('game_release_dates.release_date', 'asc')
