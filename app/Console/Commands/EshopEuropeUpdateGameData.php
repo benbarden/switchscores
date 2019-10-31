@@ -79,6 +79,10 @@ class EshopEuropeUpdateGameData extends Command
 
             // GAME CORE DATA
             $gameReleaseDate = $game->regionReleaseDate('eu');
+            if (!$gameReleaseDate) {
+                $logger->error($eshopTitle.' - No EU gameReleaseDate found for this record. Skipping');
+                continue;
+            }
 
             // SETUP
             $serviceUpdateGameData->setEshopItem($eshopItem);
