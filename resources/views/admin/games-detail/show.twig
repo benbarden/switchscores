@@ -314,62 +314,101 @@
 
     <div class="col-md-12">
 
-        {% if GameChangeHistory|length %}
-        <h2>
-            Change history <span class="h4">(<a href="{{ route('admin.game-change-history.index') }}?gameId={{ GameId }}">view all</a>)</span>
-        </h2>
-        <table class="table table-condensed table-responsive">
-            <tr>
-            <tr>
-                <th class="text-right">#</th>
-                <th>Game</th>
-                <th>Table</th>
-                <th class="text-center">Source</th>
-                <th class="text-center">Change type</th>
-                <th class="text-center">Date</th>
-                <th>Changes</th>
-            </tr>
-            </tr>
-            {% for item in GameChangeHistory %}
-                <tr>
-                    <td class="text-right">
-                        {{ item.id }}
-                    </td>
-                    <td>
-                        {% if item.game %}
-                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
-                        {% else %}
-                            {{ item.game_id }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{ item.affected_table_name }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.source }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.change_type }}
-                    </td>
-                    <td class="text-center">
-                        <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
-                    </td>
-                    <td>
-                        {% if item.data_changed %}
-                            {% set dataChanged = JsonHelper.jsonDecode(item.data_changed) %}
-                            <p>
-                                <small>
-                                    {% for field,value in dataChanged %}
-                                        {{ field }}: {{ value }}<br>
-                                    {% endfor %}
-                                </small>
-                            </p>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-change-history">Change history</a></li>
+                <li><a href="#tabs-reviews">Reviews</a></li>
+                <li><a href="#tabs-title-hashes">Title hashes</a></li>
+            </ul>
+
+            <div id="tabs-change-history">
+
+                <h2>Change history</h2>
+
+                {% if GameChangeHistory|length %}
+                    <table class="table table-condensed table-responsive">
+                        <thead>
+                        <tr>
+                            <th class="text-right">#</th>
+                            <th>Game</th>
+                            <th>Table</th>
+                            <th class="text-center">Source</th>
+                            <th class="text-center">Change type</th>
+                            <th class="text-center">Date</th>
+                            <th>Changes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in GameChangeHistory %}
+                            <tr>
+                                <td class="text-right">
+                                    {{ item.id }}
+                                </td>
+                                <td>
+                                    {% if item.game %}
+                                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                                    {% else %}
+                                        {{ item.game_id }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ item.affected_table_name }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.source }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.change_type }}
+                                </td>
+                                <td class="text-center">
+                                    <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
+                                </td>
+                                <td>
+                                    {% if item.data_changed %}
+                                        {% set dataChanged = JsonHelper.jsonDecode(item.data_changed) %}
+                                        <p>
+                                            <small>
+                                                {% for field,value in dataChanged %}
+                                                    {{ field }}: {{ value }}<br>
+                                                {% endfor %}
+                                            </small>
+                                        </p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            </div>
+
+            <div id="tabs-reviews">
+
+                <h2>Reviews</h2>
+                {% include 'staff/reviews/review-link-table.twig' with {'ReviewLinks': GameReviews} %}
+
+            </div>
+
+            <div id="tabs-title-hashes">
+
+                <h2>Title hashes</h2>
+                {% include 'staff/games/title-hash/table.twig' with {'TitleHashList': GameTitleHashes} %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <hr>
 
     </div>
 
@@ -378,6 +417,15 @@
 <script>
 
     var gameId = '{{ GameId }}';
+
+    $('#tabs').tabs();
+
+    var tabId = '{{ SelectedTabId }}';
+    if (tabId == 'reviews') {
+        $("#tabs").tabs("option", "active", 1);
+    } else if (tabId == 'title-hashes') {
+        $("#tabs").tabs("option", "active", 2);
+    }
 
     $('#btn-update-eu-eshop-data').on('click', function() {
 

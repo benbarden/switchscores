@@ -95,7 +95,8 @@ class GamesTitleHashController extends Controller
             $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
 
             // Done
-            return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
+            //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
+            return redirect('/admin/games/detail/'.$gameId.'?tabid=title-hashes');
 
         }
 
@@ -139,7 +140,8 @@ class GamesTitleHashController extends Controller
             $serviceGameTitleHash->edit($gameTitleHashData, $request->title, $titleHash, $gameId);
 
             // Done
-            return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
+            //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
+            return redirect('/admin/games/detail/'.$gameId.'?tabid=title-hashes');
 
         } else {
 

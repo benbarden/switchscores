@@ -1,0 +1,48 @@
+<table class="table data-sortable">
+    <thead>
+    <tr>
+        <th class="text-right">#</th>
+        <th class="text-left">Game</th>
+        <th class="text-left">Site</th>
+        <th class="text-center">Date</th>
+        <th class="text-center">Link</th>
+        <th class="text-center">Rating</th>
+        <th class="text-center">Original</th>
+        <th class="text-center">Options</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in ReviewLinks %}
+        <tr>
+            <td class="text-right">
+                {{ item.id }}
+            </td>
+            <td class="text-left">
+                <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+            </td>
+            <td class="text-left">
+                {{ item.site.name }}
+            </td>
+            <td class="text-center">
+                {{ item.review_date }}
+            </td>
+            <td class="text-center">
+                <a href="{{ item.url }}" target="_blank">View</a>
+            </td>
+            <td class="text-center">
+                {{ item.rating_normalised }}
+            </td>
+            <td class="text-center">
+                {% if item.rating_original != item.rating_normalised %}
+                    {{ item.rating_original }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="text-center">
+                <a href="{{ route('admin.reviews.link.edit', {'linkId': item.id}) }}">Edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

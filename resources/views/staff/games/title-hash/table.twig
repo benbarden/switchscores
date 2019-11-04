@@ -1,0 +1,35 @@
+<table class="table data-sortable">
+    <thead>
+    <tr>
+        <th class="text-right">#</th>
+        <th>Title</th>
+        <th>Game</th>
+        <th class="text-center" style="width: 150px;">Added</th>
+        <th class="text-center" style="width: 100px;">Options</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in TitleHashList %}
+        <tr>
+            <td class="text-right">
+                {{ item.id }}
+            </td>
+            <td>
+                {{ item.title }}
+            </td>
+            <td>
+                <a href="{{ LinkHelper.gameShow(item.game) }}">
+                    {{ item.game.title }}
+                </a>
+            </td>
+            <td class="text-center">
+                {{ item.created_at }}
+            </td>
+            <td class="text-center">
+                <a href="{{ route('admin.games-title-hash.edit', {'itemId': item.id}) }}">Edit</a> :
+                <a href="{{ route('admin.games-title-hash.delete', {'itemId': item.id}) }}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

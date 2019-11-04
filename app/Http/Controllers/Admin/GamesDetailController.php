@@ -4,26 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
 
 class GamesDetailController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function show($gameId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceGameGenres = $serviceContainer->getGameGenreService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
-        $serviceReviewUser = $serviceContainer->getReviewUserService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-        $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
+        $serviceGame = $this->getServiceGame();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameGenres = $this->getServiceGameGenre();
+        $serviceGameTag = $this->getServiceGameTag();
+        $serviceReviewUser = $this->getServiceReviewUser();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $serviceGameChangeHistory = $this->getServiceGameChangeHistory();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         $game = $serviceGame->find($gameId);
         if (!$game) abort(404);
@@ -45,6 +47,9 @@ class GamesDetailController extends Controller
             }
         }
 
+        $selectedTabId = \Request::get('tabid');
+        $bindings['SelectedTabId'] = $selectedTabId;
+
         // Get all the data
         $gameReviews = $serviceReviewLink->getByGame($gameId);
         $gameGenres = $serviceGameGenres->getByGame($gameId);
@@ -53,6 +58,7 @@ class GamesDetailController extends Controller
         $gamePublishers = $serviceGamePublisher->getByGame($gameId);
         $gameTags = $serviceGameTag->getByGame($gameId);
         $gameChangeHistory = $serviceGameChangeHistory->getByGameId($gameId);
+        $gameTitleHashes = $serviceGameTitleHash->getByGameId($gameId);
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
@@ -63,6 +69,7 @@ class GamesDetailController extends Controller
         $bindings['GamePublishers'] = $gamePublishers;
         $bindings['GameTags'] = $gameTags;
         $bindings['GameChangeHistory'] = $gameChangeHistory;
+        $bindings['GameTitleHashes'] = $gameTitleHashes;
 
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
         $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
