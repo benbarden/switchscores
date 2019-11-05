@@ -107,6 +107,9 @@ class LoaderEurope
         'product_code_ss',
         'switch_game_voucher_b',
         'deprioritise_b',
+        'price_regular_f',
+        'price_discounted_f',
+        'eshop_removed_b',
     ];
 
     /**
@@ -218,6 +221,7 @@ class LoaderEurope
             'nintendo_switch_online_exclusive_b',
             'switch_game_voucher_b',
             'deprioritise_b',
+            'eshop_removed_b',
         ];
 
         $jsonFields = [
