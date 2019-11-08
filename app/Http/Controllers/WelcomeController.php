@@ -31,9 +31,13 @@ class WelcomeController extends Controller
         $idLittleTownHero = 2925;
         $idCatQuestII = 3073;
         $idLuigisMansion = 2706;
+        $idDisneyTsumTsumFestival = 3174;
+        $idLaytonsMysteryJourney = 2665;
+        $idMarioSonicOlympicGames = 2862;
+        $idNewSuperLuckysTale = 3138;
         $featuredIdList = [
-            //$idLittleTownHero,
-            //$idCatQuestII,
+            $idDisneyTsumTsumFestival,
+            $idNewSuperLuckysTale,
             $idLuigisMansion,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
