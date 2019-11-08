@@ -31,7 +31,7 @@ class FeedItemEshopEuropeController extends Controller
 
         $serviceEshopGame = $serviceContainer->getEshopEuropeGameService();
 
-        $jsInitialSort = "[ 3, 'desc']";
+        $jsInitialSort = "[ 1, 'asc']";
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
             $feedItems = $serviceEshopGame->getAll();
