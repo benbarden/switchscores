@@ -101,7 +101,8 @@ class Builder
             } else {
 
                 // Key is not in new array, so it's different
-                $changed[$key] = $value;
+                // Fix: avoid adding blank records
+                //$changed[$key] = $value;
 
             }
 
@@ -113,9 +114,6 @@ class Builder
             if (in_array($key, $fieldsToIgnore)) continue;
 
             if (!array_key_exists($key, $orig)) {
-
-                // Ignore if blank
-                if (($value == '') || ($value == null)) continue;
 
                 // Field added in new array
                 $changed[$key] = $value;
