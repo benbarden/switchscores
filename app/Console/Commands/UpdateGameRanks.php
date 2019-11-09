@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use App\Services\GameRankUpdateService;
 use App\Services\ServiceContainer;
@@ -99,7 +100,7 @@ class UpdateGameRanks extends Command
                     $gameTitle, $ratingAvg, $actualRank));
 
                 // Store rank update
-                $serviceGameRankUpdate->create($gameId, null, $actualRank, $ratingAvg);
+                //$serviceGameRankUpdate->create($gameId, null, $actualRank, $ratingAvg);
 
             } elseif ($prevRank != $actualRank) {
 
@@ -110,7 +111,7 @@ class UpdateGameRanks extends Command
                     $gameTitle, $ratingAvg, $prevRank, $actualRank));
 
                 // Store rank update
-                $serviceGameRankUpdate->create($gameId, $prevRank, $actualRank, $ratingAvg);
+                //$serviceGameRankUpdate->create($gameId, $prevRank, $actualRank, $ratingAvg);
 
             } else {
 
