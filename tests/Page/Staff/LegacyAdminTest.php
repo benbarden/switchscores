@@ -56,7 +56,7 @@ class LegacyAdminTest extends TestCase
     {
         $this->be($this->userAdmin);
         $response = $this->get('/admin');
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     // Admin pages

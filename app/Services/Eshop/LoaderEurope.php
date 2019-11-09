@@ -7,6 +7,7 @@ use App\SiteAlert;
 use GuzzleHttp\Client as GuzzleClient;
 
 use App\EshopEuropeGame;
+use App\Services\Eshop\Europe\FieldMapper;
 
 /**
  * Class LoaderEurope
@@ -19,98 +20,6 @@ class LoaderEurope
 
     const DEFAULT_LOCALE = "en";
     const GET_GAMES_EU_URL = "http://search.nintendo-europe.com/{locale}/select";
-
-    private $expectedFields = [
-        '_version_',
-        'age_rating_sorting_i',
-        'age_rating_type',
-        'age_rating_value',
-        'change_date',
-        'cloud_saves_b',
-        'club_nintendo',
-        'compatible_controller',
-        'copyright_s',
-        'date_from',
-        'dates_released_dts',
-        'digital_version_b',
-        'excerpt',
-        'fs_id',
-        'game_categories_txt',
-        'game_category',
-        'gift_finder_carousel_image_url_s',
-        'gift_finder_detail_page_image_url_s',
-        'gift_finder_wishlist_image_url_s',
-        'image_url',
-        'image_url_h2x1_s',
-        'image_url_sq_s',
-        'language_availability',
-        'nsuid_txt',
-        'originally_for_t',
-        'pg_s',
-        'physical_version_b',
-        'play_mode_handheld_mode_b',
-        'play_mode_tabletop_mode_b',
-        'play_mode_tv_mode_b',
-        'playable_on_txt',
-        'players_to',
-        'pretty_agerating_s',
-        'pretty_date_s',
-        'pretty_game_categories_txt',
-        'price_discount_percentage_f',
-        'price_has_discount_b',
-        'price_lowest_f',
-        'price_sorting_f',
-        'product_code_txt',
-        'publisher',
-        'sorting_title',
-        'system_names_txt',
-        'system_type',
-        'title',
-        'title_extras_txt',
-        'type',
-        'url',
-        'hd_rumble_b',
-        'multiplayer_mode',
-        'ir_motion_camera_b',
-        'gift_finder_description_s',
-        'players_from',
-        'gift_finder_detail_page_store_link_s',
-        'demo_availability',
-        'paid_subscription_required_b',
-        'internet',
-        'add_on_content_b',
-        'reg_only_hidden',
-        'play_coins',
-        'ranking_b',
-        'match_play_b',
-        'developer',
-        'near_field_comm_b',
-        'indie_b',
-        'priority',
-        'game_series_txt',
-        'game_series_t',
-        'local_play',
-        'coop_play_b',
-        'off_tv_play_b',
-        'image_url_tm_s',
-        'datasize_readable_txt',
-        'mii_support',
-        'voice_chat_b',
-        'download_play',
-        'wishlist_email_square_image_url_s',
-        'hits_i',
-        'dlc_shown_b',
-        'wishlist_email_banner460w_image_url_s',
-        'wishlist_email_banner640w_image_url_s',
-        'labo_b',
-        'nintendo_switch_online_exclusive_b',
-        'product_code_ss',
-        'switch_game_voucher_b',
-        'deprioritise_b',
-        'price_regular_f',
-        'price_discounted_f',
-        'eshop_removed_b',
-    ];
 
     /**
      * @var array
@@ -162,11 +71,6 @@ class LoaderEurope
         $this->setMode(self::MODE_LIVE);
     }
 
-    public function getExpectedFields()
-    {
-        return $this->expectedFields;
-    }
-
     public function getRequestUrl()
     {
         return $this->requestUrl;
@@ -189,64 +93,10 @@ class LoaderEurope
 
     public function handleModelField($gameModel, $field, $value)
     {
-        $booleanFields = [
-            'club_nintendo',
-            'price_has_discount_b',
-            'play_mode_tv_mode_b',
-            'play_mode_handheld_mode_b',
-            'cloud_saves_b',
-            'digital_version_b',
-            'play_mode_tabletop_mode_b',
-            'physical_version_b',
-            'hd_rumble_b',
-            'ir_motion_camera_b',
-            'demo_availability',
-            'paid_subscription_required_b',
-            'internet',
-            'add_on_content_b',
-            'reg_only_hidden',
-            'play_coins',
-            'ranking_b',
-            'match_play_b',
-            'near_field_comm_b',
-            'indie_b',
-            'local_play',
-            'coop_play_b',
-            'off_tv_play_b',
-            'mii_support',
-            'voice_chat_b',
-            'download_play',
-            'dlc_shown_b',
-            'labo_b',
-            'nintendo_switch_online_exclusive_b',
-            'switch_game_voucher_b',
-            'deprioritise_b',
-            'eshop_removed_b',
-        ];
+        $fieldMapper = new FieldMapper();
+        $fieldMapper->setField($field);
 
-        $jsonFields = [
-            'dates_released_dts',
-            'language_availability',
-            'product_code_txt',
-            'playable_on_txt',
-            'pretty_game_categories_txt',
-            'compatible_controller',
-            'game_category',
-            'system_names_txt',
-            'title_extras_txt',
-            'system_type',
-            'game_categories_txt',
-            'nsuid_txt',
-            'game_series_txt',
-            'datasize_readable_txt',
-            'product_code_ss',
-        ];
-
-        $specialFields = [
-            '_version_',
-        ];
-
-        if (!in_array($field, $this->expectedFields)) {
+        if (!$fieldMapper->fieldExists()) {
 
             if (is_array($value)) {
                 $value = json_encode($value);
@@ -266,23 +116,27 @@ class LoaderEurope
             return false;
         }
 
-        if (in_array($field, $booleanFields)) {
+        $dbFieldName = $fieldMapper->getDbFieldName();
+        $dbFieldType = $fieldMapper->getDbFieldType();
 
-            $gameModel->{$field} = $value == true ? 1 : 0;
+        if ($dbFieldType == FieldMapper::TYPE_BOOLEAN) {
 
-        } elseif (in_array($field, $jsonFields)) {
-
-            $gameModel->{$field} = json_encode($value);
-
-        } elseif (in_array($field, $specialFields)) {
-
-            if ($field == '_version_') {
-                $gameModel->version = $value;
+            if ($value == true) {
+                $fieldValue = 1;
+            } elseif ($value == NULL) {
+                $fieldValue = 0;
+            } else {
+                $fieldValue = 0;
             }
+            $gameModel->{$dbFieldName} = $fieldValue;
+
+        } elseif ($dbFieldType == FieldMapper::TYPE_JSON) {
+
+            $gameModel->{$dbFieldName} = json_encode($value);
 
         } else {
 
-            $gameModel->{$field} = $value;
+            $gameModel->{$dbFieldName} = $value;
 
         }
 

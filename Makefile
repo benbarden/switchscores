@@ -1,18 +1,30 @@
 SHELL:=/bin/bash
 
-unit-test:
+test:
 	./vendor/bin/phpunit
 
-unit-test-game-title-match:
+test-feature:
+	./vendor/bin/phpunit --testsuite Feature
+
+test-page:
+	./vendor/bin/phpunit --testsuite Page
+
+test-unit:
+	./vendor/bin/phpunit --testsuite Unit
+
+test-eshop:
+	./vendor/bin/phpunit --testsuite Eshop
+
+test-game-title-match:
 	./vendor/bin/phpunit --filter TitleMatchTest
 
-unit-test-feed-importer-generic:
+test-feed-importer-generic:
 	./vendor/bin/phpunit --filter FeedImporterGeneric
 
-unit-test-page-staff:
+test-page-staff:
 	./vendor/bin/phpunit --filter Staff
 
-unit-test-models:
+test-models:
 	./vendor/bin/phpunit --filter Models
 
 local-startup:
