@@ -21,6 +21,27 @@
             </tr>
             </tbody>
         </table>
+
+        <h2>Reports</h2>
+        <table class="table">
+            <tbody>
+            {% for item in ReportList %}
+                <tr>
+                    <td>
+                        {% if item.reportTitle %}
+                            {% set reportTitle = item.reportTitle %}
+                        {% else %}
+                            {% set reportTitle = item.dbField %}
+                        {% endif %}
+                        <a href="{{ route('staff.eshop.report', {'reportName': item.dbField}) }}">{{ reportTitle }}</a>
+                    </td>
+                    <td class="text-right">
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     </div>
 
     <div class="col-md-4">

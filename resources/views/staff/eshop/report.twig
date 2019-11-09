@@ -1,0 +1,41 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('staff.eshop.dashboard'), 'text': 'eShop'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+{% if ReportData|length %}
+    <table class="table" style="max-width: 50%;">
+        <thead>
+            <tr>
+                <th>{{ FieldName }}</th>
+                <th class="text-right">Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReportData %}
+                <tr>
+                    <td class="text-left">
+                        {{ item.field_value }}
+                    </td>
+                    <td class="text-right">
+                        {% if item.field_value == '0' %}
+                            {% set FilterValue = item.field_value %}
+                        {% elseif item.field_value == '' %}
+                            {% set FilterValue = 'no-value' %}
+                        {% else %}
+                            {% set FilterValue = item.field_value %}
+                        {% endif %}
+                        <a href="{{ route('staff.eshop.report.gameList', {'reportName': ReportName, 'filterValue': FilterValue}) }}">
+                            {{ item.field_count }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No data found!</p>
+{% endif %}
+
+{% endblock page_inner %}

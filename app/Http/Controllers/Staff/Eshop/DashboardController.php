@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
+use App\Services\Eshop\Europe\FieldMapper;
+
 class DashboardController extends Controller
 {
     use WosServices;
@@ -32,6 +34,11 @@ class DashboardController extends Controller
         $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, true);
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
+
+        // Report list
+        $serviceFieldMapper = new FieldMapper();
+        $reportList = $serviceFieldMapper->getBooleanReportList();
+        $bindings['ReportList'] = $reportList;
 
         return view('staff.eshop.dashboard', $bindings);
     }
