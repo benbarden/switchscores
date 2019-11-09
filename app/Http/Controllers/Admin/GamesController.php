@@ -576,7 +576,18 @@ class GamesController extends Controller
         }
 
         $serviceGameReleaseDate->markAsReleased($gameReleaseDate);
-        $gameData->touch();
+
+        if ($regionCode == 'eu') {
+            $gameOrig = $gameData;
+
+            $dateNow = new \DateTime('now');
+            $gameData->eu_released_on = $dateNow->format('Y-m-d H:i:s');
+            $gameData->save();
+
+            // Game change history
+            $gameData->refresh();
+            GameChangeHistoryFactory::makeHistory($gameData, $gameOrig, Auth::user()->id, 'games');
+        }
 
         $data = array(
             'status' => 'OK'

@@ -81,9 +81,12 @@ class Builder
     public function getArrayDifferences($orig, $new): array
     {
         $changed = [];
+        $fieldsToIgnore = ['created_at', 'updated_at'];
 
         // 1. Handle removed fields and value changes
         foreach ($orig as $key => $value) {
+
+            if (in_array($key, $fieldsToIgnore)) continue;
 
             if (array_key_exists($key, $new)) {
 
@@ -107,7 +110,12 @@ class Builder
         // 2. Handle new fields
         foreach ($new as $key => $value) {
 
+            if (in_array($key, $fieldsToIgnore)) continue;
+
             if (!array_key_exists($key, $orig)) {
+
+                // Ignore if blank
+                if (($value == '') || ($value == null)) continue;
 
                 // Field added in new array
                 $changed[$key] = $value;

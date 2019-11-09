@@ -25,7 +25,7 @@ class Game extends Model
         'media_folder', 'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid', 'video_header_text',
-        'primary_type_id', 'series_id',
+        'primary_type_id', 'series_id', 'eu_released_on'
     ];
 
     public function gameRankYear()

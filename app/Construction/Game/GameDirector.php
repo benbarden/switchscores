@@ -44,6 +44,9 @@ class GameDirector
         if (array_key_exists('players', $params)) {
             $this->builder->setPlayers($params['players']);
         }
+        if (array_key_exists('eu_released_on', $params)) {
+            $this->builder->setEuReleasedOn($params['eu_released_on']);
+        }
         if (array_key_exists('developer', $params)) {
             $this->builder->setDeveloper($params['developer']);
         }

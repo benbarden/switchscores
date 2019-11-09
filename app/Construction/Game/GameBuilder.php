@@ -55,6 +55,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setEuReleasedOn($euReleasedOn): GameBuilder
+    {
+        $this->game->eu_released_on = $euReleasedOn;
+        return $this;
+    }
+
     public function setOverview($overview): GameBuilder
     {
         $this->game->overview = $overview;
