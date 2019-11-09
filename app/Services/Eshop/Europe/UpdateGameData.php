@@ -213,12 +213,37 @@ class UpdateGameData
         $gameTitle = $this->game->title;
         $eshopPriceLowest = $this->eshopItem->price_lowest_f;
         $eshopPriceDiscount = $this->eshopItem->price_discount_percentage_f;
+        // New fields
+        $eshopPriceRegular = $this->eshopItem->price_regular_f;
+        $eshopPriceDiscounted = $this->eshopItem->price_discounted_f;
 
-        if ($eshopPriceLowest < 0) {
+        if ($eshopPriceRegular > 0) {
+
+            // Use new eShop field
+            if ($this->game->price_eshop == null) {
+
+                // Not set, so let's update it
+                $this->logMessageInfo = $gameTitle.' - no price set. '.
+                    'Expected: '.$eshopPriceRegular.' - Updating.';
+                $this->game->price_eshop = $eshopPriceRegular;
+                $this->hasGameChanged = true;
+
+            } elseif ($this->game->price_eshop != $eshopPriceRegular) {
+
+                // Different
+                $this->logMessageInfo = $gameTitle.' - different price. '.
+                    'Game data: '.$this->game->price_eshop.' - '.
+                    'Expected: '.$eshopPriceRegular.' - Updating.';
+                $this->game->price_eshop = $eshopPriceRegular;
+                $this->hasGameChanged = true;
+
+            }
+
+        } elseif ($eshopPriceLowest < 0) {
 
             // Skip negative prices. This is an error in the API!
-            $this->logMessageError = $gameTitle.' - Price is negative - skipping. '.
-                'Price: '.$eshopPriceLowest;
+            $this->logMessageError = $gameTitle . ' - Price is negative - skipping. ' .
+                'Price: ' . $eshopPriceLowest;
 
         } elseif ($eshopPriceDiscount != '0.0') {
 
