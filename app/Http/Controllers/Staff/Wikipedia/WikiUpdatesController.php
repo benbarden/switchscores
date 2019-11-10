@@ -1,14 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Wikipedia;
+
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
 use App\FeedItemGame;
-use App\Http\Controllers\BaseController;
 use App\Services\HtmlLoader\Wikipedia\Importer;
-use Illuminate\Http\Request;
 
-class FeedItemGameController extends BaseController
+class WikiUpdatesController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use WosServices;
+    use SiteRequestData;
+
     /**
      * @var array
      */
@@ -17,38 +27,38 @@ class FeedItemGameController extends BaseController
 
     public function showList($report = null)
     {
-        $bindings = array();
+        $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Feed items - Games';
-        $bindings['PageTitle'] = 'Feed items - Games';
+        $bindings['TopTitle'] = 'Wiki updates';
+        $bindings['PageTitle'] = 'Wiki updates';
 
-        $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
+        $serviceFeedItemGame = $this->getServiceFeedItemGame();
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
-            $feedItems = $feedItemGameService->getPendingAndOkToUpdate();
+            $feedItems = $serviceFeedItemGame->getPendingAndOkToUpdate();
             $jsInitialSort = "[ 0, 'asc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'pending-game-id':
-                    $feedItems = $feedItemGameService->getPendingWithGameId();
+                    $feedItems = $serviceFeedItemGame->getPendingWithGameId();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'pending-no-game-id':
-                    $feedItems = $feedItemGameService->getPendingNoGameId();
+                    $feedItems = $serviceFeedItemGame->getPendingNoGameId();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'ok-to-update':
-                    $feedItems = $feedItemGameService->getForProcessing();
+                    $feedItems = $serviceFeedItemGame->getForProcessing();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'complete':
-                    $feedItems = $feedItemGameService->getComplete();
+                    $feedItems = $serviceFeedItemGame->getComplete();
                     $jsInitialSort = "[ 0, 'asc']";
                     break;
                 case 'inactive':
-                    $feedItems = $feedItemGameService->getInactive();
+                    $feedItems = $serviceFeedItemGame->getInactive();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 default:
@@ -60,19 +70,19 @@ class FeedItemGameController extends BaseController
         $bindings['FeedItems'] = $feedItems;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        return view('admin.feed-items.games.list', $bindings);
+        return view('staff.wikipedia.wiki-updates.list', $bindings);
     }
 
     public function edit($itemId)
     {
-        $regionCode = \Request::get('regionCode');
+        $regionCode = $this->getRegionCode();
 
-        $feedItemGameService = $this->serviceContainer->getFeedItemGameService();
-        $gameService = $this->serviceContainer->getGameService();
-        $gameReleaseDateService = $this->serviceContainer->getGameReleaseDateService();
-        $gameTitleHashService = $this->serviceContainer->getGameTitleHashService();
+        $serviceFeedItemGame = $this->getServiceFeedItemGame();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
-        $feedItemData = $feedItemGameService->find($itemId);
+        $feedItemData = $serviceFeedItemGame->find($itemId);
         if (!$feedItemData) abort(404);
 
         $request = request();
@@ -80,27 +90,27 @@ class FeedItemGameController extends BaseController
 
         $statusPending = [
             'id' => FeedItemGame::STATUS_PENDING,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_PENDING)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_PENDING)
         ];
         $statusOkToUpdate = [
             'id' => FeedItemGame::STATUS_OK_TO_UPDATE,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_OK_TO_UPDATE)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_OK_TO_UPDATE)
         ];
         $statusComplete = [
             'id' => FeedItemGame::STATUS_COMPLETE,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_COMPLETE)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_COMPLETE)
         ];
         $statusNoUpdateNeeded = [
             'id' => FeedItemGame::STATUS_NO_UPDATE_NEEDED,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_NO_UPDATE_NEEDED)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_NO_UPDATE_NEEDED)
         ];
         $statusSkippedByUser = [
             'id' => FeedItemGame::STATUS_SKIPPED_BY_USER,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_USER)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_USER)
         ];
         $statusSkippedByGameRules = [
             'id' => FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES,
-            'title' => $feedItemGameService->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES)
+            'title' => $serviceFeedItemGame->getStatusDesc(FeedItemGame::STATUS_SKIPPED_BY_GAME_RULES)
         ];
 
         $statusList = [
@@ -126,27 +136,27 @@ class FeedItemGameController extends BaseController
 
                 // If assigning a game id, we need to set the modified fields
                 $importer = new Importer();
-                $game = $gameService->find($gameId);
-                $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
+                $game = $serviceGame->find($gameId);
+                $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
                 $modifiedFields = $importer->getGameModifiedFields($feedItemData, $game, $gameReleaseDates);
                 $feedItemData->modified_fields = serialize($modifiedFields);
 
                 // We also need to add a new title hash if one doesn't already exist
-                $titleHash = $gameTitleHashService->generateHash($feedItemData->item_title);
-                $existingHash = $gameTitleHashService->getByHash($titleHash);
+                $titleHash = $serviceGameTitleHash->generateHash($feedItemData->item_title);
+                $existingHash = $serviceGameTitleHash->getByHash($titleHash);
                 if (!$existingHash) {
-                    $gameTitleHashService->create($feedItemData->item_title, $titleHash, $gameId);
+                    $serviceGameTitleHash->create($feedItemData->item_title, $titleHash, $gameId);
                 }
 
             }
 
             // Update the DB
-            $feedItemGameService->edit(
+            $serviceFeedItemGame->edit(
                 $feedItemData, $request->game_id, $request->status_code
             );
 
             // All done; send us back
-            return redirect(route('admin.feed-items.games.list'));
+            return redirect(route('staff.wikipedia.wiki-updates.list'));
 
         } else {
 
@@ -154,18 +164,18 @@ class FeedItemGameController extends BaseController
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Feed items - Games - Edit';
-        $bindings['PageTitle'] = 'Edit feed item';
+        $bindings['TopTitle'] = 'Wiki updates - Edit';
+        $bindings['PageTitle'] = 'Edit wiki update';
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
         // Load existing game data
         if ($feedItemData->game_id) {
             $gameId = $feedItemData->game_id;
-            $game = $gameService->find($gameId);
-            $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
+            $game = $serviceGame->find($gameId);
+            $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
             $bindings['GameData'] = $game;
             foreach ($gameReleaseDates as $gameReleaseDate) {
                 $region = strtoupper($gameReleaseDate->region);
@@ -173,6 +183,6 @@ class FeedItemGameController extends BaseController
             }
         }
 
-        return view('admin.feed-items.games.edit', $bindings);
+        return view('staff.wikipedia.wiki-updates.edit', $bindings);
     }
 }

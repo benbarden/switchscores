@@ -32,6 +32,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/admin/developer/add-game-developer', 'Api\Admin\Developer@addGameDeveloper');
 
-    Route::get('/admin/feed-item-game/update-status', 'Api\Admin\FeedItemGame@updateStatus');
+});
+
+/* Staff-restricted */
+// WIKIPEDIA
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_WIKIPEDIA_MANAGER]], function() {
+
+    Route::get('/staff/wikipedia/wiki-updates/update-status', 'Api\Staff\WikiUpdate@updateStatus');
 
 });

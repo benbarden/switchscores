@@ -49,13 +49,13 @@
                 </td>
             </tr>
             {% endif %}
-            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
             <tr>
                 <td>
-                    <a href="{{ route('admin.feed-items.games.list') }}">Feeds: Game updates</a>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}">Wiki updates</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.feed-items.games.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
                 </td>
             </tr>
             {% endif %}
@@ -137,7 +137,6 @@
 
         <ul>
             <li><a href="{{ route('admin.games.list') }}">All games</a></li>
-            <li><a href="{{ route('admin.feed-items.games.list') }}">Feed items - Games</a></li>
             <li><a href="{{ route('admin.user.list') }}">Users</a></li>
             <li><a href="{{ route('admin.news.list') }}">News</a></li>
             <li><a href="{{ route('admin.charts.date.list') }}">Charts</a> (no longer in use)</li>

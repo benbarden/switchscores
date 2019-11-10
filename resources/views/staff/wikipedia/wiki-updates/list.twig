@@ -1,6 +1,9 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.wikipedia.dashboard'), 'text': 'Wikipedia dashboard'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
@@ -84,7 +87,7 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.feed-items.games.edit', {'itemId': item.id}) }}">Edit</a>
+                        <a href="{{ route('staff.wikipedia.wiki-updates.edit', {'itemId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -98,7 +101,7 @@
 <script>
     $('#admin-nav-feed-item-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('admin.feed-items.games.list')}}' + '/' + selectedFilter;
+        top.location.href = '{{ route('staff.wikipedia.wiki-updates.list')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';

@@ -1,0 +1,74 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Action lists</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}">Wiki updates</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}" class="h4">{{ PendingWikiUpdateCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}">Wiki updates</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Tools</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaCrawlGamesList'}) }}">WikipediaCrawlGamesList</a>
+                    <br>
+                    <small>Crawls the Nintendo Switch games list on Wikipedia and saves data to the WOS database</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaImportGamesList'}) }}">WikipediaImportGamesList</a>
+                    <br>
+                    <small>Converts crawler data into Feed Items for creating or updating games</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaUpdateGamesList'}) }}">WikipediaUpdateGamesList</a>
+                    <br>
+                    <small>Processes feed items (games) that are marked as OK to update</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+</div>
+
+{% endblock page_inner %}

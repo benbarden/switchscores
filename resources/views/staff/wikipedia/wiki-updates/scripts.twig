@@ -32,10 +32,10 @@
             return false;
         }
 
-        $.getJSON('/api/admin/feed-item-game/update-status', {itemId: feedItemGameId, newStatusId: quickStatusId}, function(data) {
+        $.getJSON('/api/staff/wikipedia/wiki-updates/update-status', {itemId: feedItemGameId, newStatusId: quickStatusId}, function(data) {
             apiMessage = data.message;
             console.log(apiMessage);
-            top.location.href = '{{ route('admin.feed-items.games.list') }}';
+            top.location.href = '{{ route('staff.wikipedia.wiki-updates.list') }}';
             //$('#link_title').val(linkText);
         });
     });

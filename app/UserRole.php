@@ -12,6 +12,7 @@ class UserRole extends Model
     const ID_PARTNERSHIPS_MANAGER = 4;
     const ID_ESHOP_MANAGER = 5;
     const ID_NEWS_MANAGER = 6;
+    const ID_WIKIPEDIA_MANAGER = 7;
 
     const ROLE_GAMES_MANAGER = 'Games manager';
     const ROLE_REVIEWS_MANAGER = 'Reviews manager';
@@ -19,6 +20,7 @@ class UserRole extends Model
     const ROLE_PARTNERSHIPS_MANAGER = 'Partnerships manager';
     const ROLE_ESHOP_MANAGER = 'eShop manager';
     const ROLE_NEWS_MANAGER = 'News manager';
+    const ROLE_WIKIPEDIA_MANAGER = 'Wikipedia manager';
 
     public static function getRoleList()
     {
@@ -29,6 +31,7 @@ class UserRole extends Model
             self::ID_PARTNERSHIPS_MANAGER => self::ROLE_PARTNERSHIPS_MANAGER,
             self::ID_ESHOP_MANAGER => self::ROLE_ESHOP_MANAGER,
             self::ID_NEWS_MANAGER => self::ROLE_NEWS_MANAGER,
+            self::ID_WIKIPEDIA_MANAGER => self::ROLE_WIKIPEDIA_MANAGER,
         ];
     }
 
@@ -53,6 +56,9 @@ class UserRole extends Model
                 break;
             case self::ID_NEWS_MANAGER:
                 $role = self::ROLE_NEWS_MANAGER;
+                break;
+            case self::ID_WIKIPEDIA_MANAGER:
+                $role = self::ROLE_WIKIPEDIA_MANAGER;
                 break;
         }
 
@@ -80,6 +86,9 @@ class UserRole extends Model
                 break;
             case self::ROLE_NEWS_MANAGER:
                 $roleId = self::ID_NEWS_MANAGER;
+                break;
+            case self::ROLE_WIKIPEDIA_MANAGER:
+                $roleId = self::ID_WIKIPEDIA_MANAGER;
                 break;
         }
 

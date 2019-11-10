@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Staff;
 
-use App\Services\ServiceContainer;
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
-class FeedItemGame
+class WikiUpdate
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function updateStatus()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceFeedItemGame = $this->getServiceFeedItemGame();
 
         $request = request();
 
@@ -22,8 +25,6 @@ class FeedItemGame
         if (!$statusId) {
             return response()->json(['error' => 'Missing data: newStatusId'], 400);
         }
-
-        $serviceFeedItemGame = $serviceContainer->getFeedItemGameService();
 
         // Validation
         $feedItemGame = $serviceFeedItemGame->find($feedItemGameId);

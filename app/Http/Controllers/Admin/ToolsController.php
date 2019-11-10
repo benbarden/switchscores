@@ -27,25 +27,25 @@ class ToolsController extends Controller
                 'command' => 'WikipediaImportGamesList',
                 'group' => 'Wikipedia',
                 'title' => 'Wikipedia Import Games List',
-                'desc' => 'Converts crawler data into Feed Items for creating or updating games',
+                'desc' => 'Converts crawler data into Wiki Updates for creating or updating games',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0315',
                 'nextStep' => 'WikipediaUpdateGamesList',
                 'relatedLink' => [
-                    'url' => route('admin.feed-items.games.list'),
-                    'text' => 'Feed Items - Games'
+                    'url' => route('staff.wikipedia.wiki-updates.list'),
+                    'text' => 'Wiki updates'
                 ],
             ],
             'WikipediaUpdateGamesList' => [
                 'command' => 'WikipediaUpdateGamesList',
                 'group' => 'Wikipedia',
                 'title' => 'Wikipedia Update Games List',
-                'desc' => 'Processes feed items (games) that are marked as OK to update',
+                'desc' => 'Processes Wiki Updates that are marked as OK to update',
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0320',
                 'relatedLink' => [
-                    'url' => route('admin.feed-items.games.list'),
-                    'text' => 'Feed Items - Games'
+                    'url' => route('staff.wikipedia.wiki-updates.list'),
+                    'text' => 'Wiki Updates'
                 ],
             ],
             /* *** eShop *** */

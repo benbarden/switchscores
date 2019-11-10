@@ -230,6 +230,19 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
+// *************** Staff: WIKIPEDIA *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_WIKIPEDIA_MANAGER]], function() {
+
+    Route::get('/staff/wikipedia/dashboard', 'Staff\Wikipedia\DashboardController@show')->name('staff.wikipedia.dashboard');
+
+    // Wiki updates
+    Route::get('/staff/wikipedia/wiki-updates/{report?}', 'Staff\Wikipedia\WikiUpdatesController@showList')->name('staff.wikipedia.wiki-updates.list');
+    Route::get('/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
+    Route::post('/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
+
+});
+
+
 // *************** Staff: Admin-only *************** //
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
@@ -362,11 +375,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/feed-items/reviews/{report?}', 'Admin\FeedItemReviewController@showList')->name('admin.feed-items.reviews.list');
     Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
     Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
-
-    // Feed items: Games
-    Route::get('/admin/feed-items/games/{report?}', 'Admin\FeedItemGameController@showList')->name('admin.feed-items.games.list');
-    Route::get('/admin/feed-items/games/edit/{linkId}', 'Admin\FeedItemGameController@edit')->name('admin.feed-items.games.edit');
-    Route::post('/admin/feed-items/games/edit/{linkId}', 'Admin\FeedItemGameController@edit')->name('admin.feed-items.games.edit');
 
     // Feed items: eShop (Europe)
     Route::get('/admin/feed-items/eshop/europe/{report?}', 'Admin\FeedItemEshopEuropeController@showList')->name('admin.feed-items.eshop.europe.list');
