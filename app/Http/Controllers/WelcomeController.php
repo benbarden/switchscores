@@ -27,18 +27,22 @@ class WelcomeController extends Controller
         $bindings['TopRatedAllTime'] = $this->getServiceTopRated()->getList($regionCode, 20);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 20);
 
-        // Featured
+        // --- Featured
+        // Oct 2019
         $idLittleTownHero = 2925;
         $idCatQuestII = 3073;
+        // Oct 2019
         $idLuigisMansion = 2706;
+        // Nov 2019
         $idDisneyTsumTsumFestival = 3174;
-        $idLaytonsMysteryJourney = 2665;
-        $idMarioSonicOlympicGames = 2862;
         $idNewSuperLuckysTale = 3138;
+        // 15th Nov 2019
+        $idSparklite = 3078;
+        $idPokemonSword = 2536;
+
         $featuredIdList = [
-            $idDisneyTsumTsumFestival,
-            $idNewSuperLuckysTale,
-            $idLuigisMansion,
+            $idSparklite,
+            $idPokemonSword,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
         $featuredGameId = rand(0, count($featuredIdList)-1);
