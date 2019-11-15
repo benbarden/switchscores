@@ -1,0 +1,64 @@
+{# PACKSHOTS #}
+{% if item.boxart_header_image %}
+    {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
+{% endif %}
+
+<div class="col-sm-12 col-md-12 col-lg-12">
+    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+        {% if boxartUrl %}
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+        {% else %}
+            <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+        {% endif %}
+    </a>
+</div>
+<div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-md-2 col-lg-2">
+            <span class="h5 label bg-primary">#{{ item.game_rank }}</span>
+        </div>
+        <div class="col-sm-7 col-md-7 col-lg-7">
+            <span class="h4">
+                <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+            </span>
+        </div>
+        <div class="col-sm-2 col-md-2 col-lg-2">
+            {% if item.rating_avg %}
+                {% if item.game_rank %}
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                {% else %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            &nbsp;
+        </div>
+    </div>
+    {#
+    <p>
+    <div class="pull-left">
+        <span class="h4 label bg-primary">#{{ item.game_rank }}</span>
+    </div>
+    <div class="pull-right">
+        {% if item.rating_avg %}
+            {% if item.game_rank %}
+                {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h4'} %}
+            {% else %}
+                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+            {% endif %}
+        {% endif %}
+    </div>
+    <span class="h4" style="margin-left: 5px;">
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+    </span>
+    </p>
+    #}
+</div>

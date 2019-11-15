@@ -276,6 +276,10 @@ class GamesBrowseController extends Controller
         $bindings['CalendarDateDesc'] = $dtDateDesc;
         $bindings['CalendarDateUrl'] = $dateUrl;
 
+        // Top Rated by month
+        $yearMonth = $calendarYear.$calendarMonth;
+        $bindings['GamesRatingsWithRanks'] = $this->getServiceGameRankYearMonth()->getList($yearMonth, 50);
+
         return view('games.browse.byDatePage', $bindings);
     }
 
