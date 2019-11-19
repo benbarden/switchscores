@@ -151,9 +151,6 @@ class FeedItemEshopEuropeController extends Controller
 
                 }
 
-                // Game change history
-                GameChangeHistoryFactory::makeHistory($game, null, Auth::user()->id, 'games');
-
                 // Update eShop data
                 EshopEuropeUpdateGameFactory::updateGame($game);
                 EshopEuropeRedownloadPackshotsFactory::redownloadPackshots($game);
@@ -168,15 +165,25 @@ class FeedItemEshopEuropeController extends Controller
                     if ($gameReleaseDateExisting) {
                         $releaseDate = $gameReleaseDateExisting->release_date;
                         $releaseYear = $gameReleaseDateExisting->release_year;
+                        $isReleased = $gameReleaseDateExisting->is_released;
                         if (!$releaseYear) {
                             $releaseYear = $serviceGameReleaseDate->getReleaseYear($releaseDate);
                             $gameReleaseDateExisting->release_year = $releaseYear;
                             $gameReleaseDateExisting->save();
                         }
+                        if ($region == 'eu') {
+                            if ($isReleased == 1) {
+                                $dateNow = new \DateTime('now');
+                                $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
+                                $game->save();
+                            }
+                        }
                     }
 
                 }
 
+                // Game change history
+                GameChangeHistoryFactory::makeHistory($game, null, Auth::user()->id, 'games');
 
                 // Trigger event
                 event(new GameCreated($game));
