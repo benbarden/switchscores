@@ -238,6 +238,14 @@ class GamesController extends Controller
                 $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
                 $gameReleaseDate->save();
 
+                if ($region == 'eu') {
+                    if ($gameReleaseDate->is_released == 1) {
+                        $dateNow = new \DateTime('now');
+                        $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
+                        $game->save();
+                    }
+                }
+
             }
 
             // Update genres
