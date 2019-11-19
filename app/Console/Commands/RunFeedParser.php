@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Traits\WosServices;
+
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
 use App\Services\FeedItemReviewService;
@@ -15,6 +17,8 @@ use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
 class RunFeedParser extends Command
 {
+    use WosServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -49,6 +53,9 @@ class RunFeedParser extends Command
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
+
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
+
 
         $feedItemReviewService = resolve('Services\FeedItemReviewService');
         /* @var FeedItemReviewService $feedItemReviewService */
@@ -117,11 +124,21 @@ class RunFeedParser extends Command
                 $feedItem->parsed_title = $parsedTitle;
                 $logger->info("Parsed title: $parsedTitle");
 
+                // Check for curly quotes
+                $titleMatches = [];
+                $titleMatches[] = $parsedTitle;
+                if (strpos($parsedTitle, "’") !== false) {
+                    $titleMatches[] = str_replace("’", "'", $parsedTitle);
+                }
+
+                $logger->info('Checking for matches: '.var_export($titleMatches, true));
+
                 // Can we find a game from this title?
-                $game = $gameService->getByTitle($parsedTitle);
-                if ($game) {
-                    $feedItem->game_id = $game->id;
-                    $parseStatus = 'Matched item to game '.$game->id;
+                //$game = $gameService->getByTitle($parsedTitle);
+                $gameTitleHash = $serviceGameTitleHash->getByTitleGroup($titleMatches);
+                if ($gameTitleHash) {
+                    $feedItem->game_id = $gameTitleHash->game_id;
+                    $parseStatus = 'Matched item to game '.$gameTitleHash->game_id;
                     $logger->info($parseStatus);
                 } else {
                     $parseStatus = 'Could not locate game';

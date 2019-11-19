@@ -46,19 +46,33 @@ class GameTitleHashService
 
     // ********************************************************** //
 
-    public function find($id)
+    public function find($id): GameTitleHash
     {
         return GameTitleHash::find($id);
     }
 
-    public function generateHash($title)
+    public function generateHash($title): string
     {
         return md5($title);
     }
 
-    public function getByHash($hash)
+    public function getByHash($hash): GameTitleHash
     {
         $gameTitleHash = GameTitleHash::where('title_hash', $hash)->get();
+        if ($gameTitleHash) {
+            return $gameTitleHash->first();
+        } else {
+            return null;
+        }
+    }
+
+    public function getByTitleGroup(array $titles)
+    {
+        foreach ($titles as &$title) {
+            $title = $this->generateHash($title);
+        }
+
+        $gameTitleHash = GameTitleHash::whereIn('title_hash', $titles)->get();
         if ($gameTitleHash) {
             return $gameTitleHash->first();
         } else {
