@@ -4,25 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
 
 class TopRatedController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
-        $serviceGameRankYear = $serviceContainer->getGameRankYearService();
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceGameRankYear = $this->getServiceGameRankYear();
 
         $bindings = [];
 
         $thisYear = date('Y');
         $bindings['Year'] = $thisYear;
         $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
+        $bindings['TopRated2018'] = $serviceGameRankYear->getList(2018, 15);
         $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
@@ -33,10 +33,7 @@ class TopRatedController extends Controller
 
     public function multiplayer()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
 
         $bindings = [];
 
@@ -50,16 +47,9 @@ class TopRatedController extends Controller
 
     public function allTime()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceTopRated = $serviceContainer->getTopRatedService();
-
         $bindings = [];
 
-        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
         $gamesList = $serviceGameRankAllTime->getList(100);
 
         $bindings['TopRatedAllTime'] = $gamesList;
@@ -72,12 +62,7 @@ class TopRatedController extends Controller
 
     public function byYear($year)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameRankYear = $serviceContainer->getGameRankYearService();
+        $serviceGameRankYear = $this->getServiceGameRankYear();
 
         $allowedYears = [2017, 2018, 2019];
         if (!in_array($year, $allowedYears)) {
@@ -96,99 +81,6 @@ class TopRatedController extends Controller
         $bindings['PageTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
 
         return view('topRated.byYear', $bindings);
-    }
-
-    public function byMonthLanding()
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-        $regionCodeDesc = null;
-        switch ($regionCode) {
-            case 'eu':
-                $regionCodeDesc = 'Europe';
-                break;
-            case 'us':
-                $regionCodeDesc = 'US';
-                break;
-            case 'jp':
-                $regionCodeDesc = 'Japan';
-                break;
-            default:
-                break;
-        }
-
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-
-        $bindings = [];
-
-        if ($regionCodeDesc) {
-            $bindings['RegionCodeDesc'] = $regionCodeDesc;
-        }
-
-        $bindings['TopTitle'] = 'Top Rated Nintendo Switch games - By month';
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games - By month';
-
-        $dateList = $serviceGameCalendar->getAllowedDates();
-        $dateListArray = [];
-
-        if ($dateList) {
-
-            foreach ($dateList as $date) {
-
-                list($dateYear, $dateMonth) = explode('-', $date);
-
-                $gameCalendarStat = $serviceGameCalendar->getStat($regionCode, $dateYear, $dateMonth);
-                $dateCount = $gameCalendarStat->released_count;
-
-                $dateListArray[] = [
-                    'DateRaw' => $date,
-                    'GameCount' => $dateCount,
-                ];
-
-            }
-
-        }
-
-        $bindings['DateList'] = $dateListArray;
-
-        return view('topRated.byMonthLanding', $bindings);
-    }
-
-    public function byMonthPage($date)
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-        $serviceGameRankYearMonth = $serviceContainer->getGameRankYearMonthService();
-
-        $dates = $serviceGameCalendar->getAllowedDates();
-        if (!in_array($date, $dates)) {
-            abort(404);
-        }
-
-        $bindings = [];
-
-        $dtDate = new \DateTime($date);
-        $dtDateDesc = $dtDate->format('M Y');
-
-        $calendarYear = $dtDate->format('Y');
-        $calendarMonth = $dtDate->format('m');
-        $yearMonth = $calendarYear.$calendarMonth;
-
-        $bindings['GamesRatingsWithRanks'] = $serviceGameRankYearMonth->getList($yearMonth);
-
-        $bindings['TopTitle'] = 'Top Rated Nintendo Switch games - By month: '.$dtDateDesc;
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games - By month: '.$dtDateDesc;
-        $bindings['SubTitle'] = 'Top Rated games in '.$dtDateDesc;
-
-        $bindings['CalendarDateDesc'] = $dtDateDesc;
-
-        return view('topRated.byMonthPage', $bindings);
     }
 
 }

@@ -72,7 +72,7 @@
                         {% set GameRankYearMonthUrl = ReleaseDateInfo.release_date|date('Y-m') %}
                         {% set GameRankYearMonthDisplay = ReleaseDateInfo.release_date|date('M Y') %}
                         <span class="h4" style="margin: 5px 0;">
-                            <span><a href="{{ route('topRated.byMonthPage', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a></span>
+                            <span><a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a></span>
                             <strong>#{{ GameData.gameRankYearMonth.game_rank }}</strong>
                         </span>
                     {% endif %}

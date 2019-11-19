@@ -75,8 +75,6 @@ Route::get('/charts-us/{date?}', 'ChartsController@redirectUs')->name('charts.us
 Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
 Route::get('/top-rated/all-time', 'TopRatedController@allTime')->name('topRated.allTime');
 Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topRated.byYear');
-Route::get('/top-rated/by-month', 'TopRatedController@byMonthLanding')->name('topRated.byMonthLanding');
-Route::get('/top-rated/by-month/{date}', 'TopRatedController@byMonthPage')->name('topRated.byMonthPage');
 Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */

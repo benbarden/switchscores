@@ -180,26 +180,6 @@ class SitemapController extends Controller
                 'priority' => '0.8'
             );
 
-            $sitemapPages[] = array(
-                'url' => route('topRated.byMonthLanding'),
-                'lastmod' => $timestamp,
-                'changefreq' => 'weekly',
-                'priority' => '0.8'
-            );
-
-            $dateList = $serviceCalendar->getAllowedDates();
-
-            foreach ($dateList as $dateListItem) {
-
-                $sitemapPages[] = array(
-                    'url' => route('topRated.byMonthPage', ['date' => $dateListItem]),
-                    'lastmod' => $timestamp,
-                    'changefreq' => 'weekly',
-                    'priority' => '0.8'
-                );
-
-            }
-
             $bindings['SitemapPages'] = $sitemapPages;
 
             return response()->view('sitemap.standard', $bindings)->header('Content-Type', 'text/xml');
