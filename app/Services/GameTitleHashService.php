@@ -56,7 +56,7 @@ class GameTitleHashService
         return md5($title);
     }
 
-    public function getByHash($hash): GameTitleHash
+    public function getByHash($hash)
     {
         $gameTitleHash = GameTitleHash::where('title_hash', $hash)->get();
         if ($gameTitleHash) {
