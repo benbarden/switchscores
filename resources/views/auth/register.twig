@@ -26,15 +26,15 @@
                             <label for="display_name" class="col-md-4 control-label">Display name</label>
 
                             <div class="col-md-6">
-                                <input id="display_name" type="text" class="form-control" name="display_name" value="{{ old('display_name') }}" required autofocus>
+                                <input id="display_name" type="text" class="form-control" name="display_name" value="{{ old('display_name') }}" maxlength="50" required autofocus>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="col-md-4 control-label">Email Address</label>
+                            <label for="email" class="col-md-4 control-label">Email address</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" maxlength="100" required>
                             </div>
                         </div>
 

@@ -49,7 +49,15 @@ class RegisterController extends BaseController
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'display_name' => 'required|string|max:100',
+            'display_name' => [
+                'required', 'string', 'max:50',
+                function($attribute, $value, $fail) {
+                    $filteredString = preg_replace('/[^A-Za-z0-9\-\.\_\ \']/', '', $value);
+                    if ($value != $filteredString) {
+                        return $fail('Please remove special characters from the display name. Spaces, hyphens and underscores are permitted.');
+                    }
+                },
+            ],
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
