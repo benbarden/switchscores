@@ -114,7 +114,7 @@ class FeedItemEshopEuropeController extends Controller
 
             // Check for duplicates
             if ($existingTitleHash != null) {
-                $customErrors[] = 'Title already exists for another record!';
+                $customErrors[] = 'Title already exists for another record! Game id: '.$existingTitleHash->game_id;
                 $okToProceed = false;
             }
 
@@ -193,6 +193,8 @@ class FeedItemEshopEuropeController extends Controller
             }
 
         }
+
+        $bindings['ErrorsCustom'] = $customErrors;
 
         return view('admin.feed-items.eshop.europe.add-game', $bindings);
     }
