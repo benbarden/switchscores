@@ -56,7 +56,7 @@ class WelcomeController extends Controller
         $bindings['TotalReviews'] = $this->getServiceReviewLink()->countActive();
 
         $bindings['TopTitle'] = 'Welcome';
-        $bindings['PageTitle'] = 'World of Switch - Homepage';
+        $bindings['PageTitle'] = 'Switch Scores - Homepage';
 
         return view('welcome', $bindings);
     }

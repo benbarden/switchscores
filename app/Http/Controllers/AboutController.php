@@ -13,7 +13,7 @@ class AboutController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'About';
-        $bindings['PageTitle'] = 'About World of Switch';
+        $bindings['PageTitle'] = 'About Switch Scores';
 
         return view('about', $bindings);
     }
