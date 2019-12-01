@@ -1,6 +1,6 @@
-# worldofswitch
+# switchscores
 
-* [Template helpers](https://github.com/benbarden/worldofswitch/wiki/Template-helpers)
+* [Template helpers](https://github.com/benbarden/switchscores/wiki/Template-helpers)
 
 ## Vagrant
 
