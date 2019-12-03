@@ -175,7 +175,7 @@ class BuilderTest extends TestCase
     {
         $gameOrigArray = ['title' => 'Super Mario Odyssey', 'link_title' => 'super-mario-odyssey'];
         $gameNewArray = ['title' => 'Super Mario Odyssey'];
-        $gameChangesArray = ['link_title' => 'super-mario-odyssey'];
+        $gameChangesArray = []; //['link_title' => 'super-mario-odyssey'];
 
         $builder = new Builder();
 

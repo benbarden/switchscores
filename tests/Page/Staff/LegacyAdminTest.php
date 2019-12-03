@@ -131,10 +131,10 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminFeedItemsGames()
+    public function testStaffWikipediaWikiUpdates()
     {
         $this->be($this->userAdmin);
-        $response = $this->get('/admin/feed-items/games');
+        $response = $this->get('/staff/wikipedia/wiki-updates');
         $response->assertStatus(200);
     }
 

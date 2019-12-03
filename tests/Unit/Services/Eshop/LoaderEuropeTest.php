@@ -56,20 +56,6 @@ class LoaderEuropeTest extends TestCase
         $this->assertEquals(48, count(array_keys($gameData[0])));
     }
 
-    public function testExpectedFields()
-    {
-        $this->loader->loadLocalData('europe-test-25-games.json');
-        $responseArray = $this->loader->getResponseData();
-        $gameData = $responseArray['response']['docs'];
-
-        $gameDataKeys = array_keys($gameData);
-        $expectedFields = $this->loader->getExpectedFields();
-
-        foreach ($gameDataKeys as $dataKey) {
-            $this->assertArrayHasKey($dataKey, $expectedFields);
-        }
-    }
-
     public function testLoadGames1500()
     {
         $this->loader->loadLocalData('europe-test-1500-games.json');
