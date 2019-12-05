@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use App\EshopEuropeGame;
 use App\Game;
 use App\GameReleaseDate;
+use App\EshopEuropeAlert;
 
 use App\Services\GenreService;
 use App\Services\GameGenreService;
@@ -17,6 +18,11 @@ class UpdateGameData
      * @var EshopEuropeGame
      */
     private $eshopItem;
+
+    /**
+     * @var EshopEuropeAlert
+     */
+    private $eshopAlert;
 
     /**
      * @var Game
@@ -53,6 +59,9 @@ class UpdateGameData
      */
     private $logMessageError;
 
+    /**
+     * @return EshopEuropeGame
+     */
     public function getEshopItem()
     {
         return $this->eshopItem;
@@ -61,6 +70,37 @@ class UpdateGameData
     public function setEshopItem($eshopItem)
     {
         $this->eshopItem = $eshopItem;
+    }
+
+    /**
+     * @return EshopEuropeAlert
+     */
+    public function getEshopAlert()
+    {
+        return $this->eshopAlert;
+    }
+
+    public function setEshopAlert($typeId, $errorMsg, $currentData, $newData)
+    {
+        $eshopAlert = new EshopEuropeAlert();
+        $eshopAlert->game_id = $this->game->id;
+        $eshopAlert->type = $typeId;
+        $eshopAlert->error_message = $errorMsg;
+        $eshopAlert->current_data = $currentData;
+        $eshopAlert->new_data = $newData;
+        $this->eshopAlert = $eshopAlert;
+    }
+
+    public function setEshopAlertError($errorMsg, $currentData, $newData)
+    {
+        $typeId = EshopEuropeAlert::TYPE_ERROR;
+        $this->setEshopAlert($typeId, $errorMsg, $currentData, $newData);
+    }
+
+    public function setEshopAlertWarning($errorMsg, $currentData, $newData)
+    {
+        $typeId = EshopEuropeAlert::TYPE_WARNING;
+        $this->setEshopAlert($typeId, $errorMsg, $currentData, $newData);
     }
 
     public function getGame()
@@ -101,6 +141,7 @@ class UpdateGameData
         $this->logMessageInfo = null;
         $this->logMessageWarning = null;
         $this->logMessageError = null;
+        $this->eshopAlert = null;
     }
 
     public function getLogMessageInfo()
@@ -172,6 +213,8 @@ class UpdateGameData
             $this->logMessageWarning = $gameTitle.' - different player info. '.
                 'Game data: '.$gamePlayers.' - '.
                 'Expected: '.$expectedPlayers;
+            // Set alert
+            $this->setEshopAlertWarning('Different player info', $gamePlayers, $expectedPlayers);
         } else {
             // Same value, nothing to do
         }
@@ -202,6 +245,8 @@ class UpdateGameData
                 $this->logMessageWarning = $gameTitle.' - different publisher. '.
                     'Game data: '.$this->game->publisher.' - '.
                     'Expected: '.$eshopPublisher;
+                // Set alert
+                $this->setEshopAlertWarning('Different publisher', $this->game->publisher, $eshopPublisher);
             } else {
                 // Same value, nothing to do
             }
@@ -244,6 +289,9 @@ class UpdateGameData
             // Skip negative prices. This is an error in the API!
             $this->logMessageError = $gameTitle . ' - Price is negative - skipping. ' .
                 'Price: ' . $eshopPriceLowest;
+
+            // Set alert
+            $this->setEshopAlertError('Price is negative', $this->game->price_eshop, $eshopPriceLowest);
 
         } elseif ($eshopPriceDiscount != '0.0') {
 
@@ -304,6 +352,10 @@ class UpdateGameData
             }
         } catch (\Throwable $e) {
             $this->logMessageError = 'ERROR: ['.$eshopReleaseDateRaw.'] - '.$e->getMessage();
+
+            // Set alert
+            $this->setEshopAlertError('Date error', $this->gameReleaseDate->release_date, $eshopReleaseDateRaw);
+
             return;
         }
 
@@ -338,6 +390,9 @@ class UpdateGameData
                 $this->logMessageWarning = $gameTitle.' - different release date. '.
                     'Game data: '.$this->gameReleaseDate->release_date.' - '.
                     'eShop data: '.$eshopReleaseDate;
+
+                // Set alert
+                $this->setEshopAlertWarning('Different release date', $this->gameReleaseDate->release_date, $eshopReleaseDate);
 
             } else {
 
@@ -388,6 +443,9 @@ class UpdateGameData
                 'Check for differences.';
             $okToAddGenres = false;
 
+            // Set alert
+            $this->setEshopAlertWarning('Different genre count', implode(',', $gameGenresArray), implode(',', $eshopGenres));
+
         } else {
 
             $okToAddGenres = false;
@@ -403,6 +461,8 @@ class UpdateGameData
             $genreItem = $serviceGenre->getByGenreTitle($eshopGenre);
             if (!$genreItem) {
                 $this->logMessageError = 'Genre not found: '.$genreItem.'; skipping';
+                // Set alert
+                $this->setEshopAlertError('Genre not found', null, $genreItem);
                 continue;
             }
             $genreId = $genreItem->id;

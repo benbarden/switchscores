@@ -27,6 +27,22 @@
                     <a href="{{ route('admin.action-lists.no-price') }}" class="h4">{{ NoPriceCount }}</a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.eshop.alerts.errors') }}">eShop update alerts: Errors</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.eshop.alerts.errors') }}" class="h4">{{ EshopAlertErrorCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.eshop.alerts.warnings') }}">eShop update alerts: Warnings</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.eshop.alerts.warnings') }}" class="h4">{{ EshopAlertWarningCount }}</a>
+                </td>
+            </tr>
             </tbody>
         </table>
 

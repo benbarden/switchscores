@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
+use App\EshopEuropeAlert;
+
 use App\Services\Eshop\Europe\FieldMapper;
 
 class DashboardController extends Controller
@@ -20,6 +22,7 @@ class DashboardController extends Controller
 
         $serviceGame = $this->getServiceGame();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
+        $serviceEshopEuropeAlert = $this->getServiceEshopEuropeAlert();
 
         $bindings = [];
 
@@ -28,6 +31,8 @@ class DashboardController extends Controller
 
         // Action lists
         $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
+        $bindings['EshopAlertErrorCount'] = $serviceEshopEuropeAlert->countByType(EshopEuropeAlert::TYPE_ERROR);
+        $bindings['EshopAlertWarningCount'] = $serviceEshopEuropeAlert->countByType(EshopEuropeAlert::TYPE_WARNING);
 
         // Stats
         $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();

@@ -8,6 +8,7 @@ use App\Services\ActivityFeedService;
 use App\Services\ChartsDateService;
 use App\Services\ChartsRankingGlobalService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
+use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\FeedItemGameService;
 use App\Services\FeedItemReviewService;
@@ -147,6 +148,14 @@ trait WosServices
     public function getServiceEshopEuropeGame()
     {
         return $this->loadService('EshopEuropeGameService');
+    }
+
+    /**
+     * @return EshopEuropeAlertService
+     */
+    public function getServiceEshopEuropeAlert()
+    {
+        return $this->loadService('EshopEuropeAlertService');
     }
 
     /**

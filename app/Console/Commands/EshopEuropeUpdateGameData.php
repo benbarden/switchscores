@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Traits\WosServices;
+
 use App\Services\GameService;
 use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\Europe\UpdateGameData;
@@ -14,6 +16,8 @@ use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 
 class EshopEuropeUpdateGameData extends Command
 {
+    use WosServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -54,6 +58,10 @@ class EshopEuropeUpdateGameData extends Command
         /* @var EshopEuropeGameService $eshopEuropeGameService */
 
         $serviceUpdateGameData = new UpdateGameData();
+
+        $logger->info('Clearing previous alerts...');
+
+        $this->getServiceEshopEuropeAlert()->clearAll();
 
         $logger->info('Loading data...');
 
@@ -103,6 +111,11 @@ class EshopEuropeUpdateGameData extends Command
             foreach ($updateGameDataMethods as $method) {
 
                 call_user_func([$serviceUpdateGameData, $method]);
+
+                $eshopAlert = $serviceUpdateGameData->getEshopAlert();
+                if ($eshopAlert != null) {
+                    $eshopAlert->save();
+                }
 
                 if ($serviceUpdateGameData->getLogMessageError()) {
 

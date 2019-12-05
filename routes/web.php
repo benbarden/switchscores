@@ -225,6 +225,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/eshop/report/{reportName}', 'Staff\Eshop\ReportController@show')->name('staff.eshop.report');
     Route::get('/staff/eshop/report/{reportName}/game-list/{filterValue}', 'Staff\Eshop\ReportController@gameList')->name('staff.eshop.report.gameList');
 
+    Route::get('/staff/eshop/alerts/errors', 'Staff\Eshop\AlertsController@showErrors')->name('staff.eshop.alerts.errors');
+    Route::get('/staff/eshop/alerts/warnings', 'Staff\Eshop\AlertsController@showWarnings')->name('staff.eshop.alerts.warnings');
+
 });
 
 
