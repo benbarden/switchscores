@@ -317,10 +317,64 @@
         <div id="tabs">
 
             <ul>
-                <li><a href="#tabs-change-history">Change history</a></li>
+                <li><a href="#tabs-audit">Audit</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
+                <li><a href="#tabs-change-history">Change history (old)</a></li>
             </ul>
+
+            <div id="tabs-audit">
+
+                <h2>Audit</h2>
+
+                {% if GameAuditsCore|length %}
+                    <table class="table table-condensed table-responsive">
+                        <thead>
+                        <tr>
+                            <th class="text-right">#</th>
+                            <th>Old values</th>
+                            <th>New values</th>
+                            <th class="text-center">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in GameAuditsCore %}
+                            <tr>
+                                <td class="text-right">
+                                    {{ item.id }}
+                                </td>
+                                <td>
+                                    {% if item.old_values %}
+                                        <p>
+                                            <small>
+                                            {% for vf, vv in item.old_values %}
+                                                {{ vf }}: {{ vv }}<br>
+                                            {% endfor %}
+                                            </small>
+                                        </p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.new_values %}
+                                        <p>
+                                            <small>
+                                                {% for vf, vv in item.new_values %}
+                                                    {{ vf }}: {{ vv }}<br>
+                                                {% endfor %}
+                                            </small>
+                                        </p>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            </div>
 
             <div id="tabs-change-history">
 

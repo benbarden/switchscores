@@ -4,8 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Game extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class Game extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     /**
      * @var string
      */

@@ -92,24 +92,33 @@ class EshopEuropeRedownloadPackshots extends Command
                 continue;
             }
 
-            // Square
-            $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
-            $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            if ($eshopPackshotEuropeService->getIsAborted() == false) {
-                $game->boxart_square_url = $destFilename;
-                $game->save();
-                $logger->info('Square packshot saved!: '.$destFilename);
-                $logger->info('**************************************************');
-            }
+            try {
 
-            // Header
-            $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
-            $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            if ($eshopPackshotEuropeService->getIsAborted() == false) {
-                $game->boxart_header_image = $destFilename;
-                $game->save();
-                $logger->info('Header packshot saved!: '.$destFilename);
-                $logger->info('**************************************************');
+                // Square
+                $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
+                $destFilename = $eshopPackshotEuropeService->getDestFilename();
+                if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                    $game->boxart_square_url = $destFilename;
+                    $game->save();
+                    $logger->info('Square packshot saved!: '.$destFilename);
+                    $logger->info('**************************************************');
+                }
+
+                // Header
+                $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
+                $destFilename = $eshopPackshotEuropeService->getDestFilename();
+                if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                    $game->boxart_header_image = $destFilename;
+                    $game->save();
+                    $logger->info('Header packshot saved!: '.$destFilename);
+                    $logger->info('**************************************************');
+                }
+
+            } catch (\Exception $e) {
+
+                $logger->error($e->getMessage());
+                continue;
+
             }
         }
     }

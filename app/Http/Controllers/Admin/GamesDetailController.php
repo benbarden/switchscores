@@ -74,6 +74,10 @@ class GamesDetailController extends Controller
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
         $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
 
+        // Audit data
+        $gameAuditsCore = $game->audits()->orderBy('created_at', 'desc')->get();
+        $bindings['GameAuditsCore'] = $gameAuditsCore;
+
         return view('admin.games-detail.show', $bindings);
     }
 

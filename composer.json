@@ -12,6 +12,7 @@
         "laravel/framework": "5.8.*",
         "laravel/socialite": "^4.1",
         "laravel/tinker": "~1.0",
+        "owen-it/laravel-auditing": "^9.3",
         "rcrowe/twigbridge": "^0.11.0",
         "sentry/sentry-laravel": "1.4.1"
     },

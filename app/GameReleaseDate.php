@@ -4,8 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GameReleaseDate extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class GameReleaseDate extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     const REGION_EU = 'eu';
     const REGION_US = 'us';
     const REGION_JP = 'jp';

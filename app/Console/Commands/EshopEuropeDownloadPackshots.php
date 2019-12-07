@@ -92,17 +92,26 @@ class EshopEuropeDownloadPackshots extends Command
                 continue;
             }
 
-            // Square packshot
-            $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
-            $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            $logger->info('Saving square packshot: '.$destFilename);
-            $game->boxart_square_url = $destFilename;
+            try {
 
-            // Header
-            $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
-            $destFilename = $eshopPackshotEuropeService->getDestFilename();
-            $logger->info('Saving header packshot: '.$destFilename);
-            $game->boxart_header_image = $destFilename;
+                // Square packshot
+                $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
+                $destFilename = $eshopPackshotEuropeService->getDestFilename();
+                $logger->info('Saving square packshot: '.$destFilename);
+                $game->boxart_square_url = $destFilename;
+
+                // Header
+                $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
+                $destFilename = $eshopPackshotEuropeService->getDestFilename();
+                $logger->info('Saving header packshot: '.$destFilename);
+                $game->boxart_header_image = $destFilename;
+
+            } catch (\Exception $e) {
+
+                $logger->error($e->getMessage());
+                continue;
+
+            }
 
             $game->save();
             $logger->info('Packshot(s) saved!');
