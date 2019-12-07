@@ -15,14 +15,14 @@ class WikipediaParserTest extends TestCase
      */
     private $wikiParser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->wikiParser = new WikiParser();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->wikiParser);
 

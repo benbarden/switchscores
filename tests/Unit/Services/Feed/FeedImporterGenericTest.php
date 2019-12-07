@@ -16,14 +16,14 @@ class FeedImporterGenericTest extends TestCase
      */
     private $feedImporter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->feedImporter = new Importer();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->feedImporter);
 

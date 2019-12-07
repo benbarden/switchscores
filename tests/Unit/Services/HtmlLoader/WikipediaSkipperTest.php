@@ -23,7 +23,7 @@ class WikipediaSkipperTest extends TestCase
      */
     private $wikiDateHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->wikiSkipper = new WikiSkipper();
         $this->wikiDateHandler = new WikiDateHandler();
@@ -31,7 +31,7 @@ class WikipediaSkipperTest extends TestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->wikiSkipper);
         unset($this->wikiDateHandler);

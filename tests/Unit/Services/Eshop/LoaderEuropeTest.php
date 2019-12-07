@@ -16,14 +16,14 @@ class LoaderEuropeTest extends TestCase
      */
     private $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loader = new LoaderEurope();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->loader);
 

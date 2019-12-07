@@ -16,13 +16,13 @@ class UrlGenerateLinkTextTest extends TestCase
      */
     private $urlService;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->urlService = new UrlService();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->urlService);

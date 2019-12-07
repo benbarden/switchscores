@@ -18,7 +18,7 @@ class LegacyAdminTest extends TestCase
      */
     private $userAdmin;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class LegacyAdminTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->userStandard);

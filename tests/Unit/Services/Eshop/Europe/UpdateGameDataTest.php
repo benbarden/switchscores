@@ -18,14 +18,14 @@ class UpdateGameDataTest extends TestCase
      */
     private $serviceUpdateGameData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceUpdateGameData = new UpdateGameData();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->serviceUpdateGameData);
 

@@ -19,7 +19,7 @@ class ParserTest extends TestCase
      */
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $titleParser = new TitleParser();
         $this->parser = new Parser($titleParser);
@@ -27,7 +27,7 @@ class ParserTest extends TestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->parser);
 

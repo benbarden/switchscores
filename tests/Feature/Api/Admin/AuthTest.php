@@ -24,7 +24,7 @@ class AuthTest extends TestCase
      */
     private $userOwner;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +36,7 @@ class AuthTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->userStandard);

@@ -17,14 +17,14 @@ class WikipediaDateHandlerTest extends TestCase
      */
     private $dateHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->dateHandler = new DateHandler();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->dateHandler);
 

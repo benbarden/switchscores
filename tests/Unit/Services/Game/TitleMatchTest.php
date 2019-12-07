@@ -17,13 +17,13 @@ class TitleMatchTest extends TestCase
      */
     private $gameTitleMatch;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gameTitleMatch = new TitleMatch();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->gameTitleMatch);

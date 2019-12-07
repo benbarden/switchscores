@@ -15,14 +15,14 @@ class WikipediaCrawlerTest extends TestCase
      */
     private $wikiCrawler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->wikiCrawler = new WikiCrawler();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->wikiCrawler);
 

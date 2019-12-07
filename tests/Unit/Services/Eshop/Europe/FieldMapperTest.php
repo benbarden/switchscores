@@ -13,13 +13,13 @@ class FieldMapperTest extends TestCase
      */
     private $fieldMapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->fieldMapper = new FieldMapper();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->fieldMapper);

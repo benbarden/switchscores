@@ -17,14 +17,14 @@ class WikipediaImporterTest extends TestCase
      */
     private $wikiImporter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->wikiImporter = new WikiImporter();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->wikiImporter);
 

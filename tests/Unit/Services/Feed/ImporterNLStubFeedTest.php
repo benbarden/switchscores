@@ -16,7 +16,7 @@ class ImporterNLStubFeedTest extends TestCase
      */
     private $feedImporter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->feedImporter = new Importer();
 
@@ -48,7 +48,7 @@ class ImporterNLStubFeedTest extends TestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->feedImporter);
 

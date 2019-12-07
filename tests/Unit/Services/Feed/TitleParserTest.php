@@ -18,14 +18,14 @@ class TitleParserTest extends TestCase
      */
     private $titleParser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->titleParser = new TitleParser();
 
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->titleParser);
 

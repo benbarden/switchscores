@@ -48,7 +48,7 @@ class RoleNameTest extends TestCase
      */
     private $userNewsManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -87,7 +87,7 @@ class RoleNameTest extends TestCase
         $this->userNewsManager = $newsManager;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->userOwner);
