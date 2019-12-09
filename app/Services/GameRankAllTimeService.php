@@ -36,7 +36,9 @@ class GameRankAllTimeService
     {
         $games = DB::table('game_rank_alltime')
             ->join('games', 'game_rank_alltime.game_id', '=', 'games.id')
+            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
             ->select('games.*',
+                'game_primary_types.primary_type',
                 'game_rank_alltime.game_rank');
 
         if ($customFilter == 'multiplayer') {
