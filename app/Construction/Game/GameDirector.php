@@ -39,49 +39,79 @@ class GameDirector
             $this->builder->setLinkTitle($params['link_title']);
         }
         if (array_key_exists('price_eshop', $params)) {
-            $this->builder->setPriceEshop($params['price_eshop']);
+            if ($params['price_eshop'] != '') {
+                $this->builder->setPriceEshop($params['price_eshop']);
+            }
         }
         if (array_key_exists('players', $params)) {
-            $this->builder->setPlayers($params['players']);
+            if ($params['players'] != '') {
+                $this->builder->setPlayers($params['players']);
+            }
         }
         if (array_key_exists('eu_released_on', $params)) {
-            $this->builder->setEuReleasedOn($params['eu_released_on']);
+            if ($params['eu_released_on'] != '') {
+                $this->builder->setEuReleasedOn($params['eu_released_on']);
+            }
         }
         if (array_key_exists('developer', $params)) {
-            $this->builder->setDeveloper($params['developer']);
+            if ($params['developer'] != '') {
+                $this->builder->setDeveloper($params['developer']);
+            }
         }
         if (array_key_exists('publisher', $params)) {
-            $this->builder->setPublisher($params['publisher']);
+            if ($params['publisher'] != '') {
+                $this->builder->setPublisher($params['publisher']);
+            }
         }
         if (array_key_exists('amazon_uk_link', $params)) {
-            $this->builder->setAmazonUkLink($params['amazon_uk_link']);
+            if ($params['amazon_uk_link'] != '') {
+                $this->builder->setAmazonUkLink($params['amazon_uk_link']);
+            }
         }
         if (array_key_exists('overview', $params)) {
-            $this->builder->setOverview($params['overview']);
+            if ($params['overview'] != '') {
+                $this->builder->setOverview($params['overview']);
+            }
         }
         if (array_key_exists('media_folder', $params)) {
-            $this->builder->setMediaFolder($params['media_folder']);
+            if ($params['media_folder'] != '') {
+                $this->builder->setMediaFolder($params['media_folder']);
+            }
         }
         if (array_key_exists('video_url', $params)) {
-            $this->builder->setVideoUrl($params['video_url']);
+            if ($params['video_url'] != '') {
+                $this->builder->setVideoUrl($params['video_url']);
+            }
         }
         if (array_key_exists('video_header_text', $params)) {
-            $this->builder->setVideoHeaderText($params['video_header_text']);
+            if ($params['video_header_text'] != '') {
+                $this->builder->setVideoHeaderText($params['video_header_text']);
+            }
         }
         if (array_key_exists('boxart_square_url', $params)) {
-            $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
+            if ($params['boxart_square_url'] != '') {
+                $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
+            }
         }
         if (array_key_exists('eshop_europe_fs_id', $params)) {
-            $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
+            if ($params['eshop_europe_fs_id'] != '') {
+                $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
+            }
         }
         if (array_key_exists('boxart_header_image', $params)) {
-            $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
+            if ($params['boxart_header_image'] != '') {
+                $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
+            }
         }
         if (array_key_exists('primary_type_id', $params)) {
-            $this->builder->setPrimaryTypeId($params['primary_type_id']);
+            if ($params['primary_type_id'] != '') {
+                $this->builder->setPrimaryTypeId($params['primary_type_id']);
+            }
         }
         if (array_key_exists('series_id', $params)) {
-            $this->builder->setGameSeriesId($params['series_id']);
+            if ($params['series_id'] != '') {
+                $this->builder->setGameSeriesId($params['series_id']);
+            }
         }
     }
 }
