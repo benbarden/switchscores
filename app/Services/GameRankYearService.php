@@ -31,7 +31,9 @@ class GameRankYearService
     {
         $games = DB::table('game_rank_year')
             ->join('games', 'game_rank_year.game_id', '=', 'games.id')
+            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
             ->select('games.*',
+                'game_primary_types.primary_type',
                 'game_rank_year.game_rank')
             ->where('game_rank_year.release_year', $year)
             ->orderBy('game_rank_year.game_rank')
