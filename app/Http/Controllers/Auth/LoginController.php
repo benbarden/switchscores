@@ -9,6 +9,8 @@ use Laravel\Socialite\Facades\Socialite;
 
 use App\Services\ServiceContainer;
 
+use App\Events\UserCreated;
+
 class LoginController extends Controller
 {
     /*

@@ -12,8 +12,11 @@ class UserService
         $twitterUserId, $twitterNickname
     )
     {
+        $randomEmail = $twitterNickname.mt_rand(1000, 9999).'@switchscores.com';
+
         $values = [
             'display_name' => $twitterNickname,
+            'email' => $randomEmail,
             'twitter_user_id' => $twitterUserId,
             'twitter_name' => $twitterNickname,
             'region' => 'eu',
