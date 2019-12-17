@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Services\StaffDashboards\CategorisationService;
 
 use App\Services\ActivityFeedService;
+use App\Services\AuditService;
 use App\Services\ChartsDateService;
 use App\Services\ChartsRankingGlobalService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
@@ -103,19 +104,27 @@ trait WosServices
     // ** Get specific classes ** //
 
     /**
-     * @return CategorisationService
-     */
-    public function getServiceStaffDashboardsCategorisation()
-    {
-        return $this->loadService("StaffDashboards\\CategorisationService");
-    }
-
-    /**
      * @return ActivityFeedService
      */
     public function getServiceActivityFeed()
     {
         return $this->loadService('ActivityFeedService');
+    }
+
+    /**
+     * @return AuditService
+     */
+    public function getServiceAudit()
+    {
+        return $this->loadService('AuditService');
+    }
+
+    /**
+     * @return CategorisationService
+     */
+    public function getServiceStaffDashboardsCategorisation()
+    {
+        return $this->loadService("StaffDashboards\\CategorisationService");
     }
 
     /**
