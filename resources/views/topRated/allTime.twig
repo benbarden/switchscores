@@ -17,11 +17,7 @@
             Top 100 Switch games - all-time
         </h2>
         {% if TopRatedAllTime|length %}
-            {% for item in TopRatedAllTime %}
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
-                </div>
-            {% endfor %}
+            {% include 'games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedAllTime, 'batchOverride': 3} %}
         {% else %}
             <p>No games found!</p>
         {% endif %}

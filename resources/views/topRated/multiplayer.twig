@@ -15,11 +15,7 @@
             Top 100 multiplayer Switch games
         </h2>
         {% if TopRatedMultiplayer|length %}
-            {% for item in TopRatedMultiplayer %}
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    {% include 'games/layouts/rankedItem.twig' with {'item': item, 'cfgSmallTitles': 'Y', 'cfgRankPos': 'right'} %}
-                </div>
-            {% endfor %}
+            {% include 'games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedMultiplayer, 'batchOverride': 3} %}
         {% else %}
             <p>No Top Rated games here... yet.</p>
         {% endif %}

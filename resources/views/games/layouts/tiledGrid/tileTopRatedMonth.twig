@@ -5,7 +5,7 @@
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     {% if item.primary_type_id %}
-        <div style="position: relative; top: 23px;">
+        <div style="position: absolute; top: 2px;">
             <span class="h5 label label-default">{{ item.primary_type }}</span>
         </div>
     {% endif %}
@@ -47,23 +47,4 @@
             &nbsp;
         </div>
     </div>
-    {#
-    <p>
-    <div class="pull-left">
-        <span class="h4 label bg-primary">#{{ item.game_rank }}</span>
-    </div>
-    <div class="pull-right">
-        {% if item.rating_avg %}
-            {% if item.game_rank %}
-                {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h4'} %}
-            {% else %}
-                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
-            {% endif %}
-        {% endif %}
-    </div>
-    <span class="h4" style="margin-left: 5px;">
-        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
-    </span>
-    </p>
-    #}
 </div>
