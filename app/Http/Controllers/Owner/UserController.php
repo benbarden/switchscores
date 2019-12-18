@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Owner;
 
 use App\UserRole;
 use Illuminate\Routing\Controller as Controller;
@@ -38,7 +38,7 @@ class UserController extends Controller
 
         $bindings['UserList'] = $userList;
 
-        return view('admin.user.list', $bindings);
+        return view('owner.user.list', $bindings);
     }
 
     public function showUser($userId)
@@ -64,7 +64,7 @@ class UserController extends Controller
         $bindings['CollectionList'] = $collectionService->getByUser($userId);
         $bindings['CollectionStats'] = $collectionService->getStats($userId);
 
-        return view('admin.user.view', $bindings);
+        return view('owner.user.view', $bindings);
     }
 
     public function editUser($userId)
@@ -113,7 +113,7 @@ class UserController extends Controller
 
             }
 
-            return redirect(route('admin.user.list'));
+            return redirect(route('owner.user.list'));
 
         } else {
 
@@ -140,7 +140,7 @@ class UserController extends Controller
             $bindings['UserRoleList'] = $userRoleListForView;
         }
 
-        return view('admin.user.edit', $bindings);
+        return view('owner.user.edit', $bindings);
     }
 
     public function deleteUser($userId)
@@ -205,7 +205,7 @@ class UserController extends Controller
 
             // Done
 
-            return redirect(route('admin.user.list'));
+            return redirect(route('owner.user.list'));
 
         } else {
 
@@ -219,7 +219,7 @@ class UserController extends Controller
         $bindings['UserId'] = $userId;
         $bindings['ErrorsCustom'] = $customErrors;
 
-        return view('admin.user.delete', $bindings);
+        return view('owner.user.delete', $bindings);
     }
 
 }

@@ -35,7 +35,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('admin.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
+                        <a href="{{ route('owner.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
                         <br>
                         <small>{{ item.email }}</small>
                     </td>
@@ -71,8 +71,8 @@
                         {{ item.created_at|date('Y-m-d') }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.user.edit', {'userId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('admin.user.delete', {'userId': item.id}) }}">Delete</a>
+                        <a href="{{ route('owner.user.edit', {'userId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('owner.user.delete', {'userId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

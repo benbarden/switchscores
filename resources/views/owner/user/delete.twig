@@ -1,6 +1,6 @@
 {% extends 'theme/wos/admin/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.user.list'), 'text': 'Users'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('owner.user.list'), 'text': 'Users'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -26,7 +26,7 @@
         </ul>
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.user.delete', {'userId': UserId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('owner.user.delete', {'userId': UserId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

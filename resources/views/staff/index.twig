@@ -81,10 +81,10 @@
             {% if auth_user().isOwner() %}
             <tr>
                 <td>
-                    <a href="{{ route('admin.user.list') }}">Registered users</a>
+                    <a href="{{ route('owner.user.list') }}">Registered users</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+                    <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
                 </td>
             </tr>
             {% endif %}
@@ -137,7 +137,7 @@
 
         <ul>
             <li><a href="{{ route('admin.games.list') }}">All games</a></li>
-            <li><a href="{{ route('admin.user.list') }}">Users</a></li>
+            <li><a href="{{ route('owner.user.list') }}">Users</a></li>
             <li><a href="{{ route('admin.news.list') }}">News</a></li>
             <li><a href="{{ route('admin.charts.date.list') }}">Charts</a> (no longer in use)</li>
         </ul>

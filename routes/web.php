@@ -244,9 +244,18 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
-// *************** Staff: Admin-only *************** //
+// *************** Staff: Admin-only (owner) *************** //
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
+    // Users
+    Route::get('/owner/user/list', 'Owner\UserController@showList')->name('owner.user.list');
+    Route::get('/owner/user/view/{userId}', 'Owner\UserController@showUser')->name('owner.user.view');
+    Route::get('/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
+    Route::post('/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
+    Route::get('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
+    Route::post('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
+
+    // Stats
     Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
 
     Route::get('/staff/stats/review-site', 'Staff\Stats\ReviewSiteController@show')->name('staff.stats.reviewSite');
@@ -389,14 +398,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/news/add', 'Admin\NewsController@add')->name('admin.news.add');
     Route::get('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
     Route::post('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
-
-    // Users
-    Route::get('/admin/user/list', 'Admin\UserController@showList')->name('admin.user.list');
-    Route::get('/admin/user/view/{userId}', 'Admin\UserController@showUser')->name('admin.user.view');
-    Route::get('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
-    Route::post('/admin/user/edit/{userId}', 'Admin\UserController@editUser')->name('admin.user.edit');
-    Route::get('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
-    Route::post('/admin/user/delete/{userId}', 'Admin\UserController@deleteUser')->name('admin.user.delete');
 
     // Partners: Review sites
     Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
