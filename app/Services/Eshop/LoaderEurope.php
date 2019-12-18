@@ -166,6 +166,12 @@ class LoaderEurope
 
     public function loadGames($limit = 9999, $locale = 'en')
     {
+        /*
+         * TEST URL
+         http://search.nintendo-europe.com/en/select
+         ?fq=type:GAME AND system_type:nintendoswitch* AND product_code_txt:*&q=*&rows=10&sort=sorting_title asc&start=0&wt=json
+         */
+
         // Base url
         $baseUrl = str_replace('{locale}', $locale, self::GET_GAMES_EU_URL);
 
