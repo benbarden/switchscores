@@ -170,7 +170,6 @@ return [
         App\Providers\FeedItemGameServiceProvider::class,
         App\Providers\FeedItemReviewServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,
-        App\Providers\GameChangeHistoryServiceProvider::class,
         App\Providers\GameDeveloperServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\GamePublisherServiceProvider::class,

@@ -152,7 +152,6 @@ class UserController extends Controller
         $serviceUser = $serviceContainer->getUserService();
 
         // Validation
-        $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
         $servicePartnerReview = $serviceContainer->getPartnerReviewService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
         $serviceReviewUser = $serviceContainer->getReviewUserService();
@@ -171,10 +170,6 @@ class UserController extends Controller
         $request = request();
 
         // Validation: check for any reason we should not allow the user to be deleted.
-        $gameChangeHistory = $serviceGameChangeHistory->getByUserId($userId);
-        if (count($gameChangeHistory) > 0) {
-            $customErrors[] = 'User has authored '.count($gameChangeHistory).' game change history record(s) and cannot be deleted';
-        }
         $partnerReviews = $servicePartnerReview->getByUser($userId);
         if (count($partnerReviews) > 0) {
             $customErrors[] = 'User has created '.count($partnerReviews).' partner review(s)';

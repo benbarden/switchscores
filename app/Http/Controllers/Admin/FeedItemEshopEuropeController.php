@@ -8,7 +8,6 @@ use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 
 use App\Factories\GameDirectorFactory;
-use App\Factories\GameChangeHistoryFactory;
 
 use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
 use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
@@ -181,9 +180,6 @@ class FeedItemEshopEuropeController extends Controller
                     }
 
                 }
-
-                // Game change history
-                GameChangeHistoryFactory::makeHistory($game, null, Auth::user()->id, 'games');
 
                 // Trigger event
                 event(new GameCreated($game));

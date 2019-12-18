@@ -9,6 +9,15 @@ use OwenIt\Auditing\Models\Audit;
 
 class AuditService
 {
+    public function getAll($limit = 25)
+    {
+        $auditList = Audit::orderBy('id', 'desc');
+        if ($limit) {
+            $auditList = $auditList->limit($limit);
+        }
+        return $auditList->get();
+    }
+
     public function getAggregatedGameAudits($gameId, $limit = 25)
     {
         /*

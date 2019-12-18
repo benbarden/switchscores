@@ -1,0 +1,15 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<table class="table">
+    <tr>
+        <td>
+            <a href="{{ route('owner.audit.report', {'reportName': 'games'}) }}">Audit report: Games</a>
+        </td>
+    </tr>
+</table>
+
+{% endblock page_inner %}

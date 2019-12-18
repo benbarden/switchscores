@@ -24,7 +24,6 @@ class GamesDetailController extends Controller
         $serviceReviewUser = $this->getServiceReviewUser();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
-        $serviceGameChangeHistory = $this->getServiceGameChangeHistory();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         $game = $serviceGame->find($gameId);
@@ -57,7 +56,6 @@ class GamesDetailController extends Controller
         $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
         $gamePublishers = $serviceGamePublisher->getByGame($gameId);
         $gameTags = $serviceGameTag->getByGame($gameId);
-        $gameChangeHistory = $serviceGameChangeHistory->getByGameId($gameId);
         $gameTitleHashes = $serviceGameTitleHash->getByGameId($gameId);
 
         $bindings['GameId'] = $gameId;
@@ -68,7 +66,6 @@ class GamesDetailController extends Controller
         $bindings['GameDevelopers'] = $gameDevelopers;
         $bindings['GamePublishers'] = $gamePublishers;
         $bindings['GameTags'] = $gameTags;
-        $bindings['GameChangeHistory'] = $gameChangeHistory;
         $bindings['GameTitleHashes'] = $gameTitleHashes;
 
         $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);

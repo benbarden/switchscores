@@ -5,8 +5,6 @@ namespace App\Factories;
 use App\Game;
 use App\Services\Eshop\Europe\UpdateGameData;
 
-use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
-use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
 use App\Services\EshopEuropeGameService;
 
 class EshopEuropeUpdateGameFactory
@@ -51,25 +49,7 @@ class EshopEuropeUpdateGameFactory
         // ***************************************************** //
 
         if ($serviceUpdateGameData->hasGameChanged()) {
-
-            // Recreate objects each time to avoid issues
-            $gameChangeHistoryDirector = new GameChangeHistoryDirector();
-            $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
-
-            // Get original version before saving
-            $gameOrig = $game->fresh();
-
             $game->save();
-
-            // Game change history
-            $gameChangeHistoryBuilder->setGame($game);
-            $gameChangeHistoryBuilder->setGameOriginal($gameOrig);
-            $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
-            $gameChangeHistoryDirector->setTableNameGames();
-            $gameChangeHistoryDirector->buildEshopEuropeUpdate();
-            $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
-            $gameChangeHistory->save();
-
         }
 
         if ($serviceUpdateGameData->hasGameReleaseDateChanged()) {

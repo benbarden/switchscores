@@ -320,7 +320,6 @@
                 <li><a href="#tabs-audit">Audit</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
-                <li><a href="#tabs-change-history">Change history (old)</a></li>
             </ul>
 
             <div id="tabs-audit">
@@ -379,68 +378,6 @@
                                 </td>
                                 <td class="text-center">
                                     <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-
-            </div>
-
-            <div id="tabs-change-history">
-
-                <h2>Change history</h2>
-
-                {% if GameChangeHistory|length %}
-                    <table class="table table-condensed table-responsive">
-                        <thead>
-                        <tr>
-                            <th class="text-right">#</th>
-                            <th>Game</th>
-                            <th>Table</th>
-                            <th class="text-center">Source</th>
-                            <th class="text-center">Change type</th>
-                            <th class="text-center">Date</th>
-                            <th>Changes</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for item in GameChangeHistory %}
-                            <tr>
-                                <td class="text-right">
-                                    {{ item.id }}
-                                </td>
-                                <td>
-                                    {% if item.game %}
-                                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
-                                    {% else %}
-                                        {{ item.game_id }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {{ item.affected_table_name }}
-                                </td>
-                                <td class="text-center">
-                                    {{ item.source }}
-                                </td>
-                                <td class="text-center">
-                                    {{ item.change_type }}
-                                </td>
-                                <td class="text-center">
-                                    <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
-                                </td>
-                                <td>
-                                    {% if item.data_changed %}
-                                        {% set dataChanged = JsonHelper.jsonDecode(item.data_changed) %}
-                                        <p>
-                                            <small>
-                                                {% for field,value in dataChanged %}
-                                                    {{ field }}: {{ value }}<br>
-                                                {% endfor %}
-                                            </small>
-                                        </p>
-                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

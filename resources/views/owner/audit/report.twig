@@ -1,0 +1,94 @@
+{% extends 'theme/wos/admin/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+{% if ItemList|length %}
+    <table class="table table-condensed table-responsive data-sortable">
+        <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th class="text-center">User</th>
+            <th>Type</th>
+            <th class="text-right">Id</th>
+            <th>Old values</th>
+            <th>New values</th>
+            <th class="text-center">Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-right">
+                    <p>
+                        <small>
+                            {{ item.id }}
+                        </small>
+                    </p>
+                </td>
+                <td class="text-center">
+                    <p>
+                        <small>
+                            {{ item.user_id }}
+                        </small>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <small>
+                            {{ item.auditable_type }}
+                        </small>
+                    </p>
+                </td>
+                <td class="text-right">
+                    <p>
+                        <small>
+                            {{ item.auditable_id }}
+                        </small>
+                    </p>
+                </td>
+                <td>
+                    {% if item.old_values %}
+                        <p>
+                            <small>
+                                {% for vf, vv in item.old_values %}
+                                    {{ vf }}: {{ vv }}<br>
+                                {% endfor %}
+                            </small>
+                        </p>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.new_values %}
+                        <p>
+                            <small>
+                                {% for vf, vv in item.new_values %}
+                                    {{ vf }}: {{ vv }}<br>
+                                {% endfor %}
+                            </small>
+                        </p>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No records found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25
+        });
+    });
+</script>
+
+{% endblock page_inner %}

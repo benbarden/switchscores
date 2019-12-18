@@ -13,7 +13,6 @@ class ServiceContainer
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
     const KEY_FEED_ITEM_REVIEW_SERVICE = 'FeedItemReviewService';
     const KEY_GAME_CALENDAR_SERVICE = 'GameCalendarService';
-    const KEY_GAME_CHANGE_HISTORY_SERVICE = 'GameChangeHistoryService';
     const KEY_GAME_DEVELOPER_SERVICE = 'GameDeveloperService';
     const KEY_GAME_GENRE_SERVICE = 'GameGenreService';
     const KEY_GAME_ACTION_LIST_SERVICE = 'GameActionListService';
@@ -134,15 +133,6 @@ class ServiceContainer
     public function getGameCalendarService()
     {
         return $this->load(self::KEY_GAME_CALENDAR_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return GameChangeHistoryService
-     */
-    public function getGameChangeHistoryService()
-    {
-        return $this->load(self::KEY_GAME_CHANGE_HISTORY_SERVICE);
     }
 
     /**

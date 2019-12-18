@@ -255,6 +255,10 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
     Route::post('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
 
+    // Audit
+    Route::get('/owner/audit/index', 'Owner\AuditController@index')->name('owner.audit.index');
+    Route::get('/owner/audit/{reportName}', 'Owner\AuditController@showReport')->name('owner.audit.report');
+
     // Stats
     Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
 
@@ -312,9 +316,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/games/release', 'Admin\GamesController@releaseGame')->name('admin.games.release');
     Route::get('/admin/games/update-eshop-data', 'Admin\GamesController@updateEshopData')->name('admin.games.updateEshopData');
     Route::get('/admin/games/redownload-packshots', 'Admin\GamesController@redownloadPackshots')->name('admin.games.redownloadPackshots');
-
-    // Game change history
-    Route::get('/admin/game-change-history/{filter?}', 'Admin\GameChangeHistoryController@index')->name('admin.game-change-history.index');
 
     // Games: Title hashes
     Route::get('/admin/games-title-hash/list/{gameId?}', 'Admin\GamesTitleHashController@showList')->name('admin.games-title-hash.list');

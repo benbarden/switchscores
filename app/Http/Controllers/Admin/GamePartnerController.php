@@ -7,7 +7,6 @@ use Auth;
 
 use App\Services\ServiceContainer;
 use App\Factories\GameDirectorFactory;
-use App\Factories\GameChangeHistoryFactory;
 use App\Factories\GamesCompanyFactory;
 
 
@@ -229,12 +228,7 @@ class GamePartnerController extends Controller
         //$gamePublisher = $request->publisher;
 
         // Save details
-        $gameOrig = $game->fresh();
         GameDirectorFactory::updateExisting($game, $request->post());
-
-        // Game change history
-        $game->refresh();
-        GameChangeHistoryFactory::makeHistory($game, $gameOrig, Auth::user()->id, 'games');
 
         $data = array(
             'status' => 'OK'

@@ -20,14 +20,10 @@ use App\Events\GameCreated;
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
-use App\Construction\GameChangeHistory\Director as GameChangeHistoryDirector;
-use App\Construction\GameChangeHistory\Builder as GameChangeHistoryBuilder;
-
 use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
 use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
 
 use App\Factories\GameDirectorFactory;
-use App\Factories\GameChangeHistoryFactory;
 use App\Factories\EshopEuropeUpdateGameFactory;
 use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 
@@ -263,18 +259,6 @@ class GamesController extends Controller
                 $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
 
-            // Game change history
-            $gameChangeHistoryDirector = new GameChangeHistoryDirector();
-            $gameChangeHistoryBuilder = new GameChangeHistoryBuilder();
-
-            $gameChangeHistoryBuilder->setGame($game);
-            $gameChangeHistoryDirector->setBuilder($gameChangeHistoryBuilder);
-            $gameChangeHistoryDirector->setTableNameGames();
-            $gameChangeHistoryDirector->buildAdminInsert();
-            $gameChangeHistoryDirector->setUserId(Auth::user()->id);
-            $gameChangeHistory = $gameChangeHistoryBuilder->getGameChangeHistory();
-            $gameChangeHistory->save();
-
             // Done
 
             // Trigger event
@@ -379,11 +363,6 @@ class GamesController extends Controller
                 $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
 
-            // Game change history
-            $gameData->refresh();
-
-            GameChangeHistoryFactory::makeHistory($gameData, $gameOrig, Auth::user()->id, 'games');
-
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
                 //return redirect('/admin/games/list/'.$gameListFilter.'?lastaction=edit&lastgameid='.$gameId);
@@ -474,7 +453,6 @@ class GamesController extends Controller
         // Deletion
         $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
         $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
-        $serviceGameChangeHistory = $serviceContainer->getGameChangeHistoryService();
         $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
         $serviceGamePublisher = $serviceContainer->getGamePublisherService();
 
@@ -525,7 +503,6 @@ class GamesController extends Controller
             $serviceGameGenres->deleteGameGenres($gameId);
             $serviceGameTitleHashes->deleteByGameId($gameId);
             $serviceGameTags->deleteGameTags($gameId);
-            $serviceGameChangeHistory->deleteByGameId($gameId);
             $serviceGameDeveloper->deleteByGameId($gameId);
             $serviceGamePublisher->deleteByGameId($gameId);
             $serviceGame->deleteGame($gameId);
@@ -591,10 +568,6 @@ class GamesController extends Controller
             $dateNow = new \DateTime('now');
             $gameData->eu_released_on = $dateNow->format('Y-m-d H:i:s');
             $gameData->save();
-
-            // Game change history
-            $gameData->refresh();
-            GameChangeHistoryFactory::makeHistory($gameData, $gameOrig, Auth::user()->id, 'games');
         }
 
         $data = array(
