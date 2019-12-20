@@ -39,10 +39,15 @@ class WelcomeController extends Controller
         // 15th Nov 2019
         $idSparklite = 3078;
         $idPokemonSword = 2536;
+        // 20th Dec 2019
+        $idShovelKnightKingOfCards = 3311;
+        $idShovelKnightShowdown = 3334;
+        $idSuperEpic = 32675;
 
         $featuredIdList = [
-            $idSparklite,
-            $idPokemonSword,
+            $idShovelKnightKingOfCards,
+            $idShovelKnightShowdown,
+            $idSuperEpic,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
         $featuredGameId = rand(0, count($featuredIdList)-1);
