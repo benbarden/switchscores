@@ -10,7 +10,7 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
 
         {% include 'modules/user/dashboard/unranked-games.twig' %}
-        {% include 'modules/review-site/score-distribution.twig' with {'ScoreDistribution': ScoreDistribution} %}
+        {% include 'modules/review-site/score-distribution.twig' with {'ScoreDistribution': ScoreDistribution, 'LoadedFrom': 'UserDashboard'} %}
 
     </div>
 

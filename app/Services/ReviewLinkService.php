@@ -271,4 +271,13 @@ class ReviewLinkService
 
         return $scoresArray;
     }
+
+    public function getBySiteScore($siteId, $rating)
+    {
+        $reviewScores = ReviewLink::where('site_id', $siteId)
+            ->where(DB::raw('round(rating_normalised, 0)'), $rating)
+            ->get();
+
+        return $reviewScores;
+    }
 }

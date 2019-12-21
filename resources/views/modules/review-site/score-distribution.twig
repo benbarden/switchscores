@@ -11,7 +11,13 @@
     {% for key, value in ScoreDistribution %}
         <tr>
             <td class="text-center">
-                {{ key }}
+                {% if LoadedFrom == 'UserDashboard' %}
+                    <a href="{{ route('user.review-link.landing', {'report': 'score-'~key}) }}">
+                        {{ key }}
+                    </a>
+                {% else %}
+                    {{ key }}
+                {% endif %}
             </td>
             <td class="text-center">
                 {{ value }}

@@ -4,10 +4,42 @@
 
 {% block page_inner %}
 
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+    </div>
+    <div class="col-xs-12 col-sm-9">
+        <div class="pull-right">
+            <label for="user-review-filter">Filter</label>
+            <select id="user-review-filter" name="user-review-filter" class="form-control">
+                <option value="">All reviews</option>
+                <optgroup label="By score">
+                    <option value="score-1">1</option>
+                    <option value="score-2">2</option>
+                    <option value="score-3">3</option>
+                    <option value="score-4">4</option>
+                    <option value="score-5">5</option>
+                    <option value="score-6">6</option>
+                    <option value="score-7">7</option>
+                    <option value="score-8">8</option>
+                    <option value="score-9">9</option>
+                    <option value="score-10">10</option>
+                </optgroup>
+            </select>
+        </div>
+    </div>
+</div>
+
 <p>
-    This page lists all of the reviews we've imported for your site, along with the date of each
+    This page lists the reviews we've imported for your site, along with the date of each
     review, and the rating. If anything is wrong, let us know.
 </p>
+{% if FilterName %}
+    <div class="alert alert-info" role="alert">
+        {% if FilterType == 'by-score' %}
+            Showing reviews with score: {{ FilterValue }}.
+        {% endif %}
+    </div>
+{% endif %}
 
 {% if ReviewLinks.count > 0 %}
     <table class="table data-sortable">
@@ -60,7 +92,13 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
+    $('#user-review-filter').on('change', function() {
+        selectedFilter = $(this).val();
+        top.location.href = '{{ route('user.review-link.landing')}}' + '/' + selectedFilter;
+    });
     $(document).ready(function() {
+        var activeScoreFilter = '{{ FilterName }}';
+        $('#user-review-filter').val(activeScoreFilter);
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,

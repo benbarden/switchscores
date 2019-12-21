@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
 use Auth;
+
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
 class ReviewLinkController extends Controller
 {
-    public function landing()
-    {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+    use SiteRequestData;
+    use WosServices;
 
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+    public function landing($report = '')
+    {
+        $servicePartner = $this->getServicePartner();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
 
@@ -36,8 +38,29 @@ class ReviewLinkController extends Controller
 
         $bindings['ReviewSite'] = $partner;
 
-        // Recent reviews
-        $bindings['ReviewLinks'] = $serviceReviewLink->getAllBySite($partnerId);
+        switch ($report) {
+            case 'score-1':
+            case 'score-2':
+            case 'score-3':
+            case 'score-4':
+            case 'score-5':
+            case 'score-6':
+            case 'score-7':
+            case 'score-8':
+            case 'score-9':
+            case 'score-10':
+                $rating = str_replace('score-', '', $report);
+                $reviewLinks = $serviceReviewLink->getBySiteScore($partnerId, $rating);
+                $bindings['FilterType'] = 'by-score';
+                $bindings['FilterName'] = $report;
+                $bindings['FilterValue'] = $rating;
+                break;
+            default:
+                $reviewLinks = $serviceReviewLink->getAllBySite($partnerId);
+                break;
+        }
+
+        $bindings['ReviewLinks'] = $reviewLinks;
         $bindings['jsInitialSort'] = "[ 3, 'desc']";
 
         $bindings['TopTitle'] = 'Review links';
