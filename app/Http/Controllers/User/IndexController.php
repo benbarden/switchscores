@@ -6,8 +6,14 @@ use Illuminate\Routing\Controller as Controller;
 use App\Services\ServiceContainer;
 use Auth;
 
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
 class IndexController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     public function show()
     {
         $serviceContainer = \Request::get('serviceContainer');
@@ -35,7 +41,16 @@ class IndexController extends Controller
 
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        $partnerId = $authUser->partner_id;
+        if ($authUser->isOwner()) {
+            $partnerId = \Request::get('partnerOverride');
+            if ($partnerId = 'xxx') {
+                $partnerId = null;
+            } elseif (!$partnerId) {
+                $partnerId = $authUser->partner_id;
+            }
+        } else {
+            $partnerId = $authUser->partner_id;
+        }
 
         if ($partnerId) {
 

@@ -14,6 +14,7 @@ use App\Services\EshopEuropeGameService;
 use App\Services\FeedItemGameService;
 use App\Services\FeedItemReviewService;
 use App\Services\GameCalendarService;
+use App\Services\GameDescriptionService;
 use App\Services\GameDeveloperService;
 use App\Services\GameGenreService;
 use App\Services\GameActionListService;
@@ -188,6 +189,14 @@ trait WosServices
     public function getServiceGameCalendar()
     {
         return $this->loadService('GameCalendarService');
+    }
+
+    /**
+     * @return GameDescriptionService
+     */
+    public function getServiceGameDescription()
+    {
+        return $this->loadService('GameDescriptionService');
     }
 
     /**

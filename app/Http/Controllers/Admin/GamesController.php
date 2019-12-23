@@ -505,6 +505,7 @@ class GamesController extends Controller
             $serviceGameTags->deleteGameTags($gameId);
             $serviceGameDeveloper->deleteByGameId($gameId);
             $serviceGamePublisher->deleteByGameId($gameId);
+            $this->getServiceGameDescription()->deleteByGameId($gameId);
             $serviceGame->deleteGame($gameId);
 
             // Done

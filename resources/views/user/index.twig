@@ -2,23 +2,59 @@
 
 {% block page_inner %}
 
-    <h2>Welcome {{ auth_user().display_name }}</h2>
-    <p>
-        Got a question? Need help? Tweet us via
-        <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
-        You can also follow us for the latest updates.
-    </p>
-
     {% if SiteRole == 'review-partner' %}
+
+        <div class="row member-dashboard">
+            <div class="col-xs-12 col-sm-8 col-md-8">
+                <h2>Hey, {{ auth_user().display_name }}!</h2>
+                <p>
+                    <strong>Thanks for being one of our review partners!</strong>
+                    This means your review links are included on game pages across the site.
+                    We also use your ratings as part of the calculations for average ratings and rankings.
+                </p>
+                <p>
+                    Want to update your details? Got a question? Need help? Contact Ben via
+                    <a href="mailto:ben@switchscores.com">ben@switchscores.com</a>.
+                </p>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                {% include 'modules/review-site/infobox.twig' with {'SourcePage': 'member-dashboard'} %}
+            </div>
+        </div>
 
         {% include 'user/dashboard/review-partner.twig' with {'AuthUser': auth_user(), 'ReviewSite': ReviewSite, 'ScoreDistribution': ScoreDistribution} %}
 
     {% elseif SiteRole == 'games-company' %}
 
+        <div class="row member-dashboard">
+            <div class="col-xs-12 col-sm-8 col-md-8">
+                <h2>Hey, {{ auth_user().display_name }}!</h2>
+                <p>
+                    <strong>Thanks for being one of our partners!</strong>
+                    Being a partner means you can view details of all of your Switch games.
+                    We're working on additional features to help manage your games catalogue and reach out to
+                    review partners. More on this soon.
+                </p>
+                <p>
+                    Want to update your details? Got a question? Need help? Contact Ben via
+                    <a href="mailto:ben@switchscores.com">ben@switchscores.com</a>.
+                </p>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                {% include 'modules/user/dashboard/games-company-infobox.twig' %}
+            </div>
+        </div>
+
         {% include 'user/dashboard/games-company.twig' with {'AuthUser': auth_user()} %}
 
     {% else %}
 
+        <h2>Welcome {{ auth_user().display_name }}</h2>
+        <p>
+            Got a question? Need help? Tweet us via
+            <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
+            You can also follow us for the latest updates.
+        </p>
         {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
 
     {% endif %}
