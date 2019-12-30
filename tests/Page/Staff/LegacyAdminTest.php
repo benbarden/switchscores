@@ -117,13 +117,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminChartsDate()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/charts/date');
-        $response->assertStatus(200);
-    }
-
     public function testAdminNewsList()
     {
         $this->be($this->userAdmin);
@@ -169,7 +162,7 @@ class LegacyAdminTest extends TestCase
     public function testAdminUserList()
     {
         $this->be($this->userAdmin);
-        $response = $this->get('/admin/user/list');
+        $response = $this->get('/owner/user/list');
         $response->assertStatus(200);
     }
 }

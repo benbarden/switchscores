@@ -14,12 +14,6 @@
 // Front page
 Route::get('/', 'WelcomeController@show')->name('welcome');
 
-/*
-Route::get('/debug-sentry', function () {
-    throw new Exception('My first Sentry error!');
-});
-*/
-
 // Third-party logins
 Route::get('login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->name('auth.login.twitter');
 Route::get('login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
@@ -55,21 +49,6 @@ Route::get('/games/by-date/{date}', 'GamesBrowseController@byDatePage')->name('g
 // These must be after the game redirects
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
 Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
-
-// Mario Maker
-Route::get('/mario-maker-levels', 'MarioMakerLevelsController@landing')->name('mario-maker-levels.landing');
-
-/* Charts */
-Route::get('/charts', 'ChartsController@landing')->name('charts.landing');
-Route::get('/charts/most-appearances', 'ChartsController@mostAppearances')->name('charts.mostAppearances');
-Route::get('/charts/games-at-position', 'ChartsController@gamesAtPositionLanding')->name('charts.gamesAtPositionLanding');
-Route::get('/charts/games-at-position/{position?}', 'ChartsController@gamesAtPosition')->name('charts.gamesAtPosition');
-
-Route::get('/charts/{countryCode}/{date}', 'ChartsController@show')->name('charts.date.show');
-
-/* Charts redirects (old URLs) */
-Route::get('/charts/{date?}', 'ChartsController@redirectEu')->name('charts.date.redirect');
-Route::get('/charts-us/{date?}', 'ChartsController@redirectUs')->name('charts.us.date.redirect');
 
 /* Top Rated */
 Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
@@ -123,19 +102,10 @@ Route::group(['middleware' => ['auth']], function() {
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 
-    // User lists
-    Route::get('/user-list-item/add', 'User\UserListController@addPlaylistItem')->name('user.list-item.add');
-    Route::get('/user-list-item/delete', 'User\UserListController@deletePlaylistItem')->name('user.list-item.delete');
-
     // User reviews
     Route::get('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
     Route::post('/user/reviews/add', 'User\ReviewUserController@add')->name('user.reviews.add');
     Route::get('/user/reviews/{report?}', 'User\ReviewUserController@showList')->name('user.reviews.list');
-
-    // Mario Maker levels
-    Route::get('/user/mario-maker-levels/add', 'User\MarioMakerLevelsController@add')->name('user.mario-maker-levels.add');
-    Route::post('/user/mario-maker-levels/add', 'User\MarioMakerLevelsController@add')->name('user.mario-maker-levels.add');
-    Route::get('/user/mario-maker-levels/{report?}', 'User\MarioMakerLevelsController@showList')->name('user.mario-maker-levels.list');
 
     // Partner reviews
     Route::get('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
@@ -337,11 +307,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/game/publisher/{gameId}/add', 'Admin\GamePartnerController@addGamePublisher')->name('admin.game.publisher.add');
     Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
 
-    // Approvals (quick format)
-    Route::get('/admin/approvals/mario-maker-levels', 'Admin\ApprovalsController@marioMakerLevels')->name('admin.approvals.mario-maker-levels');
-    Route::get('/admin/approvals/mario-maker-levels/approve', 'Admin\ApprovalsController@approveMarioMakerLevel')->name('admin.approvals.mario-maker-levels.approve');
-    Route::get('/admin/approvals/mario-maker-levels/reject', 'Admin\ApprovalsController@rejectMarioMakerLevel')->name('admin.approvals.mario-maker-levels.reject');
-
     // Action lists
     Route::get('/admin/action-lists/developer-missing', 'Admin\ActionListController@developerMissing')->name('admin.action-lists.developer-missing');
     Route::get('/admin/action-lists/new-developer-to-set', 'Admin\ActionListController@newDeveloperToSet')->name('admin.action-lists.new-developer-to-set');
@@ -351,16 +316,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/action-lists/old-publisher-to-clear', 'Admin\ActionListController@oldPublisherToClear')->name('admin.action-lists.old-publisher-to-clear');
     Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
     Route::get('/admin/action-lists/site-alert-errors', 'Admin\ActionListController@siteAlertErrors')->name('admin.action-lists.site-alert-errors');
-
-    // Charts: Dates
-    Route::get('/admin/charts/date', 'Admin\ChartsDateController@showList')->name('admin.charts.date.list');
-    Route::get('/admin/charts/date/add', 'Admin\ChartsDateController@add')->name('admin.charts.date.add');
-    Route::post('/admin/charts/date/add', 'Admin\ChartsDateController@add')->name('admin.charts.date.add');
-
-    // Charts: Rankings
-    Route::get('/admin/charts/ranking/{country}/{date}', 'Admin\ChartsRankingController@showList')->name('admin.charts.ranking.list');
-    Route::get('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
-    Route::post('/admin/charts/ranking/{country}/{date}/add', 'Admin\ChartsRankingController@add')->name('admin.charts.ranking.add');
 
     // Reviews: Links
     Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');

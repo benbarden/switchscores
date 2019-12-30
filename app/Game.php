@@ -57,16 +57,6 @@ class Game extends Model implements Auditable
         return $this->hasOne('App\GameSeries', 'id', 'series_id');
     }
 
-    public function charts()
-    {
-        return $this->hasMany('App\ChartsRanking', 'game_id', 'id');
-    }
-
-    public function images()
-    {
-        return $this->hasMany('App\GameImage', 'game_id', 'id');
-    }
-
     public function titleHashes()
     {
         return $this->hasMany('App\GameTitleHash', 'game_id', 'id');

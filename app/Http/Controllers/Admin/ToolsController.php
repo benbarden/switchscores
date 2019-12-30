@@ -157,14 +157,6 @@ class ToolsController extends Controller
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0540',
             ],
-            'UpdateGameImageCount' => [
-                'command' => 'UpdateGameImageCount',
-                'group' => 'Game updates',
-                'title' => 'Update Game Image Count',
-                'desc' => 'Updates the Image Count field for each game',
-                'scheduleFreq' => 'Manual',
-                'scheduleTime' => 'N/A',
-            ],
         ];
 
         //parent::__construct();

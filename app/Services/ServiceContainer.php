@@ -6,8 +6,6 @@ namespace App\Services;
 
 class ServiceContainer
 {
-    const KEY_CHARTS_DATE_SERVICE = 'ChartsDateService';
-    const KEY_CHARTS_RANKING_GLOBAL_SERVICE = 'ChartsRankingGlobalService';
     const KEY_CRAWLER_WIKIPEDIA_GAMES_LIST_SOURCE_SERVICE = 'CrawlerWikipediaGamesListSourceService';
     const KEY_ESHOP_EUROPE_GAME_SERVICE = 'EshopEuropeGameService';
     const KEY_FEED_ITEM_GAME_SERVICE = 'FeedItemGameService';
@@ -29,7 +27,6 @@ class ServiceContainer
     const KEY_GAME_TAG_SERVICE = 'GameTagService';
     const KEY_GAME_TITLE_HASH_SERVICE = 'GameTitleHashService';
     const KEY_GENRE_SERVICE = 'GenreService';
-    const KEY_MARIO_MAKER_LEVEL_SERVICE = 'MarioMakerLevelService';
     const KEY_NEWS_CATEGORY_SERVICE = 'NewsCategoryService';
     const KEY_NEWS_SERVICE = 'NewsService';
     const KEY_PARTNER_SERVICE = 'PartnerService';
@@ -43,8 +40,6 @@ class ServiceContainer
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
     const KEY_URL_SERVICE = 'UrlService';
     const KEY_USER_GAMES_COLLECTION_SERVICE = 'UserGamesCollectionService';
-    const KEY_USER_LIST_SERVICE = 'UserListService';
-    const KEY_USER_LIST_ITEM_SERVICE = 'UserListItemService';
     const KEY_USER_SERVICE = 'UserService';
 
     private $services = [];
@@ -281,15 +276,6 @@ class ServiceContainer
 
     /**
      * @deprecated
-     * @return MarioMakerLevelService
-     */
-    public function getMarioMakerLevelService()
-    {
-        return $this->load(self::KEY_MARIO_MAKER_LEVEL_SERVICE);
-    }
-
-    /**
-     * @deprecated
      * @return NewsCategoryService
      */
     public function getNewsCategoryService()
@@ -403,24 +389,6 @@ class ServiceContainer
     public function getUserGamesCollectionService()
     {
         return $this->load(self::KEY_USER_GAMES_COLLECTION_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return UserListItemService
-     */
-    public function getUserListItemService()
-    {
-        return $this->load(self::KEY_USER_LIST_ITEM_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return UserListService
-     */
-    public function getUserListService()
-    {
-        return $this->load(self::KEY_USER_LIST_SERVICE);
     }
 
     /**

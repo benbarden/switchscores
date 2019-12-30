@@ -10,7 +10,6 @@ class UserPointTransaction extends Model
     const ACTION_TYPE_REGISTER = 100;
     const ACTION_TYPE_BACKLOG_ADD = 110;
     const ACTION_QUICK_REVIEW_ADD = 120;
-    const ACTION_MARIO_MAKER_LEVEL_ADD = 130;
 
     // DB edits
     const ACTION_DB_PRIMARY_GENRE = 210;
@@ -25,7 +24,6 @@ class UserPointTransaction extends Model
     const POINTS_BACKLOG_ADD = 10;
     const POINTS_QUICK_REVIEW_ADD = 50;
     const POINTS_DB_EDIT = 50;
-    const POINTS_MARIO_MAKER_LEVEL_ADD = 10;
 
     /**
      * @var array

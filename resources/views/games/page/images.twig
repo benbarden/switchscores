@@ -1,4 +1,4 @@
-{% if GameImages or VideoUrl %}
+{% if VideoUrl %}
     {% if VideoUrl != '' and GameData.video_header_text != '' %}
         <h3>
             {{ GameData.video_header_text }}
@@ -20,11 +20,6 @@
          data-nav="thumbs">
         {% if VideoUrl %}
         <a href="{{ VideoUrl }}">{{ GameData.title }}</a>
-        {% endif %}
-        {% if GameImages %}
-        {% for image in GameImages %}
-            <img src="{{ GameData.media_folder }}{{ image.url }}" width="150" height="125">
-        {% endfor %}
         {% endif %}
     </div>
 {% endif %}

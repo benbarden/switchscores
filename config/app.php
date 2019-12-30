@@ -162,8 +162,6 @@ return [
 
         // WOS
         App\Providers\ActivityFeedProvider::class,
-        App\Providers\ChartsDateServiceProvider::class,
-        App\Providers\ChartsRankingGlobalServiceProvider::class,
         App\Providers\CrawlerWikipediaGamesListSourceServiceProvider::class,
         App\Providers\EshopEuropeGameServiceProvider::class,
         App\Providers\EshopUSGameServiceProvider::class,
@@ -193,8 +191,6 @@ return [
         App\Providers\TagServiceProvider::class,
         App\Providers\TopRatedServiceProvider::class,
         App\Providers\UserGamesCollectionServiceProvider::class,
-        App\Providers\UserListItemServiceProvider::class,
-        App\Providers\UserListServiceProvider::class,
         App\Providers\UserServiceProvider::class,
 
         TwigBridge\ServiceProvider::class,

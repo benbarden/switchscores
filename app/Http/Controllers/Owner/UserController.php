@@ -158,8 +158,6 @@ class UserController extends Controller
 
         // Deletion
         $serviceUserGamesCollection = $serviceContainer->getUserGamesCollectionService();
-        $serviceUserListItem = $serviceContainer->getUserListItemService();
-        $serviceUserList = $serviceContainer->getUserListService();
 
         $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);
@@ -188,14 +186,6 @@ class UserController extends Controller
             $bindings['FormMode'] = 'delete-post';
 
             $serviceUserGamesCollection->deleteByUserId($userId);
-            $userLists = $serviceUserList->getAllByUser($userId);
-            if ($userLists) {
-                foreach ($userLists as $list) {
-                    $listId = $list->id;
-                    $serviceUserListItem->deleteByList($listId);
-                    $serviceUserList->delete($listId);
-                }
-            }
             $serviceUser->deleteUser($userId);
 
             // Done

@@ -28,7 +28,6 @@ class Kernel extends ConsoleKernel
         Commands\SitemapGenerateTopRated::class,
         Commands\UpdateGameCalendarStats::class,
         Commands\UpdateGameReviewStats::class,
-        Commands\UpdateGameImageCount::class,
         Commands\UpdateGameRanks::class,
         Commands\WikipediaCrawlGamesList::class,
         Commands\WikipediaImportGamesList::class,

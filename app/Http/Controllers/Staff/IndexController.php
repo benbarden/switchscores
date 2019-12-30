@@ -30,10 +30,6 @@ class IndexController extends Controller
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        // Approvals
-        $serviceMarioMakerLevels = $this->getServiceMarioMakerLevel();
-        $bindings['MarioMakerLevelPendingCount'] = $serviceMarioMakerLevels->getPending()->count();
-
         // Information and site stats
         $bindings['RegisteredUserCount'] = $serviceUser->getCount();
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);

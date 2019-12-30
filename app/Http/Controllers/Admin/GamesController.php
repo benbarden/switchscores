@@ -444,10 +444,14 @@ class GamesController extends Controller
 
         // Core
         $serviceGame = $serviceContainer->getGameService();
+        $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
+
+        // Categorisation
+        $serviceGameGenres = $serviceContainer->getGameGenreService();
+        $serviceGameTags = $serviceContainer->getGameTagService();
 
         // Validation
         $serviceNews = $serviceContainer->getNewsService();
-        $serviceUserListItem = $serviceContainer->getUserListItemService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
 
         // Deletion
@@ -455,11 +459,6 @@ class GamesController extends Controller
         $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
         $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
         $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-
-        // No service for game_images
-        $serviceGameGenres = $serviceContainer->getGameGenreService();
-        $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
-        $serviceGameTags = $serviceContainer->getGameTagService();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
@@ -475,21 +474,9 @@ class GamesController extends Controller
             $customErrors[] = 'Game is linked to '.count($gameNews).' news article(s)';
         }
 
-        $gameUserListItem = $serviceUserListItem->getByGame($gameId);
-        if (count($gameUserListItem) > 0) {
-            $customErrors[] = 'Game is linked to '.count($gameUserListItem).' user list(s)';
-        }
-
         $gameReviews = $serviceReviewLink->getByGame($gameId);
         if (count($gameReviews) > 0) {
             $customErrors[] = 'Game is linked to '.count($gameReviews).' review(s)';
-        }
-
-        $gameChartsRankingGlobalEu = $this->getServiceChartsRankingGlobal()->getByGameEu($gameId);
-        $gameChartsRankingGlobalUs = $this->getServiceChartsRankingGlobal()->getByGameUs($gameId);
-        $totalChartsCount = count($gameChartsRankingGlobalEu) + count($gameChartsRankingGlobalUs);
-        if ($totalChartsCount > 0) {
-            $customErrors[] = 'Game is linked to '.count($gameReviews).' chart(s)';
         }
 
         if ($request->isMethod('post')) {
@@ -499,7 +486,6 @@ class GamesController extends Controller
             $this->getServiceActivityFeed()->deleteByGameId($gameId);
             $serviceFeedItemGames->deleteByGameId($gameId);
             $serviceGameReleaseDates->deleteByGameId($gameId);
-            DB::table('game_images')->where('game_id', $gameId)->delete();
             $serviceGameGenres->deleteGameGenres($gameId);
             $serviceGameTitleHashes->deleteByGameId($gameId);
             $serviceGameTags->deleteGameTags($gameId);

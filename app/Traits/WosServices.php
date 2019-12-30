@@ -6,19 +6,17 @@ use App\Services\StaffDashboards\CategorisationService;
 
 use App\Services\ActivityFeedService;
 use App\Services\AuditService;
-use App\Services\ChartsDateService;
-use App\Services\ChartsRankingGlobalService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\FeedItemGameService;
 use App\Services\FeedItemReviewService;
+use App\Services\GameActionListService;
 use App\Services\GameCalendarService;
 use App\Services\GameDescriptionService;
 use App\Services\GameDeveloperService;
-use App\Services\GameGenreService;
-use App\Services\GameActionListService;
 use App\Services\GameFilterListService;
+use App\Services\GameGenreService;
 use App\Services\GamePrimaryTypeService;
 use App\Services\GamePublisherService;
 use App\Services\GameRankAllTimeService;
@@ -31,7 +29,6 @@ use App\Services\GameService;
 use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
 use App\Services\GenreService;
-use App\Services\MarioMakerLevelService;
 use App\Services\NewsCategoryService;
 use App\Services\NewsService;
 use App\Services\PartnerService;
@@ -45,8 +42,6 @@ use App\Services\TagService;
 use App\Services\TopRatedService;
 use App\Services\UrlService;
 use App\Services\UserGamesCollectionService;
-use App\Services\UserListService;
-use App\Services\UserListItemService;
 use App\Services\UserService;
 
 trait WosServices
@@ -125,22 +120,6 @@ trait WosServices
     public function getServiceStaffDashboardsCategorisation()
     {
         return $this->loadService("StaffDashboards\\CategorisationService");
-    }
-
-    /**
-     * @return ChartsDateService
-     */
-    public function getServiceChartsDate()
-    {
-        return $this->loadService('ChartsDateService');
-    }
-
-    /**
-     * @return ChartsRankingGlobalService
-     */
-    public function getServiceChartsRankingGlobal()
-    {
-        return $this->loadService('ChartsRankingGlobalService');
     }
 
     /**
@@ -328,14 +307,6 @@ trait WosServices
     }
 
     /**
-     * @return MarioMakerLevelService
-     */
-    public function getServiceMarioMakerLevel()
-    {
-        return $this->loadService('MarioMakerLevelService');
-    }
-
-    /**
      * @return NewsCategoryService
      */
     public function getServiceNewsCategory()
@@ -437,22 +408,6 @@ trait WosServices
     public function getServiceUserGamesCollection()
     {
         return $this->loadService('UserGamesCollectionService');
-    }
-
-    /**
-     * @return UserListService
-     */
-    public function getServiceUserList()
-    {
-        return $this->loadService('UserListService');
-    }
-
-    /**
-     * @return UserListItemService
-     */
-    public function getServiceUserListItem()
-    {
-        return $this->loadService('UserListItemService');
     }
 
     /**
