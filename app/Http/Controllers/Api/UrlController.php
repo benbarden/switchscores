@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\BaseController;
-use App\Services\UrlService;
+use Illuminate\Routing\Controller as Controller;
 
-class UrlController extends BaseController
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
+class UrlController extends Controller
 {
+    use SiteRequestData;
+    use WosServices;
+
     public function generateLinkText()
     {
         $request = request();
@@ -17,7 +22,7 @@ class UrlController extends BaseController
             return response()->json(['error' => 'Missing data: title'], 404);
         }
 
-        $serviceUrl = new UrlService();
+        $serviceUrl = $this->getServiceUrl();
         $linkText = $serviceUrl->generateLinkText($title);
 
         if ($linkText) {

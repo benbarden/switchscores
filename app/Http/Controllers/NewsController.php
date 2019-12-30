@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
-class NewsController extends BaseController
+class NewsController extends Controller
 {
+    use SiteRequestData;
+    use WosServices;
+
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $serviceNews = $serviceContainer->getNewsService();
+        $serviceNews = $this->getServiceNews();
 
         $newsList = $serviceNews->getPaginated(10);
 
@@ -28,14 +29,11 @@ class NewsController extends BaseController
 
     public function displayContent()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
-        $serviceNews = $serviceContainer->getNewsService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceNews = $this->getServiceNews();
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $request = request();
         $requestUri = $request->getPathInfo();

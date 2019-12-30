@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\BaseController;
+use Illuminate\Routing\Controller as Controller;
 
-class ReviewSiteController extends BaseController
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
+
+class ReviewSiteController extends Controller
 {
+    use SiteRequestData;
+    use WosServices;
+
     public function getByDomain()
     {
         $request = request();
@@ -16,8 +22,7 @@ class ReviewSiteController extends BaseController
             return response()->json(['error' => 'Missing data: reviewUrl'], 404);
         }
 
-        $servicePartner = resolve('Services\PartnerService');
-        /* @var \App\Services\PartnerService $servicePartner */
+        $servicePartner = $this->getServicePartner();
 
         // Convert to domain URL
         $domainUrl = $reviewUrl;

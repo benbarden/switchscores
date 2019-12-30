@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\UserCreated;
 use App\User;
-use App\Http\Controllers\BaseController;
+use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-class RegisterController extends BaseController
+class RegisterController extends Controller
 {
     /*
     |--------------------------------------------------------------------------

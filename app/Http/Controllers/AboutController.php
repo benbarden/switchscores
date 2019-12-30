@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
 class AboutController extends Controller
 {
+    use SiteRequestData;
+    use WosServices;
+
     public function show()
     {
         $bindings = [];
