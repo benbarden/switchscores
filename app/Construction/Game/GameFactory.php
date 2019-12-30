@@ -15,7 +15,6 @@ class GameFactory
      * @param $publisher
      * @param null $amazonUkLink
      * @param null $overview
-     * @param null $mediaFolder
      * @param null $videoUrl
      * @param null $boxartSquareUrl
      * @param null $nintendoPageUrl
@@ -25,7 +24,7 @@ class GameFactory
      */
     public static function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $amazonUkLink = null, $overview = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null
     )
@@ -39,7 +38,6 @@ class GameFactory
                 'overview' => $overview,
                 'developer' => $developer,
                 'publisher' => $publisher,
-                'media_folder' => $mediaFolder,
                 'review_count' => 0,
                 'amazon_uk_link' => $amazonUkLink,
                 'video_url' => $videoUrl,

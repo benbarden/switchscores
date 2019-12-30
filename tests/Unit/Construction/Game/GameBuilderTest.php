@@ -95,19 +95,6 @@ class GameBuilderTest extends TestCase
         $this->assertEquals($publisher, $game->publisher);
     }
 
-    public function testMediaFolder()
-    {
-        $title = 'Yoshi';
-        $mediaFolder = '/img/media/yoshi/';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setMediaFolder($mediaFolder)
-            ->getGame();
-        $this->assertEquals($mediaFolder, $game->media_folder);
-    }
-
     public function testReviewCount()
     {
         $title = 'Yoshi';

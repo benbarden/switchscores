@@ -73,11 +73,6 @@ class GameDirector
                 $this->builder->setOverview($params['overview']);
             }
         }
-        if (array_key_exists('media_folder', $params)) {
-            if ($params['media_folder'] != '') {
-                $this->builder->setMediaFolder($params['media_folder']);
-            }
-        }
         if (array_key_exists('video_url', $params)) {
             if ($params['video_url'] != '') {
                 $this->builder->setVideoUrl($params['video_url']);

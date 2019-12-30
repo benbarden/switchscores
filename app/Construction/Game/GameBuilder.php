@@ -79,12 +79,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setMediaFolder($mediaFolder): GameBuilder
-    {
-        $this->game->media_folder = $mediaFolder;
-        return $this;
-    }
-
     public function setReviewCount($reviewCount): GameBuilder
     {
         $this->game->review_count = $reviewCount;

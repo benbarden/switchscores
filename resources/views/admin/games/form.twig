@@ -149,12 +149,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="media_folder" class="col-md-4 control-label">Media folder</label>
-                    <div class="col-md-6">
-                        <input id="media_folder" type="text" class="form-control" name="media_folder">
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="amazon_uk_link" class="col-md-4 control-label">Amazon UK link</label>
                     <div class="col-md-6">
                         <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
@@ -182,22 +176,6 @@
                         {% set upcomingDateJp = attribute(attribute(GameReleaseDates, 'jp'), 'upcoming_date') %}
                     {% endif %}
                 {% endfor %}
-            <fieldset>
-                <legend>Advanced</legend>
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Wikipedia row data</label>
-                    <div class="col-md-6">
-                        <textarea readonly="readonly" rows="10" cols="80" style="font-family: monospace;">|-
-!scope="row"|''{{ GameData.title }}''
-|
-|{{ GameData.developer }}
-|{{ GameData.publisher }}
-|{{ WikiDateList }}
-|
-                        </textarea>
-                    </div>
-                </div>
-            </fieldset>
             {% endif %}
             #}
 

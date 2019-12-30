@@ -42,7 +42,6 @@ class GamesController extends Controller
         'link_title' => 'required|max:100',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
-        'media_folder' => 'max:100',
     ];
 
     public function showList($report = null)

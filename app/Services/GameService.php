@@ -34,7 +34,7 @@ class GameService
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $amazonUkLink = null, $overview = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
@@ -47,7 +47,6 @@ class GameService
             'overview' => $overview,
             'developer' => $developer,
             'publisher' => $publisher,
-            'media_folder' => $mediaFolder,
             'review_count' => 0,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
@@ -61,7 +60,7 @@ class GameService
     public function edit(
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $overview = null, $mediaFolder = null, $videoUrl = null,
+        $amazonUkLink = null, $overview = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
@@ -74,7 +73,6 @@ class GameService
             'overview' => $overview,
             'developer' => $developer,
             'publisher' => $publisher,
-            'media_folder' => $mediaFolder,
             'amazon_uk_link' => $amazonUkLink,
             'video_url' => $videoUrl,
             'boxart_square_url' => $boxartSquareUrl,
