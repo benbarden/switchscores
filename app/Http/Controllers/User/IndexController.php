@@ -43,9 +43,9 @@ class IndexController extends Controller
 
         if ($authUser->isOwner()) {
             $partnerId = \Request::get('partnerOverride');
-            if ($partnerId = 'xxx') {
+            if ($partnerId == 'xxx') {
                 $partnerId = null;
-            } elseif (!$partnerId) {
+            } else {
                 $partnerId = $authUser->partner_id;
             }
         } else {
