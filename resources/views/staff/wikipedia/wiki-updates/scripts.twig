@@ -35,7 +35,7 @@
         $.getJSON('/api/staff/wikipedia/wiki-updates/update-status', {itemId: feedItemGameId, newStatusId: quickStatusId}, function(data) {
             apiMessage = data.message;
             console.log(apiMessage);
-            top.location.href = '{{ route('staff.wikipedia.wiki-updates.list') }}';
+            top.location.href = '{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}';
             //$('#link_title').val(linkText);
         });
     });

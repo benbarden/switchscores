@@ -18,8 +18,16 @@ class DashboardController extends Controller
 
         $serviceFeedItemGame = $this->getServiceFeedItemGame();
 
-        $pendingFeedGameItems = $serviceFeedItemGame->getPending();
-        $bindings['PendingWikiUpdateCount'] = count($pendingFeedGameItems);
+        $feedItemsAllPending = $serviceFeedItemGame->getPending();
+        $feedItemsPendingNoGameId = $serviceFeedItemGame->getPendingNoGameId();
+        $feedItemsPendingWithGameId = $serviceFeedItemGame->getPendingWithGameId();
+        $feedItemsComplete = $serviceFeedItemGame->getComplete();
+        $feedItemsInactive = $serviceFeedItemGame->getInactive();
+        $bindings['WikiUpdatesAllPendingCount'] = count($feedItemsAllPending);
+        $bindings['WikiUpdatesNoGameIdCount'] = count($feedItemsPendingNoGameId);
+        $bindings['WikiUpdatesWithGameIdCount'] = count($feedItemsPendingWithGameId);
+        $bindings['WikiUpdatesCompleteCount'] = count($feedItemsComplete);
+        $bindings['WikiUpdatesInactiveCount'] = count($feedItemsInactive);
 
         $pageTitle = 'Wikipedia dashboard';
 

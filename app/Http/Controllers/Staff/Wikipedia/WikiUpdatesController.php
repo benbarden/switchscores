@@ -25,50 +25,72 @@ class WikiUpdatesController extends Controller
     private $validationRules = [
     ];
 
-    public function showList($report = null)
+    public function showListAllPending()
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Wiki updates';
-        $bindings['PageTitle'] = 'Wiki updates';
+        $bindings['TopTitle'] = 'Wiki updates: All pending';
+        $bindings['PageTitle'] = 'Wiki updates: All pending';
 
-        $serviceFeedItemGame = $this->getServiceFeedItemGame();
+        $bindings['ActiveNav'] = 'all-pending';
+        $bindings['FeedItems'] = $this->getServiceFeedItemGame()->getPending();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        if ($report == null) {
-            $bindings['ActiveNav'] = '';
-            $feedItems = $serviceFeedItemGame->getPendingAndOkToUpdate();
-            $jsInitialSort = "[ 0, 'asc']";
-        } else {
-            $bindings['ActiveNav'] = $report;
-            switch ($report) {
-                case 'pending-game-id':
-                    $feedItems = $serviceFeedItemGame->getPendingWithGameId();
-                    $jsInitialSort = "[ 0, 'asc']";
-                    break;
-                case 'pending-no-game-id':
-                    $feedItems = $serviceFeedItemGame->getPendingNoGameId();
-                    $jsInitialSort = "[ 0, 'asc']";
-                    break;
-                case 'ok-to-update':
-                    $feedItems = $serviceFeedItemGame->getForProcessing();
-                    $jsInitialSort = "[ 0, 'asc']";
-                    break;
-                case 'complete':
-                    $feedItems = $serviceFeedItemGame->getComplete();
-                    $jsInitialSort = "[ 0, 'asc']";
-                    break;
-                case 'inactive':
-                    $feedItems = $serviceFeedItemGame->getInactive();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
-                default:
-                    abort(404);
-                    break;
-            }
-        }
+        return view('staff.wikipedia.wiki-updates.list', $bindings);
+    }
 
-        $bindings['FeedItems'] = $feedItems;
-        $bindings['jsInitialSort'] = $jsInitialSort;
+    public function showListNoGameId()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Wiki updates: Pending, no game ID';
+        $bindings['PageTitle'] = 'Wiki updates: Pending, no game ID';
+
+        $bindings['ActiveNav'] = 'pending-no-game-id';
+        $bindings['FeedItems'] = $this->getServiceFeedItemGame()->getPendingNoGameId();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        return view('staff.wikipedia.wiki-updates.list', $bindings);
+    }
+
+    public function showListWithGameId()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Wiki updates: Pending, with game ID';
+        $bindings['PageTitle'] = 'Wiki updates: Pending, with game ID';
+
+        $bindings['ActiveNav'] = 'pending-with-game-id';
+        $bindings['FeedItems'] = $this->getServiceFeedItemGame()->getPendingWithGameId();
+        $bindings['jsInitialSort'] = "[ 0, 'asc']";
+
+        return view('staff.wikipedia.wiki-updates.list', $bindings);
+    }
+
+    public function showListAllComplete()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Wiki updates: All complete';
+        $bindings['PageTitle'] = 'Wiki updates: All complete';
+
+        $bindings['ActiveNav'] = 'all-complete';
+        $bindings['FeedItems'] = $this->getServiceFeedItemGame()->getComplete();
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        return view('staff.wikipedia.wiki-updates.list', $bindings);
+    }
+
+    public function showListAllInactive()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Wiki updates: All inactive';
+        $bindings['PageTitle'] = 'Wiki updates: All inactive';
+
+        $bindings['ActiveNav'] = 'all-inactive';
+        $bindings['FeedItems'] = $this->getServiceFeedItemGame()->getInactive();
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.wikipedia.wiki-updates.list', $bindings);
     }
@@ -156,7 +178,7 @@ class WikiUpdatesController extends Controller
             );
 
             // All done; send us back
-            return redirect(route('staff.wikipedia.wiki-updates.list'));
+            return redirect(route('staff.wikipedia.wiki-updates.list-all-pending'));
 
         } else {
 

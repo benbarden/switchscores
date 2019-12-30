@@ -15,12 +15,12 @@
         <div class="pull-right">
             <label for="admin-nav-feed-item-filter">Filters:</label>
             <select id="admin-nav-feed-item-filter" name="admin-nav-feed-item-filter" class="form-control">
-                <option value="">Pending and OK to update (default)</option>
-                <option value="pending-game-id">Pending - with game ID</option>
+                <option value="all-pending">All pending (default)</option>
+                <option value="pending-with-game-id">Pending - with game ID</option>
                 <option value="pending-no-game-id">Pending - no game ID</option>
-                <option value="ok-to-update">OK to update</option>
-                <option value="complete">Complete</option>
-                <option value="inactive">Inactive items</option>
+                {#<option value="ok-to-update">OK to update</option>#}
+                <option value="all-complete">Complete</option>
+                <option value="all-inactive">Inactive items</option>
             </select>
         </div>
     </div>
@@ -48,20 +48,6 @@
                     </td>
                     <td class="text-left">
                         {{ item.item_title }}
-                        <small>
-                            {% if item.hasRealEuUpcomingDate() %}
-                                <br>
-                                <strong>upcoming_date_eu: {{ item.upcoming_date_eu }}</strong>
-                            {% endif %}
-                            {% if item.hasRealUsUpcomingDate() %}
-                                <br>
-                                upcoming_date_us: {{ item.upcoming_date_us }}
-                            {% endif %}
-                            {% if item.hasRealJpUpcomingDate() %}
-                                <br>
-                                upcoming_date_jp: {{ item.upcoming_date_jp }}
-                            {% endif %}
-                        </small>
                     </td>
                     <td class="text-left">
                         {% if item.game.title is null %}
@@ -101,7 +87,7 @@
 <script>
     $('#admin-nav-feed-item-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('staff.wikipedia.wiki-updates.list')}}' + '/' + selectedFilter;
+        top.location.href = '/staff/wikipedia/wiki-updates/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';
