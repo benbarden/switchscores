@@ -18,7 +18,6 @@ class ServiceContainer
     const KEY_GAME_PRIMARY_TYPE_SERVICE = 'GamePrimaryTypeService';
     const KEY_GAME_PUBLISHER_SERVICE = 'GamePublisherService';
     const KEY_GAME_RANK_ALLTIME_SERVICE = 'GameRankAllTimeService';
-    const KEY_GAME_RANK_UPDATE_SERVICE = 'GameRankUpdateService';
     const KEY_GAME_RANK_YEAR_SERVICE = 'GameRankYearService';
     const KEY_GAME_RANK_YEARMONTH_SERVICE = 'GameRankYearMonthService';
     const KEY_GAME_RELEASE_DATE_SERVICE = 'GameReleaseDateService';
@@ -191,15 +190,6 @@ class ServiceContainer
     public function getGameRankAllTimeService()
     {
         return $this->load(self::KEY_GAME_RANK_ALLTIME_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return GameRankUpdateService
-     */
-    public function getGameRankUpdateService()
-    {
-        return $this->load(self::KEY_GAME_RANK_UPDATE_SERVICE);
     }
 
     /**

@@ -172,7 +172,6 @@ return [
         App\Providers\GameGenreServiceProvider::class,
         App\Providers\GamePublisherServiceProvider::class,
         App\Providers\GameRankAllTimeServiceProvider::class,
-        App\Providers\GameRankUpdateServiceProvider::class,
         App\Providers\GameRankYearServiceProvider::class,
         App\Providers\GameReleaseDateServiceProvider::class,
         App\Providers\GameServiceProvider::class,

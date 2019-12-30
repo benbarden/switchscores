@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-use App\Services\GameRankUpdateService;
 use App\Services\ServiceContainer;
 
 class UpdateGameRanks extends Command
@@ -47,10 +46,6 @@ class UpdateGameRanks extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        // This is only used for all-time ranks
-        $serviceGameRankUpdate = resolve('Services\GameRankUpdateService');
-        /* @var GameRankUpdateService $serviceGameRankUpdate */
-
         // *** 1. ALL-TIME RANK *** //
 
         \DB::statement("TRUNCATE TABLE game_rank_alltime");
@@ -90,33 +85,6 @@ class UpdateGameRanks extends Command
             } else {
                 // Go to next rank
                 $actualRank = $rankCounter;
-            }
-
-            // Notify if different
-            if (!$prevRank) {
-
-                // No previous rank - notification needed
-                $logger->info(sprintf('Game: %s - Rating: %s - Initial rank: %s',
-                    $gameTitle, $ratingAvg, $actualRank));
-
-                // Store rank update
-                //$serviceGameRankUpdate->create($gameId, null, $actualRank, $ratingAvg);
-
-            } elseif ($prevRank != $actualRank) {
-
-                // Log all rank changes, even though we might hide some on the site
-
-                // Rank has changed - notification needed
-                $logger->info(sprintf('Game: %s - Rating: %s - Previous rank: %s - New rank: %s',
-                    $gameTitle, $ratingAvg, $prevRank, $actualRank));
-
-                // Store rank update
-                //$serviceGameRankUpdate->create($gameId, $prevRank, $actualRank, $ratingAvg);
-
-            } else {
-
-                // No change. No notification needed
-
             }
 
             // Save rank to DB

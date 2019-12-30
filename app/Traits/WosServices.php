@@ -20,7 +20,6 @@ use App\Services\GameGenreService;
 use App\Services\GamePrimaryTypeService;
 use App\Services\GamePublisherService;
 use App\Services\GameRankAllTimeService;
-use App\Services\GameRankUpdateService;
 use App\Services\GameRankYearService;
 use App\Services\GameRankYearMonthService;
 use App\Services\GameReleaseDateService;
@@ -232,14 +231,6 @@ trait WosServices
     public function getServiceGameRankAllTime()
     {
         return $this->loadService('GameRankAllTimeService');
-    }
-
-    /**
-     * @return GameRankUpdateService
-     */
-    public function getServiceGameRankUpdate()
-    {
-        return $this->loadService('GameRankUpdateService');
     }
 
     /**
