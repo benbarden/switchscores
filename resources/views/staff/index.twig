@@ -42,10 +42,10 @@
             {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
             <tr>
                 <td>
-                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}">Wiki updates</a>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}">Wiki updates</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('staff.wikipedia.wiki-updates.list') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
+                    <a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
                 </td>
             </tr>
             {% endif %}

@@ -32,7 +32,7 @@ class ToolsController extends Controller
                 'scheduleTime' => '0315',
                 'nextStep' => 'WikipediaUpdateGamesList',
                 'relatedLink' => [
-                    'url' => route('staff.wikipedia.wiki-updates.list'),
+                    'url' => route('staff.wikipedia.wiki-updates.list-all-pending'),
                     'text' => 'Wiki updates'
                 ],
             ],
@@ -44,7 +44,7 @@ class ToolsController extends Controller
                 'scheduleFreq' => 'Daily',
                 'scheduleTime' => '0320',
                 'relatedLink' => [
-                    'url' => route('staff.wikipedia.wiki-updates.list'),
+                    'url' => route('staff.wikipedia.wiki-updates.list-all-pending'),
                     'text' => 'Wiki Updates'
                 ],
             ],
