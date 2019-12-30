@@ -42,9 +42,11 @@ class IndexController extends Controller
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
         if ($authUser->isOwner()) {
-            $partnerId = \Request::get('partnerOverride');
-            if ($partnerId == 'xxx') {
+            $partnerIdOverride = \Request::get('partnerOverride');
+            if ($partnerIdOverride == 'xxx') {
                 $partnerId = null;
+            } elseif ($partnerIdOverride) {
+                $partnerId = $partnerIdOverride;
             } else {
                 $partnerId = $authUser->partner_id;
             }

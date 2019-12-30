@@ -1,6 +1,6 @@
 <h2>Submitting reviews</h2>
 
-{% if ReviewSite.feed_url == '' %}
+{% if PartnerData.feed_url == '' %}
 
     {# No feed URL - partner should submit their own reviews #}
     <p>
@@ -17,7 +17,7 @@
     <p>
         <strong>We're importing reviews from your feed:</strong>
         <br>
-        <a href="{{ ReviewSite.feed_url }}" target="_blank">{{ ReviewSite.feed_url }}</a>
+        <a href="{{ PartnerData.feed_url }}" target="_blank">{{ PartnerData.feed_url }}</a>
     </p>
     <p>
         Reviews usually appear on the site within 24-48 hours. You don't need to do anything else.
