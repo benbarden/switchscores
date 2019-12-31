@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -76,7 +76,11 @@ class GamesDetailController extends Controller
         $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
         $bindings['GameAuditsCore'] = $gameAudits;
 
-        return view('admin.games-detail.show', $bindings);
+        // Import rules
+        $bindings['ImportRulesEshop'] = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+        $bindings['ImportRulesWikipedia'] = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
+
+        return view('staff.games.detail.show', $bindings);
     }
 
 }

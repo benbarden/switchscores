@@ -7,6 +7,7 @@ sudo apt-get install htop -y
 sudo apt-get install zip -y
 sudo apt-get install curl -y
 sudo apt-get install ntp -y
+sudo apt-get install ntpdate -y
 
 sudo apt-get install -y apache2
 if ! [ -L /var/www ]; then

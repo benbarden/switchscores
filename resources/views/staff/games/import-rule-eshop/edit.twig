@@ -1,0 +1,16 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.games.dashboard'), 'text': 'Games dashboard'},
+    {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Game detail'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.games.import-rule-eshop.edit', {'gameId': GameId}) %}
+{% include 'staff/games/import-rule-eshop/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/games/import-rule-eshop/scripts.twig' %}
+
+{% endblock page_inner %}

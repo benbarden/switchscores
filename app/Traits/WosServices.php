@@ -17,6 +17,8 @@ use App\Services\GameDescriptionService;
 use App\Services\GameDeveloperService;
 use App\Services\GameFilterListService;
 use App\Services\GameGenreService;
+use App\Services\GameImportRuleEshopService;
+use App\Services\GameImportRuleWikipediaService;
 use App\Services\GamePrimaryTypeService;
 use App\Services\GamePublisherService;
 use App\Services\GameRankAllTimeService;
@@ -207,6 +209,22 @@ trait WosServices
     public function getServiceGameFilterList()
     {
         return $this->loadService('GameFilterListService');
+    }
+
+    /**
+     * @return GameImportRuleEshopService
+     */
+    public function getServiceGameImportRuleEshop()
+    {
+        return $this->loadService('GameImportRuleEshopService');
+    }
+
+    /**
+     * @return GameImportRuleWikipediaService
+     */
+    public function getServiceGameImportRuleWikipedia()
+    {
+        return $this->loadService('GameImportRuleWikipediaService');
     }
 
     /**

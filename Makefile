@@ -15,6 +15,9 @@ test-unit:
 test-eshop:
 	./vendor/bin/phpunit --testsuite Eshop
 
+test-game-import-rule:
+	./vendor/bin/phpunit --filter GameImportRule
+
 test-game-title-match:
 	./vendor/bin/phpunit --filter TitleMatchTest
 

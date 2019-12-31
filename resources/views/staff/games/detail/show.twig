@@ -317,10 +317,177 @@
         <div id="tabs">
 
             <ul>
+                <li><a href="#tabs-import-rules">Import rules</a></li>
                 <li><a href="#tabs-audit">Audit</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
             </ul>
+
+            <div id="tabs-import-rules">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <h2>Import rules: eShop</h2>
+
+                        {% if ImportRulesEshop %}
+                            <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-eshop.edit', {'gameId': GameId}) }}">Edit rules</a>
+                            <br><br>
+                            <table class="table table-condensed table-responsive">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Ignore publishers
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesEshop.shouldIgnorePublishers() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore Europe dates
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesEshop.shouldIgnoreEuropeDates() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore price
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesEshop.shouldIgnorePrice() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore players
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesEshop.shouldIgnorePlayers() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore genres
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesEshop.shouldIgnoreGenres() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        {% else %}
+                            No eShop rules found.
+                            <br><br>
+                            <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-eshop.edit', {'gameId': GameId}) }}">Add rules</a>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <h2>Import rules: Wikipedia</h2>
+
+                        {% if ImportRulesWikipedia %}
+                            <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-wikipedia.edit', {'gameId': GameId}) }}">Edit rules</a>
+                            <br><br>
+                            <table class="table table-condensed table-responsive">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Ignore developers
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesWikipedia.shouldIgnoreDevelopers() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore publishers
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesWikipedia.shouldIgnorePublishers() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore Europe dates
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesWikipedia.shouldIgnoreEuropeDates() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore US dates
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesWikipedia.shouldIgnoreUSDates() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ignore JP dates
+                                    </td>
+                                    <td>
+                                        {% if ImportRulesWikipedia.shouldIgnoreJPDates() %}
+                                            Yes
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        {% else %}
+                            No Wikipedia rules found.
+                            <br><br>
+                            <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-wikipedia.edit', {'gameId': GameId}) }}">Add rules</a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
 
             <div id="tabs-audit">
 

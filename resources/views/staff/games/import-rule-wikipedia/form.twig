@@ -1,0 +1,42 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="ignore_developers" class="col-md-4 control-label">Ignore developers</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="ignore_developers" name="ignore_developers">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ignore_publishers" class="col-md-4 control-label">Ignore publishers</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="ignore_publishers" name="ignore_publishers">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ignore_europe_dates" class="col-md-4 control-label">Ignore Europe dates</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="ignore_europe_dates" name="ignore_europe_dates">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ignore_us_dates" class="col-md-4 control-label">Ignore US dates</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="ignore_us_dates" name="ignore_us_dates">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ignore_jp_dates" class="col-md-4 control-label">Ignore JP dates</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="ignore_jp_dates" name="ignore_jp_dates">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>
