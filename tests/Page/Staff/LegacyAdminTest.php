@@ -127,7 +127,7 @@ class LegacyAdminTest extends TestCase
     public function testStaffWikipediaWikiUpdates()
     {
         $this->be($this->userAdmin);
-        $response = $this->get('/staff/wikipedia/wiki-updates');
+        $response = $this->get('/staff/wikipedia/wiki-updates/all-pending');
         $response->assertStatus(200);
     }
 
