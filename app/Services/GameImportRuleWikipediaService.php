@@ -11,4 +11,9 @@ class GameImportRuleWikipediaService
     {
         return GameImportRuleWikipedia::where('game_id', $gameId)->first();
     }
+
+    public function deleteByGameId($gameId)
+    {
+        GameImportRuleWikipedia::where('game_id', $gameId)->delete();
+    }
 }

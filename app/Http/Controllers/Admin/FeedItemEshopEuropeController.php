@@ -184,7 +184,7 @@ class FeedItemEshopEuropeController extends Controller
                 // Trigger event
                 event(new GameCreated($game));
 
-                return redirect('/admin/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
+                return redirect('/staff/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
 
             }
 

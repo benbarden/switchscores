@@ -264,7 +264,7 @@ class GamesController extends Controller
             event(new GameCreated($game));
 
             //return redirect('/admin/games/list?lastaction=add&lastgameid='.$gameId);
-            return redirect('/admin/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
+            return redirect('/staff/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
 
         }
 
@@ -365,7 +365,7 @@ class GamesController extends Controller
             // Done
             if ($request->button_pressed == 'save-return-to-list') {
                 //return redirect('/admin/games/list/'.$gameListFilter.'?lastaction=edit&lastgameid='.$gameId);
-                return redirect('/admin/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
+                return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
             } elseif ($gameListFilter && $nextId) {
                 return redirect('/admin/games/edit/'.$nextId.'?filter='.$gameListFilter);
             } else {
@@ -491,6 +491,8 @@ class GamesController extends Controller
             $serviceGameDeveloper->deleteByGameId($gameId);
             $serviceGamePublisher->deleteByGameId($gameId);
             $this->getServiceGameDescription()->deleteByGameId($gameId);
+            $this->getServiceGameImportRuleEshop()->deleteByGameId($gameId);
+            $this->getServiceGameImportRuleWikipedia()->deleteByGameId($gameId);
             $serviceGame->deleteGame($gameId);
 
             // Done
