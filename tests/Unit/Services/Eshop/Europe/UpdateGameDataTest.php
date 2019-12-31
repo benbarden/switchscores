@@ -6,10 +6,7 @@ use App\EshopEuropeGame;
 use App\Game;
 use App\Services\Eshop\Europe\UpdateGameData;
 
-use Illuminate\Support\Collection;
 use Tests\TestCase;
-#use Illuminate\Foundation\Testing\DatabaseMigrations;
-#use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UpdateGameDataTest extends TestCase
 {
@@ -177,5 +174,4 @@ class UpdateGameDataTest extends TestCase
         $this->assertFalse($this->serviceUpdateGameData->hasGameChanged());
         $this->assertEquals("1-4", $serviceGameItem->players);
     }
-
 }

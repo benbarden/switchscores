@@ -4,9 +4,10 @@ namespace App\Services\Eshop\Europe;
 
 use Illuminate\Support\Collection;
 
-use App\EshopEuropeGame;
 use App\Game;
 use App\GameReleaseDate;
+use App\GameImportRuleEshop;
+use App\EshopEuropeGame;
 use App\EshopEuropeAlert;
 
 use App\Services\GenreService;
@@ -33,6 +34,11 @@ class UpdateGameData
      * @var GameReleaseDate
      */
     private $gameReleaseDate;
+
+    /**
+     * @var GameImportRuleEshop
+     */
+    private $gameImportRuleEshop;
 
     /**
      * @var boolean
@@ -126,6 +132,16 @@ class UpdateGameData
         $this->hasGameReleaseDateChanged = false;
     }
 
+    public function setGameImportRule(GameImportRuleEshop $gameImportRule)
+    {
+        $this->gameImportRuleEshop = $gameImportRule;
+    }
+
+    public function getGameImportRule(): GameImportRuleEshop
+    {
+        return $this->gameImportRuleEshop;
+    }
+
     public function hasGameChanged()
     {
         return $this->hasGameChanged;
@@ -183,6 +199,10 @@ class UpdateGameData
 
     public function updateNoOfPlayers()
     {
+        if ($this->gameImportRuleEshop) {
+            if ($this->gameImportRuleEshop->shouldIgnorePlayers()) return false;
+        }
+
         $gameTitle = $this->game->title;
         $gamePlayers = $this->game->players;
         $eshopPlayersFrom = $this->eshopItem->players_from;
@@ -222,6 +242,10 @@ class UpdateGameData
 
     public function updatePublisher()
     {
+        if ($this->gameImportRuleEshop) {
+            if ($this->gameImportRuleEshop->shouldIgnorePublishers()) return false;
+        }
+
         $gameTitle = $this->game->title;
         $eshopPublisher = $this->eshopItem->publisher;
 
@@ -255,6 +279,10 @@ class UpdateGameData
 
     public function updatePrice()
     {
+        if ($this->gameImportRuleEshop) {
+            if ($this->gameImportRuleEshop->shouldIgnorePrice()) return false;
+        }
+
         $gameTitle = $this->game->title;
         $eshopPriceLowest = $this->eshopItem->price_lowest_f;
         $eshopPriceDiscount = $this->eshopItem->price_discount_percentage_f;
@@ -328,6 +356,10 @@ class UpdateGameData
 
     public function updateReleaseDate()
     {
+        if ($this->gameImportRuleEshop) {
+            if ($this->gameImportRuleEshop->shouldIgnoreEuropeDates()) return false;
+        }
+
         $nowDate = new \DateTime('now');
 
         $gameTitle = $this->game->title;
@@ -405,6 +437,10 @@ class UpdateGameData
 
     public function updateGenres()
     {
+        if ($this->gameImportRuleEshop) {
+            if ($this->gameImportRuleEshop->shouldIgnoreGenres()) return false;
+        }
+
         $serviceGenre = new GenreService();
         $serviceGameGenre = new GameGenreService();
 

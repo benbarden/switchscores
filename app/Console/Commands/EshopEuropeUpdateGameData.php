@@ -77,6 +77,8 @@ class EshopEuropeUpdateGameData extends Command
                 continue;
             }
 
+            $gameId = $game->id;
+
             if (!$eshopUrl) {
                 $logger->error($eshopTitle.' - no URL found for this record. Skipping');
                 continue;
@@ -89,10 +91,16 @@ class EshopEuropeUpdateGameData extends Command
                 continue;
             }
 
+            // IMPORT RULES
+            $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+
             // SETUP
             $serviceUpdateGameData->setEshopItem($eshopItem);
             $serviceUpdateGameData->setGame($game);
             $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
+            if ($gameImportRule) {
+                $serviceUpdateGameData->setGameImportRule($gameImportRule);
+            }
             $serviceUpdateGameData->resetLogMessages();
 
             // STORE METHOD NAMES FOR LOOPING LATER
