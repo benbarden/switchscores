@@ -95,6 +95,7 @@ class EshopEuropeUpdateGameData extends Command
             $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
 
             // SETUP
+            $serviceUpdateGameData = new UpdateGameData();
             $serviceUpdateGameData->setEshopItem($eshopItem);
             $serviceUpdateGameData->setGame($game);
             $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
