@@ -177,9 +177,11 @@ class GamesBrowseController extends Controller
         $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
         $dateListArray = [];
 
-        $dateListArray2017 = [];
-        $dateListArray2018 = [];
-        $dateListArray2019 = [];
+        $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
+
+        foreach ($allowedYears as $allowedYear) {
+            $dateListArray{$allowedYear} = [];
+        }
 
         if ($dateList) {
 
@@ -199,35 +201,23 @@ class GamesBrowseController extends Controller
                     'GameCount' => $dateCount,
                 ];
 
-                switch ($dateYear) {
-                    case 2017:
-                        $dateListArray2017[] = [
-                            'DateRaw' => $date,
-                            'GameCount' => $dateCount,
-                        ];
-                        break;
-                    case 2018:
-                        $dateListArray2018[] = [
-                            'DateRaw' => $date,
-                            'GameCount' => $dateCount,
-                        ];
-                        break;
-                    case 2019:
-                        $dateListArray2019[] = [
-                            'DateRaw' => $date,
-                            'GameCount' => $dateCount,
-                        ];
-                        break;
+                if (!in_array($dateYear, $allowedYears)) {
+                    throw new \Exception('Year '.$dateYear.' could not be found in allowedYears');
                 }
+
+                $dateListArray{$dateYear}[] = [
+                    'DateRaw' => $date,
+                    'GameCount' => $dateCount,
+                ];
 
             }
 
         }
 
         $bindings['DateList'] = $dateListArray;
-        $bindings['DateList2017'] = $dateListArray2017;
-        $bindings['DateList2018'] = $dateListArray2018;
-        $bindings['DateList2019'] = $dateListArray2019;
+        foreach ($allowedYears as $allowedYear) {
+            $bindings['DateList'.$allowedYear] = $dateListArray{$allowedYear};
+        }
 
         return view('games.browse.byDateLanding', $bindings);
     }

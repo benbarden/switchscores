@@ -39,6 +39,9 @@ class ReviewsTest extends TestCase
         $response->assertStatus(200);
 
         $response = $this->get('/top-rated/by-year/2020');
+        $response->assertStatus(200);
+
+        $response = $this->get('/top-rated/by-year/2021');
         $response->assertStatus(404);
     }
 

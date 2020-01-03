@@ -71,6 +71,12 @@ class GamesTest extends TestCase
 
     public function testGamesBrowseByDatePage()
     {
+        $response = $this->get('/games/by-date/2020-01');
+        $response->assertStatus(200);
+
+        $response = $this->get('/games/by-date/2019-12');
+        $response->assertStatus(200);
+
         $response = $this->get('/games/by-date/2018-05');
         $response->assertStatus(200);
 

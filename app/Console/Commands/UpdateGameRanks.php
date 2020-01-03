@@ -6,10 +6,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-use App\Services\ServiceContainer;
+use App\Traits\WosServices;
 
 class UpdateGameRanks extends Command
 {
+    use WosServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -111,7 +113,7 @@ class UpdateGameRanks extends Command
 
         \DB::statement("TRUNCATE TABLE game_rank_year");
 
-        $years = [2017, 2018, 2019];
+        $years = $this->getServiceGameCalendar()->getAllowedYears();
 
         foreach ($years as $year) {
 
@@ -168,10 +170,8 @@ class UpdateGameRanks extends Command
 
         \DB::statement("TRUNCATE TABLE game_rank_yearmonth");
 
-        $serviceContainer = new ServiceContainer();
-
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
-        $serviceTopRated = $serviceContainer->getTopRatedService();
+        $serviceGameCalendar = $this->getServiceGameCalendar();
+        $serviceTopRated = $this->getServiceTopRated();
 
         $dateList = $serviceGameCalendar->getAllowedDates(false);
 
