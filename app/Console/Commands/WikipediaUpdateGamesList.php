@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Game;
 use App\GameTitleHash;
 use App\FeedItemGame;
+use App\GameImportRuleWikipedia;
 
 use App\Events\GameCreated;
 
@@ -20,8 +21,12 @@ use App\Services\FeedItemGameService;
 use App\Construction\Game\GameDirector;
 use App\Construction\Game\GameBuilder;
 
+use App\Traits\WosServices;
+
 class WikipediaUpdateGamesList extends Command
 {
+    use WosServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -91,27 +96,39 @@ class WikipediaUpdateGamesList extends Command
                     continue;
                 }
 
+                // Get game import rule
+                $gameImportRule = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
+                if (!$gameImportRule) {
+                    $gameImportRule = new GameImportRuleWikipedia;
+                }
+
                 $gameChanged = false;
 
-                // Partner fields
-                if ($game->gameDevelopers()->count() == 0) {
-                    // Only proceed if new developer db entries do not exist
-                    if ($game->developer != $feedItem->item_developers) {
-                        $newDeveloper = $feedItem->item_developers;
-                        $newDeveloper = str_replace("\r", ' ', $newDeveloper);
-                        $newDeveloper = str_replace("\n", ' ', $newDeveloper);
-                        $game->developer = $newDeveloper;
-                        $gameChanged = true;
+                // Developers
+                if (!$gameImportRule->shouldIgnoreDevelopers()) {
+                    if ($game->gameDevelopers()->count() == 0) {
+                        // Only proceed if new developer db entries do not exist
+                        if ($game->developer != $feedItem->item_developers) {
+                            $newDeveloper = $feedItem->item_developers;
+                            $newDeveloper = str_replace("\r", ' ', $newDeveloper);
+                            $newDeveloper = str_replace("\n", ' ', $newDeveloper);
+                            $game->developer = $newDeveloper;
+                            $gameChanged = true;
+                        }
                     }
                 }
-                if ($game->gamePublishers()->count() == 0) {
-                    // Only proceed if new publisher db entries do not exist
-                    if ($game->publisher != $feedItem->item_publishers) {
-                        $newPublisher = $feedItem->item_publishers;
-                        $newPublisher = str_replace("\r", ' ', $newPublisher);
-                        $newPublisher = str_replace("\n", ' ', $newPublisher);
-                        $game->publisher = $newPublisher;
-                        $gameChanged = true;
+
+                // Publishers
+                if (!$gameImportRule->shouldIgnorePublishers()) {
+                    if ($game->gamePublishers()->count() == 0) {
+                        // Only proceed if new publisher db entries do not exist
+                        if ($game->publisher != $feedItem->item_publishers) {
+                            $newPublisher = $feedItem->item_publishers;
+                            $newPublisher = str_replace("\r", ' ', $newPublisher);
+                            $newPublisher = str_replace("\n", ' ', $newPublisher);
+                            $game->publisher = $newPublisher;
+                            $gameChanged = true;
+                        }
                     }
                 }
 
@@ -124,31 +141,44 @@ class WikipediaUpdateGamesList extends Command
 
                 foreach ($gameReleaseDates as $gameReleaseDate) {
 
-                    if ($gameReleaseDate->is_locked == 1) {
-                        $logger->info('Release date is marked as locked; skipping');
-                        continue;
-                    }
-
                     $region = $gameReleaseDate->region;
 
-                    $fieldReleaseDate = 'release_date_'.$region;
-                    $fieldUpcomingDate = 'upcoming_date_'.$region;
-                    $fieldIsReleased = 'is_released_'.$region;
+                    $skipDate = false;
 
-                    $gameReleaseDateChanged = false;
-                    if ($gameReleaseDate->release_date != $feedItem->{$fieldReleaseDate}) {
-                        $gameReleaseDate->release_date = $feedItem->{$fieldReleaseDate};
-                        $gameReleaseDate->release_year = $gameReleaseDateService->getReleaseYear($gameReleaseDate->release_date);
-                        $gameReleaseDateChanged = true;
-                    }
-                    if ($gameReleaseDate->upcoming_date != $feedItem->{$fieldUpcomingDate}) {
-                        $gameReleaseDate->upcoming_date = $feedItem->{$fieldUpcomingDate};
-                        $gameReleaseDateChanged = true;
+                    switch ($region) {
+                        case 'eu':
+                            if ($gameImportRule->shouldIgnoreEuropeDates()) $skipDate = true;
+                            break;
+                        case 'us':
+                            if ($gameImportRule->shouldIgnoreUSDates()) $skipDate = true;
+                            break;
+                        case 'jp':
+                            if ($gameImportRule->shouldIgnoreJPDates()) $skipDate = true;
+                            break;
                     }
 
-                    if ($gameReleaseDateChanged) {
-                        $logger->info('Saving updates to region: '.$region);
-                        $gameReleaseDate->save();
+                    if (!$skipDate) {
+
+                        $fieldReleaseDate = 'release_date_'.$region;
+                        $fieldUpcomingDate = 'upcoming_date_'.$region;
+                        $fieldIsReleased = 'is_released_'.$region;
+
+                        $gameReleaseDateChanged = false;
+                        if ($gameReleaseDate->release_date != $feedItem->{$fieldReleaseDate}) {
+                            $gameReleaseDate->release_date = $feedItem->{$fieldReleaseDate};
+                            $gameReleaseDate->release_year = $gameReleaseDateService->getReleaseYear($gameReleaseDate->release_date);
+                            $gameReleaseDateChanged = true;
+                        }
+                        if ($gameReleaseDate->upcoming_date != $feedItem->{$fieldUpcomingDate}) {
+                            $gameReleaseDate->upcoming_date = $feedItem->{$fieldUpcomingDate};
+                            $gameReleaseDateChanged = true;
+                        }
+
+                        if ($gameReleaseDateChanged) {
+                            $logger->info('Saving updates to region: '.$region);
+                            $gameReleaseDate->save();
+                        }
+
                     }
 
                 }

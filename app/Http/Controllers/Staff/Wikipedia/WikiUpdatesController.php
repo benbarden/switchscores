@@ -11,6 +11,7 @@ use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
 use App\FeedItemGame;
+use App\GameImportRuleWikipedia;
 use App\Services\HtmlLoader\Wikipedia\Importer;
 
 class WikiUpdatesController extends Controller
@@ -156,11 +157,17 @@ class WikiUpdatesController extends Controller
 
                 $gameId = $request->game_id;
 
+                // Get game import rule
+                $gameImportRule = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
+                if (!$gameImportRule) {
+                    $gameImportRule = new GameImportRuleWikipedia;
+                }
+
                 // If assigning a game id, we need to set the modified fields
                 $importer = new Importer();
                 $game = $serviceGame->find($gameId);
                 $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
-                $modifiedFields = $importer->getGameModifiedFields($feedItemData, $game, $gameReleaseDates);
+                $modifiedFields = $importer->getGameModifiedFields($feedItemData, $game, $gameReleaseDates, $gameImportRule);
                 $feedItemData->modified_fields = serialize($modifiedFields);
 
                 // We also need to add a new title hash if one doesn't already exist
@@ -199,6 +206,7 @@ class WikiUpdatesController extends Controller
             $game = $serviceGame->find($gameId);
             $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
             $bindings['GameData'] = $game;
+            $bindings['GameImportRule'] = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
             foreach ($gameReleaseDates as $gameReleaseDate) {
                 $region = strtoupper($gameReleaseDate->region);
                 $bindings['ReleaseDates'.$region] = $gameReleaseDate;

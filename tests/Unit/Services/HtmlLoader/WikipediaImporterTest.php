@@ -2,13 +2,17 @@
 
 namespace Tests\Unit\Services\HtmlLoader;
 
-use App\Services\HtmlLoader\Wikipedia\Importer as WikiImporter;
+use App\Factories\Tests\GameImportRuleWikipediaFactory;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 use App\Game;
 use App\GameReleaseDate;
 use App\FeedItemGame;
+use App\Services\HtmlLoader\Wikipedia\Importer as WikiImporter;
+
+use App\Factories\Tests\FeedItemGameFactory;
+use App\Factories\Tests\GameReleaseDateFactory;
 
 class WikipediaImporterTest extends TestCase
 {
@@ -33,35 +37,55 @@ class WikipediaImporterTest extends TestCase
 
     public function testGetGameModifiedFieldsNoChange()
     {
-        //$newFeedItem = factory(FeedItemGame::class)->make([
-        //    'game_id' => 1
-        //]);
-
-        $newFeedItem = new FeedItemGame();
-        $newFeedItem->item_developers = 'Developer 1';
-        $newFeedItem->item_publishers = 'Publisher 1';
-        $newFeedItem->release_date_eu = '2017-03-03';
-        $newFeedItem->upcoming_date_eu = '2017-03-03';
-        $newFeedItem->is_released_eu = '1';
+        $feedItemGame = FeedItemGameFactory::makeSimpleForNoChange();
+        $gameReleaseDates = GameReleaseDateFactory::makeSimpleCollectionForNoChange();
 
         $game = new Game();
         $game->developer = 'Developer 1';
         $game->publisher = 'Publisher 1';
 
-        $gameReleaseDate = new GameReleaseDate();
-        $gameReleaseDate->region = 'eu';
-        $gameReleaseDate->release_date = '2017-03-03';
-        $gameReleaseDate->upcoming_date = '2017-03-03';
-        $gameReleaseDate->is_released = '1';
-
         $expectedFields = [];
 
-        $gameReleaseDates = new Collection();
-        $gameReleaseDates->push($gameReleaseDate);
-
-        $fields = $this->wikiImporter->getGameModifiedFields($newFeedItem, $game, $gameReleaseDates);
+        $fields = $this->wikiImporter->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
 
         $this->assertEquals($expectedFields, $fields);
     }
 
+    public function testGetGameModifiedFieldsWithDifferences()
+    {
+        $feedItemGame = FeedItemGameFactory::makeFullWithDifferences();
+        $gameReleaseDates = GameReleaseDateFactory::makeFullCollectionWithChanges();
+
+        $game = new Game();
+        $game->developer = 'ABC Developer';
+        $game->publisher = 'ABC Publisher';
+
+        $expectedFields = [
+            'item_developers', 'item_publishers',
+            'release_date_eu', 'upcoming_date_eu',
+            'release_date_us', 'upcoming_date_us',
+            'release_date_jp', 'upcoming_date_jp',
+        ];
+
+        $fields = $this->wikiImporter->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
+
+        $this->assertEquals($expectedFields, $fields);
+    }
+
+    public function testGetGameModifiedFieldsWithDifferencesAndIgnoreRules()
+    {
+        $feedItemGame = FeedItemGameFactory::makeFullWithDifferences();
+        $gameReleaseDates = GameReleaseDateFactory::makeFullCollectionWithChanges();
+        $gameImportRule = GameImportRuleWikipediaFactory::makeWithAllEnabled();
+
+        $game = new Game();
+        $game->developer = 'ABC Developer';
+        $game->publisher = 'ABC Publisher';
+
+        $expectedFields = [];
+
+        $fields = $this->wikiImporter->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates, $gameImportRule);
+
+        $this->assertEquals($expectedFields, $fields);
+    }
 }

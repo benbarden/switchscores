@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\GameImportRuleWikipedia;
+use App\Traits\WosServices;
+
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\GameService;
 use App\Services\GameReleaseDateService;
@@ -16,6 +19,8 @@ use App\Services\HtmlLoader\Wikipedia\DateHandler;
 
 class WikipediaImportGamesList extends Command
 {
+    use WosServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -134,10 +139,16 @@ class WikipediaImportGamesList extends Command
                 // Check if anything's changed since the last record, if one exists
                 if ($gameId) {
 
+                    // Get game import rule
+                    $gameImportRule = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
+                    if (!$gameImportRule) {
+                        $gameImportRule = new GameImportRuleWikipedia;
+                    }
+
                     // Let's start by checking if the game has actually changed
                     $game = $gameService->find($gameId);
                     $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
-                    $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates);
+                    $modifiedFieldList = $importer->getGameModifiedFields($feedItemGame, $game, $gameReleaseDates, $gameImportRule);
 
                     if (count($modifiedFieldList) == 0) {
 
@@ -186,8 +197,6 @@ class WikipediaImportGamesList extends Command
                 // Saving the model will create an entry in feed_item_games.
 
                 $feedItemGame->save();
-
-                //if ($i > 3) break;
 
             }
 

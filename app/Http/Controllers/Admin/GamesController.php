@@ -401,11 +401,9 @@ class GamesController extends Controller
             $releaseDate = $gameReleaseDate->release_date;
             $upcomingDate = $gameReleaseDate->upcoming_date;
             $isReleased = $gameReleaseDate->is_released;
-            $isLocked = $gameReleaseDate->is_locked;
             $dateFormData['release_date'] = $releaseDate;
             $dateFormData['upcoming_date'] = $upcomingDate;
             $dateFormData['is_released'] = $isReleased;
-            $dateFormData['is_locked'] = $isLocked;
             $gameReleaseDates[$region] = $dateFormData;
 
             if ($releaseDate) {

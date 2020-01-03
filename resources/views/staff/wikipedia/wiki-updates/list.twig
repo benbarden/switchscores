@@ -33,7 +33,7 @@
         <thead>
             <tr>
                 <th class="text-right">#</th>
-                <th class="text-left">Title</th>
+                <th class="text-left">Source title</th>
                 <th class="text-left">Game</th>
                 <th class="text-left">Status</th>
                 <th class="text-left">Modified fields</th>
@@ -53,10 +53,10 @@
                         {% if item.game.title is null %}
                             <span style="color: #f00;">Game not linked</span>
                         {% else %}
-                            {{ item.game.title }}
-                            <br>
-                            [<a href="{{ route('admin.games.edit', {'gameId': item.game.id}) }}" target="_blank">edit</a>]
-                            [<a href="{{ route('game.show', {'id': item.game.id, 'link_title': item.game.link_title}) }}" target="_blank">view</a>]
+                            <a href="{{ route('staff.games.detail', {'gameId': item.game.id}) }}">{{ item.game.title }}</a>
+                            <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank" title="Open game page in a new tab">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
                         {% endif %}
                     </td>
                     <td class="text-left">

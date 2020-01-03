@@ -18,6 +18,9 @@ test-eshop:
 test-game-import-rule:
 	./vendor/bin/phpunit --filter GameImportRule
 
+test-html-loader:
+	./vendor/bin/phpunit --filter HtmlLoader
+
 test-game-title-match:
 	./vendor/bin/phpunit --filter TitleMatchTest
 

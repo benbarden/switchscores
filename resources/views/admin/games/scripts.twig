@@ -15,7 +15,6 @@
         formVals['release_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'release_date') }}";
         formVals['upcoming_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'upcoming_date') }}";
         formVals['is_released_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'is_released') }}";
-        formVals['is_locked_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'is_locked') }}";
         {% endfor %}
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
@@ -45,7 +44,6 @@
         formVals['release_date_{{ key }}'] = "{{ old('release_date_'~key) }}";
         formVals['upcoming_date_{{ key }}'] = "{{ old('upcoming_date_'~key) }}";
         formVals['is_released_{{ key }}'] = "{{ old('is_released_'~key) }}";
-        formVals['is_locked_{{ key }}'] = "{{ old('is_locked_'~key) }}";
         {% endfor %}
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
@@ -77,9 +75,6 @@
     $('#upcoming_date_{{ key }}').val(formVals['upcoming_date_{{ key }}']);
     if (formVals['is_released_{{ key }}'] == 1) {
         $('#is_released_{{ key }}').attr('checked', true);
-    }
-    if (formVals['is_locked_{{ key }}'] == 1) {
-        $('#is_locked_{{ key }}').attr('checked', true);
     }
     {% endfor %}
     // *** eShop *** //

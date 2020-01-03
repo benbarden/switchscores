@@ -3,12 +3,13 @@
 
 namespace App\Services\HtmlLoader\Wikipedia;
 
+use Illuminate\Support\Collection;
+
 use App\CrawlerWikipediaGamesListSource;
 use App\FeedItemGame;
 use App\Game;
+use App\GameImportRuleWikipedia;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
-
 
 class Importer
 {
@@ -49,39 +50,58 @@ class Importer
         return $feedItemGame;
     }
 
-    public function getGameModifiedFields(FeedItemGame $newFeedItem, Game $game, Collection $gameReleaseDates)
+    public function getGameModifiedFields(FeedItemGame $newFeedItem, Game $game, Collection $gameReleaseDates, GameImportRuleWikipedia $gameImportRule = null)
     {
         $modifiedFields = [];
 
-        if ($game->gameDevelopers()->count() == 0) {
-            // Only proceed if new developer db entries do not exist
-            if ($newFeedItem->item_developers != $game->developer) {
-                $modifiedFields[] = 'item_developers';
+        if ($gameImportRule == null) $gameImportRule = new GameImportRuleWikipedia;
+
+        if (!$gameImportRule->shouldIgnoreDevelopers()) {
+            if ($game->gameDevelopers()->count() == 0) {
+                // Only proceed if new developer db entries do not exist
+                if ($newFeedItem->item_developers != $game->developer) {
+                    $modifiedFields[] = 'item_developers';
+                }
             }
         }
 
-        if ($game->gamePublishers()->count() == 0) {
-            // Only proceed if new publisher db entries do not exist
-            if ($newFeedItem->item_publishers != $game->publisher) {
-                $modifiedFields[] = 'item_publishers';
+        if (!$gameImportRule->shouldIgnorePublishers()) {
+            if ($game->gamePublishers()->count() == 0) {
+                // Only proceed if new publisher db entries do not exist
+                if ($newFeedItem->item_publishers != $game->publisher) {
+                    $modifiedFields[] = 'item_publishers';
+                }
             }
         }
 
         foreach ($gameReleaseDates as $gameReleaseDate) {
 
-            // Skip if locked
-            if ($gameReleaseDate->is_locked == 1) continue;
-
             $region = $gameReleaseDate->region;
 
-            $releaseDateField = 'release_date_'.$region;
-            $upcomingDateField = 'upcoming_date_'.$region;
+            $skipDate = false;
 
-            if ($newFeedItem->{$releaseDateField} != $gameReleaseDate->release_date) {
-                $modifiedFields[] = $releaseDateField;
+            switch ($region) {
+                case 'eu':
+                    if ($gameImportRule->shouldIgnoreEuropeDates()) $skipDate = true;
+                    break;
+                case 'us':
+                    if ($gameImportRule->shouldIgnoreUSDates()) $skipDate = true;
+                    break;
+                case 'jp':
+                    if ($gameImportRule->shouldIgnoreJPDates()) $skipDate = true;
+                    break;
             }
-            if ($newFeedItem->{$upcomingDateField} != $gameReleaseDate->upcoming_date) {
-                $modifiedFields[] = $upcomingDateField;
+
+            if (!$skipDate) {
+                $releaseDateField = 'release_date_'.$region;
+                $upcomingDateField = 'upcoming_date_'.$region;
+
+                if ($newFeedItem->{$releaseDateField} != $gameReleaseDate->release_date) {
+                    $modifiedFields[] = $releaseDateField;
+                }
+                if ($newFeedItem->{$upcomingDateField} != $gameReleaseDate->upcoming_date) {
+                    $modifiedFields[] = $upcomingDateField;
+                }
             }
 
         }
@@ -89,6 +109,12 @@ class Importer
         return $modifiedFields;
     }
 
+    /**
+     * @deprecated
+     * @param FeedItemGame $newFeedItem
+     * @param FeedItemGame $lastFeedItem
+     * @return array
+     */
     public function getFeedItemModifiedFields(FeedItemGame $newFeedItem, FeedItemGame $lastFeedItem)
     {
         $modifiedFields = [];

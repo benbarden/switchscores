@@ -28,7 +28,7 @@ class GameReleaseDate extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'game_id', 'region', 'release_date', 'is_released', 'upcoming_date', 'release_year', 'is_locked'
+        'game_id', 'region', 'release_date', 'is_released', 'upcoming_date', 'release_year'
     ];
 
     public function game()
