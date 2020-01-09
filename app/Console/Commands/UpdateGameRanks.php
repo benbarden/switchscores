@@ -48,6 +48,13 @@ class UpdateGameRanks extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
+        // *** QUICK FIX FOR RELEASE YEARS *** //
+        \DB::statement("
+            update game_release_dates
+            set release_year = year(release_date)
+            where release_date is not null and release_year is null
+        ");
+
         // *** 1. ALL-TIME RANK *** //
 
         \DB::statement("TRUNCATE TABLE game_rank_alltime");
