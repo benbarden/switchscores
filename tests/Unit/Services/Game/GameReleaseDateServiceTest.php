@@ -21,6 +21,15 @@ class GameReleaseDateServiceTest extends TestCase
         $this->assertEquals('2018', $releaseYear);
     }
 
+    public function testReleaseYear2020()
+    {
+        $releaseDate = '2020-01-03';
+        $serviceGame = new GameReleaseDateService();
+        $releaseYear = $serviceGame->getReleaseYear($releaseDate);
+
+        $this->assertEquals('2020', $releaseYear);
+    }
+
     public function testReleaseYearNull()
     {
         $releaseDate = null;
