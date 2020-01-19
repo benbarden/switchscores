@@ -140,13 +140,14 @@ class RunFeedParser extends Command
                     $feedItem->game_id = $gameTitleHash->game_id;
                     $parseStatus = 'Matched item to game '.$gameTitleHash->game_id;
                     $logger->info($parseStatus);
+                    // Only mark as parsed if it matched - otherwise, we can check again tomorrow
+                    $feedItem->parsed = 1;
                 } else {
                     $parseStatus = 'Could not locate game';
                     $logger->warn($parseStatus);
                 }
 
                 $feedItem->parse_status = $parseStatus;
-                $feedItem->parsed = 1;
 
                 $feedItem->save();
 

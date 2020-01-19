@@ -139,6 +139,9 @@ class RunFeedReviewGenerator extends Command
                 $game = $gameService->find($gameId);
                 $reviewStatsService->updateGameReviewStats($game);
 
+                // Mark as parsed, in case we manually updated it
+                $feedItem->parsed = 1;
+
                 // Mark feed item as processed
                 $feedItem->process_status = 'Review created';
                 $feedItem->processed = 1;
