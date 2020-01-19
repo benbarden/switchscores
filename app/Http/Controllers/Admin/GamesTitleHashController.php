@@ -64,6 +64,8 @@ class GamesTitleHashController extends Controller
 
         $request = request();
 
+        $bindings = [];
+
         if ($request->isMethod('post')) {
 
             $validator = Validator::make($request->all(), $this->validationRules);
@@ -98,9 +100,13 @@ class GamesTitleHashController extends Controller
             //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
 
-        }
+        } else {
 
-        $bindings = [];
+            $urlGameId = \Request::get('gameId');
+            if ($urlGameId) {
+                $bindings['UrlGameId'] = $urlGameId;
+            }
+        }
 
         $bindings['TopTitle'] = 'Admin - Games - Add game title hash';
         $bindings['PageTitle'] = 'Add game title hash';
