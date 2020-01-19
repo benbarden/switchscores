@@ -96,27 +96,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminGamesListUpcoming()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/upcoming');
-        $response->assertStatus(200);
-    }
-
-    public function testAdminGamesListUpcoming2018WithDates()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/upcoming-2018-with-dates');
-        $response->assertStatus(200);
-    }
-
-    public function testAdminGamesListUpcomingBeyond()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/upcoming-beyond');
-        $response->assertStatus(200);
-    }
-
     public function testAdminNewsList()
     {
         $this->be($this->userAdmin);

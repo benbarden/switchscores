@@ -67,7 +67,23 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
+        <h2>Game lists</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.recently-added') }}">Recently added</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Archive</h2>
         <table class="table">
             <tbody>
             <tr>
@@ -77,12 +93,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}">Wiki updates</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.games-title-hash.list') }}">Title hashes</a>
+                    <a href="{{ route('admin.games-title-hash.list') }}">All title hashes</a>
                 </td>
             </tr>
             </tbody>
@@ -134,10 +145,10 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games.list') }}/upcoming">Upcoming games</a>
+                    <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list') }}/upcoming" class="h4">{{ UpcomingGameCount }}</a>
+                    <a href="{{ route('staff.games.list.upcoming-games') }}" class="h4">{{ UpcomingGameCount }}</a>
                 </td>
             </tr>
             </tbody>

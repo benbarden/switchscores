@@ -145,6 +145,19 @@ class GameService
         return $game;
     }
 
+    // ********************************************************** //
+    // Rewritten lists for Staff > Games
+    // ********************************************************** //
+
+    public function getRecentlyAdded($limit = 100)
+    {
+        return Game::orderBy('id', 'desc')->limit($limit)->get();
+    }
+
+    // ********************************************************** //
+    // Stuff to sort through
+    // ********************************************************** //
+
     public function getAll($region)
     {
         $games = DB::table('games')
@@ -325,14 +338,6 @@ class GameService
         $regionCode = \Request::get('regionCode');
 
         switch ($filter) {
-            //case 'no-genre':
-            //    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
-            //    break;
-            case 'action-list-games-for-release':
-                // Removing due to issues with region override field.
-                // Shouldn't be needed anymore as we can release via a quick AJAX link.
-                //$gameList = $this->getActionListGamesForRelease($regionCode);
-                break;
             case 'no-boxart':
                 $gameList = $this->getWithoutBoxart($regionCode);
                 break;

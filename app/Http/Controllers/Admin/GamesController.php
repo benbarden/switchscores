@@ -99,19 +99,6 @@ class GamesController extends Controller
                     $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
-                // Upcoming
-                case 'upcoming':
-                    $gameList = $serviceGameReleaseDate->getUpcoming($regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-2018-with-dates':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-beyond':
-                    $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
                 // Developers and Publishers
                 case 'game-developer-links':
                     $gameList = $serviceGameDeveloper->getGameDeveloperLinks();
