@@ -13,7 +13,6 @@ use App\Services\FeedItemGameService;
 use App\Services\FeedItemReviewService;
 use App\Services\GameActionListService;
 use App\Services\GameCalendarService;
-use App\Services\GameDescriptionService;
 use App\Services\GameDeveloperService;
 use App\Services\GameFilterListService;
 use App\Services\GameGenreService;
@@ -169,14 +168,6 @@ trait WosServices
     public function getServiceGameCalendar()
     {
         return $this->loadService('GameCalendarService');
-    }
-
-    /**
-     * @return GameDescriptionService
-     */
-    public function getServiceGameDescription()
-    {
-        return $this->loadService('GameDescriptionService');
     }
 
     /**

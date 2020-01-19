@@ -32,11 +32,6 @@ class Game extends Model implements Auditable
         'primary_type_id', 'series_id', 'eu_released_on'
     ];
 
-    public function gameDescriptions()
-    {
-        return $this->hasMany('App\GameDescription', 'game_id', 'id');
-    }
-
     public function gameRankYear()
     {
         return $this->hasOne('App\GameRankYear', 'game_id', 'id');
