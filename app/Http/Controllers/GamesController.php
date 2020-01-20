@@ -96,9 +96,9 @@ class GamesController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
 
-        $bindings['HighestDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleHighestDiscounts();
-        $bindings['GoodRanks'] = $serviceEshopEuropeGame->getGamesOnSaleGoodRanks();
-        $bindings['UnrankedDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleUnranked();
+        $bindings['HighestDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleHighestDiscounts(50);
+        $bindings['GoodRanks'] = $serviceEshopEuropeGame->getGamesOnSaleGoodRanks(50);
+        $bindings['UnrankedDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleUnranked(50);
 
         //$bindings['AllGamesOnSale'] = $gamesOnSale;
 

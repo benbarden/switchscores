@@ -123,9 +123,9 @@ class EshopEuropeGameService
      * @param int $limit
      * @return \Illuminate\Support\Collection
      */
-    public function getGamesOnSaleHighestDiscounts()
+    public function getGamesOnSaleHighestDiscounts($limit = 50)
     {
-        $feedItems = DB::table('eshop_europe_games')
+        $games = DB::table('eshop_europe_games')
             ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
             ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
             ->select('eshop_europe_games.*',
@@ -145,10 +145,13 @@ class EshopEuropeGameService
             ->where('eshop_europe_games.price_has_discount_b', '=', 1)
             ->where('eshop_europe_games.price_discount_percentage_f', '>=', 50)
             ->orderBy('games.game_rank', 'asc')
-            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc')
-            ->get();
+            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc');
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
 
-        return $feedItems;
+        return $games;
     }
 
     /**
@@ -156,9 +159,9 @@ class EshopEuropeGameService
      * @param int $limit
      * @return \Illuminate\Support\Collection
      */
-    public function getGamesOnSaleGoodRanks()
+    public function getGamesOnSaleGoodRanks($limit = 50)
     {
-        $feedItems = DB::table('eshop_europe_games')
+        $games = DB::table('eshop_europe_games')
             ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
             ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
             ->select('eshop_europe_games.*',
@@ -178,10 +181,14 @@ class EshopEuropeGameService
             ->where('games.rating_avg', '>', '7.9')
             ->where('eshop_europe_games.price_has_discount_b', '=', 1)
             ->where('eshop_europe_games.price_discount_percentage_f', '>=', 25)
-            ->orderBy('games.rating_avg', 'desc')
-            ->get();
+            ->orderBy('games.rating_avg', 'desc');
 
-        return $feedItems;
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
     }
 
     /**
@@ -189,9 +196,9 @@ class EshopEuropeGameService
      * @param int $limit
      * @return \Illuminate\Support\Collection
      */
-    public function getGamesOnSaleUnranked()
+    public function getGamesOnSaleUnranked($limit = 50)
     {
-        $feedItems = DB::table('eshop_europe_games')
+        $games = DB::table('eshop_europe_games')
             ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
             ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
             ->select('eshop_europe_games.*',
@@ -209,9 +216,13 @@ class EshopEuropeGameService
                 'games.review_count')
             ->whereNull('games.game_rank')
             ->where('eshop_europe_games.price_has_discount_b', '=', 1)
-            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc')
-            ->get();
+            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc');
 
-        return $feedItems;
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
     }
 }
