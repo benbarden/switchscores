@@ -53,15 +53,15 @@ class RoleBasicTest extends TestCase
         parent::setUp();
 
         $this->userNotStaff = new User(
-            ['display_name' => 'Jaegerbomb', 'email' => 'jaegerbomb@worldofswitch.com']
+            ['display_name' => 'Jaegerbomb', 'email' => 'jaegerbomb@switchscores.com']
         );
         $this->userOwner = new User(
-            ['display_name' => 'Bananaman', 'email' => 'bananaman@worldofswitch.com', 'is_owner' => '1']
+            ['display_name' => 'Bananaman', 'email' => 'bananaman@switchscores.com', 'is_owner' => '1']
         );
 
         $staffUserArray = [
             'display_name' => 'Jimminy Billybob',
-            'email' => 'jimminy.billybob@worldofswitch.com',
+            'email' => 'jimminy.billybob@switchscores.com',
             'is_staff' => '1'
         ];
 

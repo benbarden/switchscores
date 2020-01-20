@@ -21,7 +21,7 @@ class GamesCompanyFactoryTest extends TestCase
     {
         $name = 'A Very Good Game Developer';
         $linkTitle = 'a-very-good-game-developer';
-        $websiteUrl = 'https://www.worldofswitch.com';
+        $websiteUrl = 'https://www.switchscores.com';
         $developer = GamesCompanyFactory::createActive($name, $linkTitle, $websiteUrl);
         $this->assertEquals($websiteUrl, $developer->website_url);
     }
@@ -30,8 +30,8 @@ class GamesCompanyFactoryTest extends TestCase
     {
         $name = 'A Very Good Game Developer';
         $linkTitle = 'a-very-good-game-developer';
-        $websiteUrl = 'https://www.worldofswitch.com';
-        $twitterId = 'worldofswitch';
+        $websiteUrl = 'https://www.switchscores.com';
+        $twitterId = 'switchscores';
         $developer = GamesCompanyFactory::createActive($name, $linkTitle, $websiteUrl, $twitterId);
         $this->assertEquals($twitterId, $developer->twitter_id);
     }

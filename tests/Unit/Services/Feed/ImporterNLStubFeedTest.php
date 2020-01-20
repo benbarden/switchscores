@@ -27,16 +27,16 @@ class ImporterNLStubFeedTest extends TestCase
                         'pubDate' => 'Wed, 15 Nov 2017 13:30:00 GMT',
                         'title' => 'Some Random Game 1',
                         'description' => [],
-                        'link' => 'http://www.worldofswitch.com/test-test-test-1',
-                        'guid' => 'http://www.worldofswitch.com/test-test-test-1',
+                        'link' => 'http://www.switchscores.com/test-test-test-1',
+                        'guid' => 'http://www.switchscores.com/test-test-test-1',
                         'score' => '7'
                     ],
                     [
                         'pubDate' => 'Tue, 14 Nov 2017 14:00:00 GMT',
                         'title' => 'Some Random Game 2',
                         'description' => [],
-                        'link' => 'http://www.worldofswitch.com/test-test-test-1',
-                        'guid' => 'http://www.worldofswitch.com/test-test-test-2',
+                        'link' => 'http://www.switchscores.com/test-test-test-1',
+                        'guid' => 'http://www.switchscores.com/test-test-test-2',
                         'score' => '6'
                     ],
                 ]

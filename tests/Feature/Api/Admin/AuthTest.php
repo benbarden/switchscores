@@ -29,10 +29,10 @@ class AuthTest extends TestCase
         parent::setUp();
 
         $this->userStandard = new User(
-            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com', 'is_owner' => '0']
+            ['display_name' => 'Stuart', 'email' => 'stu@switchscores.com', 'is_owner' => '0']
         );
         $this->userOwner = new User(
-            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_owner' => '1']
+            ['display_name' => 'Aaron', 'email' => 'aaron@switchscores.com', 'is_owner' => '1']
         );
     }
 

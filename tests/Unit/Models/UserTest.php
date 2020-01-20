@@ -15,8 +15,8 @@ class UserTest extends TestCase
     {
         $categoryManager = new User(
             [
-                'display_name' => 'Adam',
-                'email' => 'adam@worldofswitch.com',
+                'display_name' => 'Barry',
+                'email' => 'barry@switchscores.com',
                 'is_staff' => '1'
             ]
         );

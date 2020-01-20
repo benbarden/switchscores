@@ -23,10 +23,10 @@ class LegacyAdminTest extends TestCase
         parent::setUp();
 
         $this->userStandard = new User(
-            ['display_name' => 'Stuart', 'email' => 'stu@worldofswitch.com']
+            ['display_name' => 'Stuart', 'email' => 'stu@switchscores.com']
         );
         $this->userAdmin = new User(
-            ['display_name' => 'Adam', 'email' => 'adam@worldofswitch.com', 'is_owner' => '1']
+            ['display_name' => 'Adam', 'email' => 'adam@switchscores.com', 'is_owner' => '1']
         );
     }
 
