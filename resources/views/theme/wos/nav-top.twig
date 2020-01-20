@@ -20,14 +20,41 @@
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
-                <li><a href="{{ route('games.landing') }}">Browse games</a></li>
-                <li><a href="{{ route('games.recentReleases') }}">Recent</a></li>
-                <li><a href="{{ route('games.upcomingReleases') }}">Upcoming</a></li>
-                <li><a href="{{ route('games.browse.byTitle.landing') }}">Games A-Z</a></li>
-                <li><a href="{{ route('games.browse.byDate.landing') }}">Calendar</a></li>
-                <li><a href="{{ route('topRated.landing') }}">Top Rated</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        Games <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('games.landing') }}">Games home</a></li>
+                        <li><a href="{{ route('games.recentReleases') }}">Recent releases</a></li>
+                        <li><a href="{{ route('games.upcomingReleases') }}">Upcoming releases</a></li>
+                        <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('games.browse.byTitle.landing') }}">Browse by title (A-Z)</a></li>
+                        <li><a href="{{ route('games.browse.byDate.landing') }}">Browse by date (calendar)</a></li>
+                        <li><a href="{{ route('games.browse.byTag.landing') }}">Browse by tag</a></li>
+                        <li><a href="{{ route('games.browse.bySeries.landing') }}">Browse by series</a></li>
+                        <li><a href="{{ route('games.browse.byPrimaryType.landing') }}">Browse by primary type</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        Top Rated <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('topRated.landing') }}">Top Rated home</a></li>
+                        <li><a href="{{ route('topRated.allTime') }}">Top 100 - all-time</a></li>
+                        <li><a href="{{ route('topRated.byYear', {'year': 2020}) }}">Top 100 - 2020</a></li>
+                        <li><a href="{{ route('topRated.byYear', {'year': 2019}) }}">Top 100 - 2019</a></li>
+                        <li><a href="{{ route('topRated.byYear', {'year': 2018}) }}">Top 100 - 2018</a></li>
+                        <li><a href="{{ route('topRated.byYear', {'year': 2017}) }}">Top 100 - 2017</a></li>
+                        <li><a href="{{ route('topRated.multiplayer') }}">Top Rated - Multiplayer</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{ route('reviews.landing') }}">Reviews</a></li>
+                <li><a href="{{ route('partners.landing') }}">Partners</a></li>
                 <li><a href="{{ route('news.landing') }}">News</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
             </ul>
 
             <!-- Right Side Of Navbar -->
