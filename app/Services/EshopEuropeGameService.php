@@ -117,4 +117,101 @@ class EshopEuropeGameService
 
         return $feedItems;
     }
+
+    /**
+     * Gets the highest available discounts.
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public function getGamesOnSaleHighestDiscounts()
+    {
+        $feedItems = DB::table('eshop_europe_games')
+            ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
+            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->select('eshop_europe_games.*',
+                'games.id AS game_id',
+                'games.title AS game_title',
+                'games.link_title',
+                'games.price_eshop',
+                'eshop_europe_games.price_lowest_f',
+                'eshop_europe_games.price_discount_percentage_f',
+                'games.game_rank',
+                'games.rating_avg',
+                'games.boxart_header_image',
+                'games.primary_type_id',
+                'game_primary_types.primary_type',
+                'games.review_count')
+            ->whereNotNull('games.game_rank')
+            ->where('eshop_europe_games.price_has_discount_b', '=', 1)
+            ->where('eshop_europe_games.price_discount_percentage_f', '>=', 50)
+            ->orderBy('games.game_rank', 'asc')
+            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc')
+            ->get();
+
+        return $feedItems;
+    }
+
+    /**
+     * Gets good discounts for green rated games
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public function getGamesOnSaleGoodRanks()
+    {
+        $feedItems = DB::table('eshop_europe_games')
+            ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
+            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->select('eshop_europe_games.*',
+                'games.id AS game_id',
+                'games.title AS game_title',
+                'games.link_title',
+                'games.price_eshop',
+                'eshop_europe_games.price_lowest_f',
+                'eshop_europe_games.price_discount_percentage_f',
+                'games.game_rank',
+                'games.rating_avg',
+                'games.boxart_header_image',
+                'games.primary_type_id',
+                'game_primary_types.primary_type',
+                'games.review_count')
+            ->whereNotNull('games.game_rank')
+            ->where('games.rating_avg', '>', '7.9')
+            ->where('eshop_europe_games.price_has_discount_b', '=', 1)
+            ->where('eshop_europe_games.price_discount_percentage_f', '>=', 25)
+            ->orderBy('games.rating_avg', 'desc')
+            ->get();
+
+        return $feedItems;
+    }
+
+    /**
+     * Gets unranked games that are on sale
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public function getGamesOnSaleUnranked()
+    {
+        $feedItems = DB::table('eshop_europe_games')
+            ->join('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
+            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->select('eshop_europe_games.*',
+                'games.id AS game_id',
+                'games.title AS game_title',
+                'games.link_title',
+                'games.price_eshop',
+                'eshop_europe_games.price_lowest_f',
+                'eshop_europe_games.price_discount_percentage_f',
+                'games.game_rank',
+                'games.rating_avg',
+                'games.boxart_header_image',
+                'games.primary_type_id',
+                'game_primary_types.primary_type',
+                'games.review_count')
+            ->whereNull('games.game_rank')
+            ->where('eshop_europe_games.price_has_discount_b', '=', 1)
+            ->orderBy('eshop_europe_games.price_discount_percentage_f', 'desc')
+            ->get();
+
+        return $feedItems;
+    }
 }

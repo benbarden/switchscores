@@ -1,99 +1,68 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Upcoming games'}] %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Games on sale (Europe)'}] %}
 
 {% block page_body %}
 
 <div class="row">
+
     <div class="col-xs-12 col-sm-12">
         <p>
             This page lists Nintendo Switch games that are currently on sale in Europe.
             Prices are updated nightly.
         </p>
-        {% if RegionCode != 'eu' %}
-        <p>
-            As you've set a region other than Europe, this page won't be much use unless
-            you want to buy something from the European eShop.
-            We may add support for other regions if there's enough interest.
-        </p>
-        {% endif %}
-
-        <h2>{{ item.MainTitle }}</h2>
-        {% if GamesList %}
-            <p><em>{{ GamesList.count }} games currently on sale.</em></p>
-            <table class="table table-condensed table-responsive data-sortable">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th style="text-align: left;">Title</th>
-                    <th style="text-align: right;">Standard price</th>
-                    <th style="text-align: right;">Discounted price</th>
-                    <th style="text-align: center;">Discount</th>
-                    <th style="text-align: center;">Rank</th>
-                    <th style="text-align: center;">Avg rating</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in GamesList %}
-                    <tr>
-                        <td class="text-center" style="vertical-align: middle;">
-                            <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">
-                                {{ ImageHelper.packshotHtmlBuilder(item.game_id, 'release-calendar') }}
-                            </a>
-                        </td>
-                        <td style="text-align: left; vertical-align: middle;">
-                            {% if item.game_title %}
-                                <a href="{{ route('game.show', {'id': item.game_id, 'title': item.game_link_title}) }}">{{ item.game_title }}</a>
-                            {% else %}
-                                {{ item.title }}
-                            {% endif %}
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            &pound;{{ item.price_eshop }}
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            &pound;{{ item.price_lowest_f }}
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            {{ item.price_discount_percentage_f }}%
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            {% if item.game_rank %}
-                                {{ item.game_rank }}
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            {{ item.rating_avg }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No games to display!</p>
-        {% endif %}
     </div>
+
 </div>
 
-{% include 'common/table-sorting.twig' %}
-<script>
-    $(document).ready(function() {
-        $('.data-sortable').DataTable({
-            "order": [6, 'desc'],
-            "pageLength": 999,
-            "columns": [
-                { "orderable": false },
-                null,
-                { "orderable": false },
-                { "orderable": false },
-                { "orderable": false },
-                { "orderable": false },
-                null
-            ]
-        });
-    });
-</script>
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Top Rated discounts</h2>
+        <p>
+            These games have an average rating of 8 or above, and are discounted by 25% or more.
+        </p>
+        {% if GoodRanks|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': GoodRanks, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Highest discounts</h2>
+        <p>
+            These games are discounted by 50% or more. Highest ranked games are shown first.
+        </p>
+        {% if HighestDiscounts|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': HighestDiscounts, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Unranked discounts</h2>
+        <p>
+            These games are on sale, but we haven't ranked them yet. Highest discounts shown first.
+        </p>
+        <p>
+            Look out for the games that do have 1 or 2 reviews (we need 3 to rank the game), and look out for
+            big discounts. If you try a game listed here, we'd love to get a review from you!
+        </p>
+        {% if UnrankedDiscounts|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': UnrankedDiscounts, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock page_body %}

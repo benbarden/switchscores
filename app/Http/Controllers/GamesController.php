@@ -3,28 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use Illuminate\Support\Collection;
 
 use App\Services\ServiceContainer;
+
+use App\Traits\SiteRequestData;
+use App\Traits\WosServices;
 
 use Auth;
 
 class GamesController extends Controller
 {
-    //use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use WosServices;
+    use SiteRequestData;
 
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
@@ -41,12 +37,9 @@ class GamesController extends Controller
 
     public function recentReleases()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
@@ -61,12 +54,9 @@ class GamesController extends Controller
 
     public function upcomingReleases()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
@@ -94,22 +84,23 @@ class GamesController extends Controller
 
     public function gamesOnSale()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceEshopEuropeGame = $serviceContainer->getEshopEuropeGameService();
-        $gamesOnSale = $serviceEshopEuropeGame->getGamesOnSale();
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
+        //$gamesOnSale = $serviceEshopEuropeGame->getGamesOnSale();
 
         $bindings = [];
 
         $bindings['RegionCode'] = $regionCode;
 
-        $bindings['GamesList'] = $gamesOnSale;
-
         $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
+
+        $bindings['HighestDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleHighestDiscounts();
+        $bindings['GoodRanks'] = $serviceEshopEuropeGame->getGamesOnSaleGoodRanks();
+        $bindings['UnrankedDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleUnranked();
+
+        //$bindings['AllGamesOnSale'] = $gamesOnSale;
 
         return view('games.gamesOnSale', $bindings);
     }
@@ -121,20 +112,17 @@ class GamesController extends Controller
      */
     public function show($gameId, $linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $regionCode = $this->getRegionCode();
 
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameRankAllTime = $serviceContainer->getGameRankAllTimeService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceGameGenres = $serviceContainer->getGameGenreService();
-        $serviceReviewUser = $serviceContainer->getReviewUserService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameGenres = $this->getServiceGameGenre();
+        $serviceReviewUser = $this->getServiceReviewUser();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $serviceGameTag = $this->getServiceGameTag();
 
         $bindings = [];
 
@@ -190,10 +178,7 @@ class GamesController extends Controller
      */
     public function showId($id)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
+        $serviceGame = $this->getServiceGame();
 
         $gameData = $serviceGame->find($id);
         if (!$gameData) {
