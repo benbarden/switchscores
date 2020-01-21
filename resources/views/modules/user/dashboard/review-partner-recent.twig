@@ -27,7 +27,9 @@
                     <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
                     <br><small>Posted: {{ item.review_date }}</small>
                 </td>
-                <td class="text-center">{{ item.rating_normalised }}</td>
+                <td class="text-center">
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h5'} %}
+                </td>
                 <td class="text-center">
                     <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
                         <span class="glyphicon glyphicon-share" aria-hidden="true"></span>

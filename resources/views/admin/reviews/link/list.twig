@@ -21,12 +21,6 @@
     </div>
 </div>
 
-{#
-<div class="pull-right">
-    <a id="admin-nav-all" class="btn btn-default" href="{{ route('admin.reviews.link.list') }}">All</a>
-    <a id="admin-nav-no-date" class="btn btn-default" href="{{ route('admin.reviews.link.list', {'filter': 'no-date'}) }}">No date</a>
-</div>
-#}
 <hr>
 {% if ReviewLinks.count > 0 %}
     <div class="alert alert-warning" role="alert">
