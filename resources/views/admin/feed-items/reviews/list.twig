@@ -69,10 +69,22 @@
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    {% if item.item_rating is null %}
-                        -
-                    {% else %}
-                        {% include 'modules/rating/badge.twig' with {'score': item.item_rating, 'scoreSize': 'h5'} %}
+                    {% set origRating = null %}
+                    {% if item.site.id %}
+                        {% if item.item_rating is null %}
+                            -
+                        {% else %}
+                            {% if item.site.rating_scale == 5 %}
+                                {% set badgeRating = (item.item_rating * 2)|number_format(1) %}
+                                {% set origRating = item.item_rating %}
+                            {% else %}
+                                {% set badgeRating = item.item_rating %}
+                            {% endif %}
+                            {% include 'modules/rating/badge.twig' with {'score': badgeRating, 'scoreSize': 'h5'} %}
+                        {% endif %}
+                        {% if origRating %}
+                            <br><p style="margin-top: 10px;"><small>({{ origRating }}/5)</small></p>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td class="text-center">
