@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\ReviewUserService;
+use App\Services\QuickReviewService;
 
-class ReviewUserServiceProvider extends ServiceProvider
+class QuickReviewServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class ReviewUserServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\ReviewUserService', function($app) {
-            return new ReviewUserService();
+        $this->app->bind('Services\QuickReviewService', function($app) {
+            return new QuickReviewService();
         });
     }
 }

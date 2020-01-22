@@ -119,7 +119,7 @@ class GamesController extends Controller
         $serviceReviewLink = $this->getServiceReviewLink();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameGenres = $this->getServiceGameGenre();
-        $serviceReviewUser = $this->getServiceReviewUser();
+        $serviceQuickReview = $this->getServiceQuickReview();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
         $serviceGameTag = $this->getServiceGameTag();
@@ -143,7 +143,7 @@ class GamesController extends Controller
         $gameGenres = $serviceGameGenres->getByGame($gameId);
 
         // Get user reviews
-        $gameUserReviews = $serviceReviewUser->getActiveByGame($gameId);
+        $gameQuickReviews = $serviceQuickReview->getActiveByGame($gameId);
 
         // Get game metadata
         $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
@@ -156,7 +156,7 @@ class GamesController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameReviews'] = $gameReviews;
         $bindings['GameGenres'] = $gameGenres;
-        $bindings['GameReviewUserList'] = $gameUserReviews;
+        $bindings['GameQuickReviewList'] = $gameQuickReviews;
         $bindings['GameDevelopers'] = $gameDevelopers;
         $bindings['GamePublishers'] = $gamePublishers;
         $bindings['GameTags'] = $gameTags;

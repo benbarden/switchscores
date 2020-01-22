@@ -42,10 +42,10 @@
                 </td>
                 <td class="text-center">
                     {% if AsRole == 'user' %}
-                        {% if RowGameId in UserReviewGameIdList %}
+                        {% if RowGameId in QuickReviewGameIdList %}
                             <em>Added</em>
                         {% else %}
-                            <a href="{{ route('user.reviews.add', {'gameId': RowGameId}) }}">Add</a>
+                            <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add</a>
                         {% endif %}
                     {% endif %}
                 </td>

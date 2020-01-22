@@ -11,8 +11,14 @@ use Auth;
 
 use App\Services\ServiceContainer;
 
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
+
 class CollectionController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -24,11 +30,8 @@ class CollectionController extends Controller
 
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $collectionService = $serviceContainer->getUserGamesCollectionService();
-        $serviceUserReview = $serviceContainer->getReviewUserService();
+        $serviceCollection = $this->getServiceUserGamesCollection();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         $bindings = [];
 
@@ -38,11 +41,11 @@ class CollectionController extends Controller
         $userId = Auth::id();
         $bindings['UserId'] = $userId;
 
-        $bindings['CollectionList'] = $collectionService->getByUser($userId);
-        $bindings['CollectionStats'] = $collectionService->getStats($userId);
+        $bindings['CollectionList'] = $serviceCollection->getByUser($userId);
+        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        $userReviewGameIdList = $serviceUserReview->getAllByUserGameIdList($userId);
-        $bindings['UserReviewGameIdList'] = $userReviewGameIdList;
+        $quickReviewGameIdList = $serviceQuickReview->getAllByUserGameIdList($userId);
+        $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
         return view('user.collection.index', $bindings);
     }

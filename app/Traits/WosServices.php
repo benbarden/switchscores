@@ -33,10 +33,9 @@ use App\Services\NewsCategoryService;
 use App\Services\NewsService;
 use App\Services\PartnerService;
 use App\Services\PartnerReviewService;
+use App\Services\QuickReviewService;
 use App\Services\ReviewLinkService;
-use App\Services\ReviewQuickRatingService;
 use App\Services\ReviewStatsService;
-use App\Services\ReviewUserService;
 use App\Services\SiteAlertService;
 use App\Services\TagService;
 use App\Services\TopRatedService;
@@ -339,6 +338,14 @@ trait WosServices
     }
 
     /**
+     * @return QuickReviewService
+     */
+    public function getServiceQuickReview()
+    {
+        return $this->loadService('QuickReviewService');
+    }
+
+    /**
      * @return ReviewLinkService
      */
     public function getServiceReviewLink()
@@ -347,27 +354,11 @@ trait WosServices
     }
 
     /**
-     * @return ReviewQuickRatingService
-     */
-    public function getServiceReviewQuickRating()
-    {
-        return $this->loadService('ReviewQuickRatingService');
-    }
-
-    /**
      * @return ReviewStatsService
      */
     public function getServiceReviewStats()
     {
         return $this->loadService('ReviewStatsService');
-    }
-
-    /**
-     * @return ReviewUserService
-     */
-    public function getServiceReviewUser()
-    {
-        return $this->loadService('ReviewUserService');
     }
 
     /**

@@ -3,60 +3,58 @@
 
 namespace App\Services;
 
-use App\ReviewUser;
+use App\QuickReview;
 
-class ReviewUserService
+class QuickReviewService
 {
     public function create(
-        $userId, $gameId, $quickRating, $reviewScore, $reviewBody
+        $userId, $gameId, $reviewScore, $reviewBody
     )
     {
-        return ReviewUser::create([
+        return QuickReview::create([
             'user_id' => $userId,
             'game_id' => $gameId,
-            'quick_rating' => $quickRating,
             'review_score' => $reviewScore,
             'review_body' => $reviewBody,
-            'item_status' => ReviewUser::STATUS_PENDING,
+            'item_status' => QuickReview::STATUS_PENDING,
         ]);
     }
 
     public function edit(
-        ReviewUser $reviewUserData,
-        $gameId, $quickRating, $reviewScore, $reviewBody
+        QuickReview $quickReviewData,
+        $gameId, $reviewScore, $reviewBody
     )
     {
         $values = [
             'game_id' => $gameId,
-            'quick_rating' => $quickRating,
             'review_score' => $reviewScore,
             'review_body' => $reviewBody,
         ];
 
-        $reviewUserData->fill($values);
-        $reviewUserData->save();
+        $quickReviewData->fill($values);
+        $quickReviewData->save();
     }
 
     public function editStatus(
-        ReviewUser $reviewUserData, $itemStatus
+        QuickReview $quickReviewData, $itemStatus
     )
     {
         $values = [
             'item_status' => $itemStatus,
         ];
 
-        $reviewUserData->fill($values);
-        $reviewUserData->save();
+        $quickReviewData->fill($values);
+        $quickReviewData->save();
     }
 
     public function find($id)
     {
-        return ReviewUser::find($id);
+        return QuickReview::find($id);
     }
 
     public function getAll($limit = null)
     {
-        $reviewList = ReviewUser::orderBy('id', 'desc');
+        $reviewList = QuickReview::orderBy('id', 'desc');
         if ($limit) {
             $reviewList = $reviewList->limit($limit);
         }
@@ -67,15 +65,15 @@ class ReviewUserService
     public function getStatusList()
     {
         $statuses = [];
-        $statuses[] = ['id' => ReviewUser::STATUS_PENDING, 'title' => 'Pending'];
-        $statuses[] = ['id' => ReviewUser::STATUS_ACTIVE, 'title' => 'Active'];
-        $statuses[] = ['id' => ReviewUser::STATUS_INACTIVE, 'title' => 'Inactive'];
+        $statuses[] = ['id' => QuickReview::STATUS_PENDING, 'title' => 'Pending'];
+        $statuses[] = ['id' => QuickReview::STATUS_ACTIVE, 'title' => 'Active'];
+        $statuses[] = ['id' => QuickReview::STATUS_INACTIVE, 'title' => 'Inactive'];
         return $statuses;
     }
 
     public function getByStatus($status)
     {
-        $reviewList = ReviewUser::
+        $reviewList = QuickReview::
             where('item_status', $status)
             ->orderBy('id', 'desc');
         $reviewList = $reviewList->get();
@@ -84,7 +82,7 @@ class ReviewUserService
 
     public function getAllByUser($userId)
     {
-        $reviewList = ReviewUser::where('user_id', $userId)
+        $reviewList = QuickReview::where('user_id', $userId)
             ->orderBy('id', 'desc')
             ->get();
         return $reviewList;
@@ -92,7 +90,7 @@ class ReviewUserService
 
     public function getAllByUserGameIdList($userId)
     {
-        $reviewList = ReviewUser::where('user_id', $userId)
+        $reviewList = QuickReview::where('user_id', $userId)
             ->orderBy('id', 'desc')
             ->pluck('game_id');
         return $reviewList;
@@ -100,7 +98,7 @@ class ReviewUserService
 
     public function getLatestNaturalOrder($limit = 10)
     {
-        $reviewList = ReviewUser::orderBy('created_at', 'desc')
+        $reviewList = QuickReview::orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
         return $reviewList;
@@ -108,28 +106,26 @@ class ReviewUserService
 
     public function getByGame($gameId)
     {
-        $gameReviews = ReviewUser::select('review_user.*', 'review_quick_rating.rating_desc')
-            ->leftJoin('review_quick_rating', 'review_user.quick_rating', '=', 'review_quick_rating.id')
+        $gameReviews = QuickReview::select('quick_reviews.*')
             ->where('game_id', $gameId)
-            ->orderBy('review_user.created_at', 'desc')
+            ->orderBy('quick_reviews.created_at', 'desc')
             ->get();
         return $gameReviews;
     }
 
     public function getActiveByGame($gameId)
     {
-        $gameReviews = ReviewUser::select('review_user.*', 'review_quick_rating.rating_desc')
-            ->leftJoin('review_quick_rating', 'review_user.quick_rating', '=', 'review_quick_rating.id')
+        $gameReviews = QuickReview::select('quick_reviews.*')
             ->where('game_id', $gameId)
-            ->where('item_status', ReviewUser::STATUS_ACTIVE)
-            ->orderBy('review_user.created_at', 'desc')
+            ->where('item_status', QuickReview::STATUS_ACTIVE)
+            ->orderBy('quick_reviews.created_at', 'desc')
             ->get();
         return $gameReviews;
     }
 
     public function getByGameAndUser($gameId, $userId)
     {
-        $gameReview = ReviewUser::where('game_id', $gameId)
+        $gameReview = QuickReview::where('game_id', $gameId)
             ->where('user_id', $userId)
             ->first();
         return $gameReview;

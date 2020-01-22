@@ -49,7 +49,6 @@ class PartnerReviewController extends Controller
         $request = request();
 
         $servicePartnerReview = $serviceContainer->getPartnerReviewService();
-        $serviceReviewUser = $serviceContainer->getReviewUserService();
 
         $reviewData = $servicePartnerReview->find($reviewId);
         if (!$reviewData) abort(404);

@@ -10,8 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\ServiceContainer;
 use Auth;
 
-class ReviewUserController extends Controller
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
+
+class QuickReviewController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -19,24 +25,19 @@ class ReviewUserController extends Controller
      */
     private $validationRules = [
         'game_id' => 'required|exists:games,id',
-        'quick_rating' => 'required',
         'review_score' => 'required|numeric|between:0,10',
         'review_body' => 'max:500'
     ];
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $userId = Auth::id();
         $regionCode = Auth::user()->region;
 
         $request = request();
 
-        $gameService = $serviceContainer->getGameService();
-        $reviewUserService = $serviceContainer->getReviewUserService();
-        $reviewQuickRatingService = $serviceContainer->getReviewQuickRatingService();
+        $serviceGame = $this->getServiceGame();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         $reviewBody = $request->review_body;
         $reviewBody = strip_tags($reviewBody);
@@ -46,48 +47,42 @@ class ReviewUserController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $reviewUser = $reviewUserService->create(
-                $userId, $request->game_id, $request->quick_rating,
-                $request->review_score, $reviewBody
+            $quickReview = $serviceQuickReview->create(
+                $userId, $request->game_id, $request->review_score, $reviewBody
             );
 
-            return redirect(route('user.reviews.list').'?msg=success');
+            return redirect(route('user.quick-reviews.list').'?msg=success');
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Add review';
-        $bindings['PageTitle'] = 'Add review';
+        $bindings['TopTitle'] = 'Add quick review';
+        $bindings['PageTitle'] = 'Add quick review';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
-
-        $bindings['QuickRatingList'] = $reviewQuickRatingService->getAll();
+        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
             $bindings['UrlGameId'] = $urlGameId;
         }
 
-        return view('user.reviews.add', $bindings);
+        return view('user.quick-reviews.add', $bindings);
     }
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $urlMsg = \Request::get('msg');
 
-        $reviewUserService = $serviceContainer->getReviewUserService();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         $userId = Auth::id();
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Quick user reviews';
-        $bindings['PageTitle'] = 'Quick user reviews';
+        $bindings['TopTitle'] = 'Quick reviews';
+        $bindings['PageTitle'] = 'Quick reviews';
 
         $bindings['UserRegion'] = Auth::user()->region;
 
@@ -95,8 +90,8 @@ class ReviewUserController extends Controller
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewUserList'] = $reviewUserService->getAllByUser($userId);
+        $bindings['ReviewList'] = $serviceQuickReview->getAllByUser($userId);
 
-        return view('user.reviews.list', $bindings);
+        return view('user.quick-reviews.list', $bindings);
     }
 }

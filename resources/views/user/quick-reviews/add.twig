@@ -1,0 +1,12 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('user.quick-reviews.list'), 'text': 'Quick reviews'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('user.quick-reviews.add') %}
+{% include 'user/quick-reviews/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'user/quick-reviews/scripts.twig' %}
+
+{% endblock page_inner %}

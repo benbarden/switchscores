@@ -1,4 +1,4 @@
-<h2>Quick user reviews</h2>
+<h2>Quick reviews</h2>
 {% if ReviewList.count %}
     <table class="table table-condensed table-responsive">
         {% for item in ReviewList %}
@@ -6,10 +6,6 @@
                 <td>
                     <span style="font-weight: bold;">Author:</span>
                     {{ item.user.display_name }}
-                </td>
-                <td>
-                    <span style="font-weight: bold;">Quick rating:</span>
-                    {{ item.quickRating.rating_desc }}
                 </td>
                 <td>
                     <span style="font-weight: bold;">Score:</span>
@@ -38,7 +34,7 @@
 
     <p>
     {% if auth_user() %}
-        Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
+        Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
     {% else %}
         <a href="{{ route('register') }}">Register</a> to add a quick review.
     {% endif %}
@@ -49,7 +45,7 @@
     <p>
         None yet.
         {% if auth_user() %}
-            Why not <a href="{{ route('user.reviews.add', {'gameId': GameId}) }}">write the first quick review</a>?
+            Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write the first quick review</a>?
         {% else %}
             Why not <a href="{{ route('register') }}">register</a> and submit a quick review?
         {% endif %}

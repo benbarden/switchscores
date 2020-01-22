@@ -17,7 +17,7 @@
         <strong>Thanks for submitting your review!</strong> All reviews are subject to admin approval.
         We'll get to your review as soon as we can.
     </div>
-{% else %}
+    {% else %}
     <p>
         This is where you can submit your own reviews to the site.
     </p>
@@ -30,21 +30,19 @@
     </p>
 {% endif %}
 
-{% if ReviewUserList.count > 0 %}
-
+{% if ReviewList.count > 0 %}
     <table class="table data-sortable">
         <thead>
             <tr>
                 <th class="text-right">#</th>
                 <th class="text-left">Game</th>
                 <th class="text-center">Date</th>
-                <th class="text-center">Quick rating</th>
                 <th class="text-center">Score</th>
                 <th class="text-center">Status</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in ReviewUserList %}
+            {% for item in ReviewList %}
                 <tr>
                     <td class="text-right">
                         {{ item.id }}
@@ -54,9 +52,6 @@
                     </td>
                     <td class="text-center">
                         {{ item.created_at }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.quickRating.rating_desc }}
                     </td>
                     <td class="text-center">
                         {{ item.review_score }}
@@ -75,7 +70,7 @@
 {% include 'common/table-sorting.twig' %}
 <script>
     $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('user.reviews.add') }}';
+        top.location.href = '{{ route('user.quick-reviews.add') }}';
     });
     $(document).ready(function() {
         $('.data-sortable').DataTable({
@@ -85,8 +80,6 @@
                 null,
                 null,
                 null,
-                null,
-                { "orderable": false },
                 null,
                 { "orderable": false }
             ]

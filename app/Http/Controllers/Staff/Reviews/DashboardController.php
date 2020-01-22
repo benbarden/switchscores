@@ -8,7 +8,7 @@ use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
 use App\PartnerReview;
-use App\ReviewUser;
+use App\QuickReview;
 
 class DashboardController extends Controller
 {
@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         $serviceFeedItemReview = $this->getServiceFeedItemReview();
         $servicePartnerReview = $this->getServicePartnerReview();
-        $serviceReviewUser = $this->getServiceReviewUser();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceReviewLinks = $this->getServiceReviewLink();
         $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
@@ -34,10 +34,10 @@ class DashboardController extends Controller
         // Action lists
         $unprocessedFeedReviewItems = $serviceFeedItemReview->getUnprocessed();
         $pendingPartnerReview = $servicePartnerReview->getByStatus(PartnerReview::STATUS_PENDING);
-        $pendingReviewUser = $serviceReviewUser->getByStatus(ReviewUser::STATUS_PENDING);
+        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
-        $bindings['PendingReviewUserCount'] = count($pendingReviewUser);
+        $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Information
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();

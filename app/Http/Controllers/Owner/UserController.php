@@ -10,8 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Services\ServiceContainer;
 
+use App\Traits\WosServices;
+use App\Traits\SiteRequestData;
+
 class UserController extends Controller
 {
+    use WosServices;
+    use SiteRequestData;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -154,7 +160,7 @@ class UserController extends Controller
         // Validation
         $servicePartnerReview = $serviceContainer->getPartnerReviewService();
         $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceReviewUser = $serviceContainer->getReviewUserService();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         // Deletion
         $serviceUserGamesCollection = $serviceContainer->getUserGamesCollectionService();
@@ -176,7 +182,7 @@ class UserController extends Controller
         if (count($reviewLinks) > 0) {
             $customErrors[] = 'User has created '.count($reviewLinks).' review link(s)';
         }
-        $quickReviews = $serviceReviewUser->getAllByUser($userId);
+        $quickReviews = $serviceQuickReview->getAllByUser($userId);
         if (count($quickReviews) > 0) {
             $customErrors[] = 'User has created '.count($quickReviews).' quick review(s)';
         }

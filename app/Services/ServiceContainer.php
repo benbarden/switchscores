@@ -31,9 +31,7 @@ class ServiceContainer
     const KEY_PARTNER_SERVICE = 'PartnerService';
     const KEY_PARTNER_REVIEW_SERVICE = 'PartnerReviewService';
     const KEY_REVIEW_LINK_SERVICE = 'ReviewLinkService';
-    const KEY_REVIEW_QUICK_RATING_SERVICE = 'ReviewQuickRatingService';
     const KEY_REVIEW_STATS_SERVICE = 'ReviewStatsService';
-    const KEY_REVIEW_USER_SERVICE = 'ReviewUserService';
     const KEY_SITE_ALERT_SERVICE = 'SiteAlertService';
     const KEY_TAG_SERVICE = 'TagService';
     const KEY_TOP_RATED_SERVICE = 'TopRatedService';
@@ -311,29 +309,11 @@ class ServiceContainer
 
     /**
      * @deprecated
-     * @return ReviewQuickRatingService
-     */
-    public function getReviewQuickRatingService()
-    {
-        return $this->load(self::KEY_REVIEW_QUICK_RATING_SERVICE);
-    }
-
-    /**
-     * @deprecated
      * @return ReviewStatsService
      */
     public function getReviewStatsService()
     {
         return $this->load(self::KEY_REVIEW_STATS_SERVICE);
-    }
-
-    /**
-     * @deprecated
-     * @return ReviewUserService
-     */
-    public function getReviewUserService()
-    {
-        return $this->load(self::KEY_REVIEW_USER_SERVICE);
     }
 
     /**

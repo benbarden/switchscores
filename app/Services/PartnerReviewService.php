@@ -23,7 +23,7 @@ class PartnerReviewService
     }
 
     public function edit(
-        ReviewUser $reviewUserData,
+        PartnerReview $partnerReview,
         $gameId, $quickRating, $reviewScore, $reviewBody
     )
     {
@@ -34,8 +34,8 @@ class PartnerReviewService
             'review_body' => $reviewBody,
         ];
 
-        $reviewUserData->fill($values);
-        $reviewUserData->save();
+        $partnerReview->fill($values);
+        $partnerReview->save();
     }
 
     public function editStatus(

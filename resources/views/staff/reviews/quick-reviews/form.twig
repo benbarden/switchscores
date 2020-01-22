@@ -5,43 +5,36 @@
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">User</label>
         <div class="col-md-6">
-            {{ ReviewUserData.user.display_name }}
-            <br><small>ID: {{ ReviewUserData.user.id }} | Email: {{ ReviewUserData.user.email }}</small>
+            {{ ReviewData.user.display_name }}
+            <br><small>ID: {{ ReviewData.user.id }} | Email: {{ ReviewData.user.email }}</small>
         </div>
     </div>
 
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Game</label>
         <div class="col-md-6">
-            {{ ReviewUserData.game.title }}
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="game_id" class="col-md-4 control-label">Quick rating</label>
-        <div class="col-md-6">
-            {{ ReviewUserData.quickRating.rating_desc }}
+            {{ ReviewData.game.title }}
         </div>
     </div>
 
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Review score</label>
         <div class="col-md-6">
-            {{ ReviewUserData.review_score }}
+            {{ ReviewData.review_score }}
         </div>
     </div>
 
     <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Review body</label>
         <div class="col-md-6">
-            {% if ReviewUserData.review_body %}
+            {% if ReviewData.review_body %}
                 <p>
                     <em>Review body is shown below.</em>
                 </p>
                 <hr>
                 <p>
                     <small>
-                        {{ ReviewUserData.review_body|raw }}
+                        {{ ReviewData.review_body|raw }}
                     </small>
                 </p>
                 <hr>
@@ -57,7 +50,7 @@
         <label for="item_status" class="col-md-4 control-label">Status</label>
         <div class="col-md-6">
             <select id="item_status" name="item_status" class="form-control">
-                {% for item in ReviewUserStatusList %}
+                {% for item in StatusList %}
                     <option value="{{ item.id }}">{{ item.title }}</option>
                 {% endfor %}
             </select>

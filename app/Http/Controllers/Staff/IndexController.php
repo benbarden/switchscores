@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SiteRequestData;
 use App\Traits\WosServices;
 
+use App\QuickReview;
 use App\SiteAlert;
 
 class IndexController extends Controller
@@ -20,6 +21,7 @@ class IndexController extends Controller
 
         $serviceFeedItemGame = $this->getServiceFeedItemGame();
         $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceSiteAlert = $this->getServiceSiteAlert();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
@@ -37,8 +39,10 @@ class IndexController extends Controller
         // Updates requiring approval
         $unprocessedFeedReviewItems = $serviceFeedItemReview->getUnprocessed();
         $pendingFeedGameItems = $serviceFeedItemGame->getPending();
+        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
+        $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Action lists
         $bindings['SiteAlertErrorCount'] = $serviceSiteAlert->countByType(SiteAlert::TYPE_ERROR);

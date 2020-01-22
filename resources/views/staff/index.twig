@@ -49,6 +49,16 @@
                 </td>
             </tr>
             {% endif %}
+            {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.quick-reviews.list') }}" class="h4">{{ PendingQuickReviewCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
             </tbody>
         </table>
         {% endif %}

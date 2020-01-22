@@ -15,18 +15,6 @@
     </div>
 
     <div class="form-group">
-        <label for="site_id" class="col-md-4 control-label">Quick rating</label>
-        <div class="col-md-6">
-            <select id="quick_rating" class="form-control" name="quick_rating">
-                <option value="">&nbsp;</option>
-                {% for item in QuickRatingList %}
-                    <option value="{{ item.id }}">{{ item.rating_desc }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
         <label for="review_score" class="col-md-4 control-label">Score out of 10</label>
         <div class="col-md-6">
             <input id="review_score" type="text" class="form-control" name="review_score">

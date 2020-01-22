@@ -10,7 +10,7 @@
             <label for="admin-nav-status-filter">Filter by status:</label>
             <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
                 <option value="">All</option>
-                {% for item in ReviewUserStatusList %}
+                {% for item in QuickReviewStatusList %}
                     <option value="{{ item.id }}">{{ item.title }}</option>
                 {% endfor %}
             </select>
@@ -19,7 +19,7 @@
 </div>
 
 <hr>
-{% if ReviewUserList.count > 0 %}
+{% if QuickReviewList.count > 0 %}
 
     <table class="table data-sortable">
         <thead>
@@ -27,20 +27,22 @@
             <th class="text-right">#</th>
             <th class="text-left">Game</th>
             <th class="text-center">Date</th>
-            <th class="text-center">Quick rating</th>
             <th class="text-center">Score</th>
             <th class="text-center">Status</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
         <tbody>
-        {% for item in ReviewUserList %}
+        {% for item in QuickReviewList %}
             <tr>
                 <td class="text-right">
                     {{ item.id }}
                 </td>
                 <td class="text-left">
-                    <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    <a href="{{ route('staff.games.detail', {'gameId': item.game.id}) }}">{{ item.game.title }}</a>
+                    <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank" title="Open game page in a new tab">
+                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                    </a>
                     <br>
                     <small>
                         User: {{ item.user.email }} | ID: {{ item.user.id }}
@@ -50,16 +52,13 @@
                     {{ item.created_at }}
                 </td>
                 <td class="text-center">
-                    {{ item.quickRating.rating_desc }}
-                </td>
-                <td class="text-center">
                     {{ item.review_score }}
                 </td>
                 <td class="text-center">
                     {{ item.getStatusDesc() }}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('admin.reviews.user.edit', {'reviewId': item.id}) }}">Edit</a>
+                    <a href="{{ route('staff.reviews.quick-reviews.edit', {'reviewId': item.id}) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}
@@ -73,7 +72,7 @@
 <script>
     $('#admin-nav-status-filter').on('change', function() {
         selectedStatusFilter = $(this).val();
-        top.location.href = '{{ route('admin.reviews.user.list')}}?filterStatus=' + selectedStatusFilter;
+        top.location.href = '{{ route('staff.reviews.quick-reviews.list')}}?filterStatus=' + selectedStatusFilter;
     });
     $(document).ready(function() {
         var activeStatusId = '{{ FilterStatus }}';
@@ -85,8 +84,6 @@
                 null,
                 null,
                 null,
-                null,
-                { "orderable": false },
                 null,
                 { "orderable": false },
                 { "orderable": false }
