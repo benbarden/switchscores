@@ -43,11 +43,16 @@ class WelcomeController extends Controller
         $idShovelKnightKingOfCards = 3311;
         $idShovelKnightShowdown = 3334;
         $idSuperEpic = 3275;
+        // 22nd Jan 2020
+        $idTokyoMirageSessions = 2926;
+        $idSuperCrushKO = 3370;
+        $idToTheMoon = 3426;
+        $id140 = 3344;
 
         $featuredIdList = [
-            $idShovelKnightKingOfCards,
-            $idShovelKnightShowdown,
-            $idSuperEpic,
+            $idSuperCrushKO,
+            $idToTheMoon,
+            $id140,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList, $regionCode);
         $featuredGameId = rand(0, count($featuredIdList)-1);
