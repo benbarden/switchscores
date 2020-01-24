@@ -43,13 +43,11 @@ class WelcomeController extends Controller
         $idTokyoMirageSessions = 2926;
         $idSuperCrushKO = 3370;
         $idToTheMoon = 3426;
-        $id140 = 3344;
         $id198X = 3443;
 
         $featuredIdList = [
             $idSuperCrushKO,
             $idToTheMoon,
-            $id140,
             $id198X,
         ];
         $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList);
