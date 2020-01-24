@@ -45,7 +45,6 @@ class GamesController extends Controller
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameGenre = $this->getServiceGameGenre();
-        $serviceGameTag = $this->getServiceGameTag();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -135,10 +134,8 @@ class GamesController extends Controller
 
     public function add()
     {
-        $serviceGame = $this->getServiceGame();
         $serviceGenre = $this->getServiceGenre();
         $serviceGameGenre = $this->getServiceGameGenre();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
         $servicePrimaryTypes = $this->getServiceGamePrimaryType();
@@ -239,7 +236,6 @@ class GamesController extends Controller
         $serviceGame = $this->getServiceGame();
         $serviceGenre = $this->getServiceGenre();
         $serviceGameGenre = $this->getServiceGameGenre();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
         $servicePrimaryTypes = $this->getServiceGamePrimaryType();
         $serviceGameSeries = $this->getServiceGameSeries();
@@ -328,7 +324,6 @@ class GamesController extends Controller
 
         // Deletion
         $serviceFeedItemGame = $this->getServiceFeedItemGame();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -357,7 +352,6 @@ class GamesController extends Controller
 
             $this->getServiceActivityFeed()->deleteByGameId($gameId);
             $serviceFeedItemGame->deleteByGameId($gameId);
-            $serviceGameReleaseDate->deleteByGameId($gameId);
             $serviceGameGenre->deleteGameGenres($gameId);
             $serviceGameTitleHash->deleteByGameId($gameId);
             $serviceGameTag->deleteGameTags($gameId);

@@ -375,10 +375,16 @@ class UpdateGameData
 
                 $this->game->eu_release_date = $eshopReleaseDate;
 
+                $releaseYearObj = new \DateTime($eshopReleaseDate);
+                $releaseYear = $releaseYearObj->format('Y');
+
+                $this->game->release_year = $releaseYear;
                 if ($eshopReleaseDateObj > $nowDate) {
                     $this->game->eu_is_released = 0;
                 } else {
+                    $dateNow = new \DateTime('now');
                     $this->game->eu_is_released = 1;
+                    $this->game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
                 }
 
                 $this->hasGameChanged = true;

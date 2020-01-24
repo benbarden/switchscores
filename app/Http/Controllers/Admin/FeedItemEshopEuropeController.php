@@ -127,51 +127,9 @@ class FeedItemEshopEuropeController extends Controller
                 // Add title hash
                 $gameTitleHash = $serviceGameTitleHash->create($title, $titleHash, $gameId);
 
-                // Update release dates
-                $gameReleaseDateDirector = new GameReleaseDateDirector();
-
-                $regionsToUpdate = $gameReleaseDateDirector->getRegionList();
-
-                foreach ($regionsToUpdate as $region) {
-
-                    $gameReleaseDateBuilder = new GameReleaseDateBuilder();
-                    $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
-                    $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, []);
-                    $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
-                    $gameReleaseDate->save();
-
-                }
-
                 // Update eShop data
                 EshopEuropeUpdateGameFactory::updateGame($game);
                 EshopEuropeRedownloadPackshotsFactory::redownloadPackshots($game);
-
-                // Now fix the release year
-                foreach ($regionsToUpdate as $region) {
-
-                    $gameReleaseDateBuilder = new GameReleaseDateBuilder();
-                    $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
-
-                    $gameReleaseDateExisting = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
-                    if ($gameReleaseDateExisting) {
-                        $releaseDate = $gameReleaseDateExisting->release_date;
-                        $releaseYear = $gameReleaseDateExisting->release_year;
-                        $isReleased = $gameReleaseDateExisting->is_released;
-                        if (!$releaseYear) {
-                            $releaseYear = $serviceGameReleaseDate->getReleaseYear($releaseDate);
-                            $gameReleaseDateExisting->release_year = $releaseYear;
-                            $gameReleaseDateExisting->save();
-                        }
-                        if ($region == 'eu') {
-                            if ($isReleased == 1) {
-                                $dateNow = new \DateTime('now');
-                                $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
-                                $game->save();
-                            }
-                        }
-                    }
-
-                }
 
                 // Trigger event
                 event(new GameCreated($game));
