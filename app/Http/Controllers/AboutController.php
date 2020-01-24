@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class AboutController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
 
     public function show()
     {

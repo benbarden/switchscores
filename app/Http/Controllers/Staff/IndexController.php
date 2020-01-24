@@ -4,16 +4,14 @@ namespace App\Http\Controllers\Staff;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 use App\QuickReview;
 use App\SiteAlert;
 
 class IndexController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
 
     public function index()
     {

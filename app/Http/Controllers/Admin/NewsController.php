@@ -7,10 +7,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class NewsController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -26,16 +28,14 @@ class NewsController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceNews = $this->getServiceNews();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - News';
         $bindings['PageTitle'] = 'News';
 
-        $newsService = $serviceContainer->getNewsService();
-        $newsList = $newsService->getAll();
+        $newsList = $serviceNews->getAll();
 
         $bindings['NewsList'] = $newsList;
 
@@ -44,14 +44,9 @@ class NewsController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $newsService = $serviceContainer->getNewsService();
-        $gameService = $serviceContainer->getGameService();
-        $newsCategoryService = $serviceContainer->getNewsCategoryService();
+        $serviceNews = $this->getServiceNews();
+        $serviceNewsCategory = $this->getServiceNewsCategory();
+        $serviceGame = $this->getServiceGame();
 
         $request = request();
 
@@ -59,7 +54,7 @@ class NewsController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $news = $newsService->create(
+            $news = $serviceNews->create(
                 $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id
             );
@@ -74,27 +69,22 @@ class NewsController extends Controller
         $bindings['PageTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
-        $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
+        $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
 
         return view('admin.news.add', $bindings);
     }
 
     public function edit($newsId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $newsService = $serviceContainer->getNewsService();
-        $gameService = $serviceContainer->getGameService();
-        $newsCategoryService = $serviceContainer->getNewsCategoryService();
+        $serviceNews = $this->getServiceNews();
+        $serviceNewsCategory = $this->getServiceNewsCategory();
+        $serviceGame = $this->getServiceGame();
 
         $bindings = [];
 
-        $newsData = $newsService->find($newsId);
+        $newsData = $serviceNews->find($newsId);
         if (!$newsData) abort(404);
 
         $request = request();
@@ -105,7 +95,7 @@ class NewsController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $newsService->edit(
+            $serviceNews->edit(
                 $newsData, $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id
             );
@@ -123,9 +113,9 @@ class NewsController extends Controller
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
-        $bindings['NewsCategoryList'] = $newsCategoryService->getAll();
+        $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
 
         return view('admin.news.edit', $bindings);
     }

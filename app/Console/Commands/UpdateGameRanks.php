@@ -6,11 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class UpdateGameRanks extends Command
 {
-    use WosServices;
+    use SwitchServices;
 
     /**
      * The name and signature of the console command.
@@ -50,9 +50,9 @@ class UpdateGameRanks extends Command
 
         // *** QUICK FIX FOR RELEASE YEARS *** //
         \DB::statement("
-            update game_release_dates
-            set release_year = year(release_date)
-            where release_date is not null and release_year is null
+            UPDATE games
+            SET release_year = YEAR(eu_release_date)
+            WHERE eu_release_date IS NOT NULL AND release_year IS NULL
         ");
 
         // *** 1. ALL-TIME RANK *** //
@@ -65,11 +65,6 @@ class UpdateGameRanks extends Command
             WHERE review_count > 2
             ORDER BY rating_avg DESC
         ");
-
-        $channel = env('SLACK_ALERT_CHANNEL', '');
-        if ($channel) {
-            \Slack::to('#'.$channel)->send('UpdateGameRanks: '.count($gameRankList).' ranked games');
-        }
 
         $logger->info('All-time rank: checking '.count($gameRankList).' games');
 
@@ -127,9 +122,7 @@ class UpdateGameRanks extends Command
             $gameRankList = \DB::select("
                 select g.id AS game_id, g.title, g.rating_avg, g.game_rank
                 from games g
-                join game_release_dates grd on g.id = grd.game_id
-                where grd.region = 'eu'
-                and grd.release_year = ?
+                where g.release_year = ?
                 and g.review_count > 2
                 order by rating_avg desc
             ", [$year]);
@@ -182,8 +175,6 @@ class UpdateGameRanks extends Command
 
         $dateList = $serviceGameCalendar->getAllowedDates(false);
 
-        $region = 'eu';
-
         foreach ($dateList as $date) {
 
             $dtDate = new \DateTime($date);
@@ -194,7 +185,7 @@ class UpdateGameRanks extends Command
 
             $yearMonth = $calendarYear.$calendarMonth;
 
-            $gameRatings = $serviceTopRated->getByMonthWithRanks($region, $calendarYear, $calendarMonth);
+            $gameRatings = $serviceTopRated->getByMonthWithRanks($calendarYear, $calendarMonth);
 
             $logger->info('Yearmonth ['.$yearMonth.']: checking '.count($gameRatings).' games');
 

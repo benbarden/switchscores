@@ -4,19 +4,15 @@ namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class DashboardController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function show()
     {
         $pageTitle = 'Categorisation dashboard';
-
-        $regionCode = $this->getRegionCode();
 
         $serviceCategorisation = $this->getServiceStaffDashboardsCategorisation();
 
@@ -56,7 +52,7 @@ class DashboardController extends Controller
         $bindings['StatsWithoutSeries'] = $statsWithoutSeries;
 
         // Genres
-        $missingGenres = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+        $missingGenres = $serviceGameGenre->getGamesWithoutGenres();
         $bindings['MissingGenresCount'] = count($missingGenres);
 
         // No type or tag
@@ -64,7 +60,7 @@ class DashboardController extends Controller
         $bindings['NoTypeOrTagCount'] = count($missingTypesAndTags);
 
         // Migrations: Genre, no primary type
-        $statsGenresNoPrimaryType = $serviceGameGenre->getGamesWithGenresNoPrimaryType($regionCode);
+        $statsGenresNoPrimaryType = $serviceGameGenre->getGamesWithGenresNoPrimaryType();
         $statsCountGenresNoPrimaryType = count($statsGenresNoPrimaryType);
         $bindings['StatsCountGenresNoPrimaryType'] = $statsCountGenresNoPrimaryType;
 

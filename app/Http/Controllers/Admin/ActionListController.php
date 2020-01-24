@@ -2,32 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\SiteAlert;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\SiteAlert;
+
+use App\Traits\SwitchServices;
 
 class ActionListController extends Controller
 {
-    private function getRegionCodeOverride()
-    {
-        $regionCode = \Request::get('regionCode');
-        $regionOverride = \Request::get('regionOverride');
-        if ($regionOverride) {
-            $regionCode = $regionOverride;
-        }
-
-        return $regionCode;
-    }
+    use SwitchServices;
 
     public function developerMissing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         $bindings = [];
 
@@ -37,19 +24,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGameDeveloper->getGamesWithNoDeveloper();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-developers.list', $bindings);
     }
 
     public function newDeveloperToSet()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         $bindings = [];
 
@@ -59,19 +39,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGameDeveloper->getNewDevelopersToSet();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-developers.list', $bindings);
     }
 
     public function oldDeveloperToClear()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         $bindings = [];
 
@@ -81,19 +54,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGameDeveloper->getOldDevelopersToClear();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-developers.list', $bindings);
     }
 
     public function publisherMissing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
@@ -103,19 +69,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGamePublisher->getGamesWithNoPublisher();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-publishers.list', $bindings);
     }
 
     public function newPublisherToSet()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
@@ -125,19 +84,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGamePublisher->getNewPublishersToSet();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-publishers.list', $bindings);
     }
 
     public function oldPublisherToClear()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
@@ -147,19 +99,12 @@ class ActionListController extends Controller
         $bindings['GameList'] = $serviceGamePublisher->getOldPublishersToClear();
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.action-lists.game-publishers.list', $bindings);
     }
 
     public function noPrice()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceGame = $this->getServiceGame();
 
         $bindings = [];
 
@@ -167,21 +112,14 @@ class ActionListController extends Controller
         $bindings['PageTitle'] = 'Games without prices';
 
         $bindings['GameList'] = $serviceGame->getWithoutPrices();
-        $bindings['jsInitialSort'] = "[ 0, 'asc']";
-
-        $bindings['RegionCode'] = $regionCode;
+        $bindings['jsInitialSort'] = "[ 4, 'desc']";
 
         return view('admin.action-lists.game-prices.list', $bindings);
     }
 
     public function siteAlertErrors()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceSiteAlert = $serviceContainer->getSiteAlertService();
-
-        $regionCode = $this->getRegionCodeOverride();
+        $serviceSiteAlert = $this->getServiceSiteAlert();
 
         $bindings = [];
 
@@ -190,8 +128,6 @@ class ActionListController extends Controller
 
         $bindings['ItemList'] = $serviceSiteAlert->getByType(SiteAlert::TYPE_ERROR);
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
-
-        $bindings['RegionCode'] = $regionCode;
 
         return view('admin.action-lists.site-alerts.list', $bindings);
     }

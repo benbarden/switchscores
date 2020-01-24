@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
-
 class BlogController extends Controller
 {
     public function redirectTag($tag)

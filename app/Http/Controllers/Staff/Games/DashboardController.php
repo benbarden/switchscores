@@ -4,19 +4,15 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class DashboardController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function show()
     {
         $pageTitle = 'Games dashboard';
-
-        $regionCode = $this->getRegionCode();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
@@ -24,23 +20,19 @@ class DashboardController extends Controller
         $bindings = [];
 
         // Games to release
-        $actionListGamesForReleaseCountEu = $serviceGame->getActionListGamesForRelease('eu');
-        $actionListGamesForReleaseCountUs = $serviceGame->getActionListGamesForRelease('us');
-        $actionListGamesForReleaseCountJp = $serviceGame->getActionListGamesForRelease('jp');
-        $bindings['GamesForReleaseCountEu'] = count($actionListGamesForReleaseCountEu);
-        $bindings['GamesForReleaseCountUs'] = count($actionListGamesForReleaseCountUs);
-        $bindings['GamesForReleaseCountJp'] = count($actionListGamesForReleaseCountJp);
+        $actionListGamesForReleaseCount = $serviceGame->getActionListGamesForRelease();
+        $bindings['GamesForReleaseCount'] = count($actionListGamesForReleaseCount);
 
         // Missing data
-        $missingVideoUrl = $serviceGame->getByNullField('video_url', $regionCode);
+        $missingVideoUrl = $serviceGame->getByNullField('video_url');
         $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
 
         // Stats
         $bindings['TotalGameCount'] = $serviceGame->getCount();
-        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
-        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
+        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
+        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';

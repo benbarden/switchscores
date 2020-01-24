@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class UpdateGameCalendarStats extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -45,36 +47,30 @@ class UpdateGameCalendarStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $serviceContainer = new ServiceContainer();
-
-        $serviceGameCalendar = $serviceContainer->getGameCalendarService();
+        $serviceGameCalendar = $this->getServiceGameCalendar();
 
         $dateList = $serviceGameCalendar->getAllowedDates(false);
 
-        $regions = ['eu', 'us', 'jp'];
-
         \DB::statement('TRUNCATE TABLE game_calendar_stats');
 
-        foreach ($regions as $region) {
+        $region = 'eu';
 
-            foreach ($dateList as $date) {
+        foreach ($dateList as $date) {
 
-                $dtDate = new \DateTime($date);
-                $dtDateDesc = $dtDate->format('M Y');
+            $dtDate = new \DateTime($date);
+            $dtDateDesc = $dtDate->format('M Y');
 
-                $calendarYear = $dtDate->format('Y');
-                $calendarMonth = $dtDate->format('m');
+            $calendarYear = $dtDate->format('Y');
+            $calendarMonth = $dtDate->format('m');
 
-                $monthCount = $serviceGameCalendar->getListCount($region, $calendarYear, $calendarMonth);
+            $monthCount = $serviceGameCalendar->getListCount($calendarYear, $calendarMonth);
 
-                $logger->info($region.' // '.$date.' // '.$monthCount.' game(s)');
+            $logger->info($region.' // '.$date.' // '.$monthCount.' game(s)');
 
-                \DB::insert('
-                    INSERT INTO game_calendar_stats(region, month_name, released_count, created_at, updated_at)
-                    VALUES(?, ?, ?, NOW(), NOW())
-                ', [$region, $date, $monthCount]);
-
-            }
+            \DB::insert('
+                INSERT INTO game_calendar_stats(region, month_name, released_count, created_at, updated_at)
+                VALUES(?, ?, ?, NOW(), NOW())
+            ', [$region, $date, $monthCount]);
 
         }
 

@@ -8,15 +8,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
-
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
 
 class UserController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -30,17 +26,14 @@ class UserController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $userService = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Users';
         $bindings['PageTitle'] = 'Users';
 
-        $userList = $userService->getAll();
+        $userList = $serviceUser->getAll();
 
         $bindings['UserList'] = $userList;
 
@@ -49,13 +42,10 @@ class UserController extends Controller
 
     public function showUser($userId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceUser = $this->getServiceUser();
+        $serviceCollection = $this->getServiceUserGamesCollection();
 
-        $userService = $serviceContainer->getUserService();
-        $collectionService = $serviceContainer->getUserGamesCollectionService();
-
-        $userData = $userService->find($userId);
+        $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);
 
         $displayName = $userData->display_name;
@@ -67,21 +57,16 @@ class UserController extends Controller
 
         $bindings['UserData'] = $userData;
 
-        $bindings['CollectionList'] = $collectionService->getByUser($userId);
-        $bindings['CollectionStats'] = $collectionService->getStats($userId);
+        $bindings['CollectionList'] = $serviceCollection->getByUser($userId);
+        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
         return view('owner.user.view', $bindings);
     }
 
     public function editUser($userId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceUser = $serviceContainer->getUserService();
-        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceUser = $this->getServiceUser();
+        $servicePartner = $this->getServicePartner();
 
         $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);
@@ -151,19 +136,16 @@ class UserController extends Controller
 
     public function deleteUser($userId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         // Core
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
 
         // Validation
-        $servicePartnerReview = $serviceContainer->getPartnerReviewService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $servicePartnerReview = $this->getServicePartnerReview();
+        $serviceReviewLink = $this->getServiceReviewLink();
         $serviceQuickReview = $this->getServiceQuickReview();
 
         // Deletion
-        $serviceUserGamesCollection = $serviceContainer->getUserGamesCollectionService();
+        $serviceUserGamesCollection = $this->getServiceUserGamesCollection();
 
         $userData = $serviceUser->find($userId);
         if (!$userData) abort(404);

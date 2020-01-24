@@ -51,12 +51,6 @@ class GameReleaseDateService
         GameReleaseDate::where('game_id', $gameId)->delete();
     }
 
-    public function markAsReleased(GameReleaseDate $gameReleaseDate)
-    {
-        $gameReleaseDate->is_released = 1;
-        $gameReleaseDate->save();
-    }
-
     // ********************************************************** //
 
     /**
@@ -99,15 +93,12 @@ class GameReleaseDateService
 
     /**
      * Welcome page stats
-     * @param $region
      * @return integer
      */
-    public function countReleased($region)
+    public function countReleased()
     {
         $gameCount = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->where('games.eu_is_released', 1)
             ->count();
 
         return $gameCount;
@@ -115,16 +106,12 @@ class GameReleaseDateService
 
     /**
      * Welcome page stats
-     * @param $region
      * @return integer
      */
-    public function countUpcoming($region)
+    public function countUpcoming()
     {
         $gameCount = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 0)
-            ->where('upcoming_date', 'not like', 'Unreleased')
+            ->where('games.eu_is_released', 0)
             ->count();
 
         return $gameCount;
@@ -133,22 +120,15 @@ class GameReleaseDateService
     // ********************************************** //
 
     /**
-     * @param $region
      * @param int $limit
      * @return mixed
      */
-    public function getReleased($region, $limit = null)
+    public function getReleased($limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->orderBy('game_release_dates.release_date', 'desc')
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
+            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.eu_released_on', 'desc')
             ->orderBy('games.updated_at', 'desc')
             ->orderBy('games.title', 'asc');
@@ -163,23 +143,15 @@ class GameReleaseDateService
 
     /**
      * @param $primaryTypeId
-     * @param $region
      * @param int $limit
      * @return mixed
      */
-    public function getReleasedByPrimaryType($primaryTypeId, $region, $limit = null)
+    public function getReleasedByPrimaryType($primaryTypeId, $limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
             ->where('games.primary_type_id', $primaryTypeId)
-            //->orderBy('game_release_dates.release_date', 'desc')
             ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 
@@ -197,19 +169,12 @@ class GameReleaseDateService
      * @param int $limit
      * @return mixed
      */
-    public function getReleasedBySeries($seriesId, $region, $limit = null)
+    public function getReleasedBySeries($seriesId, $limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
             ->where('games.series_id', $seriesId)
-            //->orderBy('game_release_dates.release_date', 'desc')
             ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 
@@ -222,25 +187,17 @@ class GameReleaseDateService
     }
 
     /**
-     * @param $region
      * @param string $letter
      * @param int $limit
      * @return mixed
      */
-    public function getReleasedByLetter($region, $letter, $limit = null)
+    public function getReleasedByLetter($letter, $limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
             ->where('games.title', 'LIKE', $letter.'%')
             ->orderBy('games.title', 'asc');
-            //->orderBy('game_release_dates.release_date', 'desc')
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -252,21 +209,15 @@ class GameReleaseDateService
 
     /**
      * @param $idList
-     * @param $region
      * @return mixed
      */
-    public function getByIdList($idList, $region)
+    public function getByIdList($idList)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
+            ->select('games.*')
             ->whereIn('games.id', $idList)
-            ->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->whereNotNull('games.eu_release_date')
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         $games = $games->get();
@@ -277,28 +228,21 @@ class GameReleaseDateService
     /**
      * This returns a list of released titles, with ranks, and above a minimum average rating.
      * Sorted to show the newest titles first.
-     * @param $region
      * @param int $minimumRating
      * @param int $dateInterval
      * @param int $limit
      * @return mixed
      */
-    public function getRecentWithGoodRanks($region, $minimumRating = 7, $dateInterval = 30, $limit = 15)
+    public function getRecentWithGoodRanks($minimumRating = 7, $dateInterval = 30, $limit = 15)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->whereRaw('game_release_dates.release_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $dateInterval)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
+            ->whereRaw('games.eu_release_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $dateInterval)
             ->whereNotNull('games.game_rank')
             ->where('games.rating_avg', '>', $minimumRating)
             ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -310,32 +254,16 @@ class GameReleaseDateService
     }
 
     /**
-     * @param $region
      * @param int $limit
      * @return mixed
      */
-    public function getUpcoming($region, $limit = null)
+    public function getUpcoming($limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 0)
-            ->where('upcoming_date', 'not like', 'Unreleased');
-            //->whereNotNull('game_release_dates.release_date')
-
-        if ($limit != null) {
-            // We usually limit this list to show a shortened version on a top-level landing page.
-            // Those pages also format the dates. So, we need to make sure we have a
-            // real release date, or the upcoming date won't format correctly.
-            $games = $games->whereNotNull('game_release_dates.release_date');
-        }
-
-        $games = $games->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -347,22 +275,14 @@ class GameReleaseDateService
     }
 
     /**
-     * @param $region
      * @return mixed
      */
-    public function getUnreleased($region)
+    public function getUnreleased()
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 0)
-            ->where('game_release_dates.upcoming_date', 'Unreleased')
-            ->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->whereNull('games.eu_release_date')
             ->orderBy('games.title', 'asc');
 
         $games = $games->get();
@@ -372,24 +292,17 @@ class GameReleaseDateService
 
     /**
      * @param $reviewCount
-     * @param $region
      * @param $gameIdsReviewedBySite
      * @return mixed
      */
-    public function getUnrankedByReviewCount($reviewCount, $region, $gameIdsReviewedBySite)
+    public function getUnrankedByReviewCount($reviewCount, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
             ->where('review_count', '=', $reviewCount)
             ->whereNotIn('games.id', $gameIdsReviewedBySite)
-            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc')
             ->get();
 
@@ -398,25 +311,18 @@ class GameReleaseDateService
 
     /**
      * @param $year
-     * @param $region
      * @param $gameIdsReviewedBySite
      * @return mixed
      */
-    public function getUnrankedByYear($year, $region, $gameIdsReviewedBySite)
+    public function getUnrankedByYear($year, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->where('game_release_dates.release_year', '=', $year)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
+            ->where('games.release_year', '=', $year)
             ->where('review_count', '<', '3')
             ->whereNotIn('games.id', $gameIdsReviewedBySite)
-            ->orderBy('game_release_dates.release_date', 'desc')
+            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc')
             ->get();
 
@@ -425,22 +331,15 @@ class GameReleaseDateService
 
     /**
      * @param $filter
-     * @param $region
      * @param $gameIdsReviewedBySite
      * @return mixed
      * @throws \Exception
      */
-    public function getUnrankedByList($filter, $region, $gameIdsReviewedBySite)
+    public function getUnrankedByList($filter, $gameIdsReviewedBySite)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
             ->where('review_count', '<', '3')
             ->whereNotIn('games.id', $gameIdsReviewedBySite);
 
@@ -459,7 +358,7 @@ class GameReleaseDateService
                 throw new \Exception('Unknown filter: '.$filter);
         }
 
-        $games = $games->orderBy('game_release_dates.release_date', 'desc')
+        $games = $games->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc')
             ->get();
 

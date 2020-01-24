@@ -3,20 +3,14 @@
 
 namespace App\Helpers;
 
-use App\Services\ServiceContainer;
-
-use App\Game;
-
+use App\Services\GameService;
 
 class ImageHelper
 {
     static function packshotHtmlBuilder($gameId, $page)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $gameService = $serviceContainer->getGameService();
-        $game = $gameService->find($gameId);
+        $serviceGame = new GameService();
+        $game = $serviceGame->find($gameId);
 
         if (!$game) {
             return '<img src="/img/logo-grey.png" style="border: 0; height: 75px;" alt="Nintendo Switch games">';

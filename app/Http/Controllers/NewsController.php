@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class NewsController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
 
     public function landing()
     {
@@ -29,11 +27,8 @@ class NewsController extends Controller
 
     public function displayContent()
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceNews = $this->getServiceNews();
         $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $request = request();
         $requestUri = $request->getPathInfo();
@@ -59,11 +54,6 @@ class NewsController extends Controller
         }
         if ($newsPrev) {
             $bindings['NewsPrev'] = $newsPrev;
-        }
-
-        // Game details
-        if ($newsItem->game_id) {
-            $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($newsItem->game_id, $regionCode);
         }
 
         return view('news.content.default', $bindings);

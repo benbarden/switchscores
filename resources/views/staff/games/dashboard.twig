@@ -15,26 +15,10 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu">EU games to release</a>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release">Games to release</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=eu" class="h4">{{ GamesForReleaseCountEu }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us">US games to release</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=us" class="h4">{{ GamesForReleaseCountUs }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp">JP games to release</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release?regionOverride=jp" class="h4">{{ GamesForReleaseCountJp }}</a>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release" class="h4">{{ GamesForReleaseCount }}</a>
                 </td>
             </tr>
             </tbody>

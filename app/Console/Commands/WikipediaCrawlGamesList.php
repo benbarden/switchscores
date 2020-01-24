@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\Log;
 use App\Services\HtmlLoader\Wikipedia\Crawler as WikiCrawler;
 use App\Services\HtmlLoader\Wikipedia\Parser as WikiParser;
 
+use App\Traits\SwitchServices;
+
 class WikipediaCrawlGamesList extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *

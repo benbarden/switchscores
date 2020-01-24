@@ -7,10 +7,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class FeedItemReviewController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -22,15 +24,12 @@ class FeedItemReviewController extends Controller
 
     public function showList($report = null)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Feed items';
         $bindings['PageTitle'] = 'Feed items';
 
-        $serviceFeedItemReview = $serviceContainer->getFeedItemReviewService();
+        $serviceFeedItemReview = $this->getServiceFeedItemReview();
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
@@ -59,14 +58,9 @@ class FeedItemReviewController extends Controller
 
     public function edit($itemId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceFeedItemReview = $serviceContainer->getFeedItemReviewService();
-        $serviceGame = $serviceContainer->getGameService();
-        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceGame = $this->getServiceGame();
+        $servicePartner = $this->getServicePartner();
 
         $feedItemData = $serviceFeedItemReview->find($itemId);
         if (!$feedItemData) abort(404);
@@ -100,7 +94,7 @@ class FeedItemReviewController extends Controller
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 

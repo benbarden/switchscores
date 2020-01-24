@@ -141,7 +141,7 @@
             Release date: Europe
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.release_date }}
+            {{ GameData.eu_release_date }}
         </div>
         <div class="col-md-3">
             {{ FeedItemData.release_date_eu }}
@@ -149,7 +149,7 @@
         <div class="col-md-2">
             {% if GameImportRule.shouldIgnoreEuropeDates() %}
                 <em>Ignored</em>
-            {% elseif FeedItemData.release_date_eu != ReleaseDatesEU.release_date %}
+            {% elseif FeedItemData.release_date_eu != GameData.eu_release_date %}
                 <div style="color: #ffcc00;">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
@@ -158,18 +158,38 @@
     </div>
     <div class="form-group">
         <div class="col-md-4 text-right" style="font-weight: bold;">
-            Upcoming date: Europe
+            Release date: US
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.upcoming_date }}
+            {{ GameData.us_release_date }}
         </div>
         <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_eu }}
+            {{ FeedItemData.release_date_us }}
         </div>
         <div class="col-md-2">
-            {% if GameImportRule.shouldIgnoreEuropeDates() %}
+            {% if GameImportRule.shouldIgnoreUSDates() %}
                 <em>Ignored</em>
-            {% elseif FeedItemData.upcoming_date_eu != ReleaseDatesEU.upcoming_date %}
+            {% elseif FeedItemData.release_date_us != GameData.us_release_date %}
+                <div style="color: #ffcc00;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-right" style="font-weight: bold;">
+            Release date: Japan
+        </div>
+        <div class="col-md-3">
+            {{ GameData.jp_release_date }}
+        </div>
+        <div class="col-md-3">
+            {{ FeedItemData.release_date_jp }}
+        </div>
+        <div class="col-md-2">
+            {% if GameImportRule.shouldIgnoreJPDates() %}
+                <em>Ignored</em>
+            {% elseif FeedItemData.release_date_jp != GameData.jp_release_date %}
                 <div style="color: #ffcc00;">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
@@ -181,118 +201,10 @@
             Is released: Europe
         </div>
         <div class="col-md-3">
-            {{ ReleaseDatesEU.is_released }}
+            {{ GameData.eu_is_released }}
         </div>
         <div class="col-md-3">
             {{ FeedItemData.is_released_eu }}
-        </div>
-        <div class="col-md-2">
-            N/A
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Release date: US
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesUS.release_date }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.release_date_us }}
-        </div>
-        <div class="col-md-2">
-            {% if GameImportRule.shouldIgnoreUSDates() %}
-                <em>Ignored</em>
-            {% elseif FeedItemData.release_date_us != ReleaseDatesUS.release_date %}
-                <div style="color: #ffcc00;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Upcoming date: US
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesUS.upcoming_date }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_us }}
-        </div>
-        <div class="col-md-2">
-            {% if GameImportRule.shouldIgnoreUSDates() %}
-                <em>Ignored</em>
-            {% elseif FeedItemData.upcoming_date_us != ReleaseDatesUS.upcoming_date %}
-                <div style="color: #ffcc00;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Is released: US
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesUS.is_released }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.is_released_us }}
-        </div>
-        <div class="col-md-2">
-            N/A
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Release date: Japan
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesJP.release_date }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.release_date_jp }}
-        </div>
-        <div class="col-md-2">
-            {% if GameImportRule.shouldIgnoreJPDates() %}
-                <em>Ignored</em>
-            {% elseif FeedItemData.release_date_jp != ReleaseDatesJP.release_date %}
-                <div style="color: #ffcc00;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Upcoming date: Japan
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesJP.upcoming_date }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.upcoming_date_jp }}
-        </div>
-        <div class="col-md-2">
-            {% if GameImportRule.shouldIgnoreJPDates() %}
-                <em>Ignored</em>
-            {% elseif FeedItemData.upcoming_date_jp != ReleaseDatesJP.upcoming_date %}
-                <div style="color: #ffcc00;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-right" style="font-weight: bold;">
-            Is released: Japan
-        </div>
-        <div class="col-md-3">
-            {{ ReleaseDatesJP.is_released }}
-        </div>
-        <div class="col-md-3">
-            {{ FeedItemData.is_released_jp }}
         </div>
         <div class="col-md-2">
             N/A

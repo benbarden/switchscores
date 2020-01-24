@@ -25,11 +25,12 @@ class Game extends Model implements Auditable
      */
     protected $fillable = [
         'title', 'link_title', 'price_eshop', 'players',
-        'rating_avg', 'review_count', 'overview', 'image_count', 'developer', 'publisher',
+        'rating_avg', 'review_count', 'developer', 'publisher',
         'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid', 'video_header_text',
-        'primary_type_id', 'series_id', 'eu_released_on'
+        'primary_type_id', 'series_id', 'eu_released_on',
+        'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year'
     ];
 
     public function gameRankYear()

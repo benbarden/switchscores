@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller as Controller;
-use Auth;
 
-use App\Services\ServiceContainer;
 use App\Factories\GameDirectorFactory;
 use App\Factories\GamesCompanyFactory;
 
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class GamePartnerController extends Controller
 {
+    use SwitchServices;
+    use AuthUser;
+
     public function showGamePartners($gameId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $game = $serviceGame->find($gameId);
         if (!$game) abort(404);
@@ -43,13 +43,11 @@ class GamePartnerController extends Controller
 
     public function addGameDeveloper()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $servicePartner = $this->getServicePartner();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -84,12 +82,10 @@ class GamePartnerController extends Controller
 
     public function removeGameDeveloper()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -123,13 +119,11 @@ class GamePartnerController extends Controller
 
     public function addGamePublisher()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $servicePartner = $this->getServicePartner();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -164,12 +158,10 @@ class GamePartnerController extends Controller
 
     public function removeGamePublisher()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -203,12 +195,10 @@ class GamePartnerController extends Controller
 
     public function saveDevPub()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceGame = $this->getServiceGame();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -238,12 +228,10 @@ class GamePartnerController extends Controller
 
     public function createNewCompany()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceUser = $serviceContainer->getUserService();
+        $servicePartner = $this->getServicePartner();
+        $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -283,14 +271,12 @@ class GamePartnerController extends Controller
 
     public function legacyFixDev()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceUser = $serviceContainer->getUserService();
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $servicePartner = $this->getServicePartner();
+        $serviceUser = $this->getServiceUser();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -340,14 +326,12 @@ class GamePartnerController extends Controller
 
     public function legacyFixPub()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceUser = $serviceContainer->getUserService();
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $servicePartner = $this->getServicePartner();
+        $serviceUser = $this->getServiceUser();
+        $serviceGame = $this->getServiceGame();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {

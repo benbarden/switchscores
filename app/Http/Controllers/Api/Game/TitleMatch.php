@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Services\ServiceContainer;
-
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
+
+use App\Traits\SwitchServices;
 
 class TitleMatch
 {
+    use SwitchServices;
+
     public function getByTitle()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGame = $serviceContainer->getGameService();
+        $serviceGame = $this->getServiceGame();
 
         $request = request();
 

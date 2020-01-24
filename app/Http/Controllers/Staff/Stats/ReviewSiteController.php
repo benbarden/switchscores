@@ -4,20 +4,14 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
-use Auth;
+use App\Traits\SwitchServices;
 
 class ReviewSiteController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
 
     public function show()
     {
-        $regionCode = $this->getRegionCode();
-
         $bindings = [];
 
         $serviceReviewLinks = $this->getServiceReviewLink();
@@ -28,9 +22,9 @@ class ReviewSiteController extends Controller
         $serviceReviewStats = $this->getServiceReviewStats();
 
         $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
-        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount($regionCode);
+        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
-        $releasedGameCount = $serviceGameReleaseDate->countReleased($regionCode);
+        $releasedGameCount = $serviceGameReleaseDate->countReleased();
         $reviewLinkCount = $serviceReviewLinks->countActive();
 
         $bindings['ReleasedGameCount'] = $releasedGameCount;

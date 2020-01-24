@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
-use Auth;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class GamesCompanyController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
+    use AuthUser;
 
     public function oldDeveloperMultiple()
     {
@@ -117,7 +115,7 @@ class GamesCompanyController extends Controller
         $serviceGame = $this->getServiceGame();
         $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -149,7 +147,7 @@ class GamesCompanyController extends Controller
         $serviceGame = $this->getServiceGame();
         $serviceUser = $this->getServiceUser();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -183,7 +181,7 @@ class GamesCompanyController extends Controller
         $servicePartner = $this->getServicePartner();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -230,7 +228,7 @@ class GamesCompanyController extends Controller
         $servicePartner = $this->getServicePartner();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -278,7 +276,7 @@ class GamesCompanyController extends Controller
         $servicePartner = $this->getServicePartner();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -323,7 +321,7 @@ class GamesCompanyController extends Controller
         $servicePartner = $this->getServicePartner();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {

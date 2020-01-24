@@ -11,27 +11,23 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
-use App\Services\ServiceContainer;
 use App\Events\GameCreated;
 
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
-use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
-use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
-
 use App\Factories\GameDirectorFactory;
 use App\Factories\EshopEuropeUpdateGameFactory;
 use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 
-use Auth;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class GamesController extends Controller
 {
-    use WosServices, SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -46,24 +42,17 @@ class GamesController extends Controller
 
     public function showList($report = null)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-        $regionOverride = \Request::get('regionOverride');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceGameGenre = $serviceContainer->getGameGenreService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameGenre = $this->getServiceGameGenre();
+        $serviceGameTag = $this->getServiceGameTag();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Games';
-        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
-
+        $bindings['PageTitle'] = 'Games';
 
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
 
@@ -77,26 +66,22 @@ class GamesController extends Controller
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $serviceGame->getAll($regionCode);
+            $gameList = $serviceGame->getAll();
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
-                    $gameList = $serviceGameReleaseDate->getReleased($regionCode);
+                    $gameList = $serviceGameReleaseDate->getReleased();
                     $jsInitialSort = "[ 3, 'desc'], [ 1, 'asc']";
                     break;
                 case 'unreleased':
-                    $gameList = $serviceGameReleaseDate->getUnreleased($regionCode);
+                    $gameList = $serviceGameReleaseDate->getUnreleased();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Action lists
                 case 'action-list-games-for-release':
-                    if ($regionOverride) {
-                        $regionCode = $regionOverride;
-                        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
-                    }
-                    $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
+                    $gameList = $serviceGame->getActionListGamesForRelease();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Developers and Publishers
@@ -118,19 +103,19 @@ class GamesController extends Controller
                     break;
                 // Missing data
                 case 'no-genre':
-                    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+                    $gameList = $serviceGameGenre->getGamesWithoutGenres();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-eshop-europe-link':
-                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id', $regionCode);
+                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id');
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-boxart':
-                    $gameList = $serviceGame->getWithoutBoxart($regionCode);
+                    $gameList = $serviceGame->getWithoutBoxart();
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-video-url':
-                    $gameList = $serviceGame->getByNullField('video_url', $regionCode);
+                    $gameList = $serviceGame->getByNullField('video_url');
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-amazon-uk-link':
@@ -145,26 +130,21 @@ class GamesController extends Controller
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        $bindings['RegionCode'] = $regionCode;
-
         return view('admin.games.list', $bindings);
     }
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $serviceGame = $this->getServiceGame();
+        $serviceGenre = $this->getServiceGenre();
+        $serviceGameGenre = $this->getServiceGameGenre();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
+        $serviceEshopEurope = $this->getServiceEshopEuropeGame();
+        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
+        $serviceGameSeries = $this->getServiceGameSeries();
 
         $request = request();
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGenre = $serviceContainer->getGenreService();
-        $serviceGameGenre = $serviceContainer->getGameGenreService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
-        $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
-        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
 
         if ($request->isMethod('post')) {
 
@@ -207,27 +187,11 @@ class GamesController extends Controller
             // Add title hash
             $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
 
-            // Update release dates
-            $gameReleaseDateDirector = new GameReleaseDateDirector();
-
-            $regionsToUpdate = $gameReleaseDateDirector->getRegionList();
-
-            foreach ($regionsToUpdate as $region) {
-
-                $gameReleaseDateBuilder = new GameReleaseDateBuilder();
-                $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
-                $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, $request->post());
-                $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
-                $gameReleaseDate->save();
-
-                if ($region == 'eu') {
-                    if ($gameReleaseDate->is_released == 1) {
-                        $dateNow = new \DateTime('now');
-                        $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
-                        $game->save();
-                    }
-                }
-
+            // Check eu_released_on
+            if ($request->eu_is_released == 1) {
+                $dateNow = new \DateTime('now');
+                $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
+                $game->save();
             }
 
             // Update genres
@@ -240,7 +204,6 @@ class GamesController extends Controller
             }
 
             // As this is a new game, there are no genres to delete
-            //$gameGenreService->deleteGameGenres($gameId);
             if (count($gameGenres) > 0) {
                 $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
             }
@@ -257,8 +220,6 @@ class GamesController extends Controller
 
         $bindings = [];
 
-        $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
-
         $bindings['TopTitle'] = 'Admin - Games - Add game';
         $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
@@ -273,27 +234,22 @@ class GamesController extends Controller
 
     public function edit($gameId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $request = request();
+
+        $serviceGame = $this->getServiceGame();
+        $serviceGenre = $this->getServiceGenre();
+        $serviceGameGenre = $this->getServiceGameGenre();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceEshopEurope = $this->getServiceEshopEuropeGame();
+        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
+        $serviceGameSeries = $this->getServiceGameSeries();
 
         $gameListFilter = $request->filter;
 
         $bindings = [];
 
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGenre = $serviceContainer->getGenreService();
-        $serviceGameGenre = $serviceContainer->getGameGenreService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceEshopEurope = $serviceContainer->getEshopEuropeGameService();
-        $servicePrimaryTypes = $serviceContainer->getGamePrimaryTypeService();
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
-
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
-
-        $gameOrig = $gameData->fresh();
 
         // Filters and next game id
         $bindings['GameListFilter'] = $gameListFilter;
@@ -311,29 +267,6 @@ class GamesController extends Controller
             $this->validate($request, $this->validationRules);
 
             GameDirectorFactory::updateExisting($gameData, $request->post());
-
-            // Update release dates
-            $gameReleaseDateDirector = new GameReleaseDateDirector();
-
-            $regionsToUpdate = $gameReleaseDateDirector->getRegionList();
-
-            foreach ($regionsToUpdate as $region) {
-
-                $gameReleaseDateBuilder = new GameReleaseDateBuilder();
-                $gameReleaseDateDirector->setBuilder($gameReleaseDateBuilder);
-
-                // Check if existing data is available before updating
-                $gameReleaseDateExisting = $serviceGameReleaseDate->getByGameAndRegion($gameId, $region);
-                if ($gameReleaseDateExisting) {
-                    $gameReleaseDateDirector->buildExistingReleaseDate($region, $gameReleaseDateExisting, $request->post());
-                } else {
-                    $gameReleaseDateDirector->buildNewReleaseDate($region, $gameId, $request->post());
-                }
-
-                $gameReleaseDate = $gameReleaseDateBuilder->getGameReleaseDate();
-                $gameReleaseDate->save();
-
-            }
 
             // Update genres
             $gameGenres = [];
@@ -365,52 +298,10 @@ class GamesController extends Controller
 
         }
 
-        $bindings['RegionList'] = ['eu' => 'Europe', 'us' => 'US', 'jp' => 'Japan'];
-
         $bindings['TopTitle'] = 'Admin - Games - Edit game';
         $bindings['PageTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
-
-        // Load game release date info for the form
-        $gameReleaseDatesDb = $serviceGameReleaseDate->getByGame($gameId);
-
-        $gameReleaseDates = [];
-        $dateFormData = [];
-        $wikiFormats = [];
-
-        foreach ($regionsToUpdate as $region) {
-            $wikiFormats[$region] = null;
-        }
-
-        foreach ($gameReleaseDatesDb as $gameReleaseDate) {
-            $region = $gameReleaseDate->region;
-            $releaseDate = $gameReleaseDate->release_date;
-            $upcomingDate = $gameReleaseDate->upcoming_date;
-            $isReleased = $gameReleaseDate->is_released;
-            $dateFormData['release_date'] = $releaseDate;
-            $dateFormData['upcoming_date'] = $upcomingDate;
-            $dateFormData['is_released'] = $isReleased;
-            $gameReleaseDates[$region] = $dateFormData;
-
-            if ($releaseDate) {
-                $dtRelDate = new \DateTime($releaseDate);
-                $dtRelDateY = $dtRelDate->format('Y');
-                $dtRelDateM = $dtRelDate->format('m');
-                $dtRelDateD = $dtRelDate->format('d');
-                $wikiFormats[$region] = sprintf('{{dts|%s|%s|%s}}', $dtRelDateY, $dtRelDateM, $dtRelDateD);
-            }
-
-        }
-
-        foreach ($regionsToUpdate as $region) {
-            if ($wikiFormats[$region] == null) {
-                $wikiFormats[$region] = 'Unreleased';
-            }
-        }
-        $bindings['WikiDateList'] = sprintf('%s||%s||%s', $wikiFormats['jp'], $wikiFormats['us'], $wikiFormats['eu']);
-
-        $bindings['GameReleaseDates'] = $gameReleaseDates;
 
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
@@ -423,26 +314,23 @@ class GamesController extends Controller
 
     public function delete($gameId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         // Core
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameTitleHashes = $serviceContainer->getGameTitleHashService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         // Categorisation
-        $serviceGameGenres = $serviceContainer->getGameGenreService();
-        $serviceGameTags = $serviceContainer->getGameTagService();
+        $serviceGameGenre = $this->getServiceGameGenre();
+        $serviceGameTag = $this->getServiceGameTag();
 
         // Validation
-        $serviceNews = $serviceContainer->getNewsService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceNews = $this->getServiceNews();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         // Deletion
-        $serviceFeedItemGames = $serviceContainer->getFeedItemGameService();
-        $serviceGameReleaseDates = $serviceContainer->getGameReleaseDateService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceFeedItemGame = $this->getServiceFeedItemGame();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
@@ -468,14 +356,13 @@ class GamesController extends Controller
             $bindings['FormMode'] = 'delete-post';
 
             $this->getServiceActivityFeed()->deleteByGameId($gameId);
-            $serviceFeedItemGames->deleteByGameId($gameId);
-            $serviceGameReleaseDates->deleteByGameId($gameId);
-            $serviceGameGenres->deleteGameGenres($gameId);
-            $serviceGameTitleHashes->deleteByGameId($gameId);
-            $serviceGameTags->deleteGameTags($gameId);
+            $serviceFeedItemGame->deleteByGameId($gameId);
+            $serviceGameReleaseDate->deleteByGameId($gameId);
+            $serviceGameGenre->deleteGameGenres($gameId);
+            $serviceGameTitleHash->deleteByGameId($gameId);
+            $serviceGameTag->deleteGameTags($gameId);
             $serviceGameDeveloper->deleteByGameId($gameId);
             $serviceGamePublisher->deleteByGameId($gameId);
-            $this->getServiceGameDescription()->deleteByGameId($gameId);
             $this->getServiceGameImportRuleEshop()->deleteByGameId($gameId);
             $this->getServiceGameImportRuleWikipedia()->deleteByGameId($gameId);
             $serviceGame->deleteGame($gameId);
@@ -503,9 +390,8 @@ class GamesController extends Controller
     {
         $serviceUser = $this->getServiceUser();
         $serviceGame = $this->getServiceGame();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -515,33 +401,16 @@ class GamesController extends Controller
         $request = request();
 
         $gameId = $request->gameId;
-        $regionCode = $request->regionCode;
         if (!$gameId) {
             return response()->json(['error' => 'Missing data: gameId'], 400);
         }
-        if (!$regionCode) {
-            return response()->json(['error' => 'Missing data: regionCode'], 400);
-        }
 
-        $gameData = $serviceGame->find($gameId);
+        $game = $serviceGame->find($gameId);
         if (!$gameId) {
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
 
-        $gameReleaseDate = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
-        if (!$gameReleaseDate) {
-            return response()->json(['error' => 'gameReleaseDate not found for game: '.$gameId.'; region: '.$regionCode], 400);
-        }
-
-        $serviceGameReleaseDate->markAsReleased($gameReleaseDate);
-
-        if ($regionCode == 'eu') {
-            $gameOrig = $gameData;
-
-            $dateNow = new \DateTime('now');
-            $gameData->eu_released_on = $dateNow->format('Y-m-d H:i:s');
-            $gameData->save();
-        }
+        $serviceGame->markAsReleased($game);
 
         $data = array(
             'status' => 'OK'
@@ -551,12 +420,10 @@ class GamesController extends Controller
 
     public function updateEshopData()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
+        $serviceGame = $this->getServiceGame();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -566,12 +433,8 @@ class GamesController extends Controller
         $request = request();
 
         $gameId = $request->gameId;
-        $regionCode = $request->regionCode;
         if (!$gameId) {
             return response()->json(['error' => 'Missing data: gameId'], 400);
-        }
-        if (!$regionCode) {
-            return response()->json(['error' => 'Missing data: regionCode'], 400);
         }
 
         $game = $serviceGame->find($gameId);
@@ -593,12 +456,10 @@ class GamesController extends Controller
 
     public function redownloadPackshots()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
+        $serviceGame = $this->getServiceGame();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -608,12 +469,8 @@ class GamesController extends Controller
         $request = request();
 
         $gameId = $request->gameId;
-        $regionCode = $request->regionCode;
         if (!$gameId) {
             return response()->json(['error' => 'Missing data: gameId'], 400);
-        }
-        if (!$regionCode) {
-            return response()->json(['error' => 'Missing data: regionCode'], 400);
         }
 
         $game = $serviceGame->find($gameId);

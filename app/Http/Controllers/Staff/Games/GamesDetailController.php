@@ -4,21 +4,16 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
 
 class GamesDetailController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function show($gameId)
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceGame = $this->getServiceGame();
         $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameGenres = $this->getServiceGameGenre();
         $serviceGameTag = $this->getServiceGameTag();
         $serviceQuickReview = $this->getServiceQuickReview();
@@ -67,9 +62,6 @@ class GamesDetailController extends Controller
         $bindings['GamePublishers'] = $gamePublishers;
         $bindings['GameTags'] = $gameTags;
         $bindings['GameTitleHashes'] = $gameTitleHashes;
-
-        $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
-        $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();

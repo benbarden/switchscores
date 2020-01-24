@@ -82,33 +82,26 @@ class GamePublisherService
     }
 
     /**
-     * @param $region
      * @param $publisherId
      * @param bool $releasedOnly
      * @param null $limit
      * @return \Illuminate\Database\Query\Builder|\Illuminate\Support\Collection
      */
-    public function getGamesByPublisher($region, $publisherId, $releasedOnly = false, $limit = null)
+    public function getGamesByPublisher($publisherId, $releasedOnly = false, $limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
             ->join('partners', 'game_publishers.publisher_id', '=', 'partners.id')
             ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year',
                 'game_publishers.publisher_id',
                 'partners.name')
-            ->where('game_publishers.publisher_id', $publisherId)
-            ->where('game_release_dates.region', $region);
+            ->where('game_publishers.publisher_id', $publisherId);
 
         if ($releasedOnly) {
-            $games = $games->where('game_release_dates.is_released', '1');
+            $games = $games->where('games.eu_is_released', '1');
         }
 
-        $games = $games->orderBy('game_release_dates.release_date', 'desc');
+        $games = $games->orderBy('games.eu_release_date', 'desc');
 
         if ($limit) {
             $games = $games->limit($limit);

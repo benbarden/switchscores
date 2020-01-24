@@ -8,11 +8,14 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
-use Auth;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class PartnerReviewController extends Controller
 {
+    use SwitchServices;
+    use AuthUser;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -27,18 +30,14 @@ class PartnerReviewController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $userId = Auth::id();
-        $regionCode = Auth::user()->region;
-        $partnerId = Auth::user()->partner_id;
+        $userId = $this->getAuthId();
+        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
 
         $request = request();
 
-        $gameService = $serviceContainer->getGameService();
-        $partnerReviewService = $serviceContainer->getPartnerReviewService();
-        $reviewLinkService = $serviceContainer->getReviewLinkService();
+        $serviceGame = $this->getServiceGame();
+        $servicePartnerReview = $this->getServicePartnerReview();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         if ($request->isMethod('post')) {
 
@@ -57,10 +56,10 @@ class PartnerReviewController extends Controller
                     ->withInput();
             }
 
-            $validator->after(function ($validator) use ($reviewLinkService, $gameId, $partnerId, $itemDate) {
+            $validator->after(function ($validator) use ($serviceReviewLink, $gameId, $partnerId, $itemDate) {
 
                 // Check for an existing review
-                $reviewLinkExisting = $reviewLinkService->getByGameAndSite($gameId, $partnerId);
+                $reviewLinkExisting = $serviceReviewLink->getByGameAndSite($gameId, $partnerId);
                 if ($reviewLinkExisting) {
                     $validator->errors()->add('game_id', 'We already have a review from your site for this game. Please try a different game.');
                 }
@@ -80,7 +79,7 @@ class PartnerReviewController extends Controller
 
             // OK to proceed
 
-            $partnerReview = $partnerReviewService->create(
+            $partnerReview = $servicePartnerReview->create(
                 $userId, $partnerId, $gameId, $itemUrl, $itemDate, $itemRating
             );
 
@@ -94,23 +93,19 @@ class PartnerReviewController extends Controller
         $bindings['PageTitle'] = 'Add review';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         return view('user.partner-reviews.add', $bindings);
     }
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $urlMsg = \Request::get('msg');
 
-        $partnerReviewService = $serviceContainer->getPartnerReviewService();
+        $servicePartnerReview = $this->getServicePartnerReview();
 
-        $userId = Auth::id();
-        $userRegion = Auth::user()->region;
-        $partnerId = Auth::user()->partner_id;
+        $userId = $this->getAuthId();
+        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
 
         if ($partnerId == 0) {
             abort(403);
@@ -121,13 +116,11 @@ class PartnerReviewController extends Controller
         $bindings['TopTitle'] = 'Partner reviews';
         $bindings['PageTitle'] = 'Partner reviews';
 
-        $bindings['UserRegion'] = $userRegion;
-
         if ($urlMsg) {
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewPartnerList'] = $partnerReviewService->getAllBySite($partnerId);
+        $bindings['ReviewPartnerList'] = $servicePartnerReview->getAllBySite($partnerId);
 
         return view('user.partner-reviews.list', $bindings);
     }

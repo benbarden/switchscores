@@ -7,17 +7,13 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
-
-use Auth;
-
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class TagController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -115,7 +111,7 @@ class TagController extends Controller
         $serviceUser = $this->getServiceUser();
         $serviceGameTag = $this->getServiceGameTag();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -153,7 +149,7 @@ class TagController extends Controller
         $serviceUser = $this->getServiceUser();
         $serviceGameTag = $this->getServiceGameTag();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -191,7 +187,7 @@ class TagController extends Controller
         $serviceTag = $this->getServiceTag();
         $serviceUrl = $this->getServiceUrl();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {
@@ -225,7 +221,7 @@ class TagController extends Controller
         $serviceUser = $this->getServiceUser();
         $serviceTag = $this->getServiceTag();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {

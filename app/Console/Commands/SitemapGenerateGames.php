@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\GameService;
+use App\Traits\SwitchServices;
 
 class SitemapGenerateGames extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -51,10 +53,9 @@ class SitemapGenerateGames extends Command
         $timestamp = $now->format('c');
         $bindings['TimestampNow'] = $timestamp;
 
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
+        $serviceGame = $this->getServiceGame();
 
-        $bindings['GameList'] = $gameService->getAll('eu');
+        $bindings['GameList'] = $serviceGame->getAll();
 
         $xmlOutput = response()->view('sitemap.games', $bindings)->content();
         file_put_contents(storage_path().'/app/public/sitemaps/sitemap-games.xml', $xmlOutput);

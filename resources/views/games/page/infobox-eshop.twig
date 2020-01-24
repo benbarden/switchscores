@@ -22,30 +22,35 @@
             {% endif %}
         </td>
     </tr>
-    {% if ReleaseDates %}
-        {% for item in ReleaseDates %}
-            {% if item.region == 'eu' %}
-                {% set RegionDesc = 'Europe' %}
-            {% elseif item.region == 'us' %}
-                {% set RegionDesc = 'US' %}
-            {% elseif item.region == 'jp' %}
-                {% set RegionDesc = 'Japan' %}
-            {% else %}
-                {% set RegionDesc = item.region %}
-            {% endif %}
-            <tr>
-                <td>
-                    <span style="font-weight: bold;">{{ RegionDesc }} release</span>
-                </td>
-                <td>
-                    {% if item.release_date and item.is_released == 1 %}
-                        {{ item.release_date|date('jS M Y') }}
-                    {% else %}
-                        {{ item.upcoming_date }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
+    {% if GameData.eu_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Europe release</span>
+            </td>
+            <td>
+                {{ GameData.eu_release_date|date('jS M Y') }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if GameData.us_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">US release</span>
+            </td>
+            <td>
+                {{ GameData.us_release_date|date('jS M Y') }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if GameData.jp_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Japan release</span>
+            </td>
+            <td>
+                {{ GameData.jp_release_date|date('jS M Y') }}
+            </td>
+        </tr>
     {% endif %}
     {% if GameGenres|length > 0 %}
         <tr>

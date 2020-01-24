@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Traits\AuthUser;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use Auth;
-
-use App\Services\ServiceContainer;
-
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
 
 class CollectionController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -38,7 +34,7 @@ class CollectionController extends Controller
         $bindings['TopTitle'] = 'Collection';
         $bindings['PageTitle'] = 'Collection';
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
 
         $bindings['CollectionList'] = $serviceCollection->getByUser($userId);
@@ -52,16 +48,12 @@ class CollectionController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $gameService = $serviceContainer->getGameService();
-        $collectionService = $serviceContainer->getUserGamesCollectionService();
+        $serviceGame = $this->getServiceGame();
+        $serviceCollection = $this->getServiceUserGamesCollection();
 
         $request = request();
 
-        $userId = Auth::id();
-        $userRegionCode = Auth::user()->region;
+        $userId = $this->getAuthId();
 
         if ($request->isMethod('post')) {
 
@@ -71,7 +63,7 @@ class CollectionController extends Controller
             $isOngoing  = $request->is_ongoing  == 'on' ? 1 : 0;
             $isComplete = $request->is_complete == 'on' ? 1 : 0;
 
-            $collectionService->create(
+            $serviceCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
                 $isStarted, $isOngoing, $isComplete, $request->hours_played
             );
@@ -86,7 +78,7 @@ class CollectionController extends Controller
         $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $gameService->getAll($userRegionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
@@ -98,18 +90,14 @@ class CollectionController extends Controller
 
     public function edit($itemId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $gameService = $serviceContainer->getGameService();
-        $collectionService = $serviceContainer->getUserGamesCollectionService();
+        $serviceGame = $this->getServiceGame();
+        $serviceCollection = $this->getServiceUserGamesCollection();
 
         $request = request();
 
-        $userId = Auth::id();
-        $userRegionCode = Auth::user()->region;
+        $userId = $this->getAuthId();
 
-        $collectionData = $collectionService->find($itemId);
+        $collectionData = $serviceCollection->find($itemId);
         if (!$collectionData) abort(404);
 
         if ($collectionData->user_id != $userId) abort(403);
@@ -126,7 +114,7 @@ class CollectionController extends Controller
             $isOngoing  = $request->is_ongoing  == 'on' ? 1 : 0;
             $isComplete = $request->is_complete == 'on' ? 1 : 0;
 
-            $collectionService->edit(
+            $serviceCollection->edit(
                 $collectionData, $request->owned_from, $request->owned_type,
                 $isStarted, $isOngoing, $isComplete, $request->hours_played
             );
@@ -145,13 +133,15 @@ class CollectionController extends Controller
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $gameService->getAll($userRegionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         return view('user.collection.edit', $bindings);
     }
 
     public function delete()
     {
+        $serviceCollection = $this->getServiceUserGamesCollection();
+
         $request = request();
 
         $collectionItemId = $request->itemId;
@@ -160,22 +150,18 @@ class CollectionController extends Controller
             return response()->json(['error' => 'Missing data: itemId'], 400);
         }
 
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $collectionService = $serviceContainer->getUserGamesCollectionService();
-        $collectionItem = $collectionService->find($collectionItemId);
+        $collectionItem = $serviceCollection->find($collectionItemId);
 
         if (!$collectionItem) {
             return response()->json(['error' => 'Not found: '.$collectionItemId], 404);
         }
 
-        if ($collectionItem->user_id != Auth::id()) {
+        if ($collectionItem->user_id != $this->getAuthId()) {
             return response()->json(['error' => 'Collection item belongs to another user'], 400);
         }
 
-        // Delete from playlist
-        $collectionService->delete($collectionItemId);
+        // Delete from collection
+        $serviceCollection->delete($collectionItemId);
 
         $data = array(
             'status' => 'OK'

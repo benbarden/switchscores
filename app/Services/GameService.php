@@ -23,7 +23,6 @@ class GameService
      * @param $developer
      * @param $publisher
      * @param null $amazonUkLink
-     * @param null $overview
      * @param null $mediaFolder
      * @param null $videoUrl
      * @param null $boxartSquareUrl
@@ -34,7 +33,7 @@ class GameService
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $overview = null, $videoUrl = null,
+        $amazonUkLink = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
@@ -44,7 +43,6 @@ class GameService
             'link_title' => $linkTitle,
             'price_eshop' => $priceEshop,
             'players' => $players,
-            'overview' => $overview,
             'developer' => $developer,
             'publisher' => $publisher,
             'review_count' => 0,
@@ -60,7 +58,7 @@ class GameService
     public function edit(
         Game $game,
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $overview = null, $videoUrl = null,
+        $amazonUkLink = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null, $videoHeaderText = null
     )
@@ -70,7 +68,6 @@ class GameService
             'link_title' => $linkTitle,
             'price_eshop' => $priceEshop,
             'players' => $players,
-            'overview' => $overview,
             'developer' => $developer,
             'publisher' => $publisher,
             'amazon_uk_link' => $amazonUkLink,
@@ -94,6 +91,15 @@ class GameService
     public function clearOldPublisherField(Game $game)
     {
         $game->publisher = null;
+        $game->save();
+    }
+
+    public function markAsReleased(Game $game)
+    {
+        $dateNow = new \DateTime('now');
+
+        $game->eu_is_released = 1;
+        $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
         $game->save();
     }
 
@@ -158,16 +164,10 @@ class GameService
     // Stuff to sort through
     // ********************************************************** //
 
-    public function getAll($region)
+    public function getAll()
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', '=', $region)
+            ->select('games.*')
             ->orderBy('games.title', 'asc');
         $games = $games->get();
 
@@ -219,24 +219,17 @@ class GameService
     }
 
     /**
-     * @param $region
      * @param int $limit
      * @return mixed
      */
-    public function getActionListGamesForRelease($region, $limit = null)
+    public function getActionListGamesForRelease($limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 0)
-            ->whereRaw('DATE(game_release_dates.release_date) <= CURDATE()');
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->whereRaw('DATE(games.eu_release_date) <= CURDATE()');
 
-        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+        $games = $games->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -248,27 +241,19 @@ class GameService
     }
 
     /**
-     * @param $region
      * @param int $limit
      * @return mixed
      */
-    public function getEshopEuropeNoPackshots($region, $limit = null)
+    public function getEshopEuropeNoPackshots($limit = null)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->join('eshop_europe_games', 'games.eshop_europe_fs_id', '=', 'eshop_europe_games.fs_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
+            ->select('games.*')
             ->whereNotNull('games.eshop_europe_fs_id')
             ->where(function($q) {
                 $q->whereNull('boxart_square_url')->orWhereNull('boxart_header_image');
-            });
-
-        $games = $games->orderBy('game_release_dates.release_date', 'asc')
+            })
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -279,19 +264,12 @@ class GameService
         return $games;
     }
 
-    public function getWithoutBoxart($region)
+    public function getWithoutBoxart()
     {
         $gamesList = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
+            ->select('games.*')
             ->where('boxart_square_url', null)
-            ->orderBy('game_release_dates.release_date', 'asc')
-            //->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.id', 'asc');
         $gamesList = $gamesList->get();
 
@@ -304,7 +282,7 @@ class GameService
         return $gamesList;
     }
 
-    public function getByNullField($field, $region)
+    public function getByNullField($field)
     {
         $allowedFields = [
             'video_url', 'eshop_europe_fs_id'
@@ -315,16 +293,9 @@ class GameService
         }
 
         $gamesList = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
+            ->select('games.*')
             ->where($field, null)
-            ->orderBy('game_release_dates.release_date', 'asc')
-            //->orderBy('game_release_dates.upcoming_date', 'asc')
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.id', 'asc');
         $gamesList = $gamesList->get();
 
@@ -335,17 +306,15 @@ class GameService
     {
         $gameList = null;
 
-        $regionCode = \Request::get('regionCode');
-
         switch ($filter) {
             case 'no-boxart':
-                $gameList = $this->getWithoutBoxart($regionCode);
+                $gameList = $this->getWithoutBoxart();
                 break;
             case 'no-eshop-europe-link':
-                $gameList = $this->getByNullField('eshop_europe_fs_id', $regionCode);
+                $gameList = $this->getByNullField('eshop_europe_fs_id');
                 break;
             case 'no-video-url':
-                $gameList = $this->getByNullField('video_url', $regionCode);
+                $gameList = $this->getByNullField('video_url');
                 break;
             case 'no-amazon-uk-link':
                 $gameList = $this->getWithoutAmazonUkLink();

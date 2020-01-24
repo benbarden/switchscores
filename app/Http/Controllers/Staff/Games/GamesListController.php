@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
 
 class GamesListController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function recentlyAdded()
     {
@@ -29,7 +27,6 @@ class GamesListController extends Controller
 
     public function upcomingGames()
     {
-        $regionCode = $this->getRegionCode();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
@@ -37,7 +34,7 @@ class GamesListController extends Controller
         $bindings['TopTitle'] = 'Games - Upcoming';
         $bindings['PageTitle'] = 'Upcoming games';
 
-        $bindings['GameList'] = $serviceGameReleaseDate->getUpcoming($regionCode);
+        $bindings['GameList'] = $serviceGameReleaseDate->getUpcoming();
         $bindings['jsInitialSort'] = "[ 3, 'asc']";
 
         return view('staff.games.list.standard-view', $bindings);
@@ -45,24 +42,17 @@ class GamesListController extends Controller
 
     public function zzShowList($report = null)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-        $regionOverride = \Request::get('regionOverride');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceGameGenre = $serviceContainer->getGameGenreService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceGameGenre = $this->getServiceGameGenre();
+        $serviceGameTag = $this->getServiceGameTag();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Admin - Games';
-        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
-
+        $bindings['PageTitle'] = 'Games';
 
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
 
@@ -76,39 +66,27 @@ class GamesListController extends Controller
 
         if ($report == null) {
             $bindings['ActiveNav'] = 'all';
-            $gameList = $serviceGame->getAll($regionCode);
+            $gameList = $serviceGame->getAll();
             $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'released':
-                    $gameList = $serviceGameReleaseDate->getReleased($regionCode);
+                    $gameList = $serviceGameReleaseDate->getReleased();
                     $jsInitialSort = "[ 3, 'desc'], [ 1, 'asc']";
                     break;
                 case 'unreleased':
-                    $gameList = $serviceGameReleaseDate->getUnreleased($regionCode);
+                    $gameList = $serviceGameReleaseDate->getUnreleased();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Action lists
                 case 'action-list-games-for-release':
-                    if ($regionOverride) {
-                        $regionCode = $regionOverride;
-                        $bindings['PageTitle'] = 'Games (Region: '.$regionCode.')';
-                    }
-                    $gameList = $serviceGame->getActionListGamesForRelease($regionCode);
+                    $gameList = $serviceGame->getActionListGamesForRelease();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Upcoming
                 case 'upcoming':
-                    $gameList = $serviceGameReleaseDate->getUpcoming($regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-2018-with-dates':
-                    $gameList = $serviceGameReleaseDate->getUpcomingYearWithDates(2018, $regionCode);
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                case 'upcoming-beyond':
-                    $gameList = $serviceGameReleaseDate->getUpcomingFuture(2018, $regionCode);
+                    $gameList = $serviceGameReleaseDate->getUpcoming();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Developers and Publishers
@@ -130,19 +108,19 @@ class GamesListController extends Controller
                     break;
                 // Missing data
                 case 'no-genre':
-                    $gameList = $serviceGameGenre->getGamesWithoutGenres($regionCode);
+                    $gameList = $serviceGameGenre->getGamesWithoutGenres();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'no-eshop-europe-link':
-                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id', $regionCode);
+                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id');
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-boxart':
-                    $gameList = $serviceGame->getWithoutBoxart($regionCode);
+                    $gameList = $serviceGame->getWithoutBoxart();
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-video-url':
-                    $gameList = $serviceGame->getByNullField('video_url', $regionCode);
+                    $gameList = $serviceGame->getByNullField('video_url');
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
                     break;
                 case 'no-amazon-uk-link':
@@ -156,8 +134,6 @@ class GamesListController extends Controller
 
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = $jsInitialSort;
-
-        $bindings['RegionCode'] = $regionCode;
 
         return view('admin.games.list', $bindings);
     }

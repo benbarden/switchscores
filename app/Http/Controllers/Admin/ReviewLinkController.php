@@ -7,14 +7,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
-
 use App\ReviewLink;
 
 use App\Events\ReviewLinkCreated;
 
+use App\Traits\SwitchServices;
+
 class ReviewLinkController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -29,11 +31,8 @@ class ReviewLinkController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $servicePartner = $this->getServicePartner();
 
         $bindings = [];
 
@@ -65,17 +64,12 @@ class ReviewLinkController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
         $request = request();
 
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceReviewStats = $serviceContainer->getReviewStatsService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceGame = $this->getServiceGame();
+        $serviceReviewStats = $this->getServiceReviewStats();
+        $servicePartner = $this->getServicePartner();
 
         if ($request->isMethod('post')) {
 
@@ -111,7 +105,7 @@ class ReviewLinkController extends Controller
         $bindings['PageTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
@@ -120,15 +114,10 @@ class ReviewLinkController extends Controller
 
     public function edit($linkId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceReviewStats = $serviceContainer->getReviewStatsService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $servicePartner = $serviceContainer->getPartnerService();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceGame = $this->getServiceGame();
+        $serviceReviewStats = $this->getServiceReviewStats();
+        $servicePartner = $this->getServicePartner();
 
         $reviewLinkData = $serviceReviewLink->find($linkId);
         if (!$reviewLinkData) abort(404);
@@ -177,7 +166,7 @@ class ReviewLinkController extends Controller
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 

@@ -4,22 +4,18 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
 use App\PartnerReview;
 use App\QuickReview;
 
+use App\Traits\SwitchServices;
+
 class DashboardController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function show()
     {
         $pageTitle = 'Reviews dashboard';
-
-        $regionCode = $this->getRegionCode();
 
         $serviceFeedItemReview = $this->getServiceFeedItemReview();
         $servicePartnerReview = $this->getServicePartnerReview();
@@ -42,7 +38,7 @@ class DashboardController extends Controller
         // Information
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
         $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
-        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount($regionCode);
+        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;

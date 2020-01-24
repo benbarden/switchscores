@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class Developer
 {
+    use SwitchServices;
+
     public function addGameDeveloper()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $request = request();
 
         $gameId = $request->gameId;
@@ -23,9 +22,9 @@ class Developer
             return response()->json(['error' => 'Missing data: developerId'], 400);
         }
 
-        $serviceGame = $serviceContainer->getGameService();
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
+        $serviceGame = $this->getServiceGame();
+        $servicePartner = $this->getServicePartner();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         // Validation
         $game = $serviceGame->find($gameId);

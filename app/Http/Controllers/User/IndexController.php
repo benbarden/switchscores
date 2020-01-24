@@ -3,39 +3,30 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
-use Auth;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class IndexController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
 
     public function show()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
-        $serviceCollection = $serviceContainer->getUserGamesCollectionService();
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $servicePartner = $this->getServicePartner();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceCollection = $this->getServiceUserGamesCollection();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
 
-        $bindings['UserRegion'] = Auth::user()->region;
-
         $siteRole = 'member'; // default
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
-        $authUser = Auth::user();
+        $authUser = $this->getValidUser($this->getServiceUser());
 
         $onPageTitle = 'Member dashboard';
 
@@ -95,8 +86,8 @@ class IndexController extends Controller
                     $onPageTitle = 'Games company dashboard: '.$partnerData->name;
 
                     // Recent games
-                    $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, false, 5);
-                    $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, false, 5);
+                    $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, false, 5);
+                    $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, false, 5);
                     $bindings['GameDevList'] = $gameDevList;
                     $bindings['GamePubList'] = $gamePubList;
 

@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\NewsService;
+use App\Traits\SwitchServices;
 
 class SitemapGenerateNews extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -51,10 +53,9 @@ class SitemapGenerateNews extends Command
         $timestamp = $now->format('c');
         $bindings['TimestampNow'] = $timestamp;
 
-        $newsService = resolve('Services\NewsService');
-        /* @var NewsService $newsService */
+        $serviceNews = $this->getServiceNews();
 
-        $bindings['NewsList'] = $newsService->getAll();
+        $bindings['NewsList'] = $serviceNews->getAll();
 
         $xmlOutput = response()->view('sitemap.news', $bindings)->content();
         file_put_contents(storage_path().'/app/public/sitemaps/sitemap-news.xml', $xmlOutput);

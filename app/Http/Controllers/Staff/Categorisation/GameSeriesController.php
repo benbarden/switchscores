@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
-use Auth;
-
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class GameSeriesController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
 
     public function showList()
     {
@@ -34,7 +32,7 @@ class GameSeriesController extends Controller
         $serviceUser = $this->getServiceUser();
         $serviceUrl = $this->getServiceUrl();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $user = $serviceUser->find($userId);
         if (!$user) {

@@ -22,12 +22,10 @@
                         {% endif %}
                     </td>
                     <td style="text-align: left;">
-                        {% if item.is_released == 0 %}
+                        {% if item.eu_is_released == 0 %}
                             <span class="label label-info">Upcoming</span>
-                            &nbsp;
-                        {% elseif DateHelper.isNew(item.release_date) %}
+                        {% elseif DateHelper.isNew(item.eu_release_date) %}
                             <span class="label label-primary">New</span>
-                            &nbsp;
                         {% endif %}
                         <a href="{{ LinkHelper.gameShow(item) }}">
                             {{ item.title }}
@@ -37,17 +35,9 @@
                         {% if item.video_url %}
                             <span class="glyphicon glyphicon-facetime-video" aria-hidden="true" title="Game has a video"></span>
                         {% endif %}
-                        &nbsp;
-                        {% if item.image_count > 0 %}
-                            <span class="glyphicon glyphicon-picture" aria-hidden="true" title="Game has images"></span>
-                        {% endif %}
                     </td>
                     <td style="text-align: left;">
-                        {% if item.release_date is not null %}
-                            {{ item.release_date }}
-                        {% else %}
-                            {{ item.upcoming_date }}
-                        {% endif %}
+                        {{ item.eu_release_date }}
                     </td>
                     <td style="text-align: right;">
                         {% if item.price_eshop %}

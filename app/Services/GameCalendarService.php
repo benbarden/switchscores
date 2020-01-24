@@ -16,16 +16,15 @@ class GameCalendarService
     }
 
     /**
-     * @param $region
      * @param $year
      * @param $month
      * @return GameCalendarStat
      */
-    public function getStat($region, $year, $month)
+    public function getStat($year, $month)
     {
         $monthName = $year.'-'.$month;
         $gameCalendarStat = GameCalendarStat::
-            where('region', $region)
+            where('region', 'eu')
             ->where('month_name', $monthName)
             ->get();
 
@@ -70,24 +69,17 @@ class GameCalendarService
     }
 
     /**
-     * @param $region
      * @param $year
      * @param $month
      * @return mixed
      */
-    public function getList($region, $year, $month)
+    public function getList($year, $month)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->whereYear('game_release_dates.release_date', '=', $year)
-            ->whereMonth('game_release_dates.release_date', '=', $month)
-            ->orderBy('game_release_dates.release_date', 'asc')
+            ->select('games.*')
+            ->whereYear('games.eu_release_date', '=', $year)
+            ->whereMonth('games.eu_release_date', '=', $month)
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         $games = $games->get();
@@ -95,25 +87,18 @@ class GameCalendarService
     }
 
     /**
-     * @param $region
      * @param $year
      * @param $month
      * @return mixed
      */
-    public function getListCount($region, $year, $month)
+    public function getListCount($year, $month)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year')
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', 1)
-            ->whereYear('game_release_dates.release_date', '=', $year)
-            ->whereMonth('game_release_dates.release_date', '=', $month)
-            ->orderBy('game_release_dates.release_date', 'asc')
+            ->select('games.*')
+            ->where('games.eu_is_released', 1)
+            ->whereYear('games.eu_release_date', '=', $year)
+            ->whereMonth('games.eu_release_date', '=', $month)
+            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
         $games = $games->count();

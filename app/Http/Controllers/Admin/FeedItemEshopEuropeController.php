@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Auth;
-
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
 
 use App\Factories\GameDirectorFactory;
 
@@ -19,16 +16,17 @@ use App\Events\GameCreated;
 use App\Factories\EshopEuropeUpdateGameFactory;
 use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 
+use App\Traits\SwitchServices;
+
 class FeedItemEshopEuropeController extends Controller
 {
+    use SwitchServices;
+
     public function showList($report = null)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $serviceEshopGame = $serviceContainer->getEshopEuropeGameService();
+        $serviceEshopGame = $this->getServiceEshopEuropeGame();
 
         $jsInitialSort = "[ 1, 'asc']";
         if ($report == null) {
@@ -59,12 +57,9 @@ class FeedItemEshopEuropeController extends Controller
 
     public function view($itemId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $serviceEshopGame = $serviceContainer->getEshopEuropeGameService();
+        $serviceEshopGame = $this->getServiceEshopEuropeGame();
         $gameData = $serviceEshopGame->getByFsId($itemId);
         if (!$gameData) abort(404);
 
@@ -78,16 +73,13 @@ class FeedItemEshopEuropeController extends Controller
 
     public function addGame($itemId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
         $customErrors = [];
 
-        $serviceEshopGame = $serviceContainer->getEshopEuropeGameService();
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
+        $serviceEshopGame = $this->getServiceEshopEuropeGame();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceUrl = new UrlService();
 
         $eshopGameData = $serviceEshopGame->getByFsId($itemId);

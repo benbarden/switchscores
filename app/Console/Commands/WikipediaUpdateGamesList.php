@@ -5,27 +5,20 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Game;
-use App\GameTitleHash;
-use App\FeedItemGame;
 use App\GameImportRuleWikipedia;
 
 use App\Events\GameCreated;
 
 use App\Services\UrlService;
-use App\Services\GameService;
-use App\Services\GameReleaseDateService;
-use App\Services\GameTitleHashService;
-use App\Services\FeedItemGameService;
 
 use App\Construction\Game\GameDirector;
 use App\Construction\Game\GameBuilder;
 
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class WikipediaUpdateGamesList extends Command
 {
-    use WosServices;
+    use SwitchServices;
 
     /**
      * The name and signature of the console command.
@@ -65,16 +58,11 @@ class WikipediaUpdateGamesList extends Command
         $gameDirector = new GameDirector();
         $gameBuilder = new GameBuilder();
 
-        $feedItemGameService = resolve('Services\FeedItemGameService');
-        /* @var FeedItemGameService $feedItemGameService */
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
-        $gameTitleHashService = resolve('Services\GameTitleHashService');
-        /* @var GameTitleHashService $gameTitleHashService */
-        $gameReleaseDateService = resolve('Services\GameReleaseDateService');
-        /* @var GameReleaseDateService $gameReleaseDateService */
+        $serviceGame = $this->getServiceGame();
+        $serviceFeedItemGame = $this->getServiceFeedItemGame();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
-        $feedItemsList = $feedItemGameService->getForProcessing();
+        $feedItemsList = $serviceFeedItemGame->getForProcessing();
 
         if (count($feedItemsList) == 0) {
             $logger->info('No items found - aborting');
@@ -90,7 +78,7 @@ class WikipediaUpdateGamesList extends Command
             if ($gameId) {
 
                 // Existing game
-                $game = $gameService->find($gameId);
+                $game = $serviceGame->find($gameId);
                 if (!$game) {
                     $logger->info('Game not found: '.$gameId.' ; skipping');
                     continue;
@@ -132,55 +120,28 @@ class WikipediaUpdateGamesList extends Command
                     }
                 }
 
-                // Release dates
-                $gameReleaseDates = $gameReleaseDateService->getByGame($gameId);
-                if (!$gameReleaseDates) {
-                    $logger->info('No release dates for game: '.$gameId.' ; skipping');
-                    continue;
+                // Europe release date
+                if (!$gameImportRule->shouldIgnoreEuropeDates()) {
+                    if ($game->eu_release_date != $feedItem->release_date_eu) {
+                        $game->eu_release_date = $feedItem->release_date_eu;
+                        $gameChanged = true;
+                    }
                 }
 
-                foreach ($gameReleaseDates as $gameReleaseDate) {
-
-                    $region = $gameReleaseDate->region;
-
-                    $skipDate = false;
-
-                    switch ($region) {
-                        case 'eu':
-                            if ($gameImportRule->shouldIgnoreEuropeDates()) $skipDate = true;
-                            break;
-                        case 'us':
-                            if ($gameImportRule->shouldIgnoreUSDates()) $skipDate = true;
-                            break;
-                        case 'jp':
-                            if ($gameImportRule->shouldIgnoreJPDates()) $skipDate = true;
-                            break;
+                // US release date
+                if (!$gameImportRule->shouldIgnoreUSDates()) {
+                    if ($game->us_release_date != $feedItem->release_date_us) {
+                        $game->us_release_date = $feedItem->release_date_us;
+                        $gameChanged = true;
                     }
+                }
 
-                    if (!$skipDate) {
-
-                        $fieldReleaseDate = 'release_date_'.$region;
-                        $fieldUpcomingDate = 'upcoming_date_'.$region;
-                        $fieldIsReleased = 'is_released_'.$region;
-
-                        $gameReleaseDateChanged = false;
-                        if ($gameReleaseDate->release_date != $feedItem->{$fieldReleaseDate}) {
-                            $gameReleaseDate->release_date = $feedItem->{$fieldReleaseDate};
-                            $gameReleaseDate->release_year = $gameReleaseDateService->getReleaseYear($gameReleaseDate->release_date);
-                            $gameReleaseDateChanged = true;
-                        }
-                        if ($gameReleaseDate->upcoming_date != $feedItem->{$fieldUpcomingDate}) {
-                            $gameReleaseDate->upcoming_date = $feedItem->{$fieldUpcomingDate};
-                            $gameReleaseDateChanged = true;
-                        }
-
-                        if ($gameReleaseDateChanged) {
-                            $logger->info('Saving updates to region: '.$region);
-                            $gameReleaseDate->save();
-                        }
-
+                // Japan release date
+                if (!$gameImportRule->shouldIgnoreJPDates()) {
+                    if ($game->jp_release_date != $feedItem->release_date_jp) {
+                        $game->jp_release_date = $feedItem->release_date_jp;
+                        $gameChanged = true;
                     }
-
                 }
 
                 if ($gameChanged) {
@@ -202,8 +163,8 @@ class WikipediaUpdateGamesList extends Command
 
                 $title = $feedItem->item_title;
 
-                $titleHash = $gameTitleHashService->generateHash($title);
-                $gameTitleHash = $gameTitleHashService->getByHash($titleHash);
+                $titleHash = $serviceGameTitleHash->generateHash($title);
+                $gameTitleHash = $serviceGameTitleHash->getByHash($titleHash);
                 if ($gameTitleHash) {
                     $logger->warn('Title hash already exists - cannot create game: '.$title.'; skipping');
                     continue;
@@ -230,6 +191,9 @@ class WikipediaUpdateGamesList extends Command
                     'link_title' => $linkTitle,
                     'developer' => $developers,
                     'publisher' => $publishers,
+                    'eu_release_date' => $feedItem->release_date_eu,
+                    'us_release_date' => $feedItem->release_date_us,
+                    'jp_release_date' => $feedItem->release_date_jp,
                 ];
                 // Check price_eshop and players are both set to null
                 $gameDirector->buildNewGame($newGameParams);
@@ -238,23 +202,7 @@ class WikipediaUpdateGamesList extends Command
                 $gameId = $game->id;
 
                 // Create title hash
-                $gameTitleHashService->create($title, $titleHash, $gameId);
-
-                // Release dates
-                $regions = ['eu', 'us', 'jp'];
-                foreach ($regions as $region) {
-
-                    $fieldReleaseDate = 'release_date_'.$region;
-                    $fieldUpcomingDate = 'upcoming_date_'.$region;
-                    $fieldIsReleased = 'is_released_'.$region;
-
-                    $releaseDateValue = $feedItem->{$fieldReleaseDate};
-                    $upcomingDateValue = $feedItem->{$fieldUpcomingDate};
-                    $isReleasedValue = $feedItem->{$fieldIsReleased} == 1 ? 'on' : 'off';
-
-                    $gameReleaseDateService->createGameReleaseDate($gameId, $region, $releaseDateValue, $isReleasedValue, $upcomingDateValue);
-
-                }
+                $serviceGameTitleHash->create($title, $titleHash, $gameId);
 
                 // Wrapping up
                 $logger->info('Marking feed item as complete');

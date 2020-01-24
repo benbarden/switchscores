@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
-use Auth;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class ReviewLinkController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
+    use AuthUser;
 
     public function landing($report = '')
     {
@@ -20,11 +19,7 @@ class ReviewLinkController extends Controller
 
         $bindings = [];
 
-        $bindings['UserRegion'] = Auth::user()->region;
-
-        $userId = Auth::id();
-
-        $authUser = Auth::user();
+        $authUser = $this->getValidUser($this->getServiceUser());
 
         $partnerId = $authUser->partner_id;
 

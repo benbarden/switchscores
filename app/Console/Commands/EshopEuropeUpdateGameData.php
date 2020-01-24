@@ -5,15 +5,13 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\WosServices;
-
-use App\Services\GameService;
-use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\Europe\UpdateGameData;
+
+use App\Traits\SwitchServices;
 
 class EshopEuropeUpdateGameData extends Command
 {
-    use WosServices;
+    use SwitchServices;
 
     /**
      * The name and signature of the console command.
@@ -49,12 +47,8 @@ class EshopEuropeUpdateGameData extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
-        $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
-        /* @var EshopEuropeGameService $eshopEuropeGameService */
-
-        $serviceUpdateGameData = new UpdateGameData();
+        $serviceGame = $this->getServiceGame();
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
 
         $logger->info('Clearing previous alerts...');
 
@@ -62,7 +56,7 @@ class EshopEuropeUpdateGameData extends Command
 
         $logger->info('Loading data...');
 
-        $eshopList = $eshopEuropeGameService->getAllWithLink();
+        $eshopList = $serviceEshopEuropeGame->getAllWithLink();
 
         foreach ($eshopList as $eshopItem) {
 
@@ -70,7 +64,7 @@ class EshopEuropeUpdateGameData extends Command
             $eshopTitle = $eshopItem->title;
             $eshopUrl = $eshopItem->url;
 
-            $game = $gameService->getByFsId('eu', $fsId);
+            $game = $serviceGame->getByFsId('eu', $fsId);
 
             if (!$game) {
                 $logger->error($eshopTitle.' - no game linked to fs_id: '.$fsId.'; skipping');
@@ -84,13 +78,6 @@ class EshopEuropeUpdateGameData extends Command
                 continue;
             }
 
-            // GAME CORE DATA
-            $gameReleaseDate = $game->regionReleaseDate('eu');
-            if (!$gameReleaseDate) {
-                $logger->error($eshopTitle.' - No EU gameReleaseDate found for this record. Skipping');
-                continue;
-            }
-
             // IMPORT RULES
             $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
 
@@ -98,7 +85,6 @@ class EshopEuropeUpdateGameData extends Command
             $serviceUpdateGameData = new UpdateGameData();
             $serviceUpdateGameData->setEshopItem($eshopItem);
             $serviceUpdateGameData->setGame($game);
-            $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
             if ($gameImportRule) {
                 $serviceUpdateGameData->setGameImportRule($gameImportRule);
             }
@@ -144,14 +130,7 @@ class EshopEuropeUpdateGameData extends Command
             // ***************************************************** //
 
             if ($serviceUpdateGameData->hasGameChanged()) {
-
                 $game->save();
-
-            }
-
-            if ($serviceUpdateGameData->hasGameReleaseDateChanged()) {
-                $gameReleaseDate = $serviceUpdateGameData->getGameReleaseDate();
-                $gameReleaseDate->save();
             }
         }
     }

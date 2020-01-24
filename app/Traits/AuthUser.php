@@ -9,16 +9,19 @@ use App\User;
 
 trait AuthUser
 {
+    public function getAuthId()
+    {
+        return Auth::id();
+    }
+
     /**
-     * @param UserService $userService
+     * @param UserService $serviceUser
      * @return User
      */
-    public function getValidUser(UserService $userService)
+    public function getValidUser(UserService $serviceUser)
     {
         $userId = Auth::id();
 
-        $user = $userService->find($userId);
-
-        return $user;
+        return $serviceUser->find($userId);
     }
 }

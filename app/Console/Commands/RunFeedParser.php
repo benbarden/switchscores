@@ -5,19 +5,16 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\WosServices;
-
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
-use App\Services\FeedItemReviewService;
-use App\Services\GameService;
-use App\Services\PartnerService;
 
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
+use App\Traits\SwitchServices;
+
 class RunFeedParser extends Command
 {
-    use WosServices;
+    use SwitchServices;
 
     /**
      * The name and signature of the console command.
@@ -55,20 +52,12 @@ class RunFeedParser extends Command
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
-
-
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $feedItemReviewService */
-
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
-
-        $partnerService = resolve('Services\PartnerService');
-        /* @var PartnerService $partnerService */
+        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $servicePartner = $this->getServicePartner();
 
         $serviceTitleMatch = new ServiceTitleMatch();
 
-        $feedItems = $feedItemReviewService->getItemsToParse();
+        $feedItems = $serviceFeedItemReview->getItemsToParse();
 
         if (!$feedItems) {
             $logger->info('No items to parse. Aborting.');
@@ -85,7 +74,7 @@ class RunFeedParser extends Command
             $itemUrl = $feedItem->item_url;
             $itemTitle = $feedItem->item_title;
 
-            $reviewSite = $partnerService->find($siteId);
+            $reviewSite = $servicePartner->find($siteId);
             if (!$reviewSite) {
                 $logger->error('Cannot find review site! ['.$siteId.']');
                 continue;
@@ -134,7 +123,6 @@ class RunFeedParser extends Command
                 $logger->info('Checking for matches: '.var_export($titleMatches, true));
 
                 // Can we find a game from this title?
-                //$game = $gameService->getByTitle($parsedTitle);
                 $gameTitleHash = $serviceGameTitleHash->getByTitleGroup($titleMatches);
                 if ($gameTitleHash) {
                     $feedItem->game_id = $gameTitleHash->game_id;

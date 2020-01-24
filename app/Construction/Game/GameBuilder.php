@@ -43,6 +43,36 @@ class GameBuilder
         return $this;
     }
 
+    public function setEuReleaseDate($releaseDate): GameBuilder
+    {
+        $this->game->eu_release_date = $releaseDate;
+        return $this;
+    }
+
+    public function setUsReleaseDate($releaseDate): GameBuilder
+    {
+        $this->game->us_release_date = $releaseDate;
+        return $this;
+    }
+
+    public function setJpReleaseDate($releaseDate): GameBuilder
+    {
+        $this->game->jp_release_date = $releaseDate;
+        return $this;
+    }
+
+    public function setEuIsReleased($isReleased): GameBuilder
+    {
+        $this->game->eu_is_released = $isReleased;
+        return $this;
+    }
+
+    public function setReleaseYear($releaseYear): GameBuilder
+    {
+        $this->game->release_year = $releaseYear;
+        return $this;
+    }
+
     public function setPriceEshop($priceEshop): GameBuilder
     {
         $this->game->price_eshop = $priceEshop;
@@ -58,12 +88,6 @@ class GameBuilder
     public function setEuReleasedOn($euReleasedOn): GameBuilder
     {
         $this->game->eu_released_on = $euReleasedOn;
-        return $this;
-    }
-
-    public function setOverview($overview): GameBuilder
-    {
-        $this->game->overview = $overview;
         return $this;
     }
 
@@ -136,12 +160,6 @@ class GameBuilder
     public function setRatingAvg($ratingAvg): GameBuilder
     {
         $this->game->rating_avg = $ratingAvg;
-        return $this;
-    }
-
-    public function setImageCount($imageCount): GameBuilder
-    {
-        $this->game->image_count = $imageCount;
         return $this;
     }
 

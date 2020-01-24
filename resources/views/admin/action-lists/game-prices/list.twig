@@ -12,7 +12,7 @@
                 <th>Title</th>
                 <th class="text-center">eShop: EU</th>
                 <th class="text-left">Price</th>
-                <th class="text-left">Release info</th>
+                <th class="text-left">EU release date</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -38,11 +38,9 @@
                     <td class="text-left">
                         {{ item.price_eshop }}
                     </td>
-                    <td class="text-left">
+                    <td class="text-center">
                         <small>
-                        EU: {{ item.regionReleaseDate('eu').upcoming_date }}<br>
-                        US: {{ item.regionReleaseDate('us').upcoming_date }}<br>
-                        JP: {{ item.regionReleaseDate('jp').upcoming_date }}
+                            {{ item.eu_release_date }}
                         </small>
                     </td>
                     <td class="text-center">
@@ -58,7 +56,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    var regionCode = '{{ RegionCode }}';
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],

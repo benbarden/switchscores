@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\Eshop\LoaderEurope;
 
+use App\Traits\SwitchServices;
+
 class EshopEuropeImportData extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -73,11 +77,6 @@ class EshopEuropeImportData extends Command
             $eshopLoader->importToDb();
             $importedItemCount = $eshopLoader->getImportedCount();
             $logger->info('Complete! Imported '.$importedItemCount.' item(s).');
-
-            $channel = env('SLACK_ALERT_CHANNEL', '');
-            if ($channel) {
-                \Slack::to('#'.$channel)->send('EshopEuropeImportData: imported '.$importedItemCount.' records');
-            }
 
         } catch (\Exception $e) {
             $logger->error($e->getMessage());

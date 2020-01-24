@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\GameCalendarService;
+use App\Traits\SwitchServices;
 
 class SitemapGenerateTopRated extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -44,9 +46,6 @@ class SitemapGenerateTopRated extends Command
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
-
-        $serviceCalendar = resolve('Services\GameCalendarService');
-        /* @var GameCalendarService $serviceCalendar */
 
         $bindings = [];
 

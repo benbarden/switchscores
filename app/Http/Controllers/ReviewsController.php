@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\WosServices;
-
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class ReviewsController extends Controller
 {
-    use WosServices;
+    use SwitchServices;
 
     public function landing()
     {
@@ -99,13 +97,10 @@ class ReviewsController extends Controller
 
     public function reviewSite($linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $servicePartner = $this->getServicePartner();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         $reviewSite = $servicePartner->getByLinkTitle($linkTitle);
 

@@ -15,7 +15,7 @@
                 <th class="text-right">#</th>
                 <th>Title</th>
                 <th class="text-center">eShop: EU</th>
-                <th>Release date</th>
+                <th>Release date (EU)</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -38,12 +38,8 @@
                             -
                         {% endif %}
                     </td>
-                    <td>
-                        {% if item.release_date %}
-                        {{ item.release_date }}
-                        {% else %}
-                        {{ item.upcoming_date }}
-                        {% endif %}
+                    <td class="text-center">
+                        {{ item.eu_release_date }}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a> :

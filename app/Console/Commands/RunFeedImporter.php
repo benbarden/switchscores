@@ -5,23 +5,23 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Partner;
-use App\Services\PartnerService;
-use App\Services\FeedItemReviewService;
-use App\Services\Feed\Importer;
-use App\Services\UrlService;
-use App\FeedItemReview;
-
 use Carbon\Carbon;
 
+use App\FeedItemReview;
+use App\Services\Feed\Importer;
+use App\Services\UrlService;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
 use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 
+use App\Traits\SwitchServices;
+
 class RunFeedImporter extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -59,11 +59,10 @@ class RunFeedImporter extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $partnerService = resolve('Services\PartnerService');
-        /* @var PartnerService $partnerService */
-        $serviceFeedItemReview = resolve('Services\FeedItemReviewService');
-        /* @var FeedItemReviewService $serviceFeedItemReview */
-        $reviewSites = $partnerService->getReviewSiteFeedUrls();
+        $servicePartner = $this->getServicePartner();
+        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+
+        $reviewSites = $servicePartner->getReviewSiteFeedUrls();
 
         if (!$reviewSites) {
             $logger->info('No sites found with feed URLs. Aborting.');
@@ -129,15 +128,15 @@ class RunFeedImporter extends Command
 
                         } catch (AlreadyImported $e) {
 
-                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+                            //$logger->error('Got error: '.$e->getMessage().'; skipping');
 
                         } catch (HistoricEntry $e) {
 
-                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+                            //$logger->error('Got error: '.$e->getMessage().'; skipping');
 
                         } catch (FeedUrlPrefixNotMatched $e) {
 
-                            $logger->error('Got error: '.$e->getMessage().'; skipping');
+                            //$logger->error('Got error: '.$e->getMessage().'; skipping');
 
                         }
 

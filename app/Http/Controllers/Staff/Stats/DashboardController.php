@@ -4,19 +4,15 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class DashboardController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function show()
     {
         $pageTitle = 'Stats dashboard';
-
-        $regionCode = $this->getRegionCode();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
@@ -27,8 +23,8 @@ class DashboardController extends Controller
         $bindings['PageTitle'] = $pageTitle;
 
         $bindings['TotalGameCount'] = $serviceGame->getCount();
-        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased($regionCode);
-        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming($regionCode);
+        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
+        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 
         return view('staff.stats.dashboard', $bindings);
     }

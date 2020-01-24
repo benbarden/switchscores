@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
 
 class GamesBrowseController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function byTitleLanding()
     {
@@ -26,11 +24,9 @@ class GamesBrowseController extends Controller
 
     public function byTitlePage($letter)
     {
-        $regionCode = $this->getRegionCode();
-
         $bindings = [];
 
-        $gamesList = $this->getServiceGameReleaseDate()->getReleasedByLetter($regionCode, $letter);
+        $gamesList = $this->getServiceGameReleaseDate()->getReleasedByLetter($letter);
 
         $bindings['GamesList'] = $gamesList;
         $bindings['GameLetter'] = $letter;
@@ -55,8 +51,6 @@ class GamesBrowseController extends Controller
 
     public function byPrimaryTypePage($primaryType)
     {
-        $regionCode = $this->getRegionCode();
-
         $bindings = [];
 
         $primaryType = $this->getServiceGamePrimaryType()->getByLinkTitle($primaryType);
@@ -65,7 +59,7 @@ class GamesBrowseController extends Controller
         $primaryTypeId = $primaryType->id;
         $primaryTypeName = $primaryType->primary_type;
 
-        $gameList = $this->getServiceGameReleaseDate()->getReleasedByPrimaryType($primaryTypeId, $regionCode);
+        $gameList = $this->getServiceGameReleaseDate()->getReleasedByPrimaryType($primaryTypeId);
 
         $bindings['PrimaryType'] = $primaryType;
         $bindings['GameList'] = $gameList;
@@ -90,8 +84,6 @@ class GamesBrowseController extends Controller
 
     public function bySeriesPage($series)
     {
-        $regionCode = $this->getRegionCode();
-
         $bindings = [];
 
         $gameSeries = $this->getServiceGameSeries()->getByLinkTitle($series);
@@ -100,7 +92,7 @@ class GamesBrowseController extends Controller
         $seriesId = $gameSeries->id;
         $seriesName = $gameSeries->series;
 
-        $gameList = $this->getServiceGameReleaseDate()->getReleasedBySeries($seriesId, $regionCode);
+        $gameList = $this->getServiceGameReleaseDate()->getReleasedBySeries($seriesId);
 
         $bindings['GameList'] = $gameList;
 
@@ -124,8 +116,6 @@ class GamesBrowseController extends Controller
 
     public function byTagPage($tag)
     {
-        $regionCode = $this->getRegionCode();
-
         $bindings = [];
 
         $tag = $this->getServiceTag()->getByLinkTitle($tag);
@@ -135,7 +125,7 @@ class GamesBrowseController extends Controller
         $tagId = $tag->id;
         $tagName = $tag->tag_name;
 
-        $gameList = $this->getServiceGameFilterList()->getByTagWithDates($regionCode, $tagId);
+        $gameList = $this->getServiceGameFilterList()->getByTagWithDates($tagId);
 
         $bindings['GameList'] = $gameList;
 
@@ -147,29 +137,7 @@ class GamesBrowseController extends Controller
 
     public function byDateLanding()
     {
-        $regionCode = $this->getRegionCode();
-
-        $regionCodeDesc = null;
-        switch ($regionCode) {
-            case 'eu':
-                $regionCodeDesc = 'Europe';
-                break;
-            case 'us':
-                $regionCodeDesc = 'US';
-                break;
-            case 'jp':
-                $regionCodeDesc = 'Japan';
-                break;
-            default:
-                abort(404);
-                break;
-        }
-
         $bindings = [];
-
-        if ($regionCodeDesc) {
-            $bindings['RegionCodeDesc'] = $regionCodeDesc;
-        }
 
         $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
         $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
@@ -189,7 +157,7 @@ class GamesBrowseController extends Controller
 
                 list($dateYear, $dateMonth) = explode('-', $date);
 
-                $gameCalendarStat = $this->getServiceGameCalendar()->getStat($regionCode, $dateYear, $dateMonth);
+                $gameCalendarStat = $this->getServiceGameCalendar()->getStat($dateYear, $dateMonth);
                 if ($gameCalendarStat) {
                     $dateCount = $gameCalendarStat->released_count;
                 } else {
@@ -224,8 +192,6 @@ class GamesBrowseController extends Controller
 
     public function byDatePage($dateUrl)
     {
-        $regionCode = $this->getRegionCode();
-
         $dates = $this->getServiceGameCalendar()->getAllowedDates();
         if (!in_array($dateUrl, $dates)) {
             abort(404);
@@ -238,7 +204,7 @@ class GamesBrowseController extends Controller
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        $gamesByMonthList = $this->getServiceGameCalendar()->getList($regionCode, $calendarYear, $calendarMonth);
+        $gamesByMonthList = $this->getServiceGameCalendar()->getList($calendarYear, $calendarMonth);
         $bindings['GamesByMonthList'] = $gamesByMonthList;
 
         // Get all dates
@@ -255,7 +221,7 @@ class GamesBrowseController extends Controller
             ];
         }
         foreach ($gamesByMonthList as $game) {
-            $gameDate = $game->release_date;
+            $gameDate = $game->eu_release_date;
             $calendarGames[$gameDate]['games'][] = $game;
         }
         $bindings['CalendarGamesList'] = $calendarGames;

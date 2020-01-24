@@ -5,13 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Game;
-use App\Services\GameService;
-use App\Services\GameTitleHashService;
-use App\Services\EshopEuropeGameService;
+use App\Traits\SwitchServices;
 
 class EshopEuropeLinkGames extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -49,15 +48,10 @@ class EshopEuropeLinkGames extends Command
 
         $logger->info('Loading data...');
 
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
-        $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
-        /* @var EshopEuropeGameService $eshopEuropeGameService */
-        $gameTitleHashService = resolve('Services\GameTitleHashService');
-        /* @var GameTitleHashService $gameTitleHashService */
+        $serviceGame = $this->getServiceGame();
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
 
-        //$gameData = $gameService->getAllWithoutEshopId('eu');
-        $gameData = $gameService->getAllModels();
+        $gameData = $serviceGame->getAllModels();
 
         $logger->info('Found records: '.count($gameData));
 
@@ -68,7 +62,7 @@ class EshopEuropeLinkGames extends Command
                 $fsId = null;
                 $title = $game->title;
 
-                $eshopGame = $eshopEuropeGameService->getByTitle($title);
+                $eshopGame = $serviceEshopEuropeGame->getByTitle($title);
 
                 if (!$eshopGame) {
                     //$logger->warn('No match for title: '.$title);

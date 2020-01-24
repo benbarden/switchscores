@@ -2,13 +2,17 @@
 
 namespace App\Listeners;
 
-use App\Events\ReviewLinkCreated;
-use App\Services\ActivityFeedService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+use App\Traits\SwitchServices;
+
+use App\Events\ReviewLinkCreated;
+
 class ActivityFeedNewReviewLink
 {
+    use SwitchServices;
+
     /**
      * Create the event listener.
      *
@@ -32,8 +36,6 @@ class ActivityFeedNewReviewLink
         ];
         $jsonProperties = json_encode($properties);
 
-        $activityFeedService = resolve('Services\ActivityFeedService');
-        /* @var $activityFeedService ActivityFeedService */
-        $activityFeedService->createNewReview($jsonProperties);
+        $this->getServiceActivityFeed()->createNewReview($jsonProperties);
     }
 }

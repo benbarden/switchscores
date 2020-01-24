@@ -5,7 +5,6 @@ namespace App\Services\Eshop\Europe;
 use Illuminate\Support\Collection;
 
 use App\Game;
-use App\GameReleaseDate;
 use App\GameImportRuleEshop;
 use App\EshopEuropeGame;
 use App\EshopEuropeAlert;
@@ -31,11 +30,6 @@ class UpdateGameData
     private $game;
 
     /**
-     * @var GameReleaseDate
-     */
-    private $gameReleaseDate;
-
-    /**
      * @var GameImportRuleEshop
      */
     private $gameImportRuleEshop;
@@ -44,11 +38,6 @@ class UpdateGameData
      * @var boolean
      */
     private $hasGameChanged;
-
-    /**
-     * @var boolean
-     */
-    private $hasGameReleaseDateChanged;
 
     /**
      * @var string
@@ -121,17 +110,6 @@ class UpdateGameData
         $this->hasGameChanged = false;
     }
 
-    public function getGameReleaseDate()
-    {
-        return $this->gameReleaseDate;
-    }
-
-    public function setGameReleaseDate($gameReleaseDate)
-    {
-        $this->gameReleaseDate = $gameReleaseDate;
-        $this->hasGameReleaseDateChanged = false;
-    }
-
     public function setGameImportRule(GameImportRuleEshop $gameImportRule)
     {
         $this->gameImportRuleEshop = $gameImportRule;
@@ -145,11 +123,6 @@ class UpdateGameData
     public function hasGameChanged()
     {
         return $this->hasGameChanged;
-    }
-
-    public function hasGameReleaseDateChanged()
-    {
-        return $this->hasGameReleaseDateChanged;
     }
 
     public function resetLogMessages()
@@ -371,6 +344,7 @@ class UpdateGameData
         $badDatesArray = [
             'TBD',
             '2019',
+            '2020',
             'Spring 2019',
             'January 2019',
         ];
@@ -386,40 +360,38 @@ class UpdateGameData
             $this->logMessageError = 'ERROR: ['.$eshopReleaseDateRaw.'] - '.$e->getMessage();
 
             // Set alert
-            $this->setEshopAlertError('Date error', $this->gameReleaseDate->release_date, $eshopReleaseDateRaw);
+            $this->setEshopAlertError('Date error', $this->game->eu_release_date, $eshopReleaseDateRaw);
 
             return;
         }
 
         if (!$isBadDate) {
 
-            if ($this->gameReleaseDate->release_date == null) {
+            if ($this->game->eu_release_date == null) {
 
                 // Not set
                 $this->logMessageInfo = $gameTitle.' - no release date. '.
                     'eShop data: '.$eshopReleaseDate.' - Updating.';
 
-                $this->gameReleaseDate->release_date = $eshopReleaseDate;
-                $this->gameReleaseDate->upcoming_date = $eshopReleaseDate;
+                $this->game->eu_release_date = $eshopReleaseDate;
 
                 if ($eshopReleaseDateObj > $nowDate) {
-                    $this->gameReleaseDate->is_released = 0;
+                    $this->game->eu_is_released = 0;
                 } else {
-                    $this->gameReleaseDate->is_released = 1;
+                    $this->game->eu_is_released = 1;
                 }
 
-                $this->hasGameReleaseDateChanged = true;
-                //$gameReleaseDate->save();
+                $this->hasGameChanged = true;
 
-            } elseif ($this->gameReleaseDate->release_date != $eshopReleaseDate) {
+            } elseif ($this->game->eu_release_date != $eshopReleaseDate) {
 
                 // Different
                 $this->logMessageWarning = $gameTitle.' - different release date. '.
-                    'Game data: '.$this->gameReleaseDate->release_date.' - '.
+                    'Game data: '.$this->game->eu_release_date.' - '.
                     'eShop data: '.$eshopReleaseDate;
 
                 // Set alert
-                $this->setEshopAlertWarning('Different release date', $this->gameReleaseDate->release_date, $eshopReleaseDate);
+                $this->setEshopAlertWarning('Different release date', $this->game->eu_release_date, $eshopReleaseDate);
 
             } else {
 

@@ -56,19 +56,6 @@ class GameBuilderTest extends TestCase
         $this->assertEquals($players, $game->players);
     }
 
-    public function testOverview()
-    {
-        $title = 'Yoshi';
-        $overview = 'A game featuring Yoshi that I generated for unit testing purposes only.';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setOverview($overview)
-            ->getGame();
-        $this->assertEquals($overview, $game->overview);
-    }
-
     public function testDeveloper()
     {
         $title = 'Yoshi';
@@ -184,19 +171,6 @@ class GameBuilderTest extends TestCase
             ->setRatingAvg($ratingAvg)
             ->getGame();
         $this->assertEquals($ratingAvg, $game->rating_avg);
-    }
-
-    public function testImageCount()
-    {
-        $title = 'Yoshi';
-        $imageCount = 2;
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setImageCount($imageCount)
-            ->getGame();
-        $this->assertEquals($imageCount, $game->image_count);
     }
 
     public function testGameRank()

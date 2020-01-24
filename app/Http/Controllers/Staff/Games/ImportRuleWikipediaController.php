@@ -8,17 +8,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
 use App\Construction\GameImportRule\WikipediaDirector;
 use App\Construction\GameImportRule\WikipediaBuilder;
 
+use App\Traits\SwitchServices;
+
 class ImportRuleWikipediaController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    use WosServices;
-    use SiteRequestData;
 
     /**
      * @var array

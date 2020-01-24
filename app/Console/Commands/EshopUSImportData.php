@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\Eshop\US\Loader;
 
+use App\Traits\SwitchServices;
+
 class EshopUSImportData extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -117,11 +121,6 @@ class EshopUSImportData extends Command
                 $this->totalItemCount = 0;
                 $this->loadLiveData($logger, $eshopLoader);
 
-            }
-
-            $channel = env('SLACK_ALERT_CHANNEL', '');
-            if ($channel) {
-                \Slack::to('#'.$channel)->send('EshopUSImportData: imported '.$this->totalItemCount.' records');
             }
 
         } catch (\Exception $e) {

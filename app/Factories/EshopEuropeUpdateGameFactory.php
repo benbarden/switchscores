@@ -17,7 +17,6 @@ class EshopEuropeUpdateGameFactory
         // GAME CORE DATA
         $gameId = $game->id;
         $gameTitle = $game->title;
-        $gameReleaseDate = $game->regionReleaseDate('eu');
 
         // NB. We can't lazy load this relationship or it borks the game change history table.
         // Best to load it directly from the db.
@@ -36,7 +35,6 @@ class EshopEuropeUpdateGameFactory
         // Setup
         $serviceUpdateGameData->setEshopItem($eshopItem);
         $serviceUpdateGameData->setGame($game);
-        $serviceUpdateGameData->setGameReleaseDate($gameReleaseDate);
         $serviceUpdateGameData->resetLogMessages();
 
         // Update
@@ -50,11 +48,6 @@ class EshopEuropeUpdateGameFactory
 
         if ($serviceUpdateGameData->hasGameChanged()) {
             $game->save();
-        }
-
-        if ($serviceUpdateGameData->hasGameReleaseDateChanged()) {
-            $gameReleaseDate = $serviceUpdateGameData->getGameReleaseDate();
-            $gameReleaseDate->save();
         }
     }
 }

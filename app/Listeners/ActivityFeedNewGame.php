@@ -2,13 +2,17 @@
 
 namespace App\Listeners;
 
-use App\Events\GameCreated;
-use App\Services\ActivityFeedService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+use App\Traits\SwitchServices;
+
+use App\Events\GameCreated;
+
 class ActivityFeedNewGame
 {
+    use SwitchServices;
+
     /**
      * Create the event listener.
      *
@@ -32,8 +36,6 @@ class ActivityFeedNewGame
         ];
         $jsonProperties = json_encode($properties);
 
-        $activityFeedService = resolve('Services\ActivityFeedService');
-        /* @var $activityFeedService ActivityFeedService */
-        $activityFeedService->createNewGame($jsonProperties);
+        $this->getServiceActivityFeed()->createNewGame($jsonProperties);
     }
 }

@@ -4,14 +4,17 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
-use Auth;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class ReviewPartnerUnrankedController extends Controller
 {
+    use SwitchServices;
+    use AuthUser;
+
     public function landing()
     {
-        $partnerId = Auth::user()->partner_id;
+        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
         if ($partnerId == 0) {
             abort(403);
         }
@@ -26,18 +29,13 @@ class ReviewPartnerUnrankedController extends Controller
 
     public function showList($mode, $filter)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $partnerId = Auth::user()->partner_id;
+        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
         if ($partnerId == 0) {
             abort(403);
         }
 
-        $serviceGameReleaseDate = $serviceContainer->getGameReleaseDateService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($partnerId);
         $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($partnerId);
@@ -48,19 +46,19 @@ class ReviewPartnerUnrankedController extends Controller
 
             case 'by-count':
                 if (!in_array($filter, ['0', '1', '2'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $regionCode, $gameIdsReviewedBySite);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 
             case 'by-year':
                 if (!in_array($filter, ['2017', '2018', '2019'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $regionCode, $gameIdsReviewedBySite);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 
             case 'by-list':
                 if (!in_array($filter, ['aca-neogeo', 'arcade-archives', 'all-others'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $regionCode, $gameIdsReviewedBySite);
+                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $gameIdsReviewedBySite);
                 $tableSort = "[1, 'asc']";
                 break;
 

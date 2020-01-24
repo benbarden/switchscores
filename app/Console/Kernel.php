@@ -13,26 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        /*
-        Commands\EshopEuropeImportData::class,
-        Commands\EshopEuropeLinkGames::class,
-        Commands\EshopEuropeUpdateGameData::class,
-        Commands\EshopEuropeDownloadPackshots::class,
-        Commands\EshopEuropeRedownloadPackshots::class,
-        Commands\RunFeedImporter::class,
-        Commands\RunFeedParser::class,
-        Commands\RunFeedReviewGenerator::class,
-        Commands\SitemapGenerateCalendar::class,
-        Commands\SitemapGenerateGames::class,
-        Commands\SitemapGenerateNews::class,
-        Commands\SitemapGenerateTopRated::class,
-        Commands\UpdateGameCalendarStats::class,
-        Commands\UpdateGameReviewStats::class,
-        Commands\UpdateGameRanks::class,
-        Commands\WikipediaCrawlGamesList::class,
-        Commands\WikipediaImportGamesList::class,
-        Commands\WikipediaUpdateGamesList::class,
-        */
     ];
 
     /**

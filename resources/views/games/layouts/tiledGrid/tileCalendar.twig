@@ -1,7 +1,7 @@
 {# PACKSHOTS #}
 {% if item.boxart_header_image %}
     {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
-    {% if item.is_released == 0 %}
+    {% if item.eu_is_released == 0 %}
         {% set imageOpacity = ' opacity: 0.4;' %}
     {% endif %}
 {% endif %}

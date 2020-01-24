@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class PartnerUpdateFields extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -46,10 +48,8 @@ class PartnerUpdateFields extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $serviceContainer = new ServiceContainer();
-
-        $servicePartner = $serviceContainer->getPartnerService();
-        $serviceReviewLink = $serviceContainer->getReviewLinkService();
+        $servicePartner = $this->getServicePartner();
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         $reviewSites = $servicePartner->getAllReviewSites();
 

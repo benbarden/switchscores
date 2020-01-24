@@ -5,12 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\GameService;
-use App\Services\EshopEuropeGameService;
 use App\Services\Eshop\PackshotEurope;
+
+use App\Traits\SwitchServices;
 
 class EshopEuropeRedownloadPackshots extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -46,16 +48,14 @@ class EshopEuropeRedownloadPackshots extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $gameService = resolve('Services\GameService');
-        /* @var GameService $gameService */
-        $eshopEuropeGameService = resolve('Services\EshopEuropeGameService');
-        /* @var EshopEuropeGameService $eshopEuropeGameService */
+        $serviceGame = $this->getServiceGame();
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
 
-        $eshopPackshotEuropeService = new PackshotEurope();
+        $servicePackshotEurope = new PackshotEurope();
 
         $logger->info('Loading data...');
 
-        $gameList = $eshopEuropeGameService->getAllWithLink();
+        $gameList = $serviceEshopEuropeGame->getAllWithLink();
 
         if (count($gameList) == 0) {
             $logger->warn('No items found; exiting');
@@ -66,7 +66,7 @@ class EshopEuropeRedownloadPackshots extends Command
 
         foreach ($gameList as $item) {
 
-            $game = $gameService->find($item->game_id);
+            $game = $serviceGame->find($item->game_id);
 
             if (!$game) {
                 $logger->warn('Error loading data');
@@ -85,7 +85,7 @@ class EshopEuropeRedownloadPackshots extends Command
                 continue;
             }
 
-            $eshopEuropeGame = $eshopEuropeGameService->getByFsId($fsId);
+            $eshopEuropeGame = $serviceEshopEuropeGame->getByFsId($fsId);
 
             if (!$eshopEuropeGame) {
                 $logger->warn($gameTitle.': record is linked to fs_id: '.$fsId.' - record could not be located; skipping');
@@ -95,9 +95,9 @@ class EshopEuropeRedownloadPackshots extends Command
             try {
 
                 // Square
-                $eshopPackshotEuropeService->downloadSquarePackshot($eshopEuropeGame, $game);
-                $destFilename = $eshopPackshotEuropeService->getDestFilename();
-                if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                $servicePackshotEurope->downloadSquarePackshot($eshopEuropeGame, $game);
+                $destFilename = $servicePackshotEurope->getDestFilename();
+                if ($servicePackshotEurope->getIsAborted() == false) {
                     $game->boxart_square_url = $destFilename;
                     $game->save();
                     $logger->info('Square packshot saved!: '.$destFilename);
@@ -105,9 +105,9 @@ class EshopEuropeRedownloadPackshots extends Command
                 }
 
                 // Header
-                $eshopPackshotEuropeService->downloadHeaderImage($eshopEuropeGame, $game);
-                $destFilename = $eshopPackshotEuropeService->getDestFilename();
-                if ($eshopPackshotEuropeService->getIsAborted() == false) {
+                $servicePackshotEurope->downloadHeaderImage($eshopEuropeGame, $game);
+                $destFilename = $servicePackshotEurope->getDestFilename();
+                if ($servicePackshotEurope->getIsAborted() == false) {
                     $game->boxart_header_image = $destFilename;
                     $game->save();
                     $logger->info('Header packshot saved!: '.$destFilename);

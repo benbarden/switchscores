@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Traits\WosServices;
 use Illuminate\Routing\Controller as Controller;
-
-use App\Services\ServiceContainer;
 use Illuminate\Support\Collection;
+
+use App\Traits\SwitchServices;
 
 class GamesFilterListController extends Controller
 {
-    use WosServices;
+    use SwitchServices;
 
     public function gamesWithTag($tagLinkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
-        $serviceTag = $serviceContainer->getTagService();
+        $serviceGameList = $this->getServiceGameFilterList();
+        $serviceTag = $this->getServiceTag();
 
         $tag = $serviceTag->getByLinkTitle($tagLinkTitle);
         if (!$tag) abort(404);
@@ -43,10 +39,7 @@ class GamesFilterListController extends Controller
 
     public function gamesWithNoTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
+        $serviceGameList = $this->getServiceGameFilterList();
 
         $bindings = [];
 
@@ -65,10 +58,7 @@ class GamesFilterListController extends Controller
 
     public function gamesWithNoTypeOrTag()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
+        $serviceGameList = $this->getServiceGameFilterList();
 
         $bindings = [];
 
@@ -87,11 +77,8 @@ class GamesFilterListController extends Controller
 
     public function gamesWithGenre($linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
-        $serviceGenre = $serviceContainer->getGenreService();
+        $serviceGameList = $this->getServiceGameFilterList();
+        $serviceGenre = $this->getServiceGenre();
 
         $genre = $serviceGenre->getByLinkTitle($linkTitle);
         if (!$genre) abort(404);
@@ -117,12 +104,8 @@ class GamesFilterListController extends Controller
 
     public function gameSeriesTitleMatches($linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameSeries = $serviceContainer->getGameSeriesService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameSeries = $this->getServiceGameSeries();
 
         $gameSeries = $serviceGameSeries->getByLinkTitle($linkTitle);
         if (!$gameSeries) abort(404);
@@ -148,13 +131,9 @@ class GamesFilterListController extends Controller
 
     public function gameTagTitleMatches($linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameList = $serviceContainer->getGameFilterListService();
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceTag = $serviceContainer->getTagService();
-        $serviceGameTag = $serviceContainer->getGameTagService();
+        $serviceGame = $this->getServiceGame();
+        $serviceTag = $this->getServiceTag();
+        $serviceGameTag = $this->getServiceGameTag();
 
         $tag = $serviceTag->getByLinkTitle($linkTitle);
         if (!$tag) abort(404);
@@ -192,14 +171,8 @@ class GamesFilterListController extends Controller
 
     public function gamesWithGenresNoPrimaryType()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $serviceGame = $serviceContainer->getGameService();
-        $serviceGameList = $serviceContainer->getGameFilterListService();
-        $serviceGameGenre = $serviceContainer->getGameGenreService();
+        $serviceGame = $this->getServiceGame();
+        $serviceGameGenre = $this->getServiceGameGenre();
 
         $bindings = [];
 
@@ -207,7 +180,7 @@ class GamesFilterListController extends Controller
         $bindings['TopTitle'] = 'Admin - '.$pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        $gameListTemp = $serviceGameGenre->getGamesWithGenresNoPrimaryType($regionCode);
+        $gameListTemp = $serviceGameGenre->getGamesWithGenresNoPrimaryType();
         if ($gameListTemp) {
             $gameList = new Collection();
             foreach ($gameListTemp as $gameTemp) {

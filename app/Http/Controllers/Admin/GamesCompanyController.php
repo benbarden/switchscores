@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Factories\GamesCompanyFactory;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
-use Auth;
-
-use App\Partner;
+use App\Factories\GamesCompanyFactory;
 
 class GamesCompanyController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -28,10 +27,7 @@ class GamesCompanyController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $bindings = [];
 
@@ -46,12 +42,9 @@ class GamesCompanyController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $servicePartner = $this->getServicePartner();
 
         $request = request();
-
-        $servicePartner = $serviceContainer->getPartnerService();
 
         if ($request->isMethod('post')) {
 
@@ -77,12 +70,7 @@ class GamesCompanyController extends Controller
 
     public function edit($partnerId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $regionCode = \Request::get('regionCode');
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $partnerData = $servicePartner->find($partnerId);
         if (!$partnerData) abort(404);
@@ -126,13 +114,9 @@ class GamesCompanyController extends Controller
 
     public function delete($partnerId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
-
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $servicePartner = $this->getServicePartner();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $partnerData = $servicePartner->find($partnerId);
         if (!$partnerData) abort(404);

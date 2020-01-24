@@ -34,12 +34,14 @@ class AuditService
         }
 
         // App\GameReleaseDate
+        /*
         $audits = Audit::join('game_release_dates', 'game_release_dates.id', '=', 'audits.auditable_id')
             ->where('game_release_dates.game_id', $gameId)
             ->orderBy('id', 'desc')->get('audits.*');
         foreach ($audits as $audit) {
             $aggAudits->push($audit);
         }
+        */
 
         $aggAudits = $aggAudits->sortByDesc('id');
 

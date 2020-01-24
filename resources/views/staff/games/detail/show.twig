@@ -256,31 +256,54 @@
                     {% endif %}
                 </td>
             </tr>
-            {% if ReleaseDates %}
-                {% for item in ReleaseDates %}
-                    {% if item.region == 'eu' %}
-                        {% set RegionDesc = 'Europe' %}
-                    {% elseif item.region == 'us' %}
-                        {% set RegionDesc = 'US' %}
-                    {% elseif item.region == 'jp' %}
-                        {% set RegionDesc = 'Japan' %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Europe release</span>
+                </td>
+                <td>
+                    {% if GameData.eu_release_date %}
+                        {{ GameData.eu_release_date|date('jS M Y') }}
                     {% else %}
-                        {% set RegionDesc = item.region %}
+                        -
                     {% endif %}
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">{{ RegionDesc }} release</span>
-                        </td>
-                        <td>
-                            {% if item.release_date and item.is_released == 1 %}
-                                {{ item.release_date|date('jS M Y') }}
-                            {% else %}
-                                {{ item.upcoming_date }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">US release</span>
+                </td>
+                <td>
+                    {% if GameData.us_release_date %}
+                        {{ GameData.us_release_date|date('jS M Y') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Japan release</span>
+                </td>
+                <td>
+                    {% if GameData.jp_release_date %}
+                        {{ GameData.jp_release_date|date('jS M Y') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Released (in EU)?</span>
+                </td>
+                <td>
+                    {% if GameData.eu_is_released == 1 %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+            </tr>
             {% if GameData.eshopEuropeGame.fs_id is not null %}
                 <tr>
                     <td>
@@ -616,7 +639,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.games.updateEshopData') }}', {'gameId': gameId, 'regionCode': 'eu'}, function(data) {
+        $.getJSON('{{ route('admin.games.updateEshopData') }}', {'gameId': gameId}, function(data) {
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
@@ -649,7 +672,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.games.redownloadPackshots') }}', {'gameId': gameId, 'regionCode': 'eu'}, function(data) {
+        $.getJSON('{{ route('admin.games.redownloadPackshots') }}', {'gameId': gameId}, function(data) {
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);

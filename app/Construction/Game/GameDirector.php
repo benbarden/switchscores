@@ -38,6 +38,23 @@ class GameDirector
         if (array_key_exists('link_title', $params)) {
             $this->builder->setLinkTitle($params['link_title']);
         }
+        if (array_key_exists('eu_release_date', $params)) {
+            $this->builder->setEuReleaseDate($params['eu_release_date']);
+            $releaseYear = $this->buildReleaseYear($params['eu_release_date']);
+            $this->builder->setReleaseYear($releaseYear);
+        }
+        if (array_key_exists('us_release_date', $params)) {
+            $this->builder->setUsReleaseDate($params['us_release_date']);
+        }
+        if (array_key_exists('jp_release_date', $params)) {
+            $this->builder->setJpReleaseDate($params['jp_release_date']);
+        }
+        if (array_key_exists('eu_is_released', $params)) {
+            $isReleased = $params['eu_is_released'] == 'on' ? 1 : 0;
+            $this->builder->setEuIsReleased($isReleased);
+        } else {
+            $this->builder->setEuIsReleased(0);
+        }
         if (array_key_exists('price_eshop', $params)) {
             if ($params['price_eshop'] != '') {
                 $this->builder->setPriceEshop($params['price_eshop']);
@@ -66,11 +83,6 @@ class GameDirector
         if (array_key_exists('amazon_uk_link', $params)) {
             if ($params['amazon_uk_link'] != '') {
                 $this->builder->setAmazonUkLink($params['amazon_uk_link']);
-            }
-        }
-        if (array_key_exists('overview', $params)) {
-            if ($params['overview'] != '') {
-                $this->builder->setOverview($params['overview']);
             }
         }
         if (array_key_exists('video_url', $params)) {
@@ -108,5 +120,17 @@ class GameDirector
                 $this->builder->setGameSeriesId($params['series_id']);
             }
         }
+    }
+
+    public function buildReleaseYear($releaseDate): string
+    {
+        if ($releaseDate) {
+            $releaseDateObject = new \DateTime($releaseDate);
+            $releaseYear = $releaseDateObject->format('Y');
+        } else {
+            $releaseYear = '';
+        }
+
+        return $releaseYear;
     }
 }

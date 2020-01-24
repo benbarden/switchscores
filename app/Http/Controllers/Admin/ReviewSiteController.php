@@ -7,11 +7,14 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
 use App\Partner;
+
+use App\Traits\SwitchServices;
 
 class ReviewSiteController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -26,10 +29,7 @@ class ReviewSiteController extends Controller
 
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $bindings = [];
 
@@ -44,10 +44,7 @@ class ReviewSiteController extends Controller
 
     public function add()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $request = request();
 
@@ -87,10 +84,7 @@ class ReviewSiteController extends Controller
 
     public function edit($siteId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $partnerData = $servicePartner->find($siteId);
         if (!$partnerData) abort(404);

@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Owner;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class AuditController extends Controller
 {
-    use SiteRequestData;
-    use WosServices;
+    use SwitchServices;
 
     public function showReport($reportName)
     {

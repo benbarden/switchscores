@@ -11,11 +11,10 @@
         formVals['primary_type_id'] = "{{ GameData.primary_type_id }}";
         formVals['series_id'] = "{{ GameData.series_id }}";
         // *** Dates *** //
-        {% for key,value in RegionList %}
-        formVals['release_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'release_date') }}";
-        formVals['upcoming_date_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'upcoming_date') }}";
-        formVals['is_released_{{ key }}'] = "{{ attribute(attribute(GameReleaseDates, key), 'is_released') }}";
-        {% endfor %}
+        formVals['eu_release_date'] = "{{ GameData.eu_release_date }}";
+        formVals['us_release_date'] = "{{ GameData.us_release_date }}";
+        formVals['jp_release_date'] = "{{ GameData.jp_release_date }}";
+        formVals['eu_is_released'] = "{{ GameData.eu_is_released }}";
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ GameData.eshop_europe_fs_id }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
@@ -25,7 +24,6 @@
         formVals['boxart_header_image'] = "{{ GameData.boxart_header_image }}";
         // *** Additional *** //
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
-        formVals['overview'] = "{{ GameData.overview|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         // *** Media *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
         formVals['video_header_text'] = "{{ GameData.video_header_text }}";
@@ -40,11 +38,10 @@
         formVals['primary_type_id'] = "{{ old('primary_type_id') }}";
         formVals['series_id'] = "{{ old('series_id') }}";
         // *** Dates *** //
-        {% for key,value in RegionList %}
-        formVals['release_date_{{ key }}'] = "{{ old('release_date_'~key) }}";
-        formVals['upcoming_date_{{ key }}'] = "{{ old('upcoming_date_'~key) }}";
-        formVals['is_released_{{ key }}'] = "{{ old('is_released_'~key) }}";
-        {% endfor %}
+        formVals['eu_release_date'] = "{{ old('eu_release_date') }}";
+        formVals['us_release_date'] = "{{ old('us_release_date') }}";
+        formVals['jp_release_date'] = "{{ old('jp_release_date') }}";
+        formVals['eu_is_released'] = "{{ old('eu_is_released') }}";
         // *** eShop *** //
         formVals['eshop_europe_fs_id'] = "{{ old('eshop_europe_fs_id') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
@@ -54,7 +51,6 @@
         formVals['boxart_header_image'] = "{{ old('boxart_header_image') }}";
         // *** Additional *** //
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
-        formVals['overview'] = "{{ old('overview')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         // *** Media *** //
         formVals['video_url'] = "{{ old('video_url') }}";
         formVals['video_header_text'] = "{{ old('video_header_text') }}";
@@ -70,13 +66,12 @@
     $('#primary_type_id').val(formVals['primary_type_id']);
     $('#series_id').val(formVals['series_id']);
     // *** Dates *** //
-    {% for key,value in RegionList %}
-    $('#release_date_{{ key }}').val(formVals['release_date_{{ key }}']);
-    $('#upcoming_date_{{ key }}').val(formVals['upcoming_date_{{ key }}']);
-    if (formVals['is_released_{{ key }}'] == 1) {
-        $('#is_released_{{ key }}').attr('checked', true);
+    $('#eu_release_date').val(formVals['eu_release_date']);
+    $('#us_release_date').val(formVals['us_release_date']);
+    $('#jp_release_date').val(formVals['jp_release_date']);
+    if (formVals['eu_is_released'] == 1) {
+        $('#eu_is_released').attr('checked', true);
     }
-    {% endfor %}
     // *** eShop *** //
     $('#eshop_europe_fs_id').val(formVals['eshop_europe_fs_id']);
     $('#price_eshop').val(formVals['price_eshop']);
@@ -86,7 +81,6 @@
     $('#boxart_header_image').val(formVals['boxart_header_image']);
     // *** Additional *** //
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
-    $('#overview').val(formVals['overview']);
     // *** Media *** //
     $('#video_url').val(formVals['video_url']);
     $('#video_header_text').val(formVals['video_header_text']);
@@ -116,25 +110,6 @@
             //console.log(linkText);
             $('#link_title').val(linkText);
         });
-    });
-
-    // Autogenerate upcoming date
-    $('#release_date_eu, #release_date_us, #release_date_jp').on('blur', function() {
-
-        fieldId = $(this).attr('id');
-        fieldRegion = fieldId.replace('release_date_', '');
-
-        releaseDate = $(this).val();
-
-        if (releaseDate == '') {
-            $('#upcoming_date_' + fieldRegion).val('');
-            return false;
-        }
-
-        //var upcomingDate = releaseDate.split("-").reverse().join("-");
-
-        // can keep the same value as the field rather helpfully translates the value
-        $('#upcoming_date_' + fieldRegion).val(releaseDate);
     });
 
     // Save, return to list

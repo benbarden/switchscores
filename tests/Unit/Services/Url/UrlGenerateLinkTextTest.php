@@ -14,18 +14,18 @@ class UrlGenerateLinkTextTest extends TestCase
     /**
      * @var UrlService
      */
-    private $urlService;
+    private $serviceUrl;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->urlService = new UrlService();
+        $this->serviceUrl = new UrlService();
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-        unset($this->urlService);
+        unset($this->serviceUrl);
     }
 
     public function testSimpleText()
@@ -33,7 +33,7 @@ class UrlGenerateLinkTextTest extends TestCase
         $title = 'Super Mario Odyssey';
         $expected = 'super-mario-odyssey';
 
-        $linkText = $this->urlService->generateLinkText($title);
+        $linkText = $this->serviceUrl->generateLinkText($title);
         $this->assertEquals($expected, $linkText);
     }
 }

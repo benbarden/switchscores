@@ -5,8 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Traits\SwitchServices;
+
 class UpdateGameReviewStats extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *

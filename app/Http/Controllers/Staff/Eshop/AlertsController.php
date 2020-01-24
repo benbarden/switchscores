@@ -5,16 +5,14 @@ namespace App\Http\Controllers\Staff\Eshop;
 use App\EshopEuropeAlert;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 use App\Services\Eshop\Europe\ReportData;
 use App\Services\Eshop\Europe\FieldMapper;
 
 class AlertsController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function showErrors()
     {

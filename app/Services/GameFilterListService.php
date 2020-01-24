@@ -30,28 +30,21 @@ class GameFilterListService
     }
 
     /**
-     * @param $region
      * @param $tagId
      * @return mixed
      */
-    public function getByTagWithDates($region, $tagId)
+    public function getByTagWithDates($tagId)
     {
         $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
             ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
             ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
             ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year',
                 'game_tags.tag_id',
                 'tags.tag_name')
             ->where('game_tags.tag_id', $tagId)
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', '1')
+            ->where('games.eu_is_released', '1')
             ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('game_release_dates.release_date', 'desc');
+            ->orderBy('games.eu_release_date', 'desc');
 
         $games = $games->get();
         return $games;
@@ -114,32 +107,4 @@ class GameFilterListService
             ->orderBy('games.title', 'asc');
         return $games->get();
     }
-
-    /**
-     * @param $region
-     * @param $genreId
-     * @return mixed
-     */
-    public function getGamesByGenreWithDates($region, $genreId)
-    {
-        $games = DB::table('games')
-            ->join('game_release_dates', 'games.id', '=', 'game_release_dates.game_id')
-            ->join('game_genres', 'games.id', '=', 'game_genres.game_id')
-            ->join('genres', 'game_genres.genre_id', '=', 'genres.id')
-            ->select('games.*',
-                'game_release_dates.release_date',
-                'game_release_dates.is_released',
-                'game_release_dates.upcoming_date',
-                'game_release_dates.release_year',
-                'game_genres.genre_id',
-                'genres.genre')
-            ->where('game_genres.genre_id', $genreId)
-            ->where('game_release_dates.region', $region)
-            ->where('game_release_dates.is_released', '1')
-            ->orderBy('games.title', 'asc');
-
-        $games = $games->get();
-        return $games;
-    }
-
 }

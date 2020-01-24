@@ -7,18 +7,17 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
 use App\FeedItemGame;
 use App\GameImportRuleWikipedia;
 use App\Services\HtmlLoader\Wikipedia\Importer;
 
+use App\Traits\SwitchServices;
+
 class WikiUpdatesController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    use WosServices;
-    use SiteRequestData;
 
     /**
      * @var array
@@ -98,8 +97,6 @@ class WikiUpdatesController extends Controller
 
     public function edit($itemId)
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceFeedItemGame = $this->getServiceFeedItemGame();
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
@@ -166,8 +163,7 @@ class WikiUpdatesController extends Controller
                 // If assigning a game id, we need to set the modified fields
                 $importer = new Importer();
                 $game = $serviceGame->find($gameId);
-                $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
-                $modifiedFields = $importer->getGameModifiedFields($feedItemData, $game, $gameReleaseDates, $gameImportRule);
+                $modifiedFields = $importer->getGameModifiedFields($feedItemData, $game, $gameImportRule);
                 $feedItemData->modified_fields = serialize($modifiedFields);
 
                 // We also need to add a new title hash if one doesn't already exist
@@ -198,19 +194,14 @@ class WikiUpdatesController extends Controller
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         // Load existing game data
         if ($feedItemData->game_id) {
             $gameId = $feedItemData->game_id;
             $game = $serviceGame->find($gameId);
-            $gameReleaseDates = $serviceGameReleaseDate->getByGame($gameId);
             $bindings['GameData'] = $game;
             $bindings['GameImportRule'] = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
-            foreach ($gameReleaseDates as $gameReleaseDate) {
-                $region = strtoupper($gameReleaseDate->region);
-                $bindings['ReleaseDates'.$region] = $gameReleaseDate;
-            }
         }
 
         return view('staff.wikipedia.wiki-updates.edit', $bindings);

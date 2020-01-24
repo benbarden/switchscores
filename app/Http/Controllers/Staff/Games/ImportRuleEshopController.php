@@ -8,17 +8,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
 use App\Construction\GameImportRule\EshopDirector;
 use App\Construction\GameImportRule\EshopBuilder;
 
+use App\Traits\SwitchServices;
+
 class ImportRuleEshopController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    use WosServices;
-    use SiteRequestData;
 
     /**
      * @var array

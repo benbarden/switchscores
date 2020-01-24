@@ -7,16 +7,13 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Services\ServiceContainer;
-use Auth;
-
-use App\Traits\WosServices;
-use App\Traits\SiteRequestData;
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class QuickReviewController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
+    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -31,8 +28,7 @@ class QuickReviewController extends Controller
 
     public function add()
     {
-        $userId = Auth::id();
-        $regionCode = Auth::user()->region;
+        $userId = $this->getAuthId();
 
         $request = request();
 
@@ -61,7 +57,7 @@ class QuickReviewController extends Controller
         $bindings['PageTitle'] = 'Add quick review';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
@@ -77,14 +73,12 @@ class QuickReviewController extends Controller
 
         $serviceQuickReview = $this->getServiceQuickReview();
 
-        $userId = Auth::id();
+        $userId = $this->getAuthId();
 
         $bindings = [];
 
         $bindings['TopTitle'] = 'Quick reviews';
         $bindings['PageTitle'] = 'Quick reviews';
-
-        $bindings['UserRegion'] = Auth::user()->region;
 
         if ($urlMsg) {
             $bindings['MsgSuccess'] = true;

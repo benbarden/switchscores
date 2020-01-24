@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
-
 use App\Partner;
+
+use App\Traits\SwitchServices;
 
 class PartnersController extends Controller
 {
+    use SwitchServices;
+
     public function landing()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
         $bindings['TopTitle'] = 'Partners';
@@ -25,12 +24,9 @@ class PartnersController extends Controller
 
     public function reviewSites()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
         $bindings = [];
 
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
         $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
         $bindings['ReviewPartnerList'] = $reviewPartnerList;
 
@@ -52,15 +48,10 @@ class PartnersController extends Controller
 
     public function showGamesCompany($linkTitle)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $servicePartner = $this->getServicePartner();
 
-        $regionCode = \Request::get('regionCode');
-
-        $servicePartner = $serviceContainer->getPartnerService();
-
-        $serviceGameDeveloper = $serviceContainer->getGameDeveloperService();
-        $serviceGamePublisher = $serviceContainer->getGamePublisherService();
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $partnerData = $servicePartner->getByLinkTitle($linkTitle);
         if (!$partnerData) abort(404);
@@ -68,8 +59,8 @@ class PartnersController extends Controller
 
         $partnerId = $partnerData->id;
 
-        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($regionCode, $partnerId, true);
-        $gamePubList = $serviceGamePublisher->getGamesByPublisher($regionCode, $partnerId, true);
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, true);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, true);
 
         $mergedGameList = [];
         $usedGameIds = [];

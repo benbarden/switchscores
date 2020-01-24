@@ -14,12 +14,6 @@ class ActivityFeedService
         return $this->create($typeId, $properties);
     }
 
-    public function createNewChart($properties)
-    {
-        $typeId = ActivityFeed::TYPE_NEW_CHART;
-        return $this->create($typeId, $properties);
-    }
-
     public function createNewGame($properties)
     {
         $typeId = ActivityFeed::TYPE_NEW_GAME;

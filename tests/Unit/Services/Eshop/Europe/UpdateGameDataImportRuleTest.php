@@ -71,22 +71,22 @@ class UpdateGameDataImportRuleTest extends TestCase
 
     public function testIgnoreReleaseDate()
     {
-        $game = new Game(['title' => 'Test release date']);
+        $game = new Game([
+            'title' => 'Test release date',
+            'eu_release_date' => '2020-12-31',
+        ]);
         $eshopItem = new EshopEuropeGame(['pretty_date_s' => '15/06/2022']);
-        $releaseDate = new GameReleaseDate(['release_date' => '2020-12-31']);
         $gameImportRule = new GameImportRuleEshop(['ignore_europe_dates' => '1']);
 
         $serviceUpdateGameData = new UpdateGameData();
         $serviceUpdateGameData->setGame($game);
         $serviceUpdateGameData->setEshopItem($eshopItem);
-        $serviceUpdateGameData->setGameReleaseDate($releaseDate);
         $serviceUpdateGameData->setGameImportRule($gameImportRule);
         $serviceUpdateGameData->updateReleaseDate();
 
         $serviceGameItem = $serviceUpdateGameData->getGame();
-        $serviceGameReleaseDate = $serviceUpdateGameData->getGameReleaseDate();
 
-        $this->assertEquals('2020-12-31', $serviceGameReleaseDate->release_date);
+        $this->assertEquals('2020-12-31', $serviceGameItem->eu_release_date);
 
         $this->assertEquals(null, $serviceUpdateGameData->getLogMessage());
     }

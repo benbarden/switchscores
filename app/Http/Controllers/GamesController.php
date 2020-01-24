@@ -4,28 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
-
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
-
-use Auth;
+use App\Traits\SwitchServices;
 
 class GamesController extends Controller
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function landing()
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 20);
-        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming($regionCode, 20);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(20);
+        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming(20);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
@@ -37,13 +29,11 @@ class GamesController extends Controller
 
     public function recentReleases()
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased($regionCode, 50);
+        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(50);
         $bindings['CalendarThisMonth'] = date('Y-m');
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';
@@ -54,13 +44,11 @@ class GamesController extends Controller
 
     public function upcomingReleases()
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings = [];
 
-        $bindings['UpcomingGames'] = $serviceGameReleaseDate->getUpcoming($regionCode);
+        $bindings['UpcomingGames'] = $serviceGameReleaseDate->getUpcoming();
 
         $featuredIdList = [
             1237, // Ninjala
@@ -74,7 +62,7 @@ class GamesController extends Controller
             2578, // Zelda Link's Awakening
             2148, // Marvel Ultimate Alliance
         ];
-        $bindings['FeaturedGames'] = $serviceGameReleaseDate->getByIdList($featuredIdList, $regionCode);
+        $bindings['FeaturedGames'] = $serviceGameReleaseDate->getByIdList($featuredIdList);
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
@@ -84,14 +72,9 @@ class GamesController extends Controller
 
     public function gamesOnSale()
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
-        //$gamesOnSale = $serviceEshopEuropeGame->getGamesOnSale();
 
         $bindings = [];
-
-        $bindings['RegionCode'] = $regionCode;
 
         $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
@@ -112,8 +95,6 @@ class GamesController extends Controller
      */
     public function show($gameId, $linkTitle)
     {
-        $regionCode = $this->getRegionCode();
-
         $serviceGame = $this->getServiceGame();
         $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
         $serviceReviewLink = $this->getServiceReviewLink();
@@ -160,10 +141,6 @@ class GamesController extends Controller
         $bindings['GameDevelopers'] = $gameDevelopers;
         $bindings['GamePublishers'] = $gamePublishers;
         $bindings['GameTags'] = $gameTags;
-
-        $bindings['ReleaseDates'] = $serviceGameReleaseDate->getByGame($gameId);
-
-        $bindings['ReleaseDateInfo'] = $serviceGameReleaseDate->getByGameAndRegion($gameId, $regionCode);
 
         // Total rank count
         $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();

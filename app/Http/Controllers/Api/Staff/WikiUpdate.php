@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api\Staff;
 
-use App\Traits\SiteRequestData;
-use App\Traits\WosServices;
+use App\Traits\SwitchServices;
 
 class WikiUpdate
 {
-    use WosServices;
-    use SiteRequestData;
+    use SwitchServices;
 
     public function updateStatus()
     {

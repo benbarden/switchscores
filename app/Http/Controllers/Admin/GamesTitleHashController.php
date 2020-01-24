@@ -9,11 +9,13 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
 
+use App\Traits\SwitchServices;
 
 class GamesTitleHashController extends Controller
 {
+    use SwitchServices;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -27,10 +29,7 @@ class GamesTitleHashController extends Controller
 
     public function showList($gameId = null)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         $bindings = [];
 
@@ -54,13 +53,8 @@ class GamesTitleHashController extends Controller
 
     public function add()
     {
-        $regionCode = \Request::get('regionCode');
-
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
-        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
+        $serviceGame = $this->getServiceGame();
 
         $request = request();
 
@@ -112,20 +106,15 @@ class GamesTitleHashController extends Controller
         $bindings['PageTitle'] = 'Add game title hash';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         return view('admin.games-title-hash.add', $bindings);
     }
 
     public function edit($gameTitleHashId)
     {
-        $regionCode = \Request::get('regionCode');
-
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
-        $serviceGame = $serviceContainer->getGameService();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
+        $serviceGame = $this->getServiceGame();
 
         $gameTitleHashData = $serviceGameTitleHash->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
@@ -161,17 +150,14 @@ class GamesTitleHashController extends Controller
         $bindings['GameTitleHashId'] = $gameTitleHashId;
         $bindings['FormMode'] = 'edit';
 
-        $bindings['GamesList'] = $serviceGame->getAll($regionCode);
+        $bindings['GamesList'] = $serviceGame->getAll();
 
         return view('admin.games-title-hash.edit', $bindings);
     }
 
     public function delete($gameTitleHashId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceGameTitleHash = $serviceContainer->getGameTitleHashService();
+        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         $gameTitleHashData = $serviceGameTitleHash->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);

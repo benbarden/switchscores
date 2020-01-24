@@ -6,15 +6,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\ReviewLink;
-use App\Services\FeedItemReviewService;
-use App\Services\GameService;
-use App\Services\ReviewLinkService;
-use App\Services\PartnerService;
-use App\Services\ReviewStatsService;
 use App\Events\ReviewLinkCreated;
+
+use App\Traits\SwitchServices;
 
 class RunFeedReviewGenerator extends Command
 {
+    use SwitchServices;
+
     /**
      * The name and signature of the console command.
      *
@@ -50,19 +49,13 @@ class RunFeedReviewGenerator extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $feedItemReviewService = resolve('Services\FeedItemReviewService');
-        $gameService = resolve('Services\GameService');
-        $reviewLinkService = resolve('Services\ReviewLinkService');
-        $reviewStatsService = resolve('Services\ReviewStatsService');
-        /* @var FeedItemReviewService $feedItemReviewService */
-        /* @var GameService $gameService */
-        /* @var ReviewLinkService $reviewLinkService */
-        /* @var ReviewStatsService $reviewStatsService */
+        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceGame = $this->getServiceGame();
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceReviewStats = $this->getServiceReviewStats();
+        $servicePartner = $this->getServicePartner();
 
-        $partnerService = resolve('Services\PartnerService');
-        /* @var PartnerService $partnerService */
-
-        $feedItems = $feedItemReviewService->getUnprocessed();
+        $feedItems = $serviceFeedItemReview->getUnprocessed();
 
         if (!$feedItems) {
             $logger->info('No items to process. Aborting.');
@@ -87,7 +80,7 @@ class RunFeedReviewGenerator extends Command
                 // Check for a duplicate review
                 // We can do this even if we don't have all the other fields yet
                 if ($gameId && $siteId) {
-                    $existingReview = $reviewLinkService->getByGameAndSite($gameId, $siteId);
+                    $existingReview = $serviceReviewLink->getByGameAndSite($gameId, $siteId);
                     if ($existingReview) {
                         $logger->warn('Existing review found for this game/site. Marking as a duplicate.');
                         $feedItem->process_status = 'Duplicate';
@@ -127,17 +120,17 @@ class RunFeedReviewGenerator extends Command
                 //$logger->info('Reformatting date: '.$itemDate.' as short date: '.$itemDateShort);
 
                 // We're good to go - let's create the review
-                $reviewSite = $partnerService->find($siteId);
-                $ratingNormalised = $reviewLinkService->getNormalisedRating($itemRating, $reviewSite);
+                $reviewSite = $servicePartner->find($siteId);
+                $ratingNormalised = $serviceReviewLink->getNormalisedRating($itemRating, $reviewSite);
 
-                $reviewLink = $reviewLinkService->create(
+                $reviewLink = $serviceReviewLink->create(
                     $gameId, $siteId, $itemUrl, $itemRating, $ratingNormalised, $itemDateShort,
                     ReviewLink::TYPE_IMPORTED
                 );
 
                 // Update game review stats
-                $game = $gameService->find($gameId);
-                $reviewStatsService->updateGameReviewStats($game);
+                $game = $serviceGame->find($gameId);
+                $serviceReviewStats->updateGameReviewStats($game);
 
                 // Mark as parsed, in case we manually updated it
                 $feedItem->parsed = 1;

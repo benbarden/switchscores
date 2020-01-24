@@ -83,10 +83,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if item.release_date %}
-                        {{ item.release_date }}
+                        {% if item.eu_release_date %}
+                            {{ item.eu_release_date }}
                         {% else %}
-                        {{ item.upcoming_date }}
+                            -
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -110,7 +110,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    var regionCode = '{{ RegionCode }}';
     $('#admin-nav-game-filter').on('change', function() {
         selectedGameFilter = $(this).val();
         top.location.href = '{{ route('admin.games.list')}}' + '/' + selectedGameFilter;
@@ -155,11 +154,8 @@
             }
         });
 
-        $.getJSON('{{ route('admin.games.release') }}', {'gameId': gameId, 'regionCode': regionCode}, function(data) {
-            //$('#js-admin-notify').text('Game released!');
-            //$('#js-admin-notify').show();
+        $.getJSON('{{ route('admin.games.release') }}', {'gameId': gameId}, function(data) {
             $('#lnk-release-game-' + gameId).parent().html('<em>Released</em>');
-            //setTimeout("$('#js-admin-notify').fadeOut();", 2000);
         })
         .fail(function(data) {
             $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);

@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\PartnerReview;
 use App\ReviewLink;
-use Illuminate\Routing\Controller as Controller;
-use App\Services\ServiceContainer;
+
+use App\Traits\SwitchServices;
 
 class PartnerReviewController extends Controller
 {
+    use SwitchServices;
+
     public function showList()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $servicePartnerReview = $this->getServicePartnerReview();
 
         $request = request();
         $filterStatus = $request->filterStatus;
-
-        $servicePartnerReview = $serviceContainer->getPartnerReviewService();
 
         $bindings = [];
 
@@ -43,12 +44,9 @@ class PartnerReviewController extends Controller
 
     public function edit($reviewId)
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
+        $servicePartnerReview = $this->getServicePartnerReview();
 
         $request = request();
-
-        $servicePartnerReview = $serviceContainer->getPartnerReviewService();
 
         $reviewData = $servicePartnerReview->find($reviewId);
         if (!$reviewData) abort(404);
@@ -79,10 +77,10 @@ class PartnerReviewController extends Controller
 
             if ($itemStatus == PartnerReview::STATUS_ACTIVE) {
 
-                $partnerService = $serviceContainer->getPartnerService();
-                $reviewLinkService = $serviceContainer->getReviewLinkService();
-                $reviewStatsService = $serviceContainer->getReviewStatsService();
-                $gameService = $serviceContainer->getGameService();
+                $servicePartner = $this->getServicePartner();
+                $serviceReviewLink = $this->getServiceReviewLink();
+                $serviceReviewStats = $this->getServiceReviewStats();
+                $serviceGame = $this->getServiceGame();
 
                 // Create the review
                 $gameId = $reviewData->game_id;
@@ -92,17 +90,17 @@ class PartnerReviewController extends Controller
                 $itemUrl = $reviewData->item_url;
                 $itemDateShort = date('Y-m-d', strtotime($reviewData->item_date));
 
-                $reviewSite = $partnerService->find($siteId);
-                $ratingNormalised = $reviewLinkService->getNormalisedRating($itemRating, $reviewSite);
+                $reviewSite = $servicePartner->find($siteId);
+                $ratingNormalised = $serviceReviewLink->getNormalisedRating($itemRating, $reviewSite);
 
-                $reviewLink = $reviewLinkService->create(
+                $reviewLink = $serviceReviewLink->create(
                     $gameId, $siteId, $itemUrl, $itemRating, $ratingNormalised, $itemDateShort,
                     ReviewLink::TYPE_PARTNER, $reviewUserId
                 );
 
                 // Update game review stats
-                $game = $gameService->find($gameId);
-                $reviewStatsService->updateGameReviewStats($game);
+                $game = $serviceGame->find($gameId);
+                $serviceReviewStats->updateGameReviewStats($game);
 
                 // Update review link
                 $reviewData->review_link_id = $reviewLink->id;

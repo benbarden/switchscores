@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\ServiceContainer;
+use App\Traits\SwitchServices;
 
 class SitemapController extends Controller
 {
+    use SwitchServices;
+
     public function getTimestampNow()
     {
         $now = new \DateTime('now');
@@ -50,10 +52,7 @@ class SitemapController extends Controller
 
     public function games()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $gameService = $serviceContainer->getGameService();
+        $serviceGame = $this->getServiceGame();
 
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-games.xml';
 
@@ -67,7 +66,7 @@ class SitemapController extends Controller
             $timestamp = $this->getTimestampNow();
             $bindings['TimestampNow'] = $timestamp;
 
-            $bindings['GameList'] = $gameService->getAll('eu');
+            $bindings['GameList'] = $serviceGame->getAll();
 
             return response()->view('sitemap.games', $bindings)->header('Content-Type', 'text/xml');
 
@@ -76,10 +75,7 @@ class SitemapController extends Controller
 
     public function calendar()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceCalendar = $serviceContainer->getGameCalendarService();
+        $serviceCalendar = $this->getServiceGameCalendar();
 
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-calendar.xml';
 
@@ -124,11 +120,6 @@ class SitemapController extends Controller
 
     public function topRated()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceCalendar = $serviceContainer->getGameCalendarService();
-
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-top-rated.xml';
 
         if (file_exists($xmlFilePath)) {
@@ -190,10 +181,7 @@ class SitemapController extends Controller
 
     public function reviews()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $servicePartner = $serviceContainer->getPartnerService();
+        $servicePartner = $this->getServicePartner();
 
         $bindings = [];
         $timestamp = $this->getTimestampNow();
@@ -224,10 +212,7 @@ class SitemapController extends Controller
 
     public function tags()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceTag = $serviceContainer->getTagService();
+        $serviceTag = $this->getServiceTag();
 
         $bindings = [];
         $timestamp = $this->getTimestampNow();
@@ -258,10 +243,7 @@ class SitemapController extends Controller
 
     public function news()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $newsService = $serviceContainer->getNewsService();
+        $serviceNews = $this->getServiceNews();
 
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-news.xml';
 
@@ -275,7 +257,7 @@ class SitemapController extends Controller
             $timestamp = $this->getTimestampNow();
             $bindings['TimestampNow'] = $timestamp;
 
-            $bindings['NewsList'] = $newsList = $newsService->getAll();
+            $bindings['NewsList'] = $newsList = $serviceNews->getAll();
 
             return response()->view('sitemap.news', $bindings)->header('Content-Type', 'text/xml');
 

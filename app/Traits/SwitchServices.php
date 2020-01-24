@@ -43,7 +43,7 @@ use App\Services\UrlService;
 use App\Services\UserGamesCollectionService;
 use App\Services\UserService;
 
-trait WosServices
+trait SwitchServices
 {
     private $services = [];
 

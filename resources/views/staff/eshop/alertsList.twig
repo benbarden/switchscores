@@ -50,7 +50,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    var regionCode = '{{ RegionCode }}';
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],

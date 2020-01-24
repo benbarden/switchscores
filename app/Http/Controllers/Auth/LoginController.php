@@ -7,12 +7,14 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Laravel\Socialite\Facades\Socialite;
 
-use App\Services\ServiceContainer;
-
 use App\Events\UserCreated;
+
+use App\Traits\SwitchServices;
 
 class LoginController extends Controller
 {
+    use SwitchServices;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -60,10 +62,7 @@ class LoginController extends Controller
      */
     public function handleProviderCallbackTwitter()
     {
-        $serviceContainer = \Request::get('serviceContainer');
-        /* @var $serviceContainer ServiceContainer */
-
-        $serviceUser = $serviceContainer->getUserService();
+        $serviceUser = $this->getServiceUser();
 
         $user = Socialite::driver('twitter')->user();
         $twitterUserId = $user->id;
