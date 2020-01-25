@@ -9,9 +9,31 @@ use OwenIt\Auditing\Models\Audit;
 
 class AuditService
 {
-    public function getAll($limit = 25)
+    public function getAll($limit = 250)
     {
         $auditList = Audit::orderBy('id', 'desc');
+        if ($limit) {
+            $auditList = $auditList->limit($limit);
+        }
+        return $auditList->get();
+    }
+
+    public function getGame($limit = 250)
+    {
+        $auditList = Audit::
+            where('auditable_type', 'App\Game')
+            ->orderBy('id', 'desc');
+        if ($limit) {
+            $auditList = $auditList->limit($limit);
+        }
+        return $auditList->get();
+    }
+
+    public function getReviewLink($limit = 250)
+    {
+        $auditList = Audit::
+            where('auditable_type', 'App\ReviewLink')
+            ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
         }

@@ -7,7 +7,17 @@
 <table class="table">
     <tr>
         <td>
+            <a href="{{ route('owner.audit.report', {'reportName': 'all'}) }}">Audit report: All</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
             <a href="{{ route('owner.audit.report', {'reportName': 'games'}) }}">Audit report: Games</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ route('owner.audit.report', {'reportName': 'review-links'}) }}">Audit report: Review links</a>
         </td>
     </tr>
 </table>

@@ -15,9 +15,17 @@ class AuditController extends Controller
         $bindings = [];
 
         switch ($reportName) {
+            case 'all':
+                $pageTitle = 'Audit report: All';
+                $bindings['ItemList'] = $this->getServiceAudit()->getAll(250);
+                break;
             case 'games':
                 $pageTitle = 'Audit report: Games';
-                $bindings['ItemList'] = $this->getServiceAudit()->getAll(250);
+                $bindings['ItemList'] = $this->getServiceAudit()->getGame(250);
+                break;
+            case 'review-links':
+                $pageTitle = 'Audit report: Review links';
+                $bindings['ItemList'] = $this->getServiceAudit()->getReviewLink(250);
                 break;
             default:
                 abort(404);

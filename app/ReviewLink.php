@@ -4,8 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReviewLink extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class ReviewLink extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     const TYPE_MANUAL = 'Manual';
     const TYPE_IMPORTED = 'Imported';
     const TYPE_PARTNER = 'Partner';
