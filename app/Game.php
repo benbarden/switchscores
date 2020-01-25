@@ -73,11 +73,6 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\GameGenre', 'game_id', 'id');
     }
 
-    public function releaseDates()
-    {
-        return $this->hasMany('App\GameReleaseDate', 'game_id', 'id');
-    }
-
     public function gameDevelopers()
     {
         return $this->hasMany('App\GameDeveloper', 'game_id', 'id');
@@ -86,12 +81,6 @@ class Game extends Model implements Auditable
     public function gamePublishers()
     {
         return $this->hasMany('App\GamePublisher', 'game_id', 'id');
-    }
-
-    // GameReleaseDate helper functions
-    public function regionReleaseDate($region)
-    {
-        return $this->releaseDates()->where('region', '=', $region)->first();
     }
 
     public function eshopEuropeGame()
