@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Eshop;
 
 use Illuminate\Routing\Controller as Controller;
-
-use App\Factories\GameDirectorFactory;
-
-use App\Construction\GameReleaseDate\Director as GameReleaseDateDirector;
-use App\Construction\GameReleaseDate\Builder as GameReleaseDateBuilder;
 
 use App\Services\UrlService;
 
 use App\Events\GameCreated;
 
+use App\Factories\GameDirectorFactory;
 use App\Factories\EshopEuropeUpdateGameFactory;
 use App\Factories\EshopEuropeRedownloadPackshotsFactory;
 
@@ -47,12 +43,12 @@ class FeedItemEshopEuropeController extends Controller
             }
         }
 
-        $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe';
+        $bindings['TopTitle'] = 'Staff - Feed items - eShop: Europe';
         $bindings['PageTitle'] = 'Feed items - eShop: Europe';
         $bindings['FeedItems'] = $feedItems;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        return view('admin.feed-items.eshop.europe.list', $bindings);
+        return view('staff.eshop.feed-items-europe.list', $bindings);
     }
 
     public function view($itemId)
@@ -68,7 +64,7 @@ class FeedItemEshopEuropeController extends Controller
         $bindings['TopTitle'] = 'Admin - Feed items - eShop: Europe - '.$gameData->title;
         $bindings['PageTitle'] = $gameData->title.' - Feed items - eShop: Europe';
 
-        return view('admin.feed-items.eshop.europe.view', $bindings);
+        return view('staff.eshop.feed-items-europe.view', $bindings);
     }
 
     public function addGame($itemId)
@@ -77,9 +73,7 @@ class FeedItemEshopEuropeController extends Controller
         $customErrors = [];
 
         $serviceEshopGame = $this->getServiceEshopEuropeGame();
-        $serviceGame = $this->getServiceGame();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceUrl = new UrlService();
 
         $eshopGameData = $serviceEshopGame->getByFsId($itemId);
@@ -142,6 +136,6 @@ class FeedItemEshopEuropeController extends Controller
 
         $bindings['ErrorsCustom'] = $customErrors;
 
-        return view('admin.feed-items.eshop.europe.add-game', $bindings);
+        return view('staff.eshop.feed-items-europe.add-game', $bindings);
     }
 }

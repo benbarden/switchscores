@@ -216,6 +216,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/eshop/alerts/errors', 'Staff\Eshop\AlertsController@showErrors')->name('staff.eshop.alerts.errors');
     Route::get('/staff/eshop/alerts/warnings', 'Staff\Eshop\AlertsController@showWarnings')->name('staff.eshop.alerts.warnings');
 
+    // Feed items: eShop (Europe)
+    Route::get('/staff/eshop/feed-items-europe/{report?}', 'Staff\Eshop\FeedItemEshopEuropeController@showList')->name('staff.eshop.feed-items-europe.list');
+    Route::get('/staff/eshop/feed-items-europe/view/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@view')->name('staff.eshop.feed-items-europe.view');
+    Route::get('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
+    Route::post('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
+
 });
 
 
@@ -356,12 +362,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/feed-items/reviews/{report?}', 'Admin\FeedItemReviewController@showList')->name('admin.feed-items.reviews.list');
     Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
     Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
-
-    // Feed items: eShop (Europe)
-    Route::get('/admin/feed-items/eshop/europe/{report?}', 'Admin\FeedItemEshopEuropeController@showList')->name('admin.feed-items.eshop.europe.list');
-    Route::get('/admin/feed-items/eshop/europe/view/{itemId}', 'Admin\FeedItemEshopEuropeController@view')->name('admin.feed-items.eshop.europe.view');
-    Route::get('/admin/feed-items/eshop/europe/add-game/{itemId}', 'Admin\FeedItemEshopEuropeController@addGame')->name('admin.feed-items.eshop.europe.add-game');
-    Route::post('/admin/feed-items/eshop/europe/add-game/{itemId}', 'Admin\FeedItemEshopEuropeController@addGame')->name('admin.feed-items.eshop.europe.add-game');
 
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');

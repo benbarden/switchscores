@@ -1,6 +1,10 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.feed-items.eshop.europe.list'), 'text': 'Feed items - eShop Europe'}, {'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.eshop.dashboard'), 'text': 'eShop'},
+    {'url': route('staff.eshop.feed-items-europe.list'), 'text': 'Feed items - eShop Europe'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
@@ -28,7 +32,7 @@
         </ul>
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.feed-items.eshop.europe.add-game', {'itemId': FsId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.eshop.feed-items-europe.add-game', {'itemId': FsId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

@@ -1,6 +1,10 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.feed-items.eshop.europe.list'), 'text': 'Feed items - eShop Europe'}, {'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.eshop.dashboard'), 'text': 'eShop'},
+    {'url': route('staff.eshop.feed-items-europe.list'), 'text': 'Feed items - eShop Europe'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 

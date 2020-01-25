@@ -1,6 +1,6 @@
-{% extends 'theme/wos/admin/clean-wide.twig' %}
+{% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.eshop.dashboard'), 'text': 'eShop'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -60,9 +60,9 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': item.fs_id}) }}">View</a>
+                        <a href="{{ route('staff.eshop.feed-items-europe.view', {'itemId': item.fs_id}) }}">View</a>
                         {% if item.game.id is null or item.game.id == '0' %}
-                            : <a href="{{ route('admin.feed-items.eshop.europe.add-game', {'itemId': item.fs_id}) }}">Add game</a>
+                            : <a href="{{ route('staff.eshop.feed-items-europe.add-game', {'itemId': item.fs_id}) }}">Add game</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -77,7 +77,7 @@
 <script>
     $('#admin-nav-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('admin.feed-items.eshop.europe.list')}}' + '/' + selectedFilter;
+        top.location.href = '{{ route('staff.eshop.feed-items-europe.list')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';

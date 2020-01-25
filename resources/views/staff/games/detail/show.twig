@@ -225,7 +225,7 @@
                 <td>
                     {% if GameData.eshop_europe_fs_id is not null %}
                         {% if GameData.eshopEuropeGame.fs_id is not null %}
-                            <a href="{{ route('admin.feed-items.eshop.europe.view', {'itemId': GameData.eshop_europe_fs_id}) }}">
+                            <a href="{{ route('staff.eshop.feed-items-europe.view', {'itemId': GameData.eshop_europe_fs_id}) }}">
                                 <i class="fas fa-link"></i>
                             </a> - <em>linked</em>
                         {% else %}
