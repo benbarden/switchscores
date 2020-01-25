@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Services\StaffDashboards\CategorisationService;
 
-use App\Services\ActivityFeedService;
 use App\Services\AuditService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\EshopEuropeAlertService;
@@ -96,14 +95,6 @@ trait SwitchServices
     }
 
     // ** Get specific classes ** //
-
-    /**
-     * @return ActivityFeedService
-     */
-    public function getServiceActivityFeed()
-    {
-        return $this->loadService('ActivityFeedService');
-    }
 
     /**
      * @return AuditService

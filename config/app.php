@@ -161,7 +161,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // WOS
-        App\Providers\ActivityFeedProvider::class,
         App\Providers\CrawlerWikipediaGamesListSourceServiceProvider::class,
         App\Providers\EshopEuropeGameServiceProvider::class,
         App\Providers\EshopUSGameServiceProvider::class,

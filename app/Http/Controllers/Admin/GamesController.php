@@ -344,7 +344,6 @@ class GamesController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $this->getServiceActivityFeed()->deleteByGameId($gameId);
             $serviceFeedItemGame->deleteByGameId($gameId);
             $serviceGameGenre->deleteGameGenres($gameId);
             $serviceGameTitleHash->deleteByGameId($gameId);
