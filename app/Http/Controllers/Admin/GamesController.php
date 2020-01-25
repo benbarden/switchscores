@@ -356,7 +356,7 @@ class GamesController extends Controller
 
             // Done
 
-            return redirect(route('admin.games.list'));
+            return redirect(route('staff.games.dashboard'));
 
         } else {
 
