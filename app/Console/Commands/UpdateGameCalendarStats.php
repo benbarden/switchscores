@@ -53,8 +53,6 @@ class UpdateGameCalendarStats extends Command
 
         \DB::statement('TRUNCATE TABLE game_calendar_stats');
 
-        $region = 'eu';
-
         foreach ($dateList as $date) {
 
             $dtDate = new \DateTime($date);
@@ -65,12 +63,12 @@ class UpdateGameCalendarStats extends Command
 
             $monthCount = $serviceGameCalendar->getListCount($calendarYear, $calendarMonth);
 
-            $logger->info($region.' // '.$date.' // '.$monthCount.' game(s)');
+            $logger->info($date.' // '.$monthCount.' game(s)');
 
             \DB::insert('
-                INSERT INTO game_calendar_stats(region, month_name, released_count, created_at, updated_at)
-                VALUES(?, ?, ?, NOW(), NOW())
-            ', [$region, $date, $monthCount]);
+                INSERT INTO game_calendar_stats(month_name, released_count, created_at, updated_at)
+                VALUES(?, ?, NOW(), NOW())
+            ', [$date, $monthCount]);
 
         }
 

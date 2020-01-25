@@ -250,8 +250,6 @@ class GamesController extends Controller
             $bindings['GameListFilterNextId'] = $nextId;
         }
 
-        $regionsToUpdate = ['eu', 'us', 'jp'];
-
         if ($request->isMethod('post')) {
 
             $bindings['FormMode'] = 'edit-post';

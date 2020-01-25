@@ -20,6 +20,6 @@ class GameCalendarStat extends Model
      * @var array
      */
     protected $fillable = [
-        'region', 'month_name', 'released_count',
+        'month_name', 'released_count',
     ];
 }

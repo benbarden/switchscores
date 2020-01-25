@@ -24,8 +24,7 @@ class GameCalendarService
     {
         $monthName = $year.'-'.$month;
         $gameCalendarStat = GameCalendarStat::
-            where('region', 'eu')
-            ->where('month_name', $monthName)
+            where('month_name', $monthName)
             ->get();
 
         if ($gameCalendarStat) {

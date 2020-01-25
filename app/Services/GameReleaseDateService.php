@@ -123,7 +123,6 @@ class GameReleaseDateService
 
     /**
      * @param $seriesId
-     * @param $region
      * @param int $limit
      * @return mixed
      */

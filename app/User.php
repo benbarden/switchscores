@@ -15,7 +15,7 @@ class User extends Authenticatable
     // is_admin, is_owner, is_staff: these have to be fillable or unit tests will fail
     protected $fillable = [
         'is_admin', 'is_owner', 'is_staff', 'user_roles',
-        'display_name', 'email', 'password', 'region', 'partner_id',
+        'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'login_date', 'points_balance'
     ];
 
