@@ -67,7 +67,7 @@ class GamesDetailController extends Controller
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();
-        $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
+        $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 10);
         $bindings['GameAuditsCore'] = $gameAudits;
 
         // Import rules
