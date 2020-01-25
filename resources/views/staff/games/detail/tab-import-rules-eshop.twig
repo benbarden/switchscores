@@ -1,0 +1,72 @@
+{% if ImportRulesEshop %}
+    <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-eshop.edit', {'gameId': GameId}) }}">Edit rules</a>
+    <br><br>
+    <table class="table table-condensed table-responsive">
+        <tbody>
+        <tr>
+            <td>
+                Ignore publishers
+            </td>
+            <td>
+                {% if ImportRulesEshop.shouldIgnorePublishers() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore Europe dates
+            </td>
+            <td>
+                {% if ImportRulesEshop.shouldIgnoreEuropeDates() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore price
+            </td>
+            <td>
+                {% if ImportRulesEshop.shouldIgnorePrice() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore players
+            </td>
+            <td>
+                {% if ImportRulesEshop.shouldIgnorePlayers() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore genres
+            </td>
+            <td>
+                {% if ImportRulesEshop.shouldIgnoreGenres() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% else %}
+    No eShop rules found.
+    <br><br>
+    <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-eshop.edit', {'gameId': GameId}) }}">Add rules</a>
+{% endif %}

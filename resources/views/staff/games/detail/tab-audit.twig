@@ -1,0 +1,5 @@
+{% if GameAuditsCore|length %}
+    <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.detail.fullAudit', {'game': GameData}) }}">View all</a>
+    <br><br>
+    {% include 'staff/games/detail/table-audit.twig' with {'GameAuditsCore': GameAuditsCore} %}
+{% endif %}

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Game;
+
 use App\Traits\SwitchServices;
 
 class GamesDetailController extends Controller
@@ -73,6 +75,22 @@ class GamesDetailController extends Controller
         $bindings['ImportRulesWikipedia'] = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
 
         return view('staff.games.detail.show', $bindings);
+    }
+
+    public function showFullAudit(Game $game)
+    {
+        $gameId = $game->id;
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $game->title.' - Game detail - Admin';
+        $bindings['PageTitle'] = $game->title;
+
+        $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
+        $bindings['GameAuditsCore'] = $gameAudits;
+        $bindings['GameId'] = $gameId;
+
+        return view('staff.games.detail.fullAudit', $bindings);
     }
 
 }

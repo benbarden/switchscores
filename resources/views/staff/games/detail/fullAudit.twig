@@ -1,0 +1,43 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.games.dashboard'), 'text': 'Games'},
+    {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Game detail'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>Full audit history</h2>
+
+        {% if GameAuditsCore|length %}
+            {% include 'staff/games/detail/table-audit.twig' with {'GameAuditsCore': GameAuditsCore} %}
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    var gameId = '{{ GameId }}';
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

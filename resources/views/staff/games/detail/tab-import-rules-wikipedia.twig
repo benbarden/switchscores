@@ -1,0 +1,72 @@
+{% if ImportRulesWikipedia %}
+    <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-wikipedia.edit', {'gameId': GameId}) }}">Edit rules</a>
+    <br><br>
+    <table class="table table-condensed table-responsive">
+        <tbody>
+        <tr>
+            <td>
+                Ignore developers
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnoreDevelopers() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore publishers
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnorePublishers() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore Europe dates
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnoreEuropeDates() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore US dates
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnoreUSDates() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ignore JP dates
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnoreJPDates() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% else %}
+    No Wikipedia rules found.
+    <br><br>
+    <a class="btn btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.import-rule-wikipedia.edit', {'gameId': GameId}) }}">Add rules</a>
+{% endif %}

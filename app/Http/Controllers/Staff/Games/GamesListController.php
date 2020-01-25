@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\GamePrimaryType;
 use App\GameSeries;
-use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 

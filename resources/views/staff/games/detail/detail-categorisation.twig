@@ -1,0 +1,93 @@
+<h2>Categorisation</h2>
+
+<table class="table table-condensed table-responsive">
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Primary type</span>
+        </td>
+        <td>
+            {% if GameData.primary_type_id %}
+                <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}" target="_blank">{{ GameData.primaryType.primary_type }}</a>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Series</span>
+        </td>
+        <td>
+            {% if GameData.series_id %}
+                <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <a href="{{ route('staff.categorisation.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
+        </td>
+        <td>
+            {% if GameTags|length > 0 %}
+                {% for item in GameTags %}
+                    <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
+                        <nobr>{{ item.tag.tag_name }}</nobr>
+                    </a>
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                <em>None set.</em>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Genres</span>
+        </td>
+        <td>
+            {% if GameGenres|length > 0 %}
+                {% for item in GameGenres %}
+                    <nobr>{{ item.genre.genre }}</nobr>
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                <em>None set.</em>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+        </td>
+        <td>
+            {% if GameDevelopers|length > 0 %}
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}" target="_blank">{{ item.developer.name }}</a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.developer }}
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+        </td>
+        <td>
+            {% if GamePublishers|length > 0 %}
+                {% for item in GamePublishers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" target="_blank">{{ item.publisher.name }}</a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.publisher }}
+            {% endif %}
+        </td>
+    </tr>
+
+</table>
