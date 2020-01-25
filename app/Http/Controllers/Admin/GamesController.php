@@ -74,10 +74,6 @@ class GamesController extends Controller
                     $gameList = $serviceGameReleaseDate->getReleased();
                     $jsInitialSort = "[ 3, 'desc'], [ 1, 'asc']";
                     break;
-                case 'unreleased':
-                    $gameList = $serviceGameReleaseDate->getUnreleased();
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
                 // Action lists
                 case 'action-list-games-for-release':
                     $gameList = $serviceGame->getActionListGamesForRelease();

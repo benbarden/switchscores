@@ -31,10 +31,10 @@ class GamesListController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Games - Upcoming';
-        $bindings['PageTitle'] = 'Upcoming games';
+        $bindings['TopTitle'] = 'Games - Upcoming and unreleased';
+        $bindings['PageTitle'] = 'Upcoming and unreleased games';
 
-        $bindings['GameList'] = $serviceGameReleaseDate->getUpcoming();
+        $bindings['GameList'] = $serviceGameReleaseDate->getAllUnreleased();
         $bindings['jsInitialSort'] = "[ 3, 'asc']";
 
         return view('staff.games.list.standard-view', $bindings);
@@ -45,7 +45,6 @@ class GamesListController extends Controller
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameGenre = $this->getServiceGameGenre();
-        $serviceGameTag = $this->getServiceGameTag();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -74,10 +73,6 @@ class GamesListController extends Controller
                 case 'released':
                     $gameList = $serviceGameReleaseDate->getReleased();
                     $jsInitialSort = "[ 3, 'desc'], [ 1, 'asc']";
-                    break;
-                case 'unreleased':
-                    $gameList = $serviceGameReleaseDate->getUnreleased();
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Action lists
                 case 'action-list-games-for-release':

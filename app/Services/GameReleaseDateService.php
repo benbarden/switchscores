@@ -3,92 +3,15 @@
 
 namespace App\Services;
 
-use App\GameReleaseDate;
 use Illuminate\Support\Facades\DB;
 
+use App\Game;
 
 class GameReleaseDateService
 {
-    public function createGameReleaseDate(
-        $gameId, $region, $releaseDate, $released, $upcomingDate
-    )
-    {
-        $isReleased = $released == 'on' ? 1 : 0;
 
-        $releaseYear = $this->getReleaseYear($releaseDate);
-
-        GameReleaseDate::create([
-            'game_id' => $gameId,
-            'region' => $region,
-            'release_date' => $releaseDate,
-            'is_released' => $isReleased,
-            'upcoming_date' => $upcomingDate,
-            'release_year' => $releaseYear
-        ]);
-    }
-
-    public function editGameReleaseDate(
-        GameReleaseDate $gameReleaseDate, $releaseDate, $released, $upcomingDate
-    )
-    {
-        $isReleased = $released == 'on' ? 1 : 0;
-
-        $releaseYear = $this->getReleaseYear($releaseDate);
-
-        $values = [
-            'release_date' => $releaseDate,
-            'is_released' => $isReleased,
-            'upcoming_date' => $upcomingDate,
-            'release_year' => $releaseYear
-        ];
-
-        $gameReleaseDate->fill($values);
-        $gameReleaseDate->save();
-    }
-
-    public function deleteByGameId($gameId)
-    {
-        GameReleaseDate::where('game_id', $gameId)->delete();
-    }
-
-    // ********************************************************** //
-
-    /**
-     * @param $releaseDate
-     * @throws \Exception
-     * @return null|string
-     */
-    public function getReleaseYear($releaseDate)
-    {
-        if ($releaseDate) {
-            $releaseDateObject = new \DateTime($releaseDate);
-            $releaseYear = $releaseDateObject->format('Y');
-        } else {
-            $releaseYear = null;
-        }
-
-        return $releaseYear;
-    }
-
-    public function getByGame($gameId)
-    {
-        return GameReleaseDate::where('game_id', $gameId)->get();
-    }
-
-    public function getByGameAndRegion($gameId, $region)
-    {
-        $releaseDate = GameReleaseDate::
-            where('game_id', $gameId)
-            ->where('region', $region)
-            ->get();
-
-        if (!$releaseDate->isEmpty()) {
-            return $releaseDate->first();
-        } else {
-            return null;
-        }
-    }
-
+    // ********************************************** //
+    // Released games
     // ********************************************** //
 
     /**
@@ -97,27 +20,8 @@ class GameReleaseDateService
      */
     public function countReleased()
     {
-        $gameCount = DB::table('games')
-            ->where('games.eu_is_released', 1)
-            ->count();
-
-        return $gameCount;
+        return Game::where('games.eu_is_released', 1)->count();
     }
-
-    /**
-     * Welcome page stats
-     * @return integer
-     */
-    public function countUpcoming()
-    {
-        $gameCount = DB::table('games')
-            ->where('games.eu_is_released', 0)
-            ->count();
-
-        return $gameCount;
-    }
-
-    // ********************************************** //
 
     /**
      * @param int $limit
@@ -140,6 +44,60 @@ class GameReleaseDateService
 
         return $games;
     }
+
+    // ********************************************** //
+    // Upcoming games
+    // ********************************************** //
+
+    /**
+     * This is used on the public site. Games with no release date are hidden.
+     * @param int $limit
+     * @return mixed
+     */
+    public function getUpcoming($limit = null)
+    {
+        $games = DB::table('games')
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->orderBy('games.eu_release_date', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * Only used for Staff
+     * @return integer
+     */
+    public function countUpcoming()
+    {
+        return Game::where('games.eu_is_released', 0)->count();
+    }
+
+    /**
+     * This is used for Staff - all unreleased games are shown.
+     * There's no limit (aka 2 Unlimited) as we want the full list.
+     * @return mixed
+     */
+    public function getAllUnreleased()
+    {
+        $games = DB::table('games')
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->orderBy('games.eu_release_date', 'asc')
+            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
+    // ********************************************** //
 
     /**
      * @param $primaryTypeId
@@ -248,43 +206,6 @@ class GameReleaseDateService
         if ($limit != null) {
             $games = $games->limit($limit);
         }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @param int $limit
-     * @return mixed
-     */
-    public function getUpcoming($limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 0)
-            ->whereNotNull('games.eu_release_date')
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUnreleased()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 0)
-            ->whereNull('games.eu_release_date')
-            ->orderBy('games.title', 'asc');
-
         $games = $games->get();
 
         return $games;

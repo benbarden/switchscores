@@ -10,6 +10,36 @@ use App\Construction\Game\GameDirector;
 
 class GameDirectorTest extends TestCase
 {
+    public function testBuildReleaseYear()
+    {
+        $releaseDate = '2018-01-01';
+
+        $director = new GameDirector();
+        $releaseYear = $director->buildReleaseYear($releaseDate);
+
+        $this->assertEquals('2018', $releaseYear);
+    }
+
+    public function testReleaseYear2020()
+    {
+        $releaseDate = '2020-01-03';
+
+        $director = new GameDirector();
+        $releaseYear = $director->buildReleaseYear($releaseDate);
+
+        $this->assertEquals('2020', $releaseYear);
+    }
+
+    public function testReleaseYearNull()
+    {
+        $releaseDate = null;
+
+        $director = new GameDirector();
+        $releaseYear = $director->buildReleaseYear($releaseDate);
+
+        $this->assertEquals(null, $releaseYear);
+    }
+
     public function testBasicUsage()
     {
         $title = 'Mario';

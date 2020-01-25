@@ -29,10 +29,12 @@ class DashboardController extends Controller
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
 
-        // Stats
+        // Release date stats
         $bindings['TotalGameCount'] = $serviceGame->getCount();
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
+
+        // eShop
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
