@@ -6,10 +6,6 @@ use App\Services\HtmlLoader\Wikipedia\DateHandler;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-use App\Game;
-use App\GameReleaseDate;
-use App\FeedItemGame;
-
 class WikipediaDateHandlerTest extends TestCase
 {
     /**

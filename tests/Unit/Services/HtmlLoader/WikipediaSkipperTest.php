@@ -7,8 +7,6 @@ use App\Services\HtmlLoader\Wikipedia\DateHandler as WikiDateHandler;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-use App\Game;
-use App\GameReleaseDate;
 use App\FeedItemGame;
 
 class WikipediaSkipperTest extends TestCase
