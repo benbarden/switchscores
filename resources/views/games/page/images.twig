@@ -1,12 +1,4 @@
 {% if VideoUrl %}
-    {% if VideoUrl != '' and GameData.video_header_text != '' %}
-        <h3>
-            {{ GameData.video_header_text }}
-            <small>
-                (<a href="{{ VideoUrl }}" target="_blank">view original</a>)
-            </small>
-        </h3>
-    {% endif %}
     {# http://fotorama.io/customize/ #}
     <link href="//cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>

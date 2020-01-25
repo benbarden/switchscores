@@ -121,12 +121,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setVideoHeaderText($videoHeaderText): GameBuilder
-    {
-        $this->game->video_header_text = $videoHeaderText;
-        return $this;
-    }
-
     public function setBoxartSquareUrl($boxartSquareUrl): GameBuilder
     {
         $this->game->boxart_square_url = $boxartSquareUrl;

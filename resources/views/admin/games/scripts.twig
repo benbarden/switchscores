@@ -26,7 +26,6 @@
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
         // *** Media *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
-        formVals['video_header_text'] = "{{ GameData.video_header_text }}";
 
     } else {
 
@@ -53,7 +52,6 @@
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
         // *** Media *** //
         formVals['video_url'] = "{{ old('video_url') }}";
-        formVals['video_header_text'] = "{{ old('video_header_text') }}";
 
     }
 
@@ -83,7 +81,6 @@
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
     // *** Media *** //
     $('#video_url').val(formVals['video_url']);
-    $('#video_header_text').val(formVals['video_header_text']);
 
     // *** Genres *** //
     {% if GameGenreList %}

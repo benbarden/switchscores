@@ -28,14 +28,13 @@ class GameService
      * @param null $boxartSquareUrl
      * @param null $eshopEuropeFsId
      * @param null $boxartHeaderImage
-     * @param null $videoHeaderText
      * @return Game
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null, $videoHeaderText = null
+        $boxartHeaderImage = null
     )
     {
         return Game::create([
@@ -51,7 +50,6 @@ class GameService
             'boxart_square_url' => $boxartSquareUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
-            'video_header_text' => $videoHeaderText,
         ]);
     }
 
@@ -60,7 +58,7 @@ class GameService
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
         $amazonUkLink = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null, $videoHeaderText = null
+        $boxartHeaderImage = null
     )
     {
         $values = [
@@ -75,7 +73,6 @@ class GameService
             'boxart_square_url' => $boxartSquareUrl,
             'eshop_europe_fs_id' => $eshopEuropeFsId,
             'boxart_header_image' => $boxartHeaderImage,
-            'video_header_text' => $videoHeaderText,
         ];
 
         $game->fill($values);
