@@ -18,7 +18,8 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Primary type</th>
-                <th class="text-center">Games with primary type</th>
+                <th class="text-center">Game count</th>
+                <th class="text-center">View</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -35,6 +36,9 @@
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.games.list.by-primary-type', {'primaryType': item}) }}">View games</a>
                     </td>
                     <td class="text-center">
                         {% if item.games().count == 0 %}
@@ -56,6 +60,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,

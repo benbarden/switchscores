@@ -14,6 +14,7 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Title</th>
+                <th>{{ CustomHeader }}</th>
                 <th class="text-center">eShop: EU</th>
                 <th>Release date (EU)</th>
                 <th class="text-center">Options</th>
@@ -31,6 +32,13 @@
                             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                         </a>
                     </td>
+                    <td>
+                        {% if ListMode == 'by-primary-type' %}
+                            {{ item.primaryType.primary_type }}
+                        {% elseif ListMode == 'by-series' %}
+                            {{ item.series.series }}
+                        {% endif %}
+                    </td>
                     <td class="text-center">
                         {% if item.eshop_europe_fs_id %}
                             <i class="fas fa-link"></i>
@@ -42,8 +50,7 @@
                         {{ item.eu_release_date }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('admin.games.delete', {'gameId': item.id}) }}">Delete</a>
+                        <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -62,6 +69,7 @@
             "columns": [
                 null,
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 null,
                 { "orderable": false }

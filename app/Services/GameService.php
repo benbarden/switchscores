@@ -5,6 +5,8 @@ namespace App\Services;
 
 use App\Game;
 use App\GameGenre;
+use App\GamePrimaryType;
+use App\GameSeries;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -207,6 +209,16 @@ class GameService
     public function getByPublisher($publisher)
     {
         return Game::where('publisher', $publisher)->orderBy('title', 'asc')->get();
+    }
+
+    public function getByPrimaryType(GamePrimaryType $primaryType)
+    {
+        return Game::where('primary_type_id', $primaryType->id)->orderBy('title', 'asc')->get();
+    }
+
+    public function getBySeries(GameSeries $gameSeries)
+    {
+        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
     }
 
     public function getByIdList($idList)

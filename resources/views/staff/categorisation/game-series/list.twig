@@ -18,7 +18,8 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Game series</th>
-                <th class="text-center">Games with series</th>
+                <th class="text-center">Game count</th>
+                <th class="text-center">View</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -33,6 +34,9 @@
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.games.list.by-series', {'gameSeries': item}) }}">View games</a>
                     </td>
                     <td class="text-center">
                         {% if item.games().count == 0 %}
@@ -54,6 +58,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,

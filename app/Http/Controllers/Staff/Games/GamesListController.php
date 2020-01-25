@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use App\GamePrimaryType;
+use App\GameSeries;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
@@ -36,6 +38,38 @@ class GamesListController extends Controller
 
         $bindings['GameList'] = $serviceGameReleaseDate->getAllUnreleased();
         $bindings['jsInitialSort'] = "[ 3, 'asc']";
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function byPrimaryType(GamePrimaryType $primaryType)
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Games - By primary type: '.$primaryType->primary_type;
+        $bindings['PageTitle'] = 'Games - By primary type: '.$primaryType->primary_type;
+
+        $bindings['GameList'] = $this->getServiceGame()->getByPrimaryType($primaryType);
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
+
+        $bindings['CustomHeader'] = 'Primary type';
+        $bindings['ListMode'] = 'by-primary-type';
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function bySeries(GameSeries $gameSeries)
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Games - By series: '.$gameSeries->series;
+        $bindings['PageTitle'] = 'Games - By series: '.$gameSeries->series;
+
+        $bindings['GameList'] = $this->getServiceGame()->getBySeries($gameSeries);
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
+
+        $bindings['CustomHeader'] = 'Series';
+        $bindings['ListMode'] = 'by-series';
 
         return view('staff.games.list.standard-view', $bindings);
     }
