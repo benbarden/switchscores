@@ -62,26 +62,131 @@
 
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
+
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
+
                         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
-                            <li><a href="{{ route('staff.games.dashboard') }}">Games</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Games <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
+                                <li><a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.games.list')}}/action-list-games-for-release">Games to release</a></li>
+                                <li><a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a></li>
+                                <li><a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.games.list') }}">All games</a></li>
+                                <li><a href="{{ route('admin.games-title-hash.list') }}">All title hashes</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameCalendarStats'}) }}">UpdateGameCalendarStats</a>
+                            </ul>
+                        </li>
                         {% endif %}
+
                         {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('staff.reviews.dashboard') }}">Reviews</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Reviews <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.reviews.dashboard') }}">Reviews dashboard</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a></li>
+                                    <li><a href="{{ route('admin.reviews.partner.list') }}">Partner reviews</a></li>
+                                    <li><a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a></li>
+                                    <li><a href="{{ route('admin.reviews.link.list') }}">Review links</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedImporter'}) }}">RunFeedImporter</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedParser'}) }}">RunFeedParser</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'RunFeedReviewGenerator'}) }}">RunFeedReviewGenerator</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameRanks'}) }}">UpdateGameRanks</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'UpdateGameReviewStats'}) }}">UpdateGameReviewStats</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
+
                         {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('staff.categorisation.dashboard') }}">Categorisation</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Categorisation <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.categorisation.dashboard') }}">Categorisation dashboard</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('staff.categorisation.game-primary-types.list') }}">Primary types</a></li>
+                                    <li><a href="{{ route('staff.categorisation.tag.list') }}">Tags</a></li>
+                                    <li><a href="{{ route('staff.categorisation.genre.list') }}">Genres</a></li>
+                                    <li><a href="{{ route('staff.categorisation.game-series.list') }}">Series</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
+
                         {% if auth_user().hasRole('Partnerships manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('staff.partners.dashboard') }}">Partners</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Partners <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.partners.dashboard') }}">Partners dashboard</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.reviews.site.list') }}">Review sites</a></li>
+                                    <li><a href="{{ route('admin.partners.games-company.list') }}">Games companies</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'PartnerUpdateFields'}) }}">PartnerUpdateFields</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
+
                         {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('staff.eshop.dashboard') }}">eShop</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    eShop <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.eshop.dashboard') }}">eShop dashboard</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('staff.eshop.feed-items-europe.list') }}/no-link">eShop items not linked to a game</a></li>
+                                    <li><a href="{{ route('admin.games-filter.games-no-eshop-europe-link') }}">Games with no eShop link</a></li>
+                                    <li><a href="{{ route('admin.action-lists.no-price') }}">Games with no price</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('staff.eshop.alerts.errors') }}">eShop errors</a></li>
+                                    <li><a href="{{ route('staff.eshop.alerts.warnings') }}">eShop warnings</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeImportData'}) }}">EshopEuropeImportData</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeLinkGames'}) }}">EshopEuropeLinkGames</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeUpdateGameData'}) }}">EshopEuropeUpdateGameData</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeDownloadPackshots'}) }}">EshopEuropeDownloadPackshots</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeRedownloadPackshots'}) }}">EshopEuropeRedownloadPackshots</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
+
                         {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
-                            <li><a href="{{ route('staff.wikipedia.dashboard') }}">Wikipedia</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Wikipedia <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.wikipedia.dashboard') }}">Wikipedia dashboard</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('staff.wikipedia.wiki-updates.list-with-game-id') }}">Wiki updates: Pending with game id</a></li>
+                                    <li><a href="{{ route('staff.wikipedia.wiki-updates.list-no-game-id') }}">Wiki updates: Pending, no game id</a></li>
+                                    <li><a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}">Wiki updates: All pending</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaCrawlGamesList'}) }}">WikipediaCrawlGamesList</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaImportGamesList'}) }}">WikipediaImportGamesList</a></li>
+                                    <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'WikipediaUpdateGamesList'}) }}">WikipediaUpdateGamesList</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
+
                         {% if auth_user().isOwner() %}
                             <li><a href="{{ route('staff.stats.dashboard') }}">Stats</a></li>
                         {% endif %}
@@ -89,15 +194,13 @@
                         {% if auth_user().isOwner() %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Admin <span class="caret"></span>
+                                    Owner links <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.index') }}">Staff index</a></li>
-                                    <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
-                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('owner.audit.index') }}">Audit</a></li>
+                                    <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                     <li><a href="{{ route('owner.user.list') }}">Users</a></li>
                                     <li><a href="{{ route('admin.news.list') }}">News</a></li>
-                                    <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                 </ul>
                             </li>
                         {% endif %}
