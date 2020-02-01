@@ -99,32 +99,32 @@
 
     <div class="col-md-4">
 
-        <h2>Release date stats</h2>
+        <h2>Game stats</h2>
 
         <table class="table">
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games.list') }}">Total games</a>
+                    Total games
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list') }}" class="h4">{{ TotalGameCount }}</a>
+                    <span class="h4">{{ TotalGameCount }}</span>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('admin.games.list') }}/released">Released games</a>
+                    Released games
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list') }}/released" class="h4">{{ ReleasedGameCount }}</a>
+                    <span class="h4">{{ ReleasedGameCount }}</span>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
+                    Upcoming games
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('staff.games.list.upcoming-games') }}" class="h4">{{ UpcomingGameCount }}</a>
+                    <span class="h4">{{ UpcomingGameCount }}</span>
                 </td>
             </tr>
             </tbody>
