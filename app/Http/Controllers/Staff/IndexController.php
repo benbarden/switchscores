@@ -32,7 +32,8 @@ class IndexController extends Controller
 
         // Information and site stats
         $bindings['RegisteredUserCount'] = $serviceUser->getCount();
-        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
+        $ignoreFsIdList = $this->getServiceEshopEuropeIgnore()->getIgnoredFsIdList();
+        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink($ignoreFsIdList, null, true);
 
         // Updates requiring approval
         $unprocessedFeedReviewItems = $serviceFeedItemReview->getUnprocessed();
