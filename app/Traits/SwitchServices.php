@@ -8,6 +8,7 @@ use App\Services\AuditService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
+use App\Services\EshopEuropeIgnoreService;
 use App\Services\FeedItemGameService;
 use App\Services\FeedItemReviewService;
 use App\Services\GameActionListService;
@@ -126,6 +127,14 @@ trait SwitchServices
     public function getServiceEshopEuropeGame()
     {
         return $this->loadService('EshopEuropeGameService');
+    }
+
+    /**
+     * @return EshopEuropeIgnoreService
+     */
+    public function getServiceEshopEuropeIgnore()
+    {
+        return $this->loadService('EshopEuropeIgnoreService');
     }
 
     /**

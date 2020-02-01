@@ -227,6 +227,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/eshop/feed-items-europe/view/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@view')->name('staff.eshop.feed-items-europe.view');
     Route::get('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
     Route::post('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
+    Route::get('/staff/eshop/europe/add-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@addToIgnoreList')->name('staff.eshop.europe.addToIgnoreList');
+    Route::get('/staff/eshop/europe/remove-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@removeFromIgnoreList')->name('staff.eshop.europe.removeFromIgnoreList');
 
 });
 
@@ -400,16 +402,3 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 });
 
 Auth::routes();
-
-
-
-/* Misc redirects */
-//Route::get('/lists/released-nintendo-switch-games', 'ListsController@releasedGames')->name('lists.released');
-//Route::get('/lists/upcoming-nintendo-switch-games', 'ListsController@upcomingGames')->name('lists.upcoming');
-
-// **** NOTE: THESE NEED TO BE LAST! **** //
-
-/* Blog redirects */
-//Route::get('/tag/{tag}/', 'BlogController@redirectTag')->name('blog.redirectTag');
-//Route::get('/category/{tag}/', 'BlogController@redirectCategory')->name('blog.redirectCategory');
-//Route::get('/{year}/{month}/{day}/{title}/', 'BlogController@redirectPost')->name('blog.redirectPost');

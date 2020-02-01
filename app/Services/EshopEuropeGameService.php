@@ -57,14 +57,17 @@ class EshopEuropeGameService
         return EshopEuropeGame::orderBy('title', 'asc')->count();
     }
 
-    public function getAllWithLink($limit = null, $count = false)
+    public function getAllWithLink($ignoreFsIdList = null, $limit = null, $count = false)
     {
         $feedItems = DB::table('eshop_europe_games')
             ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
             ->select('eshop_europe_games.*',
                 'games.id AS game_id')
-            ->whereNotNull('games.id')
-            ->orderBy('eshop_europe_games.title', 'asc');
+            ->whereNotNull('games.id');
+        if ($ignoreFsIdList) {
+            $feedItems = $feedItems->whereNotIn('eshop_europe_games.fs_id', $ignoreFsIdList);
+        }
+        $feedItems = $feedItems->orderBy('eshop_europe_games.title', 'asc');
         if ($limit) {
             $feedItems = $feedItems->limit($limit);
         }
@@ -77,14 +80,17 @@ class EshopEuropeGameService
         return $feedItems;
     }
 
-    public function getAllWithoutLink($limit = null, $count = false)
+    public function getAllWithoutLink($ignoreFsIdList = null, $limit = null, $count = false)
     {
         $feedItems = DB::table('eshop_europe_games')
             ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
             ->select('eshop_europe_games.*',
                 'games.id AS game_id')
-            ->whereNull('games.id')
-            ->orderBy('eshop_europe_games.title', 'asc');
+            ->whereNull('games.id');
+        if ($ignoreFsIdList) {
+            $feedItems = $feedItems->whereNotIn('eshop_europe_games.fs_id', $ignoreFsIdList);
+        }
+        $feedItems = $feedItems->orderBy('eshop_europe_games.title', 'asc');
         if ($limit) {
             $feedItems = $feedItems->limit($limit);
         }
@@ -94,6 +100,19 @@ class EshopEuropeGameService
             $feedItems = $feedItems->get();
         }
 
+        return $feedItems;
+    }
+
+    public function getByFsIdList($fsIdList)
+    {
+        $feedItems = DB::table('eshop_europe_games')
+            ->leftJoin('games', 'eshop_europe_games.fs_id', '=', 'games.eshop_europe_fs_id')
+            ->select('eshop_europe_games.*',
+                'games.id AS game_id')
+            ->whereNull('games.id')
+            ->whereIn('eshop_europe_games.fs_id', $fsIdList)
+            ->orderBy('eshop_europe_games.title', 'asc')
+            ->get();
         return $feedItems;
     }
 

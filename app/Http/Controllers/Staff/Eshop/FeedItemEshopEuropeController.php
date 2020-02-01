@@ -23,6 +23,9 @@ class FeedItemEshopEuropeController extends Controller
         $bindings = [];
 
         $serviceEshopGame = $this->getServiceEshopEuropeGame();
+        $serviceEshopIgnore = $this->getServiceEshopEuropeIgnore();
+
+        $ignoredIdList = $serviceEshopIgnore->getIgnoredFsIdList();
 
         $jsInitialSort = "[ 1, 'asc']";
         if ($report == null) {
@@ -32,10 +35,13 @@ class FeedItemEshopEuropeController extends Controller
             $bindings['ActiveNav'] = $report;
             switch ($report) {
                 case 'with-link':
-                    $feedItems = $serviceEshopGame->getAllWithLink();
+                    $feedItems = $serviceEshopGame->getAllWithLink($ignoredIdList);
                     break;
                 case 'no-link':
-                    $feedItems = $serviceEshopGame->getAllWithoutLink();
+                    $feedItems = $serviceEshopGame->getAllWithoutLink($ignoredIdList);
+                    break;
+                case 'ignored':
+                    $feedItems = $serviceEshopGame->getByFsIdList($ignoredIdList);
                     break;
                 default:
                     abort(404);
@@ -138,4 +144,65 @@ class FeedItemEshopEuropeController extends Controller
 
         return view('staff.eshop.feed-items-europe.add-game', $bindings);
     }
+
+    public function addToIgnoreList()
+    {
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
+        $serviceEshopEuropeIgnore = $this->getServiceEshopEuropeIgnore();
+
+        $request = request();
+
+        $fsId = $request->fsId;
+        if (!$fsId) {
+            return response()->json(['error' => 'Missing data: fsId'], 400);
+        }
+
+        $eshopEuropeGame = $serviceEshopEuropeGame->getByFsId($fsId);
+        if (!$eshopEuropeGame) {
+            return response()->json(['error' => 'eShop Europe record not found for fsId: '.$fsId], 400);
+        }
+
+        $eshopEuropeIgnore = $serviceEshopEuropeIgnore->getByFsId($fsId);
+        if ($eshopEuropeIgnore) {
+            return response()->json(['error' => 'eShop Europe record is already marked as ignored'], 400);
+        }
+
+        $serviceEshopEuropeIgnore->add($fsId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function removeFromIgnoreList()
+    {
+        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
+        $serviceEshopEuropeIgnore = $this->getServiceEshopEuropeIgnore();
+
+        $request = request();
+
+        $fsId = $request->fsId;
+        if (!$fsId) {
+            return response()->json(['error' => 'Missing data: fsId'], 400);
+        }
+
+        $eshopEuropeGame = $serviceEshopEuropeGame->getByFsId($fsId);
+        if (!$eshopEuropeGame) {
+            return response()->json(['error' => 'eShop Europe record not found for fsId: '.$fsId], 400);
+        }
+
+        $eshopEuropeIgnore = $serviceEshopEuropeIgnore->getByFsId($fsId);
+        if (!$eshopEuropeIgnore) {
+            return response()->json(['error' => 'eShop Europe record is not marked as ignored'], 400);
+        }
+
+        $serviceEshopEuropeIgnore->deleteByFsId($fsId);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
 }

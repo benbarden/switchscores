@@ -34,7 +34,7 @@ class DashboardController extends Controller
 
         // Stats
         $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();
-        $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, true);
+        $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, null, true);
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
