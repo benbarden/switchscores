@@ -33,9 +33,10 @@ class DashboardController extends Controller
         $bindings['EshopAlertWarningCount'] = $serviceEshopEuropeAlert->countByType(EshopEuropeAlert::TYPE_WARNING);
 
         // Stats
+        $ignoreFsIdList = $this->getServiceEshopEuropeIgnore()->getIgnoredFsIdList();
         $bindings['EshopEuropeTotalCount'] = $serviceEshopEurope->getTotalCount();
-        $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink(null, null, true);
-        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink(null, true);
+        $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink($ignoreFsIdList, null, true);
+        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink($ignoreFsIdList, null, true);
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
 
         // Report list
