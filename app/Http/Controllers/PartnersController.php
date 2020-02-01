@@ -16,6 +16,10 @@ class PartnersController extends Controller
     {
         $bindings = [];
 
+        $servicePartner = $this->getServicePartner();
+        $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
+        $bindings['ReviewPartnerList'] = $reviewPartnerList;
+
         $bindings['TopTitle'] = 'Partners';
         $bindings['PageTitle'] = 'Partners';
 
@@ -25,10 +29,6 @@ class PartnersController extends Controller
     public function reviewSites()
     {
         $bindings = [];
-
-        $servicePartner = $this->getServicePartner();
-        $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
-        $bindings['ReviewPartnerList'] = $reviewPartnerList;
 
         $bindings['TopTitle'] = 'Review partners';
         $bindings['PageTitle'] = 'Review partners';

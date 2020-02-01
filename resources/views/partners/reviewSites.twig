@@ -75,41 +75,6 @@
         </ul>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>
-            Our review partners
-        </h2>
-        {% if ReviewPartnerList %}
-            <table class="table table-responsive">
-                <thead>
-                <tr>
-                    <th class="text-left">Name</th>
-                    <th class="text-center">Link</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in ReviewPartnerList %}
-                    <tr>
-                        <td class="text-left">
-                            <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}">
-                                {{ item.name }}
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ item.website_url }}" target="_blank">Visit site</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <p>
-                <small>
-                    The above is a list of our partners who have published a Switch review within
-                    the last 30 days.
-                </small>
-            </p>
-        {% else %}
-            <p>Could not display review partners.</p>
-        {% endif %}
     </div>
 </div>
 

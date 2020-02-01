@@ -4,14 +4,15 @@
 
 {% block page_body %}
 
-<p>
-    Switch Scores works with a variety of different partners to import review scores and keep the games
-    database updated. Interested in joining? See below for further details.
-</p>
-
 <div class="row wos-content-page">
 
-    <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+
+        <p>
+            Switch Scores works with review partners, games developers and publishers to provide
+            a comprehensive database of Nintendo Switch reviews.
+            Interested in joining? See below for further details.
+        </p>
 
         <h2>Review sites</h2>
 
@@ -24,21 +25,21 @@
         </h3>
 
         <ul>
-            <li>A dedicated profile page for your site with some overall stats</li>
             <li>Your reviews will be linked from our game pages</li>
             <li>Your scores will be included in our ranking calculations</li>
+            <li>A dedicated profile page for your site with some overall stats</li>
+            <li>Partner dashboard with additional stats and info on your reviews</li>
             <li>Coming soon: Connect with indie developers and publishers</li>
-            <li>Coming soon: Partner dashboard with additional stats and info on your reviews</li>
         </ul>
 
-    </div>
+        <div class="text-center">
+            <a href="{{ route('partners.review-sites') }}" class="btn btn-lg btn-primary">Info for review partners &gt;</a>
+        </div>
 
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
-
-        <h2>Developers</h2>
+        <h2>Developers and Publishers</h2>
 
         <p>
-            Developers with one or more games on the Switch can join as a partner.
+            Developers and publishers with one or more games on the Switch can join as a partner.
         </p>
 
         <h3>
@@ -49,62 +50,63 @@
             <li>A dedicated page with your company's details, website URL, Twitter profile link,
                 and links to the games of yours we've got on the site</li>
             <li>Links back from our game pages to your on-site profile page</li>
+            <li>Partner dashboard with additional stats and info on your games</li>
             <li>Coming soon: Connect with review partners</li>
-            <li>Coming soon: Partner dashboard with additional stats and info on your games</li>
         </ul>
 
-    </div>
-
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="border-left: 1px solid #c9c9c9;">
-
-        <h2>Publishers</h2>
-
-        <p>
-            Publishers with one or more games on the Switch can join as a partner.
-        </p>
-
-        <h3>
-            Benefits:
-        </h3>
-
-        <ul>
-            <li>A dedicated page with your company's details, website URL, Twitter profile link,
-                and links to the games of yours we've got on the site</li>
-            <li>Links back from our game pages to your on-site profile page</li>
-            <li>Coming soon: Connect with review partners</li>
-            <li>Coming soon: Partner dashboard with additional stats and info on your games</li>
-        </ul>
-
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-xs-12 col-sm-4 col-md-4">
-
         <div class="text-center">
-            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.review-sites') }}';">Find out more &gt;</button>
+            <a href="{{ route('partners.developers-publishers') }}" class="btn btn-lg btn-primary">Info for developers/publishers &gt;</a>
         </div>
-
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4">
-
-        <div class="text-center">
-            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.developers-publishers') }}';">Find out more &gt;</button>
-        </div>
-
+        <h2>
+            Our review partners
+        </h2>
+        {% if ReviewPartnerList %}
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-center">View profile</th>
+                    <th class="text-center">Links</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in ReviewPartnerList %}
+                    <tr>
+                        <td class="text-left">
+                            {{ item.name }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}">Profile</a>
+                        </td>
+                        <td class="text-center">
+                            {% if item.website_url %}
+                                <a href="{{ item.website_url }}" target="_blank">
+                                    <i class="fas fa-link"></i>
+                                </a>
+                            {% endif %}
+                            {% if item.twitter_id %}
+                                <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <p>
+                <small>
+                    The above is a list of our partners who have published a Switch review within
+                    the last 30 days.
+                </small>
+            </p>
+        {% else %}
+            <p>Could not display review partners.</p>
+        {% endif %}
     </div>
-
-    <div class="col-xs-12 col-sm-4 col-md-4">
-
-        <div class="text-center">
-            <button class="btn btn-lg btn-primary" onclick="top.location.href = '{{ route('partners.developers-publishers') }}';">Find out more &gt;</button>
-        </div>
-
-    </div>
-
 </div>
 
 {% endblock page_body %}
