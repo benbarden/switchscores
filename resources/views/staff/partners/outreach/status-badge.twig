@@ -1,0 +1,18 @@
+{% set statusDesc = partnerOutreach.getStatusDesc() %}
+{% set headerSize = 'h6' %}
+
+{% if partnerOutreach.isStatusInitiated() %}
+    <span class="{{ headerSize }} label label-primary">{{ statusDesc }}</span>
+{% elseif partnerOutreach.isStatusAwaitingReply() %}
+    <span class="{{ headerSize }} label label-info">{{ statusDesc }}</span>
+{% elseif partnerOutreach.isStatusActionRequired() %}
+    <span class="{{ headerSize }} label label-warning">{{ statusDesc }}</span>
+{% elseif partnerOutreach.isStatusOutreachSuccess() %}
+    <span class="{{ headerSize }} label label-success">{{ statusDesc }}</span>
+{% elseif partnerOutreach.isStatusOutreachFail() %}
+    <span class="{{ headerSize }} label label-danger">{{ statusDesc }}</span>
+{% elseif partnerOutreach.isStatusOutreachStale() %}
+    <span class="{{ headerSize }} label label-default">{{ statusDesc }}</span>
+{% else %}
+    <span class="{{ headerSize }} label label-default">{{ statusDesc }}</span>
+{% endif %}

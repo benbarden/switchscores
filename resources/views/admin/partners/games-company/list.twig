@@ -25,6 +25,9 @@
                 <th>Twitter ID</th>
                 <th class="text-center">Assigned games<br>(developer)</th>
                 <th class="text-center">Assigned games<br>(publisher)</th>
+                <th class="text-center">Last outreach status</th>
+                <th class="text-center">Last outreach date</th>
+                <th class="text-center">Outreach history</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -57,6 +60,15 @@
                         {{ item.publisherGames().count }}
                     </td>
                     <td class="text-center">
+                        {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item.lastOutreach} %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.lastOutreach.created_at }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.partners.outreach.list', {'partner': item}) }}">View</a>
+                    </td>
+                    <td class="text-center">
                         <a href="{{ route('admin.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
                         <a href="{{ route('admin.partners.games-company.delete', {'partnerId': item.id}) }}">Delete</a>
                     </td>
@@ -83,6 +95,9 @@
                 { "orderable": false },
                 null,
                 null,
+                null,
+                null,
+                { "orderable": false },
                 { "orderable": false }
             ]
         });

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Partner;
+use App\PartnerOutreach;
 
 class PartnerService
 {
@@ -75,6 +76,19 @@ class PartnerService
     public function deleteGamesCompany($id)
     {
         Partner::where('id', $id)->delete();
+    }
+
+    // ********************************************************** //
+
+    public function editOutreach(
+        Partner $partner, PartnerOutreach $lastOutreach
+    )
+    {
+        $values = [
+            'last_outreach_id' => $lastOutreach->id,
+        ];
+
+        $partner->fill($values)->save();
     }
 
     // ********************************************************** //

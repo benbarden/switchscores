@@ -1,0 +1,90 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <a class="btn outline btn-primary" href="{{ route('staff.partners.outreach.add') }}">+ Add partner outreach</a>
+    </div>
+    <div class="col-xs-12 col-sm-9">
+    </div>
+</div>
+
+<hr>
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+{% if OutreachList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Partner</th>
+                <th class="text-center">New status</th>
+                <th class="text-center">Contact method</th>
+                <th>Contact message</th>
+                <th>Internal notes</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in OutreachList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.partner.name }}
+                    </td>
+                    <td class="text-center">
+                        {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.contact_method }}
+                    </td>
+                    <td>
+                        <small>
+                            {{ item.contact_message }}
+                        </small>
+                    </td>
+                    <td>
+                        <small>
+                            {{ item.internal_notes }}
+                        </small>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.partners.outreach.edit', {'partnerOutreach': item}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

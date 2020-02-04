@@ -32,6 +32,7 @@ use App\Services\GenreService;
 use App\Services\NewsCategoryService;
 use App\Services\NewsService;
 use App\Services\PartnerService;
+use App\Services\PartnerOutreachService;
 use App\Services\PartnerReviewService;
 use App\Services\QuickReviewService;
 use App\Services\ReviewLinkService;
@@ -327,6 +328,14 @@ trait SwitchServices
     public function getServicePartner()
     {
         return $this->loadService('PartnerService');
+    }
+
+    /**
+     * @return PartnerOutreachService
+     */
+    public function getServicePartnerOutreach()
+    {
+        return $this->loadService('PartnerOutreachService');
     }
 
     /**

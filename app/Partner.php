@@ -58,7 +58,7 @@ class Partner extends Model
         'type_id', 'status', 'name', 'link_title', 'website_url', 'twitter_id',
         'feed_url', 'feed_url_prefix', 'rating_scale', 'allow_historic_content',
         'title_match_rule_pattern', 'title_match_index',
-        'review_count', 'last_review_date'
+        'review_count', 'last_review_date', 'last_outreach_id'
     ];
 
     public function isReviewSite()
@@ -89,5 +89,15 @@ class Partner extends Model
     public function publisherGames()
     {
         return $this->hasMany('App\GamePublisher', 'publisher_id', 'id');
+    }
+
+    public function lastOutreach()
+    {
+        return $this->hasOne('App\PartnerOutreach', 'id', 'last_outreach_id');
+    }
+
+    public function outreach()
+    {
+        return $this->hasMany('App\PartnerOutreach', 'partner_id', 'id');
     }
 }
