@@ -13,6 +13,22 @@
             <tbody>
             <tr>
                 <td>
+                    Games companies with unranked games
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Unranked games with missing partner data
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Action lists - to be reviewed</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
                     <a href="{{ route('admin.action-lists.developer-missing') }}">Developer missing <small>(all fields)</small></a>
                 </td>
                 <td class="text-right">
@@ -81,7 +97,12 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.outreach.landing') }}">Partner outreach</a>
+                    <a href="{{ route('staff.partners.outreach.list') }}">Partner outreach - view all</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.outreach.add') }}">+ Add outreach</a>
                 </td>
             </tr>
             </tbody>

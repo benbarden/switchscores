@@ -34,18 +34,6 @@ class OutreachController extends Controller
         'new_status' => 'required',
     ];
 
-    public function landing()
-    {
-        $pageTitle = 'Partner outreach';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-
-        return view('staff.partners.outreach.landing', $bindings);
-    }
-
     public function showList(Partner $partner = null)
     {
         $bindings = [];

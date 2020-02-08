@@ -208,7 +208,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
 
-    Route::get('/staff/partners/outreach', 'Staff\Partners\OutreachController@landing')->name('staff.partners.outreach.landing');
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
     Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
     Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
