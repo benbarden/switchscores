@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Partners;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -33,13 +33,13 @@ class ReviewSiteController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Review sites';
+        $bindings['TopTitle'] = 'Staff - Review sites';
         $bindings['PageTitle'] = 'Review sites';
 
         $bindings['ReviewSitesActive'] = $servicePartner->getActiveReviewSites();
         $bindings['ReviewSitesInactive'] = $servicePartner->getInactiveReviewSites();
 
-        return view('admin.partners.review-site.list', $bindings);
+        return view('staff.partners.review-site.list', $bindings);
     }
 
     public function add()
@@ -69,17 +69,17 @@ class ReviewSiteController extends Controller
                 $request->title_match_index
             );
 
-            return redirect(route('admin.reviews.site.list'));
+            return redirect(route('staff.reviews.site.list'));
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Review sites - Add site';
+        $bindings['TopTitle'] = 'Staff - Review sites - Add site';
         $bindings['PageTitle'] = 'Add site';
         $bindings['FormMode'] = 'add';
 
-        return view('admin.partners.review-site.add', $bindings);
+        return view('staff.partners.review-site.add', $bindings);
     }
 
     public function edit($siteId)
@@ -115,13 +115,13 @@ class ReviewSiteController extends Controller
                 $request->title_match_index
             );
 
-            return redirect(route('admin.reviews.site.list'));
+            return redirect(route('staff.reviews.site.list'));
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Review sites - Edit site';
+        $bindings['TopTitle'] = 'Staff - Review sites - Edit site';
         $bindings['PageTitle'] = 'Edit site';
         $bindings['ReviewSiteData'] = $partnerData;
         $bindings['SiteId'] = $siteId;
@@ -135,6 +135,6 @@ class ReviewSiteController extends Controller
 
         $bindings['FormMode'] = 'edit';
 
-        return view('admin.partners.review-site.edit', $bindings);
+        return view('staff.partners.review-site.edit', $bindings);
     }
 }

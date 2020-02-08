@@ -1,6 +1,6 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.partners.games-company.list'), 'text': 'Games companies'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.partners.games-company.list'), 'text': 'Games companies'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -15,7 +15,7 @@
         <br>Please ensure this is what you want to do before proceeding. There is no option to undo the deletion if you proceed!
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.partners.games-company.delete', {'partnerId': PartnerId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.partners.games-company.delete', {'partnerId': PartnerId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

@@ -1,6 +1,9 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
@@ -69,8 +72,8 @@
                         <a href="{{ route('staff.partners.outreach.list', {'partner': item}) }}">View</a>
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('admin.partners.games-company.delete', {'partnerId': item.id}) }}">Delete</a>
+                        <a href="{{ route('staff.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.partners.games-company.delete', {'partnerId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -83,7 +86,7 @@
 {% include 'common/table-sorting.twig' %}
 <script>
     $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('admin.partners.games-company.add') }}';
+        top.location.href = '{{ route('staff.partners.games-company.add') }}';
     });
     $(document).ready(function() {
         $('.data-sortable').DataTable({

@@ -208,11 +208,28 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
 
+    // Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
     Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
     Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
     Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
     Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
+
+    // Partners: Review sites
+    Route::get('/staff/partners/review-site', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
+    Route::get('/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
+    Route::post('/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
+    Route::get('/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
+    Route::post('/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
+
+    // Partners: Games companies
+    Route::get('/staff/partners/games-company/list', 'Staff\Partners\GamesCompanyController@showList')->name('staff.partners.games-company.list');
+    Route::get('/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
+    Route::post('/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
+    Route::get('/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
+    Route::post('/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
+    Route::get('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
+    Route::post('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
 
 });
 
@@ -383,22 +400,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::post('/admin/news/add', 'Admin\NewsController@add')->name('admin.news.add');
     Route::get('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
     Route::post('/admin/news/edit/{newsId}', 'Admin\NewsController@edit')->name('admin.news.edit');
-
-    // Partners: Review sites
-    Route::get('/admin/reviews/site', 'Admin\ReviewSiteController@showList')->name('admin.reviews.site.list');
-    Route::get('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
-    Route::post('/admin/reviews/site/add', 'Admin\ReviewSiteController@add')->name('admin.reviews.site.add');
-    Route::get('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
-    Route::post('/admin/reviews/site/edit/{siteId}', 'Admin\ReviewSiteController@edit')->name('admin.reviews.site.edit');
-
-    // Partners: Games companies
-    Route::get('/admin/partners/games-company/list', 'Admin\GamesCompanyController@showList')->name('admin.partners.games-company.list');
-    Route::get('/admin/partners/games-company/add', 'Admin\GamesCompanyController@add')->name('admin.partners.games-company.add');
-    Route::post('/admin/partners/games-company/add', 'Admin\GamesCompanyController@add')->name('admin.partners.games-company.add');
-    Route::get('/admin/partners/games-company/edit/{partnerId}', 'Admin\GamesCompanyController@edit')->name('admin.partners.games-company.edit');
-    Route::post('/admin/partners/games-company/edit/{partnerId}', 'Admin\GamesCompanyController@edit')->name('admin.partners.games-company.edit');
-    Route::get('/admin/partners/games-company/delete/{partnerId}', 'Admin\GamesCompanyController@delete')->name('admin.partners.games-company.delete');
-    Route::post('/admin/partners/games-company/delete/{partnerId}', 'Admin\GamesCompanyController@delete')->name('admin.partners.games-company.delete');
 
     // Tools
     Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');

@@ -14,7 +14,7 @@
         {% if DeveloperData is not defined %}
             <div class="alert alert-warning" role="alert">
                 There isn't a record in the developer list for <strong>{{ DeveloperName }}</strong>.
-                <a href="{{ route('admin.partners.games-company.add') }}">Add one now</a>.
+                <a href="{{ route('staff.partners.games-company.add') }}">Add one now</a>.
             </div>
         {% else %}
             <input type="button" id="js-btn-add-all-new" class="btn btn-default" value="Add new dev to all">

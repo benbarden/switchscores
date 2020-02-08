@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Partners;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -31,13 +31,13 @@ class GamesCompanyController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Games companies';
+        $bindings['TopTitle'] = 'Staff - Games companies';
         $bindings['PageTitle'] = 'Games companies';
 
         $bindings['GamesCompanyList'] = $servicePartner->getAllGamesCompanies();
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
-        return view('admin.partners.games-company.list', $bindings);
+        return view('staff.partners.games-company.list', $bindings);
     }
 
     public function add()
@@ -55,17 +55,17 @@ class GamesCompanyController extends Controller
             );
             $partner->save();
 
-            return redirect(route('admin.partners.games-company.list'));
+            return redirect(route('staff.partners.games-company.list'));
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Add games company';
+        $bindings['TopTitle'] = 'Staff - Add games company';
         $bindings['PageTitle'] = 'Add games company';
         $bindings['FormMode'] = 'add';
 
-        return view('admin.partners.games-company.add', $bindings);
+        return view('staff.partners.games-company.add', $bindings);
     }
 
     public function edit($partnerId)
@@ -89,7 +89,7 @@ class GamesCompanyController extends Controller
                 $partnerData, $request->name, $request->link_title, $request->website_url, $request->twitter_id
             );
 
-            return redirect(route('admin.partners.games-company.list'));
+            return redirect(route('staff.partners.games-company.list'));
 
         } else {
 
@@ -97,7 +97,7 @@ class GamesCompanyController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Edit games company';
+        $bindings['TopTitle'] = 'Staff - Edit games company';
         $bindings['PageTitle'] = 'Edit games company';
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;
@@ -109,7 +109,7 @@ class GamesCompanyController extends Controller
 
         $bindings['StatusList'] = $statusList;
 
-        return view('admin.partners.games-company.edit', $bindings);
+        return view('staff.partners.games-company.edit', $bindings);
     }
 
     public function delete($partnerId)
@@ -142,7 +142,7 @@ class GamesCompanyController extends Controller
 
             $servicePartner->deleteGamesCompany($partnerId);
 
-            return redirect(route('admin.partners.games-company.list'));
+            return redirect(route('staff.partners.games-company.list'));
 
         } else {
 
@@ -150,13 +150,13 @@ class GamesCompanyController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Delete games company';
+        $bindings['TopTitle'] = 'Staff - Delete games company';
         $bindings['PageTitle'] = 'Delete games company';
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;
         $bindings['ErrorsCustom'] = $customErrors;
 
-        return view('admin.partners.games-company.delete', $bindings);
+        return view('staff.partners.games-company.delete', $bindings);
     }
 
 }

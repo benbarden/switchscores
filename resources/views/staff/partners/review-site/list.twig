@@ -1,0 +1,28 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a site">
+
+<hr>
+
+<h2>Active sites</h2>
+
+{% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
+
+<h2>Inactive sites</h2>
+
+{% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesInactive} %}
+
+<script>
+    $('#js-btn-add').on('click', function() {
+        top.location.href = '{{ route('staff.reviews.site.add') }}';
+    });
+</script>
+
+{% endblock page_inner %}
