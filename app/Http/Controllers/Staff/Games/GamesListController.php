@@ -120,20 +120,12 @@ class GamesListController extends Controller
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
                     break;
                 // Developers and Publishers
-                case 'game-developer-links':
-                    $gameList = $serviceGameDeveloper->getGameDeveloperLinks();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
                 case 'no-publisher-set':
                     $gameList = $serviceGamePublisher->getGamesWithNoPublisher();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 case 'old-publishers-to-migrate':
                     $gameList = $serviceGamePublisher->getOldPublishersToMigrate();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
-                case 'game-publisher-links':
-                    $gameList = $serviceGamePublisher->getGamePublisherLinks();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
                 // Missing data

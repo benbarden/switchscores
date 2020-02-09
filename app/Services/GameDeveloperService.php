@@ -194,19 +194,6 @@ class GameDeveloperService
         return $games[0]->count;
     }
 
-    public function getGameDeveloperLinks()
-    {
-        $games = DB::table('games')
-            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
-            ->leftJoin('partners', 'game_developers.developer_id', '=', 'partners.id')
-            ->select('games.*', 'partners.name')
-            ->whereNotNull('partners.id')
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-    }
-
     public function countGameDeveloperLinks()
     {
         $games = DB::select('
