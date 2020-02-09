@@ -8,7 +8,21 @@
 
     <div class="col-md-4">
 
-        <h2>Action lists</h2>
+        <h2>Data cleanup</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-partner-multiple') }}">Legacy partners: Multiple records</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-partner-multiple') }}" class="h4">{{ LegacyPartnerMultipleCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Outreach</h2>
         <table class="table">
             <tbody>
             <tr>

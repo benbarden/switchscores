@@ -14,6 +14,7 @@ class DashboardController extends Controller
     {
         $pageTitle = 'Partners dashboard';
 
+        $serviceGame = $this->getServiceGame();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -21,6 +22,11 @@ class DashboardController extends Controller
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
+
+        // Data cleanup
+        $legacyDevMultipleCount = count($serviceGame->getOldDevelopersMultiple());
+        $legacyPubMultipleCount = count($serviceGame->getOldPublishersMultiple());
+        $bindings['LegacyPartnerMultipleCount'] = $legacyDevMultipleCount + $legacyPubMultipleCount;
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();

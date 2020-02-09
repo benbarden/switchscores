@@ -12,34 +12,6 @@ class GamesCompanyController extends Controller
     use SwitchServices;
     use AuthUser;
 
-    public function oldDeveloperMultiple()
-    {
-        $serviceGame = $this->getServiceGame();
-
-        $bindings = [];
-
-        $bindings['ItemList'] = $serviceGame->getOldDevelopersMultiple();
-
-        $bindings['PageTitle'] = 'Old developers - multiple records';
-        $bindings['TopTitle'] = 'Staff - Stats - Old developers - multiple records';
-
-        return view('staff.stats.gamesCompany.old-developer-multiple', $bindings);
-    }
-
-    public function oldPublisherMultiple()
-    {
-        $serviceGame = $this->getServiceGame();
-
-        $bindings = [];
-
-        $bindings['ItemList'] = $serviceGame->getOldPublishersMultiple();
-
-        $bindings['PageTitle'] = 'Old publishers - multiple records';
-        $bindings['TopTitle'] = 'Staff - Stats - Old publishers - multiple records';
-
-        return view('staff.stats.gamesCompany.old-publisher-multiple', $bindings);
-    }
-
     public function oldDeveloperByCount()
     {
         $serviceGame = $this->getServiceGame();

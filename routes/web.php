@@ -208,13 +208,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
 
-    // Outreach
-    Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
-    Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
-    Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
-
     // Partners: Review sites
     Route::get('/staff/partners/review-site', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
     Route::get('/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
@@ -230,6 +223,16 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::post('/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
     Route::get('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
     Route::post('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
+
+    // Partners: Data cleanup
+    Route::get('/staff/partners/data-cleanup/legacy-partner-multiple', 'Staff\Partners\DataCleanupController@legacyPartnerMultiple')->name('staff.partners.data-cleanup.legacy-partner-multiple');
+
+    // Partners: Outreach
+    Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
+    Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
+    Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 
     // Partners: Tools
     Route::get('/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');
@@ -300,10 +303,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/staff/stats/review-site', 'Staff\Stats\ReviewSiteController@show')->name('staff.stats.reviewSite');
 
-    Route::get('/staff/stats/games-company/old-developer-multiple', 'Staff\Stats\GamesCompanyController@oldDeveloperMultiple')->name('staff.stats.gamesCompany.oldDeveloperMultiple');
     Route::get('/staff/stats/games-company/old-developer-by-count', 'Staff\Stats\GamesCompanyController@oldDeveloperByCount')->name('staff.stats.gamesCompany.oldDeveloperByCount');
     Route::get('/staff/stats/games-company/old-developer/{developer}', 'Staff\Stats\GamesCompanyController@oldDeveloperGameList')->name('staff.stats.gamesCompany.oldDeveloperGameList');
-    Route::get('/staff/stats/games-company/old-publisher-multiple', 'Staff\Stats\GamesCompanyController@oldPublisherMultiple')->name('staff.stats.gamesCompany.oldPublisherMultiple');
     Route::get('/staff/stats/games-company/old-publisher-by-count', 'Staff\Stats\GamesCompanyController@oldPublisherByCount')->name('staff.stats.gamesCompany.oldPublisherByCount');
     Route::get('/staff/stats/games-company/old-publisher/{publisher}', 'Staff\Stats\GamesCompanyController@oldPublisherGameList')->name('staff.stats.gamesCompany.oldPublisherGameList');
     Route::get('/staff/stats/games-company/clear-old-developer', 'Staff\Stats\GamesCompanyController@clearOldDeveloperField')->name('staff.stats.gamesCompany.clearOldDeveloperField');
