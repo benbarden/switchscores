@@ -37,28 +37,6 @@ class LegacyAdminTest extends TestCase
         unset($this->userAdmin);
     }
 
-    // Auth
-
-    public function testLoggedOut()
-    {
-        $response = $this->get('/admin');
-        $response->assertStatus(401);
-    }
-
-    public function testAsNormalUser()
-    {
-        $this->be($this->userStandard);
-        $response = $this->get('/admin');
-        $response->assertStatus(401);
-    }
-
-    public function testAsAdmin()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin');
-        $response->assertStatus(302);
-    }
-
     // Admin pages
 
     public function testAdminGamesList()
