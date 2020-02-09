@@ -71,14 +71,10 @@ class GameDirector
             }
         }
         if (array_key_exists('developer', $params)) {
-            if ($params['developer'] != '') {
-                $this->builder->setDeveloper($params['developer']);
-            }
+            $this->builder->setDeveloper($params['developer']);
         }
         if (array_key_exists('publisher', $params)) {
-            if ($params['publisher'] != '') {
-                $this->builder->setPublisher($params['publisher']);
-            }
+            $this->builder->setPublisher($params['publisher']);
         }
         if (array_key_exists('amazon_uk_link', $params)) {
             if ($params['amazon_uk_link'] != '') {

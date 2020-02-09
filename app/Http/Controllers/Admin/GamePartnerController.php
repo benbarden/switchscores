@@ -214,11 +214,12 @@ class GamePartnerController extends Controller
         }
 
         // Expected fields
-        //$gameDeveloper = $request->developer;
-        //$gamePublisher = $request->publisher;
+        $gameDeveloper = $request->developer;
+        $gamePublisher = $request->publisher;
+        $gameDataToSave = ['developer' => $gameDeveloper, 'publisher' => $gamePublisher];
 
         // Save details
-        GameDirectorFactory::updateExisting($game, $request->post());
+        GameDirectorFactory::updateExisting($game, $gameDataToSave);
 
         $data = array(
             'status' => 'OK'
