@@ -162,6 +162,8 @@ class GamesTitleHashController extends Controller
         $gameTitleHashData = $serviceGameTitleHash->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
 
+        $gameId = $gameTitleHashData->game_id;
+
         $bindings = [];
         $customErrors = [];
 
@@ -175,7 +177,7 @@ class GamesTitleHashController extends Controller
 
             // Done
 
-            return redirect(route('admin.games-title-hash.list'));
+            return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
 
         } else {
 
