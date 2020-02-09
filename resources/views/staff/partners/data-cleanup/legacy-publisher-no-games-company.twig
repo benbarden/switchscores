@@ -1,6 +1,9 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('staff.stats.dashboard'), 'text': 'Stats'}, {'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
@@ -13,7 +16,7 @@
             <table class="table data-sortable">
                 <thead>
                     <tr>
-                        <th class="text-left">Developer</th>
+                        <th class="text-left">Publisher</th>
                         <th class="text-center">Count</th>
                         <th class="text-center">Options</th>
                     </tr>
@@ -22,16 +25,16 @@
                 {% for item in ItemList %}
                     <tr>
                         <td class="text-left">
-                            {{ item.developer }}
+                            {{ item.publisher }}
                         </td>
                         <td class="text-center">
                             {{ item.count }}
                         </td>
                         <td class="text-center">
-                            {% if item.developer %}
-                                <a href="{{ route('staff.stats.gamesCompany.oldDeveloperGameList', {'developer': item.developer}) }}">View games</a>
+                            {% if item.publisher %}
+                                <a href="{{ route('staff.partners.data-cleanup.legacy-publisher-no-games-company.game-list', {'publisher': item.publisher|raw|url_encode(true)}) }}">View games</a>
                             {% else %}
-                                <a href="{{ route('admin.action-lists.developer-missing') }}">View games</a>
+                                -
                             {% endif %}
                         </td>
                     </tr>
@@ -44,5 +47,20 @@
     </div>
 
 </div>
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'asc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
 
 {% endblock page_inner %}

@@ -226,6 +226,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Partners: Data cleanup
     Route::get('/staff/partners/data-cleanup/legacy-partner-multiple', 'Staff\Partners\DataCleanupController@legacyPartnerMultiple')->name('staff.partners.data-cleanup.legacy-partner-multiple');
+    Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompany')->name('staff.partners.data-cleanup.legacy-developer-no-games-company');
+    Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company/{developer}/game-list', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-developer-no-games-company.game-list');
+    Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompany')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company');
+    Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company/{publisher}/game-list', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company.game-list');
 
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
@@ -302,17 +306,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
 
     Route::get('/staff/stats/review-site', 'Staff\Stats\ReviewSiteController@show')->name('staff.stats.reviewSite');
-
-    Route::get('/staff/stats/games-company/old-developer-by-count', 'Staff\Stats\GamesCompanyController@oldDeveloperByCount')->name('staff.stats.gamesCompany.oldDeveloperByCount');
-    Route::get('/staff/stats/games-company/old-developer/{developer}', 'Staff\Stats\GamesCompanyController@oldDeveloperGameList')->name('staff.stats.gamesCompany.oldDeveloperGameList');
-    Route::get('/staff/stats/games-company/old-publisher-by-count', 'Staff\Stats\GamesCompanyController@oldPublisherByCount')->name('staff.stats.gamesCompany.oldPublisherByCount');
-    Route::get('/staff/stats/games-company/old-publisher/{publisher}', 'Staff\Stats\GamesCompanyController@oldPublisherGameList')->name('staff.stats.gamesCompany.oldPublisherGameList');
-    Route::get('/staff/stats/games-company/clear-old-developer', 'Staff\Stats\GamesCompanyController@clearOldDeveloperField')->name('staff.stats.gamesCompany.clearOldDeveloperField');
-    Route::get('/staff/stats/games-company/clear-old-publisher', 'Staff\Stats\GamesCompanyController@clearOldPublisherField')->name('staff.stats.gamesCompany.clearOldPublisherField');
-    Route::get('/staff/stats/games-company/add-all-new-developers', 'Staff\Stats\GamesCompanyController@addAllNewDevelopers')->name('staff.stats.gamesCompany.addAllNewDevelopers');
-    Route::get('/staff/stats/games-company/remove-all-old-developers', 'Staff\Stats\GamesCompanyController@removeAllOldDevelopers')->name('staff.stats.gamesCompany.removeAllOldDevelopers');
-    Route::get('/staff/stats/games-company/add-all-new-publishers', 'Staff\Stats\GamesCompanyController@addAllNewPublishers')->name('staff.stats.gamesCompany.addAllNewPublishers');
-    Route::get('/staff/stats/games-company/remove-all-old-publishers', 'Staff\Stats\GamesCompanyController@removeAllOldPublishers')->name('staff.stats.gamesCompany.removeAllOldPublishers');
 
 });
 

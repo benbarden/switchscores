@@ -15,6 +15,7 @@ class DashboardController extends Controller
         $pageTitle = 'Partners dashboard';
 
         $serviceGame = $this->getServiceGame();
+        $servicePartner = $this->getServicePartner();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -27,6 +28,10 @@ class DashboardController extends Controller
         $legacyDevMultipleCount = count($serviceGame->getOldDevelopersMultiple());
         $legacyPubMultipleCount = count($serviceGame->getOldPublishersMultiple());
         $bindings['LegacyPartnerMultipleCount'] = $legacyDevMultipleCount + $legacyPubMultipleCount;
+        $legacyDeveloperNoGamesCompanyCount = count($servicePartner->getUnmatchedGameDevelopers());
+        $bindings['LegacyDeveloperNoGamesCompanyCount'] = $legacyDeveloperNoGamesCompanyCount;
+        $legacyPublisherNoGamesCompanyCount = count($servicePartner->getUnmatchedGamePublishers());
+        $bindings['LegacyPublisherNoGamesCompanyCount'] = $legacyPublisherNoGamesCompanyCount;
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();

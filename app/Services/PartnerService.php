@@ -240,10 +240,10 @@ class PartnerService
     public function getUnmatchedGameDevelopers()
     {
         return DB::select('
-            select g.id, g.title, g.developer, p.id, p.name
-            from games g
+            select g.developer, count(*) AS count from games g
             left join partners p on g.developer = p.name
             where g.developer is not null and p.id is null
+            group by g.developer
             order by g.developer asc
         ');
     }
@@ -252,10 +252,10 @@ class PartnerService
     public function getUnmatchedGamePublishers()
     {
         return DB::select('
-            select g.id, g.title, g.publisher, p.id, p.name
-            from games g
+            select g.publisher, count(*) AS count from games g
             left join partners p on g.publisher = p.name
             where g.publisher is not null and p.id is null
+            group by g.publisher
             order by g.publisher asc
         ');
     }
