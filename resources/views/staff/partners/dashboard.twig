@@ -113,9 +113,17 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'PartnerUpdateFields'}) }}">PartnerUpdateFields</a>
+                    <a href="{{ route('staff.partners.tools.partnerUpdateFields') }}">PartnerUpdateFields</a>
                     <br>
                     <small>Updates the review count and last review date fields for review sites</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.tools.partnerMigrateGameDevsPubs') }}">PartnerMigrateGameDevsPubs</a>
+                    <br>
+                    <small>Migrates legacy developer/publisher data into the new partner/games company format.
+                        Only migrates records with exact matches</small>
                 </td>
             </tr>
             </tbody>

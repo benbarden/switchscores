@@ -1,0 +1,19 @@
+{% extends 'theme/wos/staff/clean-narrow.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<p>
+    Process completed. Check the logfile for output.
+</p>
+
+<h2>Where next?</h2>
+<ul>
+    <li><a href="{{ route('staff.partners.dashboard') }}">Partner dashboard</a></li>
+</ul>
+
+{% endblock page_inner %}

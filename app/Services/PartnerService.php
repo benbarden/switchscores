@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Partner;
 use App\PartnerOutreach;
+use Illuminate\Support\Facades\DB;
 
 class PartnerService
 {
@@ -198,4 +199,65 @@ class PartnerService
     {
         return Partner::where('type_id', Partner::TYPE_GAMES_COMPANY)->orderBy('name', 'asc')->get();
     }
+
+    // ********************************************************** //
+    // MIGRATION WORK
+    // ********************************************************** //
+
+    // Step 1a. Exact matches
+    public function getGameDevelopersForMigration()
+    {
+        return DB::select('
+            SELECT g.id AS game_id, 
+            g.title AS game_title, 
+            g.developer, 
+            p.id AS partner_id, 
+            p.name AS partner_name
+            FROM games g
+            LEFT JOIN partners p ON g.developer = p.name
+            WHERE p.id IS NOT NULL
+            ORDER BY g.id ASC
+        ');
+    }
+
+    // Step 1b. Exact matches
+    public function getGamePublishersForMigration()
+    {
+        return DB::select('
+            SELECT g.id AS game_id, 
+            g.title AS game_title, 
+            g.publisher, 
+            p.id AS partner_id, 
+            p.name AS partner_name
+            FROM games g
+            LEFT JOIN partners p ON g.publisher = p.name
+            WHERE p.id IS NOT NULL
+            ORDER BY g.id ASC
+        ');
+    }
+
+    // Step 2a. List the partners that don't match
+    public function getUnmatchedGameDevelopers()
+    {
+        return DB::select('
+            select g.id, g.title, g.developer, p.id, p.name
+            from games g
+            left join partners p on g.developer = p.name
+            where g.developer is not null and p.id is null
+            order by g.developer asc
+        ');
+    }
+
+    // Step 2b. List the partners that don't match
+    public function getUnmatchedGamePublishers()
+    {
+        return DB::select('
+            select g.id, g.title, g.publisher, p.id, p.name
+            from games g
+            left join partners p on g.publisher = p.name
+            where g.publisher is not null and p.id is null
+            order by g.publisher asc
+        ');
+    }
+
 }

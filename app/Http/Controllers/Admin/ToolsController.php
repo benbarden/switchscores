@@ -122,14 +122,6 @@ class ToolsController extends Controller
                 'scheduleTime' => '0510',
                 'nextStep' => 'UpdateGameRanks',
             ],
-            'PartnerUpdateFields' => [
-                'command' => 'PartnerUpdateFields',
-                'group' => 'Partners',
-                'title' => 'Partner Update Fields',
-                'desc' => 'Updates the review count and last review date fields for review sites',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0515',
-            ],
             'UpdateGameRanks' => [
                 'command' => 'UpdateGameRanks',
                 'group' => 'Game updates',
