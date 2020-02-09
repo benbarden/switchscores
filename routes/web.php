@@ -230,6 +230,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company/{developer}/game-list', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-developer-no-games-company.game-list');
     Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompany')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company');
     Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company/{publisher}/game-list', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company.game-list');
+    Route::get('/staff/partners/data-cleanup/games-with-old-dev-field-set', 'Staff\Partners\DataCleanupController@gamesWithOldDevFieldSet')->name('staff.partners.data-cleanup.games-with-old-dev-field-set');
+    Route::get('/staff/partners/data-cleanup/games-with-old-pub-field-set', 'Staff\Partners\DataCleanupController@gamesWithOldPubFieldSet')->name('staff.partners.data-cleanup.games-with-old-pub-field-set');
+    Route::get('/staff/partners/data-cleanup/games-with-missing-developer', 'Staff\Partners\DataCleanupController@gamesWithMissingDeveloper')->name('staff.partners.data-cleanup.games-with-missing-developer');
+    Route::get('/staff/partners/data-cleanup/games-with-missing-publisher', 'Staff\Partners\DataCleanupController@gamesWithMissingPublisher')->name('staff.partners.data-cleanup.games-with-missing-publisher');
 
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
@@ -362,12 +366,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
 
     // Action lists
-    Route::get('/admin/action-lists/developer-missing', 'Admin\ActionListController@developerMissing')->name('admin.action-lists.developer-missing');
-    Route::get('/admin/action-lists/new-developer-to-set', 'Admin\ActionListController@newDeveloperToSet')->name('admin.action-lists.new-developer-to-set');
-    Route::get('/admin/action-lists/old-developer-to-clear', 'Admin\ActionListController@oldDeveloperToClear')->name('admin.action-lists.old-developer-to-clear');
-    Route::get('/admin/action-lists/publisher-missing', 'Admin\ActionListController@publisherMissing')->name('admin.action-lists.publisher-missing');
-    Route::get('/admin/action-lists/new-publisher-to-set', 'Admin\ActionListController@newPublisherToSet')->name('admin.action-lists.new-publisher-to-set');
-    Route::get('/admin/action-lists/old-publisher-to-clear', 'Admin\ActionListController@oldPublisherToClear')->name('admin.action-lists.old-publisher-to-clear');
     Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
     Route::get('/admin/action-lists/site-alert-errors', 'Admin\ActionListController@siteAlertErrors')->name('admin.action-lists.site-alert-errors');
 

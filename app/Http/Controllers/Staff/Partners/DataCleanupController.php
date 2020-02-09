@@ -10,6 +10,40 @@ class DataCleanupController extends Controller
 {
     use SwitchServices;
 
+    public function gamesWithMissingDeveloper()
+    {
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+
+        $pageTitle = 'Games with missing developer';
+
+        $bindings = [];
+
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+
+        $bindings['ItemList'] = $serviceGameDeveloper->getGamesWithNoDeveloper();
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
+
+        return view('staff.partners.data-cleanup.games-with-missing-developer', $bindings);
+    }
+
+    public function gamesWithMissingPublisher()
+    {
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+
+        $pageTitle = 'Games with missing publisher';
+
+        $bindings = [];
+
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+
+        $bindings['ItemList'] = $serviceGamePublisher->getGamesWithNoPublisher();
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
+
+        return view('staff.partners.data-cleanup.games-with-missing-publisher', $bindings);
+    }
+
     public function legacyPartnerMultiple()
     {
         $serviceGame = $this->getServiceGame();
@@ -55,6 +89,7 @@ class DataCleanupController extends Controller
         $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
 
         $bindings['ItemList'] = $serviceGame->getByDeveloper($developer);
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         return view('staff.partners.data-cleanup.legacy-developer-game-list', $bindings);
     }
@@ -87,8 +122,43 @@ class DataCleanupController extends Controller
         $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
 
         $bindings['ItemList'] = $serviceGame->getByPublisher($publisher);
+        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         return view('staff.partners.data-cleanup.legacy-publisher-game-list', $bindings);
+    }
+
+    public function gamesWithOldDevFieldSet()
+    {
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+
+        $pageTitle = 'Games with old dev field set';
+
+        $bindings = [];
+
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+
+        $bindings['ItemList'] = $serviceGameDeveloper->getGamesWithOldDevFieldSet();
+        $bindings['jsInitialSort'] = "[ 2, 'asc']";
+
+        return view('staff.partners.data-cleanup.games-with-old-dev-field-set', $bindings);
+    }
+
+    public function gamesWithOldPubFieldSet()
+    {
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+
+        $pageTitle = 'Games with old pub field set';
+
+        $bindings = [];
+
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+
+        $bindings['ItemList'] = $serviceGamePublisher->getGamesWithOldPubFieldSet();
+        $bindings['jsInitialSort'] = "[ 2, 'asc']";
+
+        return view('staff.partners.data-cleanup.games-with-old-pub-field-set', $bindings);
     }
 
 }

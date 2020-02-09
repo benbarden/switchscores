@@ -35,11 +35,9 @@ class DashboardController extends Controller
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
-        $bindings['NewDeveloperToSetCount'] = $serviceGameDeveloper->countNewDevelopersToSet();
-        $bindings['OldDeveloperToClearCount'] = $serviceGameDeveloper->countOldDevelopersToClear();
+        $bindings['GamesWithOldDevFieldSetCount'] = $serviceGameDeveloper->countGamesWithOldDevFieldSet();
         $bindings['PublisherMissingCount'] = $serviceGamePublisher->countGamesWithNoPublisher();
-        $bindings['NewPublisherToSetCount'] = $serviceGamePublisher->countNewPublishersToSet();
-        $bindings['OldPublisherToClearCount'] = $serviceGamePublisher->countOldPublishersToClear();
+        $bindings['GamesWithOldPubFieldSetCount'] = $serviceGamePublisher->countGamesWithOldPubFieldSet();
 
         // Stats
         $bindings['GameDeveloperLinks'] = $serviceGameDeveloper->countGameDeveloperLinks();

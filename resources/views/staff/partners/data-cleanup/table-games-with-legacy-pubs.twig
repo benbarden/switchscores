@@ -1,0 +1,61 @@
+{% if ItemList %}
+
+    <table class="table data-sortable">
+        <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-left">Title</th>
+            <th class="text-left">Publisher (old)</th>
+            <th class="text-left">Publisher (new)</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-center">
+                    {{ item.id }}
+                </td>
+                <td class="text-left">
+                    {{ item.title }}
+                </td>
+                <td class="text-left">
+                    {{ item.publisher }}
+                </td>
+                <td class="text-left">
+                    {{ item.gamePublishers.length }}
+                    {% if item.gamePublishers is defined %}
+                        {% for gamePub in item.gamePublishers %}
+                            {{ gamePub.publisher.name }}<br>
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit game</a> :
+                    <a href="{{ route('admin.game.partner.list', {'gameId': item.id}) }}">Partners</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [ {{ jsInitialSort|raw}} ],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>

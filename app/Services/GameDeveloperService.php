@@ -140,13 +140,13 @@ class GameDeveloperService
         return $games[0]->count;
     }
 
-    public function getNewDevelopersToSet()
+    public function getGamesWithOldDevFieldSet()
     {
         $games = DB::table('games')
             ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
             ->leftJoin('partners', 'game_developers.developer_id', '=', 'partners.id')
             ->select('games.*', 'partners.name')
-            ->whereNull('partners.id')
+            //->whereNull('partners.id')
             ->whereNotNull('games.developer')
             ->orderBy('games.id', 'desc');
 
@@ -154,41 +154,14 @@ class GameDeveloperService
         return $games;
     }
 
-    public function countNewDevelopersToSet()
+    public function countGamesWithOldDevFieldSet()
     {
         $games = DB::select('
             select count(*) AS count
             from games g
             left join game_developers gd on g.id = gd.game_id
             left join partners d on d.id = gd.developer_id
-            where d.id is null and g.developer is not null;
-        ');
-
-        return $games[0]->count;
-    }
-
-    public function getOldDevelopersToClear()
-    {
-        $games = DB::table('games')
-            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
-            ->leftJoin('partners', 'game_developers.developer_id', '=', 'partners.id')
-            ->select('games.*', 'partners.name')
-            ->whereNotNull('partners.id')
-            ->whereNotNull('games.developer')
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-    }
-
-    public function countOldDevelopersToClear()
-    {
-        $games = DB::select('
-            select count(*) AS count
-            from games g
-            left join game_developers gd on g.id = gd.game_id
-            left join partners d on d.id = gd.developer_id
-            where d.id is not null and g.developer is not null;
+            where g.developer is not null;
         ');
 
         return $games[0]->count;
