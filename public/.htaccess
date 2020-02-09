@@ -1,6 +1,8 @@
 
 RewriteEngine On
 
+RewriteRule ^admin$ /staff [R=301,NC,L]
+
 RewriteRule ^games/released/(.*)$ /games/by-title/$1 [R=301,NC,L]
 RewriteRule ^games/released$      /games/by-title    [R=301,NC,L]
 

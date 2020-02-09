@@ -317,9 +317,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
  */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
-    // Index
-    Route::get('/admin', 'Admin\DashboardsController@index')->name('admin.index');
-
     // Games: Core
     Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
 
@@ -385,9 +382,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::post('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
-
-    // Feed items: Landing
-    Route::get('/admin/feed-items', 'Admin\IndexController@feedItemsLanding')->name('admin.feed-items.landing');
 
     // Feed items: Reviews
     Route::get('/admin/feed-items/reviews/{report?}', 'Admin\FeedItemReviewController@showList')->name('admin.feed-items.reviews.list');
