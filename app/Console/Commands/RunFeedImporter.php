@@ -114,6 +114,15 @@ class RunFeedImporter extends Command
 
                     }
 
+                } elseif (array_key_exists('item', $feedData)) {
+
+                    // Video Chums - custom feed
+                    foreach ($feedData['item'] as $feedItem) {
+
+                        $feedItemsToProcess[] = $feedItem;
+
+                    }
+
                 }
 
                 if (count($feedItemsToProcess) > 0) {
@@ -123,7 +132,7 @@ class RunFeedImporter extends Command
                         try {
 
                             $feedItemReview = $feedImporter->processItemRss($isWix, $feedItem, $reviewSite, $serviceUrl, $serviceFeedItemReview);
-                            $logger->info('Importing item: '.$feedItemReview->item_url);
+                            $logger->info('Importing item with date: '.$feedItemReview->item_date.'; URL: '.$feedItemReview->item_url);
                             $feedItemReview->save();
 
                         } catch (AlreadyImported $e) {
@@ -229,7 +238,7 @@ class RunFeedImporter extends Command
                         }
 
                         // Output some details
-                        $logger->info('Importing item: '.$itemUrl);
+                        $logger->info('Importing item with date: '.$itemDate.'; URL: '.$itemUrl);
 
                         // All good - add it as a feed item
                         $feedItemReview->load_status = 'Loaded OK';
