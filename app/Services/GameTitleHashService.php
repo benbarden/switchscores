@@ -53,7 +53,7 @@ class GameTitleHashService
 
     public function generateHash($title): string
     {
-        return strtolower(md5($title));
+        return md5(strtolower($title));
     }
 
     public function getByHash($hash)
