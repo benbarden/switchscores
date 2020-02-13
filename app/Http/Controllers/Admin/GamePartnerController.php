@@ -213,13 +213,10 @@ class GamePartnerController extends Controller
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
 
-        // Expected fields
-        $gameDeveloper = $request->developer;
-        $gamePublisher = $request->publisher;
-        $gameDataToSave = ['developer' => $gameDeveloper, 'publisher' => $gamePublisher];
-
         // Save details
-        GameDirectorFactory::updateExisting($game, $gameDataToSave);
+        $game->developer = $request->developer;
+        $game->publisher = $request->publisher;
+        $game->save();
 
         $data = array(
             'status' => 'OK'
