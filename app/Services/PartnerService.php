@@ -260,4 +260,34 @@ class PartnerService
         ');
     }
 
+    // Outreach targets
+    public function getPublishersWithUnrankedGames()
+    {
+        return DB::select('
+            select p.id, p.name, g.id AS game_id, g.title AS game_title, g.link_title AS game_link_title, g.review_count, g.rating_avg
+            from partners p
+            join game_publishers gp on p.id = gp.publisher_id
+            join games g on g.id = gp.game_id
+            where p.type_id = ?
+            and g.review_count < 3
+            and p.last_outreach_id is null
+            order by p.id asc, g.id asc
+        ', [Partner::TYPE_GAMES_COMPANY]);
+    }
+
+    // Outreach targets
+    public function getDevelopersWithUnrankedGames()
+    {
+        return DB::select('
+            select p.id, p.name, g.id AS game_id, g.title AS game_title, g.link_title AS game_link_title, g.review_count, g.rating_avg
+            from partners p
+            join game_developers gd on p.id = gd.developer_id
+            join games g on g.id = gd.game_id
+            where p.type_id = ?
+            and g.review_count < 3
+            and p.last_outreach_id is null
+            order by p.id asc, g.id asc
+        ', [Partner::TYPE_GAMES_COMPANY]);
+    }
+
 }

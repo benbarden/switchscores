@@ -40,6 +40,39 @@ class GamesCompanyController extends Controller
         return view('staff.partners.games-company.list', $bindings);
     }
 
+    public function devsWithUnrankedGames()
+    {
+        $servicePartner = $this->getServicePartner();
+
+        $bindings = [];
+
+        $pageTitle = 'Outreach targets: Developers with unranked games';
+        $bindings['TopTitle'] = $pageTitle.' - Staff';
+        $bindings['PageTitle'] = $pageTitle;
+
+        $bindings['GamesCompanyList'] = $servicePartner->getDevelopersWithUnrankedGames();
+
+        $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
+
+        return view('staff.partners.games-company.list-unranked', $bindings);
+    }
+
+    public function pubsWithUnrankedGames()
+    {
+        $servicePartner = $this->getServicePartner();
+
+        $bindings = [];
+
+        $pageTitle = 'Outreach targets: Publishers with unranked games';
+        $bindings['TopTitle'] = $pageTitle.' - Staff';
+        $bindings['PageTitle'] = $pageTitle;
+
+        $bindings['GamesCompanyList'] = $servicePartner->getPublishersWithUnrankedGames();
+        $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
+
+        return view('staff.partners.games-company.list-unranked', $bindings);
+    }
+
     public function add()
     {
         $servicePartner = $this->getServicePartner();

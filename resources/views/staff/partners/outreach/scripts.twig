@@ -1,6 +1,7 @@
 <script>
     var formMode = '{{ FormMode }}';
     var formVals = [];
+    var urlPartnerId = '{{ UrlPartnerId }}';
 
     if (formMode == 'edit') {
 
@@ -15,7 +16,13 @@
         // This is used for new items.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
         if (formMode == 'add') {
-            formVals['partner_id'] = "{{ old('partner_id') }}";
+            partnerId = "{{ old('partner_id') }}";
+            if (partnerId == '') {
+                if (urlPartnerId != '') {
+                    partnerId = urlPartnerId;
+                }
+            }
+            formVals['partner_id'] = partnerId;
         }
         formVals['new_status'] = "{{ old('new_status') }}";
         formVals['contact_method'] = "{{ old('contact_method')|e('js') }}";

@@ -33,6 +33,12 @@ class DashboardController extends Controller
         $legacyPublisherNoGamesCompanyCount = count($servicePartner->getUnmatchedGamePublishers());
         $bindings['LegacyPublisherNoGamesCompanyCount'] = $legacyPublisherNoGamesCompanyCount;
 
+        // Outreach
+        $devsWithUnrankedGames = $servicePartner->getDevelopersWithUnrankedGames();
+        $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
+        $pubsWithUnrankedGames = $servicePartner->getPublishersWithUnrankedGames();
+        $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGames);
+
         // Action lists
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
         $bindings['GamesWithOldDevFieldSetCount'] = $serviceGameDeveloper->countGamesWithOldDevFieldSet();

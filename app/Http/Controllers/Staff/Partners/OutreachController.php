@@ -88,6 +88,11 @@ class OutreachController extends Controller
         $bindings['StatusList'] = $servicePartnerOutreach->getStatusList();
         $bindings['MethodList'] = $servicePartnerOutreach->getContactMethodList();
 
+        $urlPartnerId = $request->partnerId;
+        if ($urlPartnerId) {
+            $bindings['UrlPartnerId'] = $urlPartnerId;
+        }
+
         return view('staff.partners.outreach.add', $bindings);
     }
 

@@ -224,6 +224,16 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
     Route::post('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
 
+    Route::get('/staff/partners/games-company/devs-with-unranked-games', 'Staff\Partners\GamesCompanyController@devsWithUnrankedGames')->name('staff.partners.games-company.devs-with-unranked-games');
+    Route::get('/staff/partners/games-company/pubs-with-unranked-games', 'Staff\Partners\GamesCompanyController@pubsWithUnrankedGames')->name('staff.partners.games-company.pubs-with-unranked-games');
+
+    // Partners: Outreach
+    Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
+    Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
+    Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
+
     // Partners: Data cleanup
     Route::get('/staff/partners/data-cleanup/legacy-partner-multiple', 'Staff\Partners\DataCleanupController@legacyPartnerMultiple')->name('staff.partners.data-cleanup.legacy-partner-multiple');
     Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompany')->name('staff.partners.data-cleanup.legacy-developer-no-games-company');
@@ -234,13 +244,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/data-cleanup/games-with-old-pub-field-set', 'Staff\Partners\DataCleanupController@gamesWithOldPubFieldSet')->name('staff.partners.data-cleanup.games-with-old-pub-field-set');
     Route::get('/staff/partners/data-cleanup/games-with-missing-developer', 'Staff\Partners\DataCleanupController@gamesWithMissingDeveloper')->name('staff.partners.data-cleanup.games-with-missing-developer');
     Route::get('/staff/partners/data-cleanup/games-with-missing-publisher', 'Staff\Partners\DataCleanupController@gamesWithMissingPublisher')->name('staff.partners.data-cleanup.games-with-missing-publisher');
-
-    // Partners: Outreach
-    Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
-    Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
-    Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 
     // Partners: Tools
     Route::get('/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');

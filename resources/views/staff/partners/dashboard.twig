@@ -75,12 +75,25 @@
             <tbody>
             <tr>
                 <td>
-                    Games companies with unranked games
+                    <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}">Developers with unranked games</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}" class="h4">{{ DevsWithUnrankedGamesCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}">Publishers with unranked games</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}" class="h4">{{ PubsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     Unranked games with missing partner data
+                </td>
+                <td>
                 </td>
             </tr>
             </tbody>
