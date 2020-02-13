@@ -39,7 +39,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {{ item.partner.name }}
+                        <a href="{{ route('staff.partners.games-company.show', {'partner': item.partner}) }}">{{ item.partner.name }}</a>
                     </td>
                     <td class="text-center">
                         {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}

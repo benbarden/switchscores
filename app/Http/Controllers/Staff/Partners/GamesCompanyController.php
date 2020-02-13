@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\SwitchServices;
 
 use App\Factories\GamesCompanyFactory;
+use App\Partner;
 
 class GamesCompanyController extends Controller
 {
@@ -38,6 +39,35 @@ class GamesCompanyController extends Controller
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function show(Partner $partner)
+    {
+        if (!$partner->isGamesCompany()) abort(404);
+
+        $servicePartner = $this->getServicePartner();
+
+        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $serviceGamePublisher = $this->getServiceGamePublisher();
+
+        $partnerId = $partner->id;
+
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, false);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, false);
+
+        $mergedGameList = $servicePartner->getMergedGameList($gameDevList, $gamePubList);
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $partner->name;
+        $bindings['PageTitle'] = $partner->name;
+
+        $bindings['PartnerData'] = $partner;
+        $bindings['PartnerId'] = $partnerId;
+
+        $bindings['MergedGameList'] = $mergedGameList;
+
+        return view('staff.partners.games-company.show', $bindings);
     }
 
     public function devsWithUnrankedGames()
@@ -88,7 +118,7 @@ class GamesCompanyController extends Controller
             );
             $partner->save();
 
-            return redirect(route('staff.partners.games-company.list'));
+            return redirect(route('staff.partners.games-company.show', ['partner' => $partner]));
 
         }
 
@@ -122,7 +152,7 @@ class GamesCompanyController extends Controller
                 $partnerData, $request->name, $request->link_title, $request->website_url, $request->twitter_id
             );
 
-            return redirect(route('staff.partners.games-company.list'));
+            return redirect(route('staff.partners.games-company.show', ['partner' => $partnerData]));
 
         } else {
 

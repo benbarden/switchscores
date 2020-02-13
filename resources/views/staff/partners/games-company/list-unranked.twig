@@ -27,7 +27,10 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank">{{ item.name }}</a>
+                        <a href="{{ route('staff.partners.games-company.show', {'partner': item}) }}">{{ item.name }}</a>
+                        <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
+                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        </a>
                         {% if item.website_url %}
                             <br>
                             <small>

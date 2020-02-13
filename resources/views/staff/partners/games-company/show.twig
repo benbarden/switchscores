@@ -1,0 +1,136 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
+    {'url': route('staff.partners.games-company.list'), 'text': 'Games companies'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+        <a href="{{ route('staff.partners.games-company.edit', {'partnerId': PartnerData.id}) }}" class="btn btn-primary btn-md">Edit partner</a>
+        <a href="{{ route('partners.detail.games-company', {'linkTitle': PartnerData.link_title}) }}" class="btn btn-primary btn-md" target="_blank">View public profile</a>
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+    <div class="col-md-4">
+
+    <span class="pull-right">
+        <a href="{{ route('staff.partners.games-company.delete', {'partnerId': PartnerData.id}) }}" class="btn btn-danger btn-md">Delete partner</a>
+    </span>
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <h2>Overview</h2>
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <td style="max-width: 150px;">
+                    <span style="font-weight: bold;">Name</span>
+                </td>
+                <td>{{ PartnerData.name }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Official site</span>
+                </td>
+                <td>
+                    {% if PartnerData.website_url %}
+                        <a href="{{ PartnerData.website_url }}" target="_blank">Visit official site</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Twitter account</span>
+                </td>
+                <td>
+                    {% if PartnerData.twitter_id %}
+                        <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <h2>Outreach</h2>
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <td style="max-width: 150px;">
+                    <span style="font-weight: bold;">Last outreach</span>
+                </td>
+                <td>
+                    {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': PartnerData.lastOutreach} %}
+                </td>
+            </tr>
+            <tr>
+                <td style="max-width: 150px;">
+                    <span style="font-weight: bold;">Last outreach date</span>
+                </td>
+                <td>
+                    {{ PartnerData.lastOutreach.created_at }}
+                </td>
+            </tr>
+            <tr>
+                <td style="max-width: 150px;">
+                    <span style="font-weight: bold;">View all outreach</span>
+                </td>
+                <td>
+                    <a href="{{ route('staff.partners.outreach.list', {'partner': PartnerData}) }}">View</a>
+                </td>
+            </tr>
+        </table>
+        <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ PartnerData.id }}" class="btn btn-primary">Add outreach</a>
+    </div>
+</div>
+{% if MergedGameList %}
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
+            <table class="table table-responsive">
+                <tr>
+                    <th>Game</th>
+                    <th class="text-center">Involvement</th>
+                    <th class="text-center">Release date</th>
+                    <th class="text-center">Released?</th>
+                </tr>
+                {% for item in MergedGameList %}
+                    {% if item.PartnerType == 'developer' %}
+                        {% set ExtraDetailLine = 'Developer' %}
+                    {% elseif item.PartnerType == 'publisher' %}
+                        {% set ExtraDetailLine = 'Publisher' %}
+                    {% elseif item.PartnerType == 'dev/pub' %}
+                        {% set ExtraDetailLine = 'Developer/Publisher' %}
+                    {% else %}
+                        {% set ExtraDetailLine = '' %}
+                    {% endif %}
+                    <tr>
+                        <td>{{ item.title }}</td>
+                        <td class="text-center">{{ ExtraDetailLine }}</td>
+                        <td class="text-center">{{ item.eu_release_date }}</td>
+                        <td class="text-center">
+                            {% if item.eu_is_released == 1 %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock page_inner %}

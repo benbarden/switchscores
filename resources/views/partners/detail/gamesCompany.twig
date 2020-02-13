@@ -4,79 +4,53 @@
 
 {% block page_body %}
 
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <table class="table table-condensed table-responsive">
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <td style="max-width: 150px;">
+                    <span style="font-weight: bold;">Name</span>
+                </td>
+                <td>{{ PartnerData.name }}</td>
+            </tr>
+            {% if PartnerData.website_url %}
                 <tr>
-                    <td style="max-width: 150px;">
-                        <span style="font-weight: bold;">Name</span>
+                    <td>
+                        <span style="font-weight: bold;">Official site</span>
                     </td>
-                    <td>{{ PartnerData.name }}</td>
+                    <td><a href="{{ PartnerData.website_url }}" target="_blank">Visit official site</a></td>
                 </tr>
-                {% if PartnerData.website_url %}
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Official site</span>
-                        </td>
-                        <td><a href="{{ PartnerData.website_url }}" target="_blank">Visit official site</a></td>
-                    </tr>
-                {% endif %}
-                {% if PartnerData.twitter_id %}
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Twitter account</span>
-                        </td>
-                        <td><a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a></td>
-                    </tr>
-                {% endif %}
-            </table>
-        </div>
+            {% endif %}
+            {% if PartnerData.twitter_id %}
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Twitter account</span>
+                    </td>
+                    <td><a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a></td>
+                </tr>
+            {% endif %}
+        </table>
     </div>
-    {% if MergedGameList %}
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
-            </div>
-            {% for item in MergedGameList %}
-                {% if item.PartnerType == 'developer' %}
-                    {% set ExtraDetailLine = 'Developer' %}
-                {% elseif item.PartnerType == 'publisher' %}
-                    {% set ExtraDetailLine = 'Publisher' %}
-                {% elseif item.PartnerType == 'dev/pub' %}
-                    {% set ExtraDetailLine = 'Developer/Publisher' %}
-                {% else %}
-                    {% set ExtraDetailLine = '' %}
-                {% endif %}
-                <div class="col-xs-12 col-sm-6 col-md-4">
-                    {% include 'games/layouts/miniItem.twig' with {'item': item, 'ExtraDetailLine': ExtraDetailLine} %}
-                </div>
-            {% endfor %}
+</div>
+{% if MergedGameList %}
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
         </div>
-    {% endif %}
-{#
-    {% if GameDevList.count > 0 %}
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <h2>Nintendo Switch games developed by {{ PartnerData.name }}</h2>
+        {% for item in MergedGameList %}
+            {% if item.PartnerType == 'developer' %}
+                {% set ExtraDetailLine = 'Developer' %}
+            {% elseif item.PartnerType == 'publisher' %}
+                {% set ExtraDetailLine = 'Publisher' %}
+            {% elseif item.PartnerType == 'dev/pub' %}
+                {% set ExtraDetailLine = 'Developer/Publisher' %}
+            {% else %}
+                {% set ExtraDetailLine = '' %}
+            {% endif %}
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                {% include 'games/layouts/miniItem.twig' with {'item': item, 'ExtraDetailLine': ExtraDetailLine} %}
             </div>
-            {% for item in GameDevList %}
-                <div class="col-xs-12 col-sm-6 col-md-4">
-                    {% include 'games/layouts/miniItem.twig' with {'item': item} %}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if GamePubList.count > 0 %}
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <h2>Nintendo Switch games published by {{ PartnerData.name }}</h2>
-            </div>
-            {% for item in GamePubList %}
-                <div class="col-xs-12 col-sm-6 col-md-4">
-                    {% include 'games/layouts/miniItem.twig' with {'item': item} %}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-#}
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock page_body %}

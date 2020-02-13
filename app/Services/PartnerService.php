@@ -201,6 +201,52 @@ class PartnerService
     }
 
     // ********************************************************** //
+
+    public function getMergedGameList($gameDevList, $gamePubList)
+    {
+        $mergedGameList = [];
+        $usedGameIds = [];
+
+        if ($gameDevList && $gamePubList) {
+
+            foreach ($gameDevList as $item) {
+                $gameId = $item->id;
+                $item->PartnerType = 'developer';
+                $mergedGameList[$gameId] = $item;
+                $usedGameIds[] = $gameId;
+            }
+            foreach ($gamePubList as $item) {
+                $gameId = $item->id;
+                if (in_array($gameId, $usedGameIds)) {
+                    $mergedGameList[$gameId]->PartnerType = 'dev/pub';
+                } else {
+                    $item->PartnerType = 'publisher';
+                    $mergedGameList[] = $item;
+                }
+            }
+
+        } elseif ($gameDevList) {
+
+            $mergedGameList = $gameDevList;
+            foreach ($gameDevList as $item) {
+                $item->PartnerType = 'developer';
+                $mergedGameList[] = $item;
+            }
+
+        } elseif ($gamePubList) {
+
+            $mergedGameList = $gamePubList;
+            foreach ($gamePubList as $item) {
+                $item->PartnerType = 'publisher';
+                $mergedGameList[] = $item;
+            }
+
+        }
+
+        return $mergedGameList;
+    }
+
+    // ********************************************************** //
     // MIGRATION WORK
     // ********************************************************** //
 
@@ -263,31 +309,35 @@ class PartnerService
     // Outreach targets
     public function getPublishersWithUnrankedGames()
     {
-        return DB::select('
-            select p.id, p.name, g.id AS game_id, g.title AS game_title, g.link_title AS game_link_title, g.review_count, g.rating_avg
-            from partners p
-            join game_publishers gp on p.id = gp.publisher_id
-            join games g on g.id = gp.game_id
-            where p.type_id = ?
-            and g.review_count < 3
-            and p.last_outreach_id is null
-            order by p.id asc, g.id asc
-        ', [Partner::TYPE_GAMES_COMPANY]);
+        return Partner::select(
+            'partners.id', 'partners.name', 'partners.link_title',
+            'games.id AS game_id', 'games.title AS game_title',
+            'games.link_title AS game_link_title', 'games.review_count', 'games.rating_avg')
+            ->join('game_publishers', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->join('games', 'games.id', '=', 'game_publishers.game_id')
+            ->where('partners.type_id', Partner::TYPE_GAMES_COMPANY)
+            ->where('games.review_count', '<', 3)
+            ->whereNull('partners.last_outreach_id')
+            ->orderBy('partners.id', 'asc')
+            ->orderBy('games.id', 'asc')
+            ->get();
     }
 
     // Outreach targets
     public function getDevelopersWithUnrankedGames()
     {
-        return DB::select('
-            select p.id, p.name, g.id AS game_id, g.title AS game_title, g.link_title AS game_link_title, g.review_count, g.rating_avg
-            from partners p
-            join game_developers gd on p.id = gd.developer_id
-            join games g on g.id = gd.game_id
-            where p.type_id = ?
-            and g.review_count < 3
-            and p.last_outreach_id is null
-            order by p.id asc, g.id asc
-        ', [Partner::TYPE_GAMES_COMPANY]);
+        return Partner::select(
+            'partners.id', 'partners.name', 'partners.link_title',
+            'games.id AS game_id', 'games.title AS game_title',
+            'games.link_title AS game_link_title', 'games.review_count', 'games.rating_avg')
+            ->join('game_developers', 'game_developers.developer_id', '=', 'partners.id')
+            ->join('games', 'games.id', '=', 'game_developers.game_id')
+            ->where('partners.type_id', Partner::TYPE_GAMES_COMPANY)
+            ->where('games.review_count', '<', 3)
+            ->whereNull('partners.last_outreach_id')
+            ->orderBy('partners.id', 'asc')
+            ->orderBy('games.id', 'asc')
+            ->get();
     }
 
 }

@@ -64,17 +64,18 @@ class OutreachController extends Controller
 
             $this->validate($request, $this->validationRulesAdd);
 
+            $partnerId = $request->partner_id;
+
             $partnerOutreach = $servicePartnerOutreach->create(
-                $request->partner_id, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
+                $partnerId, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
             );
             $partnerOutreach->save();
 
             // Update last outreach for partner
-            $partner = $servicePartner->find($request->partner_id);
+            $partner = $servicePartner->find($partnerId);
             $servicePartner->editOutreach($partner, $partnerOutreach);
 
-            //return redirect(route('staff.partners.outreach.list', ['partnerId' => $request->partner_id]));
-            return redirect(route('staff.partners.outreach.list'));
+            return redirect(route('staff.partners.games-company.show', ['partner' => $partner]));
 
         }
 
