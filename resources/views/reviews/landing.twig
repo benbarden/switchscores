@@ -30,6 +30,9 @@
             be incorporated on the appropriate publication dates.
         </p>
 
+        {% if DateList2020|length %}
+            {% include 'reviews/reviewYearItem.twig' with {'Year': '2020', 'DateList': DateList2020} %}
+        {% endif %}
         {% if DateList2019|length %}
             {% include 'reviews/reviewYearItem.twig' with {'Year': '2019', 'DateList': DateList2019} %}
         {% endif %}

@@ -23,10 +23,12 @@ class ReviewsController extends Controller
         $dateListArray2017 = [];
         $dateListArray2018 = [];
         $dateListArray2019 = [];
+        $dateListArray2020 = [];
 
         $reviewTotal2017 = 0;
         $reviewTotal2018 = 0;
         $reviewTotal2019 = 0;
+        $reviewTotal2020 = 0;
 
         if ($dateList) {
 
@@ -70,6 +72,13 @@ class ReviewsController extends Controller
                         ];
                         $reviewTotal2019 += $dateCount;
                         break;
+                    case 2020:
+                        $dateListArray2020[] = [
+                            'DateRaw' => $date,
+                            'ReviewCount' => $dateCount,
+                        ];
+                        $reviewTotal2020 += $dateCount;
+                        break;
                 }
 
             }
@@ -80,9 +89,11 @@ class ReviewsController extends Controller
         $bindings['DateList2017'] = $dateListArray2017;
         $bindings['DateList2018'] = $dateListArray2018;
         $bindings['DateList2019'] = $dateListArray2019;
+        $bindings['DateList2020'] = $dateListArray2020;
         $bindings['ReviewTotal2017'] = $reviewTotal2017;
         $bindings['ReviewTotal2018'] = $reviewTotal2018;
         $bindings['ReviewTotal2019'] = $reviewTotal2019;
+        $bindings['ReviewTotal2020'] = $reviewTotal2020;
 
         $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
         $bindings['PageTitle'] = 'Reviews';
