@@ -1,0 +1,64 @@
+{% if GameList.count > 0 %}
+    <table class="table data-sortable table-condensed table-responsive">
+        <thead>
+            <tr>
+                <th class="text-right"></th>
+                <th>Title</th>
+                <th>Primary type</th>
+                <th class="text-center">Rating</th>
+                <th class="text-center">Reviews</th>
+                <th>Release date (EU)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td class="text-right">
+                        <a href="{{ LinkHelper.gameShow(item) }}" class="h5">
+                            {{ ImageHelper.packshotHtml(item, 'landing-mini') }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ LinkHelper.gameShow(item) }}" class="h5">{{ item.title }}</a>
+                    </td>
+                    <td>
+                        {{ item.primaryType.primary_type }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.rating_avg %}
+                            {% if item.game_rank %}
+                                {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.review_count }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.eu_release_date }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [ 1, 'asc' ],
+            "pageLength": 25,
+            "columns": [
+                { "orderable": false },
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>

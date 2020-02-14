@@ -150,11 +150,9 @@ class GameReleaseDateService
      */
     public function getReleasedByLetter($letter, $limit = null)
     {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('games.title', 'LIKE', $letter.'%')
-            ->orderBy('games.title', 'asc');
+        $games = Game::where('eu_is_released', 1)
+            ->where('title', 'LIKE', $letter.'%')
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
