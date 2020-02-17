@@ -32,7 +32,7 @@ class GameTitleHashServiceTest extends TestCase
     public function testSuperMarioOdyssey()
     {
         $title = 'Super Mario Odyssey';
-        $hash = '11c597730ed1454f91f9885cdb36fe9e';
+        $hash = '63c5bbaa5b0bf74da91d1c40dff0cb02';
 
         $this->assertEquals($hash, $this->serviceGameTitleHash->generateHash($title));
     }
@@ -40,7 +40,7 @@ class GameTitleHashServiceTest extends TestCase
     public function testBreakforcistBattle()
     {
         $title = '#Breakforcist Battle';
-        $hash = '26178fd8980eb3e422a86332055cc886';
+        $hash = '33237ac48f51f66661550227626220f9';
 
         $this->assertEquals($hash, $this->serviceGameTitleHash->generateHash($title));
     }
@@ -48,7 +48,7 @@ class GameTitleHashServiceTest extends TestCase
     public function testAeternoBlade()
     {
         $title = 'AeternoBlade';
-        $hash = '9fba7410ddb407b3bf9bdb01d9bb3e6f';
+        $hash = '8e3106978679e1539960e0850bfad65a';
 
         $this->assertEquals($hash, $this->serviceGameTitleHash->generateHash($title));
     }
@@ -56,7 +56,7 @@ class GameTitleHashServiceTest extends TestCase
     public function testAeternoBladeII()
     {
         $title = 'AeternoBlade II';
-        $hash = '2d6c5b8904998f092e367e7a7a398573';
+        $hash = '21e4e0006a4ded1afcffcdfcb8d835c5';
 
         $this->assertEquals($hash, $this->serviceGameTitleHash->generateHash($title));
     }
