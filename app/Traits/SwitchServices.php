@@ -10,7 +10,6 @@ use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\EshopEuropeIgnoreService;
 use App\Services\FeedItemGameService;
-use App\Services\FeedItemReviewService;
 use App\Services\GameActionListService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
@@ -35,6 +34,8 @@ use App\Services\PartnerService;
 use App\Services\PartnerOutreachService;
 use App\Services\PartnerReviewService;
 use App\Services\QuickReviewService;
+use App\Services\ReviewFeedImportService;
+use App\Services\ReviewFeedItemService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 use App\Services\SiteAlertService;
@@ -152,14 +153,6 @@ trait SwitchServices
     public function getServiceFeedItemGame()
     {
         return $this->loadService('FeedItemGameService');
-    }
-
-    /**
-     * @return FeedItemReviewService
-     */
-    public function getServiceFeedItemReview()
-    {
-        return $this->loadService('FeedItemReviewService');
     }
 
     /**
@@ -352,6 +345,22 @@ trait SwitchServices
     public function getServiceQuickReview()
     {
         return $this->loadService('QuickReviewService');
+    }
+
+    /**
+     * @return ReviewFeedImportService
+     */
+    public function getServiceReviewFeedImport()
+    {
+        return $this->loadService('ReviewFeedImportService');
+    }
+
+    /**
+     * @return ReviewFeedItemService
+     */
+    public function getServiceReviewFeedItem()
+    {
+        return $this->loadService('ReviewFeedItemService');
     }
 
     /**

@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\FeedItemReviewService;
+use App\Services\ReviewFeedImportService;
 
-class FeedItemReviewServiceProvider extends ServiceProvider
+class ReviewFeedImportServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class FeedItemReviewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\FeedItemReviewService', function($app) {
-            return new FeedItemReviewService();
+        $this->app->bind('Services\ReviewFeedImportService', function($app) {
+            return new ReviewFeedImportService();
         });
     }
 }

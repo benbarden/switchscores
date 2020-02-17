@@ -165,7 +165,7 @@ return [
         App\Providers\EshopEuropeGameServiceProvider::class,
         App\Providers\EshopUSGameServiceProvider::class,
         App\Providers\FeedItemGameServiceProvider::class,
-        App\Providers\FeedItemReviewServiceProvider::class,
+        App\Providers\ReviewFeedItemServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,
         App\Providers\GameDeveloperServiceProvider::class,
         App\Providers\GameGenreServiceProvider::class,

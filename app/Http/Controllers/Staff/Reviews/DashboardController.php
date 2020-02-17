@@ -17,7 +17,7 @@ class DashboardController extends Controller
     {
         $pageTitle = 'Reviews dashboard';
 
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $servicePartnerReview = $this->getServicePartnerReview();
         $serviceQuickReview = $this->getServiceQuickReview();
 
@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $bindings = [];
 
         // Action lists
-        $unprocessedFeedReviewItems = $serviceFeedItemReview->getUnprocessed();
+        $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
         $pendingPartnerReview = $servicePartnerReview->getByStatus(PartnerReview::STATUS_PENDING);
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);

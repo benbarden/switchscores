@@ -18,7 +18,7 @@ class IndexController extends Controller
         $serviceUser = $this->getServiceUser();
 
         $serviceFeedItemGame = $this->getServiceFeedItemGame();
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceSiteAlert = $this->getServiceSiteAlert();
@@ -36,7 +36,7 @@ class IndexController extends Controller
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink($ignoreFsIdList, null, true);
 
         // Updates requiring approval
-        $unprocessedFeedReviewItems = $serviceFeedItemReview->getUnprocessed();
+        $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
         $pendingFeedGameItems = $serviceFeedItemGame->getPending();
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);

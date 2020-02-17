@@ -4,13 +4,9 @@ namespace Tests\Unit\Services\Feed;
 
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
-use App\FeedItemReview;
 use App\Partner;
 
-use Illuminate\Support\Collection;
 use Tests\TestCase;
-#use Illuminate\Foundation\Testing\DatabaseMigrations;
-#use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ParserTest extends TestCase
 {

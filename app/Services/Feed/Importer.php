@@ -3,9 +3,9 @@
 
 namespace App\Services\Feed;
 
-use App\FeedItemReview;
 use App\Partner;
-use App\Services\FeedItemReviewService;
+use App\ReviewFeedItem;
+use App\Services\ReviewFeedItemService;
 use App\Services\UrlService;
 use Carbon\Carbon;
 
@@ -121,18 +121,18 @@ class Importer
     /**
      * @param $isWix
      * @param $feedItem
-     * @return FeedItemReview
+     * @return ReviewFeedItem
      */
     public function generateModel($isWix, $feedItem)
     {
-        $feedItemReview = new FeedItemReview();
+        $reviewFeedItem = new ReviewFeedItem();
 
         // Basic fields
-        $feedItemReview->site_id = $this->siteId;
+        $reviewFeedItem->site_id = $this->siteId;
 
         if ($isWix) {
 
-            $feedItemReview->item_url = $feedItem->link;
+            $reviewFeedItem->item_url = $feedItem->link;
 
             $itemTitle = (string) $feedItem->title;
 
@@ -141,7 +141,7 @@ class Importer
 
         } else {
 
-            $feedItemReview->item_url = $feedItem['link'];
+            $reviewFeedItem->item_url = $feedItem['link'];
 
             $itemTitle = $feedItem['title'];
             $itemTitle = str_replace('<![CDATA[', '', $itemTitle);
@@ -153,37 +153,37 @@ class Importer
             $pubDateModel = new Carbon($pubDate);
 
             if (array_key_exists('score', $feedItem)) {
-                $feedItemReview->item_rating = $feedItem['score'];
+                $reviewFeedItem->item_rating = $feedItem['score'];
             }
 
         }
 
-        $feedItemReview->item_title = $itemTitle;
-        $feedItemReview->item_date = $pubDateModel->format('Y-m-d H:i:s');
+        $reviewFeedItem->item_title = $itemTitle;
+        $reviewFeedItem->item_date = $pubDateModel->format('Y-m-d H:i:s');
 
-        return $feedItemReview;
+        return $reviewFeedItem;
     }
 
-    public function processItemRss($isWix, $feedItem, Partner $reviewSite, UrlService $serviceUrl, FeedItemReviewService $serviceFeedItemReview)
+    public function processItemRss($isWix, $feedItem, Partner $reviewSite, UrlService $serviceUrl, ReviewFeedItemService $serviceReviewFeedItem)
     {
         // Generate the model
-        $feedItemReview = $this->generateModel($isWix, $feedItem);
-        $itemTitle = $feedItemReview->item_title;
-        $itemUrl = $feedItemReview->item_url;
-        $itemDate = $feedItemReview->item_date;
+        $reviewFeedItem = $this->generateModel($isWix, $feedItem);
+        $itemTitle = $reviewFeedItem->item_title;
+        $itemUrl = $reviewFeedItem->item_url;
+        $itemDate = $reviewFeedItem->item_date;
 
         // Clean up URL
         $itemUrl = $serviceUrl->cleanReviewFeedUrl($itemUrl);
-        $feedItemReview->item_url = $itemUrl;
+        $reviewFeedItem->item_url = $itemUrl;
 
         // Check if it's already been imported
-        $dbExistingItem = $serviceFeedItemReview->getByItemUrl($itemUrl);
+        $dbExistingItem = $serviceReviewFeedItem->getByItemUrl($itemUrl);
         if ($dbExistingItem) {
             throw new AlreadyImported('Already imported: '.$itemUrl);
         }
 
         // Silently bypass historic reviews - removes some log noise
-        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
+        if ($reviewFeedItem->isHistoric() && !$reviewSite->allowHistoric()) {
             throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
         }
 
@@ -197,8 +197,8 @@ class Importer
         }
 
         // All good - add it as a feed item
-        $feedItemReview->load_status = 'Loaded OK';
-        return $feedItemReview;
+        $reviewFeedItem->load_status = 'Loaded OK';
+        return $reviewFeedItem;
     }
 
     public function processItemAtom($feedItem)

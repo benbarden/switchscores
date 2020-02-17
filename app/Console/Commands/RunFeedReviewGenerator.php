@@ -49,13 +49,13 @@ class RunFeedReviewGenerator extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceGame = $this->getServiceGame();
         $serviceReviewLink = $this->getServiceReviewLink();
         $serviceReviewStats = $this->getServiceReviewStats();
         $servicePartner = $this->getServicePartner();
 
-        $feedItems = $serviceFeedItemReview->getUnprocessed();
+        $feedItems = $serviceReviewFeedItem->getUnprocessed();
 
         if (!$feedItems) {
             $logger->info('No items to process. Aborting.');

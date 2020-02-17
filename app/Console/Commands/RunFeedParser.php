@@ -52,12 +52,12 @@ class RunFeedParser extends Command
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $servicePartner = $this->getServicePartner();
 
         $serviceTitleMatch = new ServiceTitleMatch();
 
-        $feedItems = $serviceFeedItemReview->getItemsToParse();
+        $feedItems = $serviceReviewFeedItem->getItemsToParse();
 
         if (!$feedItems) {
             $logger->info('No items to parse. Aborting.');

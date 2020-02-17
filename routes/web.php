@@ -387,9 +387,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
 
     // Feed items: Reviews
-    Route::get('/admin/feed-items/reviews/{report?}', 'Admin\FeedItemReviewController@showList')->name('admin.feed-items.reviews.list');
-    Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
-    Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\FeedItemReviewController@edit')->name('admin.feed-items.reviews.edit');
+    Route::get('/admin/feed-items/reviews/{report?}', 'Admin\ReviewFeedItemController@showList')->name('admin.feed-items.reviews.list');
+    Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\ReviewFeedItemController@edit')->name('admin.feed-items.reviews.edit');
+    Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\ReviewFeedItemController@edit')->name('admin.feed-items.reviews.edit');
 
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');

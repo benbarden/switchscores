@@ -3,8 +3,6 @@
 namespace Tests\Unit\Services\Feed;
 
 use App\Services\Feed\TitleParser;
-use App\FeedItemReview;
-use App\ReviewSite;
 
 use Illuminate\Support\Collection;
 use Tests\TestCase;

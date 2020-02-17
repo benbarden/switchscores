@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use Carbon\Carbon;
 
-use App\FeedItemReview;
+use App\ReviewFeedItem;
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
@@ -60,7 +60,7 @@ class RunFeedImporter extends Command
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $servicePartner = $this->getServicePartner();
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
 
         $reviewSites = $servicePartner->getReviewSiteFeedUrls();
 
@@ -69,6 +69,16 @@ class RunFeedImporter extends Command
             return true;
         }
 
+        // Create import record
+        if ($argSiteId) {
+            $importSiteId = $argSiteId;
+        } else {
+            $importSiteId = null;
+        }
+        $reviewFeedImport = $this->getServiceReviewFeedImport()->createCron($importSiteId);
+        $feedImportId = $reviewFeedImport->id;
+
+        // Create feed items
         $serviceUrl = new UrlService();
 
         foreach ($reviewSites as $reviewSite) {
@@ -80,7 +90,7 @@ class RunFeedImporter extends Command
 
             if ($argSiteId && ($siteId != $argSiteId)) continue;
 
-            $logger->info(sprintf('Site: %s - Feed URL: %s', $siteName, $feedUrl));
+            $logger->info(sprintf('Site %s: %s - Feed URL: %s', $siteId, $siteName, $feedUrl));
 
             try {
 
@@ -131,9 +141,10 @@ class RunFeedImporter extends Command
 
                         try {
 
-                            $feedItemReview = $feedImporter->processItemRss($isWix, $feedItem, $reviewSite, $serviceUrl, $serviceFeedItemReview);
-                            $logger->info('Importing item with date: '.$feedItemReview->item_date.'; URL: '.$feedItemReview->item_url);
-                            $feedItemReview->save();
+                            $reviewFeedItem = $feedImporter->processItemRss($isWix, $feedItem, $reviewSite, $serviceUrl, $serviceReviewFeedItem);
+                            $logger->info('Importing item with date: '.$reviewFeedItem->item_date.'; URL: '.$reviewFeedItem->item_url);
+                            $reviewFeedItem->import_id = $feedImportId;
+                            $reviewFeedItem->save();
 
                         } catch (AlreadyImported $e) {
 
@@ -157,12 +168,13 @@ class RunFeedImporter extends Command
 
                     foreach ($feedData['entry'] as $feedItem) {
 
-                        $feedItemReview = new FeedItemReview();
+                        $reviewFeedItem = new ReviewFeedItem();
 
                         // Basic fields
-                        $feedItemReview->site_id = $siteId;
+                        $reviewFeedItem->import_id = $feedImportId;
+                        $reviewFeedItem->site_id = $siteId;
                         $itemTitle = $feedItem['title'];
-                        $feedItemReview->item_title = $itemTitle;
+                        $reviewFeedItem->item_title = $itemTitle;
 
                         // URL
                         $itemUrl = null;
@@ -175,16 +187,16 @@ class RunFeedImporter extends Command
                             }
                         }
                         if ($itemUrl != null) {
-                            $feedItemReview->item_url = $itemUrl;
+                            $reviewFeedItem->item_url = $itemUrl;
                         }
 
                         // Date
                         $itemDateModel = new Carbon($feedItem['published']);
                         $itemDate = $itemDateModel->format('Y-m-d H:i:s');
-                        $feedItemReview->item_date = $itemDate;
+                        $reviewFeedItem->item_date = $itemDate;
 
                         // Check if it's already been imported
-                        $dbExistingItem = $serviceFeedItemReview->getByItemUrl($itemUrl);
+                        $dbExistingItem = $serviceReviewFeedItem->getByItemUrl($itemUrl);
                         if ($dbExistingItem) {
                             //$logger->warn('Already imported: '.$itemUrl);
                             continue;
@@ -232,7 +244,7 @@ class RunFeedImporter extends Command
                         }
 
                         // Check that it's not a historic review
-                        if ($feedItemReview->isHistoric() && !$reviewSite->allowHistoric()) {
+                        if ($reviewFeedItem->isHistoric() && !$reviewSite->allowHistoric()) {
                             $logger->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                             continue;
                         }
@@ -241,8 +253,8 @@ class RunFeedImporter extends Command
                         $logger->info('Importing item with date: '.$itemDate.'; URL: '.$itemUrl);
 
                         // All good - add it as a feed item
-                        $feedItemReview->load_status = 'Loaded OK';
-                        $feedItemReview->save();
+                        $reviewFeedItem->load_status = 'Loaded OK';
+                        $reviewFeedItem->save();
 
                     }
 

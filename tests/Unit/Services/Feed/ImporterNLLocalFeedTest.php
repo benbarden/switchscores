@@ -2,12 +2,10 @@
 
 namespace Tests\Unit\Services\Feed;
 
-use App\FeedItemReview;
-use App\Partner;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
-#use Illuminate\Foundation\Testing\DatabaseMigrations;
-#use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+use App\ReviewFeedItem;
+use App\Partner;
 
 use App\Services\Feed\Importer;
 
@@ -76,24 +74,24 @@ class ImporterNLLocalFeedTest extends TestCase
 
         foreach ($feedData['channel']['item'] as $feedItem) {
 
-            $feedItemReview = $this->feedImporter->generateModel(false, $feedItem);
+            $reviewFeedItem = $this->feedImporter->generateModel(false, $feedItem);
 
             // Check model type
-            $this->assertInstanceOf(FeedItemReview::class, $feedItemReview);
+            $this->assertInstanceOf(ReviewFeedItem::class, $reviewFeedItem);
 
             // Compare model against feed data
             $feedLink = $feedData['channel']['item'][$counter]['link'];
-            $this->assertEquals($feedLink, $feedItemReview->item_url);
+            $this->assertEquals($feedLink, $reviewFeedItem->item_url);
 
             $feedTitle = $feedData['channel']['item'][$counter]['title'];
-            $this->assertEquals($feedTitle, $feedItemReview->item_title);
+            $this->assertEquals($feedTitle, $reviewFeedItem->item_title);
 
             $feedDate = $feedData['channel']['item'][$counter]['pubDate'];
             $feedDate = date('Y-m-d H:i:s', strtotime($feedDate));
-            $this->assertEquals($feedDate, $feedItemReview->item_date);
+            $this->assertEquals($feedDate, $reviewFeedItem->item_date);
 
             $feedScore = $feedData['channel']['item'][$counter]['score'];
-            $this->assertEquals($feedScore, $feedItemReview->item_rating);
+            $this->assertEquals($feedScore, $reviewFeedItem->item_rating);
 
             $counter++;
 

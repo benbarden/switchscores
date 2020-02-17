@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 
-class FeedItemReviewController extends Controller
+class ReviewFeedItemController extends Controller
 {
     use SwitchServices;
 
@@ -29,11 +29,11 @@ class FeedItemReviewController extends Controller
         $bindings['TopTitle'] = 'Admin - Feed items';
         $bindings['PageTitle'] = 'Feed items';
 
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
-            $feedItems = $serviceFeedItemReview->getUnprocessed();
+            $feedItems = $serviceReviewFeedItem->getUnprocessed();
             $jsInitialSort = "[ 2, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
@@ -41,7 +41,7 @@ class FeedItemReviewController extends Controller
                 case 'processed':
                     $itemLimit = 250;
                     $bindings['TableLimit'] = $itemLimit;
-                    $feedItems = $serviceFeedItemReview->getProcessed($itemLimit);
+                    $feedItems = $serviceReviewFeedItem->getProcessed($itemLimit);
                     $jsInitialSort = "[ 2, 'desc']";
                     break;
                 default:
@@ -58,11 +58,11 @@ class FeedItemReviewController extends Controller
 
     public function edit($itemId)
     {
-        $serviceFeedItemReview = $this->getServiceFeedItemReview();
+        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceGame = $this->getServiceGame();
         $servicePartner = $this->getServicePartner();
 
-        $feedItemData = $serviceFeedItemReview->find($itemId);
+        $feedItemData = $serviceReviewFeedItem->find($itemId);
         if (!$feedItemData) abort(404);
 
         $bindings = [];
@@ -75,7 +75,7 @@ class FeedItemReviewController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceFeedItemReview->edit(
+            $serviceReviewFeedItem->edit(
                 $feedItemData, $request->site_id, $request->game_id, $request->item_rating,
                 $request->processed, $request->process_status
             );

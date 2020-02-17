@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FeedItemReview extends Model
+class ReviewFeedItem extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'feed_item_reviews';
+    protected $table = 'review_feed_items';
 
     /**
      * @var bool

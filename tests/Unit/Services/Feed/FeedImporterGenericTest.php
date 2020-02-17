@@ -2,9 +2,6 @@
 
 namespace Tests\Unit\Services\Feed;
 
-use App\FeedItemReview;
-use App\Partner;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 use App\Services\Feed\Importer;
