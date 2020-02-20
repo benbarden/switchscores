@@ -88,13 +88,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminFeedItemsReviews()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/feed-items/reviews');
-        $response->assertStatus(200);
-    }
-
     public function testAdminReviewsLink()
     {
         $this->be($this->userAdmin);

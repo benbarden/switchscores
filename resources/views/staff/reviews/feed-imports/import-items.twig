@@ -1,0 +1,72 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'url': route('staff.reviews.feed-imports.list'), 'text': 'Feed imports'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<p>
+    <small>
+        Import run at {{ FeedImport.created_at|date('Y-m-d H:i') }}.
+    </small>
+</p>
+
+{% if ItemList.count > 0 %}
+
+<table class="table data-sortable table-responsive">
+    <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th class="text-left">Site</th>
+            <th class="text-left">Title from feed</th>
+            <th class="text-center">Parse status</th>
+            <th class="text-center">Process status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-right">
+                    {{ item.id }}
+                </td>
+                <td class="text-left">
+                    {{ item.site.name }}
+                </td>
+                <td class="text-left">
+                    <small>{{ item.item_title }}</small>
+                </td>
+                <td class="text-center">
+                    {{ item.parse_status }}
+                </td>
+                <td class="text-center">
+                    {{ item.process_status }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [ '0', 'desc' ],
+            "pageLength": 50,
+            "columns": [
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

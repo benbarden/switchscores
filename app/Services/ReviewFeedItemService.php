@@ -79,4 +79,9 @@ class ReviewFeedItemService
         $reviewFeedItem = $reviewFeedItem->get();
         return $reviewFeedItem;
     }
+
+    public function getByImportId($importId)
+    {
+        return ReviewFeedItem::where('import_id', $importId)->orderBy('id', 'desc')->get();
+    }
 }

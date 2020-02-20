@@ -1,0 +1,75 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% if ImportList.count > 0 %}
+
+<table class="table data-sortable table-responsive">
+    <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th class="text-left">Method</th>
+            <th class="text-center">Day of week</th>
+            <th class="text-center">Items</th>
+            <th class="text-center">Site</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ImportList %}
+            <tr>
+                <td class="text-right">
+                    {{ item.id }}
+                </td>
+                <td class="text-left">
+                    {{ item.import_method }}
+                </td>
+                <td class="text-center">
+                    {{ item.created_at|date('l') }}
+                </td>
+                <td class="text-center">
+                    {{ item.feedItems.count() }}
+                </td>
+                <td class="text-center">
+                    {{ item.site.name }}
+                </td>
+                <td class="text-center">
+                    {{ item.created_at|date('Y-m-d H:i') }}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item}) }}">View items</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [ '0', 'desc' ],
+            "pageLength": 50,
+            "columns": [
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                { "orderable": false },
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}
