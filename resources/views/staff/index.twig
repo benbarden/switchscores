@@ -32,10 +32,10 @@
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
             <tr>
                 <td>
-                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+                    <a href="{{ route('staff.reviews.feed-items.list') }}">Feeds: Reviews</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+                    <a href="{{ route('staff.reviews.feed-items.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
                 </td>
             </tr>
             {% endif %}

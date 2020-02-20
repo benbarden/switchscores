@@ -29,15 +29,10 @@
         <div class="col-md-6">
             {% if ReviewData.review_body %}
                 <p>
-                    <em>Review body is shown below.</em>
-                </p>
-                <hr>
-                <p>
                     <small>
                         {{ ReviewData.review_body|raw }}
                     </small>
                 </p>
-                <hr>
             {% else %}
                 <p>
                     <em>Review does not contain a body.</em>

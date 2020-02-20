@@ -1,0 +1,16 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'url': route('staff.reviews.feed-items.list'), 'text': 'Feed items'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.reviews.feed-items.edit', {'itemId': ItemId}) %}
+{% include 'staff/reviews/feed-items/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/reviews/feed-items/scripts.twig' %}
+
+{% endblock page_inner %}

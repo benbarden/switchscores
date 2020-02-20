@@ -146,6 +146,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::post('/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
+    // Review feed items
+    Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
+    Route::get('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
+    Route::post('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
+
+    // Review feed imports
+    Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports');
+
 });
 
 
@@ -385,11 +393,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::post('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
-
-    // Feed items: Reviews
-    Route::get('/admin/feed-items/reviews/{report?}', 'Admin\ReviewFeedItemController@showList')->name('admin.feed-items.reviews.list');
-    Route::get('/admin/feed-items/reviews/edit/{linkId}', 'Admin\ReviewFeedItemController@edit')->name('admin.feed-items.reviews.edit');
-    Route::post('/admin/feed-items/reviews/edit/{linkId}', 'Admin\ReviewFeedItemController@edit')->name('admin.feed-items.reviews.edit');
 
     // News
     Route::get('/admin/news/list', 'Admin\NewsController@showList')->name('admin.news.list');

@@ -14,10 +14,10 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('admin.feed-items.reviews.list') }}">Feeds: Reviews</a>
+                    <a href="{{ route('staff.reviews.feed-items.list') }}">Review feed items - pending</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.feed-items.reviews.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
+                    <a href="{{ route('staff.reviews.feed-items.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
                 </td>
             </tr>
             <tr>
@@ -42,6 +42,17 @@
     </div>
 
     <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('admin.reviews.link.list') }}">Review links</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
         <h2>Tools</h2>
         <table class="table">

@@ -1,6 +1,9 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
@@ -95,7 +98,7 @@
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('admin.feed-items.reviews.edit', {'itemId': item.id}) }}">Edit</a>
+                    <a href="{{ route('staff.reviews.feed-items.edit', {'itemId': item.id}) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}
@@ -109,7 +112,7 @@
 <script>
     $('#admin-nav-feed-item-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('admin.feed-items.reviews.list')}}' + '/' + selectedFilter;
+        top.location.href = '{{ route('staff.reviews.feed-items.list')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeNav = '{{ ActiveNav }}';

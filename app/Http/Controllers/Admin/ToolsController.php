@@ -109,7 +109,7 @@ class ToolsController extends Controller
                 'scheduleTime' => '0505',
                 'nextStep' => 'RunFeedReviewGenerator',
                 'relatedLink' => [
-                    'url' => route('admin.feed-items.reviews.list'),
+                    'url' => route('staff.reviews.feed-items.list'),
                     'text' => 'Feed Items - Reviews'
                 ],
             ],

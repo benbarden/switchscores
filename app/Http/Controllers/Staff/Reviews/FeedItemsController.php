@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 
-class ReviewFeedItemController extends Controller
+class FeedItemsController extends Controller
 {
     use SwitchServices;
 
@@ -26,7 +26,7 @@ class ReviewFeedItemController extends Controller
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Feed items';
+        $bindings['TopTitle'] = 'Reviews - Feed items';
         $bindings['PageTitle'] = 'Feed items';
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
@@ -53,7 +53,7 @@ class ReviewFeedItemController extends Controller
         $bindings['FeedItems'] = $feedItems;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        return view('admin.feed-items.reviews.list', $bindings);
+        return view('staff.reviews.feed-items.list', $bindings);
     }
 
     public function edit($itemId)
@@ -81,7 +81,7 @@ class ReviewFeedItemController extends Controller
             );
 
             // All done; send us back
-            return redirect(route('admin.feed-items.reviews.list'));
+            return redirect(route('staff.reviews.feed-items.list'));
 
         } else {
 
@@ -89,7 +89,7 @@ class ReviewFeedItemController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Feed items - Edit';
+        $bindings['TopTitle'] = 'Reviews - Feed items - Edit';
         $bindings['PageTitle'] = 'Edit feed item';
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
@@ -98,6 +98,6 @@ class ReviewFeedItemController extends Controller
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
-        return view('admin.feed-items.reviews.edit', $bindings);
+        return view('staff.reviews.feed-items.edit', $bindings);
     }
 }

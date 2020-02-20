@@ -1,6 +1,9 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
