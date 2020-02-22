@@ -70,8 +70,9 @@ class GamesTitleHashController extends Controller
                     ->withInput();
             }
 
-            $titleHash = $serviceGameTitleHash->generateHash($request->title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($titleHash);
+            $titleLowercase = strtolower($request->title);
+            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
+            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
 
             $validator->after(function ($validator) use ($existingTitleHash) {
                 // Check for duplicates
@@ -88,7 +89,7 @@ class GamesTitleHashController extends Controller
 
             // Add to DB
             $gameId = $request->game_id;
-            $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
+            $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
             // Done
             //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
@@ -129,13 +130,13 @@ class GamesTitleHashController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $titleHash = $serviceGameTitleHash->generateHash($request->title);
+            $titleLowercase = strtolower($request->title);
+            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
 
             $gameId = $request->game_id;
-            $serviceGameTitleHash->edit($gameTitleHashData, $request->title, $titleHash, $gameId);
+            $serviceGameTitleHash->edit($gameTitleHashData, $titleLowercase, $hashedTitle, $gameId);
 
             // Done
-            //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
 
         } else {

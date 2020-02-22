@@ -100,8 +100,9 @@ class FeedItemEshopEuropeController extends Controller
             $title = $eshopGameData->title;
 
             // Check title hash is unique
-            $titleHash = $serviceGameTitleHash->generateHash($title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($titleHash);
+            $titleLowercase = strtolower($title);
+            $hashedTitle = $serviceGameTitleHash->generateHash($title);
+            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
 
             // Check for duplicates
             if ($existingTitleHash != null) {
@@ -125,7 +126,7 @@ class FeedItemEshopEuropeController extends Controller
                 $gameId = $game->id;
 
                 // Add title hash
-                $gameTitleHash = $serviceGameTitleHash->create($title, $titleHash, $gameId);
+                $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
                 // Update eShop data
                 EshopEuropeUpdateGameFactory::updateGame($game);

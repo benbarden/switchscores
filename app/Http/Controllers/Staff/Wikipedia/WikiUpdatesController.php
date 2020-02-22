@@ -167,10 +167,11 @@ class WikiUpdatesController extends Controller
                 $feedItemData->modified_fields = serialize($modifiedFields);
 
                 // We also need to add a new title hash if one doesn't already exist
-                $titleHash = $serviceGameTitleHash->generateHash($feedItemData->item_title);
-                $existingHash = $serviceGameTitleHash->getByHash($titleHash);
+                $titleLowercase = strtolower($feedItemData->item_title);
+                $hashedTitle = $serviceGameTitleHash->generateHash($feedItemData->item_title);
+                $existingHash = $serviceGameTitleHash->getByHash($hashedTitle);
                 if (!$existingHash) {
-                    $serviceGameTitleHash->create($feedItemData->item_title, $titleHash, $gameId);
+                    $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
                 }
 
             }

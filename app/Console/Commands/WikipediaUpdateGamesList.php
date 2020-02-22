@@ -163,8 +163,9 @@ class WikipediaUpdateGamesList extends Command
 
                 $title = $feedItem->item_title;
 
-                $titleHash = $serviceGameTitleHash->generateHash($title);
-                $gameTitleHash = $serviceGameTitleHash->getByHash($titleHash);
+                $titleLowercase = strtolower($title);
+                $hashedTitle = $serviceGameTitleHash->generateHash($title);
+                $gameTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
                 if ($gameTitleHash) {
                     $logger->warn('Title hash already exists - cannot create game: '.$title.'; skipping');
                     continue;
@@ -202,7 +203,7 @@ class WikipediaUpdateGamesList extends Command
                 $gameId = $game->id;
 
                 // Create title hash
-                $serviceGameTitleHash->create($title, $titleHash, $gameId);
+                $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
                 // Wrapping up
                 $logger->info('Marking feed item as complete');

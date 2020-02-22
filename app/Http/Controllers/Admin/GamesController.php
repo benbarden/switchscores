@@ -144,8 +144,9 @@ class GamesController extends Controller
             }
 
             // Check title hash is unique
-            $titleHash = $serviceGameTitleHash->generateHash($request->title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($titleHash);
+            $titleLowercase = strtolower($request->title);
+            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
+            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
 
             $validator->after(function ($validator) use ($existingTitleHash) {
                 // Check for duplicates
@@ -170,7 +171,7 @@ class GamesController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $gameTitleHash = $serviceGameTitleHash->create($request->title, $titleHash, $gameId);
+            $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
             // Check eu_released_on
             if ($request->eu_is_released == 1) {
