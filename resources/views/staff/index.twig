@@ -113,8 +113,15 @@
             </tr>
             <tr>
                 <td>
-                    {% if auth_user().isOwner() %}
-                        <a href="{{ route('staff.stats.dashboard') }}">Stats</a>
+                    {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
+                        <a href="{{ route('staff.wikipedia.dashboard') }}">Wikipedia</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
+                        <a href="{{ route('staff.data-sources.dashboard') }}">Data sources</a>
                     {% endif %}
                 </td>
             </tr>
@@ -178,6 +185,11 @@
                 <tr>
                     <td>
                         <a href="{{ route('admin.news.list') }}">News</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.stats.dashboard') }}">Stats</a>
                     </td>
                 </tr>
             </tbody>

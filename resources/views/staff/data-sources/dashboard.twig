@@ -1,0 +1,66 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        <h2>Data sources</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Name</th>
+                    <th class="text-center">Import method</th>
+                    <th class="text-center">Active?</th>
+                    <th class="text-center">Raw items</th>
+                    <th class="text-center">Parsed items</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in DataSources %}
+            <tr>
+                <td class="text-center">
+                    {{ item.id }}
+                </td>
+                <td>
+                    {{ item.name }}
+                </td>
+                <td class="text-center">
+                    {{ item.importMethodDesc() }}
+                </td>
+                <td class="text-center">
+                    {% if item.is_active == 1 %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {{ item.itemsRaw().count() }}
+                </td>
+                <td class="text-center">
+                    {{ item.itemsParsed().count() }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <ul>
+            <li>TBC</li>
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

@@ -18,6 +18,9 @@
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
+        <testsuite name="Data">
+            <directory suffix="Test.php">./tests/Unit/Services/DataSources</directory>
+        </testsuite>
         <testsuite name="Eshop">
             <directory suffix="Test.php">./tests/Unit/Services/Eshop</directory>
         </testsuite>

@@ -6,6 +6,9 @@ use App\Services\StaffDashboards\CategorisationService;
 
 use App\Services\AuditService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
+use App\Services\DataSourceService;
+use App\Services\DataSourceParsedService;
+use App\Services\DataSourceRawService;
 use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\EshopEuropeIgnoreService;
@@ -121,6 +124,30 @@ trait SwitchServices
     public function getServiceCrawlerWikipediaGamesListSource()
     {
         return $this->loadService('CrawlerWikipediaGamesListSourceService');
+    }
+
+    /**
+     * @return DataSourceService
+     */
+    public function getServiceDataSource()
+    {
+        return $this->loadService('DataSourceService');
+    }
+
+    /**
+     * @return DataSourceParsedService
+     */
+    public function getServiceDataSourceParsed()
+    {
+        return $this->loadService('DataSourceParsedService');
+    }
+
+    /**
+     * @return DataSourceRawService
+     */
+    public function getServiceDataSourceRaw()
+    {
+        return $this->loadService('DataSourceRawService');
     }
 
     /**

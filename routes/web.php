@@ -305,6 +305,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
+// *************** Staff: DATA SOURCES *************** //
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_DATA_SOURCE_MANAGER]], function() {
+
+    Route::get('/staff/data-sources/dashboard', 'Staff\DataSources\DashboardController@show')->name('staff.data-sources.dashboard');
+
+});
+
+
 // *************** Staff: Admin-only (owner) *************** //
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 

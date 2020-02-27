@@ -12,6 +12,9 @@ test-page:
 test-unit:
 	./vendor/bin/phpunit --testsuite Unit
 
+test-data:
+	./vendor/bin/phpunit --testsuite Data
+
 test-eshop:
 	./vendor/bin/phpunit --testsuite Eshop
 
