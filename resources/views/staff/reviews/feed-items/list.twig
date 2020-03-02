@@ -102,9 +102,9 @@
                 </td>
                 <td class="text-center">
                     {% if item.processed == 1 %}
-                    {{ item.process_status }}
+                        {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
                     {% else %}
-                    -
+                        -
                     {% endif %}
                 </td>
                 <td class="text-center">

@@ -68,9 +68,7 @@ class ReviewFeedItemService
 
     public function getProcessed($limit = 25)
     {
-        $reviewFeedItem = ReviewFeedItem::
-            where('processed', 1)
-            ->orderBy('id', 'desc');
+        $reviewFeedItem = ReviewFeedItem::where('processed', 1)->orderBy('id', 'desc');
 
         if ($limit) {
             $reviewFeedItem = $reviewFeedItem->limit($limit);
