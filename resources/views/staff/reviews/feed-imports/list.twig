@@ -13,11 +13,11 @@
     <thead>
         <tr>
             <th class="text-right">#</th>
+            <th class="text-center">Day of week</th>
+            <th class="text-center">Items</th>
+            <th class="text-center">Date</th>
             <th class="text-left">Method</th>
             <th class="text-center">Site</th>
-            <th class="text-center">Day of week</th>
-            <th class="text-center">Date</th>
-            <th class="text-center">Items</th>
         </tr>
     </thead>
     <tbody>
@@ -26,22 +26,22 @@
                 <td class="text-right">
                     {{ item.id }}
                 </td>
-                <td class="text-left">
-                    {{ item.import_method }}
-                </td>
-                <td class="text-center">
-                    {{ item.site.name }}
-                </td>
                 <td class="text-center">
                     {{ item.created_at|date('l') }}
-                </td>
-                <td class="text-center">
-                    {{ item.created_at|date('Y-m-d H:i') }}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item}) }}">
                         {{ item.feedItems.count() }}
                     </a>
+                </td>
+                <td class="text-center">
+                    {{ item.created_at|date('Y-m-d H:i') }}
+                </td>
+                <td class="text-left">
+                    {{ item.import_method }}
+                </td>
+                <td class="text-center">
+                    {{ item.site.name }}
                 </td>
             </tr>
         {% endfor %}
@@ -60,10 +60,10 @@
             "columns": [
                 null,
                 { "orderable": false },
-                { "orderable": false },
-                { "orderable": false },
                 null,
-                null
+                null,
+                { "orderable": false },
+                { "orderable": false }
             ]
         });
     });
