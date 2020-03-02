@@ -35,7 +35,8 @@
 <table class="table data-sortable table-responsive">
     <thead>
         <tr>
-            <th class="text-right">#</th>
+            <th class="text-center">#</th>
+            <th class="text-center">Import id</th>
             <th class="text-left">Title</th>
             <th class="text-center">Date</th>
             <th class="text-center">Game link</th>
@@ -47,8 +48,17 @@
     <tbody>
         {% for item in FeedItems %}
             <tr>
-                <td class="text-right">
-                    {{ item.id }}
+                <td class="text-center">
+                    <small>
+                        {{ item.id }}
+                    </small>
+                </td>
+                <td class="text-center">
+                    {% if item.feedImport.id %}
+                        <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item.feedImport}) }}">{{ item.feedImport.id }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
                 </td>
                 <td class="text-left" style="max-width: 300px;">
                     <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
@@ -121,6 +131,7 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 50,
             "columns": [
+                null,
                 null,
                 { "orderable": false },
                 null,

@@ -34,7 +34,7 @@ class FeedItemsController extends Controller
         if ($report == null) {
             $bindings['ActiveNav'] = '';
             $feedItems = $serviceReviewFeedItem->getUnprocessed();
-            $jsInitialSort = "[ 2, 'desc']";
+            $jsInitialSort = "[ 1, 'desc'], [2, 'asc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
