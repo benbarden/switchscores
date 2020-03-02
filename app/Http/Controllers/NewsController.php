@@ -28,7 +28,7 @@ class NewsController extends Controller
     public function displayContent()
     {
         $serviceNews = $this->getServiceNews();
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceGame = $this->getServiceGame();
 
         $request = request();
         $requestUri = $request->getPathInfo();
@@ -44,7 +44,7 @@ class NewsController extends Controller
         $bindings['NewsItem'] = $newsItem;
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();
+        $bindings['RankMaximum'] = $serviceGame->countRanked();
 
         // Next/Previous links
         $newsNext = $serviceNews->getNext($newsItem);

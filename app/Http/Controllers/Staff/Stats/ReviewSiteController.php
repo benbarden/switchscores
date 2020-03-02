@@ -17,11 +17,11 @@ class ReviewSiteController extends Controller
         $serviceReviewLinks = $this->getServiceReviewLink();
         $servicePartner = $this->getServicePartner();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceGame = $this->getServiceGame();
         $serviceTopRated = $this->getServiceTopRated();
         $serviceReviewStats = $this->getServiceReviewStats();
 
-        $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
+        $bindings['RankedGameCount'] = $serviceGame->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         $releasedGameCount = $serviceGameReleaseDate->countReleased();

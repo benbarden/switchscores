@@ -143,7 +143,7 @@ class GamesController extends Controller
         $bindings['GameTags'] = $gameTags;
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceGameRankAllTime->countRanked();
+        $bindings['RankMaximum'] = $serviceGame->countRanked();
 
         return view('games.page.show', $bindings);
     }

@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceReviewLinks = $this->getServiceReviewLink();
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $serviceGame = $this->getServiceGame();
         $serviceTopRated = $this->getServiceTopRated();
 
         $bindings = [];
@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         // Information
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
-        $bindings['RankedGameCount'] = $serviceGameRankAllTime->countRanked();
+        $bindings['RankedGameCount'] = $serviceGame->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';

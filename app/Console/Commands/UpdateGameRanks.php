@@ -92,19 +92,20 @@ class UpdateGameRanks extends Command
             }
 
             // Save rank to DB
-            \DB::update("
-                UPDATE games SET game_rank = ? WHERE id = ?
-            ", array($actualRank, $gameId));
+            if ($actualRank != $prevRank) {
+                \DB::update("UPDATE games SET game_rank = ? WHERE id = ?", [$actualRank, $gameId]);
+            }
 
             $lastRatingAvg = $ratingAvg;
             $lastRank = $actualRank;
 
-            // Save to all-time rank table.
-            // Although we only show the Top 100, we store the whole list so we can quickly count
-            // the number of ranked games.
-            \DB::insert("
-                INSERT INTO game_rank_alltime(game_rank, game_id, created_at, updated_at)
-                VALUES(?, ?, NOW(), NOW())", array($actualRank, $gameId));
+            // Save to all-time rank table, if it's in the Top 100.
+            // This is faster than storing all the ranks.
+            if ($actualRank <= 100) {
+                \DB::insert("
+                    INSERT INTO game_rank_alltime(game_rank, game_id, created_at, updated_at)
+                    VALUES(?, ?, NOW(), NOW())", [$actualRank, $gameId]);
+            }
 
             // This is always incremented by 1
             $rankCounter++;

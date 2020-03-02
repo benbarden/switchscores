@@ -58,7 +58,7 @@ class WelcomeController extends Controller
 
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased();
-        $bindings['TotalRanked'] = $this->getServiceGameRankAllTime()->countRanked();
+        $bindings['TotalRanked'] = $this->getServiceGame()->countRanked();
         $bindings['TotalReviews'] = $this->getServiceReviewLink()->countActive();
 
         $bindings['TopTitle'] = 'Welcome';

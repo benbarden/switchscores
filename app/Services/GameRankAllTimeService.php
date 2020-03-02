@@ -22,6 +22,10 @@ class GameRankAllTimeService
         return $gameRankList;
     }
 
+    /**
+     * @deprecated
+     * @return mixed
+     */
     public function countRanked()
     {
         return GameRankAllTime::orderBy('game_rank', 'asc')->count();
