@@ -47,6 +47,9 @@ class IndexController extends Controller
         $bindings['SiteAlertErrorCount'] = $serviceSiteAlert->countByType(SiteAlert::TYPE_ERROR);
         $bindings['SiteAlertLatest'] = $serviceSiteAlert->getLatest(SiteAlert::TYPE_ERROR);
 
+        // Feed imports
+        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getAll(5);
+
         return view('staff.index', $bindings);
     }
 }

@@ -73,60 +73,40 @@
 
     <div class="col-md-4">
 
-        <h2>Staff dashboards</h2>
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.games.dashboard') }}">Games</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.reviews.dashboard') }}">Reviews</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.categorisation.dashboard') }}">Categorisation</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Partnerships manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.partners.dashboard') }}">Partners</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.eshop.dashboard') }}">eShop</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.wikipedia.dashboard') }}">Wikipedia</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
-                        <a href="{{ route('staff.data-sources.dashboard') }}">Data sources</a>
-                    {% endif %}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
+            <h2>Recent imports</h2>
+            {% if ReviewFeedImportList.count > 0 %}
+                <table class="table data-sortable table-responsive">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Day of week</th>
+                        <th class="text-center">Items</th>
+                        <th class="text-center">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in ReviewFeedImportList %}
+                        <tr>
+                            <td class="text-center">
+                                {{ item.created_at|date('l') }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item}) }}">
+                                    {{ item.feedItems.count() }}
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                {{ item.created_at|date('Y-m-d') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No items found!</p>
+            {% endif %}
+            <p><a href="{{ route('staff.reviews.feed-imports.list') }}">View all imports</a>.</p>
+        {% endif %}
 
     </div>
 

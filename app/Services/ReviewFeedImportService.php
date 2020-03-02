@@ -24,9 +24,13 @@ class ReviewFeedImportService
         ]);
     }
 
-    public function getAll()
+    public function getAll($limit = null)
     {
-        return ReviewFeedImport::orderBy('id', 'desc')->get();
+        if ($limit) {
+            return ReviewFeedImport::orderBy('id', 'desc')->limit($limit)->get();
+        } else {
+            return ReviewFeedImport::orderBy('id', 'desc')->get();
+        }
     }
 
     public function getBySiteId($siteId)
