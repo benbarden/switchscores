@@ -64,7 +64,7 @@ class WikipediaCrawlGamesList extends Command
             $tableData = $wikiCrawler->getTableData();
 
             $logger->info('Processing table data...');
-            $wikiParser->processTableData($tableData);
+            $wikiParser->processTableData($tableData, $logger);
 
             $logger->info('Crawling page 2...');
             $wikiCrawler->crawlPage2();
@@ -74,7 +74,7 @@ class WikipediaCrawlGamesList extends Command
             $tableData = $wikiCrawler->getTableData();
 
             $logger->info('Processing table data...');
-            $wikiParser->processTableData($tableData);
+            $wikiParser->processTableData($tableData, $logger);
 
         } catch (\Exception $e) {
             $logger->error($e->getMessage());

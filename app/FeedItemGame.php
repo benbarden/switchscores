@@ -31,10 +31,7 @@ class FeedItemGame extends Model
      */
     protected $fillable = [
         'game_id', 'source', 'item_title', 'item_genre', 'item_developers', 'item_publishers',
-        'release_date_eu', 'upcoming_date_eu', 'is_released_eu',
-        'release_date_us', 'upcoming_date_us', 'is_released_us',
-        'release_date_jp', 'upcoming_date_jp', 'is_released_jp',
-        'status_code', 'status_desc'
+        'release_date_eu', 'release_date_us', 'release_date_jp', 'status_code', 'status_desc'
     ];
 
     public function game()
@@ -68,20 +65,5 @@ class FeedItemGame extends Model
         if (in_array($date, ['TBA', 'Unreleased'])) return false;
 
         return true;
-    }
-
-    public function hasRealEuUpcomingDate()
-    {
-        return $this->hasRealUpcomingDate($this->upcoming_date_eu);
-    }
-
-    public function hasRealUsUpcomingDate()
-    {
-        return $this->hasRealUpcomingDate($this->upcoming_date_us);
-    }
-
-    public function hasRealJpUpcomingDate()
-    {
-        return $this->hasRealUpcomingDate($this->upcoming_date_jp);
     }
 }

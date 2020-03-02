@@ -42,13 +42,13 @@ class Skipper
     {
         $count = 0;
 
-        if ($dateHandler->getUpcomingDate($feedItemGame->upcoming_date_eu) == null) {
+        if ($feedItemGame->release_date_eu != null) {
             $count++;
         }
-        if ($dateHandler->getUpcomingDate($feedItemGame->upcoming_date_us) == null) {
+        if ($feedItemGame->release_date_us != null) {
             $count++;
         }
-        if ($dateHandler->getUpcomingDate($feedItemGame->upcoming_date_jp) == null) {
+        if ($feedItemGame->release_date_jp != null) {
             $count++;
         }
 

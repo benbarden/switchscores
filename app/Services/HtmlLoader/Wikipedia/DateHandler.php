@@ -181,11 +181,9 @@ class DateHandler
         return in_array($releaseDateRaw, ['Unreleased', 'TBA'], true);
     }
 
-    public function getDates($row, $rowData = "")
+    public function getReleaseDate($row, $rowData = "")
     {
         $releaseDate = null;
-        $upcomingDate = null;
-        $isReleased = null;
 
         if (is_array($row)) {
             if (count($row) == 2) {
@@ -197,8 +195,6 @@ class DateHandler
         } else {
             $releaseDateRaw = $row;
         }
-
-        $dtNow = new \DateTime('now');
 
         // Is this a real date?
         $upcomingDate = $this->getUpcomingDate($releaseDateRaw);
@@ -213,22 +209,13 @@ class DateHandler
                 throw new \Exception($rowData.' - Failed to parse date: '.$releaseDateRaw);
             }
 
-            $upcomingDate = $releaseDate;
-
-            if ($dtReleaseDate > $dtNow) {
-                $isReleased = 0;
-            } else {
-                $isReleased = 1;
-            }
-
         } else {
 
             $releaseDate = null;
-            $isReleased = 0;
 
         }
 
-        return [$releaseDate, $upcomingDate, $isReleased];
+        return $releaseDate;
     }
 
 }

@@ -37,14 +37,8 @@ class Importer
         $feedItemGame->item_developers = $this->crawlerModel->developers;
         $feedItemGame->item_publishers = $this->crawlerModel->publishers;
         $feedItemGame->release_date_eu = $this->crawlerModel->release_date_eu;
-        $feedItemGame->upcoming_date_eu = $this->crawlerModel->upcoming_date_eu;
-        $feedItemGame->is_released_eu = $this->crawlerModel->is_released_eu;
         $feedItemGame->release_date_us = $this->crawlerModel->release_date_us;
-        $feedItemGame->upcoming_date_us = $this->crawlerModel->upcoming_date_us;
-        $feedItemGame->is_released_us = $this->crawlerModel->is_released_us;
         $feedItemGame->release_date_jp = $this->crawlerModel->release_date_jp;
-        $feedItemGame->upcoming_date_jp = $this->crawlerModel->upcoming_date_jp;
-        $feedItemGame->is_released_jp = $this->crawlerModel->is_released_jp;
         $feedItemGame->setStatusPending();
 
         return $feedItemGame;

@@ -204,20 +204,16 @@ class WikipediaDateHandlerTest extends TestCase
     {
         $dates = 'Unreleased';
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals(null, $releaseDate);
-        $this->assertEquals('Unreleased', $upcomingDate);
-        $this->assertEquals('0', $isReleased);
     }
 
     public function testGetDatesTBA()
     {
         $dates = 'TBA';
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals(null, $releaseDate);
-        $this->assertEquals('TBA', $upcomingDate);
-        $this->assertEquals('0', $isReleased);
     }
 
     public function testGetDatesQ4()
@@ -227,10 +223,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => 'Q4 2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals(null, $releaseDate);
-        $this->assertEquals('2018-Q4', $upcomingDate);
-        $this->assertEquals('0', $isReleased);
     }
 
     public function testGetDates2018()
@@ -240,10 +234,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => '2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals(null, $releaseDate);
-        $this->assertEquals('2018-XX', $upcomingDate);
-        $this->assertEquals('0', $isReleased);
     }
 
     public function testGetDatesBasic1()
@@ -253,10 +245,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => 'April 26, 2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals('2018-04-26', $releaseDate);
-        $this->assertEquals('2018-04-26', $upcomingDate);
-        $this->assertEquals('1', $isReleased);
     }
 
     public function testGetDatesBasic2()
@@ -266,10 +256,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => 'February 13, 2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals('2018-02-13', $releaseDate);
-        $this->assertEquals('2018-02-13', $upcomingDate);
-        $this->assertEquals('1', $isReleased);
     }
 
     public function testGetDatesBasic3()
@@ -279,10 +267,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => 'February 16, 2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals('2018-02-16', $releaseDate);
-        $this->assertEquals('2018-02-16', $upcomingDate);
-        $this->assertEquals('1', $isReleased);
     }
 
     public function testGetDatesMonth1()
@@ -292,10 +278,8 @@ class WikipediaDateHandlerTest extends TestCase
             1 => 'June 2018',
         ];
 
-        list($releaseDate, $upcomingDate, $isReleased) = $this->dateHandler->getDates($dates);
+        $releaseDate = $this->dateHandler->getReleaseDate($dates);
         $this->assertEquals(null, $releaseDate);
-        $this->assertEquals('2018-06-XX', $upcomingDate);
-        $this->assertEquals('0', $isReleased);
     }
 
     public function testGetUpcomingDate2018XX()

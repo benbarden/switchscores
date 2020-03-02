@@ -26,7 +26,7 @@ class Parser
         return $output;
     }
 
-    public function processTableData($tableData)
+    public function processTableData($tableData, $logger = null)
     {
         $counter = -1;
 
@@ -46,24 +46,21 @@ class Parser
 
             // Release dates
             $rowErrorData = $rowTitle.','.$rowDevs.','.$rowPubs; // used if the date fails
-            list($jpReleaseDate, $jpUpcomingDate, $jpIsReleased) = $dateHandler->getDates($row[4], $rowErrorData);
-            list($usReleaseDate, $usUpcomingDate, $usIsReleased) = $dateHandler->getDates($row[5], $rowErrorData);
-            list($euReleaseDate, $euUpcomingDate, $euIsReleased) = $dateHandler->getDates($row[6], $rowErrorData);
+            $jpReleaseDate = $dateHandler->getReleaseDate($row[4], $rowErrorData);
+            $usReleaseDate = $dateHandler->getReleaseDate($row[5], $rowErrorData);
+            $euReleaseDate = $dateHandler->getReleaseDate($row[6], $rowErrorData);
 
-            //$this->info('Processing item: '.$rowTitle);
+            if ($logger) {
+                //$logger->info('Processing item: '.$rowTitle.' || '.$row[4].'||'.$row[5].'||'.$row[6]);
+            }
 
             \DB::insert('
                 INSERT INTO crawler_wikipedia_games_list_source(title, genres, developers, publishers,
-                release_date_eu, upcoming_date_eu, is_released_eu,
-                release_date_us, upcoming_date_us, is_released_us,
-                release_date_jp, upcoming_date_jp, is_released_jp,
-                created_at, updated_at)
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                release_date_eu, release_date_us, release_date_jp, created_at, updated_at)
+                VALUES(?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
             ', [
                 $rowTitle, $rowGenres, $rowDevs, $rowPubs,
-                $euReleaseDate, $euUpcomingDate, $euIsReleased,
-                $usReleaseDate, $usUpcomingDate, $usIsReleased,
-                $jpReleaseDate, $jpUpcomingDate, $jpIsReleased
+                $euReleaseDate, $usReleaseDate, $jpReleaseDate
             ]);
         }
     }
