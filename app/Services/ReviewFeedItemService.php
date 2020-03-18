@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\ReviewFeedItem;
 
+use Illuminate\Support\Facades\DB;
 
 class ReviewFeedItemService
 {
@@ -78,8 +79,23 @@ class ReviewFeedItemService
         return $reviewFeedItem;
     }
 
+    public function getByProcessStatus($status)
+    {
+        return ReviewFeedItem::where('process_status', $status)->orderBy('id', 'desc')->get();
+    }
+
     public function getByImportId($importId)
     {
         return ReviewFeedItem::where('import_id', $importId)->orderBy('id', 'desc')->get();
+    }
+
+    public function getProcessStatusStats()
+    {
+        return DB::select('
+            select process_status, count(*) AS count
+            from review_feed_items
+            where process_status is not null
+            group by process_status
+        ');
     }
 }

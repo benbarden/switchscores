@@ -103,7 +103,8 @@
 
     <div class="col-md-4">
 
-        <h2>Stats</h2>
+        <h2>Review stats</h2>
+        <h3>Overall</h3>
 
         <table class="table">
             <tbody>
@@ -131,6 +132,24 @@
                         <span class="h4">{{ UnrankedGameCount }}</span>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+
+        <h3>Review feed items</h3>
+        <table class="table">
+            <tbody>
+            {% for item in ProcessStatusStats %}
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.feed-items.by-process-status', {'status': item.process_status}) }}">
+                        {{ item.process_status }}
+                    </a>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ item.count }}</span>
+                </td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
 

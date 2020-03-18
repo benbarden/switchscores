@@ -35,10 +35,12 @@ class DashboardController extends Controller
         $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
-        // Information
+        // Stats
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
         $bindings['RankedGameCount'] = $serviceGame->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
+
+        $bindings['ProcessStatusStats'] = $serviceReviewFeedItem->getProcessStatusStats();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;

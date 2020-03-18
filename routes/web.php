@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Review feed items
     Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
+    Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');
     Route::get('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
     Route::post('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
 

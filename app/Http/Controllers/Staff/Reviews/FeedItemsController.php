@@ -56,6 +56,21 @@ class FeedItemsController extends Controller
         return view('staff.reviews.feed-items.list', $bindings);
     }
 
+    public function byProcessStatus($status)
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Reviews - Feed items';
+        $bindings['PageTitle'] = 'Feed items';
+
+        $bindings['FeedItems'] = $this->getServiceReviewFeedItem()->getByProcessStatus($status);
+        $bindings['jsInitialSort'] = "[ 0, 'desc' ]";
+
+        $bindings['HideFilters'] = 'Y';
+
+        return view('staff.reviews.feed-items.list', $bindings);
+    }
+
     public function edit($itemId)
     {
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();

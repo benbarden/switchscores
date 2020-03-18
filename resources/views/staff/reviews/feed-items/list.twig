@@ -12,6 +12,7 @@
         <a href="{{ route('admin.tools.toolLandingModular', {'command': 'RunFeedReviewGenerator'}) }}" class="btn btn-primary">Go to the Feed Review Generator</a>
     </div>
     <div class="col-xs-12 col-sm-9">
+        {% if HideFilters != 'Y' %}
         <div class="pull-right">
             <label for="admin-nav-feed-item-filter">Filters:</label>
             <select id="admin-nav-feed-item-filter" name="admin-nav-feed-item-filter" class="form-control">
@@ -19,6 +20,7 @@
                 <option value="processed">Processed items</option>
             </select>
         </div>
+        {% endif %}
     </div>
 </div>
 
