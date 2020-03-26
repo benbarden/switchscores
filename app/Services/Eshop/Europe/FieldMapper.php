@@ -209,6 +209,9 @@ class FieldMapper
         $this->fieldMapping['players_to'] = [
             'dbField' => 'players_to', 'type' => ''
         ];
+        $this->fieldMapping['popularity'] = [
+            'dbField' => 'popularity', 'type' => self::TYPE_BOOLEAN
+        ];
         $this->fieldMapping['pretty_agerating_s'] = [
             'dbField' => 'pretty_agerating_s', 'type' => ''
         ];

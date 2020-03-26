@@ -110,6 +110,7 @@ class EshopEuropeGame extends Model
         'price_regular_f',
         'price_discounted_f',
         'eshop_removed_b',
+        'popularity',
     ];
 
     public function game()
