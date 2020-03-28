@@ -11,6 +11,19 @@
 
 <hr>
 
+<p>
+    Setting a site to inactive will do the following:
+</p>
+<ul>
+    <li>the partner will no longer show on the Partners page</li>
+    <li>reviews will stop being imported</li>
+    <li>reviews will not display on game pages</li>
+    <li>reviews will not count towards average ratings and game ranks</li>
+</ul>
+<p>
+    To temporarily make a site inactive but keep their reviews, remove the feed URL.
+</p>
+
 <h2>Active sites</h2>
 
 {% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}

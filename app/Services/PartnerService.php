@@ -172,7 +172,7 @@ class PartnerService
             ->get();
     }
 
-    public function getReviewSiteFeedUrls()
+    public function getActiveReviewSitesWithFeeds()
     {
         $reviewSites = Partner::
             where('type_id', Partner::TYPE_REVIEW_SITE)

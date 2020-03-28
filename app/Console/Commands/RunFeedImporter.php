@@ -62,7 +62,7 @@ class RunFeedImporter extends Command
         $servicePartner = $this->getServicePartner();
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
 
-        $reviewSites = $servicePartner->getReviewSiteFeedUrls();
+        $reviewSites = $servicePartner->getActiveReviewSitesWithFeeds();
 
         if (!$reviewSites) {
             $logger->info('No sites found with feed URLs. Aborting.');

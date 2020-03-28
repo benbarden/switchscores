@@ -4,10 +4,8 @@
         <tr>
             <th class="text-center">#</th>
             <th>Site</th>
-            <th>URL</th>
-            <th class="text-left">Twitter</th>
+            <th>Links</th>
             <th class="text-center">Rating scale</th>
-            <th class="text-center">Active</th>
             <th class="text-center">Feed?</th>
             <th class="text-center">Match rule?</th>
             <th class="text-center">Reviews</th>
@@ -27,29 +25,15 @@
                 </td>
                 <td>
                     <small>
-                        <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
+                        URL: <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
+                        {% if item.twitter_id %}
+                            <br>
+                            Twitter: <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
+                        {% endif %}
                     </small>
-                </td>
-                <td>
-                    {% if item.twitter_id %}
-                        <small>
-                            <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
-                        </small>
-                    {% endif %}
                 </td>
                 <td class="text-center">
                     {{ item.rating_scale }}
-                </td>
-                <td class="text-center">
-                    {% if item.status == '1' %}
-                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    {% else %}
-                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    {% endif %}
                 </td>
                 <td class="text-center">
                     {% if item.feed_url %}
