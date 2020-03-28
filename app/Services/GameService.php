@@ -187,12 +187,6 @@ class GameService
         return Game::orderBy('title', 'asc')->count();
     }
 
-    public function getAllModels()
-    {
-        $games = Game::orderBy('games.title', 'asc')->get();
-        return $games;
-    }
-
     public function getAllWithoutEshopId($region)
     {
         if ($region == 'eu') {

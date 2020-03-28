@@ -51,7 +51,7 @@ class EshopEuropeLinkGames extends Command
         $serviceGame = $this->getServiceGame();
         $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
 
-        $gameData = $serviceGame->getAllModels();
+        $gameData = $serviceGame->getAllWithoutEshopId('eu');
 
         $logger->info('Found records: '.count($gameData));
 
