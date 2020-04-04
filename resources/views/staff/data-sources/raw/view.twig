@@ -1,0 +1,42 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources'},
+    {'url': route('staff.data-sources.list-raw', {'sourceId': SourceId}), 'text': DataSource.name},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set SourceDataRaw = JsonHelper.jsonDecode(DSRawItem.source_data_json) %}
+{% if SourceDataRaw %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-left">Field</th>
+                <th class="text-left">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for field,dataval in SourceDataRaw %}
+                    <tr>
+                        <td class="text-left">
+                            {{ field }}
+                        </td>
+                        <td class="text-left">
+                            {% if dataval is iterable %}
+                                {% for valueNode in dataval %}
+                                    {{ valueNode }}
+                                    {% if not loop.last %}<br>{% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock page_inner %}

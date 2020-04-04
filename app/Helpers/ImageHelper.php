@@ -4,6 +4,7 @@
 namespace App\Helpers;
 
 use App\Services\GameService;
+use App\Services\Game\Images as GameImages;
 
 class ImageHelper
 {
@@ -50,7 +51,10 @@ class ImageHelper
 
         if ($game->boxart_square_url) {
             $boxartPath = '/img/games/square/';
-            $boxartUrl = $boxartPath.$game->boxart_square_url;
+            $boxartUrl = $boxartPath . $game->boxart_square_url;
+        } elseif ($game->image_square) {
+            $boxartPath = GameImages::PATH_IMAGE_SQUARE;
+            $boxartUrl = $game->image_square;
         } else {
             $boxartPath = null;
             $boxartUrl = null;
@@ -79,26 +83,29 @@ class ImageHelper
         return $htmlOutput;
     }
 
-    static function packshotHeaderHtml($game)
+    static function imageHeaderUrl($game)
     {
-        if ($game->boxart_header_image) {
-            $boxartPath = '/img/games/header/';
-            $boxartUrl = $boxartPath.$game->boxart_header_image;
+        if ($game->image_header) {
+            $imageUrl = GameImages::PATH_IMAGE_HEADER.$game->image_header;
+        } elseif ($game->boxart_header_image) {
+            $imageUrl = '/img/games/header/'.$game->boxart_header_image;
         } else {
-            $boxartPath = null;
-            $boxartUrl = null;
+            $imageUrl = '';
         }
 
-        $htmlOutput = '';
+        return $imageUrl;
+    }
 
-        if (!is_null($boxartPath) && !is_null($boxartUrl)) {
-
-            $htmlOutput = '<img src="'.$boxartUrl.'" class="img-responsive" style="border: 0;" alt="'.$game->title.'">';
-
+    static function imageSquareUrl($game)
+    {
+        if ($game->image_square) {
+            $imageUrl = GameImages::PATH_IMAGE_HEADER.$game->image_square;
+        } elseif ($game->boxart_square_url) {
+            $imageUrl = '/img/games/square/'.$game->boxart_square_url;
         } else {
-            // do nothing
+            $imageUrl = '';
         }
 
-        return $htmlOutput;
+        return $imageUrl;
     }
 }

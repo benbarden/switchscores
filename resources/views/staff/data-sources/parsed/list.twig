@@ -1,0 +1,143 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+{% if ItemList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-center">Link id</th>
+                <th class="text-left">Title</th>
+                <th class="text-center">Release date (EU)</th>
+                <th class="text-center">Price (standard)</th>
+                <th class="text-center">Nintendo Url</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ItemList %}
+                <tr>
+                    <td class="text-center">
+                        {{ item.link_id }}
+                    </td>
+                    <td class="text-left">
+                        {{ item.title }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.release_date_eu }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.price_standard }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ LinkHelper.eshopUrl('eu', item.url) }}" target="_blank">View</a>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': item.id}) }}">Add game</a> :
+                        {% if ListRef == 'ignored' %}
+                            <a href="javascript:void(0);" id="lnk-remove-ignore-{{ item.id }}" class="lnk-remove-ignore">Un-ignore</a>
+                        {% else %}
+                            <a href="javascript:void(0);" id="lnk-add-ignore-{{ item.id }}" class="lnk-add-ignore">Ignore</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+
+    var sourceId = '{{ SourceId }}';
+
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 50,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+
+    $('.lnk-add-ignore').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-add-ignore-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Add to ignore list?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.data-sources.ignore.addToIgnoreList') }}', {'sourceId': sourceId, 'dsParsedItemId': itemId}, function(data) {
+            $('#lnk-add-ignore-' + itemId).parent().html('<em>Ignored</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('.lnk-remove-ignore').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-remove-ignore-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Remove from ignore list?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.data-sources.ignore.removeFromIgnoreList') }}', {'sourceId': sourceId, 'dsParsedItemId': itemId}, function(data) {
+            $('#lnk-remove-ignore-' + itemId).parent().html('<em>Un-ignored</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+</script>
+
+{% endblock page_inner %}

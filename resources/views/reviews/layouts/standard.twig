@@ -2,11 +2,7 @@
 
     {% for item in ReviewList %}
 
-        {% if item.game.boxart_header_image %}
-            {% set boxartUrl = '/img/games/header/'~item.game.boxart_header_image %}
-        {% else %}
-            {% set boxartUrl = '' %}
-        {% endif %}
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
 
         <div class="row">
             <div class="col-sm-12 col-md-4 col-lg-4">

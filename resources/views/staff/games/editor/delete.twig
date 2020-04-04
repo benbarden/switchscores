@@ -1,6 +1,6 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('admin.games.list'), 'text': 'Games'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('staff.games.dashboard'), 'text': 'Games dashboard'}, {'text': PageTitle}] %}
 
 {% block page_inner %}
 
@@ -29,7 +29,7 @@
         </ul>
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('admin.games.delete', {'gameId': GameId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.games.delete', {'gameId': GameId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

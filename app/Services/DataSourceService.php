@@ -17,6 +17,11 @@ class DataSourceService
         return DataSource::where('name', $name)->first();
     }
 
+    public function find($sourceId)
+    {
+        return DataSource::find($sourceId);
+    }
+
     public function getSourceSwitchEshopUk()
     {
         return $this->getByName(DataSource::SOURCE_SWITCH_ESHOP_UK);

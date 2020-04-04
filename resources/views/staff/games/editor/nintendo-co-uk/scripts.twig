@@ -1,0 +1,27 @@
+<script>
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing games.
+        // *** API *** //
+        formVals['nintendo_co_uk_link_id'] = "{{ DSParsedItem.link_id }}";
+
+    } else {
+
+        // This is used for new games.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        // *** API *** //
+        formVals['nintendo_co_uk_link_id'] = "{{ old('nintendo_co_uk_link_id') }}";
+
+    }
+
+    // Enable tabs
+    $('#tabs').tabs();
+
+    // *** API *** //
+    $('#nintendo_co_uk_link_id').val(formVals['nintendo_co_uk_link_id']);
+    $('#nintendo_co_uk_link_id').select2();
+
+</script>

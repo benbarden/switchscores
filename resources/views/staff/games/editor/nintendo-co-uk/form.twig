@@ -1,0 +1,128 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <p>
+                This screen allows you to edit the link from this game to the Nintendo.co.uk API.
+                This has been split from the main Edit game screen for simplicity.
+            </p>
+            <p>
+                Updating the API link will automatically update the header image, square image, and the
+                following fields: price; release date; publishers; players; genres.
+            </p>
+            <p>
+                Some updates may not occur if the fields are already filled in, or if there is an ignore
+                rule setting for that field.
+            </p>
+
+            <fieldset>
+                <h2>Main</h2>
+                <table class="table-responsive table">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <strong>
+                                Title
+                            </strong>
+                        </td>
+                        <td>
+                            {{ GameData.title }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <h2>API link</h2>
+                <p>
+                    This dropdown only contains API items that are not linked to other games.
+                    If you wish to link this game to a record that is already linked to another game,
+                    unlink it from the other game first.
+                </p>
+                <div class="form-group">
+                    <label for="nintendo_co_uk_link_id" class="col-md-4 control-label">Link</label>
+                    <div class="col-md-6">
+                        <select id="nintendo_co_uk_link_id" class="form-control" name="nintendo_co_uk_link_id">
+                            <option value="">&nbsp;</option>
+                            {% for item in DSNintendoCoUkParsedList %}
+                                <option value="{{ item.link_id }}">{{ item.title }} (Link id: {{ item.link_id }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <h2>Images</h2>
+                <p>
+                    These are included for reference only.
+                </p>
+                <table class="table-responsive table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Image square
+                                </strong>
+                            </td>
+                            <td>
+                                {{ GameData.image_square }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Image header
+                                </strong>
+                            </td>
+                            <td>
+                                {{ GameData.image_header }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Boxart square (old)
+                                </strong>
+                            </td>
+                            <td>
+                                {{ GameData.boxart_square_url }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    Boxart header (old)
+                                </strong>
+                            </td>
+                            <td>
+                                {{ GameData.boxart_header_image }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+
+        </div>
+
+        <div class="col-md-3">
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-8">
+            <button id="btn-submit" class="btn outline btn-primary pull-right">
+                Save changes
+            </button>
+        </div>
+    </div>
+</form>

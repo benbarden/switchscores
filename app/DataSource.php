@@ -12,6 +12,12 @@ class DataSource extends Model
     const SOURCE_WIKIPEDIA = 'Wikipedia';
     const SOURCE_WHATTOPLAY = 'whattoplay';
 
+    const DSID_SWITCH_ESHOP_UK = 1;
+    const DSID_NINTENDO_CO_UK = 2;
+    const DSID_NINTENDO_COM = 3;
+    const DSID_WIKIPEDIA = 4;
+    const DSID_WHATTOPLAY = 5;
+
     const METHOD_API = 1;
     const METHOD_SCRAPER = 2;
     CONST METHOD_MANUAL = 9;

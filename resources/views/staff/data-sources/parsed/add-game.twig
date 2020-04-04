@@ -1,0 +1,45 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources'},
+    {'url': route('staff.data-sources.nintendo-co-uk.unlinked'), 'text': 'Nintendo.co.uk API - Unlinked items'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% if ErrorsCustom %}
+    {% include 'common/form-errors.twig' %}
+    <div class="alert alert-warning" role="alert">
+        Cannot create the game: <strong>{{ DSParsedItem.title }}</strong> due to the above errors.
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        This screen creates a new game from the Nintendo.co.uk API.
+        <br>The game you are about to create is: <strong>{{ DSParsedItem.title }}</strong>
+        <br>Data from the API will be copied to the game record, and any packshots will be downloaded.
+    </div>
+
+    <div class="alert alert-warning" role="alert">
+        This will create a new record with all the available data for this game, including:
+        <ul>
+            <li>Core game data, including price, players, and release date</li>
+            <li>Genres</li>
+            <li>Title hashes</li>
+        </ul>
+    </div>
+
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': ItemId}) }}">
+        {{ csrf_field() }}
+
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-4">
+                <button type="submit" class="btn outline btn-primary">
+                    Proceed
+                </button>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+{% endblock page_inner %}

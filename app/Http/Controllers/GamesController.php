@@ -72,16 +72,14 @@ class GamesController extends Controller
 
     public function gamesOnSale()
     {
-        $serviceEshopEuropeGame = $this->getServiceEshopEuropeGame();
-
         $bindings = [];
 
         $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
 
-        $bindings['HighestDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleHighestDiscounts(50);
-        $bindings['GoodRanks'] = $serviceEshopEuropeGame->getGamesOnSaleGoodRanks(50);
-        $bindings['UnrankedDiscounts'] = $serviceEshopEuropeGame->getGamesOnSaleUnranked(50);
+        $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(50);
+        $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
+        $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(50);
 
         //$bindings['AllGamesOnSale'] = $gamesOnSale;
 
@@ -130,6 +128,10 @@ class GamesController extends Controller
         $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
         $gamePublishers = $serviceGamePublisher->getByGame($gameId);
         $gameTags = $serviceGameTag->getByGame($gameId);
+
+        // Data sources
+        $dsNintendoCoUk = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $bindings['DSNintendoCoUk'] = $dsNintendoCoUk;
 
         $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game ratings, reviews and information';
         $bindings['PageTitle'] = $gameData->title;

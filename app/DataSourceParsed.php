@@ -20,6 +20,9 @@ class DataSourceParsed extends Model
      * @var array
      */
     protected $fillable = [
-        'source_id', 'game_id', 'developers', 'publishers'
+        'source_id', 'game_id', 'link_id', 'title',
+        'release_date_eu', 'price_standard', 'price_discounted', 'price_discount_pc',
+        'developers', 'publishers', 'genres_json', 'players', 'url',
+        'image_square', 'image_header'
     ];
 }

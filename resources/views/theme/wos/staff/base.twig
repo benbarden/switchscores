@@ -73,7 +73,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('admin.games.add') }}">+ Add game</a></li>
+                                <li><a href="{{ route('staff.games.add') }}">+ Add game</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
                                 <li><a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a></li>
@@ -160,6 +160,12 @@
                                 <ul class="dropdown-menu" role="menu">
                                     {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
                                         <li><a href="{{ route('staff.data-sources.dashboard') }}">Data sources dashboard</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API - Unlinked items</a></li>
+                                        <li><a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Nintendo.co.uk API - Ignored items</a></li>
+                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">DSNintendoCoUkImportParseLink</a></li>
+                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">DSNintendoCoUkUpdateGames</a></li>
+                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a></li>
                                         <li role="separator" class="divider"></li>
                                     {% endif %}
                                     {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}

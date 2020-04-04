@@ -29,8 +29,9 @@ class Game extends Model implements Auditable
         'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
-        'primary_type_id', 'series_id', 'eu_released_on',
-        'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year'
+        'primary_type_id', 'series_id',
+        'image_square', 'image_header',
+        'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year'
     ];
 
     public function gameRankYear()

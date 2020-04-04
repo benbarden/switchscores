@@ -19,9 +19,7 @@
 
 {# PACKSHOTS #}
 
-{% if item.boxart_header_image %}
-    {% set boxartUrl = '/img/games/header/'~item.boxart_header_image %}
-{% endif %}
+{% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
 
 <div class="row">
     <div class="col-sm-12 col-md-6 col-lg-6">

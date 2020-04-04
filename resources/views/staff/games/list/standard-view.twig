@@ -4,7 +4,7 @@
 
 {% block page_inner %}
 
-<a href="{{ route('admin.games.add') }}" class="btn outline btn-primary">Add a game</a>
+<a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
 <br>
 <br>
 
@@ -50,7 +50,7 @@
                         {{ item.eu_release_date }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.games.edit', {'gameId': item.id}) }}">Edit</a>
+                        <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}

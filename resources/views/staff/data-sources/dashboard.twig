@@ -6,42 +6,33 @@
 
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-4">
 
-        <h2>Data sources</h2>
+        <h2>Overview</h2>
 
         <table class="table">
             <thead>
                 <tr>
-                    <th class="text-center">#</th>
-                    <th>Name</th>
-                    <th class="text-center">Import method</th>
-                    <th class="text-center">Active?</th>
-                    <th class="text-center">Raw items</th>
-                    <th class="text-center">Parsed items</th>
+                    <th>Details</th>
+                    <th class="text-center">Raw</th>
+                    <th class="text-center">Parsed</th>
                 </tr>
             </thead>
             <tbody>
             {% for item in DataSources %}
             <tr>
-                <td class="text-center">
-                    {{ item.id }}
-                </td>
                 <td>
                     {{ item.name }}
+                    <br>
+                    <small>
+                        ID: {{ item.id }} -
+                        Method: {{ item.importMethodDesc() }}
+                    </small>
                 </td>
                 <td class="text-center">
-                    {{ item.importMethodDesc() }}
-                </td>
-                <td class="text-center">
-                    {% if item.is_active == 1 %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                    {{ item.itemsRaw().count() }}
+                    <a href="{{ route('staff.data-sources.list-raw', {'sourceId': item.id}) }}">
+                        {{ item.itemsRaw().count() }}
+                    </a>
                 </td>
                 <td class="text-center">
                     {{ item.itemsParsed().count() }}
@@ -54,10 +45,60 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
-        <ul>
-            <li>TBC</li>
-        </ul>
+        <h2>Tools</h2>
+        <h3>Nintendo.co.uk API</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">DSNintendoCoUkImportParseLink</a>
+                    <br>
+                    <small>Imports and parses data, and links it to games</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">DSNintendoCoUkUpdateGames</a>
+                    <br>
+                    <small>Updates games with data</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a>
+                    <br>
+                    <small>Downloads images</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Stats</h2>
+        <h3>Nintendo.co.uk API</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Unlinked items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Ignored items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}" class="h4">{{ NintendoCoUkIgnoredCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 

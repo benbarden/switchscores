@@ -6,6 +6,8 @@
 /public/storage
 /public/img/media/*
 /public/img/games/*
+/public/img/ps-square/*
+/public/img/ps-header/*
 /storage/*.key
 /storage/tmp/*
 /vagrant-tmp/*

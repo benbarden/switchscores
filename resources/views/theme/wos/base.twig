@@ -34,8 +34,11 @@
     <meta property="og:url" content="{{ url().current() }}" />
     <meta property="og:title" content="{{ PageTitle }}" />
     {#<meta property="og:description" content="" />#}
-    {% if GameData.boxart_header_image %}
-        <meta property="og:image" content="{{ url('/') }}/img/games/header/{{ GameData.boxart_header_image }}" />
+    {% if GameData %}
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
+        {% if boxartUrl %}
+            <meta property="og:image" content="{{ url('/') }}{{ boxartUrl }}" />
+        {% endif %}
     {% endif %}
 
     <!-- Font Awesome -->

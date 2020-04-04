@@ -4,9 +4,9 @@
 
 {% block page_inner %}
 
-{% set formSubmitAction = route('admin.games.add') %}
-{% include 'admin/games/form.twig' with {'formSubmitAction': formSubmitAction} %}
+{% set formSubmitAction = route('staff.games.add') %}
+{% include 'staff/games/editor/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
-{% include 'admin/games/scripts.twig' %}
+{% include 'staff/games/editor/scripts.twig' %}
 
 {% endblock page_inner %}

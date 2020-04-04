@@ -56,19 +56,13 @@ class GameDirector
             $this->builder->setEuIsReleased(0);
         }
         if (array_key_exists('price_eshop', $params)) {
-            if ($params['price_eshop'] != '') {
-                $this->builder->setPriceEshop($params['price_eshop']);
-            }
+            $this->builder->setPriceEshop($params['price_eshop']);
         }
         if (array_key_exists('players', $params)) {
-            if ($params['players'] != '') {
-                $this->builder->setPlayers($params['players']);
-            }
+            $this->builder->setPlayers($params['players']);
         }
         if (array_key_exists('eu_released_on', $params)) {
-            if ($params['eu_released_on'] != '') {
-                $this->builder->setEuReleasedOn($params['eu_released_on']);
-            }
+            $this->builder->setEuReleasedOn($params['eu_released_on']);
         }
         if (array_key_exists('developer', $params)) {
             $this->builder->setDeveloper($params['developer']);
@@ -77,39 +71,31 @@ class GameDirector
             $this->builder->setPublisher($params['publisher']);
         }
         if (array_key_exists('amazon_uk_link', $params)) {
-            if ($params['amazon_uk_link'] != '') {
-                $this->builder->setAmazonUkLink($params['amazon_uk_link']);
-            }
+            $this->builder->setAmazonUkLink($params['amazon_uk_link']);
         }
         if (array_key_exists('video_url', $params)) {
-            if ($params['video_url'] != '') {
-                $this->builder->setVideoUrl($params['video_url']);
-            }
+            $this->builder->setVideoUrl($params['video_url']);
         }
         if (array_key_exists('boxart_square_url', $params)) {
-            if ($params['boxart_square_url'] != '') {
-                $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
-            }
+            $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
         }
         if (array_key_exists('eshop_europe_fs_id', $params)) {
-            if ($params['eshop_europe_fs_id'] != '') {
-                $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
-            }
+            $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
         }
         if (array_key_exists('boxart_header_image', $params)) {
-            if ($params['boxart_header_image'] != '') {
-                $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
-            }
+            $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
+        }
+        if (array_key_exists('image_square', $params)) {
+            $this->builder->setImageSquare($params['image_square']);
+        }
+        if (array_key_exists('image_header', $params)) {
+            $this->builder->setImageHeader($params['image_header']);
         }
         if (array_key_exists('primary_type_id', $params)) {
-            if ($params['primary_type_id'] != '') {
-                $this->builder->setPrimaryTypeId($params['primary_type_id']);
-            }
+            $this->builder->setPrimaryTypeId($params['primary_type_id']);
         }
         if (array_key_exists('series_id', $params)) {
-            if ($params['series_id'] != '') {
-                $this->builder->setGameSeriesId($params['series_id']);
-            }
+            $this->builder->setGameSeriesId($params['series_id']);
         }
     }
 

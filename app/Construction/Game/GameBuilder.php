@@ -139,6 +139,18 @@ class GameBuilder
         return $this;
     }
 
+    public function setImageSquare($imageSquare): GameBuilder
+    {
+        $this->game->image_square = $imageSquare;
+        return $this;
+    }
+
+    public function setImageHeader($imageHeader): GameBuilder
+    {
+        $this->game->image_header = $imageHeader;
+        return $this;
+    }
+
     public function setPrimaryTypeId($primaryTypeId): GameBuilder
     {
         $this->game->primary_type_id = $primaryTypeId;

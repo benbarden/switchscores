@@ -20,18 +20,16 @@
 
     <div class="col-md-4">
 
-        <a href="{{ route('admin.games.edit', {'gameId': GameId}) }}" class="btn btn-primary btn-md">Edit game</a>
-        <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-md" target="_blank">View game page</a>
+        <a href="{{ route('staff.games.edit', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit game</a>
+        <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-sm" target="_blank">View game page</a>
 
     </div>
 
     <div class="col-md-4">
 
-        {% if GameData.eshop_europe_fs_id is not null %}
-            {% if GameData.eshopEuropeGame.fs_id is not null %}
-                <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-md" target="_blank">Update eShop data (EU)</a>
-                <a id="btn-redownload-packshots" class="btn btn-primary btn-md" target="_blank">Update packshots</a>
-            {% endif %}
+        {% if NintendoCoUkDSParsedItem %}
+            <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-sm" target="_blank">Update API data</a>
+            <a id="btn-redownload-packshots" class="btn btn-primary btn-sm" target="_blank">Update images</a>
         {% endif %}
 
     </div>
@@ -39,7 +37,7 @@
     <div class="col-md-4">
 
         <span class="pull-right">
-            <a href="{{ route('admin.games.delete', {'gameId': GameId}) }}" class="btn btn-danger btn-md">Delete game</a>
+            <a href="{{ route('staff.games.delete', {'gameId': GameId}) }}" class="btn btn-danger btn-sm">Delete game</a>
         </span>
 
     </div>
@@ -50,19 +48,19 @@
 
     <div class="col-md-4">
 
-        {% include 'staff/games/detail/detail-general-info.twig' %}
+        {% include 'staff/games/detail/detail-col1.twig' %}
 
     </div>
 
     <div class="col-md-4">
 
-        {% include 'staff/games/detail/detail-categorisation.twig' %}
+        {% include 'staff/games/detail/detail-col2.twig' %}
 
     </div>
 
     <div class="col-md-4">
 
-        {% include 'staff/games/detail/detail-external.twig' %}
+        {% include 'staff/games/detail/detail-col3.twig' %}
 
     </div>
 
@@ -175,7 +173,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.games.updateEshopData') }}', {'gameId': gameId}, function(data) {
+        $.getJSON('{{ route('staff.games.detail.updateEshopData', {'gameId': GameId}) }}', {}, function(data) {
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
@@ -208,7 +206,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.games.redownloadPackshots') }}', {'gameId': gameId}, function(data) {
+        $.getJSON('{{ route('staff.games.detail.redownloadPackshots', {'gameId': GameId}) }}', {}, function(data) {
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);

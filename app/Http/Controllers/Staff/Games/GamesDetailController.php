@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Game;
+use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
+use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 
 use App\Traits\SwitchServices;
 
@@ -30,7 +32,7 @@ class GamesDetailController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = $gameTitle.' - Game detail - Admin';
+        $bindings['TopTitle'] = $gameTitle.' - Game detail - Staff';
         $bindings['PageTitle'] = $gameTitle;
 
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
@@ -65,6 +67,12 @@ class GamesDetailController extends Controller
         $bindings['GameTags'] = $gameTags;
         $bindings['GameTitleHashes'] = $gameTitleHashes;
 
+        // Nintendo.co.uk API data
+        $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        if ($dsParsedItem) {
+            $bindings['NintendoCoUkDSParsedItem'] = $dsParsedItem;
+        }
+
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();
         $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 10);
@@ -83,7 +91,7 @@ class GamesDetailController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = $game->title.' - Game detail - Admin';
+        $bindings['TopTitle'] = $game->title.' - Game detail - Staff';
         $bindings['PageTitle'] = $game->title;
 
         $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
@@ -91,6 +99,66 @@ class GamesDetailController extends Controller
         $bindings['GameId'] = $gameId;
 
         return view('staff.games.detail.fullAudit', $bindings);
+    }
+
+    public function updateEshopData($gameId)
+    {
+        $serviceGame = $this->getServiceGame();
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        if (!$dsItem) {
+            return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
+        }
+
+        $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+
+        UpdateGameFactory::doUpdate($game, $dsItem, $gameImportRule);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function redownloadPackshots($gameId)
+    {
+        $serviceGame = $this->getServiceGame();
+
+        $request = request();
+
+        $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $serviceGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        if (!$dsItem) {
+            return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
+        }
+
+        DownloadImageFactory::downloadImages($game, $dsItem);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
     }
 
 }

@@ -187,6 +187,15 @@ class GameService
         return Game::orderBy('title', 'asc')->count();
     }
 
+    public function getAllWithEuropeEshopId()
+    {
+        $games = Game::whereNotNull('games.eshop_europe_fs_id')
+            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
     public function getAllWithoutEshopId($region)
     {
         if ($region == 'eu') {

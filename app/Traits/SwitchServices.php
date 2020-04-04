@@ -7,6 +7,7 @@ use App\Services\StaffDashboards\CategorisationService;
 use App\Services\AuditService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\DataSourceService;
+use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
 use App\Services\DataSourceRawService;
 use App\Services\EshopEuropeAlertService;
@@ -132,6 +133,14 @@ trait SwitchServices
     public function getServiceDataSource()
     {
         return $this->loadService('DataSourceService');
+    }
+
+    /**
+     * @return DataSourceIgnoreService
+     */
+    public function getServiceDataSourceIgnore()
+    {
+        return $this->loadService('DataSourceIgnoreService');
     }
 
     /**

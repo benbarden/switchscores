@@ -34,9 +34,6 @@ class DashboardController extends Controller
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 
-        // eShop
-        $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
-
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
 

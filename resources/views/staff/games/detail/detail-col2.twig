@@ -44,22 +44,6 @@
 
     <tr>
         <td>
-            <span style="font-weight: bold;">Genres</span>
-        </td>
-        <td>
-            {% if GameGenres|length > 0 %}
-                {% for item in GameGenres %}
-                    <nobr>{{ item.genre.genre }}</nobr>
-                    {% if not loop.last %}, {% endif %}
-                {% endfor %}
-            {% else %}
-                <em>None set.</em>
-            {% endif %}
-        </td>
-    </tr>
-
-    <tr>
-        <td>
             <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
         </td>
         <td>

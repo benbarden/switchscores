@@ -13,7 +13,7 @@ test-unit:
 	./vendor/bin/phpunit --testsuite Unit
 
 test-data:
-	./vendor/bin/phpunit --testsuite Data
+	./vendor/bin/phpunit --testsuite DataSources
 
 test-eshop:
 	./vendor/bin/phpunit --testsuite Eshop

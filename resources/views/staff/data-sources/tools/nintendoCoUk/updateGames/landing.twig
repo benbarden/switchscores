@@ -1,0 +1,19 @@
+{% extends 'theme/wos/staff/clean-narrow.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<p>
+    This tool updates games with data from the Nintendo.co.uk API.
+</p>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">
+    {{ csrf_field() }}
+    <input type="submit" value="Start process" class="btn btn-primary">
+</form>
+
+{% endblock page_inner %}

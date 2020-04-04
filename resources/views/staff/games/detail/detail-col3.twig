@@ -1,0 +1,90 @@
+<h2>External data</h2>
+<h3>Nintendo.co.uk API</h3>
+<table class="table table-condensed table-responsive">
+
+    {% if NintendoCoUkDSParsedItem %}
+
+        <tr>
+            <td style="width: 150px;">
+                <span style="font-weight: bold;">Link</span>
+            </td>
+            <td>
+                <i class="fas fa-link"></i>
+                {{ NintendoCoUkDSParsedItem.link_id }}
+                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td style="width: 150px;">
+                <span style="font-weight: bold;">Link</span>
+            </td>
+            <td>
+                <i class="fas fa-unlink"></i>
+                Not linked
+                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+        </tr>
+
+    {% endif %}
+
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                {% if NintendoCoUkDSParsedItem %}
+                    {% if NintendoCoUkDSParsedItem.price_discounted %}
+                        <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="h4" style="font-weight: bold;">&pound;{{ NintendoCoUkDSParsedItem.price_discounted }}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span style="color: #f00;">{{ NintendoCoUkDSParsedItem.price_discount_pc }}% off</span>
+                    {% else %}
+                        <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Genres</span>
+        </td>
+        <td>
+            {% if GameGenres|length > 0 %}
+                {% for item in GameGenres %}
+                    <nobr>{{ item.genre.genre }}</nobr>
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                <em>None set.</em>
+            {% endif %}
+        </td>
+    </tr>
+
+    {% if NintendoCoUkDSParsedItem %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">External link</span>
+            </td>
+            <td>
+                <a href="{{ LinkHelper.eshopUrl('eu', NintendoCoUkDSParsedItem.url) }}" target="_blank">Visit Nintendo.co.uk page</a>
+            </td>
+        </tr>
+    {% endif %}
+
+</table>

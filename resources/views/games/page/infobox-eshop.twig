@@ -8,16 +8,18 @@
         </td>
         <td>
             {% if GameData.price_eshop %}
-                {% if GameData.eshopEuropeGame.fs_id is null %}
-                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
-                {% elseif GameData.eshopEuropeGame.price_discount_percentage_f == '0.00' %}
-                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% if DSNintendoCoUk %}
+                    {% if DSNintendoCoUk.price_discount_pc == null %}
+                        <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                    {% else %}
+                        <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="h4" style="font-weight: bold;">&pound;{{ DSNintendoCoUk.price_discounted }}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span style="color: #f00;">{{ DSNintendoCoUk.price_discount_pc }}% off</span>
+                    {% endif %}
                 {% else %}
-                    <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
-                    &nbsp;&nbsp;&nbsp;
-                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.eshopEuropeGame.price_lowest_f }}</span>
-                    &nbsp;&nbsp;&nbsp;
-                    <span style="color: #f00;">{{ GameData.eshopEuropeGame.price_discount_percentage_f }}% off</span>
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
                 {% endif %}
             {% endif %}
         </td>
@@ -65,13 +67,13 @@
             </td>
         </tr>
     {% endif %}
-    {% if GameData.eshopEuropeGame.fs_id is not null %}
+    {% if DSNintendoCoUk is not null %}
         <tr>
             <td>
                 <span style="font-weight: bold;">Link to eShop</span>
             </td>
             <td>
-                <a href="{{ LinkHelper.eshopUrl('eu', GameData.eshopEuropeGame.url) }}" target="_blank">Visit eShop page</a>
+                <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" target="_blank">Visit eShop page</a>
             </td>
         </tr>
     {% endif %}
