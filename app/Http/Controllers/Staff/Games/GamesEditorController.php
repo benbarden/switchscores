@@ -248,6 +248,15 @@ class GamesEditorController extends Controller
 
             if ($dsNewParsedItem) {
 
+                if ($game->eshop_europe_fs_id != $dsNewParsedItem->link_id) {
+
+                    // Link the game to the parsed item (not sure we need a two-way link?)
+                    $game->eshop_europe_fs_id = $dsNewParsedItem->link_id;
+                    $game->save();
+
+                }
+
+                // Link the parsed item to the game
                 $dsNewParsedItem->game_id = $gameId;
                 $dsNewParsedItem->save();
 

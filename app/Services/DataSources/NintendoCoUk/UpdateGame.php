@@ -36,6 +36,11 @@ class UpdateGame
         }
     }
 
+    public function getGame()
+    {
+        return $this->game;
+    }
+
     public function updatePrice()
     {
         if ($this->gameImportRule) {
@@ -63,9 +68,9 @@ class UpdateGame
         if (is_null($releaseDateEu)) return false;
 
         // Ignore games that already have dates
-        if ($this->game->eu_release_date != null) return false;
-
-        $this->game->eu_release_date = $releaseDateEu;
+        if ($this->game->eu_release_date != null) {
+            $this->game->eu_release_date = $releaseDateEu;
+        }
 
         $releaseDateObj = new \DateTime($releaseDateEu);
         $releaseYear = $releaseDateObj->format('Y');

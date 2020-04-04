@@ -123,6 +123,7 @@ class DataSourceParsedController extends Controller
                 $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
                 // Update eShop data
+                $game = $game->fresh();
                 UpdateGameFactory::doUpdate($game, $dsParsedItem);
                 DownloadImageFactory::downloadImages($game, $dsParsedItem);
 
