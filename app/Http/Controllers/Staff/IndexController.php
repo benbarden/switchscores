@@ -32,8 +32,6 @@ class IndexController extends Controller
 
         // Information and site stats
         $bindings['RegisteredUserCount'] = $serviceUser->getCount();
-        $ignoreFsIdList = $this->getServiceEshopEuropeIgnore()->getIgnoredFsIdList();
-        $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink($ignoreFsIdList, null, true);
 
         // Updates requiring approval
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
@@ -42,6 +40,11 @@ class IndexController extends Controller
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
+
+        // Nintendo.co.uk: Unlinked items
+        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
+        $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
+        $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Action lists
         $bindings['SiteAlertErrorCount'] = $serviceSiteAlert->countByType(SiteAlert::TYPE_ERROR);

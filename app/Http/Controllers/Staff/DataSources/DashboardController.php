@@ -22,13 +22,13 @@ class DashboardController extends Controller
         $bindings['DataSources'] = $this->getServiceDataSource()->getAll();
 
         // Stats: Nintendo.co.uk
+        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
 
         // Unlinked items
-        $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId();
+        $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Ignored items
-        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
         $ignoredItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkInLinkIdList($ignoreIdList);
         $bindings['NintendoCoUkIgnoredCount'] = $ignoredItemList->count();
 
