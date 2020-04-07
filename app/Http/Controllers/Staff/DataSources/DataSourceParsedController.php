@@ -109,7 +109,7 @@ class DataSourceParsedController extends Controller
                     'title' => $title,
                     'link_title' => $linkText,
                     'eshop_europe_fs_id' => $dsParsedItem->link_id,
-                    'eu_release_date' => $dsParsedItem->release_date_eu,
+                    //'eu_release_date' => $dsParsedItem->release_date_eu,
                     'price_eshop' => $dsParsedItem->price_standard,
                     'players' => $dsParsedItem->players,
                     'publisher' => $dsParsedItem->publishers,

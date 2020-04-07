@@ -25,6 +25,7 @@ class Images
     {
         $filePath = public_path().self::PATH_IMAGE_SQUARE;
         $fileName = $this->game->image_square;
+        if (!$fileName) return false;
         $fileToDelete = $filePath.$fileName;
         if (file_exists($fileToDelete)) {
             unlink($fileToDelete);
@@ -35,6 +36,7 @@ class Images
     {
         $filePath = public_path().self::PATH_IMAGE_HEADER;
         $fileName = $this->game->image_header;
+        if (!$fileName) return false;
         $fileToDelete = $filePath.$fileName;
         if (file_exists($fileToDelete)) {
             unlink($fileToDelete);

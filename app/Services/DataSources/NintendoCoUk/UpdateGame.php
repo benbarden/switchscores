@@ -63,17 +63,14 @@ class UpdateGame
             if ($this->gameImportRule->shouldIgnoreEuropeDates()) return false;
         }
 
-        $dsReleaseDateEu = $this->dsParsedItem->release_date_eu;
+        $releaseDateEu = $this->dsParsedItem->release_date_eu;
 
-        if (is_null($dsReleaseDateEu)) return false;
+        if (is_null($releaseDateEu)) return false;
 
         // Ignore games that already have dates
-        if ($this->game->eu_release_date == null) {
-            $this->game->eu_release_date = $dsReleaseDateEu;
-        }
+        if ($this->game->eu_release_date != null) return false;
 
-        // Continue with whichever date is on the game
-        $releaseDateEu = $this->game->eu_release_date;
+        $this->game->eu_release_date = $releaseDateEu;
 
         $releaseDateObj = new \DateTime($releaseDateEu);
         $releaseYear = $releaseDateObj->format('Y');
