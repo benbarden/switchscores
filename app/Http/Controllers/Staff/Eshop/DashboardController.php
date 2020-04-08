@@ -18,9 +18,7 @@ class DashboardController extends Controller
     {
         $pageTitle = 'eShop dashboard';
 
-        $serviceGame = $this->getServiceGame();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
-        $serviceEshopEuropeAlert = $this->getServiceEshopEuropeAlert();
 
         $bindings = [];
 
@@ -28,9 +26,7 @@ class DashboardController extends Controller
         $bindings['PageTitle'] = $pageTitle;
 
         // Action lists
-        $bindings['NoPriceCount'] = $serviceGame->countWithoutPrices();
-        $bindings['EshopAlertErrorCount'] = $serviceEshopEuropeAlert->countByType(EshopEuropeAlert::TYPE_ERROR);
-        $bindings['EshopAlertWarningCount'] = $serviceEshopEuropeAlert->countByType(EshopEuropeAlert::TYPE_WARNING);
+        $bindings['NoPriceCount'] = $this->getServiceGame()->countWithoutPrices();
 
         // Stats
         $ignoreFsIdList = $this->getServiceEshopEuropeIgnore()->getIgnoredFsIdList();
@@ -38,11 +34,6 @@ class DashboardController extends Controller
         $bindings['EshopEuropeLinkedCount'] = $serviceEshopEurope->getAllWithLink($ignoreFsIdList, null, true);
         $bindings['EshopEuropeUnlinkedCount'] = $serviceEshopEurope->getAllWithoutLink($ignoreFsIdList, null, true);
         $bindings['NoEshopEuropeLinkCount'] = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId()->count();
-
-        // Report list
-        $serviceFieldMapper = new FieldMapper();
-        $reportList = $serviceFieldMapper->getBooleanReportList();
-        $bindings['ReportList'] = $reportList;
 
         return view('staff.eshop.dashboard', $bindings);
     }

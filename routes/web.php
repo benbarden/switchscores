@@ -284,12 +284,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/eshop/dashboard', 'Staff\Eshop\DashboardController@show')->name('staff.eshop.dashboard');
 
-    Route::get('/staff/eshop/report/{reportName}', 'Staff\Eshop\ReportController@show')->name('staff.eshop.report');
-    Route::get('/staff/eshop/report/{reportName}/game-list/{filterValue}', 'Staff\Eshop\ReportController@gameList')->name('staff.eshop.report.gameList');
-
-    Route::get('/staff/eshop/alerts/errors', 'Staff\Eshop\AlertsController@showErrors')->name('staff.eshop.alerts.errors');
-    Route::get('/staff/eshop/alerts/warnings', 'Staff\Eshop\AlertsController@showWarnings')->name('staff.eshop.alerts.warnings');
-
     // Feed items: eShop (Europe)
     Route::get('/staff/eshop/feed-items-europe/{report?}', 'Staff\Eshop\FeedItemEshopEuropeController@showList')->name('staff.eshop.feed-items-europe.list');
     Route::get('/staff/eshop/feed-items-europe/view/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@view')->name('staff.eshop.feed-items-europe.view');
@@ -414,7 +408,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Action lists
     Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
-    Route::get('/admin/action-lists/site-alert-errors', 'Admin\ActionListController@siteAlertErrors')->name('admin.action-lists.site-alert-errors');
 
     // Reviews: Links
     Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');

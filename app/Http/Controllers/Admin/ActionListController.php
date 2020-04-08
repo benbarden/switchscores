@@ -26,19 +26,4 @@ class ActionListController extends Controller
 
         return view('admin.action-lists.game-prices.list', $bindings);
     }
-
-    public function siteAlertErrors()
-    {
-        $serviceSiteAlert = $this->getServiceSiteAlert();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Site alerts: Errors - Action lists - Admin';
-        $bindings['PageTitle'] = 'Site alerts: Errors';
-
-        $bindings['ItemList'] = $serviceSiteAlert->getByType(SiteAlert::TYPE_ERROR);
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
-
-        return view('admin.action-lists.site-alerts.list', $bindings);
-    }
 }

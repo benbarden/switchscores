@@ -175,15 +175,6 @@
                                         <li><a href="{{ route('admin.games-filter.games-no-eshop-europe-link') }}">Games with no eShop link</a></li>
                                         <li><a href="{{ route('admin.action-lists.no-price') }}">Games with no price</a></li>
                                         <li role="separator" class="divider"></li>
-                                        <li><a href="{{ route('staff.eshop.alerts.errors') }}">eShop errors</a></li>
-                                        <li><a href="{{ route('staff.eshop.alerts.warnings') }}">eShop warnings</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeImportData'}) }}">EshopEuropeImportData</a></li>
-                                        <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeLinkGames'}) }}">EshopEuropeLinkGames</a></li>
-                                        <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeUpdateGameData'}) }}">EshopEuropeUpdateGameData</a></li>
-                                        <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeDownloadPackshots'}) }}">EshopEuropeDownloadPackshots</a></li>
-                                        <li><a href="{{ route('admin.tools.toolLandingModular', {'commandName': 'EshopEuropeRedownloadPackshots'}) }}">EshopEuropeRedownloadPackshots</a></li>
-                                        <li role="separator" class="divider"></li>
                                     {% endif %}
 
                                     {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}

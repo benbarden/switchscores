@@ -46,50 +46,6 @@ class ToolsController extends Controller
                     'text' => 'Wiki Updates'
                 ],
             ],
-            /* *** eShop *** */
-            'EshopEuropeImportData' => [
-                'command' => 'EshopEuropeImportData',
-                'group' => 'Eshop',
-                'title' => 'Eshop Europe Import Data',
-                'desc' => 'Imports data from the European eShop',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0410',
-                'nextStep' => 'EshopEuropeLinkGames',
-            ],
-            'EshopEuropeLinkGames' => [
-                'command' => 'EshopEuropeLinkGames',
-                'group' => 'Eshop',
-                'title' => 'Eshop Europe Link Games',
-                'desc' => 'Attempts to link data from the European eShop to games in the WOS database',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0420',
-                'nextStep' => 'EshopEuropeUpdateGameData',
-            ],
-            'EshopEuropeUpdateGameData' => [
-                'command' => 'EshopEuropeUpdateGameData',
-                'group' => 'Eshop',
-                'title' => 'Eshop Europe Update Game Data',
-                'desc' => 'Updates data for games linked to eShop Europe data records',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0422',
-                'nextStep' => 'EshopEuropeDownloadPackshots',
-            ],
-            'EshopEuropeDownloadPackshots' => [
-                'command' => 'EshopEuropeDownloadPackshots',
-                'group' => 'Eshop',
-                'title' => 'Eshop Europe Download Packshots',
-                'desc' => 'Finds packshots from the European eShop, downloads them and links them to games',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0425',
-            ],
-            'EshopEuropeRedownloadPackshots' => [
-                'command' => 'EshopEuropeRedownloadPackshots',
-                'group' => 'Eshop',
-                'title' => 'Eshop Europe Redownload Packshots',
-                'desc' => 'Redownloads missing packshots from the European eShop',
-                'scheduleFreq' => 'Manual',
-                'scheduleTime' => 'N/A',
-            ],
             /* *** Reviews *** */
             'RunFeedImporter' => [
                 'command' => 'RunFeedImporter',
