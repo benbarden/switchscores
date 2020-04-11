@@ -78,3 +78,7 @@ blockquote {
 .wos-content-page p, .wos-content-page ul, .wos-content-page ol, .wos-content-page img {
     margin-bottom: 20px;
 }
+
+.wos-content-page .blog-post-body img {
+    width: 100%;
+}

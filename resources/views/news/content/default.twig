@@ -11,7 +11,11 @@
                 {% include 'modules/news/news-image.twig' with {'item': NewsItem, 'showBlankImage': 'N'} %}
             </div>
         </div>
-        {{ NewsItem.content_html|raw }}
+        <div class="row">
+            <div class="blog-post-body col-sm-12 col-md-12 col-lg-12">
+                {{ NewsItem.content_html|raw }}
+            </div>
+        </div>
         <p>
             <small>Published: {{ NewsItem.created_at|date('jS M Y H:i') }}</small>
         </p>
