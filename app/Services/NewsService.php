@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class NewsService
 {
     public function create(
-        $title, $categoryId, $url, $contentHtml, $gameId
+        $title, $categoryId, $url, $contentHtml, $gameId, $customImageUrl
     )
     {
         return News::create([
@@ -19,11 +19,12 @@ class NewsService
             'url' => $url,
             'content_html' => $contentHtml,
             'game_id' => $gameId,
+            'custom_image_url' => $customImageUrl,
         ]);
     }
 
     public function edit(
-        News $news, $title, $categoryId, $url, $contentHtml, $gameId
+        News $news, $title, $categoryId, $url, $contentHtml, $gameId, $customImageUrl
     )
     {
         $values = [
@@ -32,6 +33,7 @@ class NewsService
             'url' => $url,
             'content_html' => $contentHtml,
             'game_id' => $gameId,
+            'custom_image_url' => $customImageUrl,
         ];
 
         $news->fill($values);

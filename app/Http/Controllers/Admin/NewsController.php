@@ -56,7 +56,7 @@ class NewsController extends Controller
 
             $news = $serviceNews->create(
                 $request->title, $request->category_id, $request->url,
-                $request->content_html, $request->game_id
+                $request->content_html, $request->game_id, $request->custom_image_url
             );
 
             return redirect(route('admin.news.list'));
@@ -97,7 +97,7 @@ class NewsController extends Controller
 
             $serviceNews->edit(
                 $newsData, $request->title, $request->category_id, $request->url,
-                $request->content_html, $request->game_id
+                $request->content_html, $request->game_id, $request->custom_image_url
             );
 
             return redirect(route('admin.news.list'));

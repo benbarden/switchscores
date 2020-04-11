@@ -26,16 +26,6 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="content_html" class="col-md-4 control-label">Content</label>
-        <div class="col-md-6">
-            {% if FormMode == 'edit' %}
-            <textarea id="content_html" class="form-control" name="content_html" rows="10">{{ NewsData.content_html }}</textarea>
-            {% else %}
-            <textarea id="content_html" class="form-control" name="content_html" rows="10">{{ old('content_html') }}</textarea>
-            {% endif %}
-        </div>
-    </div>
-    <div class="form-group">
         <label for="game_id" class="col-md-4 control-label">Game</label>
         <div class="col-md-6">
             <select id="game_id" class="form-control" name="game_id">
@@ -44,6 +34,28 @@
                     <option value="{{ item.id }}">{{ item.title }}</option>
                 {% endfor %}
             </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="custom_image_url" class="col-md-4 control-label">Custom image URL</label>
+        <div class="col-md-6">
+            <input id="custom_image_url" type="text" class="form-control" name="custom_image_url">
+            <p>
+                <small>
+                    If this entry is linked to a game, the game image will be used. Otherwise, you can enter
+                    a custom image URL here.
+                </small>
+            </p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="content_html" class="col-md-4 control-label">Content</label>
+        <div class="col-md-6">
+            {% if FormMode == 'edit' %}
+            <textarea id="content_html" class="form-control" name="content_html" rows="10">{{ NewsData.content_html }}</textarea>
+            {% else %}
+            <textarea id="content_html" class="form-control" name="content_html" rows="10">{{ old('content_html') }}</textarea>
+            {% endif %}
         </div>
     </div>
 

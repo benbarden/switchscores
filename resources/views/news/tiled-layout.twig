@@ -1,0 +1,41 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'text': 'News'}] %}
+
+{% block page_body %}
+
+{% for newsItem in NewsList|batch(3, null) %}
+    <div class="row">
+        {% for item in newsItem %}
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                {% if item.game_id %}
+                    {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
+                {% elseif item.custom_image_url %}
+                    {% set boxartUrl = item.custom_image_url %}
+                {% else %}
+                    {% set boxartUrl = '' %}
+                {% endif %}
+                <a href="{{ item.url }}">
+                    {% if boxartUrl == '' %}
+                        <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}" style="border: 0;">
+                    {% else %}
+                        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}" style="border: 0;">
+                    {% endif %}
+                </a>
+                <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                <p>
+                    <small>
+                        Published: {{ item.created_at|date('jS M Y H:i') }} |
+                        Category: {{ item.category.name }}
+                    </small>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<div class="row text-center">
+    {{ NewsList.links|raw }}
+</div>
+
+{% endblock page_body %}

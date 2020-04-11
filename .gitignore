@@ -4,6 +4,7 @@
 /node_modules
 /public/hot
 /public/storage
+/public/img/blog/*
 /public/img/media/*
 /public/img/games/*
 /public/img/ps-square/*

@@ -16,13 +16,13 @@ class NewsController extends Controller
 
         $serviceNews = $this->getServiceNews();
 
-        $newsList = $serviceNews->getPaginated(10);
+        $newsList = $serviceNews->getPaginated(12);
 
         $bindings['NewsList'] = $newsList;
         $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
         $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
 
-        return view('news.landing', $bindings);
+        return view('news.tiled-layout', $bindings);
     }
 
     public function displayContent()

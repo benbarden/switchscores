@@ -20,7 +20,7 @@ class News extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'category_id', 'url', 'content_html', 'game_id'
+        'title', 'category_id', 'url', 'content_html', 'game_id', 'custom_image_url'
     ];
 
     public function category()
