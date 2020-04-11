@@ -12,8 +12,8 @@
                 <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
                 <p>
                     <small>
-                        Published: {{ item.created_at|date('jS M Y H:i') }} |
-                        Category: {{ item.category.name }}
+                        Posted {{ item.created_at|date('jS M Y H:i') }}
+                        in {{ item.category.name }}
                     </small>
                 </p>
             </div>
