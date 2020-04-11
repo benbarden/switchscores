@@ -1,0 +1,10 @@
+{% if item.game_id %}
+    {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
+{% elseif item.custom_image_url %}
+    {% set boxartUrl = item.custom_image_url %}
+{% else %}
+    {% set boxartUrl = '' %}
+{% endif %}
+{% if boxartUrl != '' %}
+    <meta property="og:image" content="{{ url('/') }}{{ boxartUrl }}" />
+{% endif %}

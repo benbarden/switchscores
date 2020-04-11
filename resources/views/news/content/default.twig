@@ -8,18 +8,7 @@
     <div class="col-xs-12 col-sm-8 col-md-8">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                {% if NewsItem.game_id %}
-                    {% set boxartUrl = ImageHelper.imageHeaderUrl(NewsItem.game) %}
-                {% elseif NewsItem.custom_image_url %}
-                    {% set boxartUrl = NewsItem.custom_image_url %}
-                {% else %}
-                    {% set boxartUrl = '' %}
-                {% endif %}
-                <a href="{{ NewsItem.url }}">
-                    {% if boxartUrl != '' %}
-                        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ NewsItem.title }}" style="border: 0;" class="img-responsive">
-                    {% endif %}
-                </a>
+                {% include 'modules/news/news-image.twig' with {'item': NewsItem, 'showBlankImage': 'N'} %}
             </div>
         </div>
         {{ NewsItem.content_html|raw }}

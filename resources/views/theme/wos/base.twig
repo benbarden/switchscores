@@ -39,6 +39,8 @@
         {% if boxartUrl %}
             <meta property="og:image" content="{{ url('/') }}{{ boxartUrl }}" />
         {% endif %}
+    {% elseif NewsItem %}
+        {% include 'modules/news/news-image-meta.twig' with {'item': NewsItem} %}
     {% endif %}
 
     <!-- Font Awesome -->

@@ -9,6 +9,7 @@
         formVals['category_id'] = "{{ NewsData.category.id }}";
         formVals['url'] = "{{ NewsData.url }}";
         formVals['game_id'] = "{{ NewsData.game.id }}";
+        formVals['custom_image_url'] = "{{ NewsData.custom_image_url }}";
 
     } else {
 
@@ -18,6 +19,7 @@
         formVals['category_id'] = "{{ old('category_id') }}";
         formVals['url'] = "{{ old('url') }}";
         formVals['game_id'] = "{{ old('game_id') }}";
+        formVals['custom_image_url'] = "{{ old('custom_image_url') }}";
 
     }
 
@@ -25,6 +27,7 @@
     $('#category_id').val(formVals['category_id']);
     $('#url').val(formVals['url']);
     $('#game_id').val(formVals['game_id']);
+    $('#custom_image_url').val(formVals['custom_image_url']);
 
     $('#game_id').select2();
 
