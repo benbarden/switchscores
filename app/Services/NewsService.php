@@ -82,11 +82,13 @@ class NewsService
         return $news;
     }
 
-    public function getByGameId($gameId)
+    public function getByGameId($gameId, $limit = null)
     {
-        $news = News::where('game_id', $gameId)
-            ->get();
-        return $news;
+        $news = News::where('game_id', $gameId)->orderBy('created_at', 'desc');
+        if ($limit) {
+            $news = $news->limit($limit);
+        }
+        return $news->get();
     }
 
     public function getNext(News $news)

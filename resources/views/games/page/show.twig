@@ -92,7 +92,8 @@
     </div>
     <div class="col-xs-12 col-sm-4 col-md-6">
         {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
-        {% include 'games/page/images.twig' with {'GameData': GameData, 'VideoUrl': GameData.video_url} %}
+        {% include 'games/page/news.twig' with {'NewsList': GameNews} %}
+        {% include 'games/page/media.twig' with {'GameData': GameData, 'VideoUrl': GameData.video_url} %}
     </div>
 
 </div>

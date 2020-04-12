@@ -1,0 +1,21 @@
+{% if NewsList.count() %}
+    <h2>News posts for {{ GameData.title }}</h2>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th class="text-center">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in NewsList %}
+            <tr>
+                <td>
+                    <a href="{{ item.url }}">{{ item.title }}</a>
+                </td>
+                <td class="text-center">{{ item.created_at|date('jS M Y H:i') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

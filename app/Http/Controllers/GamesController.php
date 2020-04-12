@@ -94,9 +94,7 @@ class GamesController extends Controller
     public function show($gameId, $linkTitle)
     {
         $serviceGame = $this->getServiceGame();
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
         $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceGameGenres = $this->getServiceGameGenre();
         $serviceQuickReview = $this->getServiceQuickReview();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
@@ -132,6 +130,9 @@ class GamesController extends Controller
         // Data sources
         $dsNintendoCoUk = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
         $bindings['DSNintendoCoUk'] = $dsNintendoCoUk;
+
+        // News
+        $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
 
         $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game ratings, reviews and information';
         $bindings['PageTitle'] = $gameData->title;
