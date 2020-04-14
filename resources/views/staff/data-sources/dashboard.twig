@@ -46,6 +46,7 @@
     <div class="col-md-4">
 
         <h2>Tools</h2>
+
         <h3>Nintendo.co.uk API</h3>
         <table class="table">
             <tbody>
@@ -73,11 +74,32 @@
             </tbody>
         </table>
 
+        <h3>Wikipedia</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a>
+                    <br>
+                    <small>Imports and parses data, and links it to games</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a>
+                    <br>
+                    <small>Updates games with data</small>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 
     <div class="col-md-4">
 
         <h2>Stats</h2>
+
         <h3>Nintendo.co.uk API</h3>
         <table class="table">
             <tbody>
@@ -95,6 +117,28 @@
                 </td>
                 <td class="text-right">
                     <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}" class="h4">{{ NintendoCoUkIgnoredCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Wikipedia</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Unlinked items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}" class="h4">{{ WikipediaUnlinkedCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.wikipedia.ignored') }}">Ignored items</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.data-sources.wikipedia.ignored') }}" class="h4">{{ WikipediaIgnoredCount }}</a>
                 </td>
             </tr>
             </tbody>

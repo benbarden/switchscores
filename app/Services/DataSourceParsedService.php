@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class DataSourceParsedService
 {
+    // ********** Generic ********** //
+
+    /**
+     * @param $itemId
+     * @return DataSourceParsed
+     */
     public function find($itemId)
     {
         return DataSourceParsed::find($itemId);
@@ -30,15 +36,41 @@ class DataSourceParsedService
         return DataSourceParsed::where('source_id', $sourceId)->whereNotNull('game_id')->orderBy('game_id', 'asc')->get();
     }
 
-    public function getAllBySourceWithNoGameId($sourceId, $excludeLinkIdList = null)
+    public function getAllBySourceWithNoGameId($sourceId, $excludeLinkIdList = null, $excludeTitleList = null)
     {
         $dsItemList = DataSourceParsed::where('source_id', $sourceId)->whereNull('game_id');
         if ($excludeLinkIdList) {
             $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);
         }
+        if ($excludeTitleList) {
+            $dsItemList = $dsItemList->whereNotIn('title', $excludeTitleList);
+        }
         $dsItemList = $dsItemList->orderBy('title', 'asc')->get();
         return $dsItemList;
     }
+
+    public function getBySourceAndGame($sourceId, $gameId)
+    {
+        return DataSourceParsed::where('source_id', $sourceId)->where('game_id', $gameId)->first();
+    }
+
+    public function getBySourceAndLinkId($sourceId, $linkId)
+    {
+        return DataSourceParsed::where('source_id', $sourceId)->where('link_id', $linkId)->first();
+    }
+
+    public function deleteBySourceId($sourceId)
+    {
+        DataSourceParsed::where('source_id', $sourceId)->delete();
+    }
+
+    public function removeSwitchEshopItems($gameId)
+    {
+        $sourceId = DataSource::DSID_SWITCH_ESHOP_UK;
+        DataSourceParsed::where('source_id', $sourceId)->where('game_id', $gameId)->delete();
+    }
+
+    // ********** Nintendo.co.uk ********** //
 
     public function getAllNintendoCoUk()
     {
@@ -76,25 +108,10 @@ class DataSourceParsedService
         return $this->getBySourceAndGame($sourceId, $gameId);
     }
 
-    public function getBySourceAndGame($sourceId, $gameId)
-    {
-        return DataSourceParsed::where('source_id', $sourceId)->where('game_id', $gameId)->first();
-    }
-
-    public function getBySourceAndLinkId($sourceId, $linkId)
-    {
-        return DataSourceParsed::where('source_id', $sourceId)->where('link_id', $linkId)->first();
-    }
-
     public function getNintendoCoUkByLinkId($linkId)
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         return $this->getBySourceAndLinkId($sourceId, $linkId);
-    }
-
-    public function deleteBySourceId($sourceId)
-    {
-        DataSourceParsed::where('source_id', $sourceId)->delete();
     }
 
     public function clearGameIdFromNintendoCoUkItems($gameId)
@@ -109,17 +126,59 @@ class DataSourceParsedService
         }
     }
 
-    public function removeSwitchEshopItems($gameId)
+    public function updateNintendoCoUkGameIds()
     {
-        $sourceId = DataSource::DSID_SWITCH_ESHOP_UK;
-        DataSourceParsed::where('source_id', $sourceId)->where('game_id', $gameId)->delete();
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        DB::update('
+            UPDATE data_source_parsed dsp, games g
+            SET dsp.game_id = g.id
+            WHERE dsp.link_id = g.eshop_europe_fs_id
+            AND dsp.source_id = ?
+        ', [$sourceId]);
     }
 
-    public function updateGameIds()
+    // ********** Wikipedia ********** //
+
+    public function getAllWikipedia()
     {
-        DB::update('
-            UPDATE data_source_parsed dsp, games g SET dsp.game_id = g.id WHERE dsp.link_id = g.eshop_europe_fs_id
-        ');
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getAllBySource($sourceId);
+    }
+
+    public function getAllWikipediaWithGameId()
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getAllBySourceWithGameId($sourceId);
+    }
+
+    public function getAllWikipediaWithNoGameId($excludeTitleList = null)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getAllBySourceWithNoGameId($sourceId, null, $excludeTitleList);
+    }
+
+    public function getAllWikipediaInTitleList($titleList)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+
+        $dsItemList = DataSourceParsed::where('source_id', $sourceId)
+            ->whereIn('title', $titleList)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return $dsItemList;
+    }
+
+    public function getSourceWikipediaForGame($gameId)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getBySourceAndGame($sourceId, $gameId);
+    }
+
+    public function getWikipediaByLinkId($linkId)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getBySourceAndLinkId($sourceId, $linkId);
     }
 
     // ********* NINTENDO.CO.UK API - Games on sale ************** //

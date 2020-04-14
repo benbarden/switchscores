@@ -23,7 +23,7 @@ class ToolsController extends Controller
             \Artisan::call('DSNintendoCoUkImportParseLink', []);
             return view('staff.data-sources.tools.process-generic', $bindings);
         } else {
-            return view('staff.data-sources.tools.nintendoCoUk.importParseLink.landing', $bindings);
+            return view('staff.data-sources.tools.nintendoCoUk.importParseLink-landing', $bindings);
         }
     }
 
@@ -40,7 +40,7 @@ class ToolsController extends Controller
             \Artisan::call('DSNintendoCoUkUpdateGames', []);
             return view('staff.data-sources.tools.process-generic', $bindings);
         } else {
-            return view('staff.data-sources.tools.nintendoCoUk.updateGames.landing', $bindings);
+            return view('staff.data-sources.tools.nintendoCoUk.updateGames-landing', $bindings);
         }
     }
 
@@ -57,7 +57,42 @@ class ToolsController extends Controller
             \Artisan::call('DSNintendoCoUkDownloadImages', []);
             return view('staff.data-sources.tools.process-generic', $bindings);
         } else {
-            return view('staff.data-sources.tools.nintendoCoUk.downloadImages.landing', $bindings);
+            return view('staff.data-sources.tools.nintendoCoUk.downloadImages-landing', $bindings);
         }
     }
+
+    public function wikipediaImportParseLink()
+    {
+        $pageTitle = 'Wikipedia - Import/Parse/Link';
+        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
+
+        $bindings = [];
+        $bindings['TopTitle'] = $topTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        if (request()->post()) {
+            \Artisan::call('DSWikipediaImportParseLink', []);
+            return view('staff.data-sources.tools.process-generic', $bindings);
+        } else {
+            return view('staff.data-sources.tools.wikipedia.importParseLink-landing', $bindings);
+        }
+    }
+
+    public function wikipediaUpdateGames()
+    {
+        $pageTitle = 'Wikipedia - Update games';
+        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
+
+        $bindings = [];
+        $bindings['TopTitle'] = $topTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        if (request()->post()) {
+            \Artisan::call('DSWikipediaUpdateGames', []);
+            return view('staff.data-sources.tools.process-generic', $bindings);
+        } else {
+            return view('staff.data-sources.tools.wikipedia.updateGames-landing', $bindings);
+        }
+    }
+
 }

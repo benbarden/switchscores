@@ -1,0 +1,63 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <p>
+                This screen allows you to link a title from Wikipedia to a game in the database.
+            </p>
+
+            <fieldset>
+                <h2>Main</h2>
+                <table class="table-responsive table">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <strong>
+                                Title
+                            </strong>
+                        </td>
+                        <td>
+                            {{ DSParsedItem.title }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <h2>Game</h2>
+                <div class="form-group">
+                    <label for="game_id" class="col-md-4 control-label">Game id</label>
+                    <div class="col-md-6">
+                        <select id="game_id" class="form-control" name="game_id">
+                            <option value="">&nbsp;</option>
+                            {% for item in GameList %}
+                                <option value="{{ item.id }}">{{ item.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+
+        <div class="col-md-3">
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-8">
+            <button id="btn-submit" class="btn outline btn-primary pull-right">
+                Save changes
+            </button>
+        </div>
+    </div>
+</form>

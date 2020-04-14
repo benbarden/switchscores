@@ -62,4 +62,14 @@ class DataSource extends Model
         return $this->hasMany('App\DataSourceParsed', 'source_id', 'id');
     }
 
+    public function isNintendoCoUk()
+    {
+        return $this->id == self::DSID_NINTENDO_CO_UK;
+    }
+
+    public function isWikipedia()
+    {
+        return $this->id == self::DSID_WIKIPEDIA;
+    }
+
 }

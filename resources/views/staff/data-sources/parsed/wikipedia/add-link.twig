@@ -1,0 +1,16 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources dashboard'},
+    {'url': route('staff.data-sources.wikipedia.unlinked'), 'text': 'Wikipedia - Unliked items'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.data-sources.wikipedia.add-link', {'itemId': ItemId}) %}
+{% include 'staff/data-sources/parsed/wikipedia/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/data-sources/parsed/wikipedia/scripts.twig' %}
+
+{% endblock page_inner %}

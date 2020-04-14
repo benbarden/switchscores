@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
+use App\DataSource;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
@@ -17,42 +18,64 @@ class DataSourceIgnoreController extends Controller
 
         $sourceId = $request->sourceId;
         $dsParsedItemId = $request->dsParsedItemId;
-        $title = $request->title;
 
         if (!$sourceId) {
             return response()->json(['error' => 'Missing data: sourceId'], 400);
         }
 
-        if (!$dsParsedItemId && (!$title)) {
-            return response()->json(['error' => 'dsParsedItemId and title cannot both be blank; pick one'], 400);
+        if (!$dsParsedItemId) {
+            return response()->json(['error' => 'Missing data: dsParsedItemId'], 400);
         }
 
-        if ($dsParsedItemId) {
+        $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
+        if (!$dsParsedItem) {
+            return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
+        }
 
-            $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
-            if (!$dsParsedItem) {
-                return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
-            }
+        switch ($sourceId) {
 
-            $linkId = $dsParsedItem->link_id;
+            case DataSource::DSID_NINTENDO_CO_UK:
 
-            $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
-            if ($dsIgnoredItem->count() > 0) {
-                return response()->json(['error' => 'Item is already marked as ignored [Source: '.$sourceId.'; Link: '.$linkId.']'], 400);
-            }
+                $linkId = $dsParsedItem->link_id;
 
-            $this->getServiceDataSourceIgnore()->add($sourceId, $linkId);
+                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
+                if ($dsIgnoredItem->count() > 0) {
+                    return response()->json(['error' => 'Item is already marked as ignored [Source: '.$sourceId.'; Link: '.$linkId.']'], 400);
+                }
 
-            $data = array(
-                'status' => 'OK'
-            );
-            return response()->json($data, 200);
+                $this->getServiceDataSourceIgnore()->addLinkId($sourceId, $linkId);
 
-        } elseif ($title) {
+                $data = array(
+                    'status' => 'OK'
+                );
+                return response()->json($data, 200);
 
-            return response()->json(['error' => 'NOT YET SUPPORTED'], 400);
+                break;
+
+            case DataSource::DSID_WIKIPEDIA:
+
+                $title = $dsParsedItem->title;
+
+                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndTitle($sourceId, $title);
+                if ($dsIgnoredItem->count() > 0) {
+                    return response()->json(['error' => 'Item is already marked as ignored [Source: '.$sourceId.'; Title: '.$title.']'], 400);
+                }
+
+                $this->getServiceDataSourceIgnore()->addTitle($sourceId, $title);
+
+                $data = array(
+                    'status' => 'OK'
+                );
+                return response()->json($data, 200);
+
+                break;
+
+            default:
+                return response()->json(['error' => 'NOT YET SUPPORTED'], 400);
+                break;
 
         }
+
     }
 
     public function removeFromIgnoreList()
@@ -61,41 +84,62 @@ class DataSourceIgnoreController extends Controller
 
         $sourceId = $request->sourceId;
         $dsParsedItemId = $request->dsParsedItemId;
-        $title = $request->title;
 
         if (!$sourceId) {
-            return response()->json(['error' => 'Missing data: sourceId'], 400);
+            return response()->json(['error' => 'Missing data: itemId'], 400);
+        }
+        if (!$dsParsedItemId) {
+            return response()->json(['error' => 'Missing data: dsParsedItemId'], 400);
         }
 
-        if (!$dsParsedItemId && (!$title)) {
-            return response()->json(['error' => 'dsParsedItemId and title cannot both be blank; pick one'], 400);
+        $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
+        if (!$dsParsedItem) {
+            return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
         }
 
-        if ($dsParsedItemId) {
+        switch ($sourceId) {
 
-            $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
-            if (!$dsParsedItem) {
-                return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
-            }
+            case DataSource::DSID_NINTENDO_CO_UK:
 
-            $linkId = $dsParsedItem->link_id;
+                $linkId = $dsParsedItem->link_id;
 
-            $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
-            if (!$dsIgnoredItem) {
-                return response()->json(['error' => 'Item is not marked as ignored'], 400);
-            }
+                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
+                if (!$dsIgnoredItem) {
+                    return response()->json(['error' => 'Item is not marked as ignored'], 400);
+                }
 
-            $this->getServiceDataSourceIgnore()->delete($sourceId, $linkId);
+                $this->getServiceDataSourceIgnore()->deleteByLinkId($sourceId, $linkId);
 
-            $data = array(
-                'status' => 'OK'
-            );
-            return response()->json($data, 200);
+                $data = array(
+                    'status' => 'OK'
+                );
+                return response()->json($data, 200);
 
-        } elseif ($title) {
+                break;
 
-            return response()->json(['error' => 'NOT YET SUPPORTED'], 400);
+            case DataSource::DSID_WIKIPEDIA:
+
+                $title = $dsParsedItem->title;
+
+                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndTitle($sourceId, $title);
+                if (!$dsIgnoredItem) {
+                    return response()->json(['error' => 'Item is not marked as ignored'], 400);
+                }
+
+                $this->getServiceDataSourceIgnore()->deleteByTitle($sourceId, $title);
+
+                $data = array(
+                    'status' => 'OK'
+                );
+                return response()->json($data, 200);
+
+                break;
+
+            default:
+                return response()->json(['error' => 'NOT YET SUPPORTED'], 400);
+                break;
 
         }
+
     }
 }

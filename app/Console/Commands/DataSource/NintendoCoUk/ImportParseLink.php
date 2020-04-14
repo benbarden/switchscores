@@ -102,7 +102,7 @@ class ImportParseLink extends Command
 
             // Link games
             $logger->info('Updating game links...');
-            $this->getServiceDataSourceParsed()->updateGameIds();
+            $this->getServiceDataSourceParsed()->updateNintendoCoUkGameIds();
             $logger->info('Linking complete');
 
         } catch (\Exception $e) {

@@ -16,8 +16,14 @@
                 <th class="text-center">Link id</th>
                 <th class="text-left">Title</th>
                 <th class="text-center">Release date (EU)</th>
+                {% if DataSource.isWikipedia() %}
+                    <th class="text-center">Release date (US)</th>
+                    <th class="text-center">Release date (JP)</th>
+                {% endif %}
+                {% if DataSource.isNintendoCoUk() %}
                 <th class="text-center">Price (standard)</th>
                 <th class="text-center">Nintendo Url</th>
+                {% endif %}
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -33,14 +39,28 @@
                     <td class="text-center">
                         {{ item.release_date_eu }}
                     </td>
+                    {% if DataSource.isWikipedia() %}
+                        <td class="text-center">
+                            {{ item.release_date_us }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.release_date_jp }}
+                        </td>
+                    {% endif %}
+                    {% if DataSource.isNintendoCoUk() %}
                     <td class="text-center">
                         {{ item.price_standard }}
                     </td>
                     <td class="text-center">
                         <a href="{{ LinkHelper.eshopUrl('eu', item.url) }}" target="_blank">View</a>
                     </td>
+                    {% endif %}
                     <td class="text-center">
-                        <a href="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': item.id}) }}">Add game</a> :
+                        {% if DataSource.isNintendoCoUk() %}
+                            <a href="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': item.id}) }}">Add game</a> :
+                        {% elseif DataSource.isWikipedia() %}
+                            <a href="{{ route('staff.data-sources.wikipedia.add-link', {'itemId': item.id}) }}">Add link</a> :
+                        {% endif %}
                         {% if ListRef == 'ignored' %}
                             <a href="javascript:void(0);" id="lnk-remove-ignore-{{ item.id }}" class="lnk-remove-ignore">Un-ignore</a>
                         {% else %}
@@ -65,12 +85,18 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 50,
             "columns": [
-                null,
-                null,
-                null,
-                null,
-                { "orderable": false },
-                { "orderable": false }
+                null, // link_id
+                null, // title
+                null, // release_date_eu
+                {% if DataSource.isWikipedia() %}
+                null, // release_date_us
+                null, // release_date_jp
+                {% endif %}
+                {% if DataSource.isNintendoCoUk() %}
+                null, // price_standard
+                { "orderable": false }, // Nintendo URL
+                {% endif %}
+                { "orderable": false } // Options
             ]
         });
     });
