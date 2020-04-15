@@ -14,7 +14,6 @@ use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\EshopEuropeIgnoreService;
 use App\Services\FeedItemGameService;
-use App\Services\GameActionListService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
 use App\Services\GameFilterListService;
@@ -213,14 +212,6 @@ trait SwitchServices
     public function getServiceGameGenre()
     {
         return $this->loadService('GameGenreService');
-    }
-
-    /**
-     * @return GameActionListService
-     */
-    public function getServiceGameActionList()
-    {
-        return $this->loadService('GameActionListService');
     }
 
     /**
