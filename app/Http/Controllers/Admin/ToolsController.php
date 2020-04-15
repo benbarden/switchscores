@@ -11,41 +11,6 @@ class ToolsController extends Controller
     public function __construct()
     {
         $this->commandList = [
-            /* *** Wikipedia *** */
-            'WikipediaCrawlGamesList' => [
-                'command' => 'WikipediaCrawlGamesList',
-                'group' => 'Wikipedia',
-                'title' => 'Wikipedia Crawl Games List',
-                'desc' => 'Crawls the Nintendo Switch games list on Wikipedia and saves data to the WOS database',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0310',
-                'nextStep' => 'WikipediaImportGamesList',
-            ],
-            'WikipediaImportGamesList' => [
-                'command' => 'WikipediaImportGamesList',
-                'group' => 'Wikipedia',
-                'title' => 'Wikipedia Import Games List',
-                'desc' => 'Converts crawler data into Wiki Updates for creating or updating games',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0315',
-                'nextStep' => 'WikipediaUpdateGamesList',
-                'relatedLink' => [
-                    'url' => route('staff.wikipedia.wiki-updates.list-all-pending'),
-                    'text' => 'Wiki updates'
-                ],
-            ],
-            'WikipediaUpdateGamesList' => [
-                'command' => 'WikipediaUpdateGamesList',
-                'group' => 'Wikipedia',
-                'title' => 'Wikipedia Update Games List',
-                'desc' => 'Processes Wiki Updates that are marked as OK to update',
-                'scheduleFreq' => 'Daily',
-                'scheduleTime' => '0320',
-                'relatedLink' => [
-                    'url' => route('staff.wikipedia.wiki-updates.list-all-pending'),
-                    'text' => 'Wiki Updates'
-                ],
-            ],
             /* *** Reviews *** */
             'RunFeedImporter' => [
                 'command' => 'RunFeedImporter',
