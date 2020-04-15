@@ -33,21 +33,8 @@
     $('#website_url').val(formVals['website_url']);
     $('#twitter_id').val(formVals['twitter_id']);
 
-    // Autogenerate link URL
     $('#name').on('blur', function() {
-        if ($('#link_title').val() != '') {
-            return false;
-        }
-        itemTitle = $(this).val();
-        if (itemTitle == '') {
-            $('#link_title').val('');
-            return false;
-        }
-
-        $.getJSON('/api/url/link-text', {title: itemTitle}, function(data) {
-            linkText = data.linkText;
-            $('#link_title').val(linkText);
-        });
+        wosAdminTools.convertToLinkTitle('name', 'link_title');
     });
 
 </script>

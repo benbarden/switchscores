@@ -56,4 +56,8 @@
         $('#allow_historic_content').attr('checked', false);
     }
 
+    $('#name').on('blur', function() {
+        wosAdminTools.convertToLinkTitle('name', 'link_title');
+    });
+
 </script>
