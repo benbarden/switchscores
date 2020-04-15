@@ -9,14 +9,35 @@ use Illuminate\Support\Facades\DB;
 
 class ReviewFeedItemService
 {
+    private $processOptionsSuccess = [
+        'Review created',
+    ];
+
+    private $processOptionsFailure = [
+        'Bundle',
+        'DLC or special edition',
+        'Duplicate',
+        'Historic review',
+        'Multiple reviews',
+        'No score',
+        'Non-review content',
+        'Not a game review',
+        'Not in database',
+        'Page not found',
+        'Review for another platform',
+        'Review pre-dates Switch version',
+        'Skipping - posted elsewhere',
+        'Wrong link',
+    ];
+
     public function edit(
-        ReviewFeedItem $reviewFeedItem,
-        $siteId, $gameId, $itemRating, $processed, $processStatus
+        ReviewFeedItem $reviewFeedItem, $siteId, $gameId, $itemRating, $processStatus
     )
     {
-        $isProcessed = $processed == 'on' ? 1 : null;
-
-        if (!$processStatus) {
+        if ($processStatus) {
+            $isProcessed = 1;
+        } else {
+            $isProcessed = null;
             $processStatus = null;
         }
 
@@ -97,5 +118,15 @@ class ReviewFeedItemService
             where process_status is not null
             group by process_status
         ');
+    }
+
+    public function getProcessOptionsSuccess()
+    {
+        return $this->processOptionsSuccess;
+    }
+
+    public function getProcessOptionsFailure()
+    {
+        return $this->processOptionsFailure;
     }
 }

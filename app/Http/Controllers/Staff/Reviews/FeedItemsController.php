@@ -92,7 +92,7 @@ class FeedItemsController extends Controller
 
             $serviceReviewFeedItem->edit(
                 $feedItemData, $request->site_id, $request->game_id, $request->item_rating,
-                $request->processed, $request->process_status
+                $request->process_status
             );
 
             // All done; send us back
@@ -112,6 +112,9 @@ class FeedItemsController extends Controller
         $bindings['GamesList'] = $serviceGame->getAll();
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
+
+        $bindings['ProcessStatusSuccess'] = $serviceReviewFeedItem->getProcessOptionsSuccess();
+        $bindings['ProcessStatusFailure'] = $serviceReviewFeedItem->getProcessOptionsFailure();
 
         return view('staff.reviews.feed-items.edit', $bindings);
     }

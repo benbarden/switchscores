@@ -70,24 +70,27 @@
     <hr>
 
     <div class="form-group">
-        <label for="processed" class="col-md-4 control-label">Processed</label>
-        <div class="col-md-6">
-            <input id="processed" type="checkbox" name="processed">
-            <br>
-            <small>
-                This option can be used to skip, or resubmit, an item to the processing queue.
-                <br>
-                Tick the box to skip the item. When doing so, ensure you fill in the reason below.
-                <br>
-                Untick the box to resubmit the item. In this case, clear the reason field.
-            </small>
-        </div>
-    </div>
-
-    <div class="form-group">
         <label for="process_status" class="col-md-4 control-label">Process status</label>
         <div class="col-md-6">
-            <input id="process_status" class="form-control" name="process_status" type="text" />
+            <select id="process_status" name="process_status" class="form-control">
+                <option value="">(No value)</option>
+                <optgroup label="Success:">
+                    {% for item in ProcessStatusSuccess %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Failure:">
+                    {% for item in ProcessStatusFailure %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+            <br>
+            <small>
+                Where possible, this will be filled in automatically. You can also manually select an option
+                to stop this item from being processed. Or, you can clear the option if a previously skipped item
+                should be reprocessed.
+            </small>
         </div>
     </div>
 
