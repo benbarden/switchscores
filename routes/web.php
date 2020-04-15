@@ -239,6 +239,13 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/news/edit/{newsId}', 'Staff\News\EditorController@edit')->name('staff.news.edit');
     Route::post('/staff/news/edit/{newsId}', 'Staff\News\EditorController@edit')->name('staff.news.edit');
 
+    // Categories
+    Route::get('/staff/news/category/list', 'Staff\News\CategoryController@showList')->name('staff.news.category.list');
+    Route::get('/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
+    Route::post('/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
+    Route::get('/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
+    Route::post('/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
+
 });
 
 

@@ -6,9 +6,31 @@ namespace App\Services;
 use App\NewsCategory;
 use Carbon\Carbon;
 
-
 class NewsCategoryService
 {
+    public function create(
+        $name, $linkName
+    )
+    {
+        return NewsCategory::create([
+            'name' => $name,
+            'link_name' => $linkName,
+        ]);
+    }
+
+    public function edit(
+        NewsCategory $newsCategory, $name, $linkName
+    )
+    {
+        $values = [
+            'name' => $name,
+            'link_name' => $linkName,
+        ];
+
+        $newsCategory->fill($values);
+        $newsCategory->save();
+    }
+
     public function find($id)
     {
         return NewsCategory::find($id);

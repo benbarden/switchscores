@@ -1,0 +1,27 @@
+<script>
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing items.
+        formVals['name'] = "{{ NewsCategory.name }}";
+        formVals['link_name'] = "{{ NewsCategory.link_name }}";
+
+    } else {
+
+        // This is used for new news items.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['name'] = "{{ old('name') }}";
+        formVals['link_name'] = "{{ old('link_name') }}";
+
+    }
+
+    $('#name').val(formVals['name']);
+    $('#link_name').val(formVals['link_name']);
+
+    $('#name').on('blur', function() {
+        wosAdminTools.convertToLinkTitle('name', 'link_name');
+    });
+
+</script>

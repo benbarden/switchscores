@@ -1,0 +1,16 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.news.dashboard'), 'text': 'News dashboard'},
+    {'url': route('staff.news.category.list'), 'text': 'News categories'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.news.category.edit', {'newsCategoryId': NewsCategoryId}) %}
+
+{% include 'staff/news/category/form.twig' with {'formSubmitAction': formSubmitAction} %}
+{% include 'staff/news/category/scripts.twig' %}
+
+{% endblock page_inner %}
