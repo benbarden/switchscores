@@ -1,11 +1,13 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('staff.news.dashboard'), 'text': 'News dashboard'},
+    {'text': PageTitle}
+] %}
 
 {% block page_inner %}
 
-<input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add news">
-
+<a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>
 <hr>
 
 {% if NewsList.count > 0 %}
@@ -59,7 +61,7 @@
                         {{ item.created_at }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.news.edit', {'newsId': item.id}) }}">Edit</a>
+                        <a href="{{ route('staff.news.edit', {'newsId': item.id}) }}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -71,9 +73,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('admin.news.add') }}';
-    });
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [0, 'desc'],

@@ -1,0 +1,38 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>
+<hr>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>View news</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.list')}}">View news list</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

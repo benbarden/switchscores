@@ -1,0 +1,16 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.news.dashboard'), 'text': 'News dashboard'},
+    {'url': route('staff.news.list'), 'text': 'News list'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.news.edit', {'newsId': NewsId}) %}
+
+{% include 'staff/news/editor/form-news.twig' with {'formSubmitAction': formSubmitAction} %}
+{% include 'staff/news/editor/scripts.twig' %}
+
+{% endblock page_inner %}

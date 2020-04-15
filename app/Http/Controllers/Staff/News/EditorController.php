@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\News;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 
-class NewsController extends Controller
+class EditorController extends Controller
 {
     use SwitchServices;
 
@@ -25,22 +25,6 @@ class NewsController extends Controller
         'content_html' => 'required',
         //'game_id' => 'exists:games,id',
     ];
-
-    public function showList()
-    {
-        $serviceNews = $this->getServiceNews();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - News';
-        $bindings['PageTitle'] = 'News';
-
-        $newsList = $serviceNews->getAll();
-
-        $bindings['NewsList'] = $newsList;
-
-        return view('admin.news.list', $bindings);
-    }
 
     public function add()
     {
@@ -59,13 +43,13 @@ class NewsController extends Controller
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
 
-            return redirect(route('admin.news.list'));
+            return redirect(route('staff.news.list'));
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - News - Add news';
+        $bindings['TopTitle'] = 'Staff - News - Add news';
         $bindings['PageTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
@@ -73,7 +57,7 @@ class NewsController extends Controller
 
         $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
 
-        return view('admin.news.add', $bindings);
+        return view('staff.news.editor.add', $bindings);
     }
 
     public function edit($newsId)
@@ -100,7 +84,7 @@ class NewsController extends Controller
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
 
-            return redirect(route('admin.news.list'));
+            return redirect(route('staff.news.list'));
 
         } else {
 
@@ -108,7 +92,7 @@ class NewsController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - News - Edit news';
+        $bindings['TopTitle'] = 'Staff - News - Edit news';
         $bindings['PageTitle'] = 'Edit news';
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
@@ -117,6 +101,6 @@ class NewsController extends Controller
 
         $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
 
-        return view('admin.news.edit', $bindings);
+        return view('staff.news.editor.edit', $bindings);
     }
 }

@@ -34,7 +34,7 @@ class DashboardController extends Controller
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 
-        $bindings['TopTitle'] = $pageTitle.' - Admin';
+        $bindings['TopTitle'] = $pageTitle.' - Staff';
         $bindings['PageTitle'] = $pageTitle;
 
         return view('staff.games.dashboard', $bindings);
