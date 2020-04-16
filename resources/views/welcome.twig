@@ -74,7 +74,9 @@
         <h2 class="standout-header">
             Featured game
         </h2>
-        {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+        <div class="row">
+            {% include 'news/tiled-item.twig' with {'item': FeaturedGame, 'batchOverride': 1} %}
+        </div>
 
         <h2 class="standout-header">
             Latest reviews

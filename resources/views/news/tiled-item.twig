@@ -1,0 +1,23 @@
+{% if batchOverride is defined %}
+    {% set batchItemCount = batchOverride %}
+{% else %}
+    {% set batchItemCount = 3 %}
+{% endif %}
+{% if batchItemCount == 3 %}
+    {% set colBreak = '4' %}
+{% elseif batchItemCount == 1 %}
+    {% set colBreak = '12' %}
+{% else %}
+    {% set colBreak = '6' %}
+{% endif %}
+
+<div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
+    {% include 'modules/news/news-image.twig' with {'item': item, 'showBlankImage': 'Y'} %}
+    <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+    <p>
+        <small>
+            Posted {{ item.created_at|date('jS M Y H:i') }}
+            in <a href="{{ route('news.category.landing', {'linkName': item.category.link_name}) }}">{{ item.category.name }}</a>
+        </small>
+    </p>
+</div>

@@ -23,6 +23,7 @@ class WelcomeController extends Controller
         $bindings['TopRatedAllTime'] = $this->getServiceTopRated()->getList(20);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 20);
 
+        /*
         // --- Featured
         // Oct 2019
         $idLittleTownHero = 2925;
@@ -49,15 +50,17 @@ class WelcomeController extends Controller
         $idMegaManZero = 3404;
         $idTwoPointHospital = 3555;
         $idRuneFactory4Special = 3501;
+        */
 
-        $featuredIdList = [
-            $idMurderByNumbers, $idMegaManZero, $idTwoPointHospital, $idRuneFactory4Special
-        ];
-        $featuredGameList = $this->getServiceGameReleaseDate()->getByIdList($featuredIdList);
-        $featuredGameId = rand(0, count($featuredIdList)-1);
-        $featuredGamesForView = new Collection();
-        $featuredGamesForView->push($featuredGameList[$featuredGameId]);
-        $bindings['FeaturedGameList'] = $featuredGamesForView;
+        // Featured games from News page
+        $featuredGameCategory = $this->getServiceNewsCategory()->getByUrl('featured-games');
+        if ($featuredGameCategory) {
+            $featuredGameCategoryId = $featuredGameCategory->id;
+            $featuredGame = $this->getServiceNews()->getByCategory($featuredGameCategoryId, 1);
+            if (count($featuredGame) > 0) {
+                $bindings['FeaturedGame'] = $featuredGame[0];
+            }
+        }
 
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased();

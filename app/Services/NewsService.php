@@ -62,6 +62,11 @@ class NewsService
         return News::where('category_id', $categoryId)->orderBy('created_at', 'desc')->simplePaginate($limit);
     }
 
+    public function getByCategory($categoryId, $limit)
+    {
+        return News::where('category_id', $categoryId)->orderBy('created_at', 'desc')->limit($limit)->get();
+    }
+
     /**
      * @return mixed
      */

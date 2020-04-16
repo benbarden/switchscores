@@ -16,16 +16,7 @@
 {% for newsItem in NewsList|batch(3, null) %}
     <div class="row">
         {% for item in newsItem %}
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                {% include 'modules/news/news-image.twig' with {'item': item, 'showBlankImage': 'Y'} %}
-                <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                <p>
-                    <small>
-                        Posted {{ item.created_at|date('jS M Y H:i') }}
-                        in <a href="{{ route('news.category.landing', {'linkName': item.category.link_name}) }}">{{ item.category.name }}</a>
-                    </small>
-                </p>
-            </div>
+            {% include 'news/tiled-item.twig' with {'item': item, 'batchOverride': 3} %}
         {% endfor %}
     </div>
 {% endfor %}

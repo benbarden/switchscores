@@ -8,9 +8,9 @@
 <a href="{{ item.url }}">
     {% if boxartUrl == '' %}
         {% if showBlankImage == 'Y' %}
-            <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}" style="border: 0;">
+            <img src="/img/logo-grey-wide.png" class="img-responsive" style="border: 0;" alt="{{ item.title }}">
         {% endif %}
     {% else %}
-        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.title }}" style="border: 0;" class="img-responsive">
+        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
     {% endif %}
 </a>
