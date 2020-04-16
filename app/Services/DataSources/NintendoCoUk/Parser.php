@@ -66,7 +66,10 @@ class Parser
         }
 
         // Publishers
-        $this->dataSourceParsed->publishers = $this->rawJsonData['publisher'];
+        $parsedPublishers = $this->parsePublishers();
+        if (!is_null($parsedPublishers)) {
+            $this->dataSourceParsed->publishers = $parsedPublishers;
+        }
 
         // Players
         $parsedPlayers = $this->parsePlayers();
@@ -177,6 +180,17 @@ class Parser
         }
 
         return $parsedReleaseDate;
+    }
+
+    public function parsePublishers()
+    {
+        $parsedPublishers = null;
+
+        if (array_key_exists('publisher', $this->rawJsonData)) {
+            $parsedPublishers = $this->rawJsonData['publisher'];
+        }
+
+        return $parsedPublishers;
     }
 
     public function parsePlayers()
