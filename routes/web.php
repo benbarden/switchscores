@@ -72,6 +72,7 @@ Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesC
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
+Route::get('/news/category/{linkName}', 'NewsController@categoryLanding')->name('news.category.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
 
 // Sitemaps

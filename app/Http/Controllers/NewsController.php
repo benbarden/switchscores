@@ -14,13 +14,34 @@ class NewsController extends Controller
     {
         $bindings = [];
 
-        $serviceNews = $this->getServiceNews();
-
-        $newsList = $serviceNews->getPaginated(12);
+        $newsList = $this->getServiceNews()->getPaginated(12);
 
         $bindings['NewsList'] = $newsList;
         $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
         $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
+
+        $bindings['DisplayMode'] = 'home';
+
+        return view('news.tiled-layout', $bindings);
+    }
+
+    public function categoryLanding($linkName)
+    {
+        $bindings = [];
+
+        $category = $this->getServiceNewsCategory()->getByUrl($linkName);
+        if (!$category) abort(404);
+
+        $categoryId = $category->id;
+        $categoryName = $category->name;
+
+        $newsList = $this->getServiceNews()->getPaginatedByCategory($categoryId, 12);
+
+        $bindings['NewsList'] = $newsList;
+        $bindings['TopTitle'] = $categoryName.' - page '.$newsList->currentPage();
+        $bindings['PageTitle'] = $categoryName.' - page '.$newsList->currentPage();
+
+        $bindings['DisplayMode'] = 'category';
 
         return view('news.tiled-layout', $bindings);
     }

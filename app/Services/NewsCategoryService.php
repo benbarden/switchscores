@@ -48,8 +48,6 @@ class NewsCategoryService
      */
     public function getByUrl($url)
     {
-        $newsCategory = NewsCategory::where('link_name', $url)
-            ->first();
-        return $newsCategory;
+        return NewsCategory::where('link_name', $url)->first();
     }
 }

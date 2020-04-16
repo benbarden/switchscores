@@ -1,6 +1,15 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'text': 'News'}] %}
+{% if DisplayMode == 'category' %}
+    {% set crumbNav = [
+        {'url': route('news.landing'), 'text': 'News'},
+        {'text': PageTitle}
+    ] %}
+{% else %}
+    {% set crumbNav = [
+        {'text': 'News'}
+    ] %}
+{% endif %}
 
 {% block page_body %}
 
@@ -13,7 +22,7 @@
                 <p>
                     <small>
                         Posted {{ item.created_at|date('jS M Y H:i') }}
-                        in {{ item.category.name }}
+                        in <a href="{{ route('news.category.landing', {'linkName': item.category.link_name}) }}">{{ item.category.name }}</a>
                     </small>
                 </p>
             </div>
