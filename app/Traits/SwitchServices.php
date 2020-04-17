@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use App\Services\ViewHelper\Bindings;
+use App\Services\ViewHelper\Breadcrumbs;
+
 use App\Services\StaffDashboards\CategorisationService;
 
 use App\Services\AuditService;
@@ -100,14 +103,22 @@ trait SwitchServices
         return $serviceName;
     }
 
-    // ** Get specific classes ** //
+    // ** Classes with hierarchy ** //
 
     /**
-     * @return AuditService
+     * @return Bindings
      */
-    public function getServiceAudit()
+    public function getServiceViewHelperBindings()
     {
-        return $this->loadService('AuditService');
+        return $this->loadService("ViewHelper\\Bindings");
+    }
+
+    /**
+     * @return Breadcrumbs
+     */
+    public function getServiceViewHelperBreadcrumbs()
+    {
+        return $this->loadService("ViewHelper\\Breadcrumbs");
     }
 
     /**
@@ -116,6 +127,16 @@ trait SwitchServices
     public function getServiceStaffDashboardsCategorisation()
     {
         return $this->loadService("StaffDashboards\\CategorisationService");
+    }
+
+    // ** Standard service classes ** //
+
+    /**
+     * @return AuditService
+     */
+    public function getServiceAudit()
+    {
+        return $this->loadService('AuditService');
     }
 
     /**

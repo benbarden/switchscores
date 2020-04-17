@@ -168,6 +168,25 @@ class GameService
         return Game::orderBy('id', 'desc')->limit($limit)->get();
     }
 
+    public function getRecentlyReleased($limit = 100)
+    {
+        return Game::where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->orderBy('eu_released_on', 'desc')->limit($limit)->get();
+    }
+
+    // ********************************************************** //
+    // Action lists.
+    // These don't have a forced limit as we need to know the total
+    // ********************************************************** //
+
+    public function getWithNoNintendoCoUkLink($limit = null)
+    {
+        $gameList = Game::whereNull('eshop_europe_fs_id')->orderBy('id', 'desc');
+        if ($limit) {
+            $gameList = $gameList->limit($limit);
+        }
+        return $gameList->get();
+    }
+
     // ********************************************************** //
     // Stuff to sort through
     // ********************************************************** //

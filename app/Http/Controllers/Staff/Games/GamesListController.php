@@ -13,45 +13,65 @@ class GamesListController extends Controller
 {
     use SwitchServices;
 
+    private function getListBindings($pageTitle, $tableSort = '')
+    {
+        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeGamesSubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Games')
+            ->setBreadcrumbs($breadcrumbs);
+
+        if ($tableSort) {
+            $bindings = $bindings->setDatatablesSort($tableSort);
+        } else {
+            $bindings = $bindings->setDatatablesSortDefault();
+        }
+
+        return $bindings->getBindings();
+    }
+
     public function recentlyAdded()
     {
-        $serviceGame = $this->getServiceGame();
+        $bindings = $this->getListBindings('Recently added');
 
-        $bindings = [];
+        $bindings['GameList'] = $this->getServiceGame()->getRecentlyAdded(100);
 
-        $bindings['TopTitle'] = 'Games - Recently added';
-        $bindings['PageTitle'] = 'Recently added';
+        return view('staff.games.list.standard-view', $bindings);
+    }
 
-        $bindings['GameList'] = $serviceGame->getRecentlyAdded(100);
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+    public function recentlyReleased()
+    {
+        $bindings = $this->getListBindings('Recently released', "[ 4, 'desc']");
+
+        $bindings['GameList'] = $this->getServiceGame()->getRecentlyReleased(100);
 
         return view('staff.games.list.standard-view', $bindings);
     }
 
     public function upcomingGames()
     {
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $bindings = $this->getListBindings('Upcoming and unreleased', "[ 4, 'asc']");
 
-        $bindings = [];
+        $bindings['GameList'] = $this->getServiceGameReleaseDate()->getAllUnreleased();
 
-        $bindings['TopTitle'] = 'Games - Upcoming and unreleased';
-        $bindings['PageTitle'] = 'Upcoming and unreleased games';
+        return view('staff.games.list.standard-view', $bindings);
+    }
 
-        $bindings['GameList'] = $serviceGameReleaseDate->getAllUnreleased();
-        $bindings['jsInitialSort'] = "[ 3, 'asc']";
+    public function noNintendoCoUkLink()
+    {
+        $bindings = $this->getListBindings('No Nintendo.co.uk link');
+
+        $bindings['GameList'] = $this->getServiceGame()->getWithNoNintendoCoUkLink();
 
         return view('staff.games.list.standard-view', $bindings);
     }
 
     public function byPrimaryType(GamePrimaryType $primaryType)
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Games - By primary type: '.$primaryType->primary_type;
-        $bindings['PageTitle'] = 'Games - By primary type: '.$primaryType->primary_type;
+        $bindings = $this->getListBindings('By primary type: '.$primaryType->primary_type, "[ 1, 'asc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getByPrimaryType($primaryType);
-        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         $bindings['CustomHeader'] = 'Primary type';
         $bindings['ListMode'] = 'by-primary-type';
@@ -61,13 +81,9 @@ class GamesListController extends Controller
 
     public function bySeries(GameSeries $gameSeries)
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Games - By series: '.$gameSeries->series;
-        $bindings['PageTitle'] = 'Games - By series: '.$gameSeries->series;
+        $bindings = $this->getListBindings('By series: '.$gameSeries->series, "[ 1, 'asc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getBySeries($gameSeries);
-        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         $bindings['CustomHeader'] = 'Series';
         $bindings['ListMode'] = 'by-series';
