@@ -1,0 +1,6 @@
+<h2>News categories</h2>
+<ul>
+    {% for item in CategoryList %}
+    <li><a href="{{ route('news.category.landing', {'linkName': item.link_name}) }}">{{ item.name }}</a></li>
+    {% endfor %}
+</ul>

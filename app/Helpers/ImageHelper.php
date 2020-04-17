@@ -99,7 +99,7 @@ class ImageHelper
     static function imageSquareUrl($game)
     {
         if ($game->image_square) {
-            $imageUrl = GameImages::PATH_IMAGE_HEADER.$game->image_square;
+            $imageUrl = GameImages::PATH_IMAGE_SQUARE.$game->image_square;
         } elseif ($game->boxart_square_url) {
             $imageUrl = '/img/games/square/'.$game->boxart_square_url;
         } else {

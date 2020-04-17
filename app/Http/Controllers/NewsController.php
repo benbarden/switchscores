@@ -77,6 +77,17 @@ class NewsController extends Controller
             $bindings['NewsPrev'] = $newsPrev;
         }
 
+        // Game details
+        if ($newsItem->game_id) {
+            $gameId = $newsItem->game_id;
+            $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
+            $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+            $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+        }
+
+        // Category links
+        $bindings['CategoryList'] = $this->getServiceNewsCategory()->getAll();
+
         return view('news.content.default', $bindings);
     }
 }
