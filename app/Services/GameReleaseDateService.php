@@ -132,7 +132,6 @@ class GameReleaseDateService
             ->select('games.*')
             ->where('games.eu_is_released', 1)
             ->where('games.series_id', $seriesId)
-            ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
