@@ -126,11 +126,10 @@ class GameReleaseDateService
      * @param int $limit
      * @return mixed
      */
-    public function getReleasedBySeries($seriesId, $limit = null)
+    public function getBySeries($seriesId, $limit = null)
     {
         $games = DB::table('games')
             ->select('games.*')
-            ->where('games.eu_is_released', 1)
             ->where('games.series_id', $seriesId)
             ->orderBy('games.title', 'asc');
 

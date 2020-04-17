@@ -92,7 +92,7 @@ class GamesBrowseController extends Controller
         $seriesId = $gameSeries->id;
         $seriesName = $gameSeries->series;
 
-        $gameList = $this->getServiceGameReleaseDate()->getReleasedBySeries($seriesId);
+        $gameList = $this->getServiceGameReleaseDate()->getBySeries($seriesId);
 
         $bindings['GameList'] = $gameList;
 
