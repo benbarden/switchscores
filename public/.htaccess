@@ -17,6 +17,7 @@ RewriteRule ^games/genres$      /games [R=301,NC,L]
 
 Redirect 301 /games/top-rated /top-rated
 Redirect 301 /games/reviews-needed /reviews
+Redirect 301 /games/games-needing-reviews /reviews
 Redirect 301 /games/unreleased /games
 
 Redirect 301 /reviews/top-rated /top-rated

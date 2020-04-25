@@ -18,7 +18,7 @@ class WelcomeController extends Controller
         $thisYear = date('Y');
         $bindings['Year'] = $thisYear;
         $bindings['RecentWithGoodRanks'] = $this->getServiceGameReleaseDate()->getRecentWithGoodRanks(7, 35, 18);
-        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(20);
+        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
         $bindings['NewReleases'] = $this->getServiceGameReleaseDate()->getReleased(20);
         $bindings['TopRatedAllTime'] = $this->getServiceTopRated()->getList(20);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 20);
