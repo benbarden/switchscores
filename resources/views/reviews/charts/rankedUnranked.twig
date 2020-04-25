@@ -1,0 +1,66 @@
+<script src="/js/chartjs/Chart.min.js?v=2.8.0"></script>
+<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+
+<div style="width: 100%;">
+    <canvas id="ranked-unranked-{{ ReviewYear }}" height="200" style="background: #f7f7f7;"></canvas>
+</div>
+<script>
+
+    var ctx = document.getElementById('ranked-unranked-{{ ReviewYear }}');
+    var barChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for item in ChartDataSet %}
+                '{{ item.is_ranked }}'
+                {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'No of reviews',
+                data: [
+                    {% for item in ChartDataSet %}
+                    {{ item.count }}
+                    {% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255,99,132,1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+
+</script>

@@ -45,6 +45,27 @@ class TopRatedService
     }
 
     /**
+     * $param $year
+     * @return integer
+     */
+    public function getRankedCountByYear($year)
+    {
+        $rankCount = DB::select('
+            SELECT
+            CASE
+            WHEN game_rank IS NULL THEN "Unranked"
+            ELSE "Ranked"
+            END AS is_ranked,
+            count(*) AS count
+            FROM games
+            WHERE release_year = ?
+            GROUP BY is_ranked
+        ', [$year]);
+
+        return $rankCount;
+    }
+
+    /**
      * @param $year
      * @param $month
      * @return mixed

@@ -10,7 +10,63 @@ class ReviewsController extends Controller
 {
     use SwitchServices;
 
-    public function landing()
+    public function landingByYear($year = 2020)
+    {
+        $bindings = [];
+
+        // Review counts
+        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
+        $dateListArray = [];
+        $reviewTotal = 0;
+
+        if ($dateList) {
+
+            foreach ($dateList as $date) {
+
+                list($dateYear, $dateMonth) = explode('-', $date);
+
+                if ($dateYear != $year) continue;
+
+                $reviewLinkStat = $this->getServiceReviewLink()->countActiveByYearMonth($dateYear, $dateMonth);
+                if ($reviewLinkStat) {
+                    $dateCount = $reviewLinkStat;
+                } else {
+                    $dateCount = 0;
+                }
+
+                if ($dateCount == 0) continue;
+
+                $dateListArray[] = [
+                    'DateRaw' => $date,
+                    'ReviewCount' => $dateCount,
+                ];
+                $reviewTotal += $dateCount;
+
+            }
+
+        }
+
+        // Score distribution
+        $bindings['ScoreDistributionByYear'] = $this->getServiceReviewLink()->getFullScoreDistributionByYear($year);
+
+        // Ranked/Unranked count
+        $bindings['RankedCountByYear'] = $this->getServiceTopRated()->getRankedCountByYear($year);
+
+        // Review count stats
+        $bindings['ReviewCountStatsByYear'] = $this->getServiceReviewLink()->getReviewCountStatsByYear($year);
+
+        $bindings['DateList'] = $dateListArray;
+        $bindings['ReviewTotal'.$year] = $reviewTotal;
+
+        $bindings['ReviewYear'] = $year;
+
+        $bindings['TopTitle'] = 'Review stats - '.$year;
+        $bindings['PageTitle'] = 'Review stats - '.$year;
+
+        return view('reviews.landing', $bindings);
+    }
+
+    public function landingOld()
     {
         $bindings = [];
 
@@ -99,11 +155,6 @@ class ReviewsController extends Controller
         $bindings['PageTitle'] = 'Reviews';
 
         return view('reviews.landing', $bindings);
-    }
-
-    public function gamesNeedingReviews()
-    {
-        return redirect()->route('reviews.landing');
     }
 
     public function reviewSite($linkTitle)

@@ -51,7 +51,17 @@
                         <li><a href="{{ route('topRated.multiplayer') }}">Top Rated - Multiplayer</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ route('reviews.landing') }}">Reviews</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        Review stats <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('reviews.landing') }}">Review stats - 2020</a></li>
+                        <li><a href="{{ route('reviews.landing', {'year': 2019}) }}">Review stats - 2019</a></li>
+                        <li><a href="{{ route('reviews.landing', {'year': 2018}) }}">Review stats - 2018</a></li>
+                        <li><a href="{{ route('reviews.landing', {'year': 2017}) }}">Review stats - 2017</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{ route('partners.landing') }}">Partners</a></li>
                 <li><a href="{{ route('news.landing') }}">News</a></li>
                 <li><a href="{{ route('about') }}">About</a></li>
