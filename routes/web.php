@@ -142,6 +142,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/games/dashboard', 'Staff\Games\DashboardController@show')->name('staff.games.dashboard');
 
+    // Find a game
+    Route::match(['get', 'post'], '/staff/games/find', 'Staff\Games\FindController@show')->name('staff.games.find');
+
     // Games: Detail
     Route::get('/staff/games/detail/{gameId}', 'Staff\Games\GamesDetailController@show')->name('staff.games.detail');
     Route::get('/staff/games/detail/full-audit/{game}', 'Staff\Games\GamesDetailController@showFullAudit')->name('staff.games.detail.fullAudit');

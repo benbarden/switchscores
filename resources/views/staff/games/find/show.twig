@@ -1,0 +1,35 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('staff.games.dashboard'), 'text': 'Games dashboard'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.games.find') }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="game_id" class="col-md-2 control-label">Game</label>
+        <div class="col-md-6">
+            <select id="game_id" class="form-control" name="game_id">
+                <option value="">&nbsp;</option>
+                {% for item in GamesList %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn outline btn-primary">
+                View game detail
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<script>
+
+    $('#game_id').select2();
+
+</script>
+
+{% endblock page_inner %}
