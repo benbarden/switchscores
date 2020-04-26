@@ -184,6 +184,13 @@
                                         <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a></li>
                                         <li role="separator" class="divider"></li>
                                     {% endif %}
+                                    {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
+                                        <li><a href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Wikipedia - Unlinked items</a></li>
+                                        <li><a href="{{ route('staff.data-sources.wikipedia.ignored') }}">Wikipedia - Ignored items</a></li>
+                                        <li><a href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a></li>
+                                        <li><a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
+                                        <li role="separator" class="divider"></li>
+                                    {% endif %}
                                     {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
                                         <li><a href="{{ route('staff.eshop.dashboard') }}">eShop dashboard</a></li>
                                         <li role="separator" class="divider"></li>
