@@ -12,7 +12,7 @@
                     <strong>We don't have a feed for your site</strong>. This means your reviews won't be imported.
                     Get in touch and let's get things up and running.
                 </div>
-            {% elseif PartnerData.feed_url != '' and PartnerData.isLastReviewHistoric() == false %}
+            {% elseif PartnerData.feed_url != '' and PartnerData.isLastReviewHistoric() %}
                 <div class="alert alert-warning">
                     <strong>We haven't had any reviews from your site recently</strong>.
                     Have a look at the list we've imported and let us know if we've missed any.
