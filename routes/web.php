@@ -152,21 +152,15 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/detail/{gameId}/redownload-packshots', 'Staff\Games\GamesDetailController@redownloadPackshots')->name('staff.games.detail.redownloadPackshots');
 
     // Games: Add, edit, delete
-    Route::get('/staff/games/add', 'Staff\Games\GamesEditorController@add')->name('staff.games.add');
-    Route::post('/staff/games/add', 'Staff\Games\GamesEditorController@add')->name('staff.games.add');
-    Route::get('/staff/games/edit/{gameId}', 'Staff\Games\GamesEditorController@edit')->name('staff.games.edit');
-    Route::post('/staff/games/edit/{gameId}', 'Staff\Games\GamesEditorController@edit')->name('staff.games.edit');
-    Route::get('/staff/games/edit-nintendo-co-uk/{gameId}', 'Staff\Games\GamesEditorController@editNintendoCoUk')->name('staff.games.editNintendoCoUk');
-    Route::post('/staff/games/edit-nintendo-co-uk/{gameId}', 'Staff\Games\GamesEditorController@editNintendoCoUk')->name('staff.games.editNintendoCoUk');
-    Route::get('/staff/games/delete/{gameId}', 'Staff\Games\GamesEditorController@delete')->name('staff.games.delete');
-    Route::post('/staff/games/delete/{gameId}', 'Staff\Games\GamesEditorController@delete')->name('staff.games.delete');
+    Route::match(['get', 'post'], '/staff/games/add', 'Staff\Games\GamesEditorController@add')->name('staff.games.add');
+    Route::match(['get', 'post'], '/staff/games/edit/{gameId}', 'Staff\Games\GamesEditorController@edit')->name('staff.games.edit');
+    Route::match(['get', 'post'], '/staff/games/edit-nintendo-co-uk/{gameId}', 'Staff\Games\GamesEditorController@editNintendoCoUk')->name('staff.games.editNintendoCoUk');
+    Route::match(['get', 'post'], '/staff/games/delete/{gameId}', 'Staff\Games\GamesEditorController@delete')->name('staff.games.delete');
     Route::get('/staff/games/release', 'Staff\Games\GamesEditorController@releaseGame')->name('staff.games.release');
 
     // Game import rules
-    Route::get('/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
-    Route::post('/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
-    Route::get('/staff/games/{gameId}/import-rule-wikipedia/edit', 'Staff\Games\ImportRuleWikipediaController@edit')->name('staff.games.import-rule-wikipedia.edit');
-    Route::post('/staff/games/{gameId}/import-rule-wikipedia/edit', 'Staff\Games\ImportRuleWikipediaController@edit')->name('staff.games.import-rule-wikipedia.edit');
+    Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
+    Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-wikipedia/edit', 'Staff\Games\ImportRuleWikipediaController@edit')->name('staff.games.import-rule-wikipedia.edit');
 
     // Game lists
     Route::get('/staff/games/list/recently-added', 'Staff\Games\GamesListController@recentlyAdded')->name('staff.games.list.recently-added');
@@ -185,15 +179,13 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/reviews/dashboard', 'Staff\Reviews\DashboardController@show')->name('staff.reviews.dashboard');
 
     // Quick reviews
-    Route::get('/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
-    Route::post('/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
+    Route::match(['get', 'post'], '/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
     // Review feed items
     Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
     Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');
-    Route::get('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
-    Route::post('/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
+    Route::match(['get', 'post'], '/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
 
     // Review feed imports
     Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports.list');
@@ -221,8 +213,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Tags
     Route::get('/staff/categorisation/tag/list', 'Staff\Categorisation\TagController@showList')->name('staff.categorisation.tag.list');
     Route::get('/staff/categorisation/tag/add', 'Staff\Categorisation\TagController@addTag')->name('staff.categorisation.tag.add');
-    Route::get('/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
-    Route::post('/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
+    Route::match(['get', 'post'], '/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
     Route::get('/staff/categorisation/tag/delete/{tagId}', 'Staff\Categorisation\TagController@deleteTag')->name('staff.categorisation.tag.delete');
     Route::get('/staff/categorisation/tag/game/{gameId}/list', 'Staff\Categorisation\TagController@showGameTagList')->name('staff.categorisation.tag.game.list');
     Route::get('/staff/categorisation/tag/game/{gameId}/add', 'Staff\Categorisation\TagController@addGameTag')->name('staff.categorisation.tag.game.add');
@@ -241,15 +232,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Editor
     Route::get('/staff/news/add', 'Staff\News\EditorController@add')->name('staff.news.add');
     Route::post('/staff/news/add', 'Staff\News\EditorController@add')->name('staff.news.add');
-    Route::get('/staff/news/edit/{newsId}', 'Staff\News\EditorController@edit')->name('staff.news.edit');
-    Route::post('/staff/news/edit/{newsId}', 'Staff\News\EditorController@edit')->name('staff.news.edit');
+    Route::match(['get', 'post'], '/staff/news/edit/{newsId}', 'Staff\News\EditorController@edit')->name('staff.news.edit');
 
     // Categories
     Route::get('/staff/news/category/list', 'Staff\News\CategoryController@showList')->name('staff.news.category.list');
-    Route::get('/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
-    Route::post('/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
-    Route::get('/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
-    Route::post('/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
+    Route::match(['get', 'post'], '/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
+    Route::match(['get', 'post'], '/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
 
 });
 
@@ -261,19 +249,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Partners: Review sites
     Route::get('/staff/partners/review-site', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
-    Route::get('/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
-    Route::post('/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
-    Route::get('/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
-    Route::post('/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
+    Route::match(['get', 'post'], '/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
+    Route::match(['get', 'post'], '/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
 
     // Partners: Games companies
     Route::get('/staff/partners/games-company/list', 'Staff\Partners\GamesCompanyController@showList')->name('staff.partners.games-company.list');
-    Route::get('/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
-    Route::post('/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
-    Route::get('/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
-    Route::post('/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
-    Route::get('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
-    Route::post('/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
+    Route::match(['get', 'post'], '/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
+    Route::match(['get', 'post'], '/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
+    Route::match(['get', 'post'], '/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
 
     Route::get('/staff/partners/games-company/show/{partner}', 'Staff\Partners\GamesCompanyController@show')->name('staff.partners.games-company.show');
 
@@ -282,10 +265,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
-    Route::get('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::post('/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
-    Route::get('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
-    Route::post('/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
+    Route::match(['get', 'post'], '/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::match(['get', 'post'], '/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 
     // Partners: Data cleanup
     Route::get('/staff/partners/data-cleanup/legacy-partner-multiple', 'Staff\Partners\DataCleanupController@legacyPartnerMultiple')->name('staff.partners.data-cleanup.legacy-partner-multiple');
@@ -299,10 +280,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/data-cleanup/games-with-missing-publisher', 'Staff\Partners\DataCleanupController@gamesWithMissingPublisher')->name('staff.partners.data-cleanup.games-with-missing-publisher');
 
     // Partners: Tools
-    Route::get('/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');
-    Route::post('/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');
-    Route::get('/staff/partners/tools/partner-migrate-game-devs-pubs', 'Staff\Partners\ToolsController@partnerMigrateGameDevsPubs')->name('staff.partners.tools.partnerMigrateGameDevsPubs');
-    Route::post('/staff/partners/tools/partner-migrate-game-devs-pubs', 'Staff\Partners\ToolsController@partnerMigrateGameDevsPubs')->name('staff.partners.tools.partnerMigrateGameDevsPubs');
+    Route::match(['get', 'post'], '/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');
+    Route::match(['get', 'post'], '/staff/partners/tools/partner-migrate-game-devs-pubs', 'Staff\Partners\ToolsController@partnerMigrateGameDevsPubs')->name('staff.partners.tools.partnerMigrateGameDevsPubs');
 
 });
 
@@ -315,8 +294,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Feed items: eShop (Europe)
     Route::get('/staff/eshop/feed-items-europe/{report?}', 'Staff\Eshop\FeedItemEshopEuropeController@showList')->name('staff.eshop.feed-items-europe.list');
     Route::get('/staff/eshop/feed-items-europe/view/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@view')->name('staff.eshop.feed-items-europe.view');
-    Route::get('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
-    Route::post('/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
+    Route::match(['get', 'post'], '/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
     Route::get('/staff/eshop/europe/add-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@addToIgnoreList')->name('staff.eshop.europe.addToIgnoreList');
     Route::get('/staff/eshop/europe/remove-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@removeFromIgnoreList')->name('staff.eshop.europe.removeFromIgnoreList');
 
@@ -335,8 +313,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/wikipedia/wiki-updates/all-complete', 'Staff\Wikipedia\WikiUpdatesController@showListAllComplete')->name('staff.wikipedia.wiki-updates.list-all-complete');
     Route::get('/staff/wikipedia/wiki-updates/all-inactive', 'Staff\Wikipedia\WikiUpdatesController@showListAllInactive')->name('staff.wikipedia.wiki-updates.list-all-inactive');
 
-    Route::get('/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
-    Route::post('/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
+    Route::match(['get', 'post'], '/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
 
 });
 
@@ -357,28 +334,21 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Data sources: Nintendo.co.uk
     Route::get('/staff/data-sources/nintendo-co-uk/unlinked', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkUnlinkedItems')->name('staff.data-sources.nintendo-co-uk.unlinked');
     Route::get('/staff/data-sources/nintendo-co-uk/ignored', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkIgnoredItems')->name('staff.data-sources.nintendo-co-uk.ignored');
-    Route::get('/staff/data-sources/nintendo-co-uk/add-game/{itemId}', 'Staff\DataSources\DataSourceParsedController@addGameNintendoCoUk')->name('staff.data-sources.nintendo-co-uk.add-game');
-    Route::post('/staff/data-sources/nintendo-co-uk/add-game/{itemId}', 'Staff\DataSources\DataSourceParsedController@addGameNintendoCoUk')->name('staff.data-sources.nintendo-co-uk.add-game');
+    Route::match(['get', 'post'], '/staff/data-sources/nintendo-co-uk/add-game/{itemId}', 'Staff\DataSources\DataSourceParsedController@addGameNintendoCoUk')->name('staff.data-sources.nintendo-co-uk.add-game');
 
     // Tools: Nintendo.co.uk
-    Route::get('/staff/data-sources/tools/nintendo-co-uk/import-parse-link', 'Staff\DataSources\ToolsController@nintendoCoUkImportParseLink')->name('staff.data-sources.tools.nintendo-co-uk.importParseLink');
-    Route::post('/staff/data-sources/tools/nintendo-co-uk/import-parse-link', 'Staff\DataSources\ToolsController@nintendoCoUkImportParseLink')->name('staff.data-sources.tools.nintendo-co-uk.importParseLink');
-    Route::get('/staff/data-sources/tools/nintendo-co-uk/update-games', 'Staff\DataSources\ToolsController@nintendoCoUkUpdateGames')->name('staff.data-sources.tools.nintendo-co-uk.updateGames');
-    Route::post('/staff/data-sources/tools/nintendo-co-uk/update-games', 'Staff\DataSources\ToolsController@nintendoCoUkUpdateGames')->name('staff.data-sources.tools.nintendo-co-uk.updateGames');
-    Route::get('/staff/data-sources/tools/nintendo-co-uk/download-images', 'Staff\DataSources\ToolsController@nintendoCoUkDownloadImages')->name('staff.data-sources.tools.nintendo-co-uk.downloadImages');
-    Route::post('/staff/data-sources/tools/nintendo-co-uk/download-images', 'Staff\DataSources\ToolsController@nintendoCoUkDownloadImages')->name('staff.data-sources.tools.nintendo-co-uk.downloadImages');
+    Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/import-parse-link', 'Staff\DataSources\ToolsController@nintendoCoUkImportParseLink')->name('staff.data-sources.tools.nintendo-co-uk.importParseLink');
+    Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/update-games', 'Staff\DataSources\ToolsController@nintendoCoUkUpdateGames')->name('staff.data-sources.tools.nintendo-co-uk.updateGames');
+    Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/download-images', 'Staff\DataSources\ToolsController@nintendoCoUkDownloadImages')->name('staff.data-sources.tools.nintendo-co-uk.downloadImages');
 
     // Data sources: Wikipedia
     Route::get('/staff/data-sources/wikipedia/unlinked', 'Staff\DataSources\DataSourceParsedController@wikipediaUnlinkedItems')->name('staff.data-sources.wikipedia.unlinked');
     Route::get('/staff/data-sources/wikipedia/ignored', 'Staff\DataSources\DataSourceParsedController@wikipediaIgnoredItems')->name('staff.data-sources.wikipedia.ignored');
-    Route::get('/staff/data-sources/wikipedia/unlinked/add-link/{itemId}', 'Staff\DataSources\DataSourceParsedController@wikipediaAddLink')->name('staff.data-sources.wikipedia.add-link');
-    Route::post('/staff/data-sources/wikipedia/unlinked/add-link/{itemId}', 'Staff\DataSources\DataSourceParsedController@wikipediaAddLink')->name('staff.data-sources.wikipedia.add-link');
+    Route::match(['get', 'post'], '/staff/data-sources/wikipedia/unlinked/add-link/{itemId}', 'Staff\DataSources\DataSourceParsedController@wikipediaAddLink')->name('staff.data-sources.wikipedia.add-link');
 
     // Tools: Wikipedia
-    Route::get('/staff/data-sources/tools/wikipedia/import-parse-link', 'Staff\DataSources\ToolsController@wikipediaImportParseLink')->name('staff.data-sources.tools.wikipedia.importParseLink');
-    Route::post('/staff/data-sources/tools/wikipedia/import-parse-link', 'Staff\DataSources\ToolsController@wikipediaImportParseLink')->name('staff.data-sources.tools.wikipedia.importParseLink');
-    Route::get('/staff/data-sources/tools/wikipedia/update-games', 'Staff\DataSources\ToolsController@wikipediaUpdateGames')->name('staff.data-sources.tools.wikipedia.updateGames');
-    Route::post('/staff/data-sources/tools/wikipedia/update-games', 'Staff\DataSources\ToolsController@wikipediaUpdateGames')->name('staff.data-sources.tools.wikipedia.updateGames');
+    Route::match(['get', 'post'], '/staff/data-sources/tools/wikipedia/import-parse-link', 'Staff\DataSources\ToolsController@wikipediaImportParseLink')->name('staff.data-sources.tools.wikipedia.importParseLink');
+    Route::match(['get', 'post'], '/staff/data-sources/tools/wikipedia/update-games', 'Staff\DataSources\ToolsController@wikipediaUpdateGames')->name('staff.data-sources.tools.wikipedia.updateGames');
 
 });
 
@@ -389,10 +359,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Users
     Route::get('/owner/user/list', 'Owner\UserController@showList')->name('owner.user.list');
     Route::get('/owner/user/view/{userId}', 'Owner\UserController@showUser')->name('owner.user.view');
-    Route::get('/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
-    Route::post('/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
-    Route::get('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
-    Route::post('/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
+    Route::match(['get', 'post'], '/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
+    Route::match(['get', 'post'], '/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
 
     // Audit
     Route::get('/owner/audit/index', 'Owner\AuditController@index')->name('owner.audit.index');
@@ -428,12 +396,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Games: Title hashes
     Route::get('/admin/games-title-hash/list/{gameId?}', 'Admin\GamesTitleHashController@showList')->name('admin.games-title-hash.list');
-    Route::get('/admin/games-title-hash/add', 'Admin\GamesTitleHashController@add')->name('admin.games-title-hash.add');
-    Route::post('/admin/games-title-hash/add', 'Admin\GamesTitleHashController@add')->name('admin.games-title-hash.add');
-    Route::get('/admin/games-title-hash/edit/{itemId}', 'Admin\GamesTitleHashController@edit')->name('admin.games-title-hash.edit');
-    Route::post('/admin/games-title-hash/edit/{itemId}', 'Admin\GamesTitleHashController@edit')->name('admin.games-title-hash.edit');
-    Route::get('/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
-    Route::post('/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
+    Route::match(['get', 'post'], '/admin/games-title-hash/add', 'Admin\GamesTitleHashController@add')->name('admin.games-title-hash.add');
+    Route::match(['get', 'post'], '/admin/games-title-hash/edit/{itemId}', 'Admin\GamesTitleHashController@edit')->name('admin.games-title-hash.edit');
+    Route::match(['get', 'post'], '/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
 
     // Games partner links
     Route::get('/admin/game/partner/{gameId}/list', 'Admin\GamePartnerController@showGamePartners')->name('admin.game.partner.list');
@@ -450,15 +415,12 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
 
     // Reviews: Links
-    Route::get('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
-    Route::post('/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
-    Route::get('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
-    Route::post('/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
+    Route::match(['get', 'post'], '/admin/reviews/link/add', 'Admin\ReviewLinkController@add')->name('admin.reviews.link.add');
+    Route::match(['get', 'post'], '/admin/reviews/link/edit/{linkId}', 'Admin\ReviewLinkController@edit')->name('admin.reviews.link.edit');
     Route::get('/admin/reviews/link/{report?}', 'Admin\ReviewLinkController@showList')->name('admin.reviews.link.list');
 
     // Partner reviews
-    Route::get('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
-    Route::post('/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
+    Route::match(['get', 'post'], '/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
     Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
 
     // Tools
