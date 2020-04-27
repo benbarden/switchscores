@@ -1,4 +1,4 @@
-{% extends 'theme/wos/member/clean-wide.twig' %}
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
 
@@ -94,7 +94,7 @@
 <script>
     $('#user-review-filter').on('change', function() {
         selectedFilter = $(this).val();
-        top.location.href = '{{ route('user.review-link.landing')}}' + '/' + selectedFilter;
+        top.location.href = '{{ route('reviewers.reviews.landing')}}' + '/' + selectedFilter;
     });
     $(document).ready(function() {
         var activeScoreFilter = '{{ FilterName }}';

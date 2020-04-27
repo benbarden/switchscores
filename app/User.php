@@ -61,6 +61,20 @@ class User extends Authenticatable
         return $this->is_staff == 1;
     }
 
+    public function isReviewer()
+    {
+        $isReviewer = false;
+
+        $partner = $this->partner;
+        if ($partner) {
+            if ($partner->isReviewSite()) {
+                $isReviewer = true;
+            }
+        }
+
+        return $isReviewer;
+    }
+
     public function partner()
     {
         return $this->hasOne('App\Partner', 'id', 'partner_id');

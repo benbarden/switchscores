@@ -100,4 +100,16 @@ class Partner extends Model
     {
         return $this->hasMany('App\PartnerOutreach', 'partner_id', 'id');
     }
+
+    public function isLastReviewHistoric()
+    {
+        if ($this->last_review_date == null) {
+            return true;
+        } elseif (date('Y-m-d', strtotime('-30 days')) > $this->last_review_date) {
+            // If the review date is older than 30 days from today, it's history!
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

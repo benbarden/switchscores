@@ -1,0 +1,29 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': 'Unranked games'}] %}
+
+{% block page_inner %}
+
+<p>
+    Games need to have 3 reviews to be ranked. As a reviewer, you can help to get more of our database ranked.
+</p>
+<h3>By review count</h3>
+<ul>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}">2 reviews</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '1'}) }}">1 review</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '0'}) }}">0 reviews</a></li>
+</ul>
+<h3>By year released</h3>
+<ul>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2017'}) }}">2017</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2018'}) }}">2018</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2019'}) }}">2019</a></li>
+</ul>
+<h3>By list</h3>
+<ul>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-list', 'filter': 'aca-neogeo'}) }}">ACA NeoGeo</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-list', 'filter': 'arcade-archives'}) }}">Arcade Archives</a></li>
+    <li><a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-list', 'filter': 'all-others'}) }}">All except the above</a></li>
+</ul>
+
+{% endblock page_inner %}

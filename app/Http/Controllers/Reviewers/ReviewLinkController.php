@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -61,6 +61,6 @@ class ReviewLinkController extends Controller
         $bindings['TopTitle'] = 'Review links';
         $bindings['PageTitle'] = 'Review links';
 
-        return view('user.review-link.list', $bindings);
+        return view('reviewers.reviews.list', $bindings);
     }
 }

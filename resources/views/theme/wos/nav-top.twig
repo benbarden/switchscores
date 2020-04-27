@@ -74,6 +74,9 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 {% else %}
+                    {% if auth_user().isReviewer() %}
+                        <li><a href="{{ route('reviewers.index') }}">Reviewers</a></li>
+                    {% endif %}
                     <li><a href="{{ route('user.index') }}">Members</a></li>
                     <li>
                         <a href="{{ route('logout') }}"

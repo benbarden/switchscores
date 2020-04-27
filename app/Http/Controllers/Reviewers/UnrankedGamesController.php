@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
-class ReviewPartnerUnrankedController extends Controller
+class UnrankedGamesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
@@ -24,7 +24,7 @@ class ReviewPartnerUnrankedController extends Controller
         $bindings['TopTitle'] = 'Unranked games';
         $bindings['PageTitle'] = 'Unranked games';
 
-        return view('user.review-partner.unrankedLanding', $bindings);
+        return view('reviewers.unranked-games.landing', $bindings);
     }
 
     public function showList($mode, $filter)
@@ -78,6 +78,6 @@ class ReviewPartnerUnrankedController extends Controller
         $bindings['TopTitle'] = 'Unranked games';
         $bindings['PageTitle'] = 'Unranked games';
 
-        return view('user.review-partner.unrankedList', $bindings);
+        return view('reviewers.unranked-games.list', $bindings);
     }
 }

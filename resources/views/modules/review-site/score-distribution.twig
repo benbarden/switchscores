@@ -12,7 +12,7 @@
         <tr>
             <td class="text-center">
                 {% if LoadedFrom == 'UserDashboard' %}
-                    <a href="{{ route('user.review-link.landing', {'report': 'score-'~key}) }}">
+                    <a href="{{ route('reviewers.reviews.landing', {'report': 'score-'~key}) }}">
                         {{ key }}
                     </a>
                 {% else %}

@@ -1,0 +1,151 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% block page_inner %}
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h2>Feed status</h2>
+            {% if PartnerData.feed_url == '' %}
+                <div class="alert alert-danger">
+                    <strong>We don't have a feed for your site</strong>. This means your reviews won't be imported.
+                    Get in touch and let's get things up and running.
+                </div>
+            {% elseif PartnerData.feed_url != '' and PartnerData.isLastReviewHistoric() == false %}
+                <div class="alert alert-warning">
+                    <strong>We haven't had any reviews from your site recently</strong>.
+                    Have a look at the list we've imported and let us know if we've missed any.
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <strong>All looking good!</strong> Keep those reviews coming. We really appreciate
+                    everything you do! &hearts;
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/review-site/infobox.twig' with {'SourcePage': 'member-dashboard'} %}
+
+        </div>
+
+    </div>
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h2>Your recent reviews</h2>
+            {% if SiteReviewsLatest %}
+                <p>
+                    These are the reviews we've recently imported for your site.
+                    <a href="{{ route('reviewers.reviews.landing') }}" class="btn btn-sm btn-primary">View all &gt;</a>
+                </p>
+                {% if PartnerData.rating_scale != 10 %}
+                    <p>
+                        <small>
+                            As your site does not rank games out of 10, we have converted all ratings to
+                            the equivalent score out of 10.
+                        </small>
+                    </p>
+                {% endif %}
+                <table class="table table-condensed table-responsive">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Game</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Rating</th>
+                        <th class="text-center">Link</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in SiteReviewsLatest %}
+                        <tr>
+                            <td class="text-left">
+                                <a href="{{ LinkHelper.gameShow(item.game) }}">{{ item.game.title }}</a>
+                            </td>
+                            <td class="text-center">
+                                {{ item.review_date }}
+                            </td>
+                            <td class="text-center">
+                                {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h5'} %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
+                                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>
+                    We have not yet imported any reviews for your site.
+                </p>
+            {% endif %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            <h2>Hey, {{ auth_user().display_name }}!</h2>
+            <p>
+                <strong>Thanks for being one of our reviewers!</strong>
+                This means your review links are included on game pages across the site.
+                We also use your ratings as part of the calculations for average ratings and rankings.
+            </p>
+            <p>
+                <strong>Tip: </strong> To keep things organised,
+                general member settings, quick user reviews and the games collection can be found on the
+                <a href="{{ user.index }}">members dashboard</a>.
+            </p>
+            <h2>Got a question?</h2>
+            <p>
+                Contact Ben via <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                <a href="mailto:ben@switchscores.com">email</a>.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Unranked games</h2>
+            <p>
+                <strong>
+                    {{ PartnerData.name }} - we need your help!
+                </strong>
+            </p>
+            <p>
+                Games need to have 3 reviews to be ranked. As a review partner,
+                you can help to get more of our database ranked.
+            </p>
+            <p>
+                <a href="{{ route('reviewers.unranked-games.landing') }}" class="btn btn-primary btn-md">View unranked games</a>
+            </p>
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/review-site/score-distribution.twig' with {'ScoreDistribution': ScoreDistribution, 'LoadedFrom': 'UserDashboard'} %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Coming soon</h2>
+            <p>
+                We'll be adding more stats and graphs soon - stay tuned!
+            </p>
+
+        </div>
+
+    </div>
+
+{% endblock page_inner %}

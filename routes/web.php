@@ -110,20 +110,24 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/quick-reviews/add', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
     Route::get('/user/quick-reviews/{report?}', 'User\QuickReviewController@showList')->name('user.quick-reviews.list');
 
-    // Partner reviews
-    Route::get('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
-    Route::post('/user/partner-reviews/add', 'User\PartnerReviewController@add')->name('user.partner-reviews.add');
-    Route::get('/user/partner-reviews/{report?}', 'User\PartnerReviewController@showList')->name('user.partner-reviews.list');
-
-    // Review partners: Unranked games
-    Route::get('/user/review-partner/unranked', 'User\ReviewPartnerUnrankedController@landing')->name('user.review-partner.unranked.landing');
-    Route::get('/user/review-partner/unranked/{mode}/{filter}', 'User\ReviewPartnerUnrankedController@showList')->name('user.review-partner.unranked.list');
-
-    // Review partners: Review links
-    Route::get('/user/review-link/{report?}', 'User\ReviewLinkController@landing')->name('user.review-link.landing');
-
-    // Review partners: Games list
+    // Games companies: Games list
     Route::get('/user/games-list/{report}', 'User\GamesListController@landing')->name('user.games-list.landing');
+
+});
+
+
+// *************** Reviewers *************** //
+Route::group(['middleware' => ['auth.reviewer']], function() {
+
+    // *************** Reviewers: Dashboard *************** //
+    Route::get('/reviewers', 'Reviewers\IndexController@show')->name('reviewers.index');
+
+    // *************** Reviewers: Review links *************** //
+    Route::get('/reviewers/reviews/{report?}', 'Reviewers\ReviewLinkController@landing')->name('reviewers.reviews.landing');
+
+    // *************** Reviewers: Unranked games *************** //
+    Route::get('/reviewers/unranked-games', 'Reviewers\UnrankedGamesController@landing')->name('reviewers.unranked-games.landing');
+    Route::get('/reviewers/unranked-games/{mode}/{filter}', 'Reviewers\UnrankedGamesController@showList')->name('reviewers.unranked-games.list');
 
 });
 

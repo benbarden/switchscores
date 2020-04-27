@@ -56,7 +56,7 @@ class IndexController extends Controller
                 if ($partnerData->isReviewSite()) {
 
                     $siteRole = 'review-partner';
-                    $onPageTitle = 'Review partner dashboard: '.$partnerData->name;
+                    $onPageTitle = 'Members dashboard: '.$partnerData->name;
 
                     // Review stats (for infobox)
                     $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
