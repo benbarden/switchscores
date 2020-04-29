@@ -72,6 +72,8 @@
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ route('reviewers.index') }}">Reviewers dashboard</a></li>
+                        <li><a href="{{ route('reviewers.feed-health.landing') }}">Feed health</a></li>
+                        <li><a href="{{ route('reviewers.stats.landing') }}">Stats</a></li>
                         <li><a href="{{ route('user.index') }}">Members dashboard</a></li>
                         {% if auth_user().isStaff() %}
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>

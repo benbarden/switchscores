@@ -7,19 +7,17 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
-class IndexController extends Controller
+class StatsController extends Controller
 {
     use SwitchServices;
     use AuthUser;
 
-    public function show()
+    public function landing()
     {
         $servicePartner = $this->getServicePartner();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
-
-        $userId = $this->getAuthId();
 
         $authUser = $this->getValidUser($this->getServiceUser());
 
@@ -33,21 +31,18 @@ class IndexController extends Controller
 
         $bindings['PartnerData'] = $partnerData;
 
-        $pageTitle = 'Reviewers dashboard: '.$partnerData->name;
+        $pageTitle = 'Stats';
 
         // Review stats (for infobox)
         $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
         $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
-        // Recent reviews
-        $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 5);
-
-        // Pending items
-        $bindings['PendingFeedItems'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId, 5);
+        // Score distribution
+        $bindings['ScoreDistribution'] = $serviceReviewLink->getSiteScoreDistribution($partnerId);
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        return view('reviewers.index', $bindings);
+        return view('reviewers.stats.landing', $bindings);
     }
 }

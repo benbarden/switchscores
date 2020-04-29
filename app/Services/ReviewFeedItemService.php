@@ -88,6 +88,11 @@ class ReviewFeedItemService
         return ReviewFeedItem::whereNull('processed')->orderBy('id', 'asc')->get();
     }
 
+    public function getUnprocessedBySite($siteId, $limit)
+    {
+        return ReviewFeedItem::whereNull('processed')->where('site_id', $siteId)->orderBy('id', 'asc')->limit($limit)->get();
+    }
+
     public function getProcessed($limit = 25)
     {
         $reviewFeedItem = ReviewFeedItem::where('processed', 1)->orderBy('id', 'desc');
@@ -105,6 +110,11 @@ class ReviewFeedItemService
         return ReviewFeedItem::where('process_status', $status)->orderBy('id', 'desc')->get();
     }
 
+    public function getByProcessStatusAndSite($status, $siteId)
+    {
+        return ReviewFeedItem::where('process_status', $status)->where('site_id', $siteId)->orderBy('id', 'desc')->get();
+    }
+
     public function getByImportId($importId)
     {
         return ReviewFeedItem::where('import_id', $importId)->orderBy('id', 'desc')->get();
@@ -120,6 +130,20 @@ class ReviewFeedItemService
         ');
     }
 
+    public function getFailedImportStatsBySite($siteId)
+    {
+        $failedStatuses = implode("', '", $this->getProcessOptionsFailure());
+        $statsList = DB::select('
+            select process_status, count(*) AS count
+            from review_feed_items
+            where process_status in (\''.$failedStatuses.'\')
+            and site_id = ?
+            group by process_status
+        ', [$siteId]);
+
+        return $statsList;
+    }
+
     public function getProcessOptionsSuccess()
     {
         return $this->processOptionsSuccess;
@@ -129,4 +153,23 @@ class ReviewFeedItemService
     {
         return $this->processOptionsFailure;
     }
+
+    public function getSuccessFailStatsBySite($siteId)
+    {
+        $successFailStats = DB::select("
+            SELECT
+            CASE
+            WHEN process_status = 'Review created' THEN 'Success'
+            WHEN process_status IS NOT NULL THEN 'Fail'
+            ELSE 'Pending'
+            END AS import_success,
+            count(*) AS count
+            FROM review_feed_items
+            WHERE site_id = ?
+            GROUP BY import_success
+        ", [$siteId]);
+
+        return $successFailStats;
+    }
+
 }

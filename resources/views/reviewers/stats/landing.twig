@@ -1,0 +1,54 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Score distribution</h2>
+            {% include 'reviews/charts/scoreDistribution.twig' with {'ChartDataSet': ScoreDistribution} %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Quick stats</h2>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ PartnerData.review_count }}
+                        <br>
+                        <span class="h4">reviews</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock page_inner %}

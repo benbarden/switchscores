@@ -1,0 +1,41 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% set crumbNav = [{'text': PageTitle}] %}
+
+{% block page_inner %}
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h2>Failed import reasons</h2>
+
+            <table class="table">
+                <tbody>
+                {% for item in ImportStatsFailuresList %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('reviewers.feed-health.list-by-status', {'status': item.process_status}) }}">
+                                {{ item.process_status }}
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            <span class="h4">{{ item.count }}</span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Successful import ratio</h2>
+            {% include 'reviewers/feed-health/importSuccessFailure.twig' with {'ChartDataSet': SuccessFailStats} %}
+
+        </div>
+
+    </div>
+
+{% endblock page_inner %}
