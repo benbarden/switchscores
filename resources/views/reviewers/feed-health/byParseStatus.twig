@@ -12,7 +12,11 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
 
             <div class="alert alert-info">
-                Viewing status: <strong>{{ StatusDesc }}</strong>
+                Viewing parse status: <strong>{{ StatusDesc }}</strong>
+            </div>
+            <div class="alert alert-warning" role="alert">
+                For performance reasons, this page will only show up to a maximum of {{ TableLimit }} items.
+                Newest items are shown first.
             </div>
 
             {% if ReviewFeedItems %}
@@ -24,7 +28,7 @@
                     <th class="text-center">Date</th>
                     <th class="text-center">Game link</th>
                     <th class="text-center">Rating</th>
-                    <th class="text-center">Process status</th>
+                    <th class="text-center">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,11 +80,7 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            {% if item.processed == 1 %}
-                                {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
-                            {% else %}
-                                -
-                            {% endif %}
+                            {{ item.parse_status }}
                         </td>
                     </tr>
                 {% endfor %}

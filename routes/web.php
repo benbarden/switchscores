@@ -127,7 +127,8 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
 
     // *************** Reviewers: Feed health *************** //
     Route::get('/reviewers/feed-health', 'Reviewers\FeedHealthController@landing')->name('reviewers.feed-health.landing');
-    Route::get('/reviewers/feed-health/list-by-status/{status}', 'Reviewers\FeedHealthController@listByStatus')->name('reviewers.feed-health.list-by-status');
+    Route::get('/reviewers/feed-health/by-process-status/{status}', 'Reviewers\FeedHealthController@byProcessStatus')->name('reviewers.feed-health.by-process-status');
+    Route::get('/reviewers/feed-health/by-parse-status/{status}', 'Reviewers\FeedHealthController@byParseStatus')->name('reviewers.feed-health.by-parse-status');
 
     // *************** Reviewers: Review links *************** //
     Route::get('/reviewers/reviews/{report?}', 'Reviewers\ReviewLinkController@landing')->name('reviewers.reviews.landing');

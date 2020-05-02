@@ -115,6 +115,18 @@ class ReviewFeedItemService
         return ReviewFeedItem::where('process_status', $status)->where('site_id', $siteId)->orderBy('id', 'desc')->get();
     }
 
+    public function getByParseStatusAndSite($status, $siteId, $limit = 100)
+    {
+        $feedItems = ReviewFeedItem::
+            where('parse_status', $status)
+            ->where('process_status', 'Review created')
+            ->where('site_id', $siteId)->orderBy('id', 'desc');
+        if ($limit) {
+            $feedItems = $feedItems->limit($limit);
+        }
+        return $feedItems->get();
+    }
+
     public function getByImportId($importId)
     {
         return ReviewFeedItem::where('import_id', $importId)->orderBy('id', 'desc')->get();
@@ -167,9 +179,24 @@ class ReviewFeedItemService
             FROM review_feed_items
             WHERE site_id = ?
             GROUP BY import_success
+            ORDER BY process_status DESC
         ", [$siteId]);
 
         return $successFailStats;
     }
 
+
+    public function getParseStatusStatsBySite($siteId)
+    {
+        $parseStatusStats = DB::select("
+            SELECT parse_status, count(*) AS count
+            FROM review_feed_items
+            WHERE site_id = ?
+            AND process_status = 'Review created'
+            GROUP BY parse_status
+            ORDER BY parse_status
+        ", [$siteId]);
+
+        return $parseStatusStats;
+    }
 }
