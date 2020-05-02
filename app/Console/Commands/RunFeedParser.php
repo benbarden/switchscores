@@ -10,6 +10,8 @@ use App\Services\Feed\TitleParser;
 
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
+use App\ReviewFeedItem;
+
 use App\Traits\SwitchServices;
 
 class RunFeedParser extends Command
@@ -126,12 +128,12 @@ class RunFeedParser extends Command
                 $gameTitleHash = $serviceGameTitleHash->getByTitleGroup($titleMatches);
                 if ($gameTitleHash) {
                     $feedItem->game_id = $gameTitleHash->game_id;
-                    $parseStatus = 'Matched item to game '.$gameTitleHash->game_id;
+                    $parseStatus = ReviewFeedItem::PARSE_STATUS_AUTO_MATCHED;
                     $logger->info($parseStatus);
                     // Only mark as parsed if it matched - otherwise, we can check again tomorrow
                     $feedItem->parsed = 1;
                 } else {
-                    $parseStatus = 'Could not locate game';
+                    $parseStatus = ReviewFeedItem::PARSE_STATUS_COULD_NOT_LOCATE;
                     $logger->warn($parseStatus);
                 }
 

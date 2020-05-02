@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReviewFeedItem extends Model
 {
+    const PARSE_STATUS_AUTO_MATCHED = 'Automatically matched title';
+    const PARSE_STATUS_COULD_NOT_LOCATE = 'Could not locate game';
+
     /**
      * @var string
      */
