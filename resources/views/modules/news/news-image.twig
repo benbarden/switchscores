@@ -1,7 +1,7 @@
-{% if item.game_id %}
-    {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
-{% elseif item.custom_image_url %}
+{% if item.custom_image_url %}
     {% set boxartUrl = item.custom_image_url %}
+{% elseif item.game_id %}
+    {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
 {% else %}
     {% set boxartUrl = '' %}
 {% endif %}
