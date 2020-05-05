@@ -25,10 +25,9 @@ Route::get('/about', 'AboutController@show')->name('about');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
 // Main game pages
-Route::get('/games', 'GamesController@landing')->name('games.landing');
+Route::match(['get', 'post'], '/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/recent', 'GamesController@recentReleases')->name('games.recentReleases');
 Route::get('/games/upcoming', 'GamesController@upcomingReleases')->name('games.upcomingReleases');
-//Route::get('/games/upcoming', 'GamesController@listUpcoming')->name('games.list.upcoming');
 
 Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
 
