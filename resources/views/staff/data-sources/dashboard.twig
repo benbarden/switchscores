@@ -8,39 +8,45 @@
 
     <div class="col-md-4">
 
-        <h2>Overview</h2>
+        <h2>Differences - To review</h2>
 
         <table class="table">
-            <thead>
-                <tr>
-                    <th>Details</th>
-                    <th class="text-center">Raw</th>
-                    <th class="text-center">Parsed</th>
-                </tr>
-            </thead>
             <tbody>
-            {% for item in DataSources %}
             <tr>
                 <td>
-                    {{ item.name }}
-                    <br>
-                    <small>
-                        ID: {{ item.id }} -
-                        Method: {{ item.importMethodDesc() }}
-                    </small>
+                    EU release date - Nintendo.co.uk API
                 </td>
-                <td class="text-center">
-                    <a href="{{ route('staff.data-sources.list-raw', {'sourceId': item.id}) }}">
-                        {{ item.itemsRaw().count() }}
-                    </a>
-                </td>
-                <td class="text-center">
-                    {{ item.itemsParsed().count() }}
+                <td class="text-right">
+                    <span class="h4">{{ ReleaseDateEUNintendoCoUkDifferenceCount }}</span>
                 </td>
             </tr>
-            {% endfor %}
+            <tr>
+                <td>
+                    EU release date - Wikipedia
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ ReleaseDateEUWikipediaDifferenceCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    US release date - Wikipedia
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ ReleaseDateUSWikipediaDifferenceCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    JP release date - Wikipedia
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ ReleaseDateJPWikipediaDifferenceCount }}</span>
+                </td>
+            </tr>
             </tbody>
         </table>
+
     </div>
 
     <div class="col-md-4">
@@ -144,6 +150,39 @@
             </tbody>
         </table>
 
+        <h2>Import totals</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Details</th>
+                <th class="text-center">Raw</th>
+                <th class="text-center">Parsed</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in DataSources %}
+                <tr>
+                    <td>
+                        {{ item.name }}
+                        <br>
+                        <small>
+                            ID: {{ item.id }} -
+                            Method: {{ item.importMethodDesc() }}
+                        </small>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.data-sources.list-raw', {'sourceId': item.id}) }}">
+                            {{ item.itemsRaw().count() }}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        {{ item.itemsParsed().count() }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 </div>
