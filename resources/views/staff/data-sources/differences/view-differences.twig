@@ -1,0 +1,151 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.data-sources.dashboard'), 'text': 'Data sources'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+<p>
+    This page lists differences with the data on games, and one of our data sources. There are two ways
+    to handle these differences:
+</p>
+<ol>
+    <li>"Apply change" - this will copy the data source value onto the game. However, this may still lead to
+    a conflict with one of the other data sources.</li>
+    <li>"Ignore" - this will ignore further changes of this type. Any future differences in this field from
+    the same data source will be ignored. This can be reversed by editing the import rules for the game.</li>
+</ol>
+
+{% if DifferenceList %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Title</th>
+                <th class="text-center">Game field</th>
+                <th class="text-center">Source field</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in DifferenceList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
+                        <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        {{ attribute(item, GameField) }}
+                    </td>
+                    <td class="text-center">
+                        {{ attribute(item, SourceField) }}
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" id="lnk-apply-change-{{ item.id }}" class="lnk-apply-change">Apply change</a>
+                         :
+                        <a href="javascript:void(0);" id="lnk-ignore-change-{{ item.id }}" class="lnk-ignore-change">Ignore</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+
+    var dataSourceId = '{{ DataSourceId }}';
+    var sourceField = '{{ SourceField }}';
+
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+
+    $('.lnk-apply-change').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-apply-change-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Apply change?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.data-sources.differences.apply-change') }}', {'gameId': itemId, 'dataSourceId': dataSourceId, 'sourceField': sourceField}, function(data) {
+            $('#lnk-apply-change-' + itemId).parent().html('<em>Change applied</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('.lnk-ignore-change').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-ignore-change-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Ignore?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.data-sources.differences.ignore-change') }}', {'gameId': itemId, 'dataSourceId': dataSourceId, 'sourceField': sourceField}, function(data) {
+            $('#lnk-ignore-change-' + itemId).parent().html('<em>Ignored</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+</script>
+
+{% endblock page_inner %}

@@ -10,28 +10,28 @@ use Illuminate\Support\Facades\DB;
 
 class Differences
 {
-    public function getReleaseDateEUNintendoCoUk($countOnly)
+    public function getReleaseDateEUNintendoCoUk($countOnly = false)
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         $importRulesTable = 'game_import_rules_eshop';
         return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $countOnly);
     }
 
-    public function getReleaseDateEUWikipedia($countOnly)
+    public function getReleaseDateEUWikipedia($countOnly = false)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
         return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $countOnly);
     }
 
-    public function getReleaseDateUSWikipedia($countOnly)
+    public function getReleaseDateUSWikipedia($countOnly = false)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
         return $this->getReleaseDate($sourceId, $importRulesTable, 'us', $countOnly);
     }
 
-    public function getReleaseDateJPWikipedia($countOnly)
+    public function getReleaseDateJPWikipedia($countOnly = false)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
@@ -67,7 +67,7 @@ class Differences
         if ($countOnly) {
             $selectSql = 'count(*) AS count';
         } else {
-            $selectSql = 'g.id, g.title, '.$gameDateField.', '.$dspDateField;
+            $selectSql = 'g.id, g.title, g.link_title, '.$gameDateField.', '.$dspDateField;
         }
 
         return DB::select('
@@ -76,7 +76,7 @@ class Differences
             JOIN data_source_parsed dsp ON g.id = dsp.game_id
             LEFT JOIN '.$importRulesTable.' gir ON g.id = gir.game_id
             WHERE dsp.source_id = ?
-            AND gir.'.$dateIgnoreField.' IS NULL
+            AND (gir.'.$dateIgnoreField.' IS NULL OR gir.'.$dateIgnoreField.' = 0)
             AND '.$gameDateField.' != '.$dspDateField.'
         ', [$sourceId]);
     }

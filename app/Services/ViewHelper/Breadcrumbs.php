@@ -9,6 +9,8 @@ class Breadcrumbs
     const KEY_URL = 'url';
     const KEY_TEXT = 'text';
 
+    // ***** Standard methods ***** //
+
     public function getBreadcrumbs()
     {
         return $this->breadcrumbs;
@@ -20,15 +22,17 @@ class Breadcrumbs
         return $this;
     }
 
-    public function addGamesDashboard()
-    {
-        $crumbItem = ['url' => route('staff.games.dashboard'), 'text' => 'Games'];
-        return $this->addCrumb($crumbItem);
-    }
-
     public function addPageTitle($pageTitle)
     {
         $crumbItem = ['text' => $pageTitle];
+        return $this->addCrumb($crumbItem);
+    }
+
+    // ***** Games ***** //
+
+    public function addGamesDashboard()
+    {
+        $crumbItem = ['url' => route('staff.games.dashboard'), 'text' => 'Games'];
         return $this->addCrumb($crumbItem);
     }
 
