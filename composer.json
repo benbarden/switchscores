@@ -18,7 +18,6 @@
     },
     "require-dev": {
         "fzaninotto/faker": "~1.8",
-        "laravel/dusk": "^3.0.0",
         "mockery/mockery": "1.2.*",
         "phpunit/phpunit": "~7.0",
         "filp/whoops": "~2.0"
