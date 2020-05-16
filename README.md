@@ -13,3 +13,4 @@ Then run this from the root of the project:
 ## Post-install
 
 You'll need to create a folder under /vagrant/storage/tmp. This will be added to the installer at some point.
+
