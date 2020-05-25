@@ -74,13 +74,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminNewsList()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/news/list');
-        $response->assertStatus(200);
-    }
-
     public function testStaffWikipediaWikiUpdates()
     {
         $this->be($this->userAdmin);
