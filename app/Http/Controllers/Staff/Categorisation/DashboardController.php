@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 
+use App\Services\DataQuality\QualityStats;
+
 class DashboardController extends Controller
 {
     use SwitchServices;
@@ -14,7 +16,7 @@ class DashboardController extends Controller
     {
         $pageTitle = 'Categorisation dashboard';
 
-        $serviceCategorisation = $this->getServiceStaffDashboardsCategorisation();
+        $serviceCategorisation = new QualityStats();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameFilterList = $this->getServiceGameFilterList();

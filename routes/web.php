@@ -372,6 +372,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
+// *************** Staff: DATA QUALITY *************** //
+Route::group(['middleware' => ['auth.admin:admin']], function() {
+
+    Route::get('/staff/data-quality/dashboard/{year?}/{month?}', 'Staff\DataQuality\DashboardController@show')->name('staff.data-quality.dashboard');
+
+});
+
+
 // *************** Staff: Admin-only (owner) *************** //
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 

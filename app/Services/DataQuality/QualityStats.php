@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\StaffDashboards;
+namespace App\Services\DataQuality;
 
 use App\Game;
 
-class CategorisationService
+class QualityStats
 {
     public function countGamesWithPrimaryType()
     {
@@ -25,4 +25,5 @@ class CategorisationService
     {
         return Game::whereNull('series_id')->count();
     }
+
 }

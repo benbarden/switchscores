@@ -5,8 +5,6 @@ namespace App\Traits;
 use App\Services\ViewHelper\Bindings;
 use App\Services\ViewHelper\Breadcrumbs;
 
-use App\Services\StaffDashboards\CategorisationService;
-
 use App\Services\AuditService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\DataSourceService;
@@ -119,14 +117,6 @@ trait SwitchServices
     public function getServiceViewHelperBreadcrumbs()
     {
         return $this->loadService("ViewHelper\\Breadcrumbs");
-    }
-
-    /**
-     * @return CategorisationService
-     */
-    public function getServiceStaffDashboardsCategorisation()
-    {
-        return $this->loadService("StaffDashboards\\CategorisationService");
     }
 
     // ** Standard service classes ** //

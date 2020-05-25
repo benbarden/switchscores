@@ -1,0 +1,38 @@
+{% if GameList %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center" style="width: 165px;"></th>
+                <th>Title</th>
+                <th class="text-center" style="width: 80px;">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
+                <tr>
+                    <td class="text-center">
+                        <a href="{{ LinkHelper.gameShow(item) }}">
+                            {% if boxartUrl %}
+                                <img src="{{ boxartUrl }}" style="border: 0; height: 70px; width: 160px; margin-bottom: 0;" alt="{{ item.title }}">
+                            {% else %}
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" class="h4">{{ item.title }}</a>
+                    </td>
+                    <td class="text-center">
+                        {% if item.rating_avg %}
+                            {% if item.game_rank %}
+                                {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h4'} %}
+                            {% else %}
+                                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

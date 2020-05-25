@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 
+use App\Services\Shortcode\TopRated;
+
 class NewsController extends Controller
 {
     use SwitchServices;
@@ -63,6 +65,11 @@ class NewsController extends Controller
         $bindings['PageTitle'] = $newsItem->title;
         $bindings['TopTitle'] = $newsItem->title;
         $bindings['NewsItem'] = $newsItem;
+
+        // Content
+        $shortcodeTopRated = new TopRated($this->getServiceTopRated(), $newsItem->content_html);
+        $contentHtml = $shortcodeTopRated->parseShortcodes();
+        $bindings['NewsContentParsed'] = $contentHtml;
 
         // Total rank count
         $bindings['RankMaximum'] = $serviceGame->countRanked();

@@ -28,6 +28,14 @@ class Breadcrumbs
         return $this->addCrumb($crumbItem);
     }
 
+    // ***** Staff - General ***** //
+
+    public function makeStaffDashboard($pageTitle)
+    {
+        return $this->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     // ***** Games ***** //
 
     public function addGamesDashboard()
@@ -39,8 +47,23 @@ class Breadcrumbs
     public function makeGamesSubPage($pageTitle)
     {
         return $this->addGamesDashboard()
-                    ->addPageTitle($pageTitle)
-                    ->getBreadcrumbs();
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    // ***** Data quality ***** //
+
+    public function addDataQualityDashboard()
+    {
+        $crumbItem = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeDataQualitySubPage($pageTitle)
+    {
+        return $this->addDataQualityDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
     }
 
 }

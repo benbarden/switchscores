@@ -218,6 +218,17 @@
                         {% if auth_user().isOwner() %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Data quality <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('staff.data-quality.dashboard') }}">Data quality dashboard</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        {% if auth_user().isOwner() %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     Owner links <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">

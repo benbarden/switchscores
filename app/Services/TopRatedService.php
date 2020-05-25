@@ -68,9 +68,10 @@ class TopRatedService
     /**
      * @param $year
      * @param $month
+     * @param $limit
      * @return mixed
      */
-    public function getByMonthWithRanks($year, $month)
+    public function getByMonthWithRanks($year, $month, $limit = null)
     {
         $games = DB::table('games')
             ->select('games.*',
@@ -79,6 +80,9 @@ class TopRatedService
             ->whereMonth('games.eu_release_date', '=', $month)
             ->whereNotNull('games.game_rank')
             ->orderBy('games.rating_avg', 'desc');
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
         $games = $games->get();
         return $games;
     }
