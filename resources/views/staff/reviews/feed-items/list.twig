@@ -37,40 +37,22 @@
 <table class="table data-sortable table-responsive">
     <thead>
         <tr>
-            <th class="text-center">#</th>
-            <th class="text-center">Import id</th>
             <th class="text-left">Title</th>
-            <th class="text-center">Date</th>
+            <th class="text-left">Site</th>
             <th class="text-center">Game link</th>
             <th class="text-center">Rating</th>
-            <th class="text-center">Process status</th>
+            <th class="text-center">Date</th>
             <th class="text-center">Options</th>
         </tr>
     </thead>
     <tbody>
         {% for item in FeedItems %}
             <tr>
-                <td class="text-center">
-                    <small>
-                        {{ item.id }}
-                    </small>
-                </td>
-                <td class="text-center">
-                    {% if item.feedImport.id %}
-                        <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item.feedImport}) }}">{{ item.feedImport.id }}</a>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
                 <td class="text-left" style="max-width: 300px;">
                     <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
-                    <br>
-                    <small>
-                        {{ item.site.name }}
-                    </small>
                 </td>
-                <td class="text-center">
-                    {{ item.item_date|date('Y-m-d') }}
+                <td class="text-left">
+                    {{ item.site.name }}
                 </td>
                 <td class="text-center">
                     {% if item.game.title is null %}
@@ -97,17 +79,10 @@
                             {% endif %}
                             {% include 'modules/rating/badge.twig' with {'score': badgeRating, 'scoreSize': 'h5'} %}
                         {% endif %}
-                        {% if origRating %}
-                            <br><p style="margin-top: 10px;"><small>({{ origRating }}/5)</small></p>
-                        {% endif %}
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    {% if item.processed == 1 %}
-                        {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
-                    {% else %}
-                        -
-                    {% endif %}
+                    {{ item.item_date|date('Y-m-d') }}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.feed-items.edit', {'itemId': item.id}) }}">Edit</a>
@@ -133,10 +108,8 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 50,
             "columns": [
-                null,
-                null,
                 { "orderable": false },
-                null,
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 null,
