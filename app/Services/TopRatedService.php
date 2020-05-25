@@ -86,4 +86,26 @@ class TopRatedService
         $games = $games->get();
         return $games;
     }
+
+    /**
+     * @param $year
+     * @param $month
+     * @param $limit
+     * @return mixed
+     */
+    public function getByMonthUnranked($year, $month, $limit = null)
+    {
+        $games = DB::table('games')
+            ->select('games.*',
+                'games.id AS game_id')
+            ->whereYear('games.eu_release_date', '=', $year)
+            ->whereMonth('games.eu_release_date', '=', $month)
+            ->whereNull('games.game_rank')
+            ->orderBy('games.review_count', 'desc');
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+        return $games;
+    }
 }

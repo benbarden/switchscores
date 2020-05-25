@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-
 use App\Services\Shortcode\TopRated;
+use App\Services\Shortcode\Unranked;
+
+use App\Traits\SwitchServices;
 
 class NewsController extends Controller
 {
@@ -67,8 +68,14 @@ class NewsController extends Controller
         $bindings['NewsItem'] = $newsItem;
 
         // Content
-        $shortcodeTopRated = new TopRated($this->getServiceTopRated(), $newsItem->content_html);
+        $contentHtml = $newsItem->content_html;
+
+        $shortcodeTopRated = new TopRated($this->getServiceTopRated(), $contentHtml);
         $contentHtml = $shortcodeTopRated->parseShortcodes();
+
+        $shortcodeUnranked = new Unranked($this->getServiceTopRated(), $contentHtml);
+        $contentHtml = $shortcodeUnranked->parseShortcodes();
+
         $bindings['NewsContentParsed'] = $contentHtml;
 
         // Total rank count
