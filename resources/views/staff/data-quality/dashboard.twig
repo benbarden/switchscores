@@ -4,14 +4,67 @@
 
 <div class="row">
 
-    <div class="col-md-4">
+    <div class="col-md-6">
+
+        <h2>Current period</h2>
+        <label for="current-period">Select a period:</label>
+        <select id="current-period" name="current-period">
+            <option value="">&nbsp;</option>
+            {% for item in PeriodList %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        {% if CurrentPeriodDesc %}
+            <h3>{{ CurrentPeriodDesc }}</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="text-center">With</th>
+                    <th class="text-center">Without</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-center">
+                        <span class="h4">{{ PeriodWithPrimaryType }}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="h4">{{ PeriodWithoutPrimaryType }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <p>
+                Select a time period to see these stats.
+            </p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-6">
+
+        <h2>All-time stats</h2>
+        <h3>Primary types</h3>
 
         <table class="table">
+            <thead>
+            <tr>
+                <th class="text-center">With</th>
+                <th class="text-center">Without</th>
+                <th class="text-center">Progress</th>
+            </tr>
+            </thead>
             <tbody>
             <tr>
-                <td>
+                <td class="text-center">
+                    <span class="h4">{{ StatsWithPrimaryType }}</span>
                 </td>
-                <td class="text-right">
+                <td class="text-center">
+                    <span class="h4">{{ StatsWithoutPrimaryType }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="h4">{{ StatsPrimaryTypeProgress }}%</span>
                 </td>
             </tr>
             </tbody>
@@ -19,14 +72,20 @@
 
     </div>
 
-    <div class="col-md-4">
-
-    </div>
-
-    <div class="col-md-4">
-
-    </div>
-
 </div>
+
+<script>
+    $(document).ready(function() {
+        var currentPeriod = '{{ CurrentPeriodDesc }}';
+        $('#current-period').val(currentPeriod);
+    });
+
+    $('#current-period').on('change', function() {
+        selectedPeriod = $(this).val();
+        var selPeriodData = selectedPeriod.split('-');
+        pathToLoad = "{{ route('staff.data-quality.dashboard') }}/" + selPeriodData[0] + "/" + selPeriodData[1];
+        top.location.href = pathToLoad;
+    });
+</script>
 
 {% endblock page_inner %}

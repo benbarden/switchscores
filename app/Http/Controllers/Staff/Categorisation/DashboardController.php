@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         $pageTitle = 'Categorisation dashboard';
 
-        $serviceCategorisation = new QualityStats();
+        $serviceQualityStats = new QualityStats();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameFilterList = $this->getServiceGameFilterList();
@@ -31,8 +31,8 @@ class DashboardController extends Controller
         $totalGameCount = $serviceGame->getCount();
 
         // Game stats: Primary type
-        $statsWithPrimaryType = $serviceCategorisation->countGamesWithPrimaryType();
-        $statsWithoutPrimaryType = $serviceCategorisation->countGamesWithoutPrimaryType();
+        $statsWithPrimaryType = $serviceQualityStats->countGamesWithPrimaryType();
+        $statsWithoutPrimaryType = $serviceQualityStats->countGamesWithoutPrimaryType();
         $bindings['StatsWithPrimaryType'] = $statsWithPrimaryType;
         $bindings['StatsWithoutPrimaryType'] = $statsWithoutPrimaryType;
         $statsPrimaryTypeProgress = ($statsWithPrimaryType) / $totalGameCount * 100;
@@ -48,8 +48,8 @@ class DashboardController extends Controller
         $bindings['StatsTagsProgress'] = round($statsTagsProgress, 2);
 
         // Game stats: Series
-        $statsWithSeries = $serviceCategorisation->countGamesWithSeries();
-        $statsWithoutSeries = $serviceCategorisation->countGamesWithoutSeries();
+        $statsWithSeries = $serviceQualityStats->countGamesWithSeries();
+        $statsWithoutSeries = $serviceQualityStats->countGamesWithoutSeries();
         $bindings['StatsWithSeries'] = $statsWithSeries;
         $bindings['StatsWithoutSeries'] = $statsWithoutSeries;
 
