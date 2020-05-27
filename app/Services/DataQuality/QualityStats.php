@@ -3,9 +3,26 @@
 namespace App\Services\DataQuality;
 
 use App\Game;
+use Illuminate\Support\Facades\DB;
 
 class QualityStats
 {
+    // *** Primary types - all months *** //
+    public function getPrimaryTypeStats()
+    {
+        return DB::select('
+            SELECT
+            DATE_FORMAT(eu_release_date, \'%Y-%m\') AS yearmonth,
+            count(primary_type_id) AS has_primary_type, 
+            count(*) - count(primary_type_id) AS no_primary_type, 
+            count(*) AS total_count,
+            round((count(primary_type_id) / count(*)) * 100, 2) AS pc_done
+            FROM games
+            GROUP BY yearmonth
+            ORDER BY yearmonth DESC
+        ');
+    }
+
     // Primary types
     // All-time stats
     public function countGamesWithPrimaryType()

@@ -6,86 +6,47 @@
 
     <div class="col-md-6">
 
-        <h2>Current period</h2>
-        <label for="current-period">Select a period:</label>
-        <select id="current-period" name="current-period">
-            <option value="">&nbsp;</option>
-            {% for item in PeriodList %}
-                <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}
-        </select>
-        {% if CurrentPeriodDesc %}
-            <h3>{{ CurrentPeriodDesc }}</h3>
+        <h2>Primary types</h2>
+
+        {% if StatsPrimaryTypes %}
             <table class="table">
                 <thead>
-                <tr>
-                    <th class="text-center">With</th>
-                    <th class="text-center">Without</th>
-                </tr>
+                    <tr>
+                        <th class="text-center">Month</th>
+                        <th class="text-center">Has primary type</th>
+                        <th class="text-center">No primary type</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">% complete</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td class="text-center">
-                        <span class="h4">{{ PeriodWithPrimaryType }}</span>
-                    </td>
-                    <td class="text-center">
-                        <span class="h4">{{ PeriodWithoutPrimaryType }}</span>
-                    </td>
-                </tr>
+                    {% for item in StatsPrimaryTypes %}
+                        <tr>
+                            <td class="text-center">{{ item.yearmonth }}</td>
+                            <td class="text-center">{{ item.has_primary_type }}</td>
+                            <td class="text-center">{{ item.no_primary_type }}</td>
+                            <td class="text-center">{{ item.total_count }}</td>
+                            <td class="text-center">
+                                {% if item.pc_done >= 75 %}
+                                    <span class="h5 label label-success">{{ item.pc_done }}%</span>
+                                {% elseif item.pc_done >= 40 %}
+                                    <span class="h5 label label-warning">{{ item.pc_done }}%</span>
+                                {% else %}
+                                    <span class="h5 label label-danger">{{ item.pc_done }}%</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-        {% else %}
-            <p>
-                Select a time period to see these stats.
-            </p>
         {% endif %}
 
     </div>
 
     <div class="col-md-6">
 
-        <h2>All-time stats</h2>
-        <h3>Primary types</h3>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th class="text-center">With</th>
-                <th class="text-center">Without</th>
-                <th class="text-center">Progress</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="text-center">
-                    <span class="h4">{{ StatsWithPrimaryType }}</span>
-                </td>
-                <td class="text-center">
-                    <span class="h4">{{ StatsWithoutPrimaryType }}</span>
-                </td>
-                <td class="text-center">
-                    <span class="h4">{{ StatsPrimaryTypeProgress }}%</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
     </div>
 
 </div>
-
-<script>
-    $(document).ready(function() {
-        var currentPeriod = '{{ CurrentPeriodDesc }}';
-        $('#current-period').val(currentPeriod);
-    });
-
-    $('#current-period').on('change', function() {
-        selectedPeriod = $(this).val();
-        var selPeriodData = selectedPeriod.split('-');
-        pathToLoad = "{{ route('staff.data-quality.dashboard') }}/" + selPeriodData[0] + "/" + selPeriodData[1];
-        top.location.href = pathToLoad;
-    });
-</script>
 
 {% endblock page_inner %}
