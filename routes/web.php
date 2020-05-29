@@ -377,6 +377,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/staff/data-quality/dashboard/{year?}/{month?}', 'Staff\DataQuality\DashboardController@show')->name('staff.data-quality.dashboard');
 
+    Route::get('/staff/data-quality/games-with-primary-types/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithPrimaryTypes')->name('staff.data-quality.games-with-primary-types');
+    Route::get('/staff/data-quality/games-without-primary-types/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithoutPrimaryTypes')->name('staff.data-quality.games-without-primary-types');
+
 });
 
 

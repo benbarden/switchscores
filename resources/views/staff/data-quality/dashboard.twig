@@ -22,9 +22,19 @@
                 <tbody>
                     {% for item in StatsPrimaryTypes %}
                         <tr>
-                            <td class="text-center">{{ item.yearmonth }}</td>
-                            <td class="text-center">{{ item.has_primary_type }}</td>
-                            <td class="text-center">{{ item.no_primary_type }}</td>
+                            <td class="text-center">
+                                {{ item.yearmonth }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('staff.data-quality.games-with-primary-types', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.has_primary_type }}
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('staff.data-quality.games-without-primary-types', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.no_primary_type }}
+                                </a>
+                            </td>
                             <td class="text-center">{{ item.total_count }}</td>
                             <td class="text-center">
                                 {% if item.pc_done >= 75 %}

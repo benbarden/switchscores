@@ -26,11 +26,49 @@ class DashboardController extends Controller
             ->setBreadcrumbs($breadcrumbs)
             ->getBindings();
 
-        $totalGameCount = $this->getServiceGame()->getCount();
-
         // Primary types
         $bindings['StatsPrimaryTypes'] = $serviceQualityStats->getPrimaryTypeStats();
 
         return view('staff.data-quality.dashboard', $bindings);
+    }
+
+    public function gamesWithPrimaryTypes($year, $month)
+    {
+        $serviceQualityStats = new QualityStats();
+
+        $pageTitle = 'Games with primary types';
+
+        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Data quality')
+            ->setBreadcrumbs($breadcrumbs)
+            ->getBindings();
+
+        // Primary types
+        $bindings['GameList'] = $serviceQualityStats->getGamesWithPrimaryType($year, $month);
+
+        return view('staff.data-quality.primary-types.game-list', $bindings);
+    }
+
+    public function gamesWithoutPrimaryTypes($year, $month)
+    {
+        $serviceQualityStats = new QualityStats();
+
+        $pageTitle = 'Games without primary types';
+
+        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Data quality')
+            ->setBreadcrumbs($breadcrumbs)
+            ->getBindings();
+
+        // Primary types
+        $bindings['GameList'] = $serviceQualityStats->getGamesWithoutPrimaryType($year, $month);
+
+        return view('staff.data-quality.primary-types.game-list', $bindings);
     }
 }

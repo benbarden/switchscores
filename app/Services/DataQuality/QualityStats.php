@@ -13,6 +13,8 @@ class QualityStats
         return DB::select('
             SELECT
             DATE_FORMAT(eu_release_date, \'%Y-%m\') AS yearmonth,
+            DATE_FORMAT(eu_release_date, \'%Y\') AS release_year,
+            DATE_FORMAT(eu_release_date, \'%m\') AS release_month,
             count(primary_type_id) AS has_primary_type, 
             count(*) - count(primary_type_id) AS no_primary_type, 
             count(*) AS total_count,
@@ -21,6 +23,24 @@ class QualityStats
             GROUP BY yearmonth
             ORDER BY yearmonth DESC
         ');
+    }
+
+    public function getGamesWithPrimaryType($year, $month)
+    {
+        return Game::whereNotNull('primary_type_id')
+            ->whereYear('eu_release_date', $year)
+            ->whereMonth('eu_release_date', $month)
+            ->orderBy('eu_release_date', 'asc')
+            ->get();
+    }
+
+    public function getGamesWithoutPrimaryType($year, $month)
+    {
+        return Game::whereNull('primary_type_id')
+            ->whereYear('eu_release_date', $year)
+            ->whereMonth('eu_release_date', $month)
+            ->orderBy('eu_release_date', 'asc')
+            ->get();
     }
 
     // Primary types
