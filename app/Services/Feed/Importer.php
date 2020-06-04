@@ -68,10 +68,10 @@ class Importer
 
     /**
      * @param $feedUrl
-     * @param bool $isWix
+     * @param bool $parseAsObjects
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function loadRemoteFeedData($feedUrl, $isWix = false)
+    public function loadRemoteFeedData($feedUrl, $parseAsObjects = false)
     {
         try {
             $client = new GuzzleClient(['verify' => false]);
@@ -93,7 +93,7 @@ class Importer
         }
 
         try {
-            $this->feedData = $this->convertResponseToJson($body, $isWix);
+            $this->feedData = $this->convertResponseToJson($body, $parseAsObjects);
         } catch (\Exception $e) {
             throw new \Exception('Error loading data! Error details: '.$e->getMessage().'; Raw data: '.$body);
         }
@@ -101,13 +101,13 @@ class Importer
 
     /**
      * @param $body
-     * @param $isWix
+     * @param $parseAsObjects
      * @return mixed
      */
-    public function convertResponseToJson($body, $isWix = false)
+    public function convertResponseToJson($body, $parseAsObjects = false)
     {
-        if ($isWix) {
-            // Don't do the JSON conversion for Wix sites - it breaks the SimpleXMLElements
+        if ($parseAsObjects) {
+            // Don't do the JSON conversion for Wix sites or others using CDATA - it breaks the SimpleXMLElements
             $xmlObject = simplexml_load_string($body);
             $decodedJson = $xmlObject;
         } else {
@@ -119,18 +119,18 @@ class Importer
     }
 
     /**
-     * @param $isWix
+     * @param $parseAsObjects
      * @param $feedItem
      * @return ReviewFeedItem
      */
-    public function generateModel($isWix, $feedItem)
+    public function generateModel($parseAsObjects, $feedItem)
     {
         $reviewFeedItem = new ReviewFeedItem();
 
         // Basic fields
         $reviewFeedItem->site_id = $this->siteId;
 
-        if ($isWix) {
+        if ($parseAsObjects) {
 
             $reviewFeedItem->item_url = $feedItem->link;
 
@@ -164,10 +164,10 @@ class Importer
         return $reviewFeedItem;
     }
 
-    public function processItemRss($isWix, $feedItem, Partner $reviewSite, UrlService $serviceUrl, ReviewFeedItemService $serviceReviewFeedItem)
+    public function processItemRss($parseAsObjects, $feedItem, Partner $reviewSite, UrlService $serviceUrl, ReviewFeedItemService $serviceReviewFeedItem)
     {
         // Generate the model
-        $reviewFeedItem = $this->generateModel($isWix, $feedItem);
+        $reviewFeedItem = $this->generateModel($parseAsObjects, $feedItem);
         $itemTitle = $reviewFeedItem->item_title;
         $itemUrl = $reviewFeedItem->item_url;
         $itemDate = $reviewFeedItem->item_date;

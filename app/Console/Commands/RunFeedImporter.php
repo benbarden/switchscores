@@ -96,21 +96,34 @@ class RunFeedImporter extends Command
 
                 // Set up the importer for this site
                 $feedImporter = new Importer();
-                // Dirty hack for Wix
-                if ($siteId == 30) {
-                    $isWix = true;
+
+                // If sites have CDATA in their feeds, we need to parse the feed as objects
+                if ($siteName == 'JPs Switchmania') {
+                    $parseAsObjects = true;
+                } elseif ($siteName == 'SwitchRPG') {
+                    $parseAsObjects = true;
                 } else {
-                    $isWix = false;
+                    $parseAsObjects = false;
                 }
-                $feedImporter->loadRemoteFeedData($feedUrl, $isWix);
+                $feedImporter->loadRemoteFeedData($feedUrl, $parseAsObjects);
                 $feedImporter->setSiteId($siteId);
                 $feedData = $feedImporter->getFeedData();
 
                 // Make feed item array
                 $feedItemsToProcess = [];
-                if ($isWix) {
+
+                if ($siteName == 'JPs Switchmania') {
 
                     foreach ($feedData->channel->item as $feedItem) {
+
+                        $feedItemsToProcess[] = $feedItem;
+
+                    }
+
+                } elseif ($siteName == 'SwitchRPG') {
+
+                    // SwitchRPG - custom feed
+                    foreach ($feedData->post as $feedItem) {
 
                         $feedItemsToProcess[] = $feedItem;
 
@@ -133,6 +146,8 @@ class RunFeedImporter extends Command
 
                     }
 
+                } else {
+                    $logger->error('No valid tag matches found');
                 }
 
                 if (count($feedItemsToProcess) > 0) {
@@ -141,7 +156,7 @@ class RunFeedImporter extends Command
 
                         try {
 
-                            $reviewFeedItem = $feedImporter->processItemRss($isWix, $feedItem, $reviewSite, $serviceUrl, $serviceReviewFeedItem);
+                            $reviewFeedItem = $feedImporter->processItemRss($parseAsObjects, $feedItem, $reviewSite, $serviceUrl, $serviceReviewFeedItem);
                             $logger->info('Importing item with date: '.$reviewFeedItem->item_date.'; URL: '.$reviewFeedItem->item_url);
                             $reviewFeedItem->import_id = $feedImportId;
                             $reviewFeedItem->save();
