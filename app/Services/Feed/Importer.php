@@ -139,6 +139,10 @@ class Importer
             $pubDate = $feedItem->pubDate;
             $pubDateModel = new Carbon($pubDate);
 
+            if (property_exists($feedItem, 'score')) {
+                $reviewFeedItem->item_rating = $feedItem->score;
+            }
+
         } else {
 
             $reviewFeedItem->item_url = $feedItem['link'];
