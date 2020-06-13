@@ -31,7 +31,6 @@ class WelcomeController extends Controller
         // Oct 2019
         $idLuigisMansion = 2706;
         // Nov 2019
-        $idDisneyTsumTsumFestival = 3174;
         $idNewSuperLuckysTale = 3138;
         // 15th Nov 2019
         $idSparklite = 3078;
@@ -41,10 +40,8 @@ class WelcomeController extends Controller
         $idShovelKnightShowdown = 3334;
         $idSuperEpic = 3275;
         // 22nd Jan 2020
-        $idTokyoMirageSessions = 2926;
         $idSuperCrushKO = 3370;
         $idToTheMoon = 3426;
-        $id198X = 3443;
         // 8th March 2020
         $idMurderByNumbers = 3557;
         $idMegaManZero = 3404;
@@ -52,15 +49,8 @@ class WelcomeController extends Controller
         $idRuneFactory4Special = 3501;
         */
 
-        // Featured games from News page
-        $featuredGameCategory = $this->getServiceNewsCategory()->getByUrl('featured-games');
-        if ($featuredGameCategory) {
-            $featuredGameCategoryId = $featuredGameCategory->id;
-            $featuredGame = $this->getServiceNews()->getByCategory($featuredGameCategoryId, 1);
-            if (count($featuredGame) > 0) {
-                $bindings['FeaturedGame'] = $featuredGame[0];
-            }
-        }
+        // Get latest News post
+        $bindings['LatestNewsPost'] = $this->getServiceNews()->getNewest();
 
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased();

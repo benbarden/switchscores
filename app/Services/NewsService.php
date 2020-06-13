@@ -80,6 +80,11 @@ class NewsService
         return $newsList;
     }
 
+    public function getNewest()
+    {
+        return News::orderBy('created_at', 'desc')->orderBy('id', 'desc')->first();
+    }
+
     /**
      * Gets a news item from its URL
      * @param string $url
