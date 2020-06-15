@@ -1,0 +1,21 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Browse by category'}] %}
+
+{% block page_body %}
+
+{% include 'games/browse/browse-wip-alert.twig' %}
+
+{% if CategoryList %}
+    <ul>
+        {% for item in CategoryList %}
+        <li>
+            <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}">{{ item.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No categories found!</p>
+{% endif %}
+
+{% endblock page_body %}

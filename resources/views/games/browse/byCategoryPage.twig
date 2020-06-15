@@ -1,17 +1,17 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.byPrimaryType.landing'), 'text': 'Browse by primary type'}, {'text': PageTitle}] %}
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.byCategory.landing'), 'text': 'Browse by category'}, {'text': PageTitle}] %}
 
 {% block page_body %}
 
 {% include 'games/browse/browse-wip-alert.twig' %}
 
-{% if PrimaryType.tags().count() > 0 %}
+{% if Category.tags().count() > 0 %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h2>Tags in {{ PrimaryType.primary_type }}</h2>
+        <h2>Tags in {{ Category.name }}</h2>
         <ul>
-            {% for item in PrimaryType.tags %}
+            {% for item in Category.tags %}
                 <li><a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}">{{ item.tag_name }}</a></li>
             {% endfor %}
         </ul>
@@ -22,8 +22,8 @@
 {% if GameList|length %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h2>Games in {{ PrimaryType.primary_type }}</h2>
-        <p><small>{{ GameList|length }} games with this primary type.</small></p>
+        <h2>Games in {{ Category.name }}</h2>
+        <p><small>{{ GameList|length }} games with this category.</small></p>
     </div>
 </div>
 {% endif %}

@@ -91,8 +91,8 @@ class GameDirector
         if (array_key_exists('image_header', $params)) {
             $this->builder->setImageHeader($params['image_header']);
         }
-        if (array_key_exists('primary_type_id', $params)) {
-            $this->builder->setPrimaryTypeId($params['primary_type_id']);
+        if (array_key_exists('category_id', $params)) {
+            $this->builder->setCategoryId($params['category_id']);
         }
         if (array_key_exists('series_id', $params)) {
             $this->builder->setGameSeriesId($params['series_id']);

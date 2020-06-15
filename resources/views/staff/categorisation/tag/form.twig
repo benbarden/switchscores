@@ -17,12 +17,12 @@
     </div>
 
     <div class="form-group">
-        <label for="primary_type_id" class="col-md-4 control-label">Primary type (parent)</label>
+        <label for="category_id" class="col-md-4 control-label">Category (parent)</label>
         <div class="col-md-6">
-            <select id="primary_type_id" class="form-control" name="primary_type_id">
+            <select id="category_id" class="form-control" name="category_id">
                 <option value="">&nbsp;</option>
-                {% for item in PrimaryTypeList %}
-                <option value="{{ item.id }}">{{ item.primary_type }}</option>
+                {% for item in CategoryList %}
+                <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
         </div>

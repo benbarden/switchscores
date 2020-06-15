@@ -4,11 +4,11 @@
 
     <tr>
         <td>
-            <span style="font-weight: bold;">Primary type</span>
+            <span style="font-weight: bold;">Category</span>
         </td>
         <td>
-            {% if GameData.primary_type_id %}
-                <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}" target="_blank">{{ GameData.primaryType.primary_type }}</a>
+            {% if GameData.category_id %}
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
             {% endif %}
         </td>
     </tr>

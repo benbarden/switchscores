@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\GamePrimaryType;
+use App\Category;
 use App\GameSeries;
 
 use App\Traits\SwitchServices;
@@ -67,14 +67,14 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
-    public function byPrimaryType(GamePrimaryType $primaryType)
+    public function byCategory(Category $category)
     {
-        $bindings = $this->getListBindings('By primary type: '.$primaryType->primary_type, "[ 1, 'asc']");
+        $bindings = $this->getListBindings('By category: '.$category->name, "[ 1, 'asc']");
 
-        $bindings['GameList'] = $this->getServiceGame()->getByPrimaryType($primaryType);
+        $bindings['GameList'] = $this->getServiceGame()->getByCategory($category);
 
-        $bindings['CustomHeader'] = 'Primary type';
-        $bindings['ListMode'] = 'by-primary-type';
+        $bindings['CustomHeader'] = 'Category';
+        $bindings['ListMode'] = 'by-category';
 
         return view('staff.games.list.standard-view', $bindings);
     }

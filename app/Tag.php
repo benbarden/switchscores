@@ -20,7 +20,7 @@ class Tag extends Model
      * @var array
      */
     protected $fillable = [
-        'tag_name', 'link_title', 'primary_type_id'
+        'tag_name', 'link_title', 'primary_type_id', 'category_id'
     ];
 
     public function gameTags()
@@ -28,8 +28,8 @@ class Tag extends Model
         return $this->hasMany('App\GameTag', 'tag_id', 'id');
     }
 
-    public function primaryType()
+    public function category()
     {
-        return $this->hasOne('App\GamePrimaryType', 'id', 'primary_type_id');
+        return $this->hasOne('App\Category', 'id', 'category_id');
     }
 }

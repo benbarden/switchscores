@@ -16,12 +16,12 @@ class TagService
         ]);
     }
 
-    public function edit(Tag $tagData, $tagName, $linkTitle, $primaryTypeId)
+    public function edit(Tag $tagData, $tagName, $linkTitle, $categoryId)
     {
         $values = [
             'tag_name' => $tagName,
             'link_title' => $linkTitle,
-            'primary_type_id' => $primaryTypeId
+            'category_id' => $categoryId
         ];
 
         $tagData->fill($values);

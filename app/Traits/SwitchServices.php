@@ -6,6 +6,7 @@ use App\Services\ViewHelper\Bindings;
 use App\Services\ViewHelper\Breadcrumbs;
 
 use App\Services\AuditService;
+use App\Services\CategoryService;
 use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
@@ -21,7 +22,6 @@ use App\Services\GameFilterListService;
 use App\Services\GameGenreService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameImportRuleWikipediaService;
-use App\Services\GamePrimaryTypeService;
 use App\Services\GamePublisherService;
 use App\Services\GameRankAllTimeService;
 use App\Services\GameRankYearService;
@@ -127,6 +127,14 @@ trait SwitchServices
     public function getServiceAudit()
     {
         return $this->loadService('AuditService');
+    }
+
+    /**
+     * @return CategoryService
+     */
+    public function getServiceCategory()
+    {
+        return $this->loadService('CategoryService');
     }
 
     /**
@@ -247,14 +255,6 @@ trait SwitchServices
     public function getServiceGameImportRuleWikipedia()
     {
         return $this->loadService('GameImportRuleWikipediaService');
-    }
-
-    /**
-     * @return GamePrimaryTypeService
-     */
-    public function getServiceGamePrimaryType()
-    {
-        return $this->loadService('GamePrimaryTypeService');
     }
 
     /**

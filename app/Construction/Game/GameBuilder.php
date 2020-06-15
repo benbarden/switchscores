@@ -151,9 +151,9 @@ class GameBuilder
         return $this;
     }
 
-    public function setPrimaryTypeId($primaryTypeId): GameBuilder
+    public function setCategoryId($categoryId): GameBuilder
     {
-        $this->game->primary_type_id = $primaryTypeId;
+        $this->game->category_id = $categoryId;
         return $this;
     }
 

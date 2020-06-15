@@ -6,33 +6,33 @@
 
     <div class="col-md-6">
 
-        <h2>Primary types</h2>
+        <h2>Categories</h2>
 
-        {% if StatsPrimaryTypes %}
+        {% if StatsCategories %}
             <table class="table">
                 <thead>
                     <tr>
                         <th class="text-center">Month</th>
-                        <th class="text-center">Has primary type</th>
-                        <th class="text-center">No primary type</th>
+                        <th class="text-center">Has category</th>
+                        <th class="text-center">No category</th>
                         <th class="text-center">Total</th>
                         <th class="text-center">% complete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in StatsPrimaryTypes %}
+                    {% for item in StatsCategories %}
                         <tr>
                             <td class="text-center">
                                 {{ item.yearmonth }}
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('staff.data-quality.games-with-primary-types', {'year': item.release_year, 'month': item.release_month}) }}">
-                                    {{ item.has_primary_type }}
+                                <a href="{{ route('staff.data-quality.games-with-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.has_category }}
                                 </a>
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('staff.data-quality.games-without-primary-types', {'year': item.release_year, 'month': item.release_month}) }}">
-                                    {{ item.no_primary_type }}
+                                <a href="{{ route('staff.data-quality.games-without-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.no_category }}
                                 </a>
                             </td>
                             <td class="text-center">{{ item.total_count }}</td>

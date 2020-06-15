@@ -66,7 +66,7 @@ class TagController extends Controller
     public function editTag($tagId)
     {
         $serviceTag = $this->getServiceTag();
-        $servicePrimaryType = $this->getServiceGamePrimaryType();
+        $serviceCategory = $this->getServiceCategory();
 
         $tagData = $serviceTag->find($tagId);
         if (!$tagData) abort(404);
@@ -83,9 +83,9 @@ class TagController extends Controller
 
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
-            $primaryTypeId = $request->primary_type_id;
+            $categoryId = $request->category_id;
 
-            $serviceTag->edit($tagData, $tagName, $linkTitle, $primaryTypeId);
+            $serviceTag->edit($tagData, $tagName, $linkTitle, $categoryId);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -100,7 +100,7 @@ class TagController extends Controller
         $bindings['TagData'] = $tagData;
         $bindings['TagId'] = $tagId;
 
-        $bindings['PrimaryTypeList'] = $servicePrimaryType->getAll();
+        $bindings['CategoryList'] = $serviceCategory->getAll();
 
         return view('staff.categorisation.tag.edit', $bindings);
     }

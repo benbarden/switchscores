@@ -4,15 +4,15 @@
 
 {% block page_inner %}
 
-<h2>Add a primary type</h2>
-<label for="txt-new-primary-type-name">Name</label>
-<input id="txt-new-primary-type-name" type="text" maxlength="50">
-<input id="btn-save-primary-type" type="button" class="btn btn-primary" value="Save">
-<div id="js-new-primary-type-notify" class="alert alert-success" role="alert" style="display: none;">
+<h2>Add a category</h2>
+<label for="txt-new-category-name">Name</label>
+<input id="txt-new-category-name" type="text" maxlength="50">
+<input id="btn-save-category" type="button" class="btn btn-primary" value="Save">
+<div id="js-new-category-notify" class="alert alert-success" role="alert" style="display: none;">
 </div>
 
-<h2>All primary types</h2>
-{% if PrimaryTypeList.count > 0 %}
+<h2>All categories</h2>
+{% if CategoryList.count > 0 %}
     <table class="table data-sortable">
         <thead>
             <tr>
@@ -24,21 +24,21 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in PrimaryTypeList %}
+            {% for item in CategoryList %}
                 <tr>
                     <td class="text-right">
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': item.link_title}) }}" target="_blank">
-                            {{ item.primary_type }}
+                        <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}" target="_blank">
+                            {{ item.name }}
                         </a>
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.games.list.by-primary-type', {'primaryType': item}) }}">View games</a>
+                        <a href="{{ route('staff.games.list.by-category', {'category': item}) }}">View games</a>
                     </td>
                     <td class="text-center">
                         {% if item.games().count == 0 %}
@@ -50,7 +50,7 @@
         </tbody>
     </table>
 {% else %}
-    <p>No primary types found!</p>
+    <p>No categories found!</p>
 {% endif %}
 
 {% include 'common/table-sorting.twig' %}
@@ -68,12 +68,12 @@
             ]
         });
     });
-    $('#btn-save-primary-type').on('click', function() {
+    $('#btn-save-category').on('click', function() {
 
-        primaryType = $('#txt-new-primary-type-name').val();
-        if (primaryType == '') {
-            $('#js-new-primary-type-notify').text('No primary type name set.');
-            $('#js-new-primary-type-notify').show();
+        categoryName = $('#txt-new-category-name').val();
+        if (categoryName == '') {
+            $('#js-new-category-notify').text('No category name set.');
+            $('#js-new-category-notify').show();
             return false;
         }
 
@@ -83,16 +83,16 @@
             }
         });
 
-        $.getJSON('{{ route('staff.categorisation.game-primary-types.add') }}', {primaryType: primaryType}, function(data) {
-            $('#js-new-primary-type-notify').text('Primary type saved!');
-            $('#js-new-primary-type-notify').show();
-            $('#txt-new-primary-type-name').val('');
-            setTimeout("$('#js-new-primary-type-notify').fadeOut(); window.location.reload(true);", 1000);
+        $.getJSON('{{ route('staff.categorisation.category.add') }}', {categoryName: categoryName}, function(data) {
+            $('#js-new-category-notify').text('Category saved!');
+            $('#js-new-category-notify').show();
+            $('#txt-new-category-name').val('');
+            setTimeout("$('#js-new-category-notify').fadeOut(); window.location.reload(true);", 1000);
         })
         .fail(function(data) {
-            $('#js-new-primary-type-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-new-primary-type-notify').show();
-            $('#txt-new-primary-type-name').val('');
+            $('#js-new-category-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-new-category-notify').show();
+            $('#txt-new-category-name').val('');
         });
     });
 </script>

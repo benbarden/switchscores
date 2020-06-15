@@ -37,7 +37,7 @@ class SitemapController extends Controller
         $sitemapPages[] = array('url' => route('games.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.byTitle.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-        $sitemapPages[] = array('url' => route('games.browse.byPrimaryType.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        $sitemapPages[] = array('url' => route('games.browse.byCategory.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.bySeries.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.byTag.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.onSale'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');

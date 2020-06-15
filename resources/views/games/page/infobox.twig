@@ -77,13 +77,13 @@
 
     {% endif %}
 
-    {% if GameData.primary_type_id %}
+    {% if GameData.category_id %}
         <tr>
             <td>
-                <span style="font-weight: bold;">Primary type</span>
+                <span style="font-weight: bold;">Category</span>
             </td>
             <td>
-                <a href="{{ route('games.browse.byPrimaryType.page', {'primaryType': GameData.primaryType.link_title}) }}">{{ GameData.primaryType.primary_type }}</a>
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
             </td>
         </tr>
     {% endif %}
@@ -94,7 +94,7 @@
                 <span style="font-weight: bold;">Series</span>
             </td>
             <td>
-                <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
             </td>
         </tr>
     {% endif %}

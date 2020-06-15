@@ -31,8 +31,8 @@
                         </a>
                     </td>
                     <td>
-                        {% if ListMode == 'by-primary-type' %}
-                            {{ item.primaryType.primary_type }}
+                        {% if ListMode == 'by-category' %}
+                            {{ item.category.name }}
                         {% elseif ListMode == 'by-series' %}
                             {{ item.series.series }}
                         {% endif %}

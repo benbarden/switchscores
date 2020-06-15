@@ -45,7 +45,7 @@ class GamesEditorController extends Controller
         $serviceGameGenre = $this->getServiceGameGenre();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
-        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
+        $serviceCategory = $this->getServiceCategory();
         $serviceGameSeries = $this->getServiceGameSeries();
 
         $request = request();
@@ -131,7 +131,7 @@ class GamesEditorController extends Controller
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['PrimaryTypeList'] = $servicePrimaryTypes->getAll();
+        $bindings['CategoryList'] = $serviceCategory->getAll();
 
         return view('staff.games.editor.add', $bindings);
     }
@@ -144,7 +144,7 @@ class GamesEditorController extends Controller
         $serviceGenre = $this->getServiceGenre();
         $serviceGameGenre = $this->getServiceGameGenre();
         $serviceEshopEurope = $this->getServiceEshopEuropeGame();
-        $servicePrimaryTypes = $this->getServiceGamePrimaryType();
+        $serviceCategory = $this->getServiceCategory();
         $serviceGameSeries = $this->getServiceGameSeries();
 
         $bindings = [];
@@ -192,7 +192,7 @@ class GamesEditorController extends Controller
         $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
         $bindings['EshopEuropeList'] = $serviceEshopEurope->getAll();
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['PrimaryTypeList'] = $servicePrimaryTypes->getAll();
+        $bindings['CategoryList'] = $serviceCategory->getAll();
 
         return view('staff.games.editor.edit', $bindings);
     }

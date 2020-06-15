@@ -48,9 +48,6 @@ class GameSeriesService
 
     public function getByLinkTitle($linkTitle)
     {
-        $primaryType = GameSeries::
-        where('link_title', $linkTitle)
-            ->first();
-        return $primaryType;
+        return GameSeries::where('link_title', $linkTitle)->first();
     }
 }

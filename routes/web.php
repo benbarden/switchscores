@@ -35,8 +35,8 @@ Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale'
 Route::get('/games/by-title', 'GamesBrowseController@byTitleLanding')->name('games.browse.byTitle.landing');
 Route::get('/games/by-title/{letter}', 'GamesBrowseController@byTitlePage')->name('games.browse.byTitle.page');
 
-Route::get('/games/by-type', 'GamesBrowseController@byPrimaryTypeLanding')->name('games.browse.byPrimaryType.landing');
-Route::get('/games/by-type/{primaryType}', 'GamesBrowseController@byPrimaryTypePage')->name('games.browse.byPrimaryType.page');
+Route::get('/games/by-category', 'GamesBrowseController@byCategoryLanding')->name('games.browse.byCategory.landing');
+Route::get('/games/by-category/{category}', 'GamesBrowseController@byCategoryPage')->name('games.browse.byCategory.page');
 
 Route::get('/games/by-series', 'GamesBrowseController@bySeriesLanding')->name('games.browse.bySeries.landing');
 Route::get('/games/by-series/{series}', 'GamesBrowseController@bySeriesPage')->name('games.browse.bySeries.page');
@@ -46,6 +46,10 @@ Route::get('/games/by-tag/{tag}', 'GamesBrowseController@byTagPage')->name('game
 
 Route::get('/games/by-date', 'GamesBrowseController@byDateLanding')->name('games.browse.byDate.landing');
 Route::get('/games/by-date/{date}', 'GamesBrowseController@byDatePage')->name('games.browse.byDate.page');
+
+// Primary type redirects
+Route::get('/games/by-type', 'GamesBrowseController@byPrimaryTypeLanding')->name('games.browse.byPrimaryType.landing');
+Route::get('/games/by-type/{primaryType}', 'GamesBrowseController@byPrimaryTypePage')->name('games.browse.byPrimaryType.page');
 
 // These must be after the game redirects
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
@@ -178,7 +182,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/recently-released', 'Staff\Games\GamesListController@recentlyReleased')->name('staff.games.list.recently-released');
     Route::get('/staff/games/list/upcoming-games', 'Staff\Games\GamesListController@upcomingGames')->name('staff.games.list.upcoming-games');
     Route::get('/staff/games/list/no-nintendo-co-uk-link', 'Staff\Games\GamesListController@noNintendoCoUkLink')->name('staff.games.list.no-nintendo-co-uk-link');
-    Route::get('/staff/games/list/by-primary-type/{primaryType}', 'Staff\Games\GamesListController@byPrimaryType')->name('staff.games.list.by-primary-type');
+    Route::get('/staff/games/list/by-category/{category}', 'Staff\Games\GamesListController@byCategory')->name('staff.games.list.by-category');
     Route::get('/staff/games/list/by-series/{gameSeries}', 'Staff\Games\GamesListController@bySeries')->name('staff.games.list.by-series');
 
 });
@@ -211,8 +215,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')->name('staff.categorisation.dashboard');
 
     // Primary types
-    Route::get('/staff/categorisation/game-primary-types/list', 'Staff\Categorisation\GamePrimaryTypesController@showList')->name('staff.categorisation.game-primary-types.list');
-    Route::get('/staff/categorisation/game-primary-types/add', 'Staff\Categorisation\GamePrimaryTypesController@addPrimaryType')->name('staff.categorisation.game-primary-types.add');
+    Route::get('/staff/categorisation/category/list', 'Staff\Categorisation\CategoryController@showList')->name('staff.categorisation.category.list');
+    Route::get('/staff/categorisation/category/add', 'Staff\Categorisation\CategoryController@addCategory')->name('staff.categorisation.category.add');
 
     // Series
     Route::get('/staff/categorisation/game-series/list', 'Staff\Categorisation\GameSeriesController@showList')->name('staff.categorisation.game-series.list');
@@ -377,8 +381,8 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     Route::get('/staff/data-quality/dashboard/{year?}/{month?}', 'Staff\DataQuality\DashboardController@show')->name('staff.data-quality.dashboard');
 
-    Route::get('/staff/data-quality/games-with-primary-types/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithPrimaryTypes')->name('staff.data-quality.games-with-primary-types');
-    Route::get('/staff/data-quality/games-without-primary-types/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithoutPrimaryTypes')->name('staff.data-quality.games-without-primary-types');
+    Route::get('/staff/data-quality/games-with-categories/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithCategories')->name('staff.data-quality.games-with-categories');
+    Route::get('/staff/data-quality/games-without-categories/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithoutCategories')->name('staff.data-quality.games-without-categories');
 
 });
 

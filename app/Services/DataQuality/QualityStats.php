@@ -7,36 +7,36 @@ use Illuminate\Support\Facades\DB;
 
 class QualityStats
 {
-    // *** Primary types - all months *** //
-    public function getPrimaryTypeStats()
+    // *** Categories - all months *** //
+    public function getCategoryStats()
     {
         return DB::select('
             SELECT
             DATE_FORMAT(eu_release_date, \'%Y-%m\') AS yearmonth,
             DATE_FORMAT(eu_release_date, \'%Y\') AS release_year,
             DATE_FORMAT(eu_release_date, \'%m\') AS release_month,
-            count(primary_type_id) AS has_primary_type, 
-            count(*) - count(primary_type_id) AS no_primary_type, 
+            count(category_id) AS has_category, 
+            count(*) - count(category_id) AS no_category, 
             count(*) AS total_count,
-            round((count(primary_type_id) / count(*)) * 100, 2) AS pc_done
+            round((count(category_id) / count(*)) * 100, 2) AS pc_done
             FROM games
             GROUP BY yearmonth
             ORDER BY yearmonth DESC
         ');
     }
 
-    public function getGamesWithPrimaryType($year, $month)
+    public function getGamesWithCategory($year, $month)
     {
-        return Game::whereNotNull('primary_type_id')
+        return Game::whereNotNull('category_id')
             ->whereYear('eu_release_date', $year)
             ->whereMonth('eu_release_date', $month)
             ->orderBy('eu_release_date', 'asc')
             ->get();
     }
 
-    public function getGamesWithoutPrimaryType($year, $month)
+    public function getGamesWithoutCategory($year, $month)
     {
-        return Game::whereNull('primary_type_id')
+        return Game::whereNull('category_id')
             ->whereYear('eu_release_date', $year)
             ->whereMonth('eu_release_date', $month)
             ->orderBy('eu_release_date', 'asc')

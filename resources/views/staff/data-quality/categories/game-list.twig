@@ -8,8 +8,8 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Title</th>
-                <th>Primary type</th>
-                <th>Release date (EU)</th>
+                <th>Category</th>
+                <th class="text-center">Release date (EU)</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -26,7 +26,7 @@
                         </a>
                     </td>
                     <td>
-                        {{ item.primaryType.primary_type }}
+                        {{ item.category.name }}
                     </td>
                     <td class="text-center">
                         {{ item.eu_release_date }}

@@ -26,17 +26,17 @@ class DashboardController extends Controller
             ->setBreadcrumbs($breadcrumbs)
             ->getBindings();
 
-        // Primary types
-        $bindings['StatsPrimaryTypes'] = $serviceQualityStats->getPrimaryTypeStats();
+        // Categories
+        $bindings['StatsCategories'] = $serviceQualityStats->getCategoryStats();
 
         return view('staff.data-quality.dashboard', $bindings);
     }
 
-    public function gamesWithPrimaryTypes($year, $month)
+    public function gamesWithCategories($year, $month)
     {
         $serviceQualityStats = new QualityStats();
 
-        $pageTitle = 'Games with primary types';
+        $pageTitle = 'Games with categories';
 
         $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
 
@@ -47,16 +47,16 @@ class DashboardController extends Controller
             ->getBindings();
 
         // Primary types
-        $bindings['GameList'] = $serviceQualityStats->getGamesWithPrimaryType($year, $month);
+        $bindings['GameList'] = $serviceQualityStats->getGamesWithCategory($year, $month);
 
-        return view('staff.data-quality.primary-types.game-list', $bindings);
+        return view('staff.data-quality.categories.game-list', $bindings);
     }
 
-    public function gamesWithoutPrimaryTypes($year, $month)
+    public function gamesWithoutCategories($year, $month)
     {
         $serviceQualityStats = new QualityStats();
 
-        $pageTitle = 'Games without primary types';
+        $pageTitle = 'Games without categories';
 
         $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
 
@@ -67,8 +67,8 @@ class DashboardController extends Controller
             ->getBindings();
 
         // Primary types
-        $bindings['GameList'] = $serviceQualityStats->getGamesWithoutPrimaryType($year, $month);
+        $bindings['GameList'] = $serviceQualityStats->getGamesWithoutCategory($year, $month);
 
-        return view('staff.data-quality.primary-types.game-list', $bindings);
+        return view('staff.data-quality.categories.game-list', $bindings);
     }
 }

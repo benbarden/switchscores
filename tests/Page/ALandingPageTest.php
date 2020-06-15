@@ -53,13 +53,13 @@ class ALandingPageTest extends TestCase
         $response = $this->get('/games/by-date');
         $response->assertStatus(200);
 
+        $response = $this->get('/games/by-category');
+        $response->assertStatus(200);
+
         $response = $this->get('/games/by-tag');
         $response->assertStatus(200);
 
         $response = $this->get('/games/by-series');
-        $response->assertStatus(200);
-
-        $response = $this->get('/games/by-type');
         $response->assertStatus(200);
     }
 

@@ -8,7 +8,7 @@
         // *** Main *** //
         formVals['title'] = "{{ GameData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ GameData.link_title }}";
-        formVals['primary_type_id'] = "{{ GameData.primary_type_id }}";
+        formVals['category_id'] = "{{ GameData.category_id }}";
         formVals['series_id'] = "{{ GameData.series_id }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
@@ -29,7 +29,7 @@
         // *** Main *** //
         formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ old('link_title') }}";
-        formVals['primary_type_id'] = "{{ old('primary_type_id') }}";
+        formVals['category_id'] = "{{ old('category_id') }}";
         formVals['series_id'] = "{{ old('series_id') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
@@ -51,7 +51,7 @@
     // *** Main *** //
     $('#title').val(formVals['title']);
     $('#link_title').val(formVals['link_title']);
-    $('#primary_type_id').val(formVals['primary_type_id']);
+    $('#category_id').val(formVals['category_id']);
     $('#series_id').val(formVals['series_id']);
     $('#price_eshop').val(formVals['price_eshop']);
     $('#players').val(formVals['players']);

@@ -100,16 +100,16 @@ class GameReleaseDateService
     // ********************************************** //
 
     /**
-     * @param $primaryTypeId
+     * @param $categoryId
      * @param int $limit
      * @return mixed
      */
-    public function getReleasedByPrimaryType($primaryTypeId, $limit = null)
+    public function getReleasedByCategory($categoryId, $limit = null)
     {
         $games = DB::table('games')
             ->select('games.*')
             ->where('games.eu_is_released', 1)
-            ->where('games.primary_type_id', $primaryTypeId)
+            ->where('games.category_id', $categoryId)
             ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.title', 'asc');
 

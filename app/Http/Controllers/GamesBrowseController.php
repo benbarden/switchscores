@@ -37,37 +37,50 @@ class GamesBrowseController extends Controller
         return view('games.browse.byTitlePage', $bindings);
     }
 
-    public function byPrimaryTypeLanding()
+    public function byCategoryLanding()
     {
         $bindings = [];
 
-        $bindings['PrimaryTypeList'] = $this->getServiceGamePrimaryType()->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
 
-        $bindings['PageTitle'] = 'Browse Switch games by primary type';
-        $bindings['TopTitle'] = 'Browse Switch games by primary type';
+        $bindings['PageTitle'] = 'Browse Switch games by category';
+        $bindings['TopTitle'] = 'Browse Switch games by category';
 
-        return view('games.browse.byPrimaryTypeLanding', $bindings);
+        return view('games.browse.byCategoryLanding', $bindings);
     }
 
-    public function byPrimaryTypePage($primaryType)
+    public function byCategoryPage($category)
     {
         $bindings = [];
 
-        $primaryType = $this->getServiceGamePrimaryType()->getByLinkTitle($primaryType);
-        if (!$primaryType) abort(404);
+        $category = $this->getServiceCategory()->getByLinkTitle($category);
+        if (!$category) abort(404);
 
-        $primaryTypeId = $primaryType->id;
-        $primaryTypeName = $primaryType->primary_type;
+        $categoryId = $category->id;
+        $categoryName = $category->name;
 
-        $gameList = $this->getServiceGameReleaseDate()->getReleasedByPrimaryType($primaryTypeId);
+        $gameList = $this->getServiceGameReleaseDate()->getReleasedByCategory($categoryId);
 
-        $bindings['PrimaryType'] = $primaryType;
+        $bindings['Category'] = $category;
         $bindings['GameList'] = $gameList;
 
-        $bindings['PageTitle'] = 'Browse Switch games by primary type: '.$primaryTypeName;
-        $bindings['TopTitle'] = 'Browse Switch games by primary type: '.$primaryTypeName;
+        $bindings['PageTitle'] = 'Browse Switch games by category: '.$categoryName;
+        $bindings['TopTitle'] = 'Browse Switch games by category: '.$categoryName;
 
-        return view('games.browse.byPrimaryTypePage', $bindings);
+        return view('games.browse.byCategoryPage', $bindings);
+    }
+
+    public function byPrimaryTypeLanding()
+    {
+        return redirect(route('games.browse.byCategory.landing'));
+    }
+
+    public function byPrimaryTypePage($linkTitle)
+    {
+        $category = $this->getServiceCategory()->getByLinkTitle($linkTitle);
+        if (!$category) abort(404);
+
+        return redirect(route('games.browse.byCategory.page', ['link_title' => $linkTitle]));
     }
 
     public function bySeriesLanding()

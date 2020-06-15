@@ -29,7 +29,7 @@ class Game extends Model implements Auditable
         'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
-        'primary_type_id', 'series_id',
+        'primary_type_id', 'series_id', 'category_id',
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year'
     ];
@@ -44,9 +44,9 @@ class Game extends Model implements Auditable
         return $this->hasOne('App\GameRankYearMonth', 'game_id', 'id');
     }
 
-    public function primaryType()
+    public function category()
     {
-        return $this->hasOne('App\GamePrimaryType', 'id', 'primary_type_id');
+        return $this->hasOne('App\Category', 'id', 'category_id');
     }
 
     public function series()
