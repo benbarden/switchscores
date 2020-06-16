@@ -56,21 +56,21 @@ class GamesFilterListController extends Controller
         return view('admin.games-filter.list', $bindings);
     }
 
-    public function gamesWithNoTypeOrTag()
+    public function gamesWithNoCategoryOrTag()
     {
         $serviceGameList = $this->getServiceGameFilterList();
 
         $bindings = [];
 
-        $pageTitle = 'Games with no type or tag';
+        $pageTitle = 'Games with no category or tag';
         $bindings['TopTitle'] = 'Admin - '.$pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        $gameList = $serviceGameList->getGamesWithoutTypesOrTags();
+        $gameList = $serviceGameList->getGamesWithoutCategoriesOrTags();
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['FilterName'] = 'games-with-no-type-or-tag';
+        $bindings['FilterName'] = 'games-with-no-category-or-tag';
 
         return view('admin.games-filter.list', $bindings);
     }
@@ -169,18 +169,18 @@ class GamesFilterListController extends Controller
         return view('admin.games-filter.list', $bindings);
     }
 
-    public function gamesWithGenresNoPrimaryType()
+    public function gamesWithGenresNoCategory()
     {
         $serviceGame = $this->getServiceGame();
         $serviceGameGenre = $this->getServiceGameGenre();
 
         $bindings = [];
 
-        $pageTitle = 'Games with genres, no primary type';
+        $pageTitle = 'Games with genres, no category';
         $bindings['TopTitle'] = 'Admin - '.$pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        $gameListTemp = $serviceGameGenre->getGamesWithGenresNoPrimaryType();
+        $gameListTemp = $serviceGameGenre->getGamesWithGenresNoCategory();
         if ($gameListTemp) {
             $gameList = new Collection();
             foreach ($gameListTemp as $gameTemp) {
@@ -192,7 +192,7 @@ class GamesFilterListController extends Controller
 
         $bindings['jsInitialSort'] = "[ 0, 'asc']";
 
-        $bindings['FilterName'] = 'games-with-genres-no-primary-type';
+        $bindings['FilterName'] = 'games-with-genres-no-category';
 
         return view('admin.games-filter.list', $bindings);
     }

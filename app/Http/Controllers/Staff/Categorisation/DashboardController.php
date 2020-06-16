@@ -57,14 +57,13 @@ class DashboardController extends Controller
         $missingGenres = $serviceGameGenre->getGamesWithoutGenres();
         $bindings['MissingGenresCount'] = count($missingGenres);
 
-        // No type or tag
-        $missingTypesAndTags = $serviceGameFilterList->getGamesWithoutTypesOrTags();
-        $bindings['NoTypeOrTagCount'] = count($missingTypesAndTags);
+        // No category or tag
+        $missingCategoriesAndTags = $serviceGameFilterList->getGamesWithoutCategoriesOrTags();
+        $bindings['NoCategoryOrTagCount'] = count($missingCategoriesAndTags);
 
-        // Migrations: Genre, no primary type
-        $statsGenresNoPrimaryType = $serviceGameGenre->getGamesWithGenresNoPrimaryType();
-        $statsCountGenresNoPrimaryType = count($statsGenresNoPrimaryType);
-        $bindings['StatsCountGenresNoPrimaryType'] = $statsCountGenresNoPrimaryType;
+        // Migrations: Genre, no category
+        $statsGenresNoCategory = $serviceGameGenre->getGamesWithGenresNoCategory();
+        $bindings['StatsCountGenresNoCategory'] = count($statsGenresNoCategory);
 
         // Title matches: Series
         $seriesList = $serviceGameSeries->getAll();

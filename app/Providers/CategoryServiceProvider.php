@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\GamePrimaryTypeService;
+use App\Services\CategoryService;
 
-class GamePrimaryTypeServiceProvider extends ServiceProvider
+class CategoryServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class GamePrimaryTypeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\GamePrimaryTypeService', function($app) {
-            return new GamePrimaryTypeService();
+        $this->app->bind('Services\CategoryService', function($app) {
+            return new CategoryService();
         });
     }
 }

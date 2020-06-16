@@ -53,12 +53,12 @@
                 </td>
             </tr>
             <tr>
-                <td>No type or tag</td>
+                <td>No category or tag</td>
                 <td class="text-right">
                     <span class="h4"></span>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games-filter.games-with-no-type-or-tag')}}" class="h4">{{ NoTypeOrTagCount }}</a>
+                    <a href="{{ route('admin.games-filter.games-with-no-category-or-tag')}}" class="h4">{{ NoCategoryOrTagCount }}</a>
                 </td>
                 <td class="text-right">
                     <span class="h4"></span>
@@ -109,7 +109,7 @@
             <tbody>
             <tr>
                 <td>
-                    Genres, no primary type
+                    Genres, no category
                     <br><small>NB: This can be slow to load. Use sparingly.</small>
                 </td>
                 <td class="text-right">
@@ -117,8 +117,8 @@
                 </td>
                 <td class="text-right">
                     <span class="h4">
-                        <a href="{{ route('admin.games-filter.games-with-genre-no-primary-type') }}">
-                            {{ StatsCountGenresNoPrimaryType }}
+                        <a href="{{ route('admin.games-filter.games-with-genre-no-category') }}">
+                            {{ StatsCountGenresNoCategory }}
                         </a>
                     </span>
                 </td>

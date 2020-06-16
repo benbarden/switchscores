@@ -68,13 +68,13 @@ class GameFilterListService
     /**
      * @return mixed
      */
-    public function getGamesWithoutTypesOrTags()
+    public function getGamesWithoutCategoriesOrTags()
     {
         $games = DB::table('games')
             ->leftJoin('game_tags', 'games.id', '=', 'game_tags.game_id')
             ->select('games.id', 'games.title', 'games.link_title', 'games.eshop_europe_fs_id', 'game_tags.tag_id')
             ->whereNull('game_tags.tag_id')
-            ->whereNull('games.primary_type_id')
+            ->whereNull('games.category_id')
             ->orderBy('games.title', 'asc');
 
         $games = $games->get();
