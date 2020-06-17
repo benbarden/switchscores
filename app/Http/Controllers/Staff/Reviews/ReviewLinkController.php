@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -40,7 +40,7 @@ class ReviewLinkController extends Controller
 
         $reviewSites = $servicePartner->getAllReviewSites();
 
-        $bindings['TopTitle'] = 'Admin - Review links';
+        $bindings['TopTitle'] = 'Staff - Review links';
         $bindings['PageTitle'] = 'Review links';
 
         $jsInitialSort = "[ 3, 'desc']";
@@ -59,7 +59,7 @@ class ReviewLinkController extends Controller
         $bindings['ReviewSites'] = $reviewSites;
         $bindings['jsInitialSort'] = $jsInitialSort;
 
-        return view('admin.reviews.link.list', $bindings);
+        return view('staff.reviews.link.list', $bindings);
     }
 
     public function add()
@@ -95,13 +95,13 @@ class ReviewLinkController extends Controller
             event(new ReviewLinkCreated($reviewLink));
 
             // All done; send us back
-            return redirect(route('admin.reviews.link.list').'?siteId='.$siteId);
+            return redirect(route('staff.reviews.link.list').'?siteId='.$siteId);
 
         }
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Admin - Review links - Add link';
+        $bindings['TopTitle'] = 'Staff - Review links - Add link';
         $bindings['PageTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
@@ -109,7 +109,7 @@ class ReviewLinkController extends Controller
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
-        return view('admin.reviews.link.add', $bindings);
+        return view('staff.reviews.link.add', $bindings);
     }
 
     public function edit($linkId)
@@ -153,7 +153,7 @@ class ReviewLinkController extends Controller
             //\Artisan::call('UpdateGameRanks');
 
             // All done; send us back
-            return redirect(route('admin.reviews.link.list').'?siteId='.$siteId);
+            return redirect(route('staff.reviews.link.list').'?siteId='.$siteId);
 
         } else {
 
@@ -161,7 +161,7 @@ class ReviewLinkController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Review links - Edit link';
+        $bindings['TopTitle'] = 'Staff - Review links - Edit link';
         $bindings['PageTitle'] = 'Edit review link';
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
@@ -170,6 +170,6 @@ class ReviewLinkController extends Controller
 
         $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
 
-        return view('admin.reviews.link.edit', $bindings);
+        return view('staff.reviews.link.edit', $bindings);
     }
 }
