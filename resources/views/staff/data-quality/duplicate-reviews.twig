@@ -1,0 +1,51 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% if DuplicateReviews %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-left">Game</th>
+                <th class="text-left">Partner</th>
+                <th class="text-center">count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in DuplicateReviews %}
+                <tr>
+                    <td class="text-left">
+                        <a href="{{ route('staff.games.detail', {'gameId': item.game_id}) }}?tabid=reviews">
+                            {{ item.game_title }}
+                        </a>
+                    </td>
+                    <td class="text-left">
+                        {{ item.partner_name }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.count }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

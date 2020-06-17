@@ -26,10 +26,33 @@ class DashboardController extends Controller
             ->setBreadcrumbs($breadcrumbs)
             ->getBindings();
 
+        // Data integrity
+        $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
+
         // Categories
         $bindings['StatsCategories'] = $serviceQualityStats->getCategoryStats();
 
         return view('staff.data-quality.dashboard', $bindings);
+    }
+
+    public function duplicateReviews()
+    {
+        $serviceQualityStats = new QualityStats();
+
+        $pageTitle = 'Duplicate reviews';
+
+        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix($pageTitle)
+            ->setBreadcrumbs($breadcrumbs)
+            ->setDatatablesSortDefault()
+            ->getBindings();
+
+        $bindings['DuplicateReviews'] = $serviceQualityStats->getDuplicateReviews();
+
+        return view('staff.data-quality.duplicate-reviews', $bindings);
     }
 
     public function gamesWithCategories($year, $month)
