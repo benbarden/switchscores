@@ -196,6 +196,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Review links
     Route::match(['get', 'post'], '/staff/reviews/link/add', 'Staff\Reviews\ReviewLinkController@add')->name('staff.reviews.link.add');
     Route::match(['get', 'post'], '/staff/reviews/link/edit/{linkId}', 'Staff\Reviews\ReviewLinkController@edit')->name('staff.reviews.link.edit');
+    Route::match(['get', 'post'], '/staff/reviews/link/delete/{linkId}', 'Staff\Reviews\ReviewLinkController@delete')->name('staff.reviews.link.delete');
     Route::get('/staff/reviews/link/{report?}', 'Staff\Reviews\ReviewLinkController@showList')->name('staff.reviews.link.list');
 
     // Quick reviews

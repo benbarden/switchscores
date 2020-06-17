@@ -172,4 +172,47 @@ class ReviewLinkController extends Controller
 
         return view('staff.reviews.link.edit', $bindings);
     }
+
+    public function delete($linkId)
+    {
+        $serviceReviewLink = $this->getServiceReviewLink();
+        $serviceGame = $this->getServiceGame();
+
+        $reviewLink = $serviceReviewLink->find($linkId);
+        if (!$reviewLink) abort(404);
+
+        $bindings = [];
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'delete-post';
+
+            $serviceReviewLink->delete($linkId);
+
+            $game = $serviceGame->find($reviewLink->game_id);
+            if ($game) {
+                // Update game review stats
+                $this->getServiceReviewStats()->updateGameReviewStats($game);
+            }
+
+            // Done
+
+            return redirect(route('staff.reviews.link.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'delete';
+
+        }
+
+        $bindings['TopTitle'] = 'Staff - Review links - Delete link';
+        $bindings['PageTitle'] = 'Delete link';
+        $bindings['ReviewLinkData'] = $reviewLink;
+        $bindings['LinkId'] = $linkId;
+
+        return view('staff.reviews.link.delete', $bindings);
+    }
+
 }

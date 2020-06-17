@@ -43,7 +43,8 @@
                 {% endif %}
             </td>
             <td class="text-center">
-                <a href="{{ route('staff.reviews.link.edit', {'linkId': item.id}) }}">Edit</a>
+                <a href="{{ route('staff.reviews.link.edit', {'linkId': item.id}) }}">Edit</a> :
+                <a href="{{ route('staff.reviews.link.delete', {'linkId': item.id}) }}">Delete</a>
             </td>
         </tr>
     {% endfor %}

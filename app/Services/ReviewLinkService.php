@@ -65,6 +65,11 @@ class ReviewLinkService
         $reviewLinkData->save();
     }
 
+    public function delete($linkId)
+    {
+        ReviewLink::where('id', $linkId)->delete();
+    }
+
     /**
      * @param $id
      * @return ReviewLink

@@ -1,0 +1,38 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('staff.reviews.dashboard'), 'text': 'Reviews dashboard'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="alert alert-warning" role="alert">
+    <strong>Warning!</strong> You are about to delete a review link - see details below.
+    <br>Please review the details shown below before proceeding. There is no option to undo the deletion if you proceed!
+</div>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        The following review link will be deleted:
+    </p>
+    <ul>
+        <li>id: {{ ReviewLinkData.id }}</li>
+        <li>for game: {{ ReviewLinkData.game.title }}</li>
+        <li>posted by site: {{ ReviewLinkData.site.name }}</li>
+    </ul>
+    <p>
+        After deleting this review link, be sure to run UpdateGameRanks.
+    </p>
+</div>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.link.delete', {'linkId': LinkId}) }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-danger">
+                Confirm deletion
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock page_inner %}
