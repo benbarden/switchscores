@@ -19,7 +19,7 @@
         </td>
         <td>
             {% if GameData.series_id %}
-                <a href="{{ route('games.browse.bySeries.page', {'primaryType': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
             {% endif %}
         </td>
     </tr>

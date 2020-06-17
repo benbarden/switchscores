@@ -30,13 +30,13 @@ class DashboardController extends Controller
         // Used in several calculations below
         $totalGameCount = $serviceGame->getCount();
 
-        // Game stats: Primary type
-        $statsWithPrimaryType = $serviceQualityStats->countGamesWithPrimaryType();
-        $statsWithoutPrimaryType = $serviceQualityStats->countGamesWithoutPrimaryType();
-        $bindings['StatsWithPrimaryType'] = $statsWithPrimaryType;
-        $bindings['StatsWithoutPrimaryType'] = $statsWithoutPrimaryType;
-        $statsPrimaryTypeProgress = ($statsWithPrimaryType) / $totalGameCount * 100;
-        $bindings['StatsPrimaryTypeProgress'] = round($statsPrimaryTypeProgress, 2);
+        // Game stats: Categories
+        $statsWithCategory = $serviceQualityStats->countGamesWithCategory();
+        $statsWithoutCategory = $serviceQualityStats->countGamesWithoutCategory();
+        $bindings['StatsWithCategory'] = $statsWithCategory;
+        $bindings['StatsWithoutCategory'] = $statsWithoutCategory;
+        $statsCategoryProgress = ($statsWithCategory) / $totalGameCount * 100;
+        $bindings['StatsCategoryProgress'] = round($statsCategoryProgress, 2);
 
         // Game stats: Tags
         $missingTags = $serviceGameFilterList->getGamesWithoutTags();

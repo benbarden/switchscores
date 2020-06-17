@@ -43,27 +43,16 @@ class QualityStats
             ->get();
     }
 
-    // Primary types
+    // Categories
     // All-time stats
-    public function countGamesWithPrimaryType()
+    public function countGamesWithCategory()
     {
-        return Game::whereNotNull('primary_type_id')->count();
+        return Game::whereNotNull('category_id')->count();
     }
 
-    public function countGamesWithoutPrimaryType()
+    public function countGamesWithoutCategory()
     {
-        return Game::whereNull('primary_type_id')->count();
-    }
-
-    // Monthly stats
-    public function countGamesWithPrimaryTypeByYearMonth($year, $month)
-    {
-        return Game::whereNotNull('primary_type_id')->whereYear('eu_release_date', $year)->whereMonth('eu_release_date', $month)->count();
-    }
-
-    public function countGamesWithoutPrimaryTypeByYearMonth($year, $month)
-    {
-        return Game::whereNull('primary_type_id')->whereYear('eu_release_date', $year)->whereMonth('eu_release_date', $month)->count();
+        return Game::whereNull('category_id')->count();
     }
 
     // Series

@@ -2,9 +2,9 @@
 {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    {% if item.primary_type_id %}
+    {% if item.category_id %}
         <div style="position: absolute; top: 2px;">
-            <span class="h5 label label-default">{{ item.primary_type }}</span>
+            <span class="h5 label label-default">{{ item.category_name }}</span>
         </div>
     {% endif %}
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">

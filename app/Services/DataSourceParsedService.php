@@ -192,12 +192,12 @@ class DataSourceParsedService
     {
         $games = DB::table('games')
             ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
-            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
             ->select('games.*',
                 'data_source_parsed.price_standard',
                 'data_source_parsed.price_discounted',
                 'data_source_parsed.price_discount_pc',
-                'game_primary_types.primary_type')
+                'categories.name AS category_name')
             ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
             ->whereNotNull('games.game_rank')
             ->whereNotNull('data_source_parsed.price_discounted')
@@ -221,12 +221,12 @@ class DataSourceParsedService
     {
         $games = DB::table('games')
             ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
-            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
             ->select('games.*',
                 'data_source_parsed.price_standard',
                 'data_source_parsed.price_discounted',
                 'data_source_parsed.price_discount_pc',
-                'game_primary_types.primary_type')
+                'categories.name AS category_name')
             ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
             ->whereNotNull('games.game_rank')
             ->where('games.rating_avg', '>', '7.9')
@@ -249,12 +249,12 @@ class DataSourceParsedService
     {
         $games = DB::table('games')
             ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
-            ->leftJoin('game_primary_types', 'games.primary_type_id', '=', 'game_primary_types.id')
+            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
             ->select('games.*',
                 'data_source_parsed.price_standard',
                 'data_source_parsed.price_discounted',
                 'data_source_parsed.price_discount_pc',
-                'game_primary_types.primary_type')
+                'categories.name AS category_name')
             ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
             ->whereNull('games.game_rank')
             ->whereNotNull('data_source_parsed.price_discounted')
