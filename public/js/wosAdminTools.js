@@ -20,6 +20,25 @@ var wosAdminTools = {
 
     },
 
+    generateNewsUrl: function(idOfFieldToCheck, idOfFieldToUpdate, newsId) {
+
+        if ($('#' + idOfFieldToUpdate).val() != '') {
+            return false;
+        }
+        textToConvert = $('#' + idOfFieldToCheck).val();
+        if (textToConvert == '') {
+            $('#' + idOfFieldToUpdate).val('');
+            return false;
+        }
+
+        $.getJSON('/api/url/news-url', {title: textToConvert, newsId: newsId}, function(data) {
+            linkText = data.linkText;
+            //console.log(linkText);
+            $('#' + idOfFieldToUpdate).val(linkText);
+        });
+
+    },
+
     removeGameTag: function(gameId, elemId, gameTagId) {
 
         if (gameTagId == '') {

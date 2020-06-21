@@ -2,6 +2,8 @@
     var formMode = '{{ FormMode }}';
     var formVals = [];
 
+    var newsId = '{{ NewsId }}';
+
     if (formMode == 'edit') {
 
         // This is used when editing existing news items.
@@ -32,19 +34,11 @@
     $('#game_id').select2();
 
     $('#url').on('focus', function() {
-        useAutoUrl('url');
+        wosAdminTools.generateNewsUrl('title', 'url', newsId);
     });
     $('#url').on('blur', function() {
-        useAutoUrl('url');
+        wosAdminTools.generateNewsUrl('title', 'url', newsId);
     });
-
-    function useAutoUrl(elem) {
-        if ($('#' + elem).val() == '') {
-            var date = new Date();
-            dateString = date.yyyymmdd();
-            $('#' + elem).val('/news/' + dateString + '/');
-        }
-    }
 
     // Date formatting
     Date.prototype.yyyymmdd = function() {

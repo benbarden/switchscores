@@ -23,6 +23,7 @@ Route::get('/game/title-match', 'Api\Game\TitleMatch@getByTitle');
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
 Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
+Route::get('/url/news-url', 'Api\UrlController@generateNewsUrl');
 
 /* Admin-restricted */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
