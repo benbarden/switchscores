@@ -76,20 +76,7 @@
 
     // Autogenerate link URL
     $('#title').on('blur', function() {
-        if ($('#link_title').val() != '') {
-            return false;
-        }
-        gameTitle = $(this).val();
-        if (gameTitle == '') {
-            $('#link_title').val('');
-            return false;
-        }
-
-        $.getJSON('/api/url/link-text', {title: gameTitle}, function(data) {
-            linkText = data.linkText;
-            //console.log(linkText);
-            $('#link_title').val(linkText);
-        });
+        wosAdminTools.convertToLinkTitle('title', 'link_title');
     });
 
 </script>
