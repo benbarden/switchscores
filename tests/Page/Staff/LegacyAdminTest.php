@@ -84,7 +84,7 @@ class LegacyAdminTest extends TestCase
     public function testAdminReviewsLink()
     {
         $this->be($this->userAdmin);
-        $response = $this->get('/admin/reviews/link');
+        $response = $this->get('/staff/reviews/link');
         $response->assertStatus(200);
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DbEditGame extends Model
 {
-    const DATA_PRIMARY_TYPE = 'primary_type';
+    const DATA_CATEGORY = 'category';
 
     const STATUS_PENDING = 0;
     const STATUS_APPROVED = 1;

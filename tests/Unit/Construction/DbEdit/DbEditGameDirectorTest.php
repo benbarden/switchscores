@@ -24,7 +24,7 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($userId, $builder->getDbEditGame()->user_id);
     }
 
-    public function testBuildNewPrimaryType()
+    public function testBuildNewCategory()
     {
         $statusPending = DbEditGame::STATUS_PENDING;
         $statusApproved = DbEditGame::STATUS_APPROVED;
@@ -32,7 +32,7 @@ class DbEditGameDirectorTest extends TestCase
 
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         $changeHistoryId = null;
@@ -65,7 +65,7 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 
-    public function testBuildPrimaryTypeApproved()
+    public function testBuildCategoryApproved()
     {
         $statusPending = DbEditGame::STATUS_PENDING;
         $statusApproved = DbEditGame::STATUS_APPROVED;
@@ -73,7 +73,7 @@ class DbEditGameDirectorTest extends TestCase
 
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         // NOTE: these can't be set at creation, but we'll use them later
@@ -127,7 +127,7 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 
-    public function testBuildPrimaryTypeDenied()
+    public function testBuildCategoryDenied()
     {
         $statusPending = DbEditGame::STATUS_PENDING;
         $statusApproved = DbEditGame::STATUS_APPROVED;
@@ -135,7 +135,7 @@ class DbEditGameDirectorTest extends TestCase
 
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         $changeHistoryId = null;
