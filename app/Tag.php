@@ -20,7 +20,7 @@ class Tag extends Model
      * @var array
      */
     protected $fillable = [
-        'tag_name', 'link_title', 'primary_type_id', 'category_id'
+        'tag_name', 'link_title', 'category_id'
     ];
 
     public function gameTags()
