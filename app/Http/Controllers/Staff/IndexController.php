@@ -17,7 +17,6 @@ class IndexController extends Controller
     {
         $serviceUser = $this->getServiceUser();
 
-        $serviceFeedItemGame = $this->getServiceFeedItemGame();
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
 
@@ -35,10 +34,8 @@ class IndexController extends Controller
 
         // Updates requiring approval
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
-        $pendingFeedGameItems = $serviceFeedItemGame->getPending();
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
-        $bindings['PendingFeedGameItemsCount'] = count($pendingFeedGameItems);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Nintendo.co.uk: Unlinked items

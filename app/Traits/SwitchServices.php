@@ -7,7 +7,6 @@ use App\Services\ViewHelper\Breadcrumbs;
 
 use App\Services\AuditService;
 use App\Services\CategoryService;
-use App\Services\CrawlerWikipediaGamesListSourceService;
 use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
@@ -15,7 +14,6 @@ use App\Services\DataSourceRawService;
 use App\Services\EshopEuropeAlertService;
 use App\Services\EshopEuropeGameService;
 use App\Services\EshopEuropeIgnoreService;
-use App\Services\FeedItemGameService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
 use App\Services\GameFilterListService;
@@ -138,14 +136,6 @@ trait SwitchServices
     }
 
     /**
-     * @return CrawlerWikipediaGamesListSourceService
-     */
-    public function getServiceCrawlerWikipediaGamesListSource()
-    {
-        return $this->loadService('CrawlerWikipediaGamesListSourceService');
-    }
-
-    /**
      * @return DataSourceService
      */
     public function getServiceDataSource()
@@ -199,14 +189,6 @@ trait SwitchServices
     public function getServiceEshopEuropeAlert()
     {
         return $this->loadService('EshopEuropeAlertService');
-    }
-
-    /**
-     * @return FeedItemGameService
-     */
-    public function getServiceFeedItemGame()
-    {
-        return $this->loadService('FeedItemGameService');
     }
 
     /**

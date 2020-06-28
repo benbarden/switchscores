@@ -33,7 +33,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
 
         $builder = new GameBuilder();
         $builder->setDataToUpdate($dataToUpdate)->setUserId($userId)->setGameId($gameId);
@@ -48,7 +48,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = null;
 
         $builder = new GameBuilder();
@@ -68,7 +68,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
 
         $builder = new GameBuilder();
@@ -88,7 +88,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
 
@@ -111,7 +111,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         $status = DbEditGame::STATUS_PENDING;
@@ -137,7 +137,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         $status = DbEditGame::STATUS_PENDING;
@@ -166,7 +166,7 @@ class DbEditGameBuilderTest extends TestCase
     {
         $userId = 60060;
         $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_PRIMARY_TYPE;
+        $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
         $status = DbEditGame::STATUS_PENDING;

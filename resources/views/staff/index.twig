@@ -49,16 +49,6 @@
                     </td>
                 </tr>
             {% endif %}
-            {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}">Wiki updates</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}" class="h4">{{ PendingFeedGameItemsCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
                 <tr>
                     <td>

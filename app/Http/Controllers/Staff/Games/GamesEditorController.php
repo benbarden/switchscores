@@ -310,7 +310,6 @@ class GamesEditorController extends Controller
         $serviceReviewLink = $this->getServiceReviewLink();
 
         // Deletion
-        $serviceFeedItemGame = $this->getServiceFeedItemGame();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
@@ -337,7 +336,6 @@ class GamesEditorController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceFeedItemGame->deleteByGameId($gameId);
             $serviceGameGenre->deleteGameGenres($gameId);
             $serviceGameTitleHash->deleteByGameId($gameId);
             $serviceGameTag->deleteGameTags($gameId);

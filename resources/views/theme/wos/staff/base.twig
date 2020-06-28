@@ -203,14 +203,6 @@
                                         <li role="separator" class="divider"></li>
                                     {% endif %}
 
-                                    {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
-                                        <li><a href="{{ route('staff.wikipedia.dashboard') }}">Wikipedia dashboard</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="{{ route('staff.wikipedia.wiki-updates.list-with-game-id') }}">Wiki updates: Pending with game id</a></li>
-                                        <li><a href="{{ route('staff.wikipedia.wiki-updates.list-no-game-id') }}">Wiki updates: Pending, no game id</a></li>
-                                        <li><a href="{{ route('staff.wikipedia.wiki-updates.list-all-pending') }}">Wiki updates: All pending</a></li>
-                                        <li role="separator" class="divider"></li>
-                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}

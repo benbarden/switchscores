@@ -322,23 +322,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
-// *************** Staff: WIKIPEDIA *************** //
-Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_WIKIPEDIA_MANAGER]], function() {
-
-    Route::get('/staff/wikipedia/dashboard', 'Staff\Wikipedia\DashboardController@show')->name('staff.wikipedia.dashboard');
-
-    // Wiki updates
-    Route::get('/staff/wikipedia/wiki-updates/all-pending', 'Staff\Wikipedia\WikiUpdatesController@showListAllPending')->name('staff.wikipedia.wiki-updates.list-all-pending');
-    Route::get('/staff/wikipedia/wiki-updates/pending-no-game-id', 'Staff\Wikipedia\WikiUpdatesController@showListNoGameId')->name('staff.wikipedia.wiki-updates.list-no-game-id');
-    Route::get('/staff/wikipedia/wiki-updates/pending-with-game-id', 'Staff\Wikipedia\WikiUpdatesController@showListWithGameId')->name('staff.wikipedia.wiki-updates.list-with-game-id');
-    Route::get('/staff/wikipedia/wiki-updates/all-complete', 'Staff\Wikipedia\WikiUpdatesController@showListAllComplete')->name('staff.wikipedia.wiki-updates.list-all-complete');
-    Route::get('/staff/wikipedia/wiki-updates/all-inactive', 'Staff\Wikipedia\WikiUpdatesController@showListAllInactive')->name('staff.wikipedia.wiki-updates.list-all-inactive');
-
-    Route::match(['get', 'post'], '/staff/wikipedia/wiki-updates/edit/{linkId}', 'Staff\Wikipedia\WikiUpdatesController@edit')->name('staff.wikipedia.wiki-updates.edit');
-
-});
-
-
 // *************** Staff: DATA SOURCES *************** //
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_DATA_SOURCE_MANAGER]], function() {
 
