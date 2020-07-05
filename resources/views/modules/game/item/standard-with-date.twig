@@ -1,0 +1,42 @@
+<div class="row" style="margin-top: 16px;">
+
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        {# PACKSHOTS #}
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+            {% if boxartUrl %}
+                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+            {% else %}
+                <img src="/img/logo-grey-wide.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+            {% endif %}
+        </a>
+    </div>
+
+</div>
+
+<div class="row" style="margin-top: 8px;">
+
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <span class="h5">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
+        <br>
+        <span class="h6">
+            Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
+        </span>
+    </div>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+        <div class="pull-right">
+            {% if item.rating_avg %}
+                {% if item.game_rank %}
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                {% else %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+                {% endif %}
+            {% else %}
+                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>

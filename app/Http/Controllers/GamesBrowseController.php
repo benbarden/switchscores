@@ -28,7 +28,7 @@ class GamesBrowseController extends Controller
 
         $gamesList = $this->getServiceGameReleaseDate()->getReleasedByLetter($letter);
 
-        $bindings['GamesList'] = $gamesList;
+        $bindings['GameList'] = $gamesList;
         $bindings['GameLetter'] = $letter;
 
         $bindings['TopTitle'] = 'Browse Switch games by title: '.$letter;

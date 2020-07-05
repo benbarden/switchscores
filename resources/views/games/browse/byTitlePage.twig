@@ -10,10 +10,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': GamesList, 'batchOverride': 4} %}
-        {#
-        {% include 'games/layouts/tableView/standard.twig' with {'GameList': GamesList} %}
-        #}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': GameList, 'batchOverride': 4} %}
     </div>
 </div>
 

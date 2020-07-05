@@ -62,7 +62,7 @@
         <h2 class="standout-header">
             Best of {{ Year }}
         </h2>
-        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': TopRatedThisYear} %}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': TopRatedThisYear} %}
         <h3 class="text-center">
             <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
         </h3>
@@ -86,16 +86,6 @@
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
-
-        {#
-        <h2 class="standout-header">
-            New releases
-        </h2>
-        {% include 'games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases} %}
-        <h3 class="text-center">
-            <a href="{{ route('games.landing') }}">View all games &gt;</a>
-        </h3>
-        #}
 
     </div>
 

@@ -8,7 +8,7 @@
             <div class="row">
                 {% for batchItem in item %}
                     <div class="col-sm-12 col-md-6 col-lg-6">
-                        {% include 'games/layouts/tiledGrid/tileMedium.twig' with {'item': batchItem} %}
+                        {% include 'modules/game/item/standard-with-date.twig' with {'item': batchItem} %}
                     </div>
                 {% endfor %}
             </div>
