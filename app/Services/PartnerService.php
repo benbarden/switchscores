@@ -212,6 +212,7 @@ class PartnerService
             foreach ($gameDevList as $item) {
                 $gameId = $item->id;
                 $item->PartnerType = 'developer';
+                $item->ExtraDetailLine = 'Developer';
                 $mergedGameList[$gameId] = $item;
                 $usedGameIds[] = $gameId;
             }
@@ -219,8 +220,10 @@ class PartnerService
                 $gameId = $item->id;
                 if (in_array($gameId, $usedGameIds)) {
                     $mergedGameList[$gameId]->PartnerType = 'dev/pub';
+                    $mergedGameList[$gameId]->ExtraDetailLine = 'Developer/Publisher';
                 } else {
                     $item->PartnerType = 'publisher';
+                    $item->ExtraDetailLine = 'Publisher';
                     $mergedGameList[] = $item;
                 }
             }
@@ -230,6 +233,7 @@ class PartnerService
             $mergedGameList = $gameDevList;
             foreach ($gameDevList as $item) {
                 $item->PartnerType = 'developer';
+                $item->ExtraDetailLine = 'Developer';
                 $mergedGameList[] = $item;
             }
 
@@ -238,6 +242,7 @@ class PartnerService
             $mergedGameList = $gamePubList;
             foreach ($gamePubList as $item) {
                 $item->PartnerType = 'publisher';
+                $item->ExtraDetailLine = 'Publisher';
                 $mergedGameList[] = $item;
             }
 

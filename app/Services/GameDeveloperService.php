@@ -94,7 +94,8 @@ class GameDeveloperService
             ->join('partners', 'game_developers.developer_id', '=', 'partners.id')
             ->select('games.*',
                 'game_developers.developer_id',
-                'partners.name')
+                'partners.name',
+                'games.eu_release_date')
             ->where('game_developers.developer_id', $developerId);
 
         if ($releasedOnly) {

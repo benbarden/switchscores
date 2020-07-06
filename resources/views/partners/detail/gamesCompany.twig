@@ -32,25 +32,18 @@
         </table>
     </div>
 </div>
+
 {% if MergedGameList %}
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
         </div>
-        {% for item in MergedGameList %}
-            {% if item.PartnerType == 'developer' %}
-                {% set ExtraDetailLine = 'Developer' %}
-            {% elseif item.PartnerType == 'publisher' %}
-                {% set ExtraDetailLine = 'Publisher' %}
-            {% elseif item.PartnerType == 'dev/pub' %}
-                {% set ExtraDetailLine = 'Developer/Publisher' %}
-            {% else %}
-                {% set ExtraDetailLine = '' %}
-            {% endif %}
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                {% include 'games/layouts/miniItem.twig' with {'item': item, 'ExtraDetailLine': ExtraDetailLine} %}
-            </div>
-        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': MergedGameList, 'batchOverride': 4} %}
+        </div>
     </div>
 {% endif %}
+
 {% endblock page_body %}

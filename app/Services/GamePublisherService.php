@@ -94,7 +94,8 @@ class GamePublisherService
             ->join('partners', 'game_publishers.publisher_id', '=', 'partners.id')
             ->select('games.*',
                 'game_publishers.publisher_id',
-                'partners.name')
+                'partners.name',
+                'games.eu_release_date')
             ->where('game_publishers.publisher_id', $publisherId);
 
         if ($releasedOnly) {
