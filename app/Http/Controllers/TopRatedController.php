@@ -52,7 +52,7 @@ class TopRatedController extends Controller
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Nintendo Switch Top 100 games';
+        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
         $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
 
         return view('topRated.allTime', $bindings);
@@ -75,7 +75,7 @@ class TopRatedController extends Controller
         $bindings['GamesTableSort'] = "[5, 'desc']";
         $bindings['Year'] = $year;
 
-        $bindings['TopTitle'] = 'Nintendo Switch Top 100 games - released in '.$year;
+        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
         $bindings['PageTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
 
         return view('topRated.byYear', $bindings);
