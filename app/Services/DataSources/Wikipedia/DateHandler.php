@@ -108,6 +108,9 @@ class DateHandler
             case 'Fall 2019':
                 return '2019-Q3';
                 break;
+            case 'Summer 2020':
+                return '2020-Q2';
+                break;
 
         }
 
