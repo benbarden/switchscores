@@ -6,7 +6,7 @@ use App\Services\DataSources\Wikipedia\Importer;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-class WikipediaCrawlerTest extends TestCase
+class WikipediaImporterTest extends TestCase
 {
     /**
      * @var Importer

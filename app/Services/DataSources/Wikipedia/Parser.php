@@ -52,10 +52,6 @@ class Parser
      */
     public function parseItem()
     {
-        // Developers, Publishers
-        $this->dataSourceParsed->developers = $this->rawJsonData['developers'];
-        $this->dataSourceParsed->publishers = $this->rawJsonData['publishers'];
-
         // Release dates
         $releaseDateEU = $this->parseReleaseDateEU();
         $releaseDateUS = $this->parseReleaseDateUS();
@@ -68,6 +64,18 @@ class Parser
         }
         if (!is_null($releaseDateJP)) {
             $this->dataSourceParsed->release_date_jp = $releaseDateJP;
+        }
+
+        // Developers
+        $parsedDevelopers = $this->parseDevelopers();
+        if (!is_null($parsedDevelopers)) {
+            $this->dataSourceParsed->developers = $parsedDevelopers;
+        }
+
+        // Publishers
+        $parsedPublishers = $this->parsePublishers();
+        if (!is_null($parsedPublishers)) {
+            $this->dataSourceParsed->publishers = $parsedPublishers;
         }
 
         // Rules for not saving
@@ -127,5 +135,69 @@ class Parser
         $parsedDate = $this->rawJsonData['release_date_jp'];
 
         return $parsedDate;
+    }
+
+    public function parseDevelopers()
+    {
+        $parsedDevelopers = null;
+
+        if (array_key_exists('developers', $this->rawJsonData)) {
+
+            $parsedDevelopers = $this->rawJsonData['developers'];
+
+            if (is_array($parsedDevelopers)) {
+                $developerArray = $parsedDevelopers;
+            } elseif (strpos($parsedDevelopers, ",") !== false) {
+                $developerArray = explode(",", $parsedDevelopers);
+            } else {
+                $developerArray = [];
+                array_push($developerArray, $parsedDevelopers);
+            }
+            foreach ($developerArray as &$item) {
+                $item = str_replace('JP: ', '', $item);
+                $item = str_replace('WW: ', '', $item);
+                $item = str_replace('EU: ', '', $item);
+                $item = str_replace('PAL: ', '', $item);
+                $item = str_replace('NA: ', '', $item);
+                $item = trim($item);
+            }
+            sort($developerArray);
+            $parsedDevelopers = implode(",", $developerArray);
+
+        }
+
+        return $parsedDevelopers;
+    }
+
+    public function parsePublishers()
+    {
+        $parsedPublishers = null;
+
+        if (array_key_exists('publishers', $this->rawJsonData)) {
+
+            $parsedPublishers = $this->rawJsonData['publishers'];
+
+            if (is_array($parsedPublishers)) {
+                $publisherArray = $parsedPublishers;
+            } elseif (strpos($parsedPublishers, ",") !== false) {
+                $publisherArray = explode(",", $parsedPublishers);
+            } else {
+                $publisherArray = [];
+                array_push($publisherArray, $parsedPublishers);
+            }
+            foreach ($publisherArray as &$item) {
+                $item = str_replace('JP: ', '', $item);
+                $item = str_replace('WW: ', '', $item);
+                $item = str_replace('EU: ', '', $item);
+                $item = str_replace('PAL: ', '', $item);
+                $item = str_replace('NA: ', '', $item);
+                $item = trim($item);
+            }
+            sort($publisherArray);
+            $parsedPublishers = implode(",", $publisherArray);
+
+        }
+
+        return $parsedPublishers;
     }
 }

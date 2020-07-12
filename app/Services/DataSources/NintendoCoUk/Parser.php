@@ -187,7 +187,23 @@ class Parser
         $parsedPublishers = null;
 
         if (array_key_exists('publisher', $this->rawJsonData)) {
+
             $parsedPublishers = $this->rawJsonData['publisher'];
+
+            if (is_array($parsedPublishers)) {
+                $publisherArray = $parsedPublishers;
+            } elseif (strpos($parsedPublishers, ",") !== false) {
+                $publisherArray = explode(",", $parsedPublishers);
+            } else {
+                $publisherArray = [];
+                array_push($publisherArray, $parsedPublishers);
+            }
+            foreach ($publisherArray as &$item) {
+                $item = trim($item);
+            }
+            sort($publisherArray);
+            $parsedPublishers = implode(",", $publisherArray);
+
         }
 
         return $parsedPublishers;
