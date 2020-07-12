@@ -12,10 +12,11 @@ class UpdateGameFactory
     public static function doUpdate(Game $game, DataSourceParsed $dsItem, GameImportRuleWikipedia $gameImportRule = null)
     {
         $serviceUpdateGame = new UpdateGame($game, $dsItem, $gameImportRule);
-        $serviceUpdateGame->updateDevelopers();
-        $serviceUpdateGame->updatePublishers();
         $serviceUpdateGame->updateReleaseDateUS();
         $serviceUpdateGame->updateReleaseDateJP();
+        // Temporarily stop doing dev/pub updates so we can phase out the old fields on the games table.
+        //$serviceUpdateGame->updateDevelopers();
+        //$serviceUpdateGame->updatePublishers();
         $game->save();
     }
 }

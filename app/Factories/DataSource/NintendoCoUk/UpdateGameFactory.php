@@ -14,9 +14,10 @@ class UpdateGameFactory
         $serviceUpdateGame = new UpdateGame($game, $dsItem, $gameImportRule);
         $serviceUpdateGame->updatePrice();
         $serviceUpdateGame->updateReleaseDate();
-        $serviceUpdateGame->updatePublishers();
         $serviceUpdateGame->updatePlayers();
         $serviceUpdateGame->updateGenres();
+        // Temporarily stop doing dev/pub updates so we can phase out the old fields on the games table.
+        //$serviceUpdateGame->updatePublishers();
         $game->save();
     }
 }
