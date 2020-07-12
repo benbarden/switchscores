@@ -41,12 +41,12 @@ class RoleNameTest extends TestCase
     /**
      * @var User
      */
-    private $userEshopManager;
+    private $userNewsManager;
 
     /**
      * @var User
      */
-    private $userNewsManager;
+    private $userDataSourceManager;
 
     public function setUp(): void
     {
@@ -69,22 +69,22 @@ class RoleNameTest extends TestCase
         $reviewsManager = new User($staffUserArray);
         $categoryManager = new User($staffUserArray);
         $partnershipsManager = new User($staffUserArray);
-        $eshopManager = new User($staffUserArray);
         $newsManager = new User($staffUserArray);
+        $dsManager = new User($staffUserArray);
 
         $gamesManager->addRole(UserRole::ROLE_GAMES_MANAGER);
         $reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
         $categoryManager->addRole(UserRole::ROLE_CATEGORY_MANAGER);
         $partnershipsManager->addRole(UserRole::ROLE_PARTNERSHIPS_MANAGER);
-        $eshopManager->addRole(UserRole::ROLE_ESHOP_MANAGER);
         $newsManager->addRole(UserRole::ROLE_NEWS_MANAGER);
+        $dsManager->addRole(UserRole::ROLE_DATA_SOURCE_MANAGER);
 
         $this->userGamesManager = $gamesManager;
         $this->userReviewsManager = $reviewsManager;
         $this->userCategoryManager = $categoryManager;
         $this->userPartnershipsManager = $partnershipsManager;
-        $this->userEshopManager = $eshopManager;
         $this->userNewsManager = $newsManager;
+        $this->userDataSourceManager = $dsManager;
     }
 
     public function tearDown(): void
@@ -96,8 +96,8 @@ class RoleNameTest extends TestCase
         unset($this->userReviewsManager);
         unset($this->userCategoryManager);
         unset($this->userPartnershipsManager);
-        unset($this->userEshopManager);
         unset($this->userNewsManager);
+        unset($this->userDataSourceManager);
     }
 
     public function testGamesDashboard()
@@ -126,11 +126,11 @@ class RoleNameTest extends TestCase
         $response = $this->get('/staff/games/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userEshopManager);
+        $this->be($this->userNewsManager);
         $response = $this->get('/staff/games/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userNewsManager);
+        $this->be($this->userDataSourceManager);
         $response = $this->get('/staff/games/dashboard');
         $response->assertStatus(403);
     }
@@ -161,11 +161,11 @@ class RoleNameTest extends TestCase
         $response = $this->get('/staff/reviews/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userEshopManager);
+        $this->be($this->userNewsManager);
         $response = $this->get('/staff/reviews/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userNewsManager);
+        $this->be($this->userDataSourceManager);
         $response = $this->get('/staff/reviews/dashboard');
         $response->assertStatus(403);
     }
@@ -196,11 +196,11 @@ class RoleNameTest extends TestCase
         $response = $this->get('/staff/categorisation/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userEshopManager);
+        $this->be($this->userNewsManager);
         $response = $this->get('/staff/categorisation/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userNewsManager);
+        $this->be($this->userDataSourceManager);
         $response = $this->get('/staff/categorisation/dashboard');
         $response->assertStatus(403);
     }
@@ -231,48 +231,48 @@ class RoleNameTest extends TestCase
         $response = $this->get('/staff/partners/dashboard');
         $response->assertStatus(200);
 
-        $this->be($this->userEshopManager);
+        $this->be($this->userNewsManager);
         $response = $this->get('/staff/partners/dashboard');
         $response->assertStatus(403);
 
-        $this->be($this->userNewsManager);
+        $this->be($this->userDataSourceManager);
         $response = $this->get('/staff/partners/dashboard');
         $response->assertStatus(403);
     }
 
-    public function testEshopDashboard()
+    public function testDataSourceDashboard()
     {
         $this->be($this->userOwner);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(200);
 
         $this->be($this->userNotStaff);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(401);
 
         $this->be($this->userGamesManager);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userReviewsManager);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userCategoryManager);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userPartnershipsManager);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(403);
-
-        $this->be($this->userEshopManager);
-        $response = $this->get('/staff/eshop/dashboard');
-        $response->assertStatus(200);
 
         $this->be($this->userNewsManager);
-        $response = $this->get('/staff/eshop/dashboard');
+        $response = $this->get('/staff/data-sources/dashboard');
         $response->assertStatus(403);
+
+        $this->be($this->userDataSourceManager);
+        $response = $this->get('/staff/data-sources/dashboard');
+        $response->assertStatus(200);
     }
 
     /* NOT YET BUILT

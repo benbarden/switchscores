@@ -21,7 +21,6 @@ class IndexController extends Controller
         $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceSiteAlert = $this->getServiceSiteAlert();
-        $serviceEshopEurope = $this->getServiceEshopEuropeGame();
 
         $bindings = [];
 

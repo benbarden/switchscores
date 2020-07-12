@@ -161,7 +161,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // WOS
-        App\Providers\EshopEuropeGameServiceProvider::class,
         App\Providers\EshopUSGameServiceProvider::class,
         App\Providers\ReviewFeedItemServiceProvider::class,
         App\Providers\GameCalendarServiceProvider::class,

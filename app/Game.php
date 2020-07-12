@@ -84,11 +84,6 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\GamePublisher', 'game_id', 'id');
     }
 
-    public function eshopEuropeGame()
-    {
-        return $this->hasOne('App\EshopEuropeGame', 'fs_id', 'eshop_europe_fs_id');
-    }
-
     public function eshopUSGame()
     {
         return $this->hasOne('App\EshopUSGame', 'nsuid', 'eshop_europe_nsuid');

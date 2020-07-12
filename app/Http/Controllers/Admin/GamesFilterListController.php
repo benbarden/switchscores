@@ -196,22 +196,4 @@ class GamesFilterListController extends Controller
 
         return view('admin.games-filter.list', $bindings);
     }
-
-    public function gamesWithNoEshopEuropeLink()
-    {
-        $gameList = $this->getServiceGameFilterList()->getGamesWithoutEshopEuropeFsId();
-
-        $bindings = [];
-
-        $pageTitle = 'Games with no eShop Europe link';
-        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['GameList'] = $gameList;
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
-
-        $bindings['FilterName'] = 'games-with-no-eshop-europe-link';
-
-        return view('admin.games-filter.list', $bindings);
-    }
-
 }

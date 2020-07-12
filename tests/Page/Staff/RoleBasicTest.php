@@ -41,12 +41,12 @@ class RoleBasicTest extends TestCase
     /**
      * @var User
      */
-    private $userEshopManager;
+    private $userNewsManager;
 
     /**
      * @var User
      */
-    private $userNewsManager;
+    private $userDataSourceManager;
 
     public function setUp(): void
     {
@@ -69,22 +69,22 @@ class RoleBasicTest extends TestCase
         $reviewsManager = new User($staffUserArray);
         $categoryManager = new User($staffUserArray);
         $partnershipsManager = new User($staffUserArray);
-        $eshopManager = new User($staffUserArray);
         $newsManager = new User($staffUserArray);
+        $dsManager = new User($staffUserArray);
 
         $gamesManager->addRole(UserRole::ROLE_GAMES_MANAGER);
         $reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
         $categoryManager->addRole(UserRole::ROLE_CATEGORY_MANAGER);
         $partnershipsManager->addRole(UserRole::ROLE_PARTNERSHIPS_MANAGER);
-        $eshopManager->addRole(UserRole::ROLE_ESHOP_MANAGER);
         $newsManager->addRole(UserRole::ROLE_NEWS_MANAGER);
+        $dsManager->addRole(UserRole::ROLE_DATA_SOURCE_MANAGER);
 
         $this->userGamesManager = $gamesManager;
         $this->userReviewsManager = $reviewsManager;
         $this->userCategoryManager = $categoryManager;
         $this->userPartnershipsManager = $partnershipsManager;
-        $this->userEshopManager = $eshopManager;
         $this->userNewsManager = $newsManager;
+        $this->userDataSourceManager = $dsManager;
     }
 
     public function tearDown(): void
@@ -96,8 +96,8 @@ class RoleBasicTest extends TestCase
         unset($this->userReviewsManager);
         unset($this->userCategoryManager);
         unset($this->userPartnershipsManager);
-        unset($this->userEshopManager);
         unset($this->userNewsManager);
+        unset($this->userDataSourceManager);
     }
 
     // General tests
@@ -148,11 +148,11 @@ class RoleBasicTest extends TestCase
         $response = $this->get('/staff');
         $response->assertStatus(200);
 
-        $this->be($this->userEshopManager);
+        $this->be($this->userNewsManager);
         $response = $this->get('/staff');
         $response->assertStatus(200);
 
-        $this->be($this->userNewsManager);
+        $this->be($this->userDataSourceManager);
         $response = $this->get('/staff');
         $response->assertStatus(200);
     }

@@ -81,18 +81,6 @@ class GameFilterListService
         return $games;
     }
 
-    public function getGamesWithoutEshopEuropeFsId()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->whereNull('games.eshop_europe_fs_id')
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-        //return Game::whereNull('eshop_europe_fs_id')->orderBy('games.id', 'desc');
-    }
-
     /**
      * @param $genreId
      * @return mixed

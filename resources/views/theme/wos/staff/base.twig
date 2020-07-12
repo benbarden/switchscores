@@ -82,6 +82,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('admin.games.list')}}/action-list-games-for-release">Games to release</a></li>
                                 <li><a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a></li>
+                                <li><a href="{{ route('admin.action-lists.no-price') }}">No price</a></li>
                                 <li><a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a></li>
                                 <li><a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a></li>
                                 <li role="separator" class="divider"></li>
@@ -194,15 +195,6 @@
                                         <li><a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
                                         <li role="separator" class="divider"></li>
                                     {% endif %}
-                                    {% if auth_user().hasRole('eShop manager') or auth_user().isOwner() %}
-                                        <li><a href="{{ route('staff.eshop.dashboard') }}">eShop dashboard</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="{{ route('staff.eshop.feed-items-europe.list') }}/no-link">eShop items not linked to a game</a></li>
-                                        <li><a href="{{ route('admin.games-filter.games-no-eshop-europe-link') }}">Games with no eShop link</a></li>
-                                        <li><a href="{{ route('admin.action-lists.no-price') }}">Games with no price</a></li>
-                                        <li role="separator" class="divider"></li>
-                                    {% endif %}
-
                                 </ul>
                             </li>
                         {% endif %}

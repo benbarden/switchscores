@@ -307,21 +307,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 });
 
 
-// *************** Staff: ESHOP *************** //
-Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_ESHOP_MANAGER]], function() {
-
-    Route::get('/staff/eshop/dashboard', 'Staff\Eshop\DashboardController@show')->name('staff.eshop.dashboard');
-
-    // Feed items: eShop (Europe)
-    Route::get('/staff/eshop/feed-items-europe/{report?}', 'Staff\Eshop\FeedItemEshopEuropeController@showList')->name('staff.eshop.feed-items-europe.list');
-    Route::get('/staff/eshop/feed-items-europe/view/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@view')->name('staff.eshop.feed-items-europe.view');
-    Route::match(['get', 'post'], '/staff/eshop/feed-items-europe/add-game/{itemId}', 'Staff\Eshop\FeedItemEshopEuropeController@addGame')->name('staff.eshop.feed-items-europe.add-game');
-    Route::get('/staff/eshop/europe/add-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@addToIgnoreList')->name('staff.eshop.europe.addToIgnoreList');
-    Route::get('/staff/eshop/europe/remove-ignore', 'Staff\Eshop\FeedItemEshopEuropeController@removeFromIgnoreList')->name('staff.eshop.europe.removeFromIgnoreList');
-
-});
-
-
 // *************** Staff: DATA SOURCES *************** //
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_DATA_SOURCE_MANAGER]], function() {
 
@@ -417,7 +402,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/games/filter-list/series-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameSeriesTitleMatches')->name('admin.games-filter.game-series-title-matches');
     Route::get('/admin/games/filter-list/tag-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameTagTitleMatches')->name('admin.games-filter.game-tag-title-matches');
     Route::get('/admin/games/filter-list/with-genre-no-category', 'Admin\GamesFilterListController@gamesWithGenresNoCategory')->name('admin.games-filter.games-with-genre-no-category');
-    Route::get('/admin/games/filter-list/no-eshop-europe-link', 'Admin\GamesFilterListController@gamesWithNoEshopEuropeLink')->name('admin.games-filter.games-no-eshop-europe-link');
 
     // Games: Title hashes
     Route::get('/admin/games-title-hash/list/{gameId?}', 'Admin\GamesTitleHashController@showList')->name('admin.games-title-hash.list');
