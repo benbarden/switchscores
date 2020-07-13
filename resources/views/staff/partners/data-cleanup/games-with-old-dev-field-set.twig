@@ -15,7 +15,6 @@
             <th class="text-center">#</th>
             <th class="text-left">Title</th>
             <th class="text-left">Developer</th>
-            <th class="text-left">N.co.uk</th>
             <th class="text-left">Wikipedia</th>
             <th class="text-center">Options</th>
         </tr>
@@ -31,9 +30,6 @@
                 </td>
                 <td class="text-left">
                     {{ item.developer }}
-                </td>
-                <td class="text-left">
-                    {{ item.nintendo_co_uk_developers }}
                 </td>
                 <td class="text-left">
                     {{ item.wikipedia_developers }}
@@ -56,7 +52,6 @@
             "order": [ {{ jsInitialSort|raw}} ],
             "pageLength": 25,
             "columns": [
-                null,
                 null,
                 null,
                 null,

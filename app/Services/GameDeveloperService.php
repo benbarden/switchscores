@@ -156,16 +156,11 @@ class GameDeveloperService
     public function getDeveloperFieldNotNullWithSourceData()
     {
         $games = DB::table('games')
-            ->leftJoin('data_source_parsed AS dsp_nintendo_co_uk', function ($join) {
-                $join->on('games.id', '=', 'dsp_nintendo_co_uk.game_id')
-                    ->where('dsp_nintendo_co_uk.source_id', '=', DataSource::DSID_NINTENDO_CO_UK);
-            })
             ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
                 $join->on('games.id', '=', 'dsp_wikipedia.game_id')
                     ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
             })
             ->select('games.*',
-                'dsp_nintendo_co_uk.developers AS nintendo_co_uk_developers',
                 'dsp_wikipedia.developers AS wikipedia_developers')
             ->whereNotNull('games.developer')
             ->orderBy('games.id', 'desc');
