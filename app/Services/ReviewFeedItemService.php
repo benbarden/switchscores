@@ -65,12 +65,14 @@ class ReviewFeedItemService
         if ($limit) {
             $reviewFeedItem = ReviewFeedItem::
                 whereNull('parsed')
+                ->whereNull('processed')
                 ->orderBy('item_date', 'asc')
                 ->limit($limit)
                 ->get();
         } else {
             $reviewFeedItem = ReviewFeedItem::
                 whereNull('parsed')
+                ->whereNull('processed')
                 ->orderBy('id', 'asc')
                 ->get();
         }
