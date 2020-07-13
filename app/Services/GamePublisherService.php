@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\GamePublisher;
 use App\Partner;
+use App\DataSource;
 
 
 class GamePublisherService
@@ -141,43 +142,34 @@ class GamePublisherService
         return $games[0]->count;
     }
 
-    public function getGamesWithOldPubFieldSet()
-    {
-        $games = DB::table('games')
-            ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
-            ->select('games.*', 'partners.name')
-            //->whereNull('partners.id')
-            ->whereNotNull('games.publisher')
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-    }
-
     public function countGamesWithOldPubFieldSet()
     {
         $games = DB::select('
             select count(*) AS count
             from games g
-            left join game_publishers gp on g.id = gp.game_id
-            left join partners p on p.id = gp.publisher_id
-            where g.publisher is not null;
+            where g.publisher is not null
         ');
 
         return $games[0]->count;
     }
 
-    public function countGamePublisherLinks()
+    public function getPublisherFieldNotNullWithSourceData()
     {
-        $games = DB::select('
-            select count(*) AS count
-            from games g
-            left join game_publishers gp on g.id = gp.game_id
-            left join partners p on p.id = gp.publisher_id
-            where p.id is not null;
-        ');
+        $games = DB::table('games')
+            ->leftJoin('data_source_parsed AS dsp_nintendo_co_uk', function ($join) {
+                $join->on('games.id', '=', 'dsp_nintendo_co_uk.game_id')
+                    ->where('dsp_nintendo_co_uk.source_id', '=', DataSource::DSID_NINTENDO_CO_UK);
+            })
+            ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
+                $join->on('games.id', '=', 'dsp_wikipedia.game_id')
+                    ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
+            })
+            ->select('games.*',
+                'dsp_nintendo_co_uk.publishers AS nintendo_co_uk_publishers',
+                'dsp_wikipedia.publishers AS wikipedia_publishers')
+            ->whereNotNull('games.publisher')
+            ->orderBy('games.id', 'desc');
 
-        return $games[0]->count;
+        return $games->get();
     }
 }

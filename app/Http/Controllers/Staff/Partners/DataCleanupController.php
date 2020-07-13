@@ -138,7 +138,7 @@ class DataCleanupController extends Controller
         $bindings['PageTitle'] = $pageTitle;
         $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
 
-        $bindings['ItemList'] = $serviceGameDeveloper->getGamesWithOldDevFieldSet();
+        $bindings['ItemList'] = $serviceGameDeveloper->getDeveloperFieldNotNullWithSourceData();
         $bindings['jsInitialSort'] = "[ 2, 'asc']";
 
         return view('staff.partners.data-cleanup.games-with-old-dev-field-set', $bindings);
@@ -155,7 +155,7 @@ class DataCleanupController extends Controller
         $bindings['PageTitle'] = $pageTitle;
         $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
 
-        $bindings['ItemList'] = $serviceGamePublisher->getGamesWithOldPubFieldSet();
+        $bindings['ItemList'] = $serviceGamePublisher->getPublisherFieldNotNullWithSourceData();
         $bindings['jsInitialSort'] = "[ 2, 'asc']";
 
         return view('staff.partners.data-cleanup.games-with-old-pub-field-set', $bindings);

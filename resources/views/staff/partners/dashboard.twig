@@ -8,7 +8,35 @@
 
     <div class="col-md-4">
 
+        <h2>Data cleanup: old fields</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}">Games with old dev field set</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}" class="h4">{{ GamesWithOldDevFieldSetCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}">Games with old pub field set</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}" class="h4">{{ GamesWithOldPubFieldSetCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
         <h2>Data cleanup</h2>
+
+        <div class="alert alert-danger">
+            These will need reworking once the developer and publisher fields are removed.
+        </div>
+
         <table class="table">
             <tbody>
             <tr>
@@ -45,26 +73,40 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}">Games with old dev field set</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}" class="h4">{{ GamesWithOldDevFieldSetCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
                 </td>
                 <td class="text-right">
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
                 </td>
             </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Navigation</h2>
+        <table class="table">
+            <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}">Games with old pub field set</a>
+                    <a href="{{ route('staff.reviews.site.list') }}">Review sites</a>
                 </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}" class="h4">{{ GamesWithOldPubFieldSetCount }}</a>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.games-company.list') }}">Games companies</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.outreach.list') }}">Partner outreach - view all</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.outreach.add') }}">+ Add outreach</a>
                 </td>
             </tr>
             </tbody>
@@ -103,32 +145,6 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.site.list') }}">Review sites</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.partners.games-company.list') }}">Games companies</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.partners.outreach.list') }}">Partner outreach - view all</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.partners.outreach.add') }}">+ Add outreach</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
         <h2>Tools</h2>
         <table class="table">
             <tbody>
@@ -147,31 +163,6 @@
                         Only migrates records with exact matches</small>
                 </td>
             </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-md-4">
-
-        <h2>Stats</h2>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td>
-                        Game/developer links created
-                    </td>
-                    <td class="text-right">
-                        <span class="h4">{{ GameDeveloperLinks }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Game/publisher links created
-                    </td>
-                    <td class="text-right">
-                        <span class="h4">{{ GamePublisherLinks }}</span>
-                    </td>
-                </tr>
             </tbody>
         </table>
 

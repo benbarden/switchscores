@@ -21,8 +21,12 @@ class DashboardController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = $pageTitle.' - Admin';
+        $bindings['TopTitle'] = $pageTitle.' - Staff';
         $bindings['PageTitle'] = $pageTitle;
+
+        // Data cleanup: old fields
+        $bindings['GamesWithOldDevFieldSetCount'] = $serviceGameDeveloper->countGamesWithOldDevFieldSet();
+        $bindings['GamesWithOldPubFieldSetCount'] = $serviceGamePublisher->countGamesWithOldPubFieldSet();
 
         // Data cleanup
         $legacyDevMultipleCount = count($serviceGame->getOldDevelopersMultiple());
@@ -41,13 +45,7 @@ class DashboardController extends Controller
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $serviceGameDeveloper->countGamesWithNoDeveloper();
-        $bindings['GamesWithOldDevFieldSetCount'] = $serviceGameDeveloper->countGamesWithOldDevFieldSet();
         $bindings['PublisherMissingCount'] = $serviceGamePublisher->countGamesWithNoPublisher();
-        $bindings['GamesWithOldPubFieldSetCount'] = $serviceGamePublisher->countGamesWithOldPubFieldSet();
-
-        // Stats
-        $bindings['GameDeveloperLinks'] = $serviceGameDeveloper->countGameDeveloperLinks();
-        $bindings['GamePublisherLinks'] = $serviceGamePublisher->countGamePublisherLinks();
 
         return view('staff.partners.dashboard', $bindings);
     }
