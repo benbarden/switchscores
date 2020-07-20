@@ -115,7 +115,7 @@ class DataSourceParsedController extends Controller
                     //'eu_release_date' => $dsParsedItem->release_date_eu,
                     'price_eshop' => $dsParsedItem->price_standard,
                     'players' => $dsParsedItem->players,
-                    'publisher' => $dsParsedItem->publishers,
+                    //'publisher' => $dsParsedItem->publishers,
                 ];
 
                 // Save details
