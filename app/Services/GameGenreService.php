@@ -58,23 +58,4 @@ class GameGenreService
         $games = $games->get();
         return $games;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getGamesWithGenresNoCategory()
-    {
-        $games = DB::table('games')
-            ->join('game_genres', 'games.id', '=', 'game_genres.game_id')
-            ->join('genres', 'game_genres.genre_id', '=', 'genres.id')
-            ->select('games.*',
-                'game_genres.genre_id')
-            ->whereNull('games.category_id')
-            ->where('games.eu_is_released', '1')
-            ->groupBy('games.id')
-            ->orderBy('games.title', 'asc');
-
-        $games = $games->get();
-        return $games;
-    }
 }

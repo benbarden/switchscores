@@ -168,32 +168,4 @@ class GamesFilterListController extends Controller
 
         return view('admin.games-filter.list', $bindings);
     }
-
-    public function gamesWithGenresNoCategory()
-    {
-        $serviceGame = $this->getServiceGame();
-        $serviceGameGenre = $this->getServiceGameGenre();
-
-        $bindings = [];
-
-        $pageTitle = 'Games with genres, no category';
-        $bindings['TopTitle'] = 'Admin - '.$pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-
-        $gameListTemp = $serviceGameGenre->getGamesWithGenresNoCategory();
-        if ($gameListTemp) {
-            $gameList = new Collection();
-            foreach ($gameListTemp as $gameTemp) {
-                $game = $serviceGame->find($gameTemp->id);
-                $gameList->push($game);
-            }
-            $bindings['GameList'] = $gameList;
-        }
-
-        $bindings['jsInitialSort'] = "[ 0, 'asc']";
-
-        $bindings['FilterName'] = 'games-with-genres-no-category';
-
-        return view('admin.games-filter.list', $bindings);
-    }
 }
