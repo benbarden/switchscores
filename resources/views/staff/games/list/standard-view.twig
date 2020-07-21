@@ -35,6 +35,8 @@
                             {{ item.category.name }}
                         {% elseif ListMode == 'by-series' %}
                             {{ item.series.series }}
+                        {% elseif ListMode == 'category-migration' %}
+                            {{ item.genres_json }}
                         {% endif %}
                     </td>
                     <td class="text-center">

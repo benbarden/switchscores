@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 
 use App\Services\DataQuality\QualityStats;
+use App\Services\Migrations\Category as MigrationsCategory;
 
 class DashboardController extends Controller
 {
@@ -17,6 +18,7 @@ class DashboardController extends Controller
         $pageTitle = 'Categorisation dashboard';
 
         $serviceQualityStats = new QualityStats();
+        $serviceMigrationsCategory = new MigrationsCategory();
 
         $serviceGame = $this->getServiceGame();
         $serviceGameFilterList = $this->getServiceGameFilterList();
@@ -60,6 +62,10 @@ class DashboardController extends Controller
         // No category or tag
         $missingCategoriesAndTags = $serviceGameFilterList->getGamesWithoutCategoriesOrTags();
         $bindings['NoCategoryOrTagCount'] = count($missingCategoriesAndTags);
+
+        // Migrations: Category
+        $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
+        $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
 
         // Title matches: Series
         $seriesList = $serviceGameSeries->getAll();

@@ -97,13 +97,28 @@
             These are areas to focus on when migrating data to new formats.
         </p>
 
+        <h3>Games with no category</h3>
+
         <table class="table">
             <tbody>
             <tr>
                 <td>
+                    <a href="{{ route('staff.categorisation.migrations.category.games-with-one-genre') }}">
+                        Games with one genre
+                    </a>
                 </td>
                 <td class="text-right">
-                    <span class="h4"></span>
+                    <span class="h4">{{ NoCategoryOneGenreCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.categorisation.migrations.category.games-with-named-genre-and-one-other', {'genre': 'Puzzle'}) }}">
+                        Games with Puzzle and one other genre
+                    </a>
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ NoCategoryPuzzleAndOneOtherGenre }}</span>
                 </td>
             </tr>
             </tbody>

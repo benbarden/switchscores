@@ -66,4 +66,19 @@ class Breadcrumbs
             ->getBreadcrumbs();
     }
 
+    // ***** Categorisation ***** //
+
+    public function addCategorisationDashboard()
+    {
+        $crumbItem = ['url' => route('staff.categorisation.dashboard'), 'text' => 'Categorisation'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeCategorisationSubPage($pageTitle)
+    {
+        return $this->addCategorisationDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
 }

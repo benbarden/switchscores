@@ -240,6 +240,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/categorisation/tag/game/{gameId}/add', 'Staff\Categorisation\TagController@addGameTag')->name('staff.categorisation.tag.game.add');
     Route::get('/staff/categorisation/tag/game/{gameId}/remove', 'Staff\Categorisation\TagController@removeGameTag')->name('staff.categorisation.tag.game.remove');
 
+    // Migrations
+    Route::get('/staff/categorisation/migrations/category/games-with-one-genre', 'Staff\Categorisation\MigrationsCategoryController@gamesWithOneGenre')->name('staff.categorisation.migrations.category.games-with-one-genre');
+    Route::get('/staff/categorisation/migrations/category/games-with-named-genre-and-one-other/{genre}', 'Staff\Categorisation\MigrationsCategoryController@gamesWithNamedGenreAndOneOther')->name('staff.categorisation.migrations.category.games-with-named-genre-and-one-other');
+
 });
 
 // *************** Staff: NEWS *************** //
