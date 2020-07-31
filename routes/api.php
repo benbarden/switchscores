@@ -24,9 +24,9 @@ Route::get('/game/title-match', 'Api\Game\TitleMatch@getByTitle');
 // Game ids
 Route::get('/game/list', 'Api\Game\GameController@getList');
 // Game details
-Route::get('/game/{id}', 'Api\Game\GameController@getById');
+Route::get('/game/{id}', 'Api\Game\GameController@getDetails');
 // Game reviews
-Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviewsById');
+Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviews');
 
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');

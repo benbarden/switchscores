@@ -98,4 +98,10 @@ class Game extends Model implements Auditable
     {
         return $this->hasOne('App\GameImportRuleWikipedia', 'game_id', 'id');
     }
+
+    public function dspNintendoCoUk()
+    {
+        return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
+                    ->where('source_id', DataSource::DSID_NINTENDO_CO_UK);
+    }
 }
