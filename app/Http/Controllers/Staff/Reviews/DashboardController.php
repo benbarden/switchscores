@@ -35,6 +35,9 @@ class DashboardController extends Controller
         $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
+        // Feed imports
+        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getAll(10);
+
         // Stats
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
         $bindings['RankedGameCount'] = $serviceGame->countRanked();
