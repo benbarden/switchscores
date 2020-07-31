@@ -20,6 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /* Game */
 Route::get('/game/title-match', 'Api\Game\TitleMatch@getByTitle');
 
+/* LP */
+// Game ids
+Route::get('/game/list', 'Api\Game\GameController@getList');
+// Game details
+Route::get('/game/{id}', 'Api\Game\GameController@getById');
+// Game reviews
+Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviewsById');
+
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
 Route::get('/url/link-text', 'Api\UrlController@generateLinkText');

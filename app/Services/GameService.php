@@ -128,6 +128,15 @@ class GameService
         return $game;
     }
 
+    public function getApiIdList()
+    {
+        $gameList = DB::table('games')
+            ->select('games.id', 'games.title', 'games.link_title', 'games.eshop_europe_fs_id')
+            ->orderBy('games.id', 'asc')
+            ->get();
+        return $gameList;
+    }
+
     /**
      * @param $region
      * @param $fsId
