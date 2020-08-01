@@ -1,0 +1,64 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-6">
+
+        {% if StatsCategories %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Month</th>
+                        <th class="text-center">Has category</th>
+                        <th class="text-center">No category</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">% complete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in StatsCategories %}
+                        <tr>
+                            <td class="text-center">
+                                {{ item.yearmonth }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('staff.data-quality.games-with-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.has_category }}
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('staff.data-quality.games-without-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                    {{ item.no_category }}
+                                </a>
+                            </td>
+                            <td class="text-center">{{ item.total_count }}</td>
+                            <td class="text-center">
+                                {% if item.pc_done >= 75 %}
+                                    <span class="h5 label label-success">{{ item.pc_done }}%</span>
+                                {% elseif item.pc_done >= 40 %}
+                                    <span class="h5 label label-warning">{{ item.pc_done }}%</span>
+                                {% else %}
+                                    <span class="h5 label label-danger">{{ item.pc_done }}%</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>
+                Couldn't load category stats!
+            </p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-6">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

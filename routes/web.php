@@ -357,12 +357,13 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 // *************** Staff: DATA QUALITY *************** //
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 
-    Route::get('/staff/data-quality/dashboard/{year?}/{month?}', 'Staff\DataQuality\DashboardController@show')->name('staff.data-quality.dashboard');
+    Route::get('/staff/data-quality/dashboard', 'Staff\DataQuality\DashboardController@show')->name('staff.data-quality.dashboard');
 
     Route::get('/staff/data-quality/duplicate-reviews', 'Staff\DataQuality\DashboardController@duplicateReviews')->name('staff.data-quality.duplicate-reviews');
 
-    Route::get('/staff/data-quality/games-with-categories/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithCategories')->name('staff.data-quality.games-with-categories');
-    Route::get('/staff/data-quality/games-without-categories/{year}/{month}', 'Staff\DataQuality\DashboardController@gamesWithoutCategories')->name('staff.data-quality.games-without-categories');
+    Route::get('/staff/data-quality/category/dashboard', 'Staff\DataQuality\CategoryController@dashboard')->name('staff.data-quality.category.dashboard');
+    Route::get('/staff/data-quality/category/games-with-categories/{year}/{month}', 'Staff\DataQuality\CategoryController@gamesWithCategories')->name('staff.data-quality.games-with-categories');
+    Route::get('/staff/data-quality/category/games-without-categories/{year}/{month}', 'Staff\DataQuality\CategoryController@gamesWithoutCategories')->name('staff.data-quality.games-without-categories');
 
 });
 
