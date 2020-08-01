@@ -1,0 +1,98 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Cleanup of old fields</h2>
+        <h3>Games</h3>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}">Games with old dev field set</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-dev-field-set') }}" class="h4">{{ GamesWithOldDevFieldSetCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}">Games with old pub field set</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-old-pub-field-set') }}" class="h4">{{ GamesWithOldPubFieldSetCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Partners</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-partner-multiple') }}">Legacy partners (devs/pubs): Multiple records</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-partner-multiple') }}" class="h4">{{ LegacyPartnerMultipleCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-developer-no-games-company') }}">Legacy developers: No games company</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-developer-no-games-company') }}" class="h4">{{ LegacyDeveloperNoGamesCompanyCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-publisher-no-games-company') }}">Legacy publishers: No games company</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.legacy-publisher-no-games-company') }}" class="h4">{{ LegacyPublisherNoGamesCompanyCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Missing data</h2>
+
+        <div class="alert alert-danger">
+            These will need reworking once the developer and publisher fields are removed.
+        </div>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}">Games with missing developer</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}" class="h4">{{ DeveloperMissingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-8">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}
