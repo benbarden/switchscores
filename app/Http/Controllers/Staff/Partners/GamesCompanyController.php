@@ -65,6 +65,48 @@ class GamesCompanyController extends Controller
         return view('staff.partners.games-company.list', $bindings);
     }
 
+    public function duplicateTwitterIds()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Staff - Games companies with duplicate Twitter Ids';
+        $bindings['PageTitle'] = 'Games companies with duplicate Twitter Ids';
+
+        $duplicateTwitterIdsList = $this->getServicePartner()->getGamesCompanyDuplicateTwitterIds();
+        if ($duplicateTwitterIdsList) {
+            $idList = [];
+            foreach ($duplicateTwitterIdsList as $duplicateTwitterId) {
+                $idList[] = $duplicateTwitterId->twitter_id;
+            }
+            $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithTwitterIdList($idList);
+        }
+
+//        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function duplicateWebsiteUrls()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Staff - Games companies with duplicate website URLs';
+        $bindings['PageTitle'] = 'Games companies with duplicate website URLs';
+
+        $duplicateWebsiteUrlsList = $this->getServicePartner()->getGamesCompanyDuplicateWebsiteUrls();
+        if ($duplicateWebsiteUrlsList) {
+            $idList = [];
+            foreach ($duplicateWebsiteUrlsList as $duplicateWebsiteUrl) {
+                $idList[] = $duplicateWebsiteUrl->website_url;
+            }
+            $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithWebsiteUrlList($idList);
+        }
+
+//        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
     public function show(Partner $partner)
     {
         if (!$partner->isGamesCompany()) abort(404);

@@ -4,21 +4,10 @@
 
 {% block page_inner %}
 
-{% if auth_user().isOwner() %}
-    {% if SiteAlertLatest %}
-        <div class="row">
-
-            <div class="col-md-12">
-                <div class="alert alert-warning" role="alert">
-                    <a href="{{ route('admin.action-lists.site-alert-errors') }}">Latest site alert</a>:
-                    {{ SiteAlertLatest.created_at|date('d-M-Y @ H:i') }}:
-                    <strong>{{ SiteAlertLatest.detail }}</strong> - Source: {{ SiteAlertLatest.source }}
-                </div>
-            </div>
-
-        </div>
-    {% endif %}
-{% endif %}
+<p>
+    Need help with the staff pages? Contact Ben via
+    <a href="https://twitter.com/switchscores">Twitter</a> or <a href="mailto:ben@switchscores.com">email</a>.
+</p>
 
 <div class="row">
 
@@ -63,11 +52,22 @@
         </table>
         {% endif %}
 
-        <h2>Help</h2>
-        <p>
-            Need help with the staff pages? Contact Ben via
-            <a href="https://twitter.com/switchscores">Twitter</a> or <a href="mailto:ben@switchscores.com">email</a>.
-        </p>
+        {% if auth_user().isOwner() %}
+        <h2>Data integrity</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
 
     </div>
 

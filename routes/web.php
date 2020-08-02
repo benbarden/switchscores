@@ -290,6 +290,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/partners/games-company/without-twitter-ids', 'Staff\Partners\GamesCompanyController@withoutTwitterIds')->name('staff.partners.games-company.without-twitter-ids');
     Route::get('/staff/partners/games-company/without-website-urls', 'Staff\Partners\GamesCompanyController@withoutWebsiteUrls')->name('staff.partners.games-company.without-website-urls');
+    Route::get('/staff/partners/games-company/duplicate-twitter-ids', 'Staff\Partners\GamesCompanyController@duplicateTwitterIds')->name('staff.partners.games-company.duplicate-twitter-ids');
+    Route::get('/staff/partners/games-company/duplicate-website-urls', 'Staff\Partners\GamesCompanyController@duplicateWebsiteUrls')->name('staff.partners.games-company.duplicate-website-urls');
 
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');

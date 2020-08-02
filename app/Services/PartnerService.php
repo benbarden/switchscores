@@ -236,6 +236,63 @@ class PartnerService
             ->count();
     }
 
+    public function getGamesCompanyDuplicateTwitterIds()
+    {
+        return DB::select('
+            SELECT id, twitter_id, count(*) AS count
+            FROM partners
+            WHERE type_id = ?
+            AND twitter_id IS NOT NULL
+            GROUP BY twitter_id
+            HAVING count(*) > 1
+            ORDER BY twitter_id ASC
+        ', [Partner::TYPE_GAMES_COMPANY]);
+    }
+
+    public function getGamesCompanyDuplicateWebsiteUrls()
+    {
+        return DB::select('
+            SELECT id, website_url, count(*) AS count
+            FROM partners
+            WHERE type_id = ?
+            AND website_url IS NOT NULL
+            GROUP BY website_url
+            HAVING count(*) > 1
+            ORDER BY website_url ASC
+        ', [Partner::TYPE_GAMES_COMPANY]);
+    }
+
+    public function getGamesCompaniesWithTwitterIdList($twitterIdList)
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereIn('twitter_id', $twitterIdList)
+            ->orderBy('twitter_id', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
+
+    public function getGamesCompaniesWithWebsiteUrlList($websiteUrlList)
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereIn('website_url', $websiteUrlList)
+            ->orderBy('website_url', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
+
+    public function getGamesCompanyFromIdList($idList, $orderBy = '', $orderDir = '')
+    {
+        $partnerList = Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereIn('id', $idList);
+        if ($orderBy) {
+            $partnerList = $partnerList->orderBy($orderBy, $orderDir);
+        }
+        return $partnerList->get();
+    }
+
     // ********************************************************** //
 
     public function getMergedGameList($gameDevList, $gamePubList)

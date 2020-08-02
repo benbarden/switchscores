@@ -22,8 +22,13 @@ class DashboardController extends Controller
         $bindings['PageTitle'] = $pageTitle;
 
         // Action lists
-        $bindings['GamesCompaniesWithoutWebsiteUrls'] = $servicePartner->countGamesCompaniesWithoutWebsiteUrls();
-        $bindings['GamesCompaniesWithoutTwitterIds'] = $servicePartner->countGamesCompaniesWithoutTwitterIds();
+        $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $servicePartner->countGamesCompaniesWithoutWebsiteUrls();
+        $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $servicePartner->countGamesCompaniesWithoutTwitterIds();
+
+        $duplicateTwitterIdsList = $servicePartner->getGamesCompanyDuplicateTwitterIds();
+        $duplicateWebsiteUrlsList = $servicePartner->getGamesCompanyDuplicateWebsiteUrls();
+        $bindings['GamesCompanyDuplicateTwitterIdsCount'] = count($duplicateTwitterIdsList);
+        $bindings['GamesCompanyDuplicateWebsiteUrlsCount'] = count($duplicateWebsiteUrlsList);
 
         // Outreach
         $devsWithUnrankedGames = $servicePartner->getDevelopersWithUnrankedGames();

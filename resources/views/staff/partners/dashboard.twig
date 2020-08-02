@@ -19,7 +19,7 @@
                     </a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIds }}</a>
+                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIdsCount }}</a>
                 </td>
             </tr>
             <tr>
@@ -29,7 +29,27 @@
                     </a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrls }}</a>
+                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrlsCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.games-company.duplicate-twitter-ids') }}">
+                        Twitter IDs on multiple games companies
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.games-company.duplicate-twitter-ids') }}" class="h4">{{ GamesCompanyDuplicateTwitterIdsCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.games-company.duplicate-website-urls') }}">
+                        Website URLs on multiple games companies
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.games-company.duplicate-website-urls') }}" class="h4">{{ GamesCompanyDuplicateWebsiteUrlsCount }}</a>
                 </td>
             </tr>
             </tbody>
