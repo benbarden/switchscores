@@ -200,6 +200,42 @@ class PartnerService
         return Partner::where('type_id', Partner::TYPE_GAMES_COMPANY)->orderBy('name', 'asc')->get();
     }
 
+    public function getGamesCompaniesWithoutWebsiteUrls()
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereNull('website_url')
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
+    public function countGamesCompaniesWithoutWebsiteUrls()
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereNull('website_url')
+            ->orderBy('id', 'desc')
+            ->count();
+    }
+
+    public function getGamesCompaniesWithoutTwitterIds()
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereNull('twitter_id')
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
+    public function countGamesCompaniesWithoutTwitterIds()
+    {
+        return Partner::
+            where('type_id', Partner::TYPE_GAMES_COMPANY)
+            ->whereNull('twitter_id')
+            ->orderBy('id', 'desc')
+            ->count();
+    }
+
     // ********************************************************** //
 
     public function getMergedGameList($gameDevList, $gamePubList)

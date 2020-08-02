@@ -288,6 +288,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/games-company/devs-with-unranked-games', 'Staff\Partners\GamesCompanyController@devsWithUnrankedGames')->name('staff.partners.games-company.devs-with-unranked-games');
     Route::get('/staff/partners/games-company/pubs-with-unranked-games', 'Staff\Partners\GamesCompanyController@pubsWithUnrankedGames')->name('staff.partners.games-company.pubs-with-unranked-games');
 
+    Route::get('/staff/partners/games-company/without-twitter-ids', 'Staff\Partners\GamesCompanyController@withoutTwitterIds')->name('staff.partners.games-company.without-twitter-ids');
+    Route::get('/staff/partners/games-company/without-website-urls', 'Staff\Partners\GamesCompanyController@withoutWebsiteUrls')->name('staff.partners.games-company.without-website-urls');
+
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
     Route::match(['get', 'post'], '/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');

@@ -28,14 +28,38 @@ class GamesCompanyController extends Controller
 
     public function showList()
     {
-        $servicePartner = $this->getServicePartner();
-
         $bindings = [];
 
         $bindings['TopTitle'] = 'Staff - Games companies';
         $bindings['PageTitle'] = 'Games companies';
 
-        $bindings['GamesCompanyList'] = $servicePartner->getAllGamesCompanies();
+        $bindings['GamesCompanyList'] = $this->getServicePartner()->getAllGamesCompanies();
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function withoutTwitterIds()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Staff - Games companies without Twitter Ids';
+        $bindings['PageTitle'] = 'Games companies without Twitter Ids';
+
+        $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithoutTwitterIds();
+        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function withoutWebsiteUrls()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Staff - Games companies without website URLs';
+        $bindings['PageTitle'] = 'Games companies without website URLs';
+
+        $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithoutWebsiteUrls();
         $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.games-company.list', $bindings);

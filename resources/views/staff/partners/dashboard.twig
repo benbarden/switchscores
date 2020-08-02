@@ -8,24 +8,28 @@
 
     <div class="col-md-4">
 
-        <h2>Actions (TBC)</h2>
+        <h2>Action lists</h2>
 
         <table class="table">
             <tbody>
             <tr>
                 <td>
-                    Partners without Twitter IDs
+                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}">
+                        Games companies without Twitter IDs
+                    </a>
                 </td>
                 <td class="text-right">
-                    tbc
+                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIds }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    Partners without URLs
+                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}">
+                        Games companies without URLs
+                    </a>
                 </td>
                 <td class="text-right">
-                    tbc
+                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrls }}</a>
                 </td>
             </tr>
             </tbody>

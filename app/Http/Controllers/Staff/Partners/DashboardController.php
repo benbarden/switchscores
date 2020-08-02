@@ -21,6 +21,10 @@ class DashboardController extends Controller
         $bindings['TopTitle'] = $pageTitle.' - Staff';
         $bindings['PageTitle'] = $pageTitle;
 
+        // Action lists
+        $bindings['GamesCompaniesWithoutWebsiteUrls'] = $servicePartner->countGamesCompaniesWithoutWebsiteUrls();
+        $bindings['GamesCompaniesWithoutTwitterIds'] = $servicePartner->countGamesCompaniesWithoutTwitterIds();
+
         // Outreach
         $devsWithUnrankedGames = $servicePartner->getDevelopersWithUnrankedGames();
         $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
