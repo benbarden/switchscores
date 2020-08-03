@@ -91,6 +91,11 @@ class Partner extends Model
         return $this->hasMany('App\GamePublisher', 'publisher_id', 'id');
     }
 
+    public function user()
+    {
+        return $this->hasOne('App\User', 'partner_id', 'id');
+    }
+
     public function lastOutreach()
     {
         return $this->hasOne('App\PartnerOutreach', 'id', 'last_outreach_id');

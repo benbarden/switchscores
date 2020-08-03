@@ -5,6 +5,7 @@
             <th class="text-center">#</th>
             <th>Site</th>
             <th>Links</th>
+            <th class="text-center">Login?</th>
             <th class="text-center">Rating scale</th>
             <th class="text-center">Feed?</th>
             <th class="text-center">Match rule?</th>
@@ -31,6 +32,11 @@
                             Twitter: <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
                         {% endif %}
                     </small>
+                </td>
+                <td class="text-center">
+                    {% if item.user.id %}
+                        <i class="fab fa-twitter"></i>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {{ item.rating_scale }}
