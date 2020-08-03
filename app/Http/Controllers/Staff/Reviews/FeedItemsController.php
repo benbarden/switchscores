@@ -34,7 +34,7 @@ class FeedItemsController extends Controller
         if ($report == null) {
             $bindings['ActiveNav'] = '';
             $feedItems = $serviceReviewFeedItem->getUnprocessed();
-            $jsInitialSort = "[ 4, 'desc']";
+            $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
@@ -42,7 +42,7 @@ class FeedItemsController extends Controller
                     $itemLimit = 250;
                     $bindings['TableLimit'] = $itemLimit;
                     $feedItems = $serviceReviewFeedItem->getProcessed($itemLimit);
-                    $jsInitialSort = "[ 4, 'desc']";
+                    $jsInitialSort = "[ 0, 'desc']";
                     break;
                 default:
                     abort(404);
