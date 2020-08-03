@@ -37,7 +37,6 @@ use App\Services\ReviewFeedImportService;
 use App\Services\ReviewFeedItemService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
-use App\Services\SiteAlertService;
 use App\Services\TagService;
 use App\Services\TopRatedService;
 use App\Services\UrlService;
@@ -370,14 +369,6 @@ trait SwitchServices
     public function getServiceReviewStats()
     {
         return $this->loadService('ReviewStatsService');
-    }
-
-    /**
-     * @return SiteAlertService
-     */
-    public function getServiceSiteAlert()
-    {
-        return $this->loadService('SiteAlertService');
     }
 
     /**

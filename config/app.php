@@ -160,31 +160,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        // WOS
-        App\Providers\EshopUSGameServiceProvider::class,
-        App\Providers\ReviewFeedItemServiceProvider::class,
-        App\Providers\GameCalendarServiceProvider::class,
-        App\Providers\GameDeveloperServiceProvider::class,
-        App\Providers\GameGenreServiceProvider::class,
-        App\Providers\GamePublisherServiceProvider::class,
-        App\Providers\GameRankAllTimeServiceProvider::class,
-        App\Providers\GameRankYearServiceProvider::class,
-        App\Providers\GameReleaseDateServiceProvider::class,
-        App\Providers\GameServiceProvider::class,
-        App\Providers\GameTagServiceProvider::class,
-        App\Providers\GameTitleHashServiceProvider::class,
-        App\Providers\GenreServiceProvider::class,
-        App\Providers\NewsCategoryServiceProvider::class,
-        App\Providers\NewsServiceProvider::class,
-        App\Providers\PartnerServiceProvider::class,
-        App\Providers\PartnerReviewServiceProvider::class,
-        App\Providers\ReviewLinkServiceProvider::class,
-        App\Providers\ReviewStatsServiceProvider::class,
-        App\Providers\SiteAlertServiceProvider::class,
-        App\Providers\TagServiceProvider::class,
-        App\Providers\TopRatedServiceProvider::class,
-        App\Providers\UserGamesCollectionServiceProvider::class,
-        App\Providers\UserServiceProvider::class,
+        // App providers
+        // NB. These are now auto-loaded
 
         TwigBridge\ServiceProvider::class,
 
