@@ -21,9 +21,9 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Display name</th>
-                <th class="text-center">Points</th>
-                <th class="text-left">Roles</th>
+                <th class="text-center">Twitter</th>
                 <th class="text-left">Partner name</th>
+                <th class="text-left">Roles</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -40,18 +40,8 @@
                         <small>{{ item.email }}</small>
                     </td>
                     <td class="text-center">
-                        {{ item.points_balance }}
-                    </td>
-                    <td class="text-left">
-                        {% if item.is_owner %}
-                            <small>Owner</small>
-                        {% elseif item.is_staff %}
-                            {% for userRole in item.user_roles %}
-                                <small>
-                                    {{ userRole }}
-                                    {% if not loop.last %}<br>{% endif %}
-                                </small>
-                            {% endfor %}
+                        {% if item.twitter_user_id %}
+                            <i class="fab fa-twitter"></i>
                         {% endif %}
                     </td>
                     <td class="text-left">
@@ -65,6 +55,18 @@
                                     <br>{{ item.partner.name }}
                                 {% endif %}
                             </small>
+                        {% endif %}
+                    </td>
+                    <td class="text-left">
+                        {% if item.is_owner %}
+                            <small>Owner</small>
+                        {% elseif item.is_staff %}
+                            {% for userRole in item.user_roles %}
+                                <small>
+                                    {{ userRole }}
+                                    {% if not loop.last %}<br>{% endif %}
+                                </small>
+                            {% endfor %}
                         {% endif %}
                     </td>
                     <td class="text-center">
