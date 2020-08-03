@@ -1,5 +1,5 @@
 
-var wosAdminTools = {
+var ssAdminTools = {
 
     convertToLinkTitle: function(idOfFieldToCheck, idOfFieldToUpdate) {
 
