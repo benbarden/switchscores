@@ -38,7 +38,6 @@
     <thead>
         <tr>
             <th class="text-left">Title</th>
-            <th class="text-left">Site</th>
             <th class="text-center">Game link</th>
             <th class="text-center">Rating</th>
             <th class="text-center">Date</th>
@@ -50,9 +49,10 @@
             <tr>
                 <td class="text-left" style="max-width: 300px;">
                     <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
-                </td>
-                <td class="text-left">
-                    {{ item.site.name }}
+                    <br>
+                    <small>
+                        {{ item.site.name }}
+                    </small>
                 </td>
                 <td class="text-center">
                     {% if item.game.title is null %}
@@ -108,7 +108,6 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 50,
             "columns": [
-                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
