@@ -434,10 +434,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     // Action lists
     Route::get('/admin/action-lists/no-price', 'Admin\ActionListController@noPrice')->name('admin.action-lists.no-price');
 
-    // Partner reviews
-    Route::match(['get', 'post'], '/admin/reviews/partner/edit/{reviewId}', 'Admin\PartnerReviewController@edit')->name('admin.reviews.partner.edit');
-    Route::get('/admin/reviews/partner/{report?}', 'Admin\PartnerReviewController@showList')->name('admin.reviews.partner.list');
-
     // Tools
     Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
     Route::get('/admin/tools/tool/landing/modular/{commandName}', 'Admin\ToolsController@toolLandingModular')->name('admin.tools.toolLandingModular');

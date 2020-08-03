@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\PartnerReview;
 use App\QuickReview;
 
 use App\Traits\SwitchServices;
@@ -18,7 +17,6 @@ class DashboardController extends Controller
         $pageTitle = 'Reviews dashboard';
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
-        $servicePartnerReview = $this->getServicePartnerReview();
         $serviceQuickReview = $this->getServiceQuickReview();
 
         $serviceReviewLinks = $this->getServiceReviewLink();
@@ -29,10 +27,8 @@ class DashboardController extends Controller
 
         // Action lists
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
-        $pendingPartnerReview = $servicePartnerReview->getByStatus(PartnerReview::STATUS_PENDING);
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
-        $bindings['PendingPartnerReviewCount'] = count($pendingPartnerReview);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Feed imports

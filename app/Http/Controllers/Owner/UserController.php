@@ -140,7 +140,6 @@ class UserController extends Controller
         $serviceUser = $this->getServiceUser();
 
         // Validation
-        $servicePartnerReview = $this->getServicePartnerReview();
         $serviceReviewLink = $this->getServiceReviewLink();
         $serviceQuickReview = $this->getServiceQuickReview();
 
@@ -156,10 +155,6 @@ class UserController extends Controller
         $request = request();
 
         // Validation: check for any reason we should not allow the user to be deleted.
-        $partnerReviews = $servicePartnerReview->getByUser($userId);
-        if (count($partnerReviews) > 0) {
-            $customErrors[] = 'User has created '.count($partnerReviews).' partner review(s)';
-        }
         $reviewLinks = $serviceReviewLink->getByUser($userId);
         if (count($reviewLinks) > 0) {
             $customErrors[] = 'User has created '.count($reviewLinks).' review link(s)';
