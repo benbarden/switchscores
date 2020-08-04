@@ -104,6 +104,7 @@
                     <th class="text-center">Involvement</th>
                     <th class="text-center">Release date</th>
                     <th class="text-center">Released?</th>
+                    <th class="text-center">Options</th>
                 </tr>
                 {% for item in MergedGameList %}
                     {% if item.PartnerType == 'developer' %}
@@ -116,7 +117,12 @@
                         {% set ExtraDetailLine = '' %}
                     {% endif %}
                     <tr>
-                        <td>{{ item.title }}</td>
+                        <td>
+                            <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
+                            <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
+                        </td>
                         <td class="text-center">{{ ExtraDetailLine }}</td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
                         <td class="text-center">
@@ -125,6 +131,9 @@
                             {% else %}
                                 No
                             {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('admin.game.partner.list', {'gameId': item.id}) }}">Partners</a>
                         </td>
                     </tr>
                 {% endfor %}
