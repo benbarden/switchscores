@@ -4,20 +4,17 @@
 
 {% block page_inner %}
 
-<h2>Add a category</h2>
-<label for="txt-new-category-name">Name</label>
-<input id="txt-new-category-name" type="text" maxlength="50">
-<input id="btn-save-category" type="button" class="btn btn-primary" value="Save">
-<div id="js-new-category-notify" class="alert alert-success" role="alert" style="display: none;">
-</div>
+<a href="{{ route('staff.categorisation.category.add') }}" class="btn outline btn-primary">Add a category</a>
+<br>
+<br>
 
-<h2>All categories</h2>
 {% if CategoryList.count > 0 %}
     <table class="table data-sortable">
         <thead>
             <tr>
                 <th class="text-right">#</th>
-                <th>Primary type</th>
+                <th>Category</th>
+                <th>Parent</th>
                 <th class="text-center">Game count</th>
                 <th class="text-center">View</th>
                 <th class="text-center">Options</th>
@@ -34,6 +31,13 @@
                             {{ item.name }}
                         </a>
                     </td>
+                    <td>
+                        {% if item.parent.id %}
+                        <a href="{{ route('games.browse.byCategory.page', {'category': item.parent.link_title}) }}" target="_blank">
+                            {{ item.parent.name }}
+                        </a>
+                        {% endif %}
+                    </td>
                     <td class="text-center">
                         {{ item.games().count }}
                     </td>
@@ -41,8 +45,9 @@
                         <a href="{{ route('staff.games.list.by-category', {'category': item}) }}">View games</a>
                     </td>
                     <td class="text-center">
-                        {% if item.games().count == 0 %}
-                            Delete
+                        <a href="{{ route('staff.categorisation.category.edit', {'categoryId': item.id}) }}">Edit</a>
+                        {% if item.games().count == 0 and item.children().count == 0 %}
+                            : <a href="{{ route('staff.categorisation.category.delete', {'categoryId': item.id}) }}">Delete</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -64,10 +69,12 @@
                 null,
                 null,
                 null,
+                null,
                 null
             ]
         });
     });
+    /*
     $('#btn-save-category').on('click', function() {
 
         categoryName = $('#txt-new-category-name').val();
@@ -95,6 +102,7 @@
             $('#txt-new-category-name').val('');
         });
     });
+    */
 </script>
 
 {% endblock page_inner %}

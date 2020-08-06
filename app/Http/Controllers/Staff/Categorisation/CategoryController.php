@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\AuthUser;
@@ -11,6 +15,16 @@ class CategoryController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @var array
+     */
+    private $validationRules = [
+        'name' => 'required',
+        'link_title' => 'required',
+    ];
 
     public function showList()
     {
@@ -29,35 +43,103 @@ class CategoryController extends Controller
     public function addCategory()
     {
         $serviceCategory = $this->getServiceCategory();
-        $serviceUser = $this->getServiceUser();
-        $serviceUrl = $this->getServiceUrl();
-
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
 
         $request = request();
 
-        $categoryName = $request->categoryName;
-        if (!$categoryName) {
-            return response()->json(['error' => 'Missing data: categoryName'], 400);
+        $bindings = [];
+
+        if ($request->isMethod('post')) {
+
+            $this->validate($request, $this->validationRules);
+
+            $serviceCategory->create($request->name, $request->link_title, $request->parent_id);
+
+            return redirect(route('staff.categorisation.category.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
         }
 
-        $existingRecord = $serviceCategory->getByName($categoryName);
-        if ($existingRecord) {
-            return response()->json(['error' => 'Category already exists!'], 400);
+        $bindings['TopTitle'] = 'Staff - Add category';
+        $bindings['PageTitle'] = 'Add category';
+        $bindings['FormMode'] = 'add';
+
+        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
+
+        return view('staff.categorisation.category.add', $bindings);
+    }
+
+    public function editCategory($categoryId)
+    {
+        $serviceCategory = $this->getServiceCategory();
+
+        $categoryData = $serviceCategory->find($categoryId);
+        if (!$categoryData) abort(404);
+
+        $request = request();
+
+        $bindings = [];
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+            $this->validate($request, $this->validationRules);
+
+            $serviceCategory->edit($categoryData, $request->name, $request->link_title, $request->parent_id);
+
+            return redirect(route('staff.categorisation.category.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
         }
 
-        $linkTitle = $serviceUrl->generateLinkText($categoryName);
+        $bindings['TopTitle'] = 'Staff - Edit category';
+        $bindings['PageTitle'] = 'Edit category';
+        $bindings['CategoryData'] = $categoryData;
+        $bindings['CategoryId'] = $categoryId;
 
-        $serviceCategory->create($categoryName, $linkTitle);
+        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
 
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
+        return view('staff.categorisation.category.edit', $bindings);
+    }
+
+    public function deleteCategory($categoryId)
+    {
+        $serviceCategory = $this->getServiceCategory();
+
+        $categoryData = $serviceCategory->find($categoryId);
+        if (!$categoryData) abort(404);
+
+        $request = request();
+
+        $bindings = [];
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'delete-post';
+
+            $serviceCategory->delete($categoryId);
+
+            // Done
+
+            return redirect(route('staff.categorisation.category.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'delete';
+
+        }
+
+        $bindings['TopTitle'] = 'Staff - Categorisation - Delete category';
+        $bindings['PageTitle'] = 'Delete category';
+        $bindings['CategoryData'] = $categoryData;
+        $bindings['CategoryId'] = $categoryId;
+
+        return view('staff.categorisation.category.delete', $bindings);
     }
 }

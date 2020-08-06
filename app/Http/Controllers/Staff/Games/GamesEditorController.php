@@ -129,7 +129,7 @@ class GamesEditorController extends Controller
 
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['CategoryList'] = $serviceCategory->getAll();
+        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
 
         return view('staff.games.editor.add', $bindings);
     }
@@ -188,7 +188,7 @@ class GamesEditorController extends Controller
         $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['CategoryList'] = $serviceCategory->getAll();
+        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
 
         return view('staff.games.editor.edit', $bindings);
     }

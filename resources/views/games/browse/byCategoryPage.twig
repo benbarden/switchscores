@@ -1,18 +1,21 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'url': route('games.browse.byCategory.landing'), 'text': 'Browse by category'}, {'text': PageTitle}] %}
+{% set crumbNav = [
+    {'url': route('games.landing'), 'text': 'Games'},
+    {'url': route('games.browse.byCategory.landing'), 'text': 'Browse by category'},
+    {'text': PageTitle}] %}
 
 {% block page_body %}
 
 {% include 'games/browse/browse-wip-alert.twig' %}
 
-{% if Category.tags().count() > 0 %}
+{% if Category.children.count() > 0 %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h2>Tags in {{ Category.name }}</h2>
+        <h2>Subcategories</h2>
         <ul>
-            {% for item in Category.tags %}
-                <li><a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}">{{ item.tag_name }}</a></li>
+            {% for item in Category.children %}
+                <li><a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}">{{ item.name }}</a></li>
             {% endfor %}
         </ul>
     </div>

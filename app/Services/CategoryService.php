@@ -17,14 +17,26 @@ class CategoryService
         ]);
     }
 
-    public function find($id)
+    public function edit(Category $category, $name, $linkTitle, $parentId = null)
     {
-        return Category::find($id);
+        $values = [
+            'name' => $name,
+            'link_title' => $linkTitle,
+            'parent_id' => $parentId,
+        ];
+
+        $category->fill($values);
+        $category->save();
     }
 
     public function delete($id)
     {
         Category::where('id', $id)->delete();
+    }
+
+    public function find($id)
+    {
+        return Category::find($id);
     }
 
     /**
@@ -33,6 +45,11 @@ class CategoryService
     public function getAll()
     {
         return Category::orderBy('name', 'asc')->get();
+    }
+
+    public function getAllWithoutParents()
+    {
+        return Category::whereDoesntHave('parent')->orderBy('name', 'asc')->get();
     }
 
     public function getByName($name)

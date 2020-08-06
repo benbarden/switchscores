@@ -1,0 +1,35 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['name'] = "{{ CategoryData.name }}";
+        formVals['link_title'] = "{{ CategoryData.link_title }}";
+        formVals['parent_id'] = "{{ CategoryData.parent_id }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['name'] = "{{ old('name') }}";
+        formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['parent_id'] = "{{ old('parent_id') }}";
+
+    }
+
+    $('#name').val(formVals['name']);
+    $('#link_title').val(formVals['link_title']);
+    $('#category_id').val(formVals['category_id']);
+
+    $('#name').on('blur', function() {
+        ssAdminTools.convertToLinkTitle('name', 'link_title');
+    });
+
+    $(document).ready(function() {
+        $('#name').focus();
+    });
+
+</script>

@@ -59,6 +59,20 @@
 
     {% endif %}
 
+    {% if GameData.category %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Category</span>
+            </td>
+            <td>
+                {% if GameData.category.parent.id %}
+                    <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                {% endif %}
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
     {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
 
     <tr>
@@ -75,17 +89,6 @@
         </td>
     </tr>
 
-    {% endif %}
-
-    {% if GameData.category_id %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Category</span>
-            </td>
-            <td>
-                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
-            </td>
-        </tr>
     {% endif %}
 
     {% if GameData.series_id %}
