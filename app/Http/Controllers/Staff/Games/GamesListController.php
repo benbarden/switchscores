@@ -67,6 +67,15 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
+    public function brokenNintendoCoUkLink()
+    {
+        $bindings = $this->getListBindings('Broken Nintendo.co.uk link');
+
+        $bindings['GameList'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink();
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
     public function byCategory(Category $category)
     {
         $bindings = $this->getListBindings('By category: '.$category->name, "[ 1, 'asc']");

@@ -17,6 +17,7 @@
             <tbody>
             <tr>
                 <td>
+                    <div class="label alert-danger">High</div>
                     <a href="{{ route('admin.games.list')}}/action-list-games-for-release">Games to release</a>
                 </td>
                 <td class="text-right">
@@ -25,6 +26,16 @@
             </tr>
             <tr>
                 <td>
+                    <div class="label alert-danger">High</div>
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label alert-warning">Medium</div>
                     <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
                 </td>
                 <td class="text-right">
@@ -33,6 +44,7 @@
             </tr>
             <tr>
                 <td>
+                    <div class="label alert-warning">Medium</div>
                     <a href="{{ route('admin.action-lists.no-price') }}">No price</a>
                 </td>
                 <td class="text-right">
@@ -41,6 +53,7 @@
             </tr>
             <tr>
                 <td>
+                    <div class="label alert-info">Low</div>
                     <a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a>
                 </td>
                 <td class="text-right">
@@ -49,6 +62,7 @@
             </tr>
             <tr>
                 <td>
+                    <div class="label alert-info">Low</div>
                     <a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a>
                 </td>
                 <td class="text-right">
