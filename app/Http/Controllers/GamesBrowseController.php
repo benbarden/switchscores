@@ -41,7 +41,7 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
 
         $bindings['PageTitle'] = 'Browse Switch games by category';
         $bindings['TopTitle'] = 'Browse Switch games by category';
