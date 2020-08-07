@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -50,8 +51,32 @@ class CategoryController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, $this->validationRules);
+            //$this->validate($request, $this->validationRules);
 
+            $validator = Validator::make($request->all(), $this->validationRules);
+
+            if ($validator->fails()) {
+                return redirect(route('staff.categorisation.category.add'))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $existingCategory = $serviceCategory->getByName($request->name);
+
+            $validator->after(function ($validator) use ($existingCategory) {
+                // Check for duplicates
+                if ($existingCategory != null) {
+                    $validator->errors()->add('title', 'Title already exists for another record!');
+                }
+            });
+
+            if ($validator->fails()) {
+                return redirect(route('staff.categorisation.category.add'))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // All ok
             $serviceCategory->create($request->name, $request->link_title, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
