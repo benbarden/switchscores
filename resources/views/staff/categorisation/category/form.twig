@@ -22,7 +22,9 @@
             <select id="parent_id" class="form-control" name="parent_id">
                 <option value="">&nbsp;</option>
                 {% for item in CategoryList %}
-                <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% if item.id != CategoryData.id %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
