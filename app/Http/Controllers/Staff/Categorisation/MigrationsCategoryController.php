@@ -56,4 +56,18 @@ class MigrationsCategoryController extends Controller
 
         return view('staff.games.list.standard-view', $bindings);
     }
+
+    public function allGamesWithNoCategory()
+    {
+        $bindings = $this->getListBindings('All games with no category', "[ 2, 'asc']");
+
+        $serviceMigrationsCategory = new MigrationsCategory();
+
+        $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory();
+
+        $bindings['CustomHeader'] = 'Genres';
+        $bindings['ListMode'] = 'category-migration';
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
 }

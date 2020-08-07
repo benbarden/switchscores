@@ -246,6 +246,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Migrations
     Route::get('/staff/categorisation/migrations/category/games-with-one-genre', 'Staff\Categorisation\MigrationsCategoryController@gamesWithOneGenre')->name('staff.categorisation.migrations.category.games-with-one-genre');
     Route::get('/staff/categorisation/migrations/category/games-with-named-genre-and-one-other/{genre}', 'Staff\Categorisation\MigrationsCategoryController@gamesWithNamedGenreAndOneOther')->name('staff.categorisation.migrations.category.games-with-named-genre-and-one-other');
+    Route::get('/staff/categorisation/migrations/category/all-games-with-no-category', 'Staff\Categorisation\MigrationsCategoryController@allGamesWithNoCategory')->name('staff.categorisation.migrations.category.all-games-with-no-category');
 
 });
 
