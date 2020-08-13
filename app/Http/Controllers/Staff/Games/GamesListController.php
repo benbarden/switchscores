@@ -82,9 +82,6 @@ class GamesListController extends Controller
 
         $bindings['GameList'] = $this->getServiceGame()->getByCategory($category);
 
-        $bindings['CustomHeader'] = 'Category';
-        $bindings['ListMode'] = 'by-category';
-
         return view('staff.games.list.standard-view', $bindings);
     }
 
