@@ -41,8 +41,6 @@ class GamesEditorController extends Controller
 
     public function add()
     {
-        $serviceGenre = $this->getServiceGenre();
-        $serviceGameGenre = $this->getServiceGameGenre();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
         $serviceCategory = $this->getServiceCategory();
         $serviceGameSeries = $this->getServiceGameSeries();
@@ -98,20 +96,6 @@ class GamesEditorController extends Controller
                 $game->save();
             }
 
-            // Update genres
-            $gameGenres = [];
-            $gameGenreItemList = $request->genre_item;
-            if ($gameGenreItemList) {
-                foreach ($gameGenreItemList as $genreId => $value) {
-                    $gameGenres[] = $genreId;
-                }
-            }
-
-            // As this is a new game, there are no genres to delete
-            if (count($gameGenres) > 0) {
-                $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
-            }
-
             // Done
 
             // Trigger event
@@ -127,7 +111,6 @@ class GamesEditorController extends Controller
         $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GenreList'] = $serviceGenre->getAll();
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
         $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
 
@@ -139,8 +122,6 @@ class GamesEditorController extends Controller
         $request = request();
 
         $serviceGame = $this->getServiceGame();
-        $serviceGenre = $this->getServiceGenre();
-        $serviceGameGenre = $this->getServiceGameGenre();
         $serviceCategory = $this->getServiceCategory();
         $serviceGameSeries = $this->getServiceGameSeries();
 
@@ -157,20 +138,6 @@ class GamesEditorController extends Controller
 
             GameDirectorFactory::updateExisting($gameData, $request->post());
 
-            // Update genres
-            $gameGenres = [];
-            $gameGenreItemList = $request->genre_item;
-            if ($gameGenreItemList) {
-                foreach ($gameGenreItemList as $genreId => $value) {
-                    $gameGenres[] = $genreId;
-                }
-            }
-
-            $serviceGameGenre->deleteGameGenres($gameId);
-            if (count($gameGenres) > 0) {
-                $serviceGameGenre->createGameGenreList($gameId, $gameGenres);
-            }
-
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
 
@@ -185,8 +152,6 @@ class GamesEditorController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
-        $bindings['GenreList'] = $serviceGenre->getAll();
-        $bindings['GameGenreList'] = $serviceGameGenre->getByGame($gameId);
         $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
         $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
 
@@ -298,7 +263,6 @@ class GamesEditorController extends Controller
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         // Categorisation
-        $serviceGameGenre = $this->getServiceGameGenre();
         $serviceGameTag = $this->getServiceGameTag();
 
         // Validation
@@ -332,7 +296,6 @@ class GamesEditorController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceGameGenre->deleteGameGenres($gameId);
             $serviceGameTitleHash->deleteByGameId($gameId);
             $serviceGameTag->deleteGameTags($gameId);
             $serviceGameDeveloper->deleteByGameId($gameId);

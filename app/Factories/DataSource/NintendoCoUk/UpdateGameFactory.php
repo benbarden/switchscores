@@ -15,7 +15,6 @@ class UpdateGameFactory
         $serviceUpdateGame->updatePrice();
         $serviceUpdateGame->updateReleaseDate();
         $serviceUpdateGame->updatePlayers();
-        $serviceUpdateGame->updateGenres();
         // Temporarily stop doing dev/pub updates so we can phase out the old fields on the games table.
         //$serviceUpdateGame->updatePublishers();
         $game->save();

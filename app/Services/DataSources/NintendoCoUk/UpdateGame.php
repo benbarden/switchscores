@@ -6,9 +6,6 @@ use App\Game;
 use App\GameImportRuleEshop;
 use App\DataSourceParsed;
 
-use App\Services\GenreService;
-use App\Services\GameGenreService;
-
 class UpdateGame
 {
     /**
@@ -109,39 +106,5 @@ class UpdateGame
         if ($this->game->players != null) return false;
 
         $this->game->players = $this->dsParsedItem->players;
-    }
-
-    public function updateGenres()
-    {
-        if ($this->gameImportRule) {
-            if ($this->gameImportRule->shouldIgnoreGenres()) return false;
-        }
-
-        $serviceGenre = new GenreService();
-        $serviceGameGenre = new GameGenreService();
-
-        $gameId = $this->game->id;
-        $gameGenres = $serviceGameGenre->getByGame($gameId);
-
-        $dsGenres = $this->dsParsedItem->genres_json;
-        if ($dsGenres == null) return false;
-
-        $eshopGenres = json_decode($dsGenres);
-
-        $gameGenresArray = [];
-        foreach ($gameGenres as $gameGenre) {
-            $gameGenresArray[] = $gameGenre->genre->genre;
-        }
-
-        if (count($eshopGenres) == 0) return false;
-
-        if (count($gameGenres) != 0) return false;
-
-        foreach ($eshopGenres as $eshopGenre) {
-            $genreItem = $serviceGenre->getByGenreTitle($eshopGenre);
-            if (!$genreItem) continue;
-            $genreId = $genreItem->id;
-            $serviceGameGenre->create($gameId, $genreId);
-        }
     }
 }

@@ -69,11 +69,6 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\GameTag', 'game_id', 'id');
     }
 
-    public function gameGenres()
-    {
-        return $this->hasMany('App\GameGenre', 'game_id', 'id');
-    }
-
     public function gameDevelopers()
     {
         return $this->hasMany('App\GameDeveloper', 'game_id', 'id');

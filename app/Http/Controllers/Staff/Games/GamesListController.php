@@ -101,8 +101,6 @@ class GamesListController extends Controller
     {
         $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-        $serviceGameGenre = $this->getServiceGameGenre();
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
         $bindings = [];
@@ -146,15 +144,7 @@ class GamesListController extends Controller
                     $gameList = $serviceGamePublisher->getGamesWithNoPublisher();
                     $jsInitialSort = "[ 0, 'desc']";
                     break;
-                case 'old-publishers-to-migrate':
-                    $gameList = $serviceGamePublisher->getOldPublishersToMigrate();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
                 // Missing data
-                case 'no-genre':
-                    $gameList = $serviceGameGenre->getGamesWithoutGenres();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
                 case 'no-eshop-europe-link':
                     $gameList = $serviceGame->getByNullField('eshop_europe_fs_id');
                     $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";

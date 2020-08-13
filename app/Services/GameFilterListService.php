@@ -80,19 +80,4 @@ class GameFilterListService
         $games = $games->get();
         return $games;
     }
-
-    /**
-     * @param $genreId
-     * @return mixed
-     */
-    public function getGamesByGenre($genreId)
-    {
-        // First get a list of the game IDs that have this genre
-        $games = Game::with('gameGenres')
-            ->whereHas('gameGenres', function($query) use ($genreId) {
-                $query->where('game_genres.genre_id', '=', $genreId);
-            })
-            ->orderBy('games.title', 'asc');
-        return $games->get();
-    }
 }

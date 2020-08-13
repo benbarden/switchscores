@@ -14,7 +14,6 @@ use App\Services\DataSourceRawService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
 use App\Services\GameFilterListService;
-use App\Services\GameGenreService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameImportRuleWikipediaService;
 use App\Services\GamePublisherService;
@@ -26,7 +25,6 @@ use App\Services\GameSeriesService;
 use App\Services\GameService;
 use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
-use App\Services\GenreService;
 use App\Services\NewsCategoryService;
 use App\Services\NewsService;
 use App\Services\PartnerService;
@@ -179,14 +177,6 @@ trait SwitchServices
     }
 
     /**
-     * @return GameGenreService
-     */
-    public function getServiceGameGenre()
-    {
-        return $this->loadService('GameGenreService');
-    }
-
-    /**
      * @return GameFilterListService
      */
     public function getServiceGameFilterList()
@@ -280,14 +270,6 @@ trait SwitchServices
     public function getServiceGameTitleHash()
     {
         return $this->loadService('GameTitleHashService');
-    }
-
-    /**
-     * @return GenreService
-     */
-    public function getServiceGenre()
-    {
-        return $this->loadService('GenreService');
     }
 
     /**

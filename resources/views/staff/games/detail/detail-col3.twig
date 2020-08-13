@@ -60,22 +60,6 @@
         <td>{{ GameData.players }}</td>
     </tr>
 
-    <tr>
-        <td>
-            <span style="font-weight: bold;">Genres</span>
-        </td>
-        <td>
-            {% if GameGenres|length > 0 %}
-                {% for item in GameGenres %}
-                    <nobr>{{ item.genre.genre }}</nobr>
-                    {% if not loop.last %}, {% endif %}
-                {% endfor %}
-            {% else %}
-                <em>None set.</em>
-            {% endif %}
-        </td>
-    </tr>
-
     {% if NintendoCoUkDSParsedItem %}
         <tr>
             <td>

@@ -53,13 +53,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminGamesListNoGenre()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/no-genre');
-        $response->assertStatus(200);
-    }
-
     public function testAdminGamesListNoVideoUrl()
     {
         $this->be($this->userAdmin);

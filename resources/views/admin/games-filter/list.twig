@@ -12,12 +12,6 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Title</th>
-                <th>
-                    {% if FilterName == 'games-with-genre' %}Category{% endif %}
-                </th>
-                <th>
-                    {% if FilterName == 'games-with-genre' %}Genres{% endif %}
-                </th>
                 <th class="text-center">eShop: EU</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -33,23 +27,6 @@
                         <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
                             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                         </a>
-                    </td>
-                    <td>
-                        {% if FilterName == 'games-with-genre' %}
-                            {{ item.category.name }}
-                        {% endif %}
-                    <td>
-                        {% if FilterName == 'games-with-genre' %}
-                            {% for gameGenre in item.gameGenres %}
-                                {% set printValue = gameGenre.genre.genre %}
-                                {% if FilterValue == printValue %}
-                                    <strong>{{ printValue }}</strong>
-                                {% else %}
-                                    {{ printValue }}
-                                {% endif %}
-                                {% if not loop.last %}, {% endif %}
-                            {% endfor %}
-                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.eshop_europe_fs_id %}
@@ -82,8 +59,6 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,
             "columns": [
-                null,
-                null,
                 null,
                 null,
                 { "orderable": false },

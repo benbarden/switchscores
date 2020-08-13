@@ -22,7 +22,6 @@ class DashboardController extends Controller
 
         $serviceGame = $this->getServiceGame();
         $serviceGameFilterList = $this->getServiceGameFilterList();
-        $serviceGameGenre = $this->getServiceGameGenre();
         $serviceGameSeries = $this->getServiceGameSeries();
         $serviceTag = $this->getServiceTag();
         $serviceGameTag = $this->getServiceGameTag();
@@ -54,10 +53,6 @@ class DashboardController extends Controller
         $statsWithoutSeries = $serviceQualityStats->countGamesWithoutSeries();
         $bindings['StatsWithSeries'] = $statsWithSeries;
         $bindings['StatsWithoutSeries'] = $statsWithoutSeries;
-
-        // Genres
-        $missingGenres = $serviceGameGenre->getGamesWithoutGenres();
-        $bindings['MissingGenresCount'] = count($missingGenres);
 
         // No category or tag
         $missingCategoriesAndTags = $serviceGameFilterList->getGamesWithoutCategoriesOrTags();

@@ -54,19 +54,6 @@
             </td>
         </tr>
     {% endif %}
-    {% if GameGenres|length > 0 %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Genres</span>
-            </td>
-            <td>
-                {% for item in GameGenres %}
-                    <nobr>{{ item.genre.genre }}</nobr>
-                    {% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-    {% endif %}
     {% if DSNintendoCoUk is not null %}
         <tr>
             <td>

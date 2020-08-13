@@ -7,7 +7,6 @@
         <div class="col-md-9">
 
             <fieldset>
-                <legend>Main</legend>
                 <div class="form-group">
                     <label for="title" class="col-md-4 control-label">Title</label>
                     <div class="col-md-6">
@@ -114,22 +113,6 @@
         </div>
 
         <div class="col-md-3">
-
-            <div class="form-group">
-                <fieldset>
-                    <legend>Genres</legend>
-                    {% if GenreList %}
-                        {% for item in GenreList %}
-                            <div class="checkbox">
-                                <label>
-                                    <input id="genre_item_{{ item.id }}" class="genre_item" name="genre_item[{{ item.id }}]" type="checkbox">
-                                    {{ item.genre }}
-                                </label>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </fieldset>
-            </div>
 
         </div>
 
