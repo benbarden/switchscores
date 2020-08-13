@@ -93,10 +93,6 @@ class RankAllTime
                 'updated_at' => $now,
             ];
 
-            DB::insert("
-                INSERT INTO game_rank_alltime(game_rank, game_id, created_at, updated_at)
-                VALUES(?, ?, NOW(), NOW())", [$actualRank, $gameId]);
-
             // This is always incremented by 1
             $rankCounter++;
 
