@@ -37,7 +37,7 @@ class RankAllTime
             SELECT g.id AS game_id, g.title, g.rating_avg, g.game_rank
             FROM games g
             WHERE review_count > 2
-            ORDER BY rating_avg DESC
+            ORDER BY g.id DESC
         ");
     }
 
@@ -84,14 +84,14 @@ class RankAllTime
 
             // Save to all-time rank table, if it's in the Top 100.
             // This is faster than storing all the ranks.
-            if ($actualRank > 100) break;
-
-            $rowsToInsert[] = [
-                'game_rank' => $actualRank,
-                'game_id' => $gameId,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ];
+            if ($actualRank <= 100) {
+                $rowsToInsert[] = [
+                    'game_rank' => $actualRank,
+                    'game_id' => $gameId,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
 
             // This is always incremented by 1
             $rankCounter++;
