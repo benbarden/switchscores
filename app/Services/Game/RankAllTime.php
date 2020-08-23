@@ -37,7 +37,7 @@ class RankAllTime
             SELECT g.id AS game_id, g.title, g.rating_avg, g.game_rank
             FROM games g
             WHERE review_count > 2
-            ORDER BY g.id DESC
+            ORDER BY rating_avg DESC
         ");
     }
 
