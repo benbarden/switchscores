@@ -213,6 +213,13 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports.list');
     Route::get('/staff/reviews/feed-imports/{feedImport}/items', 'Staff\Reviews\FeedImportsController@showItemList')->name('staff.reviews.feed-imports.item-list');
 
+    // Reviews: Tools
+    Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-importer', 'Staff\Reviews\ToolsController@runFeedImporter')->name('staff.reviews.tools.runFeedImporter');
+    Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-parser', 'Staff\Reviews\ToolsController@runFeedParser')->name('staff.reviews.tools.runFeedParser');
+    Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-review-generator', 'Staff\Reviews\ToolsController@runFeedReviewGenerator')->name('staff.reviews.tools.runFeedReviewGenerator');
+    Route::match(['get', 'post'], '/staff/reviews/tools/update-game-ranks', 'Staff\Reviews\ToolsController@updateGameRanks')->name('staff.reviews.tools.updateGameRanks');
+    Route::match(['get', 'post'], '/staff/reviews/tools/update-game-review-stats', 'Staff\Reviews\ToolsController@updateGameReviewStats')->name('staff.reviews.tools.updateGameReviewStats');
+
 });
 
 

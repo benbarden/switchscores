@@ -1,3 +1,12 @@
+{% extends 'theme/wos/staff/clean-narrow.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
 <p>
     This tool runs the Feed Parser tool. (Step 2 of 3)
 </p>
@@ -10,3 +19,10 @@
     Once the Feed Parser has run, you'll need to review the Feed Items screen prior to running
     the final stage of the process - the Feed Review Generator.
 </p>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.tools.runFeedParser') }}">
+    {{ csrf_field() }}
+    <input type="submit" value="Start process" class="btn btn-primary">
+</form>
+
+{% endblock page_inner %}

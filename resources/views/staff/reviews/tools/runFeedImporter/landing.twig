@@ -1,0 +1,29 @@
+{% extends 'theme/wos/staff/clean-narrow.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.reviews.dashboard'), 'text': 'Reviews'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<p>
+    This tool runs the Feed Importer tool. (Step 1 of 3)
+</p>
+<p>
+    The Feed Importer will visit all review partners with RSS feeds, and load in any reviews
+    that have not yet been imported.
+</p>
+<p>
+    Once the Feed Importer has run, you'll need to run the Feed Parser tool.
+</p>
+<p>
+    <strong>Please note: Although this is not a heavy script, it may take up to a minute to complete.</strong>
+</p>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.tools.runFeedImporter') }}">
+    {{ csrf_field() }}
+    <input type="submit" value="Start process" class="btn btn-primary">
+</form>
+
+{% endblock page_inner %}
