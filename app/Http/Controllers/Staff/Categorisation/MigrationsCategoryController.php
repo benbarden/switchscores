@@ -31,7 +31,7 @@ class MigrationsCategoryController extends Controller
 
     public function gamesWithOneGenre()
     {
-        $bindings = $this->getListBindings('No category: Games with one genre and no category', "[ 2, 'asc']");
+        $bindings = $this->getListBindings('No category: Games with one genre and no category', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
@@ -45,7 +45,7 @@ class MigrationsCategoryController extends Controller
 
     public function gamesWithNamedGenreAndOneOther($genre)
     {
-        $bindings = $this->getListBindings('No category: Games with '.$genre.' and one other', "[ 2, 'asc']");
+        $bindings = $this->getListBindings('No category: Games with '.$genre.' and one other', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
@@ -59,7 +59,7 @@ class MigrationsCategoryController extends Controller
 
     public function allGamesWithNoCategory()
     {
-        $bindings = $this->getListBindings('All games with no category', "[ 2, 'asc']");
+        $bindings = $this->getListBindings('All games with no category', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
