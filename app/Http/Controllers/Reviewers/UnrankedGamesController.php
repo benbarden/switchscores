@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
+use App\Services\Reviewer\UnrankedGames;
+
 class UnrankedGamesController extends Controller
 {
     use SwitchServices;
@@ -19,7 +21,41 @@ class UnrankedGamesController extends Controller
             abort(403);
         }
 
+        $serviceUnrankedGames = new UnrankedGames();
+
         $bindings = [];
+
+        $totalReviewedBySite = $serviceUnrankedGames->getReviewedBySite($partnerId);
+        $totalUnranked = $serviceUnrankedGames->getTotalUnranked();
+        $totalUnrankedReviewedBySite = $serviceUnrankedGames->getUnrankedReviewedBySite($partnerId);
+
+        $totals = [];
+
+        foreach ($totalReviewedBySite as $item) {
+
+            $year = $item->release_year;
+            $count = $item->count;
+            $totals[$year]['TotalReviewed'] = $count;
+
+        }
+
+        foreach ($totalUnranked as $item) {
+
+            $year = $item->release_year;
+            $count = $item->count;
+            $totals[$year]['TotalUnranked'] = $count;
+
+        }
+
+        foreach ($totalUnrankedReviewedBySite as $item) {
+
+            $year = $item->release_year;
+            $count = $item->count;
+            $totals[$year]['TotalUnrankedReviewed'] = $count;
+
+        }
+
+        $bindings['UnrankedSiteTotals'] = $totals;
 
         $bindings['TopTitle'] = 'Unranked games';
         $bindings['PageTitle'] = 'Unranked games';

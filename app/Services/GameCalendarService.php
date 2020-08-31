@@ -10,6 +10,9 @@ use App\GameCalendarStat;
 
 class GameCalendarService
 {
+    /**
+     * @return int[]
+     */
     public function getAllowedYears()
     {
         return [2017, 2018, 2019, 2020];
