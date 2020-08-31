@@ -59,10 +59,11 @@ class GamesBrowseController extends Controller
         $categoryId = $category->id;
         $categoryName = $category->name;
 
-        $gameList = $this->getServiceGameReleaseDate()->getReleasedByCategory($categoryId);
-
         $bindings['Category'] = $category;
-        $bindings['GameList'] = $gameList;
+
+        $bindings['CategoryGameCount'] = $this->getServiceCategory()->countReleasedByCategory($categoryId);
+        $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($categoryId);
+        $bindings['UnrankedGameList'] = $this->getServiceCategory()->getUnrankedByCategory($categoryId);
 
         $bindings['PageTitle'] = 'Browse Switch games by category: '.$categoryName;
         $bindings['TopTitle'] = 'Browse Switch games by category: '.$categoryName;

@@ -22,18 +22,41 @@
 </div>
 {% endif %}
 
-{% if GameList|length %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <h2>Games in {{ Category.name }}</h2>
-        <p><small>{{ GameList|length }} games with this category.</small></p>
+        <p><small>{{ CategoryGameCount }} games with this category.</small></p>
     </div>
 </div>
-{% endif %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <h2>
+            Ranked
+        </h2>
+        {% if RankedGameList|length %}
+            <p>
+                Games with 3 or more reviews.
+            </p>
+            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': RankedGameList} %}
+        {% else %}
+            <p>Looks like we don't have any ranked games in this category.</p>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
+        <h2>
+            Unranked
+        </h2>
+        {% if UnrankedGameList|length %}
+            <p>
+                Games with fewer than 3 reviews - or no reviews.
+            </p>
+            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UnrankedGameList} %}
+        {% else %}
+            <p>Looks like we don't have any unranked games in this category.</p>
+        {% endif %}
     </div>
 </div>
 

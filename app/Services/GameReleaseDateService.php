@@ -100,28 +100,6 @@ class GameReleaseDateService
     // ********************************************** //
 
     /**
-     * @param $categoryId
-     * @param int $limit
-     * @return mixed
-     */
-    public function getReleasedByCategory($categoryId, $limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('games.category_id', $categoryId)
-            ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
      * @param $seriesId
      * @param int $limit
      * @return mixed
