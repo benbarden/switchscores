@@ -45,6 +45,10 @@ class DifferencesController extends Controller
 
                 if ($sourceField == 'release_date_eu') {
                     $game->eu_release_date = $dsParsedItem->release_date_eu;
+                } elseif ($sourceField == 'price_standard') {
+                    $game->price_eshop = $dsParsedItem->price_standard;
+                } elseif ($sourceField == 'dsp_players') {
+                    $game->players = $dsParsedItem->players;
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -114,6 +118,10 @@ class DifferencesController extends Controller
 
                 if ($sourceField == 'release_date_eu') {
                     $importRuleParams = ['ignore_europe_dates' => 'on'];
+                } elseif ($sourceField == 'price_standard') {
+                    $importRuleParams = ['ignore_price' => 'on'];
+                } elseif ($sourceField == 'dsp_players') {
+                    $importRuleParams = ['ignore_players' => 'on'];
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -195,6 +203,44 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'eu_release_date';
         $bindings['SourceField'] = 'release_date_eu';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
+    public function nintendoCoUkPrice()
+    {
+        $pageTitle = 'Differences: Price - Nintendo.co.uk API';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getPriceNintendoCoUk();
+
+        $bindings['GameField'] = 'price_eshop';
+        $bindings['SourceField'] = 'price_standard';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
+    public function nintendoCoUkPlayers()
+    {
+        $pageTitle = 'Differences: Players - Nintendo.co.uk API';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getPlayersNintendoCoUk();
+
+        $bindings['GameField'] = 'game_players';
+        $bindings['SourceField'] = 'dsp_players';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
 
         return view('staff.data-sources.differences.view-differences', $bindings);

@@ -339,6 +339,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Data sources: Differences
     Route::get('/staff/data-sources/differences/nintendo-co-uk/eu-release-date', 'Staff\DataSources\DifferencesController@nintendoCoUkEuReleaseDate')->name('staff.data-sources.differences.nintendo-co-uk.eu-release-date');
+    Route::get('/staff/data-sources/differences/nintendo-co-uk/price', 'Staff\DataSources\DifferencesController@nintendoCoUkPrice')->name('staff.data-sources.differences.nintendo-co-uk.price');
+    Route::get('/staff/data-sources/differences/nintendo-co-uk/players', 'Staff\DataSources\DifferencesController@nintendoCoUkPlayers')->name('staff.data-sources.differences.nintendo-co-uk.players');
     Route::get('/staff/data-sources/differences/wikipedia/eu-release-date', 'Staff\DataSources\DifferencesController@wikipediaEuReleaseDate')->name('staff.data-sources.differences.wikipedia.eu-release-date');
     Route::get('/staff/data-sources/differences/wikipedia/us-release-date', 'Staff\DataSources\DifferencesController@wikipediaUsReleaseDate')->name('staff.data-sources.differences.wikipedia.us-release-date');
     Route::get('/staff/data-sources/differences/wikipedia/jp-release-date', 'Staff\DataSources\DifferencesController@wikipediaJpReleaseDate')->name('staff.data-sources.differences.wikipedia.jp-release-date');

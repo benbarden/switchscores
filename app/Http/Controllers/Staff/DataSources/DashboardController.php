@@ -26,11 +26,15 @@ class DashboardController extends Controller
         $dsDifferences = new Differences();
 
         $releaseDateEUNintendoCoUkDifferenceCount = $dsDifferences->getReleaseDateEUNintendoCoUk(true);
+        $priceNintendoCoUkDifferenceCount = $dsDifferences->getPriceNintendoCoUk(true);
+        $playersEUNintendoCoUkDifferenceCount = $dsDifferences->getPlayersNintendoCoUk(true);
         $releaseDateEUWikipediaDifferenceCount = $dsDifferences->getReleaseDateEUWikipedia(true);
         $releaseDateUSWikipediaDifferenceCount = $dsDifferences->getReleaseDateUSWikipedia(true);
         $releaseDateJPWikipediaDifferenceCount = $dsDifferences->getReleaseDateJPWikipedia(true);
 
         $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
+        $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
+        $bindings['PlayersNintendoCoUkDifferenceCount'] = $playersEUNintendoCoUkDifferenceCount[0]->count;
         $bindings['ReleaseDateEUWikipediaDifferenceCount'] = $releaseDateEUWikipediaDifferenceCount[0]->count;
         $bindings['ReleaseDateUSWikipediaDifferenceCount'] = $releaseDateUSWikipediaDifferenceCount[0]->count;
         $bindings['ReleaseDateJPWikipediaDifferenceCount'] = $releaseDateJPWikipediaDifferenceCount[0]->count;
