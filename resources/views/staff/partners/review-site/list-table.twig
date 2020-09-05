@@ -4,9 +4,9 @@
         <tr>
             <th class="text-center">#</th>
             <th>Site</th>
-            <th>Links</th>
+            <th class="text-center">Twitter ID?</th>
             <th class="text-center">Login?</th>
-            <th class="text-center">Rating scale</th>
+            <th class="text-center">Scale</th>
             <th class="text-center">Feed?</th>
             <th class="text-center">Match rule?</th>
             <th class="text-center">Reviews</th>
@@ -24,14 +24,12 @@
                         {{ item.name }}
                     </a>
                 </td>
-                <td>
-                    <small>
-                        URL: <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
-                        {% if item.twitter_id %}
-                            <br>
-                            Twitter: <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
-                        {% endif %}
-                    </small>
+                <td class="text-center">
+                    {% if item.twitter_id %}
+                        <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {% if item.user.id %}

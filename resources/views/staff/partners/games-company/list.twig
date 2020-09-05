@@ -25,12 +25,10 @@
             <tr>
                 <th class="text-right">#</th>
                 <th>Name</th>
-                <th>Twitter ID</th>
+                <th class="text-center">Website</th>
+                <th class="text-center">Twitter</th>
                 <th class="text-center">Assigned games<br>(developer)</th>
                 <th class="text-center">Assigned games<br>(publisher)</th>
-                <th class="text-center">Last outreach status</th>
-                <th class="text-center">Last outreach date</th>
-                <th class="text-center">Outreach history</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -45,18 +43,19 @@
                         <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
                             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                         </a>
+                    </td>
+                    <td class="text-center">
                         {% if item.website_url %}
-                            <br>
-                            <small>
-                                <a href="{{ item.website_url }}" target="_blank">{{ item.website_url }}</a>
-                            </small>
+                            <a href="{{ item.website_url }}" target="_blank">
+                                <i class="fas fa-link"></i>
+                            </a>
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="text-center">
                         {% if item.twitter_id %}
-                            <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">{{ item.twitter_id }}</a>
-                        {% else %}
-                            -
+                            <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">
+                                <i class="fab fa-twitter"></i>
+                            </a>
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -64,15 +63,6 @@
                     </td>
                     <td class="text-center">
                         {{ item.publisherGames().count }}
-                    </td>
-                    <td class="text-center">
-                        {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item.lastOutreach} %}
-                    </td>
-                    <td class="text-center">
-                        {{ item.lastOutreach.created_at }}
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('staff.partners.outreach.list', {'partner': item}) }}">View</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
@@ -99,11 +89,9 @@
                 null,
                 null,
                 { "orderable": false },
-                null,
-                null,
-                null,
-                null,
                 { "orderable": false },
+                null,
+                null,
                 { "orderable": false }
             ]
         });
