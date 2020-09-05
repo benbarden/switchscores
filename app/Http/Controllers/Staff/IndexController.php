@@ -38,6 +38,10 @@ class IndexController extends Controller
         $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
+        // Games to release
+        $actionListGamesForReleaseCount = $this->getServiceGame()->getActionListGamesForRelease();
+        $bindings['GamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+
         // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 

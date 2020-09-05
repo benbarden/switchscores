@@ -28,6 +28,16 @@
                     </td>
                 </tr>
             {% endif %}
+            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release">Games to release</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('admin.games.list')}}/action-list-games-for-release" class="h4">{{ GamesForReleaseCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
             {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
                 <tr>
                     <td>
