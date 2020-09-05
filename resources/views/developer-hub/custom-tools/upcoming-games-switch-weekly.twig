@@ -54,6 +54,7 @@
                     <th class="text-center">#</th>
                     <th>Title</th>
                     <th class="text-center">EU release date</th>
+                    <th class="text-center">US release date</th>
                     <th class="text-center">Price</th>
                 </tr>
                 </thead>
@@ -63,6 +64,7 @@
                         <td class="text-center">{{ item.id }}</td>
                         <td>{{ item.title }}</td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
+                        <td class="text-center">{{ item.us_release_date }}</td>
                         <td class="text-center">{{ item.price_eshop }}</td>
                     </tr>
                 {% endfor %}
