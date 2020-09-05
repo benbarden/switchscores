@@ -31,22 +31,23 @@ class UserService
      * @param $email
      * @param $partnerId
      * @param $twitterUserId
+     * @param $isStaff
+     * @param $isDeveloper
      */
     public function edit(
-        User $userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff
+        User $userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper
     )
     {
-        if ($isStaff == 'on') {
-            $dbIsStaff = 1;
-        } else {
-            $dbIsStaff = 0;
-        }
+        $dbIsStaff     = $isStaff     == 'on' ? 1 : 0;
+        $dbIsDeveloper = $isDeveloper == 'on' ? 1 : 0;
+
         $values = [
             'display_name' => $displayName,
             'email' => $email,
             'partner_id' => $partnerId,
             'twitter_user_id' => $twitterUserId,
             'is_staff' => $dbIsStaff,
+            'is_developer' => $dbIsDeveloper,
         ];
 
         $userData->fill($values);

@@ -86,8 +86,9 @@ class UserController extends Controller
             $twitterUserId = $request->twitter_user_id;
             $partnerId = $request->partner_id;
             $isStaff = $request->is_staff;
+            $isDeveloper = $request->is_developer;
 
-            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff);
+            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper);
 
             // Clear roles
             $userData->setRoles([]);

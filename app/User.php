@@ -14,7 +14,7 @@ class User extends Authenticatable
      */
     // is_admin, is_owner, is_staff: these have to be fillable or unit tests will fail
     protected $fillable = [
-        'is_admin', 'is_owner', 'is_staff', 'user_roles',
+        'is_admin', 'is_owner', 'is_staff', 'is_developer', 'user_roles',
         'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'login_date', 'points_balance'
     ];
@@ -33,6 +33,7 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
         'is_owner' => 'boolean',
         'is_staff' => 'boolean',
+        'is_developer' => 'boolean',
         'user_roles' => 'array',
     ];
 
@@ -59,6 +60,14 @@ class User extends Authenticatable
     public function isStaff()
     {
         return $this->is_staff == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeveloper()
+    {
+        return $this->is_developer == 1;
     }
 
     public function isReviewer()

@@ -11,6 +11,7 @@
         formVals['twitter_user_id'] = "{{ UserData.twitter_user_id }}";
         formVals['partner_id'] = "{{ UserData.partner_id }}";
         formVals['is_staff'] = "{{ UserData.is_staff }}";
+        formVals['is_developer'] = "{{ UserData.is_developer }}";
 
     } else {
 
@@ -21,6 +22,7 @@
         formVals['twitter_user_id'] = "{{ old('twitter_user_id') }}";
         formVals['partner_id'] = "{{ old('partner_id') }}";
         formVals['is_staff'] = "{{ old('is_staff') }}";
+        formVals['is_developer'] = "{{ old('is_developer') }}";
 
     }
 
@@ -32,6 +34,11 @@
         $('#is_staff').attr('checked', true);
     } else {
         $('#is_staff').attr('checked', false);
+    }
+    if (formVals['is_developer'] == '1') {
+        $('#is_developer').attr('checked', true);
+    } else {
+        $('#is_developer').attr('checked', false);
     }
 
     // Roles

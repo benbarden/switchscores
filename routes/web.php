@@ -88,7 +88,7 @@ Route::get('/sitemap/reviews', 'SitemapController@reviews')->name('sitemap.revie
 Route::get('/sitemap/tags', 'SitemapController@tags')->name('sitemap.tags');
 Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
 
-/* Logged in */
+// *************** Members *************** //
 Route::group(['middleware' => ['auth']], function() {
 
     // Index
@@ -142,6 +142,14 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
 
 });
 
+
+// *************** Developers *************** //
+Route::group(['middleware' => ['auth.developer']], function() {
+
+    // *************** Developer hub: Dashboard *************** //
+    Route::get('/developer-hub', 'DeveloperHub\IndexController@show')->name('developer-hub.index');
+
+});
 
 
 // *************** Staff: General pages *************** //
