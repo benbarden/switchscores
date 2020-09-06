@@ -15,20 +15,21 @@
     </div>
 
     <div class="form-group">
-        <label for="review_score" class="col-md-4 control-label">Score out of 10</label>
+        <label class="col-md-4 control-label">Your score</label>
         <div class="col-md-6">
-            <input id="review_score" type="text" class="form-control" name="review_score">
-            <p>
-                <small>
-                    Must be between 0-10. Decimals accepted. If you enter more than one decimal place,
-                    the number will be rounded. e.g. 8.256 becomes 8.3.
-                </small>
-            </p>
+            {% for item in ScoreList %}
+                <div class="col-md-2">
+                    <input id="review_score_{{ item }}" name="review_score" value="{{ item }}" type="radio">
+                    <label for="review_score_{{ item }}" style="margin: 10px 0;">
+                        {% include 'modules/rating/badge.twig' with {'score': item} %}
+                    </label>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
     <div class="form-group">
-        <label for="review_body" class="col-md-4 control-label">Review body</label>
+        <label for="review_body" class="col-md-4 control-label">Your comments</label>
         <div class="col-md-6">
             <textarea id="review_body" name="review_body" cols="50" rows="10"></textarea>
             <p>

@@ -59,6 +59,9 @@ class QuickReviewController extends Controller
 
         $bindings['GamesList'] = $serviceGame->getAll();
 
+        $scoreList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $bindings['ScoreList'] = $scoreList;
+
         $urlGameId = $request->gameId;
         if ($urlGameId) {
             $bindings['UrlGameId'] = $urlGameId;
