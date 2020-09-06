@@ -20,18 +20,26 @@
                 {% set upcomingGamesHtml = '' %}
                 {% for item in UpcomingGames %}
                     {% if lastDate != item.eu_release_date %}
+                        {% if not loop.first %}
+                            {% set upcomingGamesHtml = upcomingGamesHtml ~ '</ul>' ~ "\n\n" %}
+                        {% endif %}
                         {% set upcomingGamesHtml = upcomingGamesHtml ~
-                        '<p style="color: rgb(85, 85, 85); font-size: 14px; line-height: 16px;"><strong>' ~ item.eu_release_date|date('l, F j') ~ '</strong></p>' ~ "\n\n"
+                        '<p style="color: rgb(85, 85, 85); font-size: 14px; line-height: 16px;">' ~
+                            '<strong>' ~ item.eu_release_date|date('l, F j') ~ '</strong></p>' ~
+                            "\n\n" ~
+                            '<ul style="color: rgb(85, 85, 85); list-style-type: square;">' ~
+                            "\n\n"
                         %}
                     {% endif %}
                     {% set lastDate = item.eu_release_date %}
                     {% set upcomingGamesHtml = upcomingGamesHtml ~
-                    '<ul style="color: rgb(85, 85, 85); list-style-type: square;">
-    <li style="color: rgb(85, 85, 85); font-size: 13px; line-height: 16px; border-bottom: 1px solid #eee; padding-bottom: 7px; margin: 0 0 7px -10px;">
+    '<li style="color: rgb(85, 85, 85); font-size: 13px; line-height: 16px; border-bottom: 1px solid #eee; padding-bottom: 7px; margin: 0 0 7px -10px;">
         <a href="### INSERT URL ###" style="text-decoration: underline; color: #d20014;">' ~ item.title ~ '</a>&nbsp;&mdash; MY DESCRIPTION.
-    </li>
-</ul>' ~ "\n\n"
+    </li>' ~ "\n\n"
                     %}
+                {% if loop.last %}
+                    {% set upcomingGamesHtml = upcomingGamesHtml ~ '</ul>' ~ "\n\n" %}
+                {% endif %}
                 {% endfor %}
                 <textarea rows="40" readonly="true" style="background: #dedede; color: #000; font-family: 'Courier New', 'Courier', monospace; font-size: 14px; font-weight: normal; width: 100%;">
 {{ upcomingGamesHtml }}
