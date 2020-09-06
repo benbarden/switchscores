@@ -21,7 +21,7 @@
                 {% for item in UpcomingGames %}
                     {% if lastDate != item.eu_release_date %}
                         {% set upcomingGamesHtml = upcomingGamesHtml ~
-                        '<p style="color: rgb(85, 85, 85); font-size: 14px; line-height: 16px;"><strong>' ~ item.eu_release_date|date('d M') ~ '</strong></p>' ~ "\n\n"
+                        '<p style="color: rgb(85, 85, 85); font-size: 14px; line-height: 16px;"><strong>' ~ item.eu_release_date|date('l, F j') ~ '</strong></p>' ~ "\n\n"
                         %}
                     {% endif %}
                     {% set lastDate = item.eu_release_date %}
