@@ -160,6 +160,121 @@ class GamesController extends Controller
         // Total rank count
         $bindings['RankMaximum'] = $serviceGame->countRanked();
 
+        // Game blurb
+        $blurb = '';
+
+        if ($gameData->category()) {
+
+            $blurbPattern = 1;
+
+            switch ($gameData->category->name) {
+                case 'Board and Tabletop':
+                case 'Sports':
+                case 'Puzzle':
+                case 'Fighting':
+                case 'Shooting':
+                case 'Racing':
+                case 'Music':
+                case 'Creative Sandbox':
+                case 'Party':
+                case 'Couch co-op':
+                case 'Strategy':
+                case 'Horror':
+                case 'Mahjong':
+                case 'Picross':
+                case 'Sudoku':
+                case 'Baseball':
+                case 'Football':
+                case 'Golf':
+                case 'Pool':
+                case 'Soccer':
+                case 'Tennis':
+                case 'Pinball':
+                case 'Farming':
+                case 'Building and Construction':
+                case 'Cricket':
+                case 'Basketball':
+                case 'Bowling':
+                case 'Fishing':
+                    $blurbPattern = 1;
+                    break;
+                case 'Online multiplayer':
+                    $blurbPattern = 2;
+                    break;
+                case 'Platformer':
+                case 'Simulation':
+                case 'Platformer (2D)':
+                case 'Platformer (3D)':
+                case 'Metroidvania':
+                case 'Visual novel':
+                case 'Runner':
+                    $blurbPattern = 3;
+                    break;
+                case 'RPG':
+                case 'FPS':
+                    $blurbPattern = 4;
+                    break;
+                case 'Jigsaws':
+                case 'Card games':
+                case 'Word games':
+                    $blurbPattern = 5;
+                    break;
+            }
+
+            switch ($blurbPattern) {
+                case 1:
+                    $categoryBlurb = 'a '.strtolower($gameData->category->name).' game for the Nintendo Switch';
+                    break;
+                case 2:
+                    $categoryBlurb = 'an '.strtolower($gameData->category->name).' game for the Nintendo Switch';
+                    break;
+                case 3:
+                    $categoryBlurb = 'a '.$gameData->category->name.' for the Nintendo Switch';
+                    break;
+                case 4:
+                    $categoryBlurb = 'an '.$gameData->category->name.' for the Nintendo Switch';
+                    break;
+                case 5:
+                    $categoryBlurb = 'involves '.$gameData->category->name.' for the Nintendo Switch';
+                    break;
+                default:
+                    throw new \Exception('Unknown blurb pattern!');
+            }
+
+            $blurb .= $gameData->title.' is '.$categoryBlurb.'. ';
+
+        } else {
+
+            $blurb .= $gameData->title.' is currently uncategorised. (Help us out!) ';
+
+        }
+
+        if ($gameData->game_rank) {
+
+            $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
+                'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
+
+        } else {
+
+            switch ($gameData->review_count) {
+                case 0:
+                    $blurb .= 'It is currently unranked, with no reviews. We need 3 reviews to give the game a rank. ';
+                    break;
+                case 1:
+                    $blurb .= 'It is currently unranked, with 1 review. We need 2 more reviews to give the game a rank. ';
+                    break;
+                case 2:
+                    $blurb .= 'It is currently unranked, with 2 reviews. We need 1 more reviews to give the game a rank. ';
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        $bindings['GameBlurb'] = $blurb;
+        $bindings['OgDescription'] = $blurb;
+
         return view('games.page.show', $bindings);
     }
 

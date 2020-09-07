@@ -13,9 +13,10 @@
 
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,700|Open+Sans:400,400i,600,600i,700,700i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
 
     <link href="{{ asset('css/app.css') }}?v=20190512" rel="stylesheet">
-    <link href="{{ asset('css/design.css') }}?v=20200411" rel="stylesheet">
+    <link href="{{ asset('css/design.css') }}?v=20200907" rel="stylesheet">
 
     <!-- Bootstrap -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -33,7 +34,9 @@
     <meta name="twitter:creator" content="@benbarden" />
     <meta property="og:url" content="{{ url().current() }}" />
     <meta property="og:title" content="{{ PageTitle }}" />
-    {#<meta property="og:description" content="" />#}
+    {% if OgDescription %}
+        <meta property="og:description" content="{{ OgDescription }}" />
+    {% endif %}
     {% if GameData %}
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
         {% if boxartUrl %}

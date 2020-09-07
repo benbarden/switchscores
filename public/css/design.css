@@ -70,6 +70,27 @@ blockquote {
 .game-rating p {margin-top: 5px; display: inline-block; text-align: center; padding: 0 5px; border: 1px solid #ddd;}
 .game-rating span {display: block; font-size: 12px; text-transform: uppercase; padding: 5px; margin: 0 -5px; background: #f5f5f5;}
 
+/* Ratings - new */
+.rating-title {
+    font-size: 22px;
+    margin: 8px 0;
+}
+.rating-v2 {
+    font-weight: bold;
+    font-family: 'Abril Fatface', serif;
+    line-height: 1;
+}
+.rating-v2 .rank {
+    font-size: 3rem;
+}
+.rating-v2 .separator {
+    margin: 0 5px;
+}
+.rating-v2 .suffix {
+    color: #999;
+    font-size: 2rem;
+}
+
 /* Blog and content pages */
 .wos-content-page {
     font-size: 15px;

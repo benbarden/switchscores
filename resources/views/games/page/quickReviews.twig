@@ -1,5 +1,22 @@
 <h2>Quick reviews</h2>
 {% if ReviewList.count %}
+    {% for item in ReviewList %}
+    <div class="row">
+        <div class="col-md-10">
+            <p style="font-size: 13px;">
+                {{ item.review_body|raw }}
+                <br>
+                <span style="font-size: 11px; font-style: italic;">
+                    submitted by {{ item.user.display_name }} on {{ item.created_at|date('jS M Y') }}
+                </span>
+            </p>
+        </div>
+        <div class="col-md-2">
+            {% include 'modules/rating/badge.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
+        </div>
+    </div>
+    {% endfor %}
+{#
     <table class="table table-condensed table-responsive">
         {% for item in ReviewList %}
             <tr style="background: #565656; color: #fff;">
@@ -31,7 +48,7 @@
             {% endif %}
         {% endfor %}
     </table>
-
+#}
     <p>
     {% if auth_user() %}
         Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
