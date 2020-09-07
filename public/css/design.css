@@ -72,8 +72,8 @@ blockquote {
 
 /* Ratings - new */
 .rating-title {
-    font-size: 22px;
-    margin: 8px 0;
+    font-size: 20px;
+    margin: 6px 0;
 }
 .rating-v2 {
     font-weight: bold;
@@ -81,14 +81,14 @@ blockquote {
     line-height: 1;
 }
 .rating-v2 .rank {
-    font-size: 3rem;
+    font-size: 24px;
 }
 .rating-v2 .separator {
     margin: 0 5px;
 }
 .rating-v2 .suffix {
     color: #999;
-    font-size: 2rem;
+    font-size: 16px;
 }
 
 /* Blog and content pages */

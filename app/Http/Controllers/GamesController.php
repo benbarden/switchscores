@@ -258,13 +258,13 @@ class GamesController extends Controller
 
             switch ($gameData->review_count) {
                 case 0:
-                    $blurb .= 'It is currently unranked, with no reviews. We need 3 reviews to give the game a rank. ';
+                    $blurb .= 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
                     break;
                 case 1:
-                    $blurb .= 'It is currently unranked, with 1 review. We need 2 more reviews to give the game a rank. ';
+                    $blurb .= 'As it only has 1 review, it is currently unranked. We need 2 more reviews to give the game a rank. ';
                     break;
                 case 2:
-                    $blurb .= 'It is currently unranked, with 2 reviews. We need 1 more reviews to give the game a rank. ';
+                    $blurb .= 'As it only has 2 reviews, it is currently unranked. We need 1 more review to give the game a rank. ';
                     break;
                 default:
                     break;

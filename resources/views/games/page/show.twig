@@ -53,12 +53,12 @@
             <!-- All-time -->
             <div class="row">
 
-                <div class="col-md-4 col-sm-4 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                     <h4 class="rating-title">
                         <a href="{{ route('topRated.allTime') }}">All-time</a>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-6 col-sm-6 col-xs-6">
                     <h4 style="margin: 5px 0;">
                         <span class="rating-v2">
                             <span class="rank">{{ GameData.game_rank }}</span>
@@ -75,12 +75,12 @@
             <!-- All-time -->
             <div class="row">
 
-                <div class="col-md-4 col-sm-4 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                     <h4 class="rating-title">
                         <a href="{{ route('topRated.allTime') }}">All-time</a>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-6 col-sm-6 col-xs-6">
                     <h4 style="margin: 5px 0;">
                         <span class="rating-v2">
                             <span class="rank"></span>
@@ -94,18 +94,19 @@
 
             </div>
         {% endif %}
+        <hr style="margin: 4px 0; width: 80%;">
 
         {% if GameData.gameRankYear.game_rank != '' %}
             <!-- Year -->
             <div class="row">
 
                 {% set GameRankYearDisplay = GameData.eu_release_date|date('Y') %}
-                <div class="col-md-4 col-sm-4 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                     <h4 class="rating-title">
                         <a href="{{ route('topRated.byYear', {'year': GameRankYearDisplay}) }}">{{ GameRankYearDisplay }}</a>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-6 col-sm-6 col-xs-6">
                     <h4 style="margin: 5px 0;">
                         <span class="rating-v2">
                             <span class="rank">{{ GameData.gameRankYear.game_rank }}</span>
@@ -118,6 +119,7 @@
                 </div>
 
             </div>
+            <hr style="margin: 4px 0; width: 80%;">
         {% endif %}
 
         {% if GameData.gameRankYearMonth.game_rank != '' %}
@@ -126,12 +128,12 @@
 
                 {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
                 {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
-                <div class="col-md-4 col-sm-4 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-4 col-sm-4 col-xs-6"">
                     <h4 class="rating-title">
                         <a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6" style="border-bottom: 1px solid #dedede;">
+                <div class="col-md-6 col-sm-6 col-xs-6">
                     <h4 style="margin: 5px 0;">
                         <span class="rating-v2">
                             <span class="rank">{{ GameData.gameRankYearMonth.game_rank }}</span>
@@ -144,6 +146,7 @@
                 </div>
 
             </div>
+            <hr style="margin: 4px 0; width: 80%;">
         {% endif %}
 
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
