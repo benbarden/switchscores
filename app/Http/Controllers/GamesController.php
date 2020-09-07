@@ -163,7 +163,7 @@ class GamesController extends Controller
         // Game blurb
         $blurb = '';
 
-        if ($gameData->category()) {
+        if ($gameData->category) {
 
             $blurbPattern = 1;
 

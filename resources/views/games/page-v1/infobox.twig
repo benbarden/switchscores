@@ -1,0 +1,115 @@
+<table class="table table-condensed table-responsive">
+    <tr>
+        <th colspan="2" style="background: #dedede;">General details</th>
+    </tr>
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+
+    {% if GameDevelopers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}">{{ item.developer.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developer(s)</span>
+            </td>
+            <td>{{ GameData.developer }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GamePublishers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>
+                {% for item in GamePublishers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Publisher(s)</span>
+            </td>
+            <td>{{ GameData.publisher }}</td>
+        </tr>
+
+    {% endif %}
+
+    {% if GameData.category %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Category</span>
+            </td>
+            <td>
+                {% if GameData.category.parent.id %}
+                    <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                {% endif %}
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Tag(s)</span>
+        </td>
+        <td>
+            {% for item in GameTags %}
+                <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                    <nobr>{{ item.tag.tag_name }}</nobr>
+                </a>
+                {% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+    </tr>
+
+    {% endif %}
+
+    {% if GameData.series_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Series</span>
+            </td>
+            <td>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if GameData.amazon_uk_link %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Buy this game</span>
+            </td>
+            <td>
+                <a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a>
+            </td>
+        </tr>
+    {% endif %}
+</table>

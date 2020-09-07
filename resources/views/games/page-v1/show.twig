@@ -1,0 +1,110 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': GameData.title}] %}
+
+{% set hideHeader = true %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-8 col-md-6">
+        <h1 style="margin: 10px 0;">
+            {{ GameData.title }}
+        </h1>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-6">
+        {% if auth_user() %}
+            <span class="pull-right">
+                <a href="{{ route('user.collection.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">Add to Games collection</a>
+                <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}" class="btn btn-default btn-primary btn-xs">Add a quick review</a>
+            </span>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-6" style="vertical-align: middle;">
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
+        {% if boxartUrl %}
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ GameData.title }}">
+        {% else %}
+            <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ GameData.title }}">
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-6" style="vertical-align: middle;">
+        <table class="table table-condensed table-responsive" style="border-bottom: 1px solid #dedede;">
+            <tr>
+                <th style="background: #dedede;">
+                    <span class="h3">Rank</span>
+                </th>
+                <td style="border-right: 1px solid #dedede; padding-left: 5px;">
+                    {% if GameData.game_rank %}
+                        <span class="h4" style="margin: 5px 0;">
+                            <span><a href="{{ route('topRated.allTime') }}">All-time</a></span>
+                            <strong>{{ GameData.game_rank }}<small>/{{ RankMaximum }}</small></strong>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="margin: 5px 0;">
+                            Pending
+                        </span>
+                    {% endif %}
+                </td>
+                <td style="border-right: 1px solid #dedede; padding-left: 5px;">
+                    {% set GameRankYearDisplay = GameData.eu_release_date|date('Y') %}
+                    {% if GameData.gameRankYear.game_rank != '' %}
+                        <span class="h4" style="margin: 5px 0;">
+                            <span><a href="{{ route('topRated.byYear', {'year': GameRankYearDisplay}) }}">{{ GameRankYearDisplay }}</a></span>
+                            <strong>{{ GameData.gameRankYear.game_rank }}<small>/100</small></strong>
+                        </span>
+                    {% else %}
+                        <span class="h4" style="margin: 5px 0;">
+                            <span><a href="{{ route('topRated.byYear', {'year': GameRankYearDisplay}) }}">{{ GameRankYearDisplay }}</a></span>
+                            <strong>N/A</strong>
+                        </span>
+                    {% endif %}
+                </td>
+                <td style="border-right: 1px solid #dedede; padding-left: 5px;">
+                    {% if GameData.gameRankYearMonth.game_rank != '' %}
+                        {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
+                        {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
+                        <span class="h4" style="margin: 5px 0;">
+                            <span><a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a></span>
+                            <strong>#{{ GameData.gameRankYearMonth.game_rank }}</strong>
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% include 'games/page/infobox-eshop.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-4 col-md-6">
+        {% if GameReviews.count > 2 %}
+        {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
+        {% endif %}
+        {% include 'games/page/reviews.twig' with {'GameReviews': GameReviews} %}
+        {% include 'games/page/quickReviews.twig' with {'ReviewList': GameQuickReviewList} %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-6">
+        {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+        {% include 'games/page/news.twig' with {'NewsList': GameNews} %}
+        {% include 'games/page/media.twig' with {'GameData': GameData, 'VideoUrl': GameData.video_url} %}
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        {% if exception is null %}
+            <a class="twitter-share-button" data-size="large"
+               href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores">Tweet</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock page_body %}
