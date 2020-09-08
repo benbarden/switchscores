@@ -175,11 +175,11 @@ class GamesController extends Controller
 
             }
 
-            $blurb .= $gameData->title.' is '.$categoryBlurb.'. ';
+            $blurb .= '<strong>'.$gameData->title.'</strong> is '.$categoryBlurb.'. ';
 
         } else {
 
-            $blurb .= $gameData->title.' is currently uncategorised. (Help us out!) ';
+            $blurb .= '<strong>'.$gameData->title.'</strong> is currently uncategorised. (Help us out!) ';
 
         }
 
