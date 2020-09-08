@@ -70,19 +70,19 @@ class CategoryService
                 $blurbText = '';
                 break;
             case 1:
-                $blurbText = sprintf('a %s game', $categoryName);
+                $blurbText = sprintf('a %s game for the Nintendo Switch', $categoryName);
                 break;
             case 2:
-                $blurbText = sprintf('an %s game', $categoryName);
+                $blurbText = sprintf('an %s game for the Nintendo Switch', $categoryName);
                 break;
             case 3:
-                $blurbText = sprintf('a %s', $categoryName);
+                $blurbText = sprintf('a %s for the Nintendo Switch', $categoryName);
                 break;
             case 4:
-                $blurbText = sprintf('an %s', $categoryName);
+                $blurbText = sprintf('an %s for the Nintendo Switch', $categoryName);
                 break;
             case 5:
-                $blurbText = sprintf('involves %s', $categoryName);
+                $blurbText = sprintf('involves %s for the Nintendo Switch', $categoryName);
                 break;
             default:
                 $blurbText = '';
