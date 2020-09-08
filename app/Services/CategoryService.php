@@ -8,20 +8,22 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryService
 {
-    public function create($name, $linkTitle, $parentId = null)
+    public function create($name, $linkTitle, $blurbOption, $parentId = null)
     {
         Category::create([
             'name' => $name,
             'link_title' => $linkTitle,
+            'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
         ]);
     }
 
-    public function edit(Category $category, $name, $linkTitle, $parentId = null)
+    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null)
     {
         $values = [
             'name' => $name,
             'link_title' => $linkTitle,
+            'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
         ];
 
@@ -37,6 +39,49 @@ class CategoryService
     public function find($id)
     {
         return Category::find($id);
+    }
+
+
+    public function getBlurbOptions()
+    {
+        $options = [
+            0 => 'None',
+            1 => 'a (category) game',
+            2 => 'an (category) game',
+            3 => 'a (category)',
+            4 => 'an (category)',
+            5 => 'involves (category)',
+        ];
+
+        return $options;
+    }
+
+    public function parseBlurbOption(Category $category)
+    {
+        switch ($category->blurb_option) {
+            case 0:
+                $blurbText = '';
+                break;
+            case 1:
+                $blurbText = sprintf('a %s game', strtolower($category->name));
+                break;
+            case 2:
+                $blurbText = sprintf('an %s game', strtolower($category->name));
+                break;
+            case 3:
+                $blurbText = sprintf('a %s', $category->name);
+                break;
+            case 4:
+                $blurbText = sprintf('an %s', $category->name);
+                break;
+            case 5:
+                $blurbText = sprintf('involves %s', $category->name);
+                break;
+            default:
+                $blurbText = '';
+        }
+
+        return $blurbText;
     }
 
     /**

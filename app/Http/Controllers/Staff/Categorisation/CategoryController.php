@@ -77,7 +77,7 @@ class CategoryController extends Controller
             }
 
             // All ok
-            $serviceCategory->create($request->name, $request->link_title, $request->parent_id);
+            $serviceCategory->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -92,6 +92,7 @@ class CategoryController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
+        $bindings['BlurbOptionList'] = $serviceCategory->getBlurbOptions();
 
         return view('staff.categorisation.category.add', $bindings);
     }
@@ -113,7 +114,7 @@ class CategoryController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceCategory->edit($categoryData, $request->name, $request->link_title, $request->parent_id);
+            $serviceCategory->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -129,6 +130,7 @@ class CategoryController extends Controller
         $bindings['CategoryId'] = $categoryId;
 
         $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
+        $bindings['BlurbOptionList'] = $serviceCategory->getBlurbOptions();
 
         return view('staff.categorisation.category.edit', $bindings);
     }
