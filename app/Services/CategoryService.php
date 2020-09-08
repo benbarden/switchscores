@@ -58,24 +58,31 @@ class CategoryService
 
     public function parseBlurbOption(Category $category)
     {
+        // Only convert if it's not an acronym
+        if ($category->name == strtoupper($category->name)) {
+            $categoryName = $category->name;
+        } else {
+            $categoryName = strtolower($category->name);
+        }
+
         switch ($category->blurb_option) {
             case 0:
                 $blurbText = '';
                 break;
             case 1:
-                $blurbText = sprintf('a %s game', strtolower($category->name));
+                $blurbText = sprintf('a %s game', $categoryName);
                 break;
             case 2:
-                $blurbText = sprintf('an %s game', strtolower($category->name));
+                $blurbText = sprintf('an %s game', $categoryName);
                 break;
             case 3:
-                $blurbText = sprintf('a %s', $category->name);
+                $blurbText = sprintf('a %s', $categoryName);
                 break;
             case 4:
-                $blurbText = sprintf('an %s', $category->name);
+                $blurbText = sprintf('an %s', $categoryName);
                 break;
             case 5:
-                $blurbText = sprintf('involves %s', $category->name);
+                $blurbText = sprintf('involves %s', $categoryName);
                 break;
             default:
                 $blurbText = '';
