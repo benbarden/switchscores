@@ -137,34 +137,27 @@ class ReviewLinkService
         return $reviewCount;
     }
 
+    public function getLatestReviewsForHighlights($dayInterval = 7)
+    {
+        $reviewLinks = DB::select('
+            SELECT g.*, count(rl.id) AS recent_review_count
+            FROM review_links rl
+            JOIN games g ON rl.game_id = g.id
+            JOIN partners p ON rl.site_id = p.id
+            WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+            GROUP BY rl.game_id
+            ORDER BY g.eu_release_date DESC, g.id ASC
+        ', [$dayInterval]);
+
+        return $reviewLinks;
+    }
+
     public function getLatestNaturalOrder($limit = 10)
     {
         $reviewLinks = ReviewLink::orderBy('review_date', 'desc')
             ->limit($limit)
             ->get();
         return $reviewLinks;
-    }
-
-    public function getLatestGameAggregates($days = 20)
-    {
-        return ReviewLink::
-            select('review_links.*', DB::raw('count(*) as count'))
-            ->whereRaw('review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
-            ->groupBy('game_id')
-            ->having('count', '>', 1)
-            ->orderBy('count', 'desc')
-            ->orderBy('review_date', 'desc')
-            ->get();
-    }
-
-    public function getLatestPerfectScores($limit = 30)
-    {
-        return ReviewLink::
-            select('review_links.*')
-            ->where('rating_normalised', 10)
-            ->orderBy('review_date', 'desc')
-            ->limit($limit)
-            ->get();
     }
 
     public function getLatestBySite($siteId, $limit = 20)
@@ -231,7 +224,7 @@ class ReviewLinkService
 
     public function getSiteReviewStats($siteId)
     {
-        $reviewAverage = \DB::select("
+        $reviewAverage = DB::select("
             SELECT
             count(*) AS ReviewCount,
             sum(rl.rating_normalised) AS ReviewSum,
@@ -246,7 +239,7 @@ class ReviewLinkService
 
     public function getSiteScoreDistribution($siteId)
     {
-        $reviewScores = \DB::select("
+        $reviewScores = DB::select("
             SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
             FROM review_links
             WHERE site_id = ?
@@ -279,7 +272,7 @@ class ReviewLinkService
 
     public function getFullScoreDistributionByYear($year)
     {
-        $reviewScores = \DB::select("
+        $reviewScores = DB::select("
             SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
             FROM review_links
             WHERE YEAR(review_date) = ?
@@ -313,7 +306,7 @@ class ReviewLinkService
 
     public function getReviewCountStatsByYear($year)
     {
-        $reviewCountStats = \DB::select('
+        $reviewCountStats = DB::select('
             SELECT review_count, count(*) AS count
             FROM games
             WHERE release_year = ?

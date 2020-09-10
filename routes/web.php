@@ -224,6 +224,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports.list');
     Route::get('/staff/reviews/feed-imports/{feedImport}/items', 'Staff\Reviews\FeedImportsController@showItemList')->name('staff.reviews.feed-imports.item-list');
 
+    // Review highlights
+    Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');
+
     // Reviews: Tools
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-importer', 'Staff\Reviews\ToolsController@runFeedImporter')->name('staff.reviews.tools.runFeedImporter');
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-parser', 'Staff\Reviews\ToolsController@runFeedParser')->name('staff.reviews.tools.runFeedParser');
