@@ -57,8 +57,7 @@ class UserGamesCollection extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'game_id', 'owned_from', 'owned_type',
-        'is_started', 'is_ongoing', 'is_complete', 'hours_played', 'play_status'
+        'user_id', 'game_id', 'owned_from', 'owned_type', 'hours_played', 'play_status'
     ];
 
     public function game()

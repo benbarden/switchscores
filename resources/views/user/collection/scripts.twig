@@ -41,6 +41,8 @@
     }
     if (formVals['play_status'] != '') {
         $('input[name=play_status][value=' + formVals['play_status'] + ']').attr('checked', true);
+    } else {
+        $('input[name=play_status][value=not-started]').attr('checked', true);
     }
     $('#hours_played').val(formVals['hours_played']);
 
