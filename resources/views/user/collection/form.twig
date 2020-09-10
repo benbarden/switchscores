@@ -2,94 +2,82 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="game_id" class="col-md-4 control-label">Game</label>
-        <div class="col-md-6">
-            <select id="game_id" class="form-control" name="game_id" required autofocus>
-                <option value="">&nbsp;</option>
-                {% for item in GamesList %}
-                    <option value="{{ item.id }}">{{ item.title }}</option>
+    <fieldset>
+        <legend>Basic details</legend>
+        <div class="form-group">
+            <label for="game_id" class="col-md-4 control-label">Game</label>
+            <div class="col-md-6">
+                <select id="game_id" class="form-control" name="game_id" required autofocus>
+                    <option value="">&nbsp;</option>
+                    {% for item in GamesList %}
+                        <option value="{{ item.id }}">{{ item.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label">Play status</label>
+            <div class="col-md-6">
+                {% for item in PlayStatusList %}
+                    <input id="play_status_{{ item.id }}" name="play_status" value="{{ item.id }}" type="radio">
+                    <label for="play_status_{{ item.id }}" style="margin: 10px 0;">
+                        <i class="fas fa-{{ item.icon }}" style="color: {{ item.iconColor }}; font-size: 24px;"></i>
+                        {{ item.desc }}
+                    </label>
+                    <br>
                 {% endfor %}
-            </select>
+            </div>
         </div>
-    </div>
+    </fieldset>
 
-    <div class="form-group">
-        <label for="owned_from" class="col-md-4 control-label">Owned from</label>
-        <div class="col-md-6">
-            <input id="owned_from" type="date" class="form-control" name="owned_from">
-            <p>
-                <small>
-                    The date that you got this game. Leave blank if you're not sure.
-                </small>
-            </p>
+    <fieldset>
+        <legend>Optional extras</legend>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Owned type</label>
+            <div class="col-md-6">
+                <input id="owned_type_none" name="owned_type" value="" type="radio">
+                <label for="owned_type_none">
+                    Not specified
+                </label>
+                <br>
+                <input id="owned_type_digital" name="owned_type" value="Digital" type="radio">
+                <label for="owned_type_digital">
+                    Digital
+                </label>
+                <br>
+                <input id="owned_type_physical" name="owned_type" value="Physical" type="radio">
+                <label for="owned_type_physical">
+                    Physical
+                </label>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label for="owned_type" class="col-md-4 control-label">Owned type</label>
-        <div class="col-md-6">
-            <select id="owned_type" class="form-control" name="owned_type">
-                <option value="">&nbsp;</option>
-                <option value="Digital">Digital</option>
-                <option value="Physical">Physical</option>
-            </select>
-            <p>
-                <small>
-                    What format you own the game on (physical or digital).
-                </small>
-            </p>
+        <div class="form-group">
+            <label for="owned_from" class="col-md-4 control-label">Owned from</label>
+            <div class="col-md-6">
+                <input id="owned_from" type="date" class="form-control" name="owned_from">
+                <p>
+                    <small>
+                        The date that you got this game. Leave blank if you're not sure.
+                    </small>
+                </p>
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label for="is_started" class="col-md-4 control-label">Started</label>
-        <div class="col-md-6">
-            <input id="is_started" type="checkbox" name="is_started">
-            <p>
-                <small>
-                    Shows if you've started playing the game yet.
-                </small>
-            </p>
+        <div class="form-group">
+            <label for="hours_played" class="col-md-4 control-label">Hours played</label>
+            <div class="col-md-6">
+                <input id="hours_played" type="text" class="form-control" name="hours_played">
+                <p>
+                    <small>
+                        The number of hours you've played this game for. You can find this on the Switch itself -
+                        go to your profile and you'll see a list of times.
+                    </small>
+                </p>
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <label for="is_ongoing" class="col-md-4 control-label">In progress</label>
-        <div class="col-md-6">
-            <input id="is_ongoing" type="checkbox" name="is_ongoing">
-            <p>
-                <small>
-                    Shows if this is a game you're actively playing or aren't done with yet.
-                </small>
-            </p>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="is_complete" class="col-md-4 control-label">Complete</label>
-        <div class="col-md-6">
-            <input id="is_complete" type="checkbox" name="is_complete">
-            <p>
-                <small>
-                    Shows if you've finished the game or not.
-                </small>
-            </p>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="hours_played" class="col-md-4 control-label">Hours played</label>
-        <div class="col-md-6">
-            <input id="hours_played" type="text" class="form-control" name="hours_played">
-            <p>
-                <small>
-                    The number of hours you've played this game for. You can find this on the Switch itself -
-                    go to your profile and you'll see a list of times.
-                </small>
-            </p>
-        </div>
-    </div>
+    </fieldset>
 
     <div class="form-group">
         <div class="col-md-8 col-md-offset-4">

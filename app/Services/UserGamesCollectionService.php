@@ -8,31 +8,27 @@ use App\UserGamesCollection;
 
 class UserGamesCollectionService
 {
-    public function create($userId, $gameId, $ownedFrom, $ownedType, $isStarted, $isOngoing, $isComplete, $hoursPlayed)
+    public function create($userId, $gameId, $ownedFrom, $ownedType, $hoursPlayed, $playStatus)
     {
         return UserGamesCollection::create([
             'user_id' => $userId,
             'game_id' => $gameId,
             'owned_from' => $ownedFrom,
             'owned_type' => $ownedType,
-            'is_started' => $isStarted,
-            'is_ongoing' => $isOngoing,
-            'is_complete' => $isComplete,
             'hours_played' => $hoursPlayed,
+            'play_status' => $playStatus,
         ]);
     }
 
     public function edit(
-        UserGamesCollection $collection, $ownedFrom, $ownedType, $isStarted, $isOngoing, $isComplete, $hoursPlayed
+        UserGamesCollection $collection, $ownedFrom, $ownedType, $hoursPlayed, $playStatus
     )
     {
         $values = [
             'owned_from' => $ownedFrom,
             'owned_type' => $ownedType,
-            'is_started' => $isStarted,
-            'is_ongoing' => $isOngoing,
-            'is_complete' => $isComplete,
             'hours_played' => $hoursPlayed,
+            'play_status' => $playStatus,
         ];
 
         $collection->fill($values);
@@ -65,6 +61,18 @@ class UserGamesCollectionService
         return $items;
     }
 
+    public function getByUserAndPlayStatus($userId, $playStatus)
+    {
+        $items = UserGamesCollection::
+            where('user_id', $userId)
+            ->where('play_status', $playStatus)
+            ->orderBy('owned_from', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+        return $items;
+    }
+
     public function getUserTotalGames($userId)
     {
         return UserGamesCollection::where('user_id', $userId)
@@ -79,19 +87,31 @@ class UserGamesCollectionService
 
     public function getUserTotalNotStarted($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('is_started', 0)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_NOT_STARTED)
             ->count();
     }
 
-    public function getUserTotalInProgress($userId)
+    public function getUserTotalNowPlaying($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('is_ongoing', 1)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_NOW_PLAYING)
+            ->count();
+    }
+
+    public function getUserTotalPaused($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_PAUSED)
+            ->count();
+    }
+
+    public function getUserTotalAbandoned($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_ABANDONED)
             ->count();
     }
 
     public function getUserTotalCompleted($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('is_complete', 1)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_COMPLETED)
             ->count();
     }
 
@@ -103,22 +123,47 @@ class UserGamesCollectionService
             'count' => $this->getUserTotalGames($userId)
         ];
         $collectionStats[] = [
-            'title' => 'Games not started',
-            'count' => $this->getUserTotalNotStarted($userId)
-        ];
-        $collectionStats[] = [
-            'title' => 'Games in progress',
-            'count' => $this->getUserTotalInProgress($userId)
-        ];
-        $collectionStats[] = [
-            'title' => 'Games completed',
-            'count' => $this->getUserTotalCompleted($userId)
-        ];
-        $collectionStats[] = [
             'title' => 'Total hours logged',
             'count' => $this->getUserTotalHours($userId)
         ];
 
+        $userGamesCollection = new UserGamesCollection();
+
+        // Not started
+        $collectionStats[] = [
+            'count' => $this->getUserTotalNotStarted($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED),
+        ];
+        $collectionStats[] = [
+            'count' => $this->getUserTotalNowPlaying($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOW_PLAYING),
+        ];
+        $collectionStats[] = [
+            'count' => $this->getUserTotalPaused($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_PAUSED),
+        ];
+        $collectionStats[] = [
+            'count' => $this->getUserTotalAbandoned($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_ABANDONED),
+        ];
+        $collectionStats[] = [
+            'count' => $this->getUserTotalCompleted($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_COMPLETED),
+        ];
+
         return $collectionStats;
+    }
+
+    public function getPlayStatusList()
+    {
+        $userGamesCollection = new UserGamesCollection();
+        $playStatusList = [];
+        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED);
+        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOW_PLAYING);
+        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_PAUSED);
+        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_ABANDONED);
+        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_COMPLETED);
+
+        return $playStatusList;
     }
 }

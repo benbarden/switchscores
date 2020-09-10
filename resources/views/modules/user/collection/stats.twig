@@ -2,8 +2,15 @@
     <tbody>
     {% for item in CollectionStats %}
         <tr>
-            <td class="text-left">{{ item.title }}</td>
-            <td class="text-right">{{ item.count }}</td>
+            <td class="text-left" style="vertical-align: middle;">
+                {% if item.title is defined %}
+                    {{ item.title }}
+                {% else %}
+                    <i class="fas fa-{{ item.playStatus.icon }}" style="color: {{ item.playStatus.iconColor }}; font-size: 24px;"></i>
+                    {{ item.playStatus.desc }}
+                {% endif %}
+            </td>
+            <td class="text-right" style="vertical-align: middle;">{{ item.count }}</td>
         </tr>
     {% endfor %}
     </tbody>

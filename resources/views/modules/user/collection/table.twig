@@ -1,3 +1,4 @@
+<h2>{{ ListTitle }}</h2>
 {% if CollectionList.count > 0 %}
 
     <table class="table table-responsive data-sortable">
@@ -17,13 +18,7 @@
                 <abbr title="Whether you own a digital or physical version of the game.">Type</abbr>
             </th>
             <th class="text-center">
-                <abbr title="Shows if you've started playing the game yet.">Started</abbr>
-            </th>
-            <th class="text-center">
-                <abbr title="Shows if this is a game you're actively playing or aren't done with yet.">In progress</abbr>
-            </th>
-            <th class="text-center">
-                <abbr title="Shows if you've finished the game or not.">Complete</abbr>
+                Play status
             </th>
             <th class="text-center">
                 <abbr title="The number of hours you've played the game for.">Hours played</abbr>
@@ -70,9 +65,11 @@
                         Not set!
                     </td>
                 {% endif %}
-                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_started} %}
-                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_ongoing} %}
-                {% include 'user/collection/checkbox-cell.twig' with {'fieldValue': item.is_complete} %}
+                <td class="text-left" style="vertical-align: middle;">
+                    {% set playStatusItem = item.getPlayStatusItem(item.play_status) %}
+                    <i class="fas fa-{{ playStatusItem.icon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
+                    {{ playStatusItem.desc }}
+                </td>
                 {% if item.hours_played %}
                     <td class="text-center">
                         {{ item.hours_played }}
@@ -94,7 +91,7 @@
     </table>
 {% else %}
     {% if AsRole == 'user' %}
-        <p>Your games collection is empty! Do you own any games? :)</p>
+        <p>No games to show in this list!</p>
     {% else %}
         <p>This user's games collection is empty.</p>
     {% endif %}

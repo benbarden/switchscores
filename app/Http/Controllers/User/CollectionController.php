@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Traits\AuthUser;
+use App\UserGamesCollection;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -37,8 +38,13 @@ class CollectionController extends Controller
         $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
 
-        $bindings['CollectionList'] = $serviceCollection->getByUser($userId);
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
+
+        $bindings['CollectionNotStarted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOT_STARTED);
+        $bindings['CollectionNowPlaying'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOW_PLAYING);
+        $bindings['CollectionPaused'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_PAUSED);
+        $bindings['CollectionAbandoned'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_ABANDONED);
+        $bindings['CollectionCompleted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_COMPLETED);
 
         $quickReviewGameIdList = $serviceQuickReview->getAllByUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
@@ -59,13 +65,9 @@ class CollectionController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $isStarted  = $request->is_started  == 'on' ? 1 : 0;
-            $isOngoing  = $request->is_ongoing  == 'on' ? 1 : 0;
-            $isComplete = $request->is_complete == 'on' ? 1 : 0;
-
             $serviceCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
-                $isStarted, $isOngoing, $isComplete, $request->hours_played
+                $request->hours_played, $request->play_status
             );
 
             return redirect(route('user.collection.landing'));
@@ -75,10 +77,11 @@ class CollectionController extends Controller
         $bindings = [];
 
         $bindings['TopTitle'] = 'User - Games collection - Add game';
-        $bindings['PageTitle'] = 'Add game';
+        $bindings['PageTitle'] = 'Add game to collection';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['PlayStatusList'] = $serviceCollection->getPlayStatusList();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
@@ -110,13 +113,9 @@ class CollectionController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $isStarted  = $request->is_started  == 'on' ? 1 : 0;
-            $isOngoing  = $request->is_ongoing  == 'on' ? 1 : 0;
-            $isComplete = $request->is_complete == 'on' ? 1 : 0;
-
             $serviceCollection->edit(
                 $collectionData, $request->owned_from, $request->owned_type,
-                $isStarted, $isOngoing, $isComplete, $request->hours_played
+                $request->hours_played, $request->play_status
             );
 
             return redirect(route('user.collection.landing'));
@@ -128,12 +127,13 @@ class CollectionController extends Controller
         }
 
         $bindings['TopTitle'] = 'User - Games collection - Edit game';
-        $bindings['PageTitle'] = 'Edit game';
+        $bindings['PageTitle'] = 'Edit games collection';
 
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 
         $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['PlayStatusList'] = $serviceCollection->getPlayStatusList();
 
         return view('user.collection.edit', $bindings);
     }
