@@ -16,7 +16,11 @@ class HighlightsController extends Controller
 
         $bindings = [];
 
-        $bindings['HighlightsList'] = $this->getServiceReviewLink()->getLatestReviewsForHighlights(7);
+        $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
+        $bindings['HighlightsStillUnranked'] = $this->getServiceReviewLink()->getHighlightsStillUnranked();
+        $bindings['HighlightsAlreadyRanked'] = $this->getServiceReviewLink()->getHighlightsAlreadyRanked();
+
+        $bindings['HighlightsFullList'] = $this->getServiceReviewLink()->getHighlightsFullList();
 
         $bindings['TopTitle'] = $pageTitle.' - Staff';
         $bindings['PageTitle'] = $pageTitle;

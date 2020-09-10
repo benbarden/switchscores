@@ -1,0 +1,41 @@
+{% if ItemList %}
+    <h2>{{ ListTitle }}</h2>
+    <table class="table table-condensed table-responsive">
+        <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th>Title</th>
+            <th class="text-center">EU release date</th>
+            <th class="text-center">Rank</th>
+            <th class="text-center">Avg rating</th>
+            <th class="text-center">Recent<br>reviews</th>
+            <th class="text-center">Total<br>reviews</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-center">{{ item.id }}</td>
+                <td>
+                    <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
+                    <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                    </a>
+                </td>
+                <td class="text-center">{{ item.eu_release_date }}</td>
+                <td class="text-center">{{ item.game_rank }}</td>
+                <td class="text-center">
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                </td>
+                <td class="text-center">{{ item.recent_review_count }}</td>
+                <td class="text-center">{{ item.review_count }}</td>
+                <td class="text-center">
+                    <a href="{{ route('staff.games.detail', {gameId: item.id}) }}?tabid=reviews">View reviews</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>{{ ItemList|length }} items.</p>
+{% endif %}

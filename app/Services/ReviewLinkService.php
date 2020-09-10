@@ -137,7 +137,7 @@ class ReviewLinkService
         return $reviewCount;
     }
 
-    public function getLatestReviewsForHighlights($dayInterval = 7)
+    public function getHighlightsFullList($dayInterval = 7)
     {
         $reviewLinks = DB::select('
             SELECT g.*, count(rl.id) AS recent_review_count
@@ -147,6 +147,56 @@ class ReviewLinkService
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             GROUP BY rl.game_id
             ORDER BY g.eu_release_date DESC, g.id ASC
+        ', [$dayInterval]);
+
+        return $reviewLinks;
+    }
+
+    public function getHighlightsRecentlyRanked($dayInterval = 7)
+    {
+        $reviewLinks = DB::select('
+            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            FROM review_links rl
+            JOIN games g ON rl.game_id = g.id
+            JOIN partners p ON rl.site_id = p.id
+            WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+            AND g.review_count > 2
+            GROUP BY rl.game_id
+            HAVING g.review_count - count(rl.id) < 3
+            ORDER BY g.rating_avg DESC, g.eu_release_date DESC, g.id ASC
+        ', [$dayInterval]);
+
+        return $reviewLinks;
+    }
+
+    public function getHighlightsStillUnranked($dayInterval = 7)
+    {
+        $reviewLinks = DB::select('
+            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            FROM review_links rl
+            JOIN games g ON rl.game_id = g.id
+            JOIN partners p ON rl.site_id = p.id
+            WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+            AND g.review_count < 3
+            GROUP BY rl.game_id
+            ORDER BY g.rating_avg DESC, g.eu_release_date DESC, g.id ASC
+        ', [$dayInterval]);
+
+        return $reviewLinks;
+    }
+
+    public function getHighlightsAlreadyRanked($dayInterval = 7)
+    {
+        $reviewLinks = DB::select('
+            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            FROM review_links rl
+            JOIN games g ON rl.game_id = g.id
+            JOIN partners p ON rl.site_id = p.id
+            WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+            AND g.review_count > 2
+            GROUP BY rl.game_id
+            HAVING g.review_count - count(rl.id) > 2
+            ORDER BY g.rating_avg DESC, g.eu_release_date DESC, g.id ASC
         ', [$dayInterval]);
 
         return $reviewLinks;

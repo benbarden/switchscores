@@ -8,54 +8,36 @@
 
     <div class="col-md-12">
 
-        {% if HighlightsList %}
+        <div id="tabs">
 
-            <table class="table table-condensed table-responsive">
-                <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>Title</th>
-                    <th class="text-center">EU release date</th>
-                    <th class="text-center">Rank</th>
-                    <th class="text-center">Avg rating</th>
-                    <th class="text-center">Recent<br>reviews</th>
-                    <th class="text-center">Total<br>reviews</th>
-                    <th class="text-center">Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in HighlightsList %}
-                    <tr>
-                        <td class="text-center">{{ item.id }}</td>
-                        <td>
-                            <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ item.title }}</a>
-                            <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
-                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                        <td class="text-center">{{ item.eu_release_date }}</td>
-                        <td class="text-center">{{ item.game_rank }}</td>
-                        <td class="text-center">
-                            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
-                        </td>
-                        <td class="text-center">{{ item.recent_review_count }}</td>
-                        <td class="text-center">{{ item.review_count }}</td>
-                        <td class="text-center">
-                            <a href="{{ route('staff.games.detail', {gameId: item.id}) }}?tabid=reviews">View reviews</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <ul>
+                <li><a href="#tabs-recently-ranked">Recently ranked ({{ HighlightsRecentlyRanked|length }})</a></li>
+                <li><a href="#tabs-still-unranked">Still unranked ({{ HighlightsStillUnranked|length }})</a></li>
+                <li><a href="#tabs-already-ranked">Already ranked ({{ HighlightsAlreadyRanked|length }})</a></li>
+                <li><a href="#tabs-full-list">Full list ({{ HighlightsFullList|length }})</a></li>
+            </ul>
 
-        {% else %}
-            <p>
-                No reviews found posted in the last 7 days.
-            </p>
-        {% endif %}
+            <div id="tabs-recently-ranked">
+                {% include 'staff/reviews/highlights/table.twig' with {'ListTitle': 'Recently ranked', 'ItemList': HighlightsRecentlyRanked} %}
+            </div>
+            <div id="tabs-still-unranked">
+                {% include 'staff/reviews/highlights/table.twig' with {'ListTitle': 'Still unranked', 'ItemList': HighlightsStillUnranked} %}
+            </div>
+            <div id="tabs-already-ranked">
+                {% include 'staff/reviews/highlights/table.twig' with {'ListTitle': 'Already ranked', 'ItemList': HighlightsAlreadyRanked} %}
+            </div>
+            <div id="tabs-full-list">
+                {% include 'staff/reviews/highlights/table.twig' with {'ListTitle': 'Full list', 'ItemList': HighlightsFullList} %}
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<script>
+    $('#tabs').tabs();
+</script>
 
 {% endblock page_inner %}
