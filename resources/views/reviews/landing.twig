@@ -4,84 +4,37 @@
 
 {% block page_body %}
 
-<div class="row">
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-        <a id="btn-nav-page-2020" class="btn btn-sm btn-default" href="{{ route('reviews.landing', {'year': '2020'}) }}">2020 stats</a>
-        <a id="btn-nav-page-2019" class="btn btn-sm btn-default" href="{{ route('reviews.landing', {'year': '2019'}) }}">2019 stats</a>
-        <a id="btn-nav-page-2018" class="btn btn-sm btn-default" href="{{ route('reviews.landing', {'year': '2018'}) }}">2018 stats</a>
-        <a id="btn-nav-page-2017" class="btn btn-sm btn-default" href="{{ route('reviews.landing', {'year': '2017'}) }}">2017 stats</a>
-
-    </div>
-
-</div>
+{% include 'reviews/navByYear.twig' %}
 
 <div class="row">
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-        <h2>
-            Reviews by month
+        <h2 class="standout-header">
+            Recently ranked
         </h2>
         <p>
-            The total number of reviews published each month in {{ ReviewYear }}.
+            These games have only recently been ranked. Thanks to everyone who's reviewed these games!
         </p>
-
-        {% if DateList|length %}
-            {% include 'reviews/reviewYearChart.twig' with {'ChartDataSet': DateList} %}
-        {% endif %}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': HighlightsRecentlyRanked} %}
 
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-        <h2>
-            Score distribution
+        <h2 class="standout-header">
+            Recently reviewed, still unranked
         </h2>
         <p>
-            The spread of scores for reviews published in {{ ReviewYear }}.
+            These games have been reviewed recently, but are still unranked. Games need 3 reviews to be ranked.
+            <a href="{{ route('partners.review-sites') }}">
+                Help us out!
+            </a>
         </p>
-        {% include 'reviews/charts/scoreDistribution.twig' with {'ChartDataSet': ScoreDistributionByYear} %}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': HighlightsStillUnranked} %}
 
     </div>
 
 </div>
-
-<div class="row">
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
-        <h2>
-            Ranked / Unranked
-        </h2>
-        <p>
-            The proportion of games released this year that are ranked or unranked.
-            To be ranked, a game must have 3 reviews on the site.
-        </p>
-
-        {% include 'reviews/charts/rankedUnranked.twig' with {'ChartDataSet': RankedCountByYear} %}
-
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
-        <h2>
-            Ranked games: Review count stats
-        </h2>
-        <p>
-            This shows how many games have received e.g. 3 reviews, or 4 reviews, or 5 reviews, etc.
-            A lot of games have a small number of reviews.
-        </p>
-
-        {% include 'reviews/charts/reviewCountStats.twig' with {'ChartDataSet': ReviewCountStatsByYear} %}
-
-    </div>
-
-</div>
-
-<script>
-    $('#btn-nav-page-{{ ReviewYear }}').addClass('btn-primary');
-</script>
 
 {% endblock page_body %}

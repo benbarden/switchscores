@@ -62,9 +62,9 @@ Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topR
 Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */
-//Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
+Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.landing.byYear');
+Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
 Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
-Route::get('/reviews/{year?}', 'ReviewsController@landingByYear')->name('reviews.landing');
 
 /* Partners */
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');

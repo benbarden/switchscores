@@ -20,7 +20,6 @@ class WelcomeController extends Controller
         $bindings['RecentWithGoodRanks'] = $this->getServiceGameReleaseDate()->getRecentWithGoodRanks(7, 35, 15);
         $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 10);
-//        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
 
         // Get latest News post
         $bindings['LatestNewsPost'] = $this->getServiceNews()->getNewest();

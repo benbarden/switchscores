@@ -10,7 +10,31 @@ class ReviewsController extends Controller
 {
     use SwitchServices;
 
-    public function landingByYear($year = 2020)
+    public function landing()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
+        $bindings['PageTitle'] = 'Reviews';
+
+        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
+        $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
+        $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked();
+
+        foreach ($highlightsRecentlyRanked as &$item) {
+            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
+        }
+        foreach ($highlightsStillUnranked as &$item) {
+            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
+        }
+
+        $bindings['HighlightsRecentlyRanked'] = $highlightsRecentlyRanked;
+        $bindings['HighlightsStillUnranked'] = $highlightsStillUnranked;
+
+        return view('reviews.landing', $bindings);
+    }
+
+    public function landingByYear($year)
     {
         $bindings = [];
 
@@ -63,98 +87,7 @@ class ReviewsController extends Controller
         $bindings['TopTitle'] = 'Review stats - '.$year;
         $bindings['PageTitle'] = 'Review stats - '.$year;
 
-        return view('reviews.landing', $bindings);
-    }
-
-    public function landingOld()
-    {
-        $bindings = [];
-
-        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(30);
-
-        // Review counts
-        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
-        $dateListArray = [];
-
-        $dateListArray2017 = [];
-        $dateListArray2018 = [];
-        $dateListArray2019 = [];
-        $dateListArray2020 = [];
-
-        $reviewTotal2017 = 0;
-        $reviewTotal2018 = 0;
-        $reviewTotal2019 = 0;
-        $reviewTotal2020 = 0;
-
-        if ($dateList) {
-
-            foreach ($dateList as $date) {
-
-                list($dateYear, $dateMonth) = explode('-', $date);
-
-                $reviewLinkStat = $this->getServiceReviewLink()->countActiveByYearMonth($dateYear, $dateMonth);
-                if ($reviewLinkStat) {
-                    $dateCount = $reviewLinkStat;
-                } else {
-                    $dateCount = 0;
-                }
-
-                if ($dateCount == 0) continue;
-
-                $dateListArray[] = [
-                    'DateRaw' => $date,
-                    'ReviewCount' => $dateCount,
-                ];
-
-                switch ($dateYear) {
-                    case 2017:
-                        $dateListArray2017[] = [
-                            'DateRaw' => $date,
-                            'ReviewCount' => $dateCount,
-                        ];
-                        $reviewTotal2017 += $dateCount;
-                        break;
-                    case 2018:
-                        $dateListArray2018[] = [
-                            'DateRaw' => $date,
-                            'ReviewCount' => $dateCount,
-                        ];
-                        $reviewTotal2018 += $dateCount;
-                        break;
-                    case 2019:
-                        $dateListArray2019[] = [
-                            'DateRaw' => $date,
-                            'ReviewCount' => $dateCount,
-                        ];
-                        $reviewTotal2019 += $dateCount;
-                        break;
-                    case 2020:
-                        $dateListArray2020[] = [
-                            'DateRaw' => $date,
-                            'ReviewCount' => $dateCount,
-                        ];
-                        $reviewTotal2020 += $dateCount;
-                        break;
-                }
-
-            }
-
-        }
-
-        $bindings['DateList'] = $dateListArray;
-        $bindings['DateList2017'] = $dateListArray2017;
-        $bindings['DateList2018'] = $dateListArray2018;
-        $bindings['DateList2019'] = $dateListArray2019;
-        $bindings['DateList2020'] = $dateListArray2020;
-        $bindings['ReviewTotal2017'] = $reviewTotal2017;
-        $bindings['ReviewTotal2018'] = $reviewTotal2018;
-        $bindings['ReviewTotal2019'] = $reviewTotal2019;
-        $bindings['ReviewTotal2020'] = $reviewTotal2020;
-
-        $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
-        $bindings['PageTitle'] = 'Reviews';
-
-        return view('reviews.landing', $bindings);
+        return view('reviews.landingByYear', $bindings);
     }
 
     public function reviewSite($linkTitle)
