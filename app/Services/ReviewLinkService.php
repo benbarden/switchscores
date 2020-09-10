@@ -155,7 +155,7 @@ class ReviewLinkService
     public function getHighlightsRecentlyRanked($dayInterval = 7)
     {
         $reviewLinks = DB::select('
-            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
             JOIN partners p ON rl.site_id = p.id
@@ -172,7 +172,7 @@ class ReviewLinkService
     public function getHighlightsStillUnranked($dayInterval = 7)
     {
         $reviewLinks = DB::select('
-            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
             JOIN partners p ON rl.site_id = p.id
@@ -188,7 +188,7 @@ class ReviewLinkService
     public function getHighlightsAlreadyRanked($dayInterval = 7)
     {
         $reviewLinks = DB::select('
-            SELECT g.id, g.title, g.link_title, g.eu_release_date, g.game_rank, g.rating_avg, g.review_count, count(rl.id) AS recent_review_count
+            SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
             JOIN partners p ON rl.site_id = p.id

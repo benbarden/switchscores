@@ -79,9 +79,9 @@
         </div>
 
         <h2 class="standout-header">
-            Latest reviews
+            Recently ranked
         </h2>
-        {% include 'reviews/layouts/standard.twig' with {'ReviewList': ReviewList} %}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': HighlightsRecentlyRanked} %}
 
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
