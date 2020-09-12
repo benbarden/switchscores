@@ -45,28 +45,28 @@
             <tr>
                 <td>
                     <div class="label alert-warning">Medium</div>
-                    <a href="{{ route('admin.action-lists.no-price') }}">No price</a>
+                    <a href="{{ route('staff.games.list.no-eshop-price') }}">No price</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.action-lists.no-price') }}" class="h4">{{ NoPriceCount }}</a>
+                    <a href="{{ route('staff.games.list.no-eshop-price') }}" class="h4">{{ NoPriceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="label alert-info">Low</div>
-                    <a href="{{ route('admin.games.list') }}/no-video-url">No video URL</a>
+                    <a href="{{ route('staff.games.list.no-video-url') }}">No video URL</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list') }}/no-video-url" class="h4">{{ MissingVideoUrlCount }}</a>
+                    <a href="{{ route('staff.games.list.no-video-url') }}" class="h4">{{ MissingVideoUrlCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="label alert-info">Low</div>
-                    <a href="{{ route('admin.games.list') }}/no-amazon-uk-link">No Amazon UK link</a>
+                    <a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('admin.games.list') }}/no-amazon-uk-link" class="h4">{{ MissingAmazonUkLink }}</a>
+                    <a href="{{ route('staff.games.list.no-amazon-uk-link') }}" class="h4">{{ MissingAmazonUkLink }}</a>
                 </td>
             </tr>
             </tbody>
@@ -103,6 +103,11 @@
             <tr>
                 <td>
                     <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a>
                 </td>
             </tr>
             </tbody>

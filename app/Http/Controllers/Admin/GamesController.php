@@ -40,36 +40,10 @@ class GamesController extends Controller
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
-                case 'released':
-                    $gameList = $serviceGameReleaseDate->getReleased();
-                    $jsInitialSort = "[ 3, 'desc'], [ 1, 'asc']";
-                    break;
                 // Action lists
                 case 'action-list-games-for-release':
                     $gameList = $serviceGame->getActionListGamesForRelease();
                     $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                // Developers and Publishers
-                case 'no-publisher-set':
-                    $gameList = $serviceGamePublisher->getGamesWithNoPublisher();
-                    $jsInitialSort = "[ 0, 'desc']";
-                    break;
-                // Missing data
-                case 'no-eshop-europe-link':
-                    $gameList = $serviceGame->getByNullField('eshop_europe_fs_id');
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-boxart':
-                    $gameList = $serviceGame->getWithoutBoxart();
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-video-url':
-                    $gameList = $serviceGame->getByNullField('video_url');
-                    $jsInitialSort = "[ 3, 'asc'], [ 0, 'asc']";
-                    break;
-                case 'no-amazon-uk-link':
-                    $gameList = $serviceGame->getWithoutAmazonUkLink();
-                    $jsInitialSort = "[ 0, 'asc']";
                     break;
                 default:
                     abort(404);

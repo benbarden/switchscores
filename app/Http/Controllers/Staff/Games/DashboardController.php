@@ -27,8 +27,8 @@ class DashboardController extends Controller
         $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->getServiceGame()->countWithoutPrices();
-        $missingVideoUrl = $serviceGame->getByNullField('video_url');
-        $missingAmazonUkLink = $serviceGame->getWithoutAmazonUkLink();
+        $missingVideoUrl = $serviceGame->getWithNoVideoUrl();
+        $missingAmazonUkLink = $serviceGame->getWithNoAmazonUkLink();
         $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
         $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
 

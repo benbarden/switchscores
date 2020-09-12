@@ -46,27 +46,6 @@ class LegacyAdminTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testAdminGamesListReleased()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/released');
-        $response->assertStatus(200);
-    }
-
-    public function testAdminGamesListNoVideoUrl()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/no-video-url');
-        $response->assertStatus(200);
-    }
-
-    public function testAdminGamesListNoAmazonUkLink()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list/no-amazon-uk-link');
-        $response->assertStatus(200);
-    }
-
     public function testAdminReviewsLink()
     {
         $this->be($this->userAdmin);

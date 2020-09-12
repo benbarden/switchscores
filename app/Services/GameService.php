@@ -207,6 +207,16 @@ class GameService
         return Game::where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->orderBy('eu_released_on', 'desc')->limit($limit)->get();
     }
 
+    public function getWithNoAmazonUkLink()
+    {
+        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->get();
+    }
+
+    public function getWithNoVideoUrl()
+    {
+        return Game::whereNull('video_url')->orderBy('id', 'asc')->get();
+    }
+
     // ********************************************************** //
     // Action lists.
     // These don't have a forced limit as we need to know the total
@@ -214,7 +224,7 @@ class GameService
 
     public function getWithNoNintendoCoUkLink($limit = null)
     {
-        $gameList = Game::whereNull('eshop_europe_fs_id')->orderBy('id', 'desc');
+        $gameList = Game::whereNull('eshop_europe_fs_id')->whereNotNull('eu_release_date')->orderBy('id', 'desc');
         if ($limit) {
             $gameList = $gameList->limit($limit);
         }
@@ -232,71 +242,6 @@ class GameService
             $gameList = $gameList->limit($limit);
         }
         return $gameList->get();
-    }
-
-    // ********************************************************** //
-    // Stuff to sort through
-    // ********************************************************** //
-
-    public function getAll()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->orderBy('games.title', 'asc');
-        $games = $games->get();
-
-        return $games;
-    }
-
-    public function getCount()
-    {
-        return Game::orderBy('title', 'asc')->count();
-    }
-
-    public function getAllWithEuropeEshopId()
-    {
-        $games = Game::whereNotNull('games.eshop_europe_fs_id')
-            ->orderBy('games.title', 'asc')
-            ->get();
-
-        return $games;
-    }
-
-    public function getAllWithoutEshopId($region)
-    {
-        if ($region == 'eu') {
-            $field = 'eshop_europe_fs_id';
-        } else {
-            throw new \Exception('Unsupported region: '.$region);
-        }
-
-        $games = Game::whereNull('games.'.$field)
-            ->orderBy('games.title', 'asc')
-            ->get();
-
-        return $games;
-    }
-
-    // Used for admin only
-    public function getByDeveloper($developer)
-    {
-        return Game::where('developer', $developer)->orderBy('title', 'asc')->get();
-    }
-
-    // Used for admin only
-    public function getByPublisher($publisher)
-    {
-        return Game::where('publisher', $publisher)->orderBy('title', 'asc')->get();
-    }
-
-    public function getByCategory(Category $category)
-    {
-        return Game::where('category_id', $category->id)->orderBy('title', 'asc')->get();
-    }
-
-    public function getBySeries(GameSeries $gameSeries)
-    {
-        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
     }
 
     /**
@@ -321,128 +266,45 @@ class GameService
         return $games;
     }
 
-    /**
-     * @param int $limit
-     * @return mixed
-     */
-    public function getEshopEuropeNoPackshots($limit = null)
+    // ********************************************************** //
+    // Stuff to sort through
+    // ********************************************************** //
+
+    public function getAll()
     {
         $games = DB::table('games')
-            ->join('eshop_europe_games', 'games.eshop_europe_fs_id', '=', 'eshop_europe_games.fs_id')
             ->select('games.*')
-            ->whereNotNull('games.eshop_europe_fs_id')
-            ->where(function($q) {
-                $q->whereNull('boxart_square_url')->orWhereNull('boxart_header_image');
-            })
-            ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
         $games = $games->get();
 
         return $games;
     }
 
-    public function getWithoutBoxart()
+    public function getCount()
     {
-        $gamesList = DB::table('games')
-            ->select('games.*')
-            ->where('boxart_square_url', null)
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.id', 'asc');
-        $gamesList = $gamesList->get();
-
-        return $gamesList;
+        return Game::orderBy('title', 'asc')->count();
     }
 
-    public function getWithoutAmazonUkLink()
+    // Used for admin only
+    public function getByDeveloper($developer)
     {
-        $gamesList = Game::where('amazon_uk_link', null)->orderBy('id', 'asc')->get();
-        return $gamesList;
+        return Game::where('developer', $developer)->orderBy('title', 'asc')->get();
     }
 
-    public function getByNullField($field)
+    // Used for admin only
+    public function getByPublisher($publisher)
     {
-        $allowedFields = [
-            'video_url', 'eshop_europe_fs_id'
-        ];
-
-        if (!in_array($field, $allowedFields)) {
-            throw new \Exception('Field '.$field.' not supported by getByMissingField');
-        }
-
-        $gamesList = DB::table('games')
-            ->select('games.*')
-            ->where($field, null)
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.id', 'asc');
-        $gamesList = $gamesList->get();
-
-        return $gamesList;
+        return Game::where('publisher', $publisher)->orderBy('title', 'asc')->get();
     }
 
-    public function getNextId($filter, $currentId)
+    public function getByCategory(Category $category)
     {
-        $gameList = null;
+        return Game::where('category_id', $category->id)->orderBy('title', 'asc')->get();
+    }
 
-        switch ($filter) {
-            case 'no-boxart':
-                $gameList = $this->getWithoutBoxart();
-                break;
-            case 'no-eshop-europe-link':
-                $gameList = $this->getByNullField('eshop_europe_fs_id');
-                break;
-            case 'no-video-url':
-                $gameList = $this->getByNullField('video_url');
-                break;
-            case 'no-amazon-uk-link':
-                $gameList = $this->getWithoutAmazonUkLink();
-                break;
-            default:
-                return null;
-                break;
-        }
-
-        if ($gameList == null) return null;
-
-        $gameIdList = $gameList->pluck('id')->toArray();
-
-        if (count($gameIdList) == 0) return null;
-
-        $flipped = array_flip($gameIdList);
-
-        if (count($flipped) == 0) return null;
-
-        // currentId is the current game id we're editing.
-        // gameIdList is an array of game IDs with the current filter,
-        // with array indexes starting from zero.
-        // The flipped array reverses the keys and values in the gameIdList array.
-        // So for instance, if the first game id in this filter is 107,
-        // the flipped array will start with key 107, value 0.
-        // Whereas the gameIdList would have key 0, value 107.
-
-        // This allows us to do the following:
-        // 1. get the array index of the current game id.
-        // e.g. game id 926 has an index of 289.
-        // 2. add 1 to the index to get the next index.
-        // e.g. the next index would be 290.
-        // 3. get the next game id with this index from the gameIdList array.
-        // e.g. index 290 is game id 663.
-
-        $currentGameIndex = $flipped[$currentId];
-        $nextGameIndex = $currentGameIndex + 1;
-
-        // Make sure the next game index exists.
-        if (!array_key_exists($nextGameIndex, $gameIdList)) {
-            // This is the end of the array
-            return null;
-        } else {
-            $nextId = $gameIdList[$nextGameIndex];
-        }
-
-        return $nextId;
+    public function getBySeries(GameSeries $gameSeries)
+    {
+        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
     }
 
     // *** STATS *** //

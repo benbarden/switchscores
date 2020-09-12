@@ -109,8 +109,22 @@ class GameReleaseDateService
         $games = DB::table('games')
             ->select('games.*')
             ->where('games.eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
             ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllWithNoEuReleaseDate()
+    {
+        $games = DB::table('games')
+            ->select('games.*')
+            ->whereNull('games.eu_release_date')
+            ->orderBy('games.id', 'desc')
             ->get();
 
         return $games;
