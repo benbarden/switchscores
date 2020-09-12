@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
+use App\Services\Shortcode\GameTable;
 
 use App\Traits\SwitchServices;
 
@@ -75,6 +76,9 @@ class NewsController extends Controller
 
         $shortcodeUnranked = new Unranked($this->getServiceTopRated(), $contentHtml);
         $contentHtml = $shortcodeUnranked->parseShortcodes();
+
+        $shortcodeGameTable = new GameTable($contentHtml, $this->getServiceGame());
+        $contentHtml = $shortcodeGameTable->parseShortcodes();
 
         $bindings['NewsContentParsed'] = $contentHtml;
 

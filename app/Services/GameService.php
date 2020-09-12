@@ -138,6 +138,32 @@ class GameService
     }
 
     /**
+     * @param $idList
+     * @param string[] $orderBy
+     * @return \Illuminate\Support\Collection
+     */
+    public function getByIdList($idList, $orderBy = "")
+    {
+        if ($orderBy) {
+            list($orderField, $orderDir) = $orderBy;
+        } else {
+            list($orderField, $orderDir) = ['id', 'desc'];
+        }
+
+        $idList = str_replace('&quot;', '', $idList);
+        $idList = explode(",", $idList);
+
+        $games = DB::table('games')
+            ->select('games.*')
+            ->whereIn('games.id', $idList)
+            ->orderBy($orderField, $orderDir)
+        ;
+
+        $games = $games->get();
+
+        return $games;
+    }
+    /**
      * @param $region
      * @param $fsId
      * @return Game
@@ -271,12 +297,6 @@ class GameService
     public function getBySeries(GameSeries $gameSeries)
     {
         return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
-    }
-
-    public function getByIdList($idList)
-    {
-        $gamesList = Game::whereIn('id', $idList)->orderBy('title', 'asc')->get();
-        return $gamesList;
     }
 
     /**
