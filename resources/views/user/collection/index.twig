@@ -26,21 +26,21 @@
         <div id="tabs">
 
             <ul>
-                <li><a href="#tabs-not-started">Not started ({{ CollectionNotStarted|length }})</a></li>
                 <li><a href="#tabs-now-playing">Now playing ({{ CollectionNowPlaying|length }})</a></li>
                 <li><a href="#tabs-paused">Paused - will return ({{ CollectionPaused|length }})</a></li>
+                <li><a href="#tabs-not-started">Not started ({{ CollectionNotStarted|length }})</a></li>
                 <li><a href="#tabs-abandoned">Abandoned ({{ CollectionAbandoned|length }})</a></li>
                 <li><a href="#tabs-completed">Completed ({{ CollectionCompleted|length }})</a></li>
             </ul>
 
-            <div id="tabs-not-started">
-                {% include 'modules/user/collection/table.twig' with {'ListTitle': 'Not started', 'CollectionList': CollectionNotStarted, 'AsRole': 'user'} %}
-            </div>
             <div id="tabs-now-playing">
                 {% include 'modules/user/collection/table.twig' with {'ListTitle': 'Now playing', 'CollectionList': CollectionNowPlaying, 'AsRole': 'user'} %}
             </div>
             <div id="tabs-paused">
                 {% include 'modules/user/collection/table.twig' with {'ListTitle': 'Paused - will return', 'CollectionList': CollectionPaused, 'AsRole': 'user'} %}
+            </div>
+            <div id="tabs-not-started">
+                {% include 'modules/user/collection/table.twig' with {'ListTitle': 'Not started', 'CollectionList': CollectionNotStarted, 'AsRole': 'user'} %}
             </div>
             <div id="tabs-abandoned">
                 {% include 'modules/user/collection/table.twig' with {'ListTitle': 'Abandoned', 'CollectionList': CollectionAbandoned, 'AsRole': 'user'} %}

@@ -131,16 +131,16 @@ class UserGamesCollectionService
 
         // Not started
         $collectionStats[] = [
-            'count' => $this->getUserTotalNotStarted($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED),
-        ];
-        $collectionStats[] = [
             'count' => $this->getUserTotalNowPlaying($userId),
             'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOW_PLAYING),
         ];
         $collectionStats[] = [
             'count' => $this->getUserTotalPaused($userId),
             'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_PAUSED),
+        ];
+        $collectionStats[] = [
+            'count' => $this->getUserTotalNotStarted($userId),
+            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED),
         ];
         $collectionStats[] = [
             'count' => $this->getUserTotalAbandoned($userId),

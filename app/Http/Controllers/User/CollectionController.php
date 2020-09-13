@@ -40,9 +40,9 @@ class CollectionController extends Controller
 
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        $bindings['CollectionNotStarted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOT_STARTED);
         $bindings['CollectionNowPlaying'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOW_PLAYING);
         $bindings['CollectionPaused'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_PAUSED);
+        $bindings['CollectionNotStarted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOT_STARTED);
         $bindings['CollectionAbandoned'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_ABANDONED);
         $bindings['CollectionCompleted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_COMPLETED);
 
