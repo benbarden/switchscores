@@ -32,8 +32,8 @@ class CollectionController extends Controller
 
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Collection';
-        $bindings['PageTitle'] = 'Collection';
+        $bindings['TopTitle'] = 'Games collection';
+        $bindings['PageTitle'] = 'Games collection';
 
         $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
