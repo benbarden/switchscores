@@ -14,7 +14,7 @@
 
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-12">
 
         <h2>Games collection</h2>
 
@@ -30,18 +30,11 @@
 
     </div>
 
-    <div class="col-md-4">
-
-        <h3>Collection stats</h3>
-        {% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
-
-    </div>
-
 </div>
 
 <div class="row">
 
-    <div class="col-md-12">
+    <div class="col-sm-12 col-md-9">
 
         <div id="tabs">
 
@@ -70,6 +63,13 @@
             </div>
 
         </div>
+
+    </div>
+
+    <div class="col-sm-12 col-md-3">
+
+        <h3>Collection stats</h3>
+        {% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
 
     </div>
 
