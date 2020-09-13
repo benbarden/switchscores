@@ -32,7 +32,11 @@
 
     }
 
-    $('#game_id').val(formVals['game_id']);
+    if (formMode == 'add') {
+        $('#game_id').val(formVals['game_id']);
+        $('#game_id').select2();
+    }
+
     $('#owned_from').val(formVals['owned_from']);
     if (formVals['owned_type'] != '') {
         $('input[name=owned_type][value=' + formVals['owned_type'] + ']').attr('checked', true);
@@ -45,7 +49,5 @@
         $('input[name=play_status][value=not-started]').attr('checked', true);
     }
     $('#hours_played').val(formVals['hours_played']);
-
-    $('#game_id').select2();
 
 </script>

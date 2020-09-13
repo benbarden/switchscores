@@ -21,7 +21,7 @@ class CollectionController extends Controller
     /**
      * @var array
      */
-    private $validationRules = [
+    private $validationRulesAdd = [
         'game_id' => 'required',
     ];
 
@@ -63,7 +63,7 @@ class CollectionController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, $this->validationRules);
+            $this->validate($request, $this->validationRulesAdd);
 
             $serviceCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
@@ -111,7 +111,7 @@ class CollectionController extends Controller
 
             $bindings['FormMode'] = 'edit-post';
 
-            $this->validate($request, $this->validationRules);
+            //$this->validate($request, $this->validationRules);
 
             $serviceCollection->edit(
                 $collectionData, $request->owned_from, $request->owned_type,
@@ -132,7 +132,6 @@ class CollectionController extends Controller
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $serviceGame->getAll();
         $bindings['PlayStatusList'] = $serviceCollection->getPlayStatusList();
 
         return view('user.collection.edit', $bindings);
