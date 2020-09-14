@@ -28,22 +28,11 @@ class IndexController extends Controller
 
         $authUser = $this->getValidUser($this->getServiceUser());
 
-        $onPageTitle = 'Member dashboard';
+        $onPageTitle = 'Members dashboard';
 
         $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
 
-        if ($authUser->isOwner()) {
-            $partnerIdOverride = \Request::get('partnerOverride');
-            if ($partnerIdOverride == 'xxx') {
-                $partnerId = null;
-            } elseif ($partnerIdOverride) {
-                $partnerId = $partnerIdOverride;
-            } else {
-                $partnerId = $authUser->partner_id;
-            }
-        } else {
-            $partnerId = $authUser->partner_id;
-        }
+        $partnerId = $authUser->partner_id;
 
         if ($partnerId) {
 
@@ -56,28 +45,6 @@ class IndexController extends Controller
                 if ($partnerData->isReviewSite()) {
 
                     $siteRole = 'review-partner';
-                    $onPageTitle = 'Members dashboard: '.$partnerData->name;
-
-                    // Review stats (for infobox)
-                    $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
-                    $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
-
-                    // Recent reviews
-                    $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 5);
-
-                    // Score distribution
-                    $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($partnerId);
-
-                    $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
-                    if ($reviewScoreDistribution) {
-                        foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
-                            if ($scoreVal > $mostUsedScore['topScoreCount']) {
-                                $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
-                            }
-                        }
-                    }
-                    $bindings['ScoreDistribution'] = $reviewScoreDistribution;
-                    $bindings['MostUsedScore'] = $mostUsedScore;
 
                 } elseif ($partnerData->isGamesCompany()) {
 
