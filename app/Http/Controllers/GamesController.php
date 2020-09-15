@@ -177,9 +177,13 @@ class GamesController extends Controller
 
             $blurb .= '<strong>'.$gameData->title.'</strong> is '.$categoryBlurb.'. ';
 
-        } else {
+        } elseif ($gameData->is_released == 1) {
 
             $blurb .= '<strong>'.$gameData->title.'</strong> is currently uncategorised. (Help us out!) ';
+
+        } else {
+
+            $blurb .= '<strong>'.$gameData->title.'</strong> is an upcoming game for the Nintendo Switch. ';
 
         }
 
@@ -188,8 +192,9 @@ class GamesController extends Controller
             $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
                 'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
 
-        } else {
+        } elseif ($gameData->is_released == 1) {
 
+            // If the game has no reviews but isn't released, this part can be ignored
             switch ($gameData->review_count) {
                 case 0:
                     $blurb .= 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
