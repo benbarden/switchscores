@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Traits\AuthUser;
-use App\UserGamesCollection;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use App\Traits\AuthUser;
+use App\UserGamesCollection;
+use App\Services\GamesCollection\PlayStatus;
 
 use App\Traits\SwitchServices;
 
@@ -29,6 +31,7 @@ class CollectionController extends Controller
     {
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceQuickReview = $this->getServiceQuickReview();
+        $serviceCollectionPlayStatus = new PlayStatus();
 
         $bindings = [];
 
@@ -38,16 +41,24 @@ class CollectionController extends Controller
         $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
 
-        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
-
-        $bindings['CollectionNowPlaying'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOW_PLAYING);
-        $bindings['CollectionPaused'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_PAUSED);
-        $bindings['CollectionNotStarted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_NOT_STARTED);
-        $bindings['CollectionAbandoned'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_ABANDONED);
-        $bindings['CollectionCompleted'] = $serviceCollection->getByUserAndPlayStatus($userId, UserGamesCollection::PLAY_STATUS_COMPLETED);
-
         $quickReviewGameIdList = $serviceQuickReview->getAllByUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
+
+        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
+
+        $playStatusList = $serviceCollectionPlayStatus->generateAll();
+
+        $userPlayStatusList = [];
+
+        foreach ($playStatusList as $playStatus) {
+
+            $statusId = $playStatus->getId();
+            $listItems = $serviceCollection->getPlayStatusByUser($userId, $statusId);
+            $userPlayStatusList[] = ['PlayStatus' => $playStatus, 'ListItems' => $listItems];
+
+        }
+
+        $bindings['UserPlayStatusList'] = $userPlayStatusList;
 
         return view('user.collection.index', $bindings);
     }
@@ -56,6 +67,7 @@ class CollectionController extends Controller
     {
         $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
+        $serviceCollectionPlayStatus = new PlayStatus();
 
         $request = request();
 
@@ -81,7 +93,7 @@ class CollectionController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll();
-        $bindings['PlayStatusList'] = $serviceCollection->getPlayStatusList();
+        $bindings['PlayStatusList'] = $serviceCollectionPlayStatus->generateAll();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
@@ -93,8 +105,8 @@ class CollectionController extends Controller
 
     public function edit($itemId)
     {
-        $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
+        $serviceCollectionPlayStatus = new PlayStatus();
 
         $request = request();
 
@@ -132,7 +144,7 @@ class CollectionController extends Controller
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['PlayStatusList'] = $serviceCollection->getPlayStatusList();
+        $bindings['PlayStatusList'] = $serviceCollectionPlayStatus->generateAll();
 
         return view('user.collection.edit', $bindings);
     }

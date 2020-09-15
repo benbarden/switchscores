@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\UserGamesCollection;
+use App\Services\GamesCollection\PlayStatus;
 
 
 class UserGamesCollectionService
@@ -61,7 +62,49 @@ class UserGamesCollectionService
         return $items;
     }
 
-    public function getByUserAndPlayStatus($userId, $playStatus)
+    public function getNowPlayingByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_NOW_PLAYING;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getPausedByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_PAUSED;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getNotStartedByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_NOT_STARTED;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getAbandonedByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_ABANDONED;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getCompletedByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_COMPLETED;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getReplayingByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_REPLAYING;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getEndlessByUser($userId)
+    {
+        $statusId = PlayStatus::PLAY_STATUS_ENDLESS;
+        return $this->getPlayStatusByUser($userId, $statusId);
+    }
+
+    public function getPlayStatusByUser($userId, $playStatus)
     {
         $items = UserGamesCollection::
             where('user_id', $userId)
@@ -85,33 +128,38 @@ class UserGamesCollectionService
             ->sum('hours_played');
     }
 
+    public function getUserTotalPlayStatus($userId, $playStatus)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', $playStatus)->count();
+    }
+
     public function getUserTotalNotStarted($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_NOT_STARTED)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_NOT_STARTED)
             ->count();
     }
 
     public function getUserTotalNowPlaying($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_NOW_PLAYING)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_NOW_PLAYING)
             ->count();
     }
 
     public function getUserTotalPaused($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_PAUSED)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_PAUSED)
             ->count();
     }
 
     public function getUserTotalAbandoned($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_ABANDONED)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_ABANDONED)
             ->count();
     }
 
     public function getUserTotalCompleted($userId)
     {
-        return UserGamesCollection::where('user_id', $userId)->where('play_status', UserGamesCollection::PLAY_STATUS_COMPLETED)
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_COMPLETED)
             ->count();
     }
 
@@ -127,43 +175,22 @@ class UserGamesCollectionService
             'count' => $this->getUserTotalHours($userId)
         ];
 
-        $userGamesCollection = new UserGamesCollection();
+        $serviceCollectionPlayStatus = new PlayStatus();
 
-        // Not started
-        $collectionStats[] = [
-            'count' => $this->getUserTotalNowPlaying($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOW_PLAYING),
-        ];
-        $collectionStats[] = [
-            'count' => $this->getUserTotalPaused($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_PAUSED),
-        ];
-        $collectionStats[] = [
-            'count' => $this->getUserTotalNotStarted($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED),
-        ];
-        $collectionStats[] = [
-            'count' => $this->getUserTotalAbandoned($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_ABANDONED),
-        ];
-        $collectionStats[] = [
-            'count' => $this->getUserTotalCompleted($userId),
-            'playStatus' => $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_COMPLETED),
-        ];
+        $playStatusList = $serviceCollectionPlayStatus->generateAll();
+
+        foreach ($playStatusList as $playStatus) {
+
+            $statusId = $playStatus->getId();
+            $itemCount = $this->getUserTotalPlayStatus($userId, $statusId);
+
+            $collectionStats[] = [
+                'playStatus' => $playStatus,
+                'count' => $itemCount
+            ];
+
+        }
 
         return $collectionStats;
-    }
-
-    public function getPlayStatusList()
-    {
-        $userGamesCollection = new UserGamesCollection();
-        $playStatusList = [];
-        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOT_STARTED);
-        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_NOW_PLAYING);
-        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_PAUSED);
-        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_ABANDONED);
-        $playStatusList[] = $userGamesCollection->getPlayStatusItem(UserGamesCollection::PLAY_STATUS_COMPLETED);
-
-        return $playStatusList;
     }
 }

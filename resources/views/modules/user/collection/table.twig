@@ -1,4 +1,9 @@
-<h2>{{ ListTitle }}</h2>
+{% if PlayStatus is defined %}
+    <h2>
+        <i class="fas fa-{{ PlayStatus.getIcon }}" style="color: {{ PlayStatus.getIconColor }}; font-size: 24px;"></i>
+        {{ ListTitle }}
+    </h2>
+{% endif %}
 {% if CollectionList.count > 0 %}
 
     <div class="table-responsive">
@@ -6,9 +11,11 @@
             <thead>
             <tr>
                 <th class="text-left">Game</th>
-                <th class="text-left">
-                    Play status
-                </th>
+                {% if PlayStatus is not defined %}
+                    <th class="text-left">
+                        Play status
+                    </th>
+                {% endif %}
                 <th class="text-center">
                     Players
                 </th>
@@ -42,11 +49,13 @@
                             {% endif %}
                         </small>
                     </td>
-                    <td class="text-left" style="vertical-align: middle;">
-                        {% set playStatusItem = item.getPlayStatusItem(item.play_status) %}
-                        <i class="fas fa-{{ playStatusItem.icon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
-                        {{ playStatusItem.desc }}
-                    </td>
+                    {% if PlayStatus is not defined %}
+                        <td class="text-left" style="vertical-align: middle;">
+                            {% set playStatusItem = item.getPlayStatus(item.play_status) %}
+                            <i class="fas fa-{{ playStatusItem.getIcon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
+                            {{ playStatusItem.getDesc }}
+                        </td>
+                    {% endif %}
                     <td class="text-center">
                         {{ item.game.players }}
                     </td>

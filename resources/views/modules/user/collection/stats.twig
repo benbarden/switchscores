@@ -6,8 +6,8 @@
                 {% if item.title is defined %}
                     {{ item.title }}
                 {% else %}
-                    <i class="fas fa-{{ item.playStatus.icon }}" style="color: {{ item.playStatus.iconColor }}; font-size: 24px;"></i>
-                    {{ item.playStatus.desc }}
+                    <i class="fas fa-{{ item.playStatus.getIcon }}" style="color: {{ item.playStatus.iconColor }}; font-size: 24px;"></i>
+                    {{ item.playStatus.getDesc }}
                 {% endif %}
             </td>
             <td class="text-right" style="vertical-align: middle;">{{ item.count }}</td>
