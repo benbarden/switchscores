@@ -57,6 +57,14 @@ class PlayStatus
             case self::PLAY_STATUS_COMPLETED:
                 $playStatusItem = $this->generateCompleted();
                 break;
+            case self::PLAY_STATUS_ENDLESS:
+                $playStatusItem = $this->generateEndless();
+                break;
+            case self::PLAY_STATUS_REPLAYING:
+                $playStatusItem = $this->generateReplaying();
+                break;
+            default:
+                throw new \Exception('Play status not found for id: '.$statusId);
         }
 
         return $playStatusItem;

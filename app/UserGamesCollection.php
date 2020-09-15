@@ -30,11 +30,11 @@ class UserGamesCollection extends Model
         return $this->hasOne('App\Game', 'id', 'game_id');
     }
 
-    public function getPlayStatus()
+    public function getPlayStatus($statusId)
     {
-        if (!$this->play_status) return null;
+        if (!$statusId) return null;
 
         $servicePlayStatus = new PlayStatus();
-        return $servicePlayStatus->generateById($this->play_status);
+        return $servicePlayStatus->generateById($statusId);
     }
 }
