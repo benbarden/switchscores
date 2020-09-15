@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Laravel\Socialite\Facades\Socialite;
@@ -43,6 +44,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        View::share('PageTitle', 'Login');
+        View::share('TopTitle', 'Login');
     }
 
     /**

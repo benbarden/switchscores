@@ -67,6 +67,17 @@
                                     {% if not loop.last %}<br>{% endif %}
                                 </small>
                             {% endfor %}
+                        {% else %}
+                            {% if item.signup_alpha != '' %}
+                                <small>
+                                    <strong>Alpha</strong>: {{ item.signup_alpha }}<br>
+                                </small>
+                            {% endif %}
+                            {% if item.signup_beta != '' %}
+                                <small>
+                                    <strong>Beta</strong>: {{ item.signup_beta }}<br>
+                                </small>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="text-center">

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\UserCreated;
 use App\User;
+
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\View;
 
 class RegisterController extends Controller
 {
@@ -38,6 +40,8 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        View::share('PageTitle', 'Register');
+        View::share('TopTitle', 'Register');
     }
 
     /**
@@ -49,7 +53,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'display_name' => [
+            'signup_name' => [
                 'required', 'string', 'max:50',
                 function($attribute, $value, $fail) {
                     $filteredString = preg_replace('/[^A-Za-z0-9\-\.\_\ \']/', '', $value);
@@ -58,8 +62,8 @@ class RegisterController extends Controller
                     }
                 },
             ],
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'signup_email' => 'required|string|email|min:6|max:100|unique:users,email',
+            'signup_pass' => 'required|string|min:6|confirmed',
         ]);
     }
 
@@ -71,11 +75,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
-            'display_name' => $data['display_name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $values = [];
+        if (array_key_exists('signup_name', $data)) {
+            $values['display_name'] = $data['signup_name'];
+        }
+        if (array_key_exists('signup_email', $data)) {
+            $values['email'] = $data['signup_email'];
+        }
+        if (array_key_exists('signup_pass', $data)) {
+            $values['password'] = $data['signup_pass'];
+        }
+        if (array_key_exists('signup_alpha', $data)) {
+            $values['signup_alpha'] = $data['signup_alpha'];
+        }
+        if (array_key_exists('signup_beta', $data)) {
+            $values['signup_beta'] = $data['signup_beta'];
+        }
+
+        $user = User::create($values);
 
         event(new UserCreated($user));
 
