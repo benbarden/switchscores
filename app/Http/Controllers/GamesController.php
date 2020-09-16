@@ -177,7 +177,7 @@ class GamesController extends Controller
 
             $blurb .= '<strong>'.$gameData->title.'</strong> is '.$categoryBlurb.'. ';
 
-        } elseif ($gameData->is_released == 1) {
+        } elseif ($gameData->eu_is_released == 1) {
 
             $blurb .= '<strong>'.$gameData->title.'</strong> is currently uncategorised. (Help us out!) ';
 
