@@ -128,6 +128,13 @@ class GameService
         return $game;
     }
 
+    public function searchByTitle($keywords)
+    {
+        return Game::where('title', 'like', '%'.$keywords.'%')
+            ->orderBy('eu_release_date', 'DESC')
+            ->get();
+    }
+
     public function getApiIdList()
     {
         $gameList = DB::table('games')

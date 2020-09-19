@@ -39,13 +39,6 @@ class LegacyAdminTest extends TestCase
 
     // Admin pages
 
-    public function testAdminGamesList()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/games/list');
-        $response->assertStatus(200);
-    }
-
     public function testAdminReviewsLink()
     {
         $this->be($this->userAdmin);
@@ -57,13 +50,6 @@ class LegacyAdminTest extends TestCase
     {
         $this->be($this->userAdmin);
         $response = $this->get('/staff/partners/review-site');
-        $response->assertStatus(200);
-    }
-
-    public function testAdminTools()
-    {
-        $this->be($this->userAdmin);
-        $response = $this->get('/admin/tools');
         $response->assertStatus(200);
     }
 

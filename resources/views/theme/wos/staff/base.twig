@@ -74,6 +74,7 @@
                                 <li><a href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('staff.games.add') }}">+ Add game</a></li>
+                                <li><a href="{{ route('staff.games.search') }}">Search games</a></li>
                                 <li><a href="{{ route('staff.games.find') }}">Find game</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
@@ -88,7 +89,6 @@
                                 <li><a href="{{ route('staff.games.list.no-video-url') }}">No video URL</a></li>
                                 <li><a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                 <li><a href="{{ route('admin.games-title-hash.list') }}">All title hashes</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('staff.games.tools.updateGameCalendarStats') }}">UpdateGameCalendarStats</a></li>
@@ -223,7 +223,6 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('owner.audit.index') }}">Audit</a></li>
-                                    <li><a href="{{ route('admin.games.list') }}">All games</a></li>
                                     <li><a href="{{ route('owner.user.list') }}">Users</a></li>
                                     <li><a href="{{ route('staff.stats.dashboard') }}">Stats</a></li>
                                 </ul>

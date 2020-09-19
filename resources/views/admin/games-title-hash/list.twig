@@ -2,13 +2,13 @@
 
 {% if GameId %}
     {% set crumbNav = [
-        {'url': route('admin.games.list'), 'text': 'Games'},
+        {'url': route('staff.games.dashboard'), 'text': 'Games'},
         {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Detail'},
         {'text': PageTitle}
     ] %}
 {% else %}
     {% set crumbNav = [
-        {'url': route('admin.games.list'), 'text': 'Games'},
+        {'url': route('staff.games.dashboard'), 'text': 'Games'},
         {'text': PageTitle}
     ] %}
 {% endif %}

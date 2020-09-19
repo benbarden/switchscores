@@ -171,6 +171,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Find a game
     Route::match(['get', 'post'], '/staff/games/find', 'Staff\Games\FindController@show')->name('staff.games.find');
 
+    // Search
+    Route::match(['get', 'post'], '/staff/games/search', 'Staff\Games\SearchController@show')->name('staff.games.search');
+
     // Games: Detail
     Route::get('/staff/games/detail/{gameId}', 'Staff\Games\GamesDetailController@show')->name('staff.games.detail');
     Route::get('/staff/games/detail/full-audit/{game}', 'Staff\Games\GamesDetailController@showFullAudit')->name('staff.games.detail.fullAudit');
@@ -434,9 +437,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
  * To be gradually moved into Staff routes
  */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
-
-    // Games: Core
-    Route::get('/admin/games/list/{report?}', 'Admin\GamesController@showList')->name('admin.games.list');
 
     // Games: Filter list
     Route::get('/admin/games/filter-list/with-tag/{linkTitle}', 'Admin\GamesFilterListController@gamesWithTag')->name('admin.games-filter.games-with-tag');
