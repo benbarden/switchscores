@@ -4,29 +4,9 @@
 
 {% block page_inner %}
 
-<div class="row">
-    <div class="col-md-3">
-        <label for="admin-nav-game-filter">Filters:</label>
-        <select id="admin-nav-game-filter" name="admin-nav-game-filter" class="form-control">
-            <option value="">All games</option>
-            <option value="action-list-games-for-release">Games for release</option>
-        </select>
-    </div>
+<div id="js-admin-notify" class="alert alert-warning" role="alert">
+    This page will be retired shortly.
 </div>
-
-<hr>
-
-{% if LastAction == 'add' and LastGame is not null %}
-    <div class="alert alert-warning" role="alert">
-        Successfully added <a href="{{ route('staff.games.detail', {'gameId': LastGame.id}) }}" target="_blank">{{ LastGame.title }}</a>.
-        <a href="{{ route('staff.games.edit', {'gameId': LastGame.id}) }}?filter={{ ActiveNav }}">Continue editing</a>.
-    </div>
-{% elseif LastAction == 'edit' and LastGame is not null %}
-    <div class="alert alert-warning" role="alert">
-        Successfully edited <a href="{{ route('staff.games.detail', {'gameId': LastGame.id}) }}" target="_blank">{{ LastGame.title }}</a>.
-        <a href="{{ route('staff.games.edit', {'gameId': LastGame.id}) }}?filter={{ ActiveNav }}">Continue editing</a>.
-    </div>
-{% endif %}
 
 <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
 <br>

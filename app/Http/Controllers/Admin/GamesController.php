@@ -33,22 +33,9 @@ class GamesController extends Controller
             }
         }
 
-        if ($report == null) {
-            $bindings['ActiveNav'] = 'all';
-            $gameList = $serviceGame->getAll();
-            $jsInitialSort = "[ 0, 'desc']";
-        } else {
-            $bindings['ActiveNav'] = $report;
-            switch ($report) {
-                // Action lists
-                case 'action-list-games-for-release':
-                    $gameList = $serviceGame->getActionListGamesForRelease();
-                    $jsInitialSort = "[ 3, 'asc'], [ 1, 'asc']";
-                    break;
-                default:
-                    abort(404);
-            }
-        }
+        $bindings['ActiveNav'] = 'all';
+        $gameList = $serviceGame->getAll();
+        $jsInitialSort = "[ 0, 'desc']";
 
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = $jsInitialSort;
