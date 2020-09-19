@@ -201,6 +201,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/by-category/{category}', 'Staff\Games\GamesListController@byCategory')->name('staff.games.list.by-category');
     Route::get('/staff/games/list/by-series/{gameSeries}', 'Staff\Games\GamesListController@bySeries')->name('staff.games.list.by-series');
 
+    // Games: Tools
+    Route::match(['get', 'post'], '/staff/games/tools/update-game-calendar-stats', 'Staff\Games\ToolsController@updateGameCalendarStats')->name('staff.games.tools.updateGameCalendarStats');
+
 });
 
 
@@ -457,11 +460,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');
     Route::get('/admin/game/publisher/{gameId}/add', 'Admin\GamePartnerController@addGamePublisher')->name('admin.game.publisher.add');
     Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
-
-    // Tools
-    Route::get('/admin/tools', 'Admin\ToolsController@landing')->name('admin.tools.landing');
-    Route::get('/admin/tools/tool/landing/modular/{commandName}', 'Admin\ToolsController@toolLandingModular')->name('admin.tools.toolLandingModular');
-    Route::get('/admin/tools/tool/process/modular/{commandName}', 'Admin\ToolsController@toolProcessModular')->name('admin.tools.toolProcessModular');
 
 });
 
