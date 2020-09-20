@@ -52,7 +52,6 @@
     $(document).ready(function() {
         var activeSiteId = '{{ ActiveSiteId }}';
         $('#admin-nav-site-filter').val(activeSiteId);
-        //$('#admin-nav-' + activeNav).addClass('btn-primary');
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 25,

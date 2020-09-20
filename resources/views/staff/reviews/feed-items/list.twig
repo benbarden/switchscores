@@ -54,6 +54,13 @@
                 </td>
                 <td class="text-left" style="max-width: 300px;">
                     <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
+                    {% if item.game.id is not null %}
+                        <div class="pull-right">
+                            <small>
+                                {% include 'modules/game/table/staff-game-edit.twig' with {'item': item.game, 'LinkDesc': 'edit game details'} %}
+                            </small>
+                        </div>
+                    {% endif %}
                     <br>
                     <small>
                         {{ item.item_date|date('Y-m-d') }} |

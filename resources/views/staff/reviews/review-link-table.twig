@@ -19,6 +19,11 @@
             </td>
             <td class="text-left">
                 {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                <div class="pull-right">
+                    <small>
+                        {% include 'modules/game/table/staff-game-edit.twig' with {'item': item.game, 'LinkDesc': 'edit game'} %}
+                    </small>
+                </div>
             </td>
             <td class="text-left">
                 {{ item.site.name }}
