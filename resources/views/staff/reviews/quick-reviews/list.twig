@@ -42,10 +42,7 @@
                     {{ item.id }}
                 </td>
                 <td class="text-left">
-                    <a href="{{ route('staff.games.detail', {'gameId': item.game.id}) }}">{{ item.game.title }}</a>
-                    <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank" title="Open game page in a new tab">
-                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                    </a>
+                    {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
                     <br>
                     <small>
                         User: {{ item.user.email }} | ID: {{ item.user.id }}

@@ -23,9 +23,7 @@
                 {{ item.title }}
             </td>
             <td>
-                <a href="{{ LinkHelper.gameShow(item.game) }}">
-                    {{ item.game.title }}
-                </a>
+                {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
             </td>
             <td class="text-center">
                 {{ item.created_at }}
