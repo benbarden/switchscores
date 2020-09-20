@@ -82,6 +82,15 @@ class ImportParseLink extends Command
             $logger->info('Importing raw data to db...');
             $importer->importToDb($sourceId);
 
+            $logger->info('Crawling page 3...');
+            $importer->crawlPage3();
+
+            $logger->info('Extracting row data...');
+            $importer->extractRows();
+
+            $logger->info('Importing raw data to db...');
+            $importer->importToDb($sourceId);
+
         }
 
         try {

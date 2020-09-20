@@ -10,8 +10,9 @@ use App\Services\DataSources\Wikipedia\DateHandler;
 
 class Importer
 {
-    const WIKI_PAGE_LIST = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games';
-    const WIKI_PAGE_LIST_2 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(M-Z)';
+    const WIKI_PAGE_LIST = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(A%E2%80%93F)';
+    const WIKI_PAGE_LIST_2 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(G%E2%80%93P)';
+    const WIKI_PAGE_LIST_3 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(Q%E2%80%93Z)';
 
     /**
      * @var GoutteClient
@@ -78,6 +79,11 @@ class Importer
     public function crawlPage2()
     {
         $this->domCrawler = $this->goutteClient->request('GET', self::WIKI_PAGE_LIST_2);
+    }
+
+    public function crawlPage3()
+    {
+        $this->domCrawler = $this->goutteClient->request('GET', self::WIKI_PAGE_LIST_3);
     }
 
     public function extractRows()
