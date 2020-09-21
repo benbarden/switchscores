@@ -192,7 +192,7 @@ class GamesController extends Controller
             $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
                 'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
 
-        } elseif ($gameData->is_released == 1) {
+        } elseif ($gameData->eu_is_released == 1) {
 
             // If the game has no reviews but isn't released, this part can be ignored
             switch ($gameData->review_count) {
