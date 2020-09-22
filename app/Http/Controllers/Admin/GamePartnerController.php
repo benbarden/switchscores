@@ -351,23 +351,58 @@ class GamePartnerController extends Controller
             return response()->json(['error' => 'Publisher field not set'], 400);
         }
 
-        // Get partner
-        $partner = $servicePartner->getByName($legacyPub);
-        if (!$partner) {
-            // Well, let's be helpful and create it!
-            $partner = GamesCompanyFactory::createActiveNameOnly($legacyPub);
-            $partner->save();
-            //return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
-        }
-        $partnerId = $partner->id;
+        // Clean up if needed
+        if (strpos($legacyPub, ",") !== false) {
 
-        // Check partner association doesn't exist
-        if ($serviceGamePublisher->gameHasPublisher($gameId, $partnerId)) {
-            return response()->json(['error' => 'Partner already assigned to game.'], 400);
+            $legacyPubData = explode(",", $legacyPub);
+
+            foreach ($legacyPubData as $pubItem) {
+
+                // Tidying up
+                $pubItem = str_replace("JP: ", "", $pubItem);
+                $pubItem = str_replace("NA: ", "", $pubItem);
+                $pubItem = str_replace("PAL: ", "", $pubItem);
+                $pubItem = str_replace("WW: ", "", $pubItem);
+                $pubItem = trim($pubItem);
+
+                // Get partner
+                $partner = $servicePartner->getByName($pubItem);
+                if (!$partner) {
+                    // Well, let's be helpful and create it!
+                    $partner = GamesCompanyFactory::createActiveNameOnly($pubItem);
+                    $partner->save();
+                }
+                $partnerId = $partner->id;
+
+                // Check partner association doesn't exist
+                if (!$serviceGamePublisher->gameHasPublisher($gameId, $partnerId)) {
+                    $serviceGamePublisher->createGamePublisher($gameId, $partnerId);
+                }
+
+            }
+
+        } else {
+
+            // Get partner
+            $partner = $servicePartner->getByName($legacyPub);
+            if (!$partner) {
+                // Well, let's be helpful and create it!
+                $partner = GamesCompanyFactory::createActiveNameOnly($legacyPub);
+                $partner->save();
+                //return response()->json(['error' => 'Partner does not exist. Create it first.'], 400);
+            }
+            $partnerId = $partner->id;
+
+            // Check partner association doesn't exist
+            if ($serviceGamePublisher->gameHasPublisher($gameId, $partnerId)) {
+                return response()->json(['error' => 'Partner already assigned to game.'], 400);
+            }
+
+            // OK to proceed
+            $serviceGamePublisher->createGamePublisher($gameId, $partnerId);
+
         }
 
-        // OK to proceed
-        $serviceGamePublisher->createGamePublisher($gameId, $partnerId);
         $game->publisher = null;
         $game->save();
 
