@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Game;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
+use App\Services\DataSources\Queries\Differences;
 
 use App\Traits\SwitchServices;
 
@@ -49,6 +50,23 @@ class GamesDetailController extends Controller
         $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
         $bindings['GameTitleHashes'] = $this->getServiceGameTitleHash()->getByGameId($gameId);
+
+        // Differences
+        $dsDifferences = new Differences();
+        $dsDifferences->setCountOnly(true);
+        $releaseDateEUNintendoCoUkDifferenceCount = $dsDifferences->getReleaseDateEUNintendoCoUk();
+        $priceNintendoCoUkDifferenceCount = $dsDifferences->getPriceNintendoCoUk();
+        $playersEUNintendoCoUkDifferenceCount = $dsDifferences->getPlayersNintendoCoUk();
+        $releaseDateEUWikipediaDifferenceCount = $dsDifferences->getReleaseDateEUWikipedia();
+        $releaseDateUSWikipediaDifferenceCount = $dsDifferences->getReleaseDateUSWikipedia();
+        $releaseDateJPWikipediaDifferenceCount = $dsDifferences->getReleaseDateJPWikipedia();
+
+        $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
+        $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
+        $bindings['PlayersNintendoCoUkDifferenceCount'] = $playersEUNintendoCoUkDifferenceCount[0]->count;
+        $bindings['ReleaseDateEUWikipediaDifferenceCount'] = $releaseDateEUWikipediaDifferenceCount[0]->count;
+        $bindings['ReleaseDateUSWikipediaDifferenceCount'] = $releaseDateUSWikipediaDifferenceCount[0]->count;
+        $bindings['ReleaseDateJPWikipediaDifferenceCount'] = $releaseDateJPWikipediaDifferenceCount[0]->count;
 
         // Nintendo.co.uk API data
         $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);

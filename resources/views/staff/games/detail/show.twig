@@ -16,6 +16,44 @@
 
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
+{% if ReleaseDateEUNintendoCoUkDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        EU release date is different to the Nintendo.co.uk API.
+        <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+{% if PriceNintendoCoUkDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        Price is different to the Nintendo.co.uk API.
+        <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+{% if PlayersNintendoCoUkDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        No of players is different to the Nintendo.co.uk API.
+        <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+
+{% if ReleaseDateEUWikipediaDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        EU release date is different to Wikipedia.
+        <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+{% if ReleaseDateUSWikipediaDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        US release date is different to Wikipedia.
+        <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+{% if ReleaseDateJPWikipediaDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        JP release date is different to Wikipedia.
+        <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
+
 <div class="row">
 
     <div class="col-md-4">

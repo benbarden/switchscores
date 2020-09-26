@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             {% for item in DifferenceList %}
-                <tr>
+                <tr id="row-difference-game-{{ item.id }}">
                     <td class="text-right">
                         {{ item.id }}
                     </td>
@@ -64,6 +64,7 @@
 
     var dataSourceId = '{{ DataSourceId }}';
     var sourceField = '{{ SourceField }}';
+    var highlightGameId = '{{ HighlightGameId }}';
 
     $(document).ready(function() {
         $('.data-sortable').DataTable({
@@ -77,6 +78,9 @@
                 { "orderable": false }
             ]
         });
+        if (highlightGameId != '') {
+            $('#row-difference-game-' + highlightGameId).addClass('active');
+        }
     });
 
     $('.lnk-apply-change').on('click', function() {

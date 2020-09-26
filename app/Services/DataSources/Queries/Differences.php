@@ -10,49 +10,56 @@ use Illuminate\Support\Facades\DB;
 
 class Differences
 {
-    public function getReleaseDateEUNintendoCoUk($countOnly = false)
+    private $countOnly = false;
+
+    public function setCountOnly($countOnly = true)
+    {
+        $this->countOnly = $countOnly;
+    }
+
+    public function getReleaseDateEUNintendoCoUk($gameId = null)
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         $importRulesTable = 'game_import_rules_eshop';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $countOnly);
+        return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $gameId);
     }
 
-    public function getPriceNintendoCoUk($countOnly = false)
+    public function getPriceNintendoCoUk($gameId = null)
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         $importRulesTable = 'game_import_rules_eshop';
-        return $this->getPrice($sourceId, $importRulesTable, $countOnly);
+        return $this->getPrice($sourceId, $importRulesTable, $gameId);
     }
 
-    public function getPlayersNintendoCoUk($countOnly = false)
+    public function getPlayersNintendoCoUk($gameId = null)
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         $importRulesTable = 'game_import_rules_eshop';
-        return $this->getPlayers($sourceId, $importRulesTable, $countOnly);
+        return $this->getPlayers($sourceId, $importRulesTable, $gameId);
     }
 
-    public function getReleaseDateEUWikipedia($countOnly = false)
+    public function getReleaseDateEUWikipedia($gameId = null)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $countOnly);
+        return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $gameId);
     }
 
-    public function getReleaseDateUSWikipedia($countOnly = false)
+    public function getReleaseDateUSWikipedia($gameId = null)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'us', $countOnly);
+        return $this->getReleaseDate($sourceId, $importRulesTable, 'us', $gameId);
     }
 
-    public function getReleaseDateJPWikipedia($countOnly = false)
+    public function getReleaseDateJPWikipedia($gameId = null)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'jp', $countOnly);
+        return $this->getReleaseDate($sourceId, $importRulesTable, 'jp', $gameId);
     }
 
-    public function getReleaseDate($sourceId, $importRulesTable, $region, $countOnly = false)
+    public function getReleaseDate($sourceId, $importRulesTable, $region, $gameId = null)
     {
         if ($region == 'eu') {
 
@@ -78,10 +85,17 @@ class Differences
 
         }
 
-        if ($countOnly) {
+        if ($this->countOnly) {
             $selectSql = 'count(*) AS count';
         } else {
             $selectSql = 'g.id, g.title, g.link_title, '.$gameDateField.', '.$dspDateField;
+        }
+        if ($gameId) {
+            $gameSql = 'AND dsp.game_id = ?';
+            $params = [$sourceId, $gameId];
+        } else {
+            $gameSql = '';
+            $params = [$sourceId];
         }
 
         return DB::select('
@@ -92,19 +106,27 @@ class Differences
             WHERE dsp.source_id = ?
             AND (gir.'.$dateIgnoreField.' IS NULL OR gir.'.$dateIgnoreField.' = 0)
             AND '.$gameDateField.' != '.$dspDateField.'
-        ', [$sourceId]);
+            '.$gameSql.'
+        ', $params);
     }
 
-    public function getPrice($sourceId, $importRulesTable, $countOnly = false)
+    public function getPrice($sourceId, $importRulesTable, $gameId = null)
     {
         $gameField = 'g.price_eshop';
         $dspField = 'dsp.price_standard';
         $ignoreField = 'ignore_price';
 
-        if ($countOnly) {
+        if ($this->countOnly) {
             $selectSql = 'count(*) AS count';
         } else {
             $selectSql = 'g.id, g.title, g.link_title, '.$gameField.', '.$dspField;
+        }
+        if ($gameId) {
+            $gameSql = 'AND dsp.game_id = ?';
+            $params = [$sourceId, $gameId];
+        } else {
+            $gameSql = '';
+            $params = [$sourceId];
         }
 
         return DB::select('
@@ -115,19 +137,27 @@ class Differences
             WHERE dsp.source_id = ?
             AND (gir.'.$ignoreField.' IS NULL OR gir.'.$ignoreField.' = 0)
             AND '.$gameField.' != '.$dspField.'
-        ', [$sourceId]);
+            '.$gameSql.'
+        ', $params);
     }
 
-    public function getPlayers($sourceId, $importRulesTable, $countOnly = false)
+    public function getPlayers($sourceId, $importRulesTable, $gameId = null)
     {
         $gameField = 'g.players';
         $dspField = 'dsp.players';
         $ignoreField = 'ignore_players';
 
-        if ($countOnly) {
+        if ($this->countOnly) {
             $selectSql = 'count(*) AS count';
         } else {
             $selectSql = 'g.id, g.title, g.link_title, '.$gameField.' AS game_players, '.$dspField.' AS dsp_players';
+        }
+        if ($gameId) {
+            $gameSql = 'AND dsp.game_id = ?';
+            $params = [$sourceId, $gameId];
+        } else {
+            $gameSql = '';
+            $params = [$sourceId];
         }
 
         return DB::select('
@@ -138,6 +168,7 @@ class Differences
             WHERE dsp.source_id = ?
             AND (gir.'.$ignoreField.' IS NULL OR gir.'.$ignoreField.' = 0)
             AND '.$gameField.' != '.$dspField.'
-        ', [$sourceId]);
+            '.$gameSql.'
+        ', $params);
     }
 }

@@ -205,6 +205,9 @@ class DifferencesController extends Controller
         $bindings['SourceField'] = 'release_date_eu';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
 
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
 
@@ -223,6 +226,9 @@ class DifferencesController extends Controller
         $bindings['GameField'] = 'price_eshop';
         $bindings['SourceField'] = 'price_standard';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
 
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
@@ -243,6 +249,9 @@ class DifferencesController extends Controller
         $bindings['SourceField'] = 'dsp_players';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
 
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
 
@@ -261,6 +270,9 @@ class DifferencesController extends Controller
         $bindings['GameField'] = 'eu_release_date';
         $bindings['SourceField'] = 'release_date_eu';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
 
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
@@ -281,6 +293,9 @@ class DifferencesController extends Controller
         $bindings['SourceField'] = 'release_date_us';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
 
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
 
@@ -299,6 +314,9 @@ class DifferencesController extends Controller
         $bindings['GameField'] = 'jp_release_date';
         $bindings['SourceField'] = 'release_date_jp';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
 
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
