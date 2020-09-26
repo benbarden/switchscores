@@ -17,12 +17,6 @@ class GamesDetailController extends Controller
     public function show($gameId)
     {
         $serviceGame = $this->getServiceGame();
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGameTag = $this->getServiceGameTag();
-        $serviceQuickReview = $this->getServiceQuickReview();
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         $game = $serviceGame->find($gameId);
         if (!$game) abort(404);
@@ -47,22 +41,14 @@ class GamesDetailController extends Controller
         $selectedTabId = \Request::get('tabid');
         $bindings['SelectedTabId'] = $selectedTabId;
 
-        // Get all the data
-        $gameReviews = $serviceReviewLink->getByGame($gameId);
-        $gameQuickReviews = $serviceQuickReview->getActiveByGame($gameId);
-        $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
-        $gamePublishers = $serviceGamePublisher->getByGame($gameId);
-        $gameTags = $serviceGameTag->getByGame($gameId);
-        $gameTitleHashes = $serviceGameTitleHash->getByGameId($gameId);
-
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
-        $bindings['GameReviews'] = $gameReviews;
-        $bindings['GameQuickReviewList'] = $gameQuickReviews;
-        $bindings['GameDevelopers'] = $gameDevelopers;
-        $bindings['GamePublishers'] = $gamePublishers;
-        $bindings['GameTags'] = $gameTags;
-        $bindings['GameTitleHashes'] = $gameTitleHashes;
+        $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
+        $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
+        $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
+        $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+        $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+        $bindings['GameTitleHashes'] = $this->getServiceGameTitleHash()->getByGameId($gameId);
 
         // Nintendo.co.uk API data
         $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
