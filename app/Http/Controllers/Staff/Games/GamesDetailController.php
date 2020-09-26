@@ -54,12 +54,12 @@ class GamesDetailController extends Controller
         // Differences
         $dsDifferences = new Differences();
         $dsDifferences->setCountOnly(true);
-        $releaseDateEUNintendoCoUkDifferenceCount = $dsDifferences->getReleaseDateEUNintendoCoUk();
-        $priceNintendoCoUkDifferenceCount = $dsDifferences->getPriceNintendoCoUk();
-        $playersEUNintendoCoUkDifferenceCount = $dsDifferences->getPlayersNintendoCoUk();
-        $releaseDateEUWikipediaDifferenceCount = $dsDifferences->getReleaseDateEUWikipedia();
-        $releaseDateUSWikipediaDifferenceCount = $dsDifferences->getReleaseDateUSWikipedia();
-        $releaseDateJPWikipediaDifferenceCount = $dsDifferences->getReleaseDateJPWikipedia();
+        $releaseDateEUNintendoCoUkDifferenceCount = $dsDifferences->getReleaseDateEUNintendoCoUk($gameId);
+        $priceNintendoCoUkDifferenceCount = $dsDifferences->getPriceNintendoCoUk($gameId);
+        $playersEUNintendoCoUkDifferenceCount = $dsDifferences->getPlayersNintendoCoUk($gameId);
+        $releaseDateEUWikipediaDifferenceCount = $dsDifferences->getReleaseDateEUWikipedia($gameId);
+        $releaseDateUSWikipediaDifferenceCount = $dsDifferences->getReleaseDateUSWikipedia($gameId);
+        $releaseDateJPWikipediaDifferenceCount = $dsDifferences->getReleaseDateJPWikipedia($gameId);
 
         $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
         $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
