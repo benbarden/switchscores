@@ -33,7 +33,7 @@ class GamesListController extends Controller
 
     public function gamesToRelease()
     {
-        $bindings = $this->getListBindings('Games to release', "[ 5, 'asc'], [ 0, 'asc']");
+        $bindings = $this->getListBindings('Games to release', "[ 5, 'asc'], [ 1, 'asc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getActionListGamesForRelease();
 
