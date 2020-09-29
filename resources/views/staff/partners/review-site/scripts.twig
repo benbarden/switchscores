@@ -11,7 +11,7 @@
         formVals['website_url'] = "{{ ReviewSiteData.website_url }}";
         formVals['twitter_id'] = "{{ ReviewSiteData.twitter_id }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
-        formVals['feed_url'] = "{{ ReviewSiteData.feed_url }}";
+        formVals['feed_url'] = "{{ ReviewSiteData.feed_url|e('js') }}";
         formVals['feed_url_prefix'] = "{{ ReviewSiteData.feed_url_prefix }}";
         formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern|e('js') }}";
         formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
@@ -27,7 +27,7 @@
         formVals['website_url'] = "{{ old('website_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
-        formVals['feed_url'] = "{{ old('feed_url') }}";
+        formVals['feed_url'] = "{{ old('feed_url')|e('js') }}";
         formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
         formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
         formVals['title_match_index'] = "{{ old('title_match_index') }}";
