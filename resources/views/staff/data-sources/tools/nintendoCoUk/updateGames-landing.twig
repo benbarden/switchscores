@@ -11,7 +11,7 @@
     This tool updates games with data from the Nintendo.co.uk API.
 </p>
 
-<form class="form-horizontal" role="form" method="post" action="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">
     {{ csrf_field() }}
     <input type="submit" value="Start process" class="btn btn-primary">
 </form>
