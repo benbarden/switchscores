@@ -74,25 +74,29 @@ class Images
     public function downloadSquare()
     {
         $remoteFile = $this->dsParsedItem->image_square;
-        $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
-        $destFilename = $this->generateDestFilename($remoteFile, 'sq-');
-        if (!file_exists($destPath.$destFilename)) {
-            $this->downloadFile($remoteFile, $destPath, $destFilename);
+        if ($remoteFile) {
+            $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
+            $destFilename = $this->generateDestFilename($remoteFile, 'sq-');
+            if (!file_exists($destPath . $destFilename)) {
+                $this->downloadFile($remoteFile, $destPath, $destFilename);
+            }
+            $this->squareFilename = $destFilename;
+            $this->squareDownloaded = true;
         }
-        $this->squareFilename = $destFilename;
-        $this->squareDownloaded = true;
     }
 
     public function downloadHeader()
     {
-        $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
         $remoteFile = $this->dsParsedItem->image_header;
-        $destFilename = $this->generateDestFilename($remoteFile, 'hdr-');
-        if (!file_exists($destPath.$destFilename)) {
-            $this->downloadFile($remoteFile, $destPath, $destFilename);
+        if ($remoteFile) {
+            $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
+            $destFilename = $this->generateDestFilename($remoteFile, 'hdr-');
+            if (!file_exists($destPath.$destFilename)) {
+                $this->downloadFile($remoteFile, $destPath, $destFilename);
+            }
+            $this->headerFilename = $destFilename;
+            $this->headerDownloaded = true;
         }
-        $this->headerFilename = $destFilename;
-        $this->headerDownloaded = true;
     }
 
     public function generateDestFilename($remoteFile, $prefix = '')
@@ -108,6 +112,10 @@ class Images
 
     public function downloadFile($remoteUrl, $destPath, $destFilename)
     {
+        if (!$remoteUrl) {
+            throw new \Exception('Remote URL cannot be blank');
+        }
+
         $storagePath = storage_path().self::PATH_TMP;
 
         // Save the file
