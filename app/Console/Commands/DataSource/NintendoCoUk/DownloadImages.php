@@ -18,7 +18,7 @@ class DownloadImages extends Command
      *
      * @var string
      */
-    protected $signature = 'DSNintendoCoUkDownloadImages';
+    protected $signature = 'DSNintendoCoUkDownloadImages {gameId?}';
 
     /**
      * The console command description.
@@ -44,29 +44,63 @@ class DownloadImages extends Command
      */
     public function handle()
     {
+        $argGameId = $this->argument('gameId');
+
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $logger->info('Loading data...');
 
-        $dsParsedList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithGameId();
+        if ($argGameId) {
+            $importGameId = $argGameId;
+        } else {
+            $importGameId = null;
+        }
 
-        $logger->info('Found '.count($dsParsedList).' item(s); processing');
+        if ($importGameId) {
 
-        foreach ($dsParsedList as $dsItem) {
+            $logger->info('Importing for game id: '.$importGameId);
 
-            $itemTitle = $dsItem->title;
-            $gameId = $dsItem->game_id;
-            $game = $this->getServiceGame()->find($gameId);
+            $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($importGameId);
 
-            if (!$game) {
-                $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');
-                continue;
+            if ($dsItem) {
+                $logger->info('Processing item...');
+                $itemTitle = $dsItem->title;
+                $gameId = $dsItem->game_id;
+                $game = $this->getServiceGame()->find($gameId);
+
+                if ($game) {
+                    $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
+                    DownloadImageFactory::downloadImages($game, $dsItem);
+                } else {
+                    $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');
+                }
+            } else {
+                $logger->info('Cannot find dsItem for game');
             }
 
-            $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
-            DownloadImageFactory::downloadImages($game, $dsItem);
+        } else {
+
+            $dsParsedList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithGameId();
+
+            $logger->info('Found '.count($dsParsedList).' item(s); processing');
+
+            foreach ($dsParsedList as $dsItem) {
+
+                $itemTitle = $dsItem->title;
+                $gameId = $dsItem->game_id;
+                $game = $this->getServiceGame()->find($gameId);
+
+                if (!$game) {
+                    $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');
+                    continue;
+                }
+
+                $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
+                DownloadImageFactory::downloadImages($game, $dsItem);
+
+            }
 
         }
 
