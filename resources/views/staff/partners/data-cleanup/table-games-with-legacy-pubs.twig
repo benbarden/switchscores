@@ -5,8 +5,9 @@
         <tr>
             <th class="text-center">#</th>
             <th class="text-left">Title</th>
-            <th class="text-left">Publisher (old)</th>
-            <th class="text-left">Publisher (new)</th>
+            <th class="text-left">Game publishers</th>
+            <th class="text-left">N.co.uk</th>
+            <th class="text-left">Wikipedia</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -17,10 +18,7 @@
                     {{ item.id }}
                 </td>
                 <td class="text-left">
-                    {{ item.title }}
-                </td>
-                <td class="text-left">
-                    {{ item.publisher }}
+                    {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
                 </td>
                 <td class="text-left">
                     {{ item.gamePublishers.length }}
@@ -31,6 +29,12 @@
                     {% else %}
                         -
                     {% endif %}
+                </td>
+                <td class="text-left">
+                    {{ item.nintendo_co_uk_publishers }}
+                </td>
+                <td class="text-left">
+                    {{ item.wikipedia_publishers }}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit game</a> :
@@ -50,6 +54,7 @@
             "order": [ {{ jsInitialSort|raw}} ],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,

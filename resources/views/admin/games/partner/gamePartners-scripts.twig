@@ -6,10 +6,6 @@
     $('#publisher-list').select2();
 
     var formVals = [];
-    formVals['developer'] = "{{ GameData.developer|e('js') }}";
-    formVals['publisher'] = "{{ GameData.publisher|e('js') }}";
-    $('#developer').val(formVals['developer']);
-    $('#publisher').val(formVals['publisher']);
 
     $('#quick-create-games-company-name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('quick-create-games-company-name', 'quick-create-games-company-link-title');
@@ -165,70 +161,6 @@
         .fail(function(data) {
             $('#js-quick-create-notify').text('An error occurred: ' + data.responseJSON.error);
             $('#js-quick-create-notify').show();
-        });
-
-    });
-
-    // Legacy
-    $('#btn-save-game-details').on('click', function() {
-
-        gameDeveloper = $('#developer').val();
-        gamePublisher = $('#publisher').val();
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.partner.saveDevPub', {'gameId': GameId}) }}', {developer: gameDeveloper, publisher: gamePublisher}, function(data) {
-            $('#js-legacy-notify').text('Saved!');
-            $('#js-legacy-notify').show();
-            setTimeout("$('#js-legacy-notify').fadeOut();", 500);
-        })
-        .fail(function(data) {
-            $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-legacy-notify').show();
-        });
-
-    });
-
-    $('#btn-legacy-fix-developer').on('click', function() {
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.partner.legacyFixDev', {'gameId': GameId}) }}', {}, function (data) {
-            $('#js-legacy-notify').text('Saved!');
-            $('#js-legacy-notify').show();
-            setTimeout("$('#js-legacy-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function (data) {
-            $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-legacy-notify').show();
-        });
-
-    });
-
-    $('#btn-legacy-fix-publisher').on('click', function() {
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('admin.game.partner.legacyFixPub', {'gameId': GameId}) }}', {}, function (data) {
-            $('#js-legacy-notify').text('Saved!');
-            $('#js-legacy-notify').show();
-            setTimeout("$('#js-legacy-notify').fadeOut(); window.location.reload(true);", 500);
-        })
-        .fail(function (data) {
-            $('#js-legacy-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-legacy-notify').show();
         });
 
     });

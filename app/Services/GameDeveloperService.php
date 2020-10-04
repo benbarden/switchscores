@@ -120,9 +120,14 @@ class GameDeveloperService
         $games = DB::table('games')
             ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
             ->leftJoin('partners', 'game_developers.developer_id', '=', 'partners.id')
-            ->select('games.*', 'partners.name')
+            ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
+                $join->on('games.id', '=', 'dsp_wikipedia.game_id')
+                    ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
+            })
+            ->select('games.*',
+                'dsp_wikipedia.developers AS wikipedia_developers',
+                'partners.name')
             ->whereNull('partners.id')
-            ->whereNull('games.developer')
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -136,35 +141,9 @@ class GameDeveloperService
             from games g
             left join game_developers gd on g.id = gd.game_id
             left join partners d on d.id = gd.developer_id
-            where d.id is null and g.developer is null;
+            where d.id is null
         ');
 
         return $games[0]->count;
-    }
-
-    public function countGamesWithOldDevFieldSet()
-    {
-        $games = DB::select('
-            select count(*) AS count
-            from games g
-            where g.developer is not null
-        ');
-
-        return $games[0]->count;
-    }
-
-    public function getDeveloperFieldNotNullWithSourceData()
-    {
-        $games = DB::table('games')
-            ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
-                $join->on('games.id', '=', 'dsp_wikipedia.game_id')
-                    ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
-            })
-            ->select('games.*',
-                'dsp_wikipedia.developers AS wikipedia_developers')
-            ->whereNotNull('games.developer')
-            ->orderBy('games.id', 'desc');
-
-        return $games->get();
     }
 }

@@ -22,6 +22,9 @@ class DashboardController extends Controller
         $bindings['PageTitle'] = $pageTitle;
 
         // Action lists
+        $bindings['DeveloperMissingCount'] = $this->getServiceGameDeveloper()->countGamesWithNoDeveloper();
+        $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
+
         $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $servicePartner->countGamesCompaniesWithoutWebsiteUrls();
         $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $servicePartner->countGamesCompaniesWithoutTwitterIds();
 

@@ -14,6 +14,22 @@
             <tbody>
             <tr>
                 <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}">Games with missing developer</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}" class="h4">{{ DeveloperMissingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}">
                         Games companies without Twitter IDs
                     </a>
@@ -126,14 +142,6 @@
                     <a href="{{ route('staff.partners.tools.partnerUpdateFields') }}">PartnerUpdateFields</a>
                     <br>
                     <small>Updates the review count and last review date fields for review sites</small>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.partners.tools.partnerMigrateGameDevsPubs') }}">PartnerMigrateGameDevsPubs</a>
-                    <br>
-                    <small>Migrates legacy developer/publisher data into the new partner/games company format.
-                        Only migrates records with exact matches</small>
                 </td>
             </tr>
             </tbody>

@@ -91,18 +91,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setDeveloper($developer): GameBuilder
-    {
-        $this->game->developer = $developer;
-        return $this;
-    }
-
-    public function setPublisher($publisher): GameBuilder
-    {
-        $this->game->publisher = $publisher;
-        return $this;
-    }
-
     public function setReviewCount($reviewCount): GameBuilder
     {
         $this->game->review_count = $reviewCount;

@@ -5,8 +5,8 @@
         <tr>
             <th class="text-center">#</th>
             <th class="text-left">Title</th>
-            <th class="text-left">Developer (old)</th>
-            <th class="text-left">Developer (new)</th>
+            <th class="text-left">Game developers</th>
+            <th class="text-left">Wikipedia</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -17,10 +17,7 @@
                     {{ item.id }}
                 </td>
                 <td class="text-left">
-                    {{ item.title }}
-                </td>
-                <td class="text-left">
-                    {{ item.developer }}
+                    {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
                 </td>
                 <td class="text-left">
                     {{ item.gameDevelopers.length }}
@@ -31,6 +28,9 @@
                     {% else %}
                         -
                     {% endif %}
+                </td>
+                <td class="text-left">
+                    {{ item.wikipedia_developers }}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit game</a> :

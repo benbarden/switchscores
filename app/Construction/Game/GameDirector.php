@@ -64,12 +64,6 @@ class GameDirector
         if (array_key_exists('eu_released_on', $params)) {
             $this->builder->setEuReleasedOn($params['eu_released_on']);
         }
-        if (array_key_exists('developer', $params)) {
-            $this->builder->setDeveloper($params['developer']);
-        }
-        if (array_key_exists('publisher', $params)) {
-            $this->builder->setPublisher($params['publisher']);
-        }
         if (array_key_exists('amazon_uk_link', $params)) {
             $this->builder->setAmazonUkLink($params['amazon_uk_link']);
         }

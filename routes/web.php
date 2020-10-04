@@ -332,19 +332,11 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::match(['get', 'post'], '/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 
     // Partners: Data cleanup
-    Route::get('/staff/partners/data-cleanup/legacy-partner-multiple', 'Staff\Partners\DataCleanupController@legacyPartnerMultiple')->name('staff.partners.data-cleanup.legacy-partner-multiple');
-    Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompany')->name('staff.partners.data-cleanup.legacy-developer-no-games-company');
-    Route::get('/staff/partners/data-cleanup/legacy-developer-no-games-company/{developer}/game-list', 'Staff\Partners\DataCleanupController@legacyDeveloperNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-developer-no-games-company.game-list');
-    Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompany')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company');
-    Route::get('/staff/partners/data-cleanup/legacy-publisher-no-games-company/{publisher}/game-list', 'Staff\Partners\DataCleanupController@legacyPublisherNoGamesCompanyGameList')->name('staff.partners.data-cleanup.legacy-publisher-no-games-company.game-list');
-    Route::get('/staff/partners/data-cleanup/games-with-old-dev-field-set', 'Staff\Partners\DataCleanupController@gamesWithOldDevFieldSet')->name('staff.partners.data-cleanup.games-with-old-dev-field-set');
-    Route::get('/staff/partners/data-cleanup/games-with-old-pub-field-set', 'Staff\Partners\DataCleanupController@gamesWithOldPubFieldSet')->name('staff.partners.data-cleanup.games-with-old-pub-field-set');
     Route::get('/staff/partners/data-cleanup/games-with-missing-developer', 'Staff\Partners\DataCleanupController@gamesWithMissingDeveloper')->name('staff.partners.data-cleanup.games-with-missing-developer');
     Route::get('/staff/partners/data-cleanup/games-with-missing-publisher', 'Staff\Partners\DataCleanupController@gamesWithMissingPublisher')->name('staff.partners.data-cleanup.games-with-missing-publisher');
 
     // Partners: Tools
     Route::match(['get', 'post'], '/staff/partners/tools/partner-update-fields', 'Staff\Partners\ToolsController@partnerUpdateFields')->name('staff.partners.tools.partnerUpdateFields');
-    Route::match(['get', 'post'], '/staff/partners/tools/partner-migrate-game-devs-pubs', 'Staff\Partners\ToolsController@partnerMigrateGameDevsPubs')->name('staff.partners.tools.partnerMigrateGameDevsPubs');
 
 });
 
@@ -405,8 +397,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/staff/data-quality/category/games-with-categories/{year}/{month}', 'Staff\DataQuality\CategoryController@gamesWithCategories')->name('staff.data-quality.games-with-categories');
     Route::get('/staff/data-quality/category/games-without-categories/{year}/{month}', 'Staff\DataQuality\CategoryController@gamesWithoutCategories')->name('staff.data-quality.games-without-categories');
 
-    Route::get('/staff/data-quality/partners/dashboard', 'Staff\DataQuality\PartnerController@dashboard')->name('staff.data-quality.partners.dashboard');
-
 });
 
 
@@ -453,9 +443,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
     // Games partner links
     Route::get('/admin/game/partner/{gameId}/list', 'Admin\GamePartnerController@showGamePartners')->name('admin.game.partner.list');
-    Route::get('/admin/game/partner/{gameId}/save-dev-pub', 'Admin\GamePartnerController@saveDevPub')->name('admin.game.partner.saveDevPub');
-    Route::get('/admin/game/partner/{gameId}/legacy-fix-dev', 'Admin\GamePartnerController@legacyFixDev')->name('admin.game.partner.legacyFixDev');
-    Route::get('/admin/game/partner/{gameId}/legacy-fix-pub', 'Admin\GamePartnerController@legacyFixPub')->name('admin.game.partner.legacyFixPub');
     Route::get('/admin/game/partner/create-new-company', 'Admin\GamePartnerController@createNewCompany')->name('admin.game.partner.createNewCompany');
     Route::get('/admin/game/developer/{gameId}/add', 'Admin\GamePartnerController@addGameDeveloper')->name('admin.game.developer.add');
     Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');

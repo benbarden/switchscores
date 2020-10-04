@@ -292,18 +292,6 @@ class GameService
         return Game::orderBy('title', 'asc')->count();
     }
 
-    // Used for admin only
-    public function getByDeveloper($developer)
-    {
-        return Game::where('developer', $developer)->orderBy('title', 'asc')->get();
-    }
-
-    // Used for admin only
-    public function getByPublisher($publisher)
-    {
-        return Game::where('publisher', $publisher)->orderBy('title', 'asc')->get();
-    }
-
     public function getByCategory(Category $category)
     {
         return Game::where('category_id', $category->id)->orderBy('title', 'asc')->get();
@@ -312,60 +300,6 @@ class GameService
     public function getBySeries(GameSeries $gameSeries)
     {
         return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
-    }
-
-    // *** STATS *** //
-
-    public function getOldDevelopersMultiple()
-    {
-        $games = DB::select("
-            select id, title, developer
-            from games
-            where developer like '%,%';
-        ");
-
-        return $games;
-    }
-
-    public function getOldPublishersMultiple()
-    {
-        $games = DB::select("
-            select id, title, publisher
-            from games
-            where publisher like '%,%';
-        ");
-
-        return $games;
-    }
-
-    public function getOldDevelopersByCount()
-    {
-        $games = DB::select("
-            select g.developer, count(*) AS count
-            from games g
-            left join game_developers gd on g.id = gd.game_id
-            left join partners d on gd.developer_id = d.id
-            where d.id is null or g.developer is not null
-            group by g.developer
-            order by count(*) desc, g.developer asc
-        ");
-
-        return $games;
-    }
-
-    public function getOldPublishersByCount()
-    {
-        $games = DB::select("
-            select g.publisher, count(*) AS count
-            from games g
-            left join game_publishers gp on g.id = gp.game_id
-            left join partners p on p.id = gp.publisher_id
-            where p.id is null or g.publisher is not null
-            group by g.publisher
-            order by count(*) desc, g.publisher asc
-        ");
-
-        return $games;
     }
 
     // ** ACTION LISTS (New) ** //

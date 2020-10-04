@@ -56,32 +56,6 @@ class GameBuilderTest extends TestCase
         $this->assertEquals($players, $game->players);
     }
 
-    public function testDeveloper()
-    {
-        $title = 'Yoshi';
-        $developer = 'WOS Developer HQ';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setDeveloper($developer)
-            ->getGame();
-        $this->assertEquals($developer, $game->developer);
-    }
-
-    public function testPublisher()
-    {
-        $title = 'Yoshi';
-        $publisher = 'The Amazing Publishing House of WOS';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setPublisher($publisher)
-            ->getGame();
-        $this->assertEquals($publisher, $game->publisher);
-    }
-
     public function testReviewCount()
     {
         $title = 'Yoshi';

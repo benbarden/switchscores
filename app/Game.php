@@ -24,8 +24,7 @@ class Game extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'title', 'link_title', 'price_eshop', 'players',
-        'rating_avg', 'review_count', 'developer', 'publisher',
+        'title', 'link_title', 'price_eshop', 'players', 'rating_avg', 'review_count',
         'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',

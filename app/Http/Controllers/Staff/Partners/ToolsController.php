@@ -26,21 +26,4 @@ class ToolsController extends Controller
             return view('staff.partners.tools.partnerUpdateFields.landing', $bindings);
         }
     }
-
-    public function partnerMigrateGameDevsPubs()
-    {
-        $pageTitle = 'Partner Migrate Game Devs/Pubs';
-        $topTitle = $pageTitle.' - Tools - Partners - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
-
-        if (request()->post()) {
-            \Artisan::call('PartnerMigrateGameDevsPubs', []);
-            return view('staff.partners.tools.partnerMigrateGameDevsPubs.process', $bindings);
-        } else {
-            return view('staff.partners.tools.partnerMigrateGameDevsPubs.landing', $bindings);
-        }
-    }
 }

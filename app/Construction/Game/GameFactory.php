@@ -11,8 +11,6 @@ class GameFactory
      * @param $linkTitle
      * @param $priceEshop
      * @param $players
-     * @param $developer
-     * @param $publisher
      * @param null $amazonUkLink
      * @param null $videoUrl
      * @param null $boxartSquareUrl
@@ -22,8 +20,7 @@ class GameFactory
      * @return Game
      */
     public static function create(
-        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $videoUrl = null,
+        $title, $linkTitle, $priceEshop, $players, $amazonUkLink = null, $videoUrl = null,
         $boxartSquareUrl = null, $eshopEuropeFsId = null,
         $boxartHeaderImage = null
     )
@@ -34,8 +31,6 @@ class GameFactory
                 'link_title' => $linkTitle,
                 'price_eshop' => $priceEshop,
                 'players' => $players,
-                'developer' => $developer,
-                'publisher' => $publisher,
                 'review_count' => 0,
                 'amazon_uk_link' => $amazonUkLink,
                 'video_url' => $videoUrl,
