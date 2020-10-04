@@ -9,10 +9,10 @@
     <div class="col-xs-12 col-sm-12 col-md-12">
         <!-- Logo + featured link -->
         <div class="row">
-            <div class="col-md-5 text-left">
-                <h1 style="margin-top: 10px;">
-                    Switch Scores
-                </h1>
+            <div class="col-md-4 text-left">
+                <h4>
+                    Current database stats
+                </h4>
             </div>
             <div class="col-md-2 text-center">
                 <h4>
@@ -29,17 +29,10 @@
                     <a href="{{ route('reviews.landing') }}">{{ TotalReviews }} ratings</a>
                 </h4>
             </div>
-            {#
-            <div class="col-md-1 col-lg-1 text-center">
-                <img src="/img/logo.png" alt="Switch Scores" class="img-responsive" style="max-height: 50px; max-width: 50px;">
-            </div>
-            #}
         </div>
     </div>
 
 </div>
-
-<hr style="border: 1px solid #c9c9c9; margin-top: 5px; margin-bottom: 5px;">
 
 {% if auth_user() is null %}
     <a href="{{ route('auth.login.twitter') }}">

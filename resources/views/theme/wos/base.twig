@@ -97,15 +97,13 @@
                 {% endif %}
                 {% block page_body %}
                 {% endblock page_body %}
+
+                {% include 'theme/wos/nav-bottom.twig' %}
             </div>
         </div>
     </div>
 
-    <div class="push"></div>
-
 </div>
-
-{% include 'theme/wos/nav-bottom.twig' %}
 
 <script>
     window.twttr = (function(d, s, id) {

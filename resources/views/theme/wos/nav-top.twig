@@ -10,16 +10,17 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <!-- Branding Image -->
+            {#
             <a class="navbar-brand" href="{{ url('/') }}" style="font-style: italic; padding: 12px 10px;" title="Switch Scores">
                 Switch Scores
-                {# <img src="/img/logo.png" alt="Switch Scores" class="img-responsive" style="max-height: 30px; max-width: 30px;"> #}
             </a>
+            #}
         </div>
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
+                <li><a href="{{ route('welcome') }}">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         Games <span class="caret"></span>
@@ -109,3 +110,10 @@
         </div>
     </div>
 </nav>
+<div class="container" style="padding: 0;">
+    <div class="logo">
+        <a href="{{ url('/') }}" title="Switch Scores">
+            <img src="/img/switch-scores-banner.jpg" alt="Switch Scores" class="img-responsive" style="border: 0;">
+        </a>
+    </div>
+</div>
