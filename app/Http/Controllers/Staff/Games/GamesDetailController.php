@@ -69,10 +69,8 @@ class GamesDetailController extends Controller
         $bindings['ReleaseDateJPWikipediaDifferenceCount'] = $releaseDateJPWikipediaDifferenceCount[0]->count;
 
         // Nintendo.co.uk API data
-        $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-        if ($dsParsedItem) {
-            $bindings['NintendoCoUkDSParsedItem'] = $dsParsedItem;
-        }
+        $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $bindings['DataSourceWikipedia'] = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();

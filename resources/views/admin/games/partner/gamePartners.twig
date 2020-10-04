@@ -161,6 +161,32 @@
 
     </div>
 
+    <div class="col-md-4 col-sm-12">
+
+        <h3>Data sources</h3>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th colspan="2">Nintendo.co.uk</th>
+            </tr>
+            <tr>
+                <td>Publishers</td>
+                <td>{{ DataSourceNintendoCoUk.publishers }}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Wikipedia</th>
+            </tr>
+            <tr>
+                <td>Developers</td>
+                <td>{{ DataSourceWikipedia.developers }}</td>
+            </tr>
+            <tr>
+                <td>Publishers</td>
+                <td>{{ DataSourceWikipedia.publishers }}</td>
+            </tr>
+        </table>
+
+    </div>
+
 </div>
 
 {% include 'admin/games/partner/gamePartners-scripts.twig' %}
