@@ -53,7 +53,9 @@
                 {% for item in GameDeveloperList %}
                     <tr>
                         <td>
-                            {{ item.developer.name }}
+                            <a href="{{ route('staff.partners.games-company.show', {'partner': item.developer}) }}">
+                                {{ item.developer.name }}
+                            </a>
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-developer-{{ item.id }}" class="lnk-remove-developer">Unassign</a>
@@ -146,7 +148,9 @@
                 {% for item in GamePublisherList %}
                     <tr>
                         <td>
-                            {{ item.publisher.name }}
+                            <a href="{{ route('staff.partners.games-company.show', {'partner': item.publisher}) }}">
+                                {{ item.publisher.name }}
+                            </a>
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-publisher-{{ item.id }}" class="lnk-remove-publisher">Unassign</a>
