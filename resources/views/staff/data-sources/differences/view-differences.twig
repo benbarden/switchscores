@@ -9,6 +9,14 @@
 
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
+{% if HideApplyChange == 'Y' %}
+    <div class="alert alert-warning">
+        This data cannot be applied automatically. Go to the Game Detail page to correct the data
+        manually. You can still use the Ignore link if you do not wish to be notified about the
+        differences for any of the games listed.
+    </div>
+{% endif %}
+
 <p>
     This page lists differences with the data on games, and one of our data sources. There are two ways
     to handle these differences:
@@ -47,8 +55,10 @@
                         {{ attribute(item, SourceField) }}
                     </td>
                     <td class="text-center">
+                        {% if HideApplyChange != 'Y' %}
                         <a href="javascript:void(0);" id="lnk-apply-change-{{ item.id }}" class="lnk-apply-change">Apply change</a>
                          :
+                        {% endif %}
                         <a href="javascript:void(0);" id="lnk-ignore-change-{{ item.id }}" class="lnk-ignore-change">Ignore</a>
                     </td>
                 </tr>

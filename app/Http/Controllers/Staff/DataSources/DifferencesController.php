@@ -116,18 +116,31 @@ class DifferencesController extends Controller
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
 
+                $serviceImportRuleEshop = $this->getServiceGameImportRuleEshop();
+                $gameImportRuleEshop = $serviceImportRuleEshop->getByGameId($gameId);
+                if ($gameImportRuleEshop) {
+                    $importRuleParams = [
+                        'ignore_europe_dates' => $gameImportRuleEshop->ignore_europe_date,
+                        'ignore_price' => $gameImportRuleEshop->ignore_price,
+                        'ignore_players' => $gameImportRuleEshop->ignore_players,
+                        'ignore_publishers' => $gameImportRuleEshop->ignore_publishers,
+                    ];
+                } else {
+                    $importRuleParams = [];
+                }
+
                 if ($sourceField == 'release_date_eu') {
-                    $importRuleParams = ['ignore_europe_dates' => 'on'];
+                    $importRuleParams['ignore_europe_dates'] = 'on';
                 } elseif ($sourceField == 'price_standard') {
-                    $importRuleParams = ['ignore_price' => 'on'];
+                    $importRuleParams['ignore_price'] = 'on';
                 } elseif ($sourceField == 'dsp_players') {
-                    $importRuleParams = ['ignore_players' => 'on'];
+                    $importRuleParams['ignore_players'] = 'on';
+                } elseif ($sourceField == 'dsp_publishers') {
+                    $importRuleParams['ignore_publishers'] = 'on';
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
 
-                $serviceImportRuleEshop = $this->getServiceGameImportRuleEshop();
-                $gameImportRuleEshop = $serviceImportRuleEshop->getByGameId($gameId);
                 // Update the DB
                 $importRuleDirector = new EshopDirector();
                 $importRuleBuilder = new EshopBuilder();
@@ -152,18 +165,34 @@ class DifferencesController extends Controller
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
 
+                $serviceImportRuleWikipedia = $this->getServiceGameImportRuleWikipedia();
+                $gameImportRuleWikipedia = $serviceImportRuleWikipedia->getByGameId($gameId);
+                if ($gameImportRuleWikipedia) {
+                    $importRuleParams = [
+                        'ignore_europe_dates' => $gameImportRuleWikipedia->ignore_europe_date,
+                        'ignore_us_dates' => $gameImportRuleWikipedia->ignore_us_dates,
+                        'ignore_jp_dates' => $gameImportRuleWikipedia->ignore_jp_dates,
+                        'ignore_developers' => $gameImportRuleWikipedia->ignore_developers,
+                        'ignore_publishers' => $gameImportRuleWikipedia->ignore_publishers,
+                    ];
+                } else {
+                    $importRuleParams = [];
+                }
+
                 if ($sourceField == 'release_date_eu') {
-                    $importRuleParams = ['ignore_europe_dates' => 'on'];
+                    $importRuleParams['ignore_europe_dates'] = 'on';
                 } elseif ($sourceField == 'release_date_us') {
-                    $importRuleParams = ['ignore_us_dates' => 'on'];
+                    $importRuleParams['ignore_us_dates'] = 'on';
                 } elseif ($sourceField == 'release_date_jp') {
-                    $importRuleParams = ['ignore_jp_dates' => 'on'];
+                    $importRuleParams['ignore_jp_dates'] = 'on';
+                } elseif ($sourceField == 'dsp_developers') {
+                    $importRuleParams['ignore_developers'] = 'on';
+                } elseif ($sourceField == 'dsp_publishers') {
+                    $importRuleParams['ignore_publishers'] = 'on';
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
 
-                $serviceImportRuleWikipedia = $this->getServiceGameImportRuleWikipedia();
-                $gameImportRuleWikipedia = $serviceImportRuleWikipedia->getByGameId($gameId);
                 // Update the DB
                 $importRuleDirector = new WikipediaDirector();
                 $importRuleBuilder = new WikipediaBuilder();
@@ -255,6 +284,29 @@ class DifferencesController extends Controller
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
 
+    public function nintendoCoUkPublishers()
+    {
+        $pageTitle = 'Differences: Publishers - Nintendo.co.uk API';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getPublishersNintendoCoUk();
+
+        $bindings['GameField'] = 'game_publishers';
+        $bindings['SourceField'] = 'dsp_publishers';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['HideApplyChange'] = 'Y';
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
     public function wikipediaEuReleaseDate()
     {
         $pageTitle = 'Differences: EU release date - Wikipedia';
@@ -314,6 +366,52 @@ class DifferencesController extends Controller
         $bindings['GameField'] = 'jp_release_date';
         $bindings['SourceField'] = 'release_date_jp';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
+    public function wikipediaDevelopers()
+    {
+        $pageTitle = 'Differences: Developers - Wikipedia';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getDevelopersWikipedia();
+
+        $bindings['GameField'] = 'game_developers';
+        $bindings['SourceField'] = 'dsp_developers';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
+        $bindings['HideApplyChange'] = 'Y';
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
+    public function wikipediaPublishers()
+    {
+        $pageTitle = 'Differences: Publishers - Wikipedia';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getPublishersWikipedia();
+
+        $bindings['GameField'] = 'game_publishers';
+        $bindings['SourceField'] = 'dsp_publishers';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
+        $bindings['HideApplyChange'] = 'Y';
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;

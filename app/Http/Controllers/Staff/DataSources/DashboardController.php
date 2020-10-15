@@ -39,6 +39,15 @@ class DashboardController extends Controller
         $bindings['ReleaseDateUSWikipediaDifferenceCount'] = $releaseDateUSWikipediaDifferenceCount[0]->count;
         $bindings['ReleaseDateJPWikipediaDifferenceCount'] = $releaseDateJPWikipediaDifferenceCount[0]->count;
 
+        // We don't have a good way to count the records for devs/pubs
+        $dsDifferences = new Differences();
+        $nintendoCoUkPublishers = $dsDifferences->getPublishersNintendoCoUk();
+        $wikipediaDevelopers = $dsDifferences->getDevelopersWikipedia();
+        $wikipediaPublishers = $dsDifferences->getPublishersWikipedia();
+        $bindings['PublishersNintendoCoUkDifferenceCount'] = count($nintendoCoUkPublishers);
+        $bindings['DevelopersWikipediaDifferenceCount'] = count($wikipediaDevelopers);
+        $bindings['PublishersWikipediaDifferenceCount'] = count($wikipediaPublishers);
+
         // Stats: Nintendo.co.uk
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
         $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);

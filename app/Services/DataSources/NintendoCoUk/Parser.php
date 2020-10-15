@@ -5,6 +5,7 @@ namespace App\Services\DataSources\NintendoCoUk;
 
 use App\DataSourceRaw;
 use App\DataSourceParsed;
+use Illuminate\Log\Logger;
 
 class Parser
 {
@@ -14,12 +15,19 @@ class Parser
     private $dataSourceParsed;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $rawJsonData;
 
-    public function __construct(DataSourceRaw $dataSourceRaw)
+    public function __construct(DataSourceRaw $dataSourceRaw, $logger)
     {
+        $this->logger = $logger;
+
         $dataSourceParsed = new DataSourceParsed();
 
         $dataSourceParsed->source_id = $dataSourceRaw->source_id;
@@ -189,6 +197,53 @@ class Parser
         if (array_key_exists('publisher', $this->rawJsonData)) {
 
             $parsedPublishers = $this->rawJsonData['publisher'];
+
+            // Clean up junk text
+            $parsedPublishers = str_replace('Co.,Ltd', '', $parsedPublishers);
+            $parsedPublishers = str_replace('Co., Ltd.', '', $parsedPublishers);
+            $parsedPublishers = str_replace('Co. Ltd', '', $parsedPublishers);
+            $parsedPublishers = str_replace('CO.,LTD.', '', $parsedPublishers);
+            $parsedPublishers = str_replace('CO., LTD', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Ltd.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Ltd', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' LTD.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' LTD', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' LIMITED', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', S.L.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', s.r.o.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' S.r.l.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', LLC', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' LLC', '', $parsedPublishers);
+            $parsedPublishers = str_replace('LLC ', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', Incorporated', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', Inc.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', Inc', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', inc', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Inc.', '', $parsedPublishers);
+            $parsedPublishers = str_replace('®', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Sp. z.o.o Sp.K', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Sp. z.o.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Sp.z.o.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' sp. z.o.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' S.R.L', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' srl', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' s.r.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' S.L', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' G.K', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' B.V', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' d.o.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Pty', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' Pty Ltd', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' (Pty.)', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' PTY', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' FK AB', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' GmbH', '', $parsedPublishers);
+
+            // Consistency
+            $parsedPublishers = str_replace(' ENTMT', ' Entertainment', $parsedPublishers);
+            $parsedPublishers = str_replace(' Ent.', ' Entertainment', $parsedPublishers);
+            //$parsedPublishers = str_replace(' Ent', ' Entertainment', $parsedPublishers);
+            $parsedPublishers = rtrim($parsedPublishers, ".");
 
             if (is_array($parsedPublishers)) {
                 $publisherArray = $parsedPublishers;

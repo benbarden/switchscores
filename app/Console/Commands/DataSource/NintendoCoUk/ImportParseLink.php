@@ -94,7 +94,7 @@ class ImportParseLink extends Command
             $logger->info('Parsing data...');
             $rawSourceData = $this->getServiceDataSourceRaw()->getBySourceId($sourceId);
             foreach ($rawSourceData as $rawItem) {
-                $parser = new Parser($rawItem);
+                $parser = new Parser($rawItem, $logger);
                 $parsedItem = $parser->parseItem();
                 $parsedItem->save();
             }
