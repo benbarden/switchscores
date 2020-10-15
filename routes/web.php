@@ -128,6 +128,9 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
     // *************** Reviewers: Campaigns *************** //
     Route::get('/reviewers/campaigns/{campaignId}', 'Reviewers\CampaignsController@show')->name('reviewers.campaigns.show');
 
+    // *************** Reviewers: Games *************** //
+    Route::get('/reviewers/games/{gameId}', 'Reviewers\GamesController@show')->name('reviewers.games.show');
+
     // *************** Reviewers: Stats *************** //
     Route::get('/reviewers/stats', 'Reviewers\StatsController@landing')->name('reviewers.stats.landing');
 

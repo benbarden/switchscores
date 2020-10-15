@@ -26,7 +26,11 @@
 
     <tr>
         <td>
-            <a href="{{ route('staff.categorisation.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
+            {% if mode == 'reviewers' %}
+                <strong>Tags</strong>
+            {% else %}
+                <a href="{{ route('staff.categorisation.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
+            {% endif %}
         </td>
         <td>
             {% if GameTags|length > 0 %}
@@ -44,7 +48,11 @@
 
     <tr>
         <td>
-            <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+            {% if mode == 'reviewers' %}
+                <strong>Developers</strong>
+            {% else %}
+                <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+            {% endif %}
         </td>
         <td>
             {% if GameDevelopers|length > 0 %}
@@ -60,7 +68,11 @@
 
     <tr>
         <td>
-            <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+            {% if mode == 'reviewers' %}
+                <strong>Publishers</strong>
+            {% else %}
+                <a href="{{ route('admin.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+            {% endif %}
         </td>
         <td>
             {% if GamePublishers|length > 0 %}

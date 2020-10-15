@@ -2,33 +2,25 @@
 <h3>Nintendo.co.uk API</h3>
 <table class="table table-condensed table-responsive">
 
-    {% if DataSourceNintendoCoUk %}
-
-        <tr>
-            <td style="width: 150px;">
-                <span style="font-weight: bold;">Link</span>
-            </td>
-            <td>
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Link</span>
+        </td>
+        <td>
+            {% if DataSourceNintendoCoUk %}
                 <i class="fas fa-link"></i>
                 {{ DataSourceNintendoCoUk.link_id }}
-                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
-            </td>
-        </tr>
-
-    {% else %}
-
-        <tr>
-            <td style="width: 150px;">
-                <span style="font-weight: bold;">Link</span>
-            </td>
-            <td>
+            {% else %}
                 <i class="fas fa-unlink"></i>
                 Not linked
-                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
-            </td>
-        </tr>
+            {% endif %}
+            {% if mode == 'reviewers' %}
 
-    {% endif %}
+            {% else %}
+                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
+            {% endif %}
+        </td>
+    </tr>
 
     <tr>
         <td style="width: 150px;">

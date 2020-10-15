@@ -1,0 +1,64 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row member-dashboard">
+
+    <div class="col-md-4">
+
+        <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-sm" target="_blank">View game page</a>
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+</div>
+
+<div class="row member-dashboard">
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                {% include 'staff/games/detail/detail-col1.twig' %}
+
+            </div>
+
+            <div class="col-md-4">
+
+                {% include 'staff/games/detail/detail-col2.twig' with {'mode': 'reviewers'} %}
+
+            </div>
+
+            <div class="col-md-4">
+
+                {% include 'staff/games/detail/detail-col3.twig' with {'mode': 'reviewers'} %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row member-dashboard">
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <h2>Data sources</h2>
+        {% include 'staff/games/detail/data-sources.twig' %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

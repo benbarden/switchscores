@@ -18,7 +18,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+                        <a href="{{ route('reviewers.games.show', {'gameId': item.id}) }}">{{ item.title }}</a>
                     </td>
                     <td class="text-center">
                         {{ item.eu_release_date }}
