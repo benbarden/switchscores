@@ -1,0 +1,73 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% if GameList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Title</th>
+                <th>Release date (EU)</th>
+                <th>Review count</th>
+                <th>Rating</th>
+                <th class="text-center">eShop: EU</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.eu_release_date }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.review_count }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.rating_avg }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.eshop_europe_fs_id %}
+                            <i class="fas fa-link"></i>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

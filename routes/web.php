@@ -238,6 +238,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Review highlights
     Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');
 
+    // Unranked lists
+    Route::get('/staff/reviews/unranked/review-count', 'Staff\Reviews\UnrankedController@reviewCountLanding')->name('staff.reviews.unranked.review-count-landing');
+    Route::get('/staff/reviews/unranked/review-count/{reviewCount}/list', 'Staff\Reviews\UnrankedController@reviewCountList')->name('staff.reviews.unranked.review-count-list');
+    Route::get('/staff/reviews/unranked/release-year', 'Staff\Reviews\UnrankedController@releaseYearLanding')->name('staff.reviews.unranked.release-year-landing');
+    Route::get('/staff/reviews/unranked/release-year/{releaseYear}/list', 'Staff\Reviews\UnrankedController@releaseYearList')->name('staff.reviews.unranked.release-year-list');
+
     // Reviews: Tools
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-importer', 'Staff\Reviews\ToolsController@runFeedImporter')->name('staff.reviews.tools.runFeedImporter');
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-parser', 'Staff\Reviews\ToolsController@runFeedParser')->name('staff.reviews.tools.runFeedParser');

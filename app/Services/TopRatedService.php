@@ -4,31 +4,10 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-
+use App\Game;
 
 class TopRatedService
 {
-    /**
-     * @param $limit
-     * @return mixed
-     */
-    public function getList($limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.review_count', '>', '2')
-            ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('games.review_count', 'desc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-
-        $games = $games->get();
-        return $games;
-    }
-
     /**
      * @return integer
      */
@@ -42,6 +21,54 @@ class TopRatedService
 
         $topRatedCounter = $games->count();
         return $topRatedCounter;
+    }
+
+    public function getUnrankedCountByReviewCount($reviewCount)
+    {
+        $gamesCount = Game::where('eu_is_released', 1)
+            ->where('review_count', $reviewCount)
+            ->count();
+
+        return $gamesCount;
+    }
+
+    public function getUnrankedListByReviewCount($reviewCount, $limit = null)
+    {
+        $gamesList = Game::where('eu_is_released', 1)
+            ->where('review_count', $reviewCount)
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('eu_release_date', 'desc');
+
+        if ($limit) {
+            $gamesList = $gamesList->limit($limit);
+        }
+
+        return $gamesList->get();
+    }
+
+    public function getUnrankedCountByReleaseYear($releaseYear)
+    {
+        $gamesCount = Game::where('eu_is_released', 1)
+            ->where('release_year', $releaseYear)
+            ->where('review_count', '<', '3')
+            ->count();
+
+        return $gamesCount;
+    }
+
+    public function getUnrankedListByReleaseYear($releaseYear, $limit = null)
+    {
+        $gamesList = Game::where('eu_is_released', 1)
+            ->where('release_year', $releaseYear)
+            ->where('review_count', '<', '3')
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('eu_release_date', 'desc');
+
+        if ($limit) {
+            $gamesList = $gamesList->limit($limit);
+        }
+
+        return $gamesList->get();
     }
 
     /**

@@ -39,6 +39,15 @@ class DashboardController extends Controller
         $bindings['RankedGameCount'] = $serviceGame->countRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
+        // Unranked breakdown
+        $bindings['UnrankedReviews2'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(2);
+        $bindings['UnrankedReviews1'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(1);
+        $bindings['UnrankedReviews0'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(0);
+        $bindings['UnrankedYear2020'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2020);
+        $bindings['UnrankedYear2019'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2019);
+        $bindings['UnrankedYear2018'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2018);
+        $bindings['UnrankedYear2017'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2017);
+
         $bindings['ProcessStatusStats'] = $serviceReviewFeedItem->getProcessStatusStats();
 
         $bindings['TopTitle'] = $pageTitle.' - Admin';

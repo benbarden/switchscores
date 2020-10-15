@@ -51,17 +51,45 @@ class Breadcrumbs
             ->getBreadcrumbs();
     }
 
-    // ***** Data quality ***** //
+    // ***** Reviews ***** //
 
-    public function addDataQualityDashboard()
+    public function addReviewsDashboard()
     {
-        $crumbItem = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
+        $crumbItem = ['url' => route('staff.reviews.dashboard'), 'text' => 'Reviews'];
         return $this->addCrumb($crumbItem);
     }
 
-    public function makeDataQualitySubPage($pageTitle)
+    public function addReviewsUnrankedByReviewCount()
     {
-        return $this->addDataQualityDashboard()
+        $crumbItem = ['url' => route('staff.reviews.unranked.review-count-landing'), 'text' => 'Unranked: By review count'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function addReviewsUnrankedByReleaseYear()
+    {
+        $crumbItem = ['url' => route('staff.reviews.unranked.release-year-landing'), 'text' => 'Unranked: By release year'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeReviewsSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function makeReviewsUnrankedByReviewCountSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsUnrankedByReviewCount()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function makeReviewsUnrankedByReleaseYearSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsUnrankedByReleaseYear()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }
@@ -77,6 +105,21 @@ class Breadcrumbs
     public function makeCategorisationSubPage($pageTitle)
     {
         return $this->addCategorisationDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    // ***** Data quality ***** //
+
+    public function addDataQualityDashboard()
+    {
+        $crumbItem = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeDataQualitySubPage($pageTitle)
+    {
+        return $this->addDataQualityDashboard()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }

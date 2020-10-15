@@ -31,6 +31,100 @@
             </tbody>
         </table>
 
+        <h2>Unranked games</h2>
+
+        <p>
+            Excludes games not released in Europe.
+        </p>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}">
+                        Unranked: 2 reviews
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}" class="h4">
+                        {{ UnrankedReviews2 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}">
+                        Unranked: 1 review
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}" class="h4">
+                        {{ UnrankedReviews1 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}">
+                        Unranked: 0 reviews
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.review-count-landing') }}" class="h4">
+                        {{ UnrankedReviews0 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}">
+                        Unranked: 2020
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}" class="h4">
+                        {{ UnrankedYear2020 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}">
+                        Unranked: 2019
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}" class="h4">
+                        {{ UnrankedYear2019 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}">
+                        Unranked: 2018
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}" class="h4">
+                        {{ UnrankedYear2018 }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}">
+                        Unranked: 2017
+                    </a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.reviews.unranked.release-year-landing') }}" class="h4">
+                        {{ UnrankedYear2017 }}
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
         <h2>Recent imports</h2>
         {% if ReviewFeedImportList.count > 0 %}
             <table class="table data-sortable table-responsive">

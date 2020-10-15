@@ -1,0 +1,42 @@
+{% if GameList %}
+    <table class="table table-responsive table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <span class="h5">
+                        Title
+                    </span>
+                </th>
+                <th style="width: 100px;" class="text-center">
+                    <span class="h5">
+                        Release date
+                    </span>
+                </th>
+                <th style="width: 100px;" class="text-center">
+                    <span class="h6">
+                        Average rating
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td>
+                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.eu_release_date }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.rating_avg %}
+                            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                        {% else %}
+                            {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
