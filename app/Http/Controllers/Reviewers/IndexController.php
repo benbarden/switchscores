@@ -40,10 +40,13 @@ class IndexController extends Controller
         $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
         // Recent reviews
-        $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 5);
+        $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 10);
 
         // Pending items
         $bindings['PendingFeedItems'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId, 5);
+
+        // Campaigns
+        $bindings['ActiveCampaigns'] = $this->getServiceCampaign()->getActive();
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;

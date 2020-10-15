@@ -4,10 +4,17 @@
 
 {% block page_inner %}
 
-    <div class="alert alert-info">
-        Your current feed URL is: <a href="{{ PartnerData.feed_url }}" target="_blank"><strong>{{ PartnerData.feed_url }}</strong></a>
-        <br>Let us know if you need to change this.
-    </div>
+    {% if PartnerData.feed_url == '' %}
+        <div class="alert alert-danger">
+            <strong>We don't have a feed for your site</strong>. This means your reviews won't be imported.
+            Get in touch and let's get things up and running.
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Your current feed URL is: <a href="{{ PartnerData.feed_url }}" target="_blank"><strong>{{ PartnerData.feed_url }}</strong></a>
+            <br>Let us know if you need to change this.
+        </div>
+    {% endif %}
 
     <div class="row member-dashboard">
 

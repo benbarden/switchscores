@@ -29,47 +29,42 @@
                     <strong>Your feed URL looks good!</strong> Keep those reviews coming. We really appreciate
                     everything you do! &hearts;
                 </div>
+                <div class="alert alert-success">
+                    Have a look at your <a href="{{ route('reviewers.feed-health.landing') }}">feed health</a> status page
+                    to see if we've had any issues importing your reviews.
+                </div>
             {% endif %}
-            <div class="alert alert-success">
-                Have a look at your <a href="{{ route('reviewers.feed-health.landing') }}">feed health</a> status page
-                to see if we've had any issues importing your reviews.
-            </div>
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Quick stats</h2>
-
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <h2>
-                        {{ PartnerData.review_count }}
-                        <br>
-                        <span class="h4">reviews</span>
+                        Campaigns
+                        <div class="label label-info h6">New!</div>
                     </h2>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    <h2>
-                        {{ ReviewAvg }}
-                        <br>
-                        <span class="h4">average</span>
-                    </h2>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    {#
-                    <h2>
-                        {{ ReviewAvg }}
-                        <br>
-                        <span class="h4">average</span>
-                    </h2>
-                    #}
+                    {% if ActiveCampaigns %}
+                        <p>
+                            Campaigns are a way to get more games ranked.
+                        </p>
+                        <ul>
+                            {% for item in ActiveCampaigns %}
+                                <li>
+                                    <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
+                                        {{ item.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>
+                            There are currently no active campaigns. Check back soon for more!
+                        </p>
+                    {% endif %}
                 </div>
             </div>
-
-            <p class="text-center">
-                <a href="{{ route('reviewers.stats.landing') }}" class="btn btn-md btn-primary">View more stats</a>
-            </p>
 
         </div>
 
@@ -172,6 +167,34 @@
             <p>
                 <a href="{{ route('reviewers.unranked-games.landing') }}" class="btn btn-primary btn-md">View unranked games</a>
             </p>
+
+            <h2>Quick stats</h2>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ PartnerData.review_count }}
+                        <br>
+                        <span class="h4">reviews</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    {#
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                    #}
+                </div>
+            </div>
 
         </div>
 

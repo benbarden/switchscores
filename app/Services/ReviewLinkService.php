@@ -98,6 +98,20 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
+    public function getGameIdsReviewedBySite($siteId)
+    {
+        $reviewList = ReviewLink::where('site_id', $siteId)
+            ->orderBy('id', 'desc')
+            ->pluck('game_id');
+
+        return $reviewList;
+    }
+
+    /**
+     * @deprecated
+     * @param $siteId
+     * @return mixed
+     */
     public function getAllGameIdsReviewedBySite($siteId)
     {
         $gameIds = ReviewLink::select('review_links.game_id')

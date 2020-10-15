@@ -6,6 +6,8 @@ use App\Services\ViewHelper\Bindings;
 use App\Services\ViewHelper\Breadcrumbs;
 
 use App\Services\AuditService;
+use App\Services\CampaignService;
+use App\Services\CampaignGameService;
 use App\Services\CategoryService;
 use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
@@ -118,6 +120,22 @@ trait SwitchServices
     public function getServiceAudit()
     {
         return $this->loadService('AuditService');
+    }
+
+    /**
+     * @return CampaignService
+     */
+    public function getServiceCampaign()
+    {
+        return $this->loadService('CampaignService');
+    }
+
+    /**
+     * @return CampaignGameService
+     */
+    public function getServiceCampaignGame()
+    {
+        return $this->loadService('CampaignGameService');
     }
 
     /**
