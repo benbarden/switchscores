@@ -4,7 +4,7 @@
             <tr>
                 <th class="text-right"></th>
                 <th>Title</th>
-                <th>Primary type</th>
+                <th>Category</th>
                 <th class="text-center">Rating</th>
                 <th class="text-center">Reviews</th>
                 <th>Release date (EU)</th>
@@ -12,10 +12,16 @@
         </thead>
         <tbody>
             {% for item in GameList %}
+                {% set boxartUrl = ImageHelper.imageSquareUrl(item) %}
+
                 <tr>
                     <td class="text-right">
-                        <a href="{{ LinkHelper.gameShow(item) }}" class="h5">
-                            {{ ImageHelper.packshotHtml(item, 'landing-mini') }}
+                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+                            {% if boxartUrl %}
+                                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; height: 75px; width: 75px;" alt="{{ item.title }}">
+                            {% else %}
+                                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+                            {% endif %}
                         </a>
                     </td>
                     <td>

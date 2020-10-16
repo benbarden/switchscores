@@ -28,8 +28,8 @@ Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 Route::match(['get', 'post'], '/games', 'GamesController@landing')->name('games.landing');
 Route::get('/games/recent', 'GamesController@recentReleases')->name('games.recentReleases');
 Route::get('/games/upcoming', 'GamesController@upcomingReleases')->name('games.upcomingReleases');
-
 Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
+Route::match(['get', 'post'], '/games/search', 'Games\SearchController@show')->name('games.search');
 
 // Browse by...
 Route::get('/games/by-title', 'GamesBrowseController@byTitleLanding')->name('games.browse.byTitle.landing');

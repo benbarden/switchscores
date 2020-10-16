@@ -1,0 +1,30 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [
+    {'url': route('games.landing'), 'text': 'Games'},
+    {'text': PageTitle}
+] %}
+
+{% block page_body %}
+
+{% include 'modules/game/search/form.twig' %}
+
+<div class="row">
+    <div class="col-md-12">
+        {% if SearchResults %}
+            <h2>Results</h2>
+            {% if SearchResults|length > 0 %}
+                {% if SearchResults|length == 1 %}
+                    <p>1 result found.</p>
+                {% else %}
+                    <p>{{ SearchResults|length }} results found.</p>
+                {% endif %}
+                {% include 'games/layouts/tableView/standard.twig' with {'GameList': SearchResults} %}
+            {% else %}
+                <p>No results found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock page_body %}

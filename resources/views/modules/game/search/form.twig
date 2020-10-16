@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-12">
+        {% include 'common/form-errors.twig' %}
+        <form class="form-horizontal" role="form" method="post" action="{{ route('games.search') }}">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="search_keywords" class="col-md-2 control-label">Search for a game:</label>
+                <div class="col-md-6">
+                    <input id="search_keywords" name="search_keywords" type="text" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn outline btn-primary">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        $('#search_keywords').focus();
+    });
+
+    var searchKeywords = '{{ SearchKeywords }}';
+
+    if (searchKeywords != '') {
+        $('#search_keywords').val(searchKeywords);
+    }
+
+</script>

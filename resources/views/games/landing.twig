@@ -4,38 +4,7 @@
 
 {% block page_body %}
 
-<div class="row">
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-        <h2>Find a game</h2>
-
-        <form class="form-horizontal" role="form" method="post" action="{{ route('games.landing') }}">
-            {{ csrf_field() }}
-
-            <div class="form-group">
-                <div class="col-md-6">
-                    <select id="game_id" class="form-control" name="game_id">
-                        <option value="">&nbsp;</option>
-                        {% for item in GamesList %}
-                            <option value="{{ item.id }}">{{ item.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn outline btn-primary btn-sm">
-                        View game
-                    </button>
-                </div>
-                <div class="col-md-2">
-                </div>
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
+{% include 'modules/game/search/form.twig' %}
 
 <div class="row">
 
@@ -86,11 +55,5 @@
         {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UpcomingReleases} %}
     </div>
 </div>
-
-<script>
-
-    $('#game_id').select2();
-
-</script>
 
 {% endblock page_body %}

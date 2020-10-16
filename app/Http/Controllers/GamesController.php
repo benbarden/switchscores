@@ -14,24 +14,7 @@ class GamesController extends Controller
     {
         $bindings = [];
 
-        if (request()->isMethod('post')) {
-
-            $gameId = request()->game_id;
-
-            if ($gameId) {
-
-                $game = $this->getServiceGame()->find($gameId);
-                if (!$game) abort(404);
-
-                return redirect(route('game.show', ['id' => $gameId, 'linkTitle' => $game->link_title]));
-
-            }
-
-        }
-
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(20);
         $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming(20);
