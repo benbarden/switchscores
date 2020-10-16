@@ -14,13 +14,13 @@ class UnrankedController extends Controller
     {
         switch ($functionName) {
             case 'reviewCountList':
-                $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeReviewsUnrankedByReviewCountSubPage($pageTitle);
+                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReviewCountSubPage($pageTitle);
                 break;
             case 'releaseYearList':
-                $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);
+                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);
                 break;
             default:
-                $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeReviewsSubPage($pageTitle);
+                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsSubPage($pageTitle);
         }
 
         $bindings = $this->getServiceViewHelperBindings()

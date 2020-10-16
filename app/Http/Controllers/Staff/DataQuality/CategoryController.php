@@ -12,21 +12,26 @@ class CategoryController extends Controller
 {
     use SwitchServices;
 
+    private function getListBindings($pageTitle)
+    {
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Data quality')
+            ->setBreadcrumbs($breadcrumbs);
+
+        return $bindings->getBindings();
+    }
+
     public function dashboard()
     {
         $serviceQualityStats = new QualityStats();
 
         $pageTitle = 'Category dashboard';
 
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+        $bindings = $this->getListBindings($pageTitle);
 
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitleSuffix('Data quality')
-            ->setBreadcrumbs($breadcrumbs)
-            ->getBindings();
-
-        // Categories
         $bindings['StatsCategories'] = $serviceQualityStats->getCategoryStats();
 
         return view('staff.data-quality.categories.dashboard', $bindings);
@@ -38,15 +43,8 @@ class CategoryController extends Controller
 
         $pageTitle = 'Games with categories';
 
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+        $bindings = $this->getListBindings($pageTitle);
 
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitleSuffix('Data quality')
-            ->setBreadcrumbs($breadcrumbs)
-            ->getBindings();
-
-        // Primary types
         $bindings['GameList'] = $serviceQualityStats->getGamesWithCategory($year, $month);
 
         return view('staff.data-quality.categories.game-list', $bindings);
@@ -58,15 +56,8 @@ class CategoryController extends Controller
 
         $pageTitle = 'Games without categories';
 
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+        $bindings = $this->getListBindings($pageTitle);
 
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitleSuffix('Data quality')
-            ->setBreadcrumbs($breadcrumbs)
-            ->getBindings();
-
-        // Primary types
         $bindings['GameList'] = $serviceQualityStats->getGamesWithoutCategory($year, $month);
 
         return view('staff.data-quality.categories.game-list', $bindings);

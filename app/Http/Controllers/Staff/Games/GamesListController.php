@@ -15,7 +15,7 @@ class GamesListController extends Controller
 
     private function getListBindings($pageTitle, $tableSort = '')
     {
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeGamesSubPage($pageTitle);
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesSubPage($pageTitle);
 
         $bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)

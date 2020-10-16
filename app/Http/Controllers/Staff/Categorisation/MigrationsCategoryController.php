@@ -13,7 +13,7 @@ class MigrationsCategoryController extends Controller
 
     private function getListBindings($pageTitle, $tableSort = '')
     {
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeCategorisationSubPage($pageTitle);
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationSubPage($pageTitle);
 
         $bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)

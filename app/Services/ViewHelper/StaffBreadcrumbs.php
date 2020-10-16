@@ -2,7 +2,7 @@
 
 namespace App\Services\ViewHelper;
 
-class Breadcrumbs
+class StaffBreadcrumbs
 {
     private $breadcrumbs = [];
 
@@ -22,7 +22,7 @@ class Breadcrumbs
         return $this;
     }
 
-    public function addPageTitle($pageTitle)
+    private function addPageTitle($pageTitle)
     {
         $crumbItem = ['text' => $pageTitle];
         return $this->addCrumb($crumbItem);
@@ -38,7 +38,7 @@ class Breadcrumbs
 
     // ***** Games ***** //
 
-    public function addGamesDashboard()
+    private function addGamesDashboard()
     {
         $crumbItem = ['url' => route('staff.games.dashboard'), 'text' => 'Games'];
         return $this->addCrumb($crumbItem);
@@ -53,19 +53,19 @@ class Breadcrumbs
 
     // ***** Reviews ***** //
 
-    public function addReviewsDashboard()
+    private function addReviewsDashboard()
     {
         $crumbItem = ['url' => route('staff.reviews.dashboard'), 'text' => 'Reviews'];
         return $this->addCrumb($crumbItem);
     }
 
-    public function addReviewsUnrankedByReviewCount()
+    private function addReviewsUnrankedByReviewCount()
     {
         $crumbItem = ['url' => route('staff.reviews.unranked.review-count-landing'), 'text' => 'Unranked: By review count'];
         return $this->addCrumb($crumbItem);
     }
 
-    public function addReviewsUnrankedByReleaseYear()
+    private function addReviewsUnrankedByReleaseYear()
     {
         $crumbItem = ['url' => route('staff.reviews.unranked.release-year-landing'), 'text' => 'Unranked: By release year'];
         return $this->addCrumb($crumbItem);
@@ -96,7 +96,7 @@ class Breadcrumbs
 
     // ***** Categorisation ***** //
 
-    public function addCategorisationDashboard()
+    private function addCategorisationDashboard()
     {
         $crumbItem = ['url' => route('staff.categorisation.dashboard'), 'text' => 'Categorisation'];
         return $this->addCrumb($crumbItem);
@@ -109,9 +109,24 @@ class Breadcrumbs
             ->getBreadcrumbs();
     }
 
+    // ***** Partners ***** //
+
+    private function addPartnersDashboard()
+    {
+        $crumbItem = ['url' => route('staff.partners.dashboard'), 'text' => 'Partners'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makePartnersSubPage($pageTitle)
+    {
+        return $this->addPartnersDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     // ***** Data quality ***** //
 
-    public function addDataQualityDashboard()
+    private function addDataQualityDashboard()
     {
         $crumbItem = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
         return $this->addCrumb($crumbItem);

@@ -18,7 +18,7 @@ class DashboardController extends Controller
 
         $pageTitle = 'Data quality dashboard';
 
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeStaffDashboard($pageTitle);
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeStaffDashboard($pageTitle);
 
         $bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)
@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
         $pageTitle = 'Duplicate reviews';
 
-        $breadcrumbs = $this->getServiceViewHelperBreadcrumbs()->makeDataQualitySubPage($pageTitle);
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataQualitySubPage($pageTitle);
 
         $bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)

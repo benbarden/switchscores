@@ -10,19 +10,33 @@ class DataCleanupController extends Controller
 {
     use SwitchServices;
 
+    private function getListBindings($pageTitle, $tableSort = '')
+    {
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersSubPage($pageTitle);
+
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Partners')
+            ->setBreadcrumbs($breadcrumbs);
+
+        if ($tableSort) {
+            $bindings = $bindings->setDatatablesSort($tableSort);
+        } else {
+            $bindings = $bindings->setDatatablesSortDefault();
+        }
+
+        return $bindings->getBindings();
+    }
+
     public function gamesWithMissingDeveloper()
     {
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         $pageTitle = 'Games with missing developer';
 
-        $bindings = [];
-
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+        $bindings = $this->getListBindings($pageTitle, "[ 0, 'asc']");
 
         $bindings['ItemList'] = $serviceGameDeveloper->getGamesWithNoDeveloper();
-        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         return view('staff.partners.data-cleanup.games-with-missing-developer', $bindings);
     }
@@ -33,13 +47,9 @@ class DataCleanupController extends Controller
 
         $pageTitle = 'Games with missing publisher';
 
-        $bindings = [];
-
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['TopTitle'] = $pageTitle.' - Partners - Staff';
+        $bindings = $this->getListBindings($pageTitle, "[ 0, 'asc']");
 
         $bindings['ItemList'] = $serviceGamePublisher->getGamesWithNoPublisher();
-        $bindings['jsInitialSort'] = "[ 1, 'asc']";
 
         return view('staff.partners.data-cleanup.games-with-missing-publisher', $bindings);
     }

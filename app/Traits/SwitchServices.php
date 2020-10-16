@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Services\ViewHelper\Bindings;
-use App\Services\ViewHelper\Breadcrumbs;
+use App\Services\ViewHelper\StaffBreadcrumbs;
 
 use App\Services\AuditService;
 use App\Services\CampaignService;
@@ -105,11 +105,11 @@ trait SwitchServices
     }
 
     /**
-     * @return Breadcrumbs
+     * @return StaffBreadcrumbs
      */
-    public function getServiceViewHelperBreadcrumbs()
+    public function getServiceViewHelperStaffBreadcrumbs()
     {
-        return $this->loadService("ViewHelper\\Breadcrumbs");
+        return $this->loadService("ViewHelper\\StaffBreadcrumbs");
     }
 
     // ** Standard service classes ** //
