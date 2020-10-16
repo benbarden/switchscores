@@ -210,6 +210,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/broken-nintendo-co-uk-link', 'Staff\Games\GamesListController@brokenNintendoCoUkLink')->name('staff.games.list.broken-nintendo-co-uk-link');
     Route::get('/staff/games/list/by-category/{category}', 'Staff\Games\GamesListController@byCategory')->name('staff.games.list.by-category');
     Route::get('/staff/games/list/by-series/{gameSeries}', 'Staff\Games\GamesListController@bySeries')->name('staff.games.list.by-series');
+    Route::get('/staff/games/list/by-tag/{tag}', 'Staff\Games\GamesListController@byTag')->name('staff.games.list.by-tag');
 
     // Games: Tools
     Route::match(['get', 'post'], '/staff/games/tools/update-game-calendar-stats', 'Staff\Games\ToolsController@updateGameCalendarStats')->name('staff.games.tools.updateGameCalendarStats');
@@ -264,6 +265,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_CATEGORY_MANAGER]], function() {
 
     Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')->name('staff.categorisation.dashboard');
+    Route::get('/staff/categorisation/title-match/category/{category}', 'Staff\Categorisation\DashboardController@categoryTitleMatch')->name('staff.categorisation.title-match.category');
+    Route::get('/staff/categorisation/title-match/series/{gameSeries}', 'Staff\Categorisation\DashboardController@seriesTitleMatch')->name('staff.categorisation.title-match.series');
+    Route::get('/staff/categorisation/title-match/tag/{tag}', 'Staff\Categorisation\DashboardController@tagTitleMatch')->name('staff.categorisation.title-match.tag');
 
     // Primary types
     Route::get('/staff/categorisation/category/list', 'Staff\Categorisation\CategoryController@showList')->name('staff.categorisation.category.list');
@@ -442,13 +446,6 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
  * To be gradually moved into Staff routes
  */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
-
-    // Games: Filter list
-    Route::get('/admin/games/filter-list/with-tag/{linkTitle}', 'Admin\GamesFilterListController@gamesWithTag')->name('admin.games-filter.games-with-tag');
-    Route::get('/admin/games/filter-list/no-tag', 'Admin\GamesFilterListController@gamesWithNoTag')->name('admin.games-filter.games-with-no-tag');
-    Route::get('/admin/games/filter-list/no-category-or-tag', 'Admin\GamesFilterListController@gamesWithNoCategoryOrTag')->name('admin.games-filter.games-with-no-category-or-tag');
-    Route::get('/admin/games/filter-list/series-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameSeriesTitleMatches')->name('admin.games-filter.game-series-title-matches');
-    Route::get('/admin/games/filter-list/tag-title-match/{linkTitle}', 'Admin\GamesFilterListController@gameTagTitleMatches')->name('admin.games-filter.game-tag-title-matches');
 
     // Games: Title hashes
     Route::get('/admin/games-title-hash/list/{gameId?}', 'Admin\GamesTitleHashController@showList')->name('admin.games-title-hash.list');

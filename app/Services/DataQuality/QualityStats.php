@@ -56,28 +56,4 @@ class QualityStats
             ->get();
     }
 
-    // Categories
-    // All-time stats
-    public function countGamesWithCategory()
-    {
-        return Game::whereNotNull('category_id')->count();
-    }
-
-    public function countGamesWithoutCategory()
-    {
-        return Game::whereNull('category_id')->count();
-    }
-
-    // Series
-    // All-time stats
-    public function countGamesWithSeries()
-    {
-        return Game::whereNotNull('series_id')->count();
-    }
-
-    public function countGamesWithoutSeries()
-    {
-        return Game::whereNull('series_id')->count();
-    }
-
 }

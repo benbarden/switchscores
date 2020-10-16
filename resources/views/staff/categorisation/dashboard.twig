@@ -4,194 +4,183 @@
 
 {% block page_inner %}
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-md-6">
+        <div class="col-md-4">
 
-        <h2>Stats</h2>
+            <h2>Action lists</h2>
 
-        <p>
-            Not every game is in a series, so the progress % is not relevant.
-        </p>
+            <h3>Games with no category</h3>
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Item</th>
-                <th class="text-right">With</th>
-                <th class="text-right">Without</th>
-                <th class="text-right">Progress</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.category.list') }}">Categories</a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsWithCategory }}</span>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsWithoutCategory }}</span>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsCategoryProgress }}%</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.tag.list') }}">Tags</a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsWithTags }}</span>
-                </td>
-                <td class="text-right">
-                    <span class="h4"><a href="{{ route('admin.games-filter.games-with-no-tag')}}" class="h4">{{ StatsWithoutTags }}</a></span>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsTagsProgress }}%</span>
-                </td>
-            </tr>
-            <tr>
-                <td>No category or tag</td>
-                <td class="text-right">
-                    <span class="h4"></span>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('admin.games-filter.games-with-no-category-or-tag')}}" class="h4">{{ NoCategoryOrTagCount }}</a>
-                </td>
-                <td class="text-right">
-                    <span class="h4"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.game-series.list') }}">Series</a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsWithSeries }}</span>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ StatsWithoutSeries }}</span>
-                </td>
-                <td class="text-right">
-                    <span class="h4">N/A</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <h2>Migrations</h2>
-
-        <p>
-            These are areas to focus on when migrating data to new formats.
-        </p>
-
-        <h3>Games with no category</h3>
-
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.migrations.category.games-with-one-genre') }}">
-                        Games with one genre
-                    </a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ NoCategoryOneGenreCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.migrations.category.games-with-named-genre-and-one-other', {'genre': 'Puzzle'}) }}">
-                        Games with Puzzle and one other genre
-                    </a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ NoCategoryPuzzleAndOneOtherGenre }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.categorisation.migrations.category.all-games-with-no-category') }}">
-                        All games with no category
-                    </a>
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ AllGamesWithNoCategoryCount }}</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-md-6">
-
-        <h2>Title matches</h2>
-
-        <p>
-            These are games that could be quickly categorised based on text in their title.
-        </p>
-
-        <h3>Series matches</h3>
-        {% if GameSeriesMatchList %}
             <table class="table">
-                <thead>
-                <tr>
-                    <th>Series</th>
-                    <th class="text-right">Potential matches</th>
-                </tr>
-                </thead>
                 <tbody>
-                {% for item in GameSeriesMatchList %}
                 <tr>
-                    <td>{{ item.name }}</td>
+                    <td>
+                        <a href="{{ route('staff.categorisation.migrations.category.games-with-one-genre') }}">
+                            Games with one genre
+                        </a>
+                    </td>
                     <td class="text-right">
-                        <span class="h4">
-                            <a href="{{ route('admin.games-filter.game-series-title-matches', {'linkTitle': item.link}) }}">{{ item.gameCount }}</a>
-                        </span>
+                        <span class="h4">{{ NoCategoryOneGenreCount }}</span>
                     </td>
                 </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No outstanding matches to review.</p>
-        {% endif %}
-
-        <h3>Tag matches</h3>
-        {% if GameTagMatchList %}
-            <table class="table">
-                <thead>
                 <tr>
-                    <th>Tag</th>
-                    <th class="text-right">Potential matches</th>
+                    <td>
+                        <a href="{{ route('staff.categorisation.migrations.category.games-with-named-genre-and-one-other', {'genre': 'Puzzle'}) }}">
+                            Games with Puzzle and one other genre
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <span class="h4">{{ NoCategoryPuzzleAndOneOtherGenre }}</span>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for item in GameTagMatchList %}
-                    <tr>
-                        <td>{{ item.name }}</td>
-                        <td class="text-right">
-                            <span class="h4">
-                                <a href="{{ route('admin.games-filter.game-tag-title-matches', {'linkTitle': item.link}) }}">{{ item.gameCount }}</a>
-                            </span>
-                        </td>
-                    </tr>
-                {% endfor %}
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.migrations.category.all-games-with-no-category') }}">
+                            All games with no category
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <span class="h4">{{ AllGamesWithNoCategoryCount }}</span>
+                    </td>
+                </tr>
                 </tbody>
             </table>
-        {% else %}
-            <p>No outstanding matches to review.</p>
-        {% endif %}
+
+        </div>
+
+        <div class="col-md-4">
+
+            <h2>Navigation</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.category.list') }}">Categories</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.tag.list') }}">Tags</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.game-series.list') }}">Series</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-md-4">
+
+        </div>
 
     </div>
 
-</div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Title matches</h2>
+            <p>
+                These are games that could be quickly categorised based on text in their title.
+            </p>
+        </div>
+    </div>
 
-<style>
-    a.h4 {color: #337ab7;}
-</style>
+    <div class="row">
+
+        <div class="col-md-4">
+            <h3>Category matches</h3>
+            {% if GameCategoryMatchList %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th class="text-right">Potential matches</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in GameCategoryMatchList %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td class="text-right">
+                            <span class="h4">
+                                <a href="{{ route('staff.categorisation.title-match.category', {'category': item.category}) }}">
+                                    {{ item.gameCount }}
+                                </a>
+                            </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No outstanding matches to review.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <h3>Tag matches</h3>
+            {% if GameTagMatchList %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th class="text-right">Potential matches</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in GameTagMatchList %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td class="text-right">
+                                <span class="h4">
+                                    <a href="{{ route('staff.categorisation.title-match.tag', {'tag': item.tag}) }}">
+                                        {{ item.gameCount }}
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No outstanding matches to review.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <h3>Series matches</h3>
+            {% if GameSeriesMatchList %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Series</th>
+                        <th class="text-right">Potential matches</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in GameSeriesMatchList %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td class="text-right">
+                                <span class="h4">
+                                    <a href="{{ route('staff.categorisation.title-match.series', {'gameSeries': item.series}) }}">
+                                        {{ item.gameCount }}
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No outstanding matches to review.</p>
+            {% endif %}
+        </div>
+
+    </div>
 
 {% endblock page_inner %}

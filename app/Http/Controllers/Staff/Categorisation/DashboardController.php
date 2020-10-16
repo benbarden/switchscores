@@ -9,62 +9,65 @@ use App\Traits\SwitchServices;
 use App\Services\DataQuality\QualityStats;
 use App\Services\Migrations\Category as MigrationsCategory;
 
+use App\Category;
+use App\GameSeries;
+use App\Tag;
+
 class DashboardController extends Controller
 {
     use SwitchServices;
 
-    public function show()
+    private function getListBindings($pageTitle, $tableSort = '')
     {
-        $pageTitle = 'Categorisation dashboard';
+        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationSubPage($pageTitle);
 
-        $serviceQualityStats = new QualityStats();
-        $serviceMigrationsCategory = new MigrationsCategory();
+        $bindings = $this->getServiceViewHelperBindings()
+            ->setPageTitle($pageTitle)
+            ->setTopTitlePrefix('Categorisation')
+            ->setBreadcrumbs($breadcrumbs);
 
-        $serviceGame = $this->getServiceGame();
-        $serviceGameFilterList = $this->getServiceGameFilterList();
-        $serviceGameSeries = $this->getServiceGameSeries();
-        $serviceTag = $this->getServiceTag();
-        $serviceGameTag = $this->getServiceGameTag();
+        if ($tableSort) {
+            $bindings = $bindings->setDatatablesSort($tableSort);
+        } else {
+            $bindings = $bindings->setDatatablesSortDefault();
+        }
 
-        $bindings = [];
+        return $bindings->getBindings();
+    }
 
-        // Used in several calculations below
-        $totalGameCount = $serviceGame->getCount();
+    private function getCategoryMatchesStats()
+    {
+        $categoryList = $this->getServiceCategory()->getAll();
 
-        // Game stats: Categories
-        $statsWithCategory = $serviceQualityStats->countGamesWithCategory();
-        $statsWithoutCategory = $serviceQualityStats->countGamesWithoutCategory();
-        $bindings['StatsWithCategory'] = $statsWithCategory;
-        $bindings['StatsWithoutCategory'] = $statsWithoutCategory;
-        $statsCategoryProgress = ($statsWithCategory) / $totalGameCount * 100;
-        $bindings['StatsCategoryProgress'] = round($statsCategoryProgress, 2);
+        $categoryArray = [];
 
-        // Game stats: Tags
-        $missingTags = $serviceGameFilterList->getGamesWithoutTags();
-        $statsWithoutTags = count($missingTags);
-        $statsWithTags = $totalGameCount - $statsWithoutTags;
-        $bindings['StatsWithoutTags'] = $statsWithoutTags;
-        $bindings['StatsWithTags'] = $statsWithTags;
-        $statsTagsProgress = ($statsWithTags) / $totalGameCount * 100;
-        $bindings['StatsTagsProgress'] = round($statsTagsProgress, 2);
+        foreach ($categoryList as $category) {
 
-        // Game stats: Series
-        $statsWithSeries = $serviceQualityStats->countGamesWithSeries();
-        $statsWithoutSeries = $serviceQualityStats->countGamesWithoutSeries();
-        $bindings['StatsWithSeries'] = $statsWithSeries;
-        $bindings['StatsWithoutSeries'] = $statsWithoutSeries;
+            $categoryId = $category->id;
+            $categoryName = $category->name;
+            $categoryLink = $category->link_title;
 
-        // No category or tag
-        $missingCategoriesAndTags = $serviceGameFilterList->getGamesWithoutCategoriesOrTags();
-        $bindings['NoCategoryOrTagCount'] = count($missingCategoriesAndTags);
+            $gameCategoryList = $this->getServiceGame()->getCategoryTitleMatch($categoryName);
+            $gameCount = count($gameCategoryList);
 
-        // Migrations: Category
-        $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
-        $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
-        $bindings['AllGamesWithNoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+            if ($gameCount > 0) {
+                $categoryArray[] = [
+                    'id' => $categoryId,
+                    'name' => $categoryName,
+                    'link' => $categoryLink,
+                    'gameCount' => $gameCount,
+                    'category' => $category,
+                ];
+            }
 
-        // Title matches: Series
-        $seriesList = $serviceGameSeries->getAll();
+        }
+
+        return $categoryArray;
+    }
+
+    private function getSeriesMatchesStats()
+    {
+        $seriesList = $this->getServiceGameSeries()->getAll();
 
         $seriesArray = [];
 
@@ -74,26 +77,27 @@ class DashboardController extends Controller
             $seriesName = $series->series;
             $seriesLink = $series->link_title;
 
-            $gameSeriesList = $serviceGame->getSeriesTitleMatch($seriesName);
+            $gameSeriesList = $this->getServiceGame()->getSeriesTitleMatch($seriesName);
             $gameCount = count($gameSeriesList);
 
             if ($gameCount > 0) {
-
                 $seriesArray[] = [
                     'id' => $seriesId,
                     'name' => $seriesName,
                     'link' => $seriesLink,
-                    'gameCount' => count($gameSeriesList),
+                    'gameCount' => $gameCount,
+                    'series' => $series,
                 ];
-
             }
 
         }
 
-        $bindings['GameSeriesMatchList'] = $seriesArray;
+        return $seriesArray;
+    }
 
-        // Title matches: Tags
-        $tagList = $serviceTag->getAll();
+    private function getTagMatchesStats()
+    {
+        $tagList = $this->getServiceTag()->getAll();
 
         $tagArray = [];
 
@@ -103,38 +107,74 @@ class DashboardController extends Controller
             $tagName = $tag->tag_name;
             $tagLink = $tag->link_title;
 
-            $gameTagList = $serviceGame->getTagTitleMatch($tagName);
+            $gameTagList = $this->getServiceGame()->getTagTitleMatch($tag);
+            $gameCount = count($gameTagList);
 
-            if ($gameTagList) {
-
-                $gameTagCount = 0;
-                foreach ($gameTagList as $game) {
-                    if (!$serviceGameTag->gameHasTag($game->id, $tagId)) {
-                        $gameTagCount++;
-                    }
-                }
-
-                if ($gameTagCount > 0) {
-
-                    $tagArray[] = [
-                        'id' => $tagId,
-                        'name' => $tagName,
-                        'link' => $tagLink,
-                        'gameCount' => $gameTagCount,
-                    ];
-
-                }
-
+            if ($gameCount > 0) {
+                $tagArray[] = [
+                    'id' => $tagId,
+                    'name' => $tagName,
+                    'link' => $tagLink,
+                    'gameCount' => $gameCount,
+                    'tag' => $tag,
+                ];
             }
 
         }
 
-        $bindings['GameTagMatchList'] = $tagArray;
+        return $tagArray;
+    }
+
+    public function show()
+    {
+        $pageTitle = 'Categorisation dashboard';
+
+        $serviceQualityStats = new QualityStats();
+        $serviceMigrationsCategory = new MigrationsCategory();
+
+        $bindings = [];
+
+        // Migrations: Category
+        $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
+        $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
+        $bindings['AllGamesWithNoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+
+        // Title matches
+        $bindings['GameCategoryMatchList'] = $this->getCategoryMatchesStats();
+        $bindings['GameSeriesMatchList'] = $this->getSeriesMatchesStats();
+        $bindings['GameTagMatchList'] = $this->getTagMatchesStats();
 
         // Core stuff
         $bindings['TopTitle'] = $pageTitle.' - Admin';
         $bindings['PageTitle'] = $pageTitle;
 
         return view('staff.categorisation.dashboard', $bindings);
+    }
+
+    public function categoryTitleMatch(Category $category)
+    {
+        $bindings = $this->getListBindings('Category matches: '.$category->name);
+
+        $bindings['GameList'] = $this->getServiceGame()->getCategoryTitleMatch($category->name);
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function seriesTitleMatch(GameSeries $gameSeries)
+    {
+        $bindings = $this->getListBindings('Series matches: '.$gameSeries->series);
+
+        $bindings['GameList'] = $this->getServiceGame()->getSeriesTitleMatch($gameSeries->series);
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function tagTitleMatch(Tag $tag)
+    {
+        $bindings = $this->getListBindings('Tag matches: '.$tag->tag_name);
+
+        $bindings['GameList'] = $this->getServiceGame()->getTagTitleMatch($tag);
+
+        return view('staff.games.list.standard-view', $bindings);
     }
 }

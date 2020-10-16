@@ -3,11 +3,13 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Category;
 use App\Game;
 use App\GameSeries;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Tag;
+use App\GameTag;
 
 
 class GameService
@@ -302,6 +304,27 @@ class GameService
         return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
     }
 
+    /**
+     * @param $tagId
+     * @return mixed
+     */
+    public function getByTag($tagId)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('game_tags.tag_id', $tagId)
+            ->orderBy('games.id', 'desc');
+
+        $games = $games->get();
+        return $games;
+    }
+
     // ** ACTION LISTS (New) ** //
 
     public function countWithoutPrices()
@@ -318,6 +341,15 @@ class GameService
             ->get();
     }
 
+    // Category
+    public function getCategoryTitleMatch($category)
+    {
+        return Game::where('title', 'LIKE', $category.'%')
+            ->whereNull('category_id')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
+
     // Series
     public function getSeriesTitleMatch($series)
     {
@@ -328,10 +360,12 @@ class GameService
     }
 
     // Tag
-    // NB. This doesn't de-dupe games that already have the tag - that is done separately
-    public function getTagTitleMatch($tagName)
+    public function getTagTitleMatch(Tag $tag)
     {
-        return Game::where('title', 'LIKE', '%'.$tagName.'%')
+        $gamesWithTag = GameTag::where('tag_id', $tag->id)->pluck('game_id');
+
+        return Game::where('title', 'LIKE', '%'.$tag->tag_name.'%')
+            ->whereNotIn('id', $gamesWithTag)
             ->orderBy('id', 'asc')
             ->get();
     }

@@ -47,7 +47,7 @@
                         {% if item.gameTags().count == 0 %}
                             <a href="javascript:void(0);" id="lnk-delete-tag-{{ item.id }}" class="lnk-delete-tag">Delete</a>
                         {% else %}
-                            <a href="{{ route('admin.games-filter.games-with-tag', {'linkTitle': item.link_title}) }}">View games</a>
+                            <a href="{{ route('staff.games.list.by-tag', {'tag': item}) }}">View games</a>
                         {% endif %}
                     </td>
                 </tr>

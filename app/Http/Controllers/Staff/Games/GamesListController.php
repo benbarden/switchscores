@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Category;
 use App\GameSeries;
+use App\Tag;
 
 use App\Traits\SwitchServices;
 
@@ -141,6 +142,15 @@ class GamesListController extends Controller
 
         $bindings['CustomHeader'] = 'Series';
         $bindings['ListMode'] = 'by-series';
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function byTag(Tag $tag)
+    {
+        $bindings = $this->getListBindings('By tag: '.$tag->tag_name, "[ 0, 'desc']");
+
+        $bindings['GameList'] = $this->getServiceGame()->getByTag($tag->id);
 
         return view('staff.games.list.standard-view', $bindings);
     }
