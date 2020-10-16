@@ -59,8 +59,8 @@ class PartnersController extends Controller
 
         $partnerId = $partnerData->id;
 
-        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, true);
-        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, true);
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, false);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, false);
 
         $mergedGameList = $servicePartner->getMergedGameList($gameDevList, $gamePubList);
         $mergedGameList = collect($mergedGameList)->sortBy('eu_release_date')->reverse()->toArray();
