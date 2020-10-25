@@ -45,6 +45,13 @@ class Differences
         return $this->getPublishers($sourceId, $importRulesTable, $gameId);
     }
 
+    public function getGenresNintendoCoUk($gameId = null)
+    {
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        $importRulesTable = 'game_import_rules_eshop';
+        return $this->getGenres($sourceId, $importRulesTable, $gameId);
+    }
+
     public function getReleaseDateEUWikipedia($gameId = null)
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
@@ -78,6 +85,13 @@ class Differences
         $sourceId = DataSource::DSID_WIKIPEDIA;
         $importRulesTable = 'game_import_rules_wikipedia';
         return $this->getPublishers($sourceId, $importRulesTable, $gameId);
+    }
+
+    public function getGenresWikipedia($gameId = null)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        $importRulesTable = 'game_import_rules_wikipedia';
+        return $this->getGenres($sourceId, $importRulesTable, $gameId);
     }
 
     public function getReleaseDate($sourceId, $importRulesTable, $region, $gameId = null)
@@ -250,6 +264,31 @@ class Differences
             '.$gameSql.'
             GROUP BY g.id
             HAVING game_publishers != dsp_publishers
+        ', $params);
+    }
+
+    public function getGenres($sourceId, $importRulesTable, $gameId = null)
+    {
+        if ($gameId) {
+            $gameSql = 'AND dsp.game_id = ?';
+            $params = [$sourceId, $gameId];
+        } else {
+            $gameSql = '';
+            $params = [$sourceId];
+        }
+
+        return DB::select('
+            SELECT g.id, g.title, g.link_title, c.name AS category_name,
+            dsp.genres_json AS dsp_genres, 
+            CASE WHEN c.name IS NULL THEN NULL ELSE JSON_ARRAY(c.name) END AS category_json
+            FROM games g
+            LEFT JOIN categories c ON g.category_id = c.id
+            LEFT JOIN '.$importRulesTable.' gir ON g.id = gir.game_id
+            JOIN data_source_parsed dsp ON g.id = dsp.game_id
+            WHERE dsp.source_id = ?
+            AND (gir.ignore_genres IS NULL OR gir.ignore_genres = 0)
+            AND (c.id IS NULL OR CAST(dsp.genres_json AS JSON) != JSON_ARRAY(c.name))
+            '.$gameSql.'
         ', $params);
     }
 }

@@ -375,11 +375,13 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/data-sources/differences/nintendo-co-uk/price', 'Staff\DataSources\DifferencesController@nintendoCoUkPrice')->name('staff.data-sources.differences.nintendo-co-uk.price');
     Route::get('/staff/data-sources/differences/nintendo-co-uk/players', 'Staff\DataSources\DifferencesController@nintendoCoUkPlayers')->name('staff.data-sources.differences.nintendo-co-uk.players');
     Route::get('/staff/data-sources/differences/nintendo-co-uk/publishers', 'Staff\DataSources\DifferencesController@nintendoCoUkPublishers')->name('staff.data-sources.differences.nintendo-co-uk.publishers');
+    Route::get('/staff/data-sources/differences/nintendo-co-uk/genres', 'Staff\DataSources\DifferencesController@nintendoCoUkGenres')->name('staff.data-sources.differences.nintendo-co-uk.genres');
     Route::get('/staff/data-sources/differences/wikipedia/eu-release-date', 'Staff\DataSources\DifferencesController@wikipediaEuReleaseDate')->name('staff.data-sources.differences.wikipedia.eu-release-date');
     Route::get('/staff/data-sources/differences/wikipedia/us-release-date', 'Staff\DataSources\DifferencesController@wikipediaUsReleaseDate')->name('staff.data-sources.differences.wikipedia.us-release-date');
     Route::get('/staff/data-sources/differences/wikipedia/jp-release-date', 'Staff\DataSources\DifferencesController@wikipediaJpReleaseDate')->name('staff.data-sources.differences.wikipedia.jp-release-date');
     Route::get('/staff/data-sources/differences/wikipedia/developers', 'Staff\DataSources\DifferencesController@wikipediaDevelopers')->name('staff.data-sources.differences.wikipedia.developers');
     Route::get('/staff/data-sources/differences/wikipedia/publishers', 'Staff\DataSources\DifferencesController@wikipediaPublishers')->name('staff.data-sources.differences.wikipedia.publishers');
+    Route::get('/staff/data-sources/differences/wikipedia/genres', 'Staff\DataSources\DifferencesController@wikipediaGenres')->name('staff.data-sources.differences.wikipedia.genres');
     Route::get('/staff/data-sources/differences/apply-change', 'Staff\DataSources\DifferencesController@applyChange')->name('staff.data-sources.differences.apply-change');
     Route::get('/staff/data-sources/differences/ignore-change', 'Staff\DataSources\DifferencesController@ignoreChange')->name('staff.data-sources.differences.ignore-change');
 

@@ -17,6 +17,23 @@ class DifferencesController extends Controller
 {
     use SwitchServices;
 
+    public function getCategoryId($genresJson)
+    {
+        $genresArray = json_decode($genresJson);
+        if (count($genresArray) != 1) {
+            throw new \Exception('Cannot auto-apply change - expected 1 genre, got '.count($genresArray));
+        }
+
+        $categoryName = $genresArray[0];
+        $category = $this->getServiceCategory()->getByName($categoryName);
+        if (!$category) {
+            throw new \Exception('Cannot find category with name: '.$categoryName);
+        }
+
+        $categoryId = $category->id;
+        return $categoryId;
+    }
+
     public function applyChange()
     {
         $request = request();
@@ -49,6 +66,13 @@ class DifferencesController extends Controller
                     $game->price_eshop = $dsParsedItem->price_standard;
                 } elseif ($sourceField == 'dsp_players') {
                     $game->players = $dsParsedItem->players;
+                } elseif ($sourceField == 'dsp_genres') {
+                    try {
+                        $categoryId = $this->getCategoryId($dsParsedItem->genres_json);
+                    } catch (\Exception $e) {
+                        return response()->json(['error' => $e->getMessage()], 400);
+                    }
+                    $game->category_id = $categoryId;
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -72,6 +96,13 @@ class DifferencesController extends Controller
                     $game->us_release_date = $dsParsedItem->release_date_us;
                 } elseif ($sourceField == 'release_date_jp') {
                     $game->jp_release_date = $dsParsedItem->release_date_jp;
+                } elseif ($sourceField == 'dsp_genres') {
+                    try {
+                        $categoryId = $this->getCategoryId($dsParsedItem->genres_json);
+                    } catch (\Exception $e) {
+                        return response()->json(['error' => $e->getMessage()], 400);
+                    }
+                    $game->category_id = $categoryId;
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -124,6 +155,7 @@ class DifferencesController extends Controller
                         'ignore_price' => $gameImportRuleEshop->ignore_price,
                         'ignore_players' => $gameImportRuleEshop->ignore_players,
                         'ignore_publishers' => $gameImportRuleEshop->ignore_publishers,
+                        'ignore_genres' => $gameImportRuleEshop->ignore_genres,
                     ];
                 } else {
                     $importRuleParams = [];
@@ -137,6 +169,8 @@ class DifferencesController extends Controller
                     $importRuleParams['ignore_players'] = 'on';
                 } elseif ($sourceField == 'dsp_publishers') {
                     $importRuleParams['ignore_publishers'] = 'on';
+                } elseif ($sourceField == 'dsp_genres') {
+                    $importRuleParams['ignore_genres'] = 'on';
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -174,6 +208,7 @@ class DifferencesController extends Controller
                         'ignore_jp_dates' => $gameImportRuleWikipedia->ignore_jp_dates,
                         'ignore_developers' => $gameImportRuleWikipedia->ignore_developers,
                         'ignore_publishers' => $gameImportRuleWikipedia->ignore_publishers,
+                        'ignore_genres' => $gameImportRuleWikipedia->ignore_genres,
                     ];
                 } else {
                     $importRuleParams = [];
@@ -189,6 +224,8 @@ class DifferencesController extends Controller
                     $importRuleParams['ignore_developers'] = 'on';
                 } elseif ($sourceField == 'dsp_publishers') {
                     $importRuleParams['ignore_publishers'] = 'on';
+                } elseif ($sourceField == 'dsp_genres') {
+                    $importRuleParams['ignore_genres'] = 'on';
                 } else {
                     return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 }
@@ -307,6 +344,28 @@ class DifferencesController extends Controller
         return view('staff.data-sources.differences.view-differences', $bindings);
     }
 
+    public function nintendoCoUkGenres()
+    {
+        $pageTitle = 'Differences: Genres - Nintendo.co.uk API';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getGenresNintendoCoUk();
+
+        $bindings['GameField'] = 'category_name';
+        $bindings['SourceField'] = 'dsp_genres';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
     public function wikipediaEuReleaseDate()
     {
         $pageTitle = 'Differences: EU release date - Wikipedia';
@@ -412,6 +471,28 @@ class DifferencesController extends Controller
         $bindings['SourceField'] = 'dsp_publishers';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
         $bindings['HideApplyChange'] = 'Y';
+
+        $highlightGameId = \Request::get('gameid');
+        $bindings['HighlightGameId'] = $highlightGameId;
+
+        return view('staff.data-sources.differences.view-differences', $bindings);
+    }
+
+    public function wikipediaGenres()
+    {
+        $pageTitle = 'Differences: Genres - Wikipedia';
+
+        $bindings = [];
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $dsDifferences = new Differences();
+        $bindings['DifferenceList'] = $dsDifferences->getGenresWikipedia();
+
+        $bindings['GameField'] = 'category_name';
+        $bindings['SourceField'] = 'dsp_genres';
+        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;

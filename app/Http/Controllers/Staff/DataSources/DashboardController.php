@@ -44,9 +44,13 @@ class DashboardController extends Controller
         $nintendoCoUkPublishers = $dsDifferences->getPublishersNintendoCoUk();
         $wikipediaDevelopers = $dsDifferences->getDevelopersWikipedia();
         $wikipediaPublishers = $dsDifferences->getPublishersWikipedia();
+        $nintendoCoUkGenres = $dsDifferences->getGenresNintendoCoUk();
+        $wikipediaGenres = $dsDifferences->getGenresWikipedia();
         $bindings['PublishersNintendoCoUkDifferenceCount'] = count($nintendoCoUkPublishers);
         $bindings['DevelopersWikipediaDifferenceCount'] = count($wikipediaDevelopers);
         $bindings['PublishersWikipediaDifferenceCount'] = count($wikipediaPublishers);
+        $bindings['GenresNintendoCoUkDifferenceCount'] = count($nintendoCoUkGenres);
+        $bindings['GenresWikipediaDifferenceCount'] = count($wikipediaGenres);
 
         // Stats: Nintendo.co.uk
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
