@@ -20,14 +20,30 @@ class DifferencesController extends Controller
     public function getCategoryId($genresJson)
     {
         $genresArray = json_decode($genresJson);
-        if (count($genresArray) != 1) {
-            throw new \Exception('Cannot auto-apply change - expected 1 genre, got '.count($genresArray));
+        $genreCount = count($genresArray);
+        $categoryName = null;
+        $category = null;
+
+        if ($genreCount == 0) {
+            throw new \Exception('No genres to apply!');
         }
 
-        $categoryName = $genresArray[0];
+        // Handle acceptable matches
+        if (array_diff($genresArray, ['Adventure', 'role-playing']) == null) {
+            $categoryName = 'Adventure RPG';
+        } elseif (array_diff($genresArray, ['Action', 'adventure']) == null) {
+            $categoryName = 'Action-adventure';
+        } elseif (array_diff($genresArray, ['Adventure', 'puzzle']) == null) {
+            $categoryName = 'Puzzle adventure';
+        } elseif (array_diff($genresArray, ['Point and click adventure']) == null) {
+            $categoryName = 'Adventure';
+        } elseif ($genreCount == 1) {
+            $categoryName = $genresArray[0];
+        }
+
         $category = $this->getServiceCategory()->getByName($categoryName);
         if (!$category) {
-            throw new \Exception('Cannot find category with name: '.$categoryName);
+            throw new \Exception('Failed to match genres to category');
         }
 
         $categoryId = $category->id;
