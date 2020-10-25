@@ -38,6 +38,8 @@ class DifferencesController extends Controller
         if ($genreCount == 1) {
             if ($genresArray[0] == 'Point and click adventure') {
                 $categoryName = 'Adventure';
+            } elseif ($genresArray[0] == 'Point-and-click adventure') {
+                $categoryName = 'Adventure';
             } else {
                 $categoryName = $genresArray[0];
             }
