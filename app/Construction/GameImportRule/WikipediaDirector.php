@@ -107,5 +107,20 @@ class WikipediaDirector
         } else {
             $this->builder->setIgnoreJPDates(0);
         }
+
+        if (array_key_exists('ignore_genres', $params)) {
+            switch ($params['ignore_genres']) {
+                case 'on':
+                case 1:
+                    $ignoreGenres = 1;
+                    break;
+                default:
+                    $ignoreGenres = 0;
+                    break;
+            }
+            $this->builder->setIgnoreGenres($ignoreGenres);
+        } else {
+            $this->builder->setIgnoreGenres(0);
+        }
     }
 }

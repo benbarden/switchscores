@@ -11,6 +11,7 @@
         formVals['ignore_europe_dates'] = "{{ GameImportRuleWikipedia.ignore_europe_dates }}";
         formVals['ignore_us_dates'] = "{{ GameImportRuleWikipedia.ignore_us_dates }}";
         formVals['ignore_jp_dates'] = "{{ GameImportRuleWikipedia.ignore_jp_dates }}";
+        formVals['ignore_genres'] = "{{ GameImportRuleWikipedia.ignore_genres }}";
 
     } else {
 
@@ -21,6 +22,7 @@
         formVals['ignore_europe_dates'] = "{{ old('ignore_europe_dates') }}";
         formVals['ignore_us_dates'] = "{{ old('ignore_us_dates') }}";
         formVals['ignore_jp_dates'] = "{{ old('ignore_jp_dates') }}";
+        formVals['ignore_genres'] = "{{ old('ignore_genres') }}";
 
     }
 
@@ -48,6 +50,11 @@
         $('#ignore_jp_dates').attr('checked', true);
     } else {
         $('#ignore_jp_dates').attr('checked', false);
+    }
+    if (formVals['ignore_genres'] == '1') {
+        $('#ignore_genres').attr('checked', true);
+    } else {
+        $('#ignore_genres').attr('checked', false);
     }
 
 </script>

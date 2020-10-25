@@ -26,6 +26,7 @@ class GameImportRuleWikipedia extends Model
         'ignore_europe_dates',
         'ignore_us_dates',
         'ignore_jp_dates',
+        'ignore_genres',
     ];
 
     /**
@@ -37,6 +38,7 @@ class GameImportRuleWikipedia extends Model
         'ignore_europe_dates' => 'boolean',
         'ignore_us_dates' => 'boolean',
         'ignore_jp_dates' => 'boolean',
+        'ignore_genres' => 'boolean',
     ];
 
     public function game()
@@ -67,5 +69,10 @@ class GameImportRuleWikipedia extends Model
     public function shouldIgnoreJPDates()
     {
         return $this->ignore_jp_dates == 1;
+    }
+
+    public function shouldIgnoreGenres()
+    {
+        return $this->ignore_genres == 1;
     }
 }

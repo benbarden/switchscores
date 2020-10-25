@@ -78,6 +78,12 @@ class Parser
             $this->dataSourceParsed->publishers = $parsedPublishers;
         }
 
+        // Genres
+        $parsedGenres = $this->parseGenres();
+        if (!is_null($parsedGenres)) {
+            $this->dataSourceParsed->genres_json = $parsedGenres;
+        }
+
         // Rules for not saving
         if (is_null($releaseDateEU) && is_null($releaseDateUS)) {
             $this->hasSufficientDataToSave = false;
@@ -199,5 +205,18 @@ class Parser
         }
 
         return $parsedPublishers;
+    }
+
+    public function parseGenres()
+    {
+        if (!array_key_exists('genres', $this->rawJsonData)) {
+            return null;
+        }
+
+        $rawGenres = $this->rawJsonData['genres'];
+        $rawGenresArray = explode(",", $rawGenres);
+        $parsedGenres = json_encode($rawGenresArray);
+
+        return $parsedGenres;
     }
 }

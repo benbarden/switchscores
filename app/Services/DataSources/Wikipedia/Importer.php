@@ -157,6 +157,25 @@ class Importer
 
                     }
 
+                } elseif ($i == 1) {
+
+                    // Genres
+                    $listItemCount = substr_count($td->html(), '<li>');
+
+                    if ($listItemCount == 0) {
+
+                        // Just return the text
+                        return trim($td->text());
+
+                    } else {
+
+                        // Expected - we can deal with this
+                        return $td->filter('li')->each(function ($span, $i) {
+                            return trim($span->text());
+                        });
+
+                    }
+
                 } else {
                     return trim($td->text());
                 }
@@ -178,7 +197,7 @@ class Importer
     public function flattenArray($input)
     {
         if (is_array($input)) {
-            $output = implode(', ', $input);
+            $output = implode(',', $input);
         } else {
             $output = $input;
         }
@@ -203,7 +222,7 @@ class Importer
             if (in_array($counter, [0, 1])) continue;
 
             $rowTitle = $this->limitField($row[0], 150);
-            $rowGenres = $this->limitField($row[1], 150);
+            $rowGenres = $this->flattenArray($row[1]);
             $rowDevs = $this->flattenArray($row[2]);
             $rowPubs = $this->flattenArray($row[3]);
 

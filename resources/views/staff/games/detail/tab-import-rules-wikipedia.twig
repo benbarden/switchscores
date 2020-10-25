@@ -63,6 +63,18 @@
                 {% endif %}
             </td>
         </tr>
+        <tr>
+            <td>
+                Ignore genres
+            </td>
+            <td>
+                {% if ImportRulesWikipedia.shouldIgnoreGenres() %}
+                    Yes
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
         </tbody>
     </table>
 {% else %}

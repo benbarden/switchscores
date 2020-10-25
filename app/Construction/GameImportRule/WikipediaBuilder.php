@@ -82,4 +82,9 @@ class WikipediaBuilder
     {
         $this->gameImportRule->ignore_jp_dates = $ignoreJPDates;
     }
+
+    public function setIgnoreGenres($ignoreGenres): void
+    {
+        $this->gameImportRule->ignore_genres = $ignoreGenres;
+    }
 }
