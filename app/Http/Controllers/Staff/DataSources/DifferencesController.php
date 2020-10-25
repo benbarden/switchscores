@@ -43,7 +43,7 @@ class DifferencesController extends Controller
 
         $category = $this->getServiceCategory()->getByName($categoryName);
         if (!$category) {
-            throw new \Exception('Failed to match genres to category');
+            throw new \Exception('Cannot auto-match this genre combination to a category.');
         }
 
         $categoryId = $category->id;
