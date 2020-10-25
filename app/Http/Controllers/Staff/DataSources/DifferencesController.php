@@ -28,12 +28,18 @@ class DifferencesController extends Controller
             throw new \Exception('No genres to apply!');
         }
 
+        // Make it consistent
+        foreach ($genresArray as &$genre) {
+            $genre = ucfirst($genre);
+        }
+        sort($genresArray);
+
         // Handle acceptable matches
-        if (array_diff($genresArray, ['Adventure', 'role-playing']) == null) {
+        if (array_diff($genresArray, ['Adventure', 'Role-playing']) == null) {
             $categoryName = 'Adventure RPG';
-        } elseif (array_diff($genresArray, ['Action', 'adventure']) == null) {
+        } elseif (array_diff($genresArray, ['Action', 'Adventure']) == null) {
             $categoryName = 'Action-adventure';
-        } elseif (array_diff($genresArray, ['Adventure', 'puzzle']) == null) {
+        } elseif (array_diff($genresArray, ['Adventure', 'Puzzle']) == null) {
             $categoryName = 'Puzzle adventure';
         } elseif (array_diff($genresArray, ['Point and click adventure']) == null) {
             $categoryName = 'Adventure';
