@@ -35,16 +35,20 @@ class DifferencesController extends Controller
         sort($genresArray);
 
         // Handle acceptable matches
-        if (array_diff($genresArray, ['Adventure', 'Role-playing']) == null) {
-            $categoryName = 'Adventure RPG';
-        } elseif (array_diff($genresArray, ['Action', 'Adventure']) == null) {
-            $categoryName = 'Action-adventure';
-        } elseif (array_diff($genresArray, ['Adventure', 'Puzzle']) == null) {
-            $categoryName = 'Puzzle adventure';
-        } elseif (array_diff($genresArray, ['Point and click adventure']) == null) {
-            $categoryName = 'Adventure';
-        } elseif ($genreCount == 1) {
-            $categoryName = $genresArray[0];
+        if ($genreCount == 1) {
+            if ($genresArray[0] == 'Point and click adventure') {
+                $categoryName = 'Adventure';
+            } else {
+                $categoryName = $genresArray[0];
+            }
+        } else {
+            if (array_diff($genresArray, ['Adventure', 'Role-playing']) == null) {
+                $categoryName = 'Adventure RPG';
+            } elseif (array_diff($genresArray, ['Action', 'Adventure']) == null) {
+                $categoryName = 'Action-adventure';
+            } elseif (array_diff($genresArray, ['Adventure', 'Puzzle']) == null) {
+                $categoryName = 'Puzzle adventure';
+            }
         }
 
         $category = $this->getServiceCategory()->getByName($categoryName);
