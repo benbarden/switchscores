@@ -57,7 +57,9 @@
         <td>
             {% if GameDevelopers|length > 0 %}
                 {% for item in GameDevelopers %}
-                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}" target="_blank">{{ item.developer.name }}</a>
+                    <a href="{{ route('staff.partners.games-company.show', {'partner': item.developer}) }}">
+                        {{ item.developer.name }}
+                    </a>
                     <br>
                 {% endfor %}
             {% else %}
@@ -77,7 +79,9 @@
         <td>
             {% if GamePublishers|length > 0 %}
                 {% for item in GamePublishers %}
-                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" target="_blank">{{ item.publisher.name }}</a>
+                    <a href="{{ route('staff.partners.games-company.show', {'partner': item.publisher}) }}">
+                        {{ item.publisher.name }}
+                    </a>
                     <br>
                 {% endfor %}
             {% else %}
