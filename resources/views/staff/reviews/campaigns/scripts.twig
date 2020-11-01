@@ -1,0 +1,38 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['name'] = "{{ CampaignData.name }}";
+        formVals['description'] = "{{ CampaignData.description }}";
+        formVals['progress'] = "{{ CampaignData.progress }}";
+        formVals['is_active'] = "{{ CampaignData.is_active }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['name'] = "{{ old('name') }}";
+        formVals['description'] = "{{ old('description') }}";
+        formVals['progress'] = "{{ old('progress') }}";
+        formVals['is_active'] = "{{ old('is_active') }}";
+
+    }
+
+    $('#name').val(formVals['name']);
+    $('#description').val(formVals['description']);
+    $('#progress').val(formVals['progress']);
+    if (formVals['is_active'] == '1') {
+        $('#is_active').attr('checked', true);
+    } else {
+        $('#is_active').attr('checked', false);
+    }
+
+    $(document).ready(function() {
+        $('#name').focus();
+    });
+
+</script>

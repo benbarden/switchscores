@@ -245,6 +245,11 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Review highlights
     Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');
 
+    // Review campaigns
+    Route::get('/staff/reviews/campaigns', 'Staff\Reviews\CampaignsController@show')->name('staff.reviews.campaigns');
+    Route::match(['get', 'post'], '/staff/reviews/campaigns/add', 'Staff\Reviews\CampaignsController@add')->name('staff.reviews.campaigns.add');
+    Route::match(['get', 'post'], '/staff/reviews/campaigns/edit/{campaignId}', 'Staff\Reviews\CampaignsController@edit')->name('staff.reviews.campaigns.edit');
+
     // Unranked lists
     Route::get('/staff/reviews/unranked/review-count', 'Staff\Reviews\UnrankedController@reviewCountLanding')->name('staff.reviews.unranked.review-count-landing');
     Route::get('/staff/reviews/unranked/review-count/{reviewCount}/list', 'Staff\Reviews\UnrankedController@reviewCountList')->name('staff.reviews.unranked.review-count-list');

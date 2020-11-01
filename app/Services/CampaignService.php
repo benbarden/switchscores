@@ -10,7 +10,7 @@ class CampaignService
 {
     public function create($name, $description, $progress, $isActive)
     {
-        Category::create([
+        return Campaign::create([
             'name' => $name,
             'description' => $description,
             'progress' => $progress,
