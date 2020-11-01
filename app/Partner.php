@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Partner extends Model
+class Partner extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     const TYPE_REVIEW_SITE = 1;
     const TYPE_GAMES_COMPANY = 2;
 

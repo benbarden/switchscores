@@ -40,6 +40,17 @@ class AuditService
         return $auditList->get();
     }
 
+    public function getPartner($limit = 250)
+    {
+        $auditList = Audit::
+            where('auditable_type', 'App\Partner')
+            ->orderBy('id', 'desc');
+        if ($limit) {
+            $auditList = $auditList->limit($limit);
+        }
+        return $auditList->get();
+    }
+
     public function getAggregatedGameAudits($gameId, $limit = 25)
     {
         /*

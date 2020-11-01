@@ -27,6 +27,10 @@ class AuditController extends Controller
                 $pageTitle = 'Audit report: Review links';
                 $bindings['ItemList'] = $this->getServiceAudit()->getReviewLink(250);
                 break;
+            case 'partners':
+                $pageTitle = 'Audit report: Partners';
+                $bindings['ItemList'] = $this->getServiceAudit()->getPartner(250);
+                break;
             default:
                 abort(404);
         }
