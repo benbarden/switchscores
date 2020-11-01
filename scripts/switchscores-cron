@@ -7,6 +7,8 @@
 10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
 15 4 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
 
+45 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewCampaignUpdateProgress >/dev/null 2>&1
+
 0 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedImporter >/dev/null 2>&1
 5 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedParser >/dev/null 2>&1
 10 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedReviewGenerator >/dev/null 2>&1

@@ -49,15 +49,28 @@
                         <p>
                             Campaigns are a way to get more games ranked.
                         </p>
-                        <ul>
-                            {% for item in ActiveCampaigns %}
-                                <li>
-                                    <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
-                                        {{ item.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-right">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in ActiveCampaigns %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
+                                                {{ item.name }}
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            {{ item.progress }}%
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     {% else %}
                         <p>
                             There are currently no active campaigns. Check back soon for more!
