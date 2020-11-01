@@ -32,6 +32,11 @@ class CampaignGameService
         CampaignGame::where('id', $id)->delete();
     }
 
+    public function deleteAllByCampaign($campaignId)
+    {
+        CampaignGame::where('campaign_id', $campaignId)->delete();
+    }
+
     public function find($id)
     {
         return CampaignGame::find($id);
@@ -40,6 +45,11 @@ class CampaignGameService
     public function getByCampaign($campaignId)
     {
         return CampaignGame::where('campaign_id', $campaignId)->get();
+    }
+
+    public function getByCampaignNumeric($campaignId)
+    {
+        return CampaignGame::where('campaign_id', $campaignId)->orderBy('game_id', 'asc')->get();
     }
 
     public function campaignHasGame($campaignId, $gameId)

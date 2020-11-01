@@ -40,7 +40,8 @@
                     {{ item.created_at }}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('staff.reviews.campaigns.edit', {'campaignId': item.id}) }}">Edit</a>
+                    <a href="{{ route('staff.reviews.campaigns.edit', {'campaignId': item.id}) }}">Edit</a> :
+                    <a href="{{ route('staff.reviews.campaigns.editGames', {'campaignId': item.id}) }}">Edit games</a>
                 </td>
             </tr>
         {% endfor %}

@@ -124,4 +124,56 @@ class CampaignsController extends Controller
 
         return view('staff.reviews.campaigns.edit', $bindings);
     }
+
+    public function editGames($campaignId)
+    {
+        $bindings = $this->getListBindings('Edit campaign games');
+
+        $request = request();
+
+        $serviceCampaign = $this->getServiceCampaign();
+        $serviceCampaignGame = $this->getServiceCampaignGame();
+
+        $campaignData = $serviceCampaign->find($campaignId);
+        if (!$campaignData) abort(404);
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+
+            $gameIds = $request->game_ids;
+            $gameIdList = explode("\r\n", $gameIds);
+
+            $serviceCampaignGame->deleteAllByCampaign($campaignId);
+            foreach ($gameIdList as $gameId) {
+                $serviceCampaignGame->create($campaignId, $gameId);
+            }
+
+            return redirect(route('staff.reviews.campaigns'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
+        }
+
+        $bindings['CampaignData'] = $campaignData;
+        $bindings['CampaignId'] = $campaignId;
+
+        $campaignGameList = $serviceCampaignGame->getByCampaignNumeric($campaignId);
+        if ($campaignGameList) {
+            $gameIdList = '';
+            foreach ($campaignGameList as $listItem) {
+                $gameId = $listItem->game_id;
+                if ($gameIdList) {
+                    $gameIdList .= "\n";
+                }
+                $gameIdList .= $gameId;
+            }
+            $bindings['GameIds'] = $gameIdList;
+        }
+
+        return view('staff.reviews.campaigns.editGames', $bindings);
+    }
 }
