@@ -19,7 +19,6 @@ class UserService
             'email' => $randomEmail,
             'twitter_user_id' => $twitterUserId,
             'twitter_name' => $twitterNickname,
-            'region' => 'eu',
         ];
         $user = User::create($values);
         return $user;

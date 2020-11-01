@@ -75,6 +75,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        abort(404);
+        /*
         $values = [];
         if (array_key_exists('signup_name', $data)) {
             $values['display_name'] = $data['signup_name'];
@@ -97,5 +99,6 @@ class RegisterController extends Controller
         event(new UserCreated($user));
 
         return $user;
+        */
     }
 }

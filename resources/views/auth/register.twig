@@ -6,9 +6,11 @@
 
     <div class="col-md-12">
 
-        <p>
-            Register for the site using the below form. Already a member? <a href="{{ route('login') }}">You can login here</a>.
-        </p>
+        <div class="alert alert-warning">
+            Registration with email and password has been disabled. You can still register with Twitter -
+            to do so, <a href="{{ route('login') }}" style="color: #fff; font-weight: bold;">go to the login screen</a>
+            and click the Twitter button.
+        </div>
         <h3>Enter your details</h3>
         {% if errors.any %}
             {% for error in errors.all %}
