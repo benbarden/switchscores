@@ -24,9 +24,11 @@ class Parser
      */
     private $rawJsonData;
 
-    public function __construct(DataSourceRaw $dataSourceRaw, $logger)
+    public function __construct(DataSourceRaw $dataSourceRaw, $logger = null)
     {
-        $this->logger = $logger;
+        if ($logger) {
+            $this->logger = $logger;
+        }
 
         $dataSourceParsed = new DataSourceParsed();
 
