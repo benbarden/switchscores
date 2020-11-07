@@ -51,107 +51,16 @@
 
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-        <h2>Rank</h2>
+        <h2 class="standout-header">Rank</h2>
 
-        {% if GameData.game_rank %}
-            <!-- All-time -->
-            <div class="row">
+        {% include 'modules/game/rank/all-time.twig' %}
+        {% include 'modules/game/rank/year.twig' %}
+        {% include 'modules/game/rank/year-month.twig' %}
 
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <h4 class="rating-title">
-                        <a href="{{ route('topRated.allTime') }}">All-time</a>
-                    </h4>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h4 style="margin: 5px 0;">
-                        <span class="rating-v2">
-                            <span class="rank">{{ GameData.game_rank }}</span>
-                            <span class="separator">/</span>
-                            <span class="suffix">{{ RankMaximum }}</span>
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-md-2">
-                </div>
+        <h2 class="standout-header">Scores</h2>
 
-            </div>
-        {% else %}
-            <!-- All-time -->
-            <div class="row">
-
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <h4 class="rating-title">
-                        <a href="{{ route('topRated.allTime') }}">All-time</a>
-                    </h4>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h4 style="margin: 5px 0;">
-                        <span class="rating-v2">
-                            <span class="rank"></span>
-                            <span class="separator"></span>
-                            <span class="suffix">TBC</span>
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-md-2">
-                </div>
-
-            </div>
-        {% endif %}
-        <hr style="margin: 4px 0; width: 80%;">
-
-        {% if GameData.gameRankYear.game_rank != '' %}
-            <!-- Year -->
-            <div class="row">
-
-                {% set GameRankYearDisplay = GameData.eu_release_date|date('Y') %}
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <h4 class="rating-title">
-                        <a href="{{ route('topRated.byYear', {'year': GameRankYearDisplay}) }}">{{ GameRankYearDisplay }}</a>
-                    </h4>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h4 style="margin: 5px 0;">
-                        <span class="rating-v2">
-                            <span class="rank">{{ GameData.gameRankYear.game_rank }}</span>
-                            <span class="separator">/</span>
-                            <span class="suffix">100</span>
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-md-2">
-                </div>
-
-            </div>
-            <hr style="margin: 4px 0; width: 80%;">
-        {% endif %}
-
-        {% if GameData.gameRankYearMonth.game_rank != '' %}
-            <!-- Month -->
-            <div class="row">
-
-                {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
-                {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
-                <div class="col-md-4 col-sm-4 col-xs-6"">
-                    <h4 class="rating-title">
-                        <a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a>
-                    </h4>
-                </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h4 style="margin: 5px 0;">
-                        <span class="rating-v2">
-                            <span class="rank">{{ GameData.gameRankYearMonth.game_rank }}</span>
-                            <span class="separator"></span>
-                            <span class="suffix"></span>
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-md-2">
-                </div>
-
-            </div>
-            <hr style="margin: 4px 0; width: 80%;">
-        {% endif %}
+        {% include 'modules/game/rank/review-count.twig' %}
+        {% include 'modules/game/rank/rating-avg.twig' %}
 
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
 

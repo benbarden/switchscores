@@ -14,6 +14,14 @@ h4, .h4 {font-size: 20px;}
 h5, .h5 {font-size: 16px;}
 h6, .h6 {font-size: 14px;}
 
+.hdr-block {
+    background: #18C0DF;
+    color: #ffffff;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    text-align: left;
+}
+
 .breadcrumb {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 12px;
@@ -28,4 +36,25 @@ h6, .h6 {font-size: 14px;}
 .navbar-default .navbar-nav>li>a,
 .navbar-default .navbar-nav>li>a:hover {
     color: #ffffff;
+}
+
+/* Ratings - new */
+.rating-title {
+    font-size: 20px;
+    margin: 6px 0;
+}
+.rating-v2 {
+    font-weight: bold;
+    font-family: 'Noto Sans KR', serif;
+    line-height: 1;
+}
+.rating-v2 .rank {
+    font-size: 24px;
+}
+.rating-v2 .separator {
+    margin: 0 5px;
+}
+.rating-v2 .suffix {
+    color: #999;
+    font-size: 16px;
 }

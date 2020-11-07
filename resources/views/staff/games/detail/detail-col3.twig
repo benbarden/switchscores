@@ -17,7 +17,7 @@
             {% if mode == 'reviewers' %}
 
             {% else %}
-                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{{ route('staff.games.editNintendoCoUk', {'gameId': GameId}) }}" class="btn btn-primary btn-sm">Edit link</a>
             {% endif %}
         </td>
     </tr>
@@ -59,6 +59,24 @@
             </td>
             <td>
                 <a href="{{ LinkHelper.eshopUrl('eu', DataSourceNintendoCoUk.url) }}" target="_blank">Visit Nintendo.co.uk page</a>
+            </td>
+        </tr>
+    {% endif %}
+    {% if DataSourceNintendoCoUk %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Update data</span>
+            </td>
+            <td>
+                <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-sm" target="_blank">Update API data</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Update images</span>
+            </td>
+            <td>
+                <a id="btn-redownload-packshots" class="btn btn-primary btn-sm" target="_blank">Update images</a>
             </td>
         </tr>
     {% endif %}

@@ -29,6 +29,9 @@ class GamesDetailController extends Controller
         $bindings['TopTitle'] = $gameTitle.' - Game detail - Staff';
         $bindings['PageTitle'] = $gameTitle;
 
+        // Total rank count
+        $bindings['RankMaximum'] = $serviceGame->countRanked();
+
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
 
         $lastGameId = \Request::get('lastgameid');

@@ -1,0 +1,25 @@
+{% if GameData.gameRankYear.game_rank != '' %}
+    <!-- Year -->
+    <div class="row">
+
+        {% set GameRankYearDisplay = GameData.eu_release_date|date('Y') %}
+        <div class="col-md-4 col-sm-4 col-xs-6">
+            <h4 class="rating-title">
+                <a href="{{ route('topRated.byYear', {'year': GameRankYearDisplay}) }}">{{ GameRankYearDisplay }}</a>
+            </h4>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <h4 style="margin: 5px 0;">
+                <span class="rating-v2">
+                    <span class="rank">{{ GameData.gameRankYear.game_rank }}</span>
+                    <span class="separator">/</span>
+                    <span class="suffix">100</span>
+                </span>
+            </h4>
+        </div>
+        <div class="col-md-2">
+        </div>
+
+    </div>
+    <hr style="margin: 4px 0; width: 80%;">
+{% endif %}

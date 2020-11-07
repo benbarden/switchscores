@@ -1,0 +1,26 @@
+{% if GameData.gameRankYearMonth.game_rank != '' %}
+    <!-- Month -->
+    <div class="row">
+
+        {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
+        {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
+        <div class="col-md-4 col-sm-4 col-xs-6"">
+            <h4 class="rating-title">
+                <a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a>
+            </h4>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <h4 style="margin: 5px 0;">
+                <span class="rating-v2">
+                    <span class="rank">{{ GameData.gameRankYearMonth.game_rank }}</span>
+                    <span class="separator"></span>
+                    <span class="suffix"></span>
+                </span>
+            </h4>
+        </div>
+        <div class="col-md-2">
+        </div>
+
+    </div>
+    <hr style="margin: 4px 0; width: 80%;">
+{% endif %}

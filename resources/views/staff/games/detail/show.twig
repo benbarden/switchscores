@@ -65,22 +65,52 @@
 
     <div class="col-md-4">
 
-        {% if DataSourceNintendoCoUk %}
-            <a id="btn-update-eu-eshop-data" class="btn btn-primary btn-sm" target="_blank">Update API data</a>
-            <a id="btn-redownload-packshots" class="btn btn-primary btn-sm" target="_blank">Update images</a>
+
+    </div>
+
+    <div class="col-md-4">
+
+    <span class="pull-right">
+        <a href="{{ route('staff.games.delete', {'gameId': GameId}) }}" class="btn btn-danger btn-sm">Delete game</a>
+    </span>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
+        {% if boxartUrl %}
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
+        {% else %}
+            <div style="background: #ccc; height: 300px; width: 100%;" class="img-responsive"></div>
         {% endif %}
 
     </div>
 
     <div class="col-md-4">
 
-        <span class="pull-right">
-            <a href="{{ route('staff.games.delete', {'gameId': GameId}) }}" class="btn btn-danger btn-sm">Delete game</a>
-        </span>
+        <h2 class="hdr-block">Rank</h2>
+
+        {% include 'modules/game/rank/all-time.twig' %}
+        {% include 'modules/game/rank/year.twig' %}
+        {% include 'modules/game/rank/year-month.twig' %}
+
+        <h2 class="hdr-block">Scores</h2>
+
+        {% include 'modules/game/rank/review-count.twig' %}
+        {% include 'modules/game/rank/rating-avg.twig' %}
 
     </div>
 
 </div>
+
+<br>
 
 <div class="row">
 
