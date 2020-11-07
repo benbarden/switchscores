@@ -33,6 +33,11 @@ class Game extends Model implements Auditable
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year'
     ];
 
+    public function gameQualityScore()
+    {
+        return $this->hasOne('App\GameQualityScore', 'game_id', 'id');
+    }
+
     public function gameRankYear()
     {
         return $this->hasOne('App\GameRankYear', 'game_id', 'id');
