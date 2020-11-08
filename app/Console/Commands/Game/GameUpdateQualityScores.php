@@ -64,7 +64,12 @@ class GameUpdateQualityScores extends Command
 
             $logger->info('Processing game: '.$game->id.' - '.$game->title);
 
-            $qsDirector = new QualityScoreDirector();
+            if ($argGameId) {
+                // Make it more verbose when running against individual games
+                $qsDirector = new QualityScoreDirector($logger);
+            } else {
+                $qsDirector = new QualityScoreDirector();
+            }
             $qsBuilder = new QualityScoreBuilder();
             $qsDirector->setBuilder($qsBuilder);
 

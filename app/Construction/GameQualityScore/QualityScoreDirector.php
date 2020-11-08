@@ -2,6 +2,8 @@
 
 namespace App\Construction\GameQualityScore;
 
+use Illuminate\Log\Logger;
+
 use App\DataSourceParsed;
 use App\Game;
 use App\GameImportRuleEshop;
@@ -10,6 +12,11 @@ use App\GameQualityScore;
 
 class QualityScoreDirector
 {
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     /**
      * @var QualityScoreBuilder
      */
@@ -45,8 +52,11 @@ class QualityScoreDirector
      */
     private $dsParsedWikipedia;
 
-    public function __construct()
+    public function __construct($logger = null)
     {
+        if ($logger) {
+            $this->logger = $logger;
+        }
         $this->scoreRunningTotal = 0;
     }
 
@@ -85,6 +95,25 @@ class QualityScoreDirector
         $this->dsParsedWikipedia = $dataSourceParsed;
     }
 
+    public function incrementScore($byHowMuch = 1)
+    {
+        $this->scoreRunningTotal = $this->scoreRunningTotal + $byHowMuch;
+        if ($this->logger) {
+            $this->logger->info('Running total: '.$this->scoreRunningTotal);
+        }
+    }
+
+    public function calculateQualityScore()
+    {
+        $maxScore = GameQualityScore::MAX_SCORE;
+        $qualityScore = ($this->scoreRunningTotal / $maxScore) * 100;
+        $qualityScore = number_format(round($qualityScore, 2), 2);
+        if ($this->logger) {
+            $this->logger->info('Calculated quality score to be: '.$qualityScore);
+        }
+        return $qualityScore;
+    }
+
     public function buildNew(): void
     {
         $gameId = $this->game->id;
@@ -100,40 +129,39 @@ class QualityScoreDirector
 
     public function buildGameQualityScore(): void
     {
-        $maxScore = GameQualityScore::MAX_SCORE;
         $this->scoreRunningTotal = 0;
 
         if ($this->game->category_id != null) {
             $this->builder->setHasCategory(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             $this->builder->setHasCategory(0);
         }
 
         if ($this->game->gameDevelopers->count() > 0) {
             $this->builder->setHasDevelopers(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             $this->builder->setHasDevelopers(0);
         }
 
         if ($this->game->gamePublishers->count() > 0) {
             $this->builder->setHasPublishers(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             $this->builder->setHasPublishers(0);
         }
 
         if ($this->game->players != null) {
             $this->builder->setHasPlayers(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             $this->builder->setHasPlayers(0);
         }
 
         if ($this->game->price_eshop != null) {
             $this->builder->setHasPrice(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             $this->builder->setHasPrice(0);
         }
@@ -146,22 +174,21 @@ class QualityScoreDirector
 
 
         // Set quality score
-        $qualityScore = ($this->scoreRunningTotal / $maxScore) * 100;
-        $qualityScore = number_format(round($qualityScore, 2), 2);
+        $qualityScore = $this->calculateQualityScore();
         $this->builder->setQualityScore($qualityScore);
     }
 
     public function buildNintendoCoUkRules(): void
     {
-        if (!$this->dsParsedNintendoCoUk || !$this->gameImportRuleEshop) {
+        if (!$this->dsParsedNintendoCoUk) {
 
-            // No import rule or data source record to compare against, so set all to pass
+            // No data source record to compare against, so set all to pass
             $this->builder->setNoConflictNintendoEUReleaseDate(1);
             $this->builder->setNoConflictNintendoPrice(1);
             $this->builder->setNoConflictNintendoPlayers(1);
             $this->builder->setNoConflictNintendoPublishers(1);
             $this->builder->setNoConflictNintendoGenre(1);
-            $this->scoreRunningTotal = $this->scoreRunningTotal + 5;
+            $this->incrementScore(5);
 
         } else {
 
@@ -176,13 +203,19 @@ class QualityScoreDirector
 
     public function buildNintendoCoUkRuleEUReleaseDate(): void
     {
-        if ($this->gameImportRuleEshop->shouldIgnoreEuropeDates()) {
+        if ($this->gameImportRuleEshop) {
+            $importRuleIgnore = $this->gameImportRuleEshop->shouldIgnoreEuropeDates();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictNintendoEUReleaseDate(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->eu_release_date == $this->dsParsedNintendoCoUk->release_date_eu) {
                 $this->builder->setNoConflictNintendoEUReleaseDate(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictNintendoEUReleaseDate(0);
             }
@@ -191,13 +224,19 @@ class QualityScoreDirector
 
     public function buildNintendoCoUkRulePrice(): void
     {
-        if ($this->gameImportRuleEshop->shouldIgnorePrice()) {
+        if ($this->gameImportRuleEshop) {
+            $importRuleIgnore = $this->gameImportRuleEshop->shouldIgnorePrice();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictNintendoPrice(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->price_eshop == $this->dsParsedNintendoCoUk->price_standard) {
                 $this->builder->setNoConflictNintendoPrice(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictNintendoPrice(0);
             }
@@ -206,13 +245,19 @@ class QualityScoreDirector
 
     public function buildNintendoCoUkRulePlayers(): void
     {
-        if ($this->gameImportRuleEshop->shouldIgnorePlayers()) {
+        if ($this->gameImportRuleEshop) {
+            $importRuleIgnore = $this->gameImportRuleEshop->shouldIgnorePlayers();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictNintendoPlayers(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->players == $this->dsParsedNintendoCoUk->players) {
                 $this->builder->setNoConflictNintendoPlayers(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictNintendoPlayers(0);
             }
@@ -221,21 +266,64 @@ class QualityScoreDirector
 
     public function buildNintendoCoUkRulePublishers(): void
     {
-        // @todo
-        $this->builder->setNoConflictNintendoPublishers(1);
-        $this->scoreRunningTotal++;
+        if ($this->gameImportRuleEshop) {
+            $importRuleIgnore = $this->gameImportRuleEshop->shouldIgnorePublishers();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
+            $this->builder->setNoConflictNintendoPublishers(1);
+            $this->incrementScore();
+        } else {
+
+            if ($this->game->gamePublishers->count() > 0) {
+
+                $gamePublisherArray = [];
+                foreach ($this->game->gamePublishers as $gamePublisher) {
+                    $gamePublisherArray[] = $gamePublisher->publisher->name;
+                }
+                sort($gamePublisherArray);
+                $gamePublisherNames = implode(',', $gamePublisherArray);
+
+                $dsPublishers = $this->dsParsedNintendoCoUk->publishers;
+                $dsPublisherArray = explode(",", $dsPublishers);
+                sort($dsPublisherArray);
+                $dsPublisherNames = implode(",", $dsPublisherArray);
+
+                if ($gamePublisherNames == $dsPublisherNames) {
+                    $this->builder->setNoConflictNintendoPublishers(1);
+                    $this->incrementScore();
+                } else {
+                    $this->builder->setNoConflictNintendoPublishers(0);
+                }
+
+            } else {
+
+                // Fail if none set
+                $this->builder->setNoConflictNintendoPublishers(0);
+
+            }
+
+        }
     }
 
     public function buildNintendoCoUkRuleGenre(): void
     {
+        if ($this->gameImportRuleEshop) {
+            $importRuleIgnore = $this->gameImportRuleEshop->shouldIgnoreGenres();
+        } else {
+            $importRuleIgnore = false;
+        }
+
         // @todo
         $this->builder->setNoConflictNintendoGenre(1);
-        $this->scoreRunningTotal++;
+        $this->incrementScore();
     }
 
     public function buildWikipediaRules(): void
     {
-        if (!$this->dsParsedWikipedia || !$this->gameImportRuleWikipedia) {
+        if (!$this->dsParsedWikipedia) {
 
             // No import rule or data source record to compare against, so set all to pass
             $this->builder->setNoConflictWikipediaEUReleaseDate(1);
@@ -244,7 +332,7 @@ class QualityScoreDirector
             $this->builder->setNoConflictWikipediaDevelopers(1);
             $this->builder->setNoConflictWikipediaPublishers(1);
             $this->builder->setNoConflictWikipediaGenre(1);
-            $this->scoreRunningTotal = $this->scoreRunningTotal + 6;
+            $this->incrementScore(6);
 
         } else {
 
@@ -260,13 +348,19 @@ class QualityScoreDirector
 
     public function buildWikipediaRuleEUReleaseDate(): void
     {
-        if ($this->gameImportRuleWikipedia->shouldIgnoreEuropeDates()) {
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreEuropeDates();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictWikipediaEUReleaseDate(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->eu_release_date == $this->dsParsedWikipedia->release_date_eu) {
                 $this->builder->setNoConflictWikipediaEUReleaseDate(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictWikipediaEUReleaseDate(0);
             }
@@ -275,13 +369,19 @@ class QualityScoreDirector
 
     public function buildWikipediaRuleUSReleaseDate(): void
     {
-        if ($this->gameImportRuleWikipedia->shouldIgnoreUSDates()) {
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreUSDates();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictWikipediaUSReleaseDate(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->us_release_date == $this->dsParsedWikipedia->release_date_us) {
                 $this->builder->setNoConflictWikipediaUSReleaseDate(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictWikipediaUSReleaseDate(0);
             }
@@ -290,13 +390,19 @@ class QualityScoreDirector
 
     public function buildWikipediaRuleJPReleaseDate(): void
     {
-        if ($this->gameImportRuleWikipedia->shouldIgnoreJPDates()) {
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreJPDates();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
             $this->builder->setNoConflictWikipediaJPReleaseDate(1);
-            $this->scoreRunningTotal++;
+            $this->incrementScore();
         } else {
             if ($this->game->jp_release_date == $this->dsParsedWikipedia->release_date_jp) {
                 $this->builder->setNoConflictWikipediaJPReleaseDate(1);
-                $this->scoreRunningTotal++;
+                $this->incrementScore();
             } else {
                 $this->builder->setNoConflictWikipediaJPReleaseDate(0);
             }
@@ -305,23 +411,103 @@ class QualityScoreDirector
 
     public function buildWikipediaRuleDevelopers(): void
     {
-        // @todo
-        $this->builder->setNoConflictWikipediaDevelopers(1);
-        $this->scoreRunningTotal++;
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreDevelopers();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
+            $this->builder->setNoConflictWikipediaDevelopers(1);
+            $this->incrementScore();
+        } else {
+
+            if ($this->game->gameDevelopers->count() > 0) {
+
+                $gameDeveloperArray = [];
+                foreach ($this->game->gameDevelopers as $gameDeveloper) {
+                    $gameDeveloperArray[] = $gameDeveloper->developer->name;
+                }
+                sort($gameDeveloperArray);
+                $gameDeveloperNames = implode(',', $gameDeveloperArray);
+
+                $dsDevelopers = $this->dsParsedWikipedia->developers;
+                $dsDeveloperArray = explode(",", $dsDevelopers);
+                sort($dsDeveloperArray);
+                $dsDeveloperNames = implode(",", $dsDeveloperArray);
+
+                if ($gameDeveloperNames == $dsDeveloperNames) {
+                    $this->builder->setNoConflictWikipediaDevelopers(1);
+                    $this->incrementScore();
+                } else {
+                    $this->builder->setNoConflictWikipediaDevelopers(0);
+                }
+
+            } else {
+
+                // Fail if none set
+                $this->builder->setNoConflictWikipediaDevelopers(0);
+
+            }
+
+        }
     }
 
     public function buildWikipediaRulePublishers(): void
     {
-        // @todo
-        $this->builder->setNoConflictWikipediaPublishers(1);
-        $this->scoreRunningTotal++;
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnorePublishers();
+        } else {
+            $importRuleIgnore = false;
+        }
+
+        if ($importRuleIgnore) {
+            $this->builder->setNoConflictWikipediaPublishers(1);
+            $this->incrementScore();
+        } else {
+
+            if ($this->game->gamePublishers->count() > 0) {
+
+                $gamePublisherArray = [];
+                foreach ($this->game->gamePublishers as $gamePublisher) {
+                    $gamePublisherArray[] = $gamePublisher->publisher->name;
+                }
+                sort($gamePublisherArray);
+                $gamePublisherNames = implode(',', $gamePublisherArray);
+
+                $dsPublishers = $this->dsParsedWikipedia->publishers;
+                $dsPublisherArray = explode(",", $dsPublishers);
+                sort($dsPublisherArray);
+                $dsPublisherNames = implode(",", $dsPublisherArray);
+
+                if ($gamePublisherNames == $dsPublisherNames) {
+                    $this->builder->setNoConflictWikipediaPublishers(1);
+                    $this->incrementScore();
+                } else {
+                    $this->builder->setNoConflictWikipediaPublishers(0);
+                }
+
+            } else {
+
+                // Fail if none set
+                $this->builder->setNoConflictWikipediaPublishers(0);
+
+            }
+
+        }
     }
 
     public function buildWikipediaRuleGenre(): void
     {
+        if ($this->gameImportRuleWikipedia) {
+            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreGenres();
+        } else {
+            $importRuleIgnore = false;
+        }
+
         // @todo
         $this->builder->setNoConflictWikipediaGenre(1);
-        $this->scoreRunningTotal++;
+        $this->incrementScore();
     }
 
 }

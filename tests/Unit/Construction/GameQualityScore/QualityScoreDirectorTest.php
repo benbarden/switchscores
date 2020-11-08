@@ -2,14 +2,18 @@
 
 namespace Tests\Unit\Construction\GameQualityScore;
 
+use Illuminate\Database\Eloquent\Collection;
+use Tests\TestCase;
+
+use App\Construction\GameQualityScore\QualityScoreBuilder;
+use App\Construction\GameQualityScore\QualityScoreDirector;
+
+use App\Game;
+use App\DataSourceParsed;
 use App\GameDeveloper;
 use App\GameImportRuleEshop;
 use App\GamePublisher;
-use Tests\TestCase;
-
-use App\Game;
-use App\Construction\GameQualityScore\QualityScoreBuilder;
-use App\Construction\GameQualityScore\QualityScoreDirector;
+use App\Partner;
 
 class QualityScoreDirectorTest extends TestCase
 {
@@ -36,7 +40,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(1, $qualityScore->has_category);
-        $this->assertEquals($this->getExpectedScore(1), $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildHasCategoryFail()
@@ -53,7 +57,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(0, $qualityScore->has_category);
-        $this->assertEquals($this->getExpectedScore(0), $qualityScore->quality_score);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
     }
 
     public function testBuildHasDevelopersPass()
@@ -72,7 +76,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(1, $qualityScore->has_developers);
-        $this->assertEquals($this->getExpectedScore(1), $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildHasDevelopersFail()
@@ -88,7 +92,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(0, $qualityScore->has_developers);
-        $this->assertEquals($this->getExpectedScore(0), $qualityScore->quality_score);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
     }
 
     public function testBuildHasPublishersPass()
@@ -107,7 +111,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(1, $qualityScore->has_publishers);
-        $this->assertEquals($this->getExpectedScore(1), $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildHasPublishersFail()
@@ -123,7 +127,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(0, $qualityScore->has_publishers);
-        $this->assertEquals($this->getExpectedScore(0), $qualityScore->quality_score);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
     }
 
     public function testBuildHasPlayersPass()
@@ -140,7 +144,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(1, $qualityScore->has_players);
-        $this->assertEquals($this->getExpectedScore(1), $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildHasPlayersFail()
@@ -156,7 +160,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(0, $qualityScore->has_players);
-        $this->assertEquals($this->getExpectedScore(0), $qualityScore->quality_score);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
     }
 
     public function testBuildHasPricePass()
@@ -173,7 +177,7 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(1, $qualityScore->has_price);
-        $this->assertEquals($this->getExpectedScore(1), $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildHasPriceFail()
@@ -189,6 +193,87 @@ class QualityScoreDirectorTest extends TestCase
         $qualityScore = $builder->getGameQualityScore();
 
         $this->assertEquals(0, $qualityScore->has_price);
-        $this->assertEquals($this->getExpectedScore(0), $qualityScore->quality_score);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
+    }
+
+    public function testBuildNintendoCoUkPublishersNaturalOrder()
+    {
+        $gamePublishers = new Collection();
+
+        $game = new Game;
+        $gamePublisherTTGames = new GamePublisher(['publisher_id' => 101]);
+        $gamePublisherUnfinishedPixel = new GamePublisher(['publisher_id' => 102]);
+        $gamePublishers->push($gamePublisherTTGames);
+        $gamePublishers->push($gamePublisherUnfinishedPixel);
+        $game->gamePublishers = $gamePublishers;
+        $dsParsedNintendoCoUk = new DataSourceParsed;
+        $dsParsedNintendoCoUk->publishers = 'TT Games,Unfinished Pixel';
+
+        $director = new QualityScoreDirector();
+        $builder = new QualityScoreBuilder();
+        $director->setBuilder($builder);
+
+        $director->setGame($game);
+        $director->setDataSourceParsedNintendoCoUk($dsParsedNintendoCoUk);
+        $director->buildNew();
+        $qualityScore = $builder->getGameQualityScore();
+
+        $this->assertEquals(1, $qualityScore->has_publishers);
+        $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
+    }
+
+    public function testBuildNintendoCoUkPublishersReverseOrderGamePub()
+    {
+        $gamePublishers = new Collection();
+
+        $game = new Game;
+        $gamePublisherTTGames = new GamePublisher(['publisher_id' => 101]);
+        $gamePublisherUnfinishedPixel = new GamePublisher(['publisher_id' => 102]);
+        $gamePublishers->push($gamePublisherUnfinishedPixel);
+        $gamePublishers->push($gamePublisherTTGames);
+        $game->gamePublishers = $gamePublishers;
+        $dsParsedNintendoCoUk = new DataSourceParsed;
+        $dsParsedNintendoCoUk->publishers = 'TT Games,Unfinished Pixel';
+
+        $director = new QualityScoreDirector();
+        $builder = new QualityScoreBuilder();
+        $director->setBuilder($builder);
+
+        $director->setGame($game);
+        $director->setDataSourceParsedNintendoCoUk($dsParsedNintendoCoUk);
+        $director->buildNew();
+        $qualityScore = $builder->getGameQualityScore();
+
+        $this->assertEquals(1, $qualityScore->has_publishers);
+        $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
+    }
+
+    public function testBuildNintendoCoUkPublishersReverseOrderDataSource()
+    {
+        $gamePublishers = new Collection();
+
+        $game = new Game;
+        $gamePublisherTTGames = new GamePublisher(['publisher_id' => 101]);
+        $gamePublisherUnfinishedPixel = new GamePublisher(['publisher_id' => 102]);
+        $gamePublishers->push($gamePublisherTTGames);
+        $gamePublishers->push($gamePublisherUnfinishedPixel);
+        $game->gamePublishers = $gamePublishers;
+        $dsParsedNintendoCoUk = new DataSourceParsed;
+        $dsParsedNintendoCoUk->publishers = 'Unfinished Pixel,TT Games';
+
+        $director = new QualityScoreDirector();
+        $builder = new QualityScoreBuilder();
+        $director->setBuilder($builder);
+
+        $director->setGame($game);
+        $director->setDataSourceParsedNintendoCoUk($dsParsedNintendoCoUk);
+        $director->buildNew();
+        $qualityScore = $builder->getGameQualityScore();
+
+        $this->assertEquals(1, $qualityScore->has_publishers);
+        $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
+        $this->assertEquals(68.75, $qualityScore->quality_score);
     }
 }

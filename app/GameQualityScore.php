@@ -8,6 +8,8 @@ class GameQualityScore extends Model
 {
     const MAX_SCORE = 16;
 
+    protected $primaryKey = 'game_id';
+
     /**
      * @var string
      */
