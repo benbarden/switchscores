@@ -40,6 +40,8 @@ class ReviewFeedItemService
             'item_date' => $itemDate,
             'item_rating' => $itemRating,
             'load_status' => 'Loaded OK',
+            'parse_status' => 'Manually linked by reviewer',
+            'parsed' => 1,
         ]);
     }
 

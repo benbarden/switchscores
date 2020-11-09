@@ -22,7 +22,12 @@
                     {{ item.item_date }}
                 </td>
                 <td class="text-center">
-                    {% include 'modules/rating/badge.twig' with {'score': item.item_rating, 'scoreSize': 'h5'} %}
+                    {% if PartnerData.rating_scale == 5 %}
+                        {% set ItemRating = (item.item_rating * 2) ~ '.0' %}
+                    {% else %}
+                        {% set ItemRating = item.item_rating %}
+                    {% endif %}
+                    {% include 'modules/rating/badge.twig' with {'score': ItemRating, 'scoreSize': 'h5'} %}
                 </td>
                 <td class="text-center">
                     {% if item.processed == 1 %}

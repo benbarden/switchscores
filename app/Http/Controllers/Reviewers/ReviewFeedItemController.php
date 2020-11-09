@@ -149,10 +149,6 @@ class ReviewFeedItemController extends Controller
             $itemRating = $request->item_rating;
             $itemTitle = 'Review of '.$gameData->title;
 
-            if ($partnerData->rating_scale == 5) {
-                $itemRating = $itemRating * 2;
-            }
-
             $this->getServiceReviewFeedItem()->add(
                 $siteId, $gameId, $itemUrl, $itemTitle, $itemDate, $itemRating
             );
