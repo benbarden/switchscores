@@ -15,6 +15,11 @@ h4, .h4 {font-size: 20px;}
 h5, .h5 {font-size: 16px;}
 h6, .h6 {font-size: 14px;}
 
+#tabs {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 90%;
+}
+
 .breadcrumb {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 12px;

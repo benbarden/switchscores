@@ -24,4 +24,19 @@ trait AuthUser
 
         return $serviceUser->find($userId);
     }
+
+    public function getCurrentUserReviewSiteId()
+    {
+        $authUser = $this->getValidUser($this->getServiceUser());
+        $partnerId = $authUser->partner_id;
+        $partnerData = $this->getServicePartner()->find($partnerId);
+
+        if (!$partnerData) {
+            return null;
+        } elseif (!$partnerData->isReviewSite()) {
+            return null;
+        } else {
+            return $partnerId;
+        }
+    }
 }

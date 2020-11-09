@@ -1,0 +1,10 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('reviewers.review-feed-item.add', {'gameId': GameId}) %}
+{% include 'reviewers/reviews/feed-item/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'reviewers/reviews/feed-item/scripts.twig' %}
+
+{% endblock page_inner %}

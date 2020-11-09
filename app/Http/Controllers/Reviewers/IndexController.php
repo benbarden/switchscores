@@ -42,8 +42,11 @@ class IndexController extends Controller
         // Recent reviews
         $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 10);
 
-        // Pending items
-        $bindings['PendingFeedItems'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId, 5);
+        // Feed items
+        $bindings['FeedItemsLatest'] = $this->getServiceReviewFeedItem()->getAllBySite($partnerId, 5);
+        $bindings['FeedItemsPending'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId);
+        $bindings['FeedItemsSuccess'] = $this->getServiceReviewFeedItem()->getSuccessBySite($partnerId, 5);
+        $bindings['FeedItemsFailed'] = $this->getServiceReviewFeedItem()->getFailedBySite($partnerId, 5);
 
         // Campaigns
         $bindings['ActiveCampaigns'] = $this->getServiceCampaign()->getActive();

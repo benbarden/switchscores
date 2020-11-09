@@ -79,6 +79,11 @@ class ReviewLinkService
         return ReviewLink::find($id);
     }
 
+    public function getByUrl($url)
+    {
+        return ReviewLink::where('url', $url)->first();
+    }
+
     public function getAll($limit = null)
     {
         $reviewLinks = ReviewLink::orderBy('id', 'desc');

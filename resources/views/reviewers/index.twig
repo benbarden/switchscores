@@ -1,17 +1,115 @@
 {% extends 'theme/wos/reviewers/clean-wide.twig' %}
+{% set hideHeader = 'Y' %}
 
 {% block page_inner %}
-
-    <p>
-        Welcome, {{ auth_user().display_name }} - thanks for checking out the Reviewers dashboard.
-        Please send questions or feedback to Ben via
-        <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-        <a href="mailto:ben@switchscores.com">email</a>.
-    </p>
 
     <div class="row member-dashboard">
 
         <div class="col-xs-12 col-sm-8 col-md-8">
+            <h1>{{ PageTitle }}</h1>
+            <p>
+                Welcome, {{ auth_user().display_name }} - thanks for checking out the Reviewers dashboard.
+                Please send questions or feedback to Ben via
+                <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                <a href="mailto:ben@switchscores.com">email</a>.
+            </p>
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <h2>
+                        Campaigns
+                        <div class="label label-info h6">New!</div>
+                    </h2>
+                    {% if ActiveCampaigns %}
+                        <p>
+                            Campaigns are a way to get more games ranked.
+                        </p>
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th class="text-right">Progress</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in ActiveCampaigns %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
+                                            {{ item.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-right">
+                                        {{ item.progress }}%
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>
+                            There are currently no active campaigns. Check back soon for more!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h2>
+                Recent feed items
+            </h2>
+            <div class="pull-right">
+                <a href="{{ route('reviewers.review-feed-item.find-game') }}" class="btn btn-primary btn-sm">Add review manually</a>
+            </div>
+            <p>
+                This is a snapshot of the latest items from your feed.
+            </p>
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div id="tabs">
+
+                        <ul>
+                            <li><a href="#tabs-feed-items-latest">Latest ({{ FeedItemsLatest.count }})</a></li>
+                            <li><a href="#tabs-feed-items-pending">Pending ({{ FeedItemsPending.count }})</a></li>
+                            <li><a href="#tabs-feed-items-success">Success ({{ FeedItemsSuccess.count }})</a></li>
+                            <li><a href="#tabs-feed-items-failed">Failed ({{ FeedItemsFailed.count }})</a></li>
+                        </ul>
+
+                        <div id="tabs-feed-items-latest">
+                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsLatest} %}
+                        </div>
+
+                        <div id="tabs-feed-items-pending">
+                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsPending} %}
+                        </div>
+
+                        <div id="tabs-feed-items-success">
+                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsSuccess} %}
+                        </div>
+
+                        <div id="tabs-feed-items-failed">
+                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsFailed} %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
 
             <h2>Feed status</h2>
             {% if PartnerData.feed_url == '' %}
@@ -37,60 +135,16 @@
 
         </div>
 
-        <div class="col-xs-12 col-sm-4 col-md-4">
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <h2>
-                        Campaigns
-                        <div class="label label-info h6">New!</div>
-                    </h2>
-                    {% if ActiveCampaigns %}
-                        <p>
-                            Campaigns are a way to get more games ranked.
-                        </p>
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th class="text-right">Progress</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in ActiveCampaigns %}
-                                    <tr>
-                                        <td>
-                                            <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
-                                                {{ item.name }}
-                                            </a>
-                                        </td>
-                                        <td class="text-right">
-                                            {{ item.progress }}%
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>
-                            There are currently no active campaigns. Check back soon for more!
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-
-        </div>
-
     </div>
 
     <div class="row member-dashboard">
 
         <div class="col-xs-12 col-sm-8 col-md-8">
 
-            <h2>Recently imported</h2>
+            <h2>Recent live reviews</h2>
             {% if SiteReviewsLatest %}
                 <p>
-                    These are the reviews we've recently imported for your site.
+                    There are the live reviews we've recently created for your site.
                     <a href="{{ route('reviewers.reviews.landing') }}" class="btn btn-sm btn-primary">View all &gt;</a>
                 </p>
                 {% if PartnerData.rating_scale != 10 %}
@@ -212,5 +266,9 @@
         </div>
 
     </div>
+
+<script>
+    $('#tabs').tabs();
+</script>
 
 {% endblock page_inner %}

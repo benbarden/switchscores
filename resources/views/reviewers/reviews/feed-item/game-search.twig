@@ -1,0 +1,99 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Start by searching for the game you wish to submit a review of.
+</p>
+
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ route('reviewers.review-feed-item.find-game') }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="search_keywords" class="col-md-2 control-label">Search:</label>
+        <div class="col-md-6">
+            <input id="search_keywords" name="search_keywords" type="text" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn outline btn-primary">
+                Search
+            </button>
+        </div>
+    </div>
+
+</form>
+
+{% if SearchResults %}
+    <h2>Results</h2>
+    {% if SearchResults|length > 0 %}
+        {% if SearchResults|length == 1 %}
+            <p>1 result found.</p>
+        {% else %}
+            <p>{{ SearchResults|length }} results found.</p>
+        {% endif %}
+        <table class="table table-condensed data-sortable">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Title</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-center">EU release date</th>
+                    <th class="text-center">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in SearchResults %}
+                    <tr>
+                        <td class="text-center">{{ item.id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td class="text-center">
+                            {{ item.category.name }}
+                        </td>
+                        <td class="text-center">{{ item.eu_release_date }}</td>
+                        <td class="text-center">
+                            {% if item.id in ReviewLinkIdList %}
+                                <em>Already reviewed</em>
+                            {% else %}
+                                <a href="{{ route('reviewers.review-feed-item.add', {'gameId': item.id}) }}">Add review</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+
+    $(document).ready(function() {
+
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+
+        $('#search_keywords').focus();
+
+    });
+
+    var searchKeywords = '{{ SearchKeywords }}';
+
+    if (searchKeywords != '') {
+        $('#search_keywords').val(searchKeywords);
+    }
+
+</script>
+
+{% endblock page_inner %}

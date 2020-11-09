@@ -30,6 +30,19 @@ class ReviewFeedItemService
         'Wrong link',
     ];
 
+    public function add($siteId, $gameId, $itemUrl, $itemTitle, $itemDate, $itemRating)
+    {
+        return ReviewFeedItem::create([
+            'site_id' => $siteId,
+            'game_id' => $gameId,
+            'item_url' => $itemUrl,
+            'item_title' => $itemTitle,
+            'item_date' => $itemDate,
+            'item_rating' => $itemRating,
+            'load_status' => 'Loaded OK',
+        ]);
+    }
+
     public function edit(
         ReviewFeedItem $reviewFeedItem, $siteId, $gameId, $itemRating, $processStatus
     )
@@ -90,9 +103,43 @@ class ReviewFeedItemService
         return ReviewFeedItem::whereNull('processed')->orderBy('id', 'asc')->get();
     }
 
-    public function getUnprocessedBySite($siteId, $limit)
+    public function getAllBySite($siteId, $limit)
     {
-        return ReviewFeedItem::whereNull('processed')->where('site_id', $siteId)->orderBy('id', 'asc')->limit($limit)->get();
+        return ReviewFeedItem::where('site_id', $siteId)->orderBy('id', 'desc')->limit($limit)->get();
+    }
+
+    public function getUnprocessedBySite($siteId, $limit = null)
+    {
+        $feedItems = ReviewFeedItem::whereNull('processed')
+            ->where('site_id', $siteId)
+            ->orderBy('id', 'asc');
+
+        if ($limit) {
+            $feedItems = $feedItems->limit($limit);
+        }
+
+        return $feedItems->get();
+    }
+
+    public function getSuccessBySite($siteId, $limit = 5)
+    {
+        return ReviewFeedItem::
+            where('process_status', 'Review created')
+            ->where('site_id', $siteId)
+            ->orderBy('id', 'asc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function getFailedBySite($siteId, $limit = 5)
+    {
+        return ReviewFeedItem::
+            whereNotNull('process_status')
+            ->where('process_status', '!=', 'Review created')
+            ->where('site_id', $siteId)
+            ->orderBy('id', 'asc')
+            ->limit($limit)
+            ->get();
     }
 
     public function getProcessed($limit = 25)

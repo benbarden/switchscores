@@ -1,0 +1,38 @@
+{% if FeedItems %}
+    <table class="table table-condensed table-responsive">
+        <thead>
+        <tr>
+            <th>Game</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in FeedItems %}
+            <tr>
+                <td class="text-left">
+                    {% if item.game.id %}
+                        <a href="{{ route('reviewers.games.show', {'gameId': item.game.id}) }}">{{ item.game.title }}</a>
+                    {% else %}
+                        {{ item.item_title }}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {{ item.item_date }}
+                </td>
+                <td class="text-center">
+                    {% include 'modules/rating/badge.twig' with {'score': item.item_rating, 'scoreSize': 'h5'} %}
+                </td>
+                <td class="text-center">
+                    {% if item.processed == 1 %}
+                        {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

@@ -1,5 +1,6 @@
 {% if errors.any() %}
     <div class="alert alert-danger">
+        <p><strong>The following errors occurred:</strong></p>
         <ul>
             {% for error in errors.all() %}
                 <li>{{ error }}</li>
@@ -10,7 +11,7 @@
 
 {% if ErrorsCustom %}
     <div class="alert alert-danger">
-        <p>The following errors occurred:</p>
+        <p><strong>The following errors occurred:</strong></p>
         <ul>
             {% for error in ErrorsCustom %}
                 <li>{{ error }}</li>
