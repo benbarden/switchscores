@@ -103,3 +103,8 @@ blockquote {
 .wos-content-page .blog-post-body img {
     width: 100%;
 }
+
+.homepage-quick-reviews {
+    line-height: 1.6em;
+    margin-bottom: 20px;
+}
