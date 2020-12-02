@@ -96,9 +96,10 @@ class QuickReviewService
         return $reviewList;
     }
 
-    public function getLatestNaturalOrder($limit = 10)
+    public function getLatestActive($limit = 10)
     {
         $reviewList = QuickReview::orderBy('created_at', 'desc')
+            ->where('item_status', QuickReview::STATUS_ACTIVE)
             ->limit($limit)
             ->get();
         return $reviewList;

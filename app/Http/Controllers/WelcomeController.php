@@ -24,6 +24,9 @@ class WelcomeController extends Controller
         // Get latest News post
         $bindings['LatestNewsPost'] = $this->getServiceNews()->getNewest();
 
+        // Latest quick reviews
+        $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
+
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased();
         $bindings['TotalRanked'] = $this->getServiceGame()->countRanked();

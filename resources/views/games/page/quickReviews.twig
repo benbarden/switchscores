@@ -1,54 +1,8 @@
 <h2>Quick reviews</h2>
 {% if ReviewList.count %}
     {% for item in ReviewList %}
-    <div class="row">
-        <div class="col-md-10">
-            <p style="font-size: 13px;">
-                {{ item.review_body|raw }}
-                <br>
-                <span style="font-size: 11px; font-style: italic;">
-                    submitted by {{ item.user.display_name }} on {{ item.created_at|date('jS M Y') }}
-                </span>
-            </p>
-        </div>
-        <div class="col-md-2">
-            {% include 'modules/rating/badge.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
-        </div>
-    </div>
+        {% include 'modules/quick-review/item.twig' with {'QuickReview': item} %}
     {% endfor %}
-{#
-    <table class="table table-condensed table-responsive">
-        {% for item in ReviewList %}
-            <tr style="background: #565656; color: #fff;">
-                <td>
-                    <span style="font-weight: bold;">Author:</span>
-                    {{ item.user.display_name }}
-                </td>
-                <td>
-                    <span style="font-weight: bold;">Score:</span>
-                    {{ item.review_score }}/10
-                </td>
-                <td>
-                    <span style="font-weight: bold;">Date:</span>
-                    {{ item.created_at|date('jS M Y') }}
-                </td>
-            </tr>
-            {% if item.review_body %}
-                <tr>
-                    <td colspan="8">
-                        {{ item.review_body|raw }}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8">
-                        &nbsp;
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-#}
     <p>
     {% if auth_user() %}
         Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
