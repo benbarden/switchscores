@@ -23,7 +23,7 @@ class QuickReviewController extends Controller
     private $validationRules = [
         'game_id' => 'required|exists:games,id',
         'review_score' => 'required|numeric|between:0,10',
-        'review_body' => 'max:500'
+        'review_body' => 'max:1000'
     ];
 
     public function add()
