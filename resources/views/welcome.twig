@@ -54,6 +54,14 @@
         <h2 class="standout-header">Recent quick reviews</h2>
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
+                <p>
+                    <em>
+                        <small>
+                            These are quick reviews submitted directly to Switch Scores.
+                            They are not included in the site ranks.
+                        </small>
+                    </em>
+                </p>
                 {% for item in QuickReviews %}
                     <p>
                         <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
