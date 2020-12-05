@@ -22,6 +22,7 @@ class GamesController extends Controller
         $pageTitle = 'Game detail: '.$game->title;
 
         $bindings['GameData'] = $game;
+        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
 
         $authUser = $this->getValidUser($this->getServiceUser());
         $partnerId = $authUser->partner_id;
