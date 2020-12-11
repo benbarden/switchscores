@@ -87,3 +87,24 @@ blockquote {
     line-height: 1.6em;
     margin-bottom: 20px;
 }
+
+/* Review table */
+.game-page-review-table thead tr {
+    background-color: #18C0DF;
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.game-page-review-table tbody tr.review-header {
+    border-top: 1px solid #999 !important;
+}
+
+.game-page-review-table tbody tr td {
+    background-color: #f6f6f6;
+    padding: 5px;
+}
+
+.game-page-review-table tbody tr.review-description td {
+    background-color: #ffffff;
+    padding: 5px;
+}

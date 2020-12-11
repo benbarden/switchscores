@@ -11,6 +11,7 @@
         formVals['site_id'] = "{{ ReviewLinkData.site_id }}";
         formVals['rating_original'] = "{{ ReviewLinkData.rating_original }}";
         formVals['review_date'] = "{{ ReviewLinkData.review_date }}"
+        formVals['description'] = "{{ ReviewLinkData.description }}"
 
     } else {
 
@@ -21,6 +22,7 @@
         formVals['site_id'] = "{{ old('site_id') }}";
         formVals['rating_original'] = "{{ old('rating_original') }}";
         formVals['review_date'] = "{{ old('review_date') }}"
+        formVals['description'] = "{{ old('description') }}"
 
     }
 
@@ -29,6 +31,7 @@
     $('#site_id').val(formVals['site_id']);
     $('#rating_original').val(formVals['rating_original']);
     $('#review_date').val(formVals['review_date']);
+    $('#description').val(formVals['description']);
 
     $('#game_id').select2();
 

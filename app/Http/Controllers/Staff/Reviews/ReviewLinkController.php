@@ -84,7 +84,7 @@ class ReviewLinkController extends Controller
 
             $reviewLink = $serviceReviewLink->create(
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
-                $request->review_date, ReviewLink::TYPE_MANUAL
+                $request->review_date, ReviewLink::TYPE_MANUAL, $request->description
             );
 
             // Update game review stats
@@ -142,7 +142,7 @@ class ReviewLinkController extends Controller
             $serviceReviewLink->edit(
                 $reviewLinkData,
                 $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
-                $request->review_date
+                $request->review_date, $request->description
             );
 
             // Update game review stats

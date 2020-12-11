@@ -1,47 +1,46 @@
 {% if GameReviews %}
     <h2>
-        {% if GameReviews.count == 1 %}
-            {{ GameReviews.count }} partner review
-        {% elseif GameReviews.count == 0 %}
-            Partner reviews
-        {% else %}
-            {{ GameReviews.count }} partner reviews
-        {% endif %}
-        {% if GameData.rating_avg %}
-            <span class="h4 pull-right">
-                <span>Average rating</span>
-                <strong>{{ GameData.rating_avg }}</strong>
-            </span>
-        {% endif %}
+        Partner reviews
     </h2>
     {% if GameReviews.count > 0 %}
-        <table class="table table-condensed table-responsive">
-            <tr>
-                <th>Site</th>
-                <th class="text-center">Rating</th>
-                <th class="text-center">Review date</th>
-                <th class="text-center">Link</th>
-            </tr>
-            {% for Review in GameReviews %}
+        <table class="table table-condensed table-responsive game-page-review-table">
+            <thead>
                 <tr>
-                    <td>
-                        <a href="{{ route('reviews.site', {'linkTitle': Review.site.link_title}) }}">{{ Review.site.name }}</a>
-                    </td>
-                    <td class="text-center">
-                        {% if Review.rating_normalised %}
-                            {% include 'modules/rating/badge.twig' with {'score': Review.rating_normalised, 'scoreSize': 'h6'} %}
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td class="text-center">
-                        {{ Review.review_date|date('jS M Y') }}
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ Review.url }}" target="_blank">Read review</a>
-                    </td>
+                    <th>Site</th>
+                    <th class="text-center">Rating</th>
+                    <th class="text-center">Review date</th>
+                    <th class="text-center">Link</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for Review in GameReviews %}
+                    <tr class="review-header">
+                        <td>
+                            <a href="{{ route('reviews.site', {'linkTitle': Review.site.link_title}) }}">{{ Review.site.name }}</a>
+                        </td>
+                        <td class="text-center">
+                            {% if Review.rating_normalised %}
+                                {% include 'modules/rating/badge.twig' with {'score': Review.rating_normalised, 'scoreSize': 'h6'} %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ Review.review_date|date('jS M Y') }}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ Review.url }}" target="_blank">Read review</a>
+                        </td>
+                    </tr>
+                    {% if Review.description %}
+                        <tr class="review-description">
+                            <td colspan="4">
+                                {{ Review.description }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>No partner reviews yet. Check back soon!</p>

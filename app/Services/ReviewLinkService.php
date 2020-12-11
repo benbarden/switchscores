@@ -18,11 +18,12 @@ class ReviewLinkService
      * @param $ratingNormalised
      * @param $reviewDate
      * @param $reviewType
+     * @param $desc
      * @param null $userId
      * @return ReviewLink
      */
     public function create(
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $userId = null
+        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $desc = null, $userId = null
     )
     {
         return ReviewLink::create([
@@ -33,6 +34,7 @@ class ReviewLinkService
             'rating_normalised' => $ratingNormalised,
             'review_date' => $reviewDate,
             'review_type' => $reviewType,
+            'description' => $desc,
             'user_id' => $userId,
         ]);
     }
@@ -45,11 +47,12 @@ class ReviewLinkService
      * @param $ratingOriginal
      * @param $ratingNormalised
      * @param $reviewDate
+     * @param $desc
      * @return void
      */
     public function edit(
         ReviewLink $reviewLinkData,
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate
+        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $desc = null
     )
     {
         $values = [
@@ -59,6 +62,7 @@ class ReviewLinkService
             'rating_original' => $ratingOriginal,
             'rating_normalised' => $ratingNormalised,
             'review_date' => $reviewDate,
+            'description' => $desc,
         ];
 
         $reviewLinkData->fill($values);

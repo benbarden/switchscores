@@ -1,4 +1,4 @@
-<h2>Quick reviews</h2>
+<h2>Member reviews</h2>
 {% if ReviewList.count %}
     {% for item in ReviewList %}
         {% include 'modules/quick-review/item.twig' with {'QuickReview': item} %}
