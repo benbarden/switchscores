@@ -47,6 +47,11 @@ class QuickReviewService
         $quickReviewData->save();
     }
 
+    public function delete($reviewId)
+    {
+        QuickReview::where('id', $reviewId)->delete();
+    }
+
     public function find($id)
     {
         return QuickReview::find($id);

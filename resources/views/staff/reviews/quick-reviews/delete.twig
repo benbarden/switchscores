@@ -1,0 +1,46 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [{'url': route('staff.reviews.dashboard'), 'text': 'Reviews dashboard'}, {'text': PageTitle}] %}
+
+{% block page_inner %}
+
+<div class="alert alert-warning" role="alert">
+    <strong>Warning!</strong> You are about to delete a quick review - see details below.
+    <br>Please review the details shown below before proceeding. There is no option to undo the deletion if you proceed!
+</div>
+
+<p>
+    The following quick review will be deleted:
+</p>
+<ul>
+    <li>id: {{ QuickReview.id }}</li>
+    <li>for game: {{ QuickReview.game.title }}</li>
+    <li>posted by member: {{ QuickReview.user.email }}</li>
+</ul>
+<p>
+    Review body:
+    <br>
+    <small>
+        {{ QuickReview.review_body }}
+    </small>
+</p>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        After deleting this review link, be sure to run UpdateGameRanks.
+    </p>
+</div>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': ReviewId}) }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-danger">
+                Confirm deletion
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock page_inner %}

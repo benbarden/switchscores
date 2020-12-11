@@ -236,6 +236,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Quick reviews
     Route::match(['get', 'post'], '/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
+    Route::match(['get', 'post'], '/staff/reviews/quick-reviews/delete/{reviewId}', 'Staff\Reviews\QuickReviewController@delete')->name('staff.reviews.quick-reviews.delete');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
     // Review feed items

@@ -87,4 +87,47 @@ class QuickReviewController extends Controller
 
         return view('staff.reviews.quick-reviews.edit', $bindings);
     }
+
+    public function delete($reviewId)
+    {
+        $reviewData = $this->getServiceQuickReview()->find($reviewId);
+        if (!$reviewData) abort(404);
+
+        $bindings = [];
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'delete-post';
+
+            $gameId = $reviewData->game_id;
+
+            $this->getServiceQuickReview()->delete($reviewId);
+
+            $game = $this->getServiceGame()->find($gameId);
+            if ($game) {
+                // Update game review stats
+                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+            }
+
+            // Done
+
+            return redirect(route('staff.reviews.quick-reviews.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'delete';
+
+        }
+
+        $bindings['TopTitle'] = 'Staff - Delete quick review';
+        $bindings['PageTitle'] = 'Delete link';
+        $bindings['QuickReview'] = $reviewData;
+        $bindings['ReviewId'] = $reviewId;
+
+        return view('staff.reviews.quick-reviews.delete', $bindings);
+    }
 }

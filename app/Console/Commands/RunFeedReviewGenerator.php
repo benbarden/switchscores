@@ -130,7 +130,9 @@ class RunFeedReviewGenerator extends Command
 
                 // Update game review stats
                 $game = $serviceGame->find($gameId);
-                $serviceReviewStats->updateGameReviewStats($game);
+                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
                 // Mark as parsed, in case we manually updated it
                 $feedItem->parsed = 1;

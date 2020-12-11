@@ -35,6 +35,39 @@ class UpdateGameReviewStats extends Command
         parent::__construct();
     }
 
+    private $oldGameData = [];
+
+    private $newGameData = [];
+
+    public function storeGameData($game, $mode)
+    {
+        $data = [
+            'id' => $game->id,
+            'title' => $game->title,
+            'rating_avg' => $game->rating_avg,
+            'review_count' => $game->review_count,
+        ];
+
+        if ($mode == 'old') {
+            $this->oldGameData = $data;
+        } elseif ($mode == 'new') {
+            $this->newGameData = $data;
+        }
+    }
+
+    public function logGameInfo($logger)
+    {
+        if ($this->oldGameData != $this->newGameData) {
+
+            $logger->info(sprintf('OLD DATA %s - %s - %s - %s', $this->oldGameData['id'], $this->oldGameData['title'], $this->oldGameData['rating_avg'], $this->oldGameData['review_count']));
+
+            $logger->info(sprintf('NEW DATA %s - %s - %s - %s', $this->newGameData['id'], $this->newGameData['title'], $this->newGameData['rating_avg'], $this->newGameData['review_count']));
+
+            $logger->info('**************************************************');
+
+        }
+    }
+
     /**
      * Execute the console command.
      *
@@ -46,89 +79,27 @@ class UpdateGameReviewStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        // Zero all counts
-        $logger->info('Zeroing all review counts');
-        \DB::update("UPDATE games SET review_count = 0");
+        $gameList = $this->getServiceGame()->getAllAsObjects();
 
-        // Review count
-        $logger->info('Calculating review counts');
-        $reviewCountList = \DB::select("
-            SELECT g.id AS game_id, g.title, g.review_count, count(rl.game_id) AS review_count_new
-            FROM games g
-            LEFT JOIN review_links rl ON g.id = rl.game_id
-            LEFT JOIN partners p ON rl.site_id = p.id
-            WHERE p.type_id = 1 AND p.status = 1
-            GROUP BY g.id
-            ORDER BY g.title ASC
-        ");
+        foreach ($gameList as $game) {
 
-        $logger->info('Updating '.count($reviewCountList).' games');
+            $gameId = $game->id;
 
-        foreach ($reviewCountList as $item) {
+            $this->storeGameData($game, 'old');
 
-            $gameId = $item->game_id;
-            $gameTitle = $item->title;
-            $reviewCount = $item->review_count;
-            $reviewCountNew = $item->review_count_new;
+            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
 
-            \DB::update("
-                UPDATE games SET review_count = ? WHERE id = ?
-            ", array($reviewCountNew, $gameId));
+            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
-        }
+            $this->storeGameData($game, 'new');
 
-        // Average rating
-        $logger->info('Calculating average ratings');
-        $avgRatingList = \DB::select("
-            SELECT g.id AS game_id, g.title, g.review_count, g.rating_avg,
-            sum(rl.rating_normalised) AS rating_sum,
-            round(avg(rl.rating_normalised), 2) AS rating_avg_new
-            FROM games g
-            LEFT JOIN review_links rl ON g.id = rl.game_id
-            LEFT JOIN partners p ON rl.site_id = p.id
-            WHERE p.type_id = 1 AND p.status = 1
-            GROUP BY g.id
-            ORDER BY g.title ASC
-        ");
-
-        $logger->info('Updating '.count($avgRatingList).' games');
-
-        foreach ($avgRatingList as $item) {
-
-            $gameId = $item->game_id;
-            $gameTitle = $item->title;
-            $reviewCount = $item->review_count;
-
-            if ($reviewCount == 0) {
-
-                \DB::update("
-                    UPDATE games SET rating_avg = 0 WHERE id = ?
-                ", $gameId);
-
-                continue;
-
-            }
-
-            //$ratingSum = $item->rating_sum;
-            $ratingAvg = $item->rating_avg;
-            $ratingAvgNew = $item->rating_avg_new;
-
-            if ($ratingAvg != $ratingAvgNew) {
-
-                $logger->info(sprintf('Game: %s - Previous average: %s - New average: %s',
-                    $gameTitle, $ratingAvg, $ratingAvgNew));
-
-                \DB::update("
-                    UPDATE games SET rating_avg = ? WHERE id = ?
-                ", array($ratingAvgNew, $gameId));
-
-            }
+            $this->logGameInfo($logger);
 
         }
 
         // Cleanup
         $logger->info('Cleanup: zeroing rating average for games with no reviews');
         \DB::update("UPDATE games SET rating_avg = NULL WHERE review_count = 0");
-
     }
 }

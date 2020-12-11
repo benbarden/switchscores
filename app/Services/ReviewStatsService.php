@@ -7,21 +7,30 @@ use Illuminate\Support\Collection;
 
 class ReviewStatsService
 {
-    public function calculateReviewCount(Collection $reviews)
+    public function calculateReviewCount(Collection $reviewLinks, Collection $quickReviews = null)
     {
-        return $reviews->count();
+
+        $reviewLinkCount = $reviewLinks->count();
+        $quickReviewCount = $quickReviews->count();
+        $totalReviewCount = $reviewLinkCount + $quickReviewCount;
+        return $totalReviewCount;
     }
 
-    public function calculateReviewAverage(Collection $reviews)
+    public function calculateReviewAverage(Collection $reviewLinks, Collection $quickReviews = null)
     {
-        $reviewCount = $reviews->count();
+        $reviewCount = $reviewLinks->count() + $quickReviews->count();
 
         if ($reviewCount == 0) return null;
 
         $sumTotal = 0;
 
-        foreach ($reviews as $review) {
+        foreach ($reviewLinks as $review) {
             $reviewScore = $review->rating_normalised;
+            $sumTotal += $reviewScore;
+        }
+
+        foreach ($quickReviews as $review) {
+            $reviewScore = $review->review_score;
             $sumTotal += $reviewScore;
         }
 
@@ -30,15 +39,18 @@ class ReviewStatsService
         return $avgScore;
     }
 
-    public function calculateStandardDeviation(Collection $reviews)
+    public function calculateStandardDeviation(Collection $reviewLinks, Collection $quickReviews = null)
     {
-        $reviewCount = $reviews->count();
+        $reviewCount = $reviewLinks->count() + $quickReviews->count();
 
         if ($reviewCount == 0) return null;
 
         $reviewsArray = [];
-        foreach ($reviews as $review) {
+        foreach ($reviewLinks as $review) {
             $reviewsArray[] = $review['rating_normalised'];
+        }
+        foreach ($quickReviews as $review) {
+            $reviewsArray[] = $review['review_score'];
         }
 
         $sdValue = $this->calculateSd($reviewsArray);
@@ -57,12 +69,10 @@ class ReviewStatsService
         return sqrt(array_sum(array_map(array($this, 'calculateSdSquare'), $array, array_fill(0, count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
     }
 
-    public function updateGameReviewStats(Game $game)
+    public function updateGameReviewStats(Game $game, $reviewLinks, $quickReviews)
     {
-        $gameReviews = $game->reviews()->get();
-
-        $reviewCount = $this->calculateReviewCount($gameReviews);
-        $reviewAverage = $this->calculateReviewAverage($gameReviews);
+        $reviewCount = $this->calculateReviewCount($reviewLinks, $quickReviews);
+        $reviewAverage = $this->calculateReviewAverage($reviewLinks, $quickReviews);
 
         $game->review_count = $reviewCount;
         $game->rating_avg = $reviewAverage;

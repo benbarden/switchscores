@@ -79,17 +79,20 @@ class ReviewLinkController extends Controller
             $ratingOriginal = $request->rating_original;
 
             $reviewSite = $servicePartner->find($siteId);
+            $gameId = $request->game_id;
 
             $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
             $reviewLink = $serviceReviewLink->create(
-                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
+                $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, ReviewLink::TYPE_MANUAL, $request->description
             );
 
             // Update game review stats
-            $game = $serviceGame->find($request->game_id);
-            $serviceReviewStats->updateGameReviewStats($game);
+            $game = $serviceGame->find($gameId);
+            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+            $serviceReviewStats->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
@@ -136,18 +139,21 @@ class ReviewLinkController extends Controller
             $ratingOriginal = $request->rating_original;
 
             $reviewSite = $servicePartner->find($siteId);
+            $gameId = $request->game_id;
 
             $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
 
             $serviceReviewLink->edit(
                 $reviewLinkData,
-                $request->game_id, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
+                $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, $request->description
             );
 
             // Update game review stats
-            $game = $serviceGame->find($request->game_id);
-            $serviceReviewStats->updateGameReviewStats($game);
+            $game = $serviceGame->find($gameId);
+            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
             // Update ranks
             //\Artisan::call('UpdateGameRanks');
@@ -189,12 +195,16 @@ class ReviewLinkController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
+            $gameId = $request->game_id;
+
             $serviceReviewLink->delete($linkId);
 
             $game = $serviceGame->find($reviewLink->game_id);
             if ($game) {
                 // Update game review stats
-                $this->getServiceReviewStats()->updateGameReviewStats($game);
+                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
             }
 
             // Done

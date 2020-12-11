@@ -289,6 +289,11 @@ class GameService
         return $games;
     }
 
+    public function getAllAsObjects()
+    {
+        return Game::orderBy('id', 'asc')->get();
+    }
+
     public function getCount()
     {
         return Game::orderBy('title', 'asc')->count();

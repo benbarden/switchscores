@@ -58,7 +58,8 @@
                     {{ item.getStatusDesc() }}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('staff.reviews.quick-reviews.edit', {'reviewId': item.id}) }}">Edit</a>
+                    <a href="{{ route('staff.reviews.quick-reviews.edit', {'reviewId': item.id}) }}">Edit</a> :
+                    <a href="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': item.id}) }}">Delete</a>
                 </td>
             </tr>
         {% endfor %}
