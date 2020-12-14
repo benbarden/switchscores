@@ -35,6 +35,7 @@ class ReviewStatsService
         }
 
         $avgScore = round(($sumTotal / $reviewCount), 2);
+        $avgScore = number_format($avgScore, 2);
 
         return $avgScore;
     }
