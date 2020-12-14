@@ -35,7 +35,6 @@ class DbEditGameDirectorTest extends TestCase
         $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
-        $changeHistoryId = null;
         $pointTransactionId = null;
 
         $params = [
@@ -44,7 +43,6 @@ class DbEditGameDirectorTest extends TestCase
             'data_to_update' => $dataToUpdate,
             'current_data' => $currentData,
             'new_data' => $newData,
-            //'change_history_id' => $changeHistoryId,
             //'point_transaction_id' => $pointTransactionId,
         ];
 
@@ -61,7 +59,6 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($statusPending, $dbEditGame->status);
-        $this->assertEquals($changeHistoryId, $dbEditGame->change_history_id);
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 
@@ -78,7 +75,6 @@ class DbEditGameDirectorTest extends TestCase
         $newData = 10;
         // NOTE: these can't be set at creation, but we'll use them later
         // Best to test them like this to make sure they aren't set when they shouldn't be
-        $changeHistoryId = 55;
         $pointTransactionId = 75;
 
         $params = [
@@ -87,7 +83,6 @@ class DbEditGameDirectorTest extends TestCase
             'data_to_update' => $dataToUpdate,
             'current_data' => $currentData,
             'new_data' => $newData,
-            'change_history_id' => $changeHistoryId,
             'point_transaction_id' => $pointTransactionId,
         ];
 
@@ -105,13 +100,11 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($statusPending, $dbEditGame->status);
-        $this->assertEquals(null, $dbEditGame->change_history_id);
         $this->assertEquals(null, $dbEditGame->point_transaction_id);
 
         // Update status to Approved
         $params = [
             'status' => $statusApproved,
-            'change_history_id' => $changeHistoryId,
             'point_transaction_id' => $pointTransactionId,
         ];
         $director->buildExisting($dbEditGame, $params);
@@ -123,7 +116,6 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($statusApproved, $dbEditGame->status);
-        $this->assertEquals($changeHistoryId, $dbEditGame->change_history_id);
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 
@@ -138,7 +130,6 @@ class DbEditGameDirectorTest extends TestCase
         $dataToUpdate = DbEditGame::DATA_CATEGORY;
         $currentData = 5;
         $newData = 10;
-        $changeHistoryId = null;
         $pointTransactionId = null;
 
         $params = [
@@ -147,7 +138,6 @@ class DbEditGameDirectorTest extends TestCase
             'data_to_update' => $dataToUpdate,
             'current_data' => $currentData,
             'new_data' => $newData,
-            //'change_history_id' => $changeHistoryId,
             //'point_transaction_id' => $pointTransactionId,
         ];
 
@@ -164,14 +154,12 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($statusPending, $dbEditGame->status);
-        $this->assertEquals(null, $dbEditGame->change_history_id);
         $this->assertEquals(null, $dbEditGame->point_transaction_id);
 
         // Update status to Denied
         $params = [
             'status' => $statusDenied,
             // These fields aren't needed but we'll test them anyway
-            'change_history_id' => $changeHistoryId,
             'point_transaction_id' => $pointTransactionId,
         ];
         $director->buildExisting($dbEditGame, $params);
@@ -183,7 +171,6 @@ class DbEditGameDirectorTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($statusDenied, $dbEditGame->status);
-        $this->assertEquals($changeHistoryId, $dbEditGame->change_history_id);
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 }

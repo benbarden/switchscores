@@ -94,8 +94,12 @@ Route::group(['middleware' => ['auth']], function() {
     // Index
     Route::get('/user', 'User\IndexController@show')->name('user.index');
 
-    // Settings
-    Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
+    // Database help
+    Route::get('/user/database-help/index', 'User\DatabaseHelpController@landing')->name('user.database-help.index');
+    Route::get('/user/database-help/games-without-categories', 'User\DatabaseHelpController@gamesWithoutCategories')->name('user.database-help.games-without-categories');
+    Route::get('/user/database-help/games-without-categories/{year}', 'User\DatabaseHelpController@gamesWithoutCategoriesByYear')->name('user.database-help.games-without-categories.byYear');
+    Route::match(['get', 'post'], '/user/database-help/games-without-categories/submit-game-category-suggestion/{gameId}',
+        'User\DatabaseHelpController@submitGameCategorySuggestion')->name('user.database-help.games-without-categories.submit-game-category-suggestion');
 
     // Collection
     Route::get('/user/collection/index', 'User\CollectionController@landing')->name('user.collection.landing');
@@ -115,6 +119,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     // Games companies: Games list
     Route::get('/user/games-list/{report}', 'User\GamesListController@landing')->name('user.games-list.landing');
+
+    // Settings
+    Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
 
 });
 
@@ -281,7 +288,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/categorisation/title-match/series/{gameSeries}', 'Staff\Categorisation\DashboardController@seriesTitleMatch')->name('staff.categorisation.title-match.series');
     Route::get('/staff/categorisation/title-match/tag/{tag}', 'Staff\Categorisation\DashboardController@tagTitleMatch')->name('staff.categorisation.title-match.tag');
 
-    // Primary types
+    // Member suggestions
+    Route::get('/staff/categorisation/game-category-suggestions', 'Staff\Categorisation\GameCategorySuggestionController@show')->name('staff.categorisation.game-category-suggestions.index');
+    Route::get('/staff/categorisation/game-category-suggestions/approve', 'Staff\Categorisation\GameCategorySuggestionController@approve')->name('staff.categorisation.game-category-suggestions.approve');
+    Route::get('/staff/categorisation/game-category-suggestions/deny', 'Staff\Categorisation\GameCategorySuggestionController@deny')->name('staff.categorisation.game-category-suggestions.deny');
+
+    // Categories
     Route::get('/staff/categorisation/category/list', 'Staff\Categorisation\CategoryController@showList')->name('staff.categorisation.category.list');
     Route::match(['get', 'post'], '/staff/categorisation/category/add', 'Staff\Categorisation\CategoryController@addCategory')->name('staff.categorisation.category.add');
     Route::match(['get', 'post'], '/staff/categorisation/category/edit/{categoryId}', 'Staff\Categorisation\CategoryController@editCategory')->name('staff.categorisation.category.edit');

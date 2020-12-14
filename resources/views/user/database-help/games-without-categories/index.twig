@@ -1,0 +1,43 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>Browse by release year</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-left">Year released</th>
+                    <th class="text-right">Games without categories</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for year in AllowedYears %}
+                <tr>
+                    <td class="text-left">
+                        <a href="{{ route('user.database-help.games-without-categories.byYear', {'year': year}) }}">{{ year }}</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('user.database-help.games-without-categories.byYear', {'year': year}) }}" class="h4">{{ _context['NoCategoryCount'~year]  }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

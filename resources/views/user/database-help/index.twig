@@ -1,0 +1,33 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>Navigation</h2>
+        <table class="table">
+            <tr>
+                <td>
+                    <a href="{{ route('user.database-help.games-without-categories') }}">Games without categories</a>
+                </td>
+                <td>
+                    <a href="{{ route('user.database-help.games-without-categories') }}" class="h4">{{ NoCategoryCount }}</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

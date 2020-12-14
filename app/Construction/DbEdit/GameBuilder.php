@@ -67,12 +67,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setChangeHistoryId($changeHistoryId): GameBuilder
-    {
-        $this->dbEditGame->change_history_id = $changeHistoryId;
-        return $this;
-    }
-
     public function setPointTransactionId($pointTransactionId): GameBuilder
     {
         $this->dbEditGame->point_transaction_id = $pointTransactionId;

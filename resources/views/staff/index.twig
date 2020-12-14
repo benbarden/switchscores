@@ -58,6 +58,16 @@
                     </td>
                 </tr>
             {% endif %}
+            {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}">Game category suggestions</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}" class="h4">{{ PendingGameCategorySuggestionCount }}</a>
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
         {% endif %}

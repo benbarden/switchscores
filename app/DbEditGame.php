@@ -12,12 +12,13 @@ class DbEditGame extends Model
     const STATUS_APPROVED = 1;
     const STATUS_DENIED = 2;
 
+    protected $table = 'db_edits_games';
+
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 'game_id', 'data_to_update', 'current_data', 'new_data', 'status',
-        'change_history_id', 'point_transaction_id'
+        'user_id', 'game_id', 'data_to_update', 'current_data', 'new_data', 'status', 'point_transaction_id'
     ];
 
     /**
@@ -42,13 +43,50 @@ class DbEditGame extends Model
         return $this->hasOne('App\User', 'id', 'user_id');
     }
 
-    public function changeHistory()
-    {
-        return $this->hasOne('App\GameChangeHistory', 'id', 'change_history_id');
-    }
-
     public function pointTransaction()
     {
         return $this->hasOne('App\UserPointTransaction', 'id', 'point_transaction_id');
+    }
+
+    public function newDataAsCategory()
+    {
+        return $this->hasOne('App\Category', 'id', 'new_data');
+    }
+
+    public function isPending()
+    {
+        return $this->status == self::STATUS_PENDING;
+    }
+
+    public function setApproved()
+    {
+        $this->status = self::STATUS_APPROVED;
+    }
+
+    public function setDenied()
+    {
+        $this->status = self::STATUS_DENIED;
+    }
+
+    public function getStatusDesc()
+    {
+        $statusDesc = null;
+
+        switch ($this->status) {
+            case self::STATUS_PENDING:
+                $statusDesc = 'Pending';
+                break;
+            case self::STATUS_APPROVED:
+                $statusDesc = 'Approved';
+                break;
+            case self::STATUS_DENIED:
+                $statusDesc = 'Denied';
+                break;
+            default:
+                $statusDesc = 'Unknown';
+                break;
+        }
+
+        return $statusDesc;
     }
 }

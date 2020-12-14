@@ -1,0 +1,44 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="alert alert-info">
+    You are suggesting a new category for the game: <strong>{{ GameData.title }}</strong>
+</div>
+<div class="alert alert-warning">
+    <strong>Can't find a suitable category?</strong>
+    <a href="https://twitter.com/switchscores" target="_blank">Send us a tweet</a> and let us
+    know which category we should add.
+</div>
+
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': GameId}) }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="category_id" class="col-md-4 control-label">Category</label>
+        <div class="col-md-6">
+            <select id="category_id" class="form-control" name="category_id" required>
+                <option value="">&nbsp;</option>
+                {% for item in CategoryList %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% if item.children %}
+                        {% for child in item.children %}
+                            <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock page_inner %}

@@ -33,6 +33,10 @@ class IndexController extends Controller
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
+        // Game category suggestions
+        $pendingCategoryEdits = $this->getServiceDbEditGame()->getPendingCategoryEdits();
+        $bindings['PendingGameCategorySuggestionCount'] = count($pendingCategoryEdits);
+
         // Nintendo.co.uk: Unlinked items
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
         $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);

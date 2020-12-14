@@ -133,35 +133,6 @@ class DbEditGameBuilderTest extends TestCase
         $this->assertEquals($status, $dbEditGame->status);
     }
 
-    public function testChangeHistoryId()
-    {
-        $userId = 60060;
-        $gameId = 945;
-        $dataToUpdate = DbEditGame::DATA_CATEGORY;
-        $currentData = 5;
-        $newData = 10;
-        $status = DbEditGame::STATUS_PENDING;
-        $changeHistoryId = 55;
-
-        $builder = new GameBuilder();
-        $builder->setDataToUpdate($dataToUpdate)
-            ->setUserId($userId)
-            ->setGameId($gameId)
-            ->setCurrentData($currentData)
-            ->setNewData($newData)
-            ->setStatus($status)
-            ->setChangeHistoryId($changeHistoryId);
-
-        $dbEditGame = $builder->getDbEditGame();
-        $this->assertEquals($userId, $dbEditGame->user_id);
-        $this->assertEquals($gameId, $dbEditGame->game_id);
-        $this->assertEquals($dataToUpdate, $dbEditGame->data_to_update);
-        $this->assertEquals($currentData, $dbEditGame->current_data);
-        $this->assertEquals($newData, $dbEditGame->new_data);
-        $this->assertEquals($status, $dbEditGame->status);
-        $this->assertEquals($changeHistoryId, $dbEditGame->change_history_id);
-    }
-
     public function testPointTransactionId()
     {
         $userId = 60060;
@@ -170,7 +141,6 @@ class DbEditGameBuilderTest extends TestCase
         $currentData = 5;
         $newData = 10;
         $status = DbEditGame::STATUS_PENDING;
-        $changeHistoryId = 55;
         $pointTransactionId = 75;
 
         $builder = new GameBuilder();
@@ -180,7 +150,6 @@ class DbEditGameBuilderTest extends TestCase
             ->setCurrentData($currentData)
             ->setNewData($newData)
             ->setStatus($status)
-            ->setChangeHistoryId($changeHistoryId)
             ->setPointTransactionId($pointTransactionId);
 
         $dbEditGame = $builder->getDbEditGame();
@@ -190,7 +159,6 @@ class DbEditGameBuilderTest extends TestCase
         $this->assertEquals($currentData, $dbEditGame->current_data);
         $this->assertEquals($newData, $dbEditGame->new_data);
         $this->assertEquals($status, $dbEditGame->status);
-        $this->assertEquals($changeHistoryId, $dbEditGame->change_history_id);
         $this->assertEquals($pointTransactionId, $dbEditGame->point_transaction_id);
     }
 }

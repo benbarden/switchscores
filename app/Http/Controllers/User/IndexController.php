@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Services\Migrations\Category as MigrationsCategory;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -67,6 +69,10 @@ class IndexController extends Controller
         $bindings['TopTitle'] = $onPageTitle;
         $bindings['PageTitle'] = $onPageTitle;
         $bindings['SiteRole'] = $siteRole;
+
+        // Database help
+        $serviceMigrationsCategory = new MigrationsCategory();
+        $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
 
         return view('user.index', $bindings);
     }

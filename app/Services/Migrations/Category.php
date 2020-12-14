@@ -8,26 +8,43 @@ use App\DataSource;
 
 class Category
 {
-    public function getGamesWithNoCategory()
+    public function getGamesWithNoCategory($year = null)
     {
+        $year = (int) $year;
+
         $games = DB::table('games')
             ->leftJoin('data_source_parsed', 'games.id', '=', 'data_source_parsed.game_id')
             ->select('games.*', 'data_source_parsed.genres_json')
             ->where('data_source_parsed.source_id', DataSource::DSID_NINTENDO_CO_UK)
-            ->whereNull('games.category_id')
-            ->orderBy('data_source_parsed.genres_json', 'asc');
+            ->whereNull('games.category_id');
+
+        if ($year) {
+            $games = $games->where('games.release_year', $year);
+        }
+
+        $games = $games->orderBy('data_source_parsed.genres_json', 'asc');
 
         $games = $games->get();
         return $games;
     }
 
-    public function countGamesWithNoCategory()
+    public function countGamesWithNoCategory($year = null)
     {
+        $year = (int) $year;
+
+        if ($year) {
+            $whereYearSql = 'AND g.release_year = ?';
+            $params = [$year];
+        } else {
+            $whereYearSql = '';
+            $params = [];
+        }
+
         $games = DB::select('
             SELECT count(*) AS count
             FROM games g
             WHERE g.category_id IS NULL
-        ');
+            '.$whereYearSql, $params);
 
         return $games[0]->count;
     }

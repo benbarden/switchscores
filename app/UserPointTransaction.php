@@ -12,7 +12,7 @@ class UserPointTransaction extends Model
     const ACTION_QUICK_REVIEW_ADD = 120;
 
     // DB edits
-    const ACTION_DB_PRIMARY_GENRE = 210;
+    const ACTION_DB_CATEGORY = 210;
     const ACTION_DB_TAG = 220;
     const ACTION_DB_DEVELOPER = 230;
     const ACTION_DB_PUBLISHER = 240;

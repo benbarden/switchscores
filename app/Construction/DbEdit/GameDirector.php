@@ -50,9 +50,6 @@ class GameDirector
             if (array_key_exists('status', $params)) {
                 $this->builder->setStatus($params['status']);
             }
-            if (array_key_exists('change_history_id', $params)) {
-                $this->builder->setChangeHistoryId($params['change_history_id']);
-            }
             if (array_key_exists('point_transaction_id', $params)) {
                 $this->builder->setPointTransactionId($params['point_transaction_id']);
             }

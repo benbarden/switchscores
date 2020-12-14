@@ -1,0 +1,170 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% set crumbNav = [
+    {'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'},
+    {'text': PageTitle}
+] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="pull-right">
+            <label for="admin-nav-status-filter">Filter by status:</label>
+            <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
+                <option value="">All</option>
+                {% for item in StatusList %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div id="js-admin-notify" style="display: none;" class="alert alert-danger">
+
+</div>
+
+{% if DbEditList.count > 0 %}
+
+    <table class="table data-sortable">
+        <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th class="text-left">Game</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Current data</th>
+            <th class="text-center">New data</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in DbEditList %}
+            <tr>
+                <td class="text-right">
+                    {{ item.id }}
+                </td>
+                <td class="text-left">
+                    {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                    <br>
+                    <small>
+                        User: {{ item.user.email }} | ID: {{ item.user.id }}
+                    </small>
+                </td>
+                <td class="text-center">
+                    {{ item.created_at }}
+                </td>
+                <td class="text-center">
+                    {{ item.current_data }}
+                </td>
+                <td class="text-center">
+                    {{ item.newDataAsCategory.name }}
+                </td>
+                <td class="text-center">
+                    {{ item.getStatusDesc() }}
+                </td>
+                <td class="text-center">
+                    {% if item.getStatusDesc() == 'Pending' %}
+                        <a href="javascript:void(0);" id="lnk-approve-item-{{ item.id }}" class="lnk-approve-item">Approve</a> :
+                        <a href="javascript:void(0);" id="lnk-deny-item-{{ item.id }}" class="lnk-deny-item">Deny</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No records found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $('#admin-nav-status-filter').on('change', function() {
+        selectedStatusFilter = $(this).val();
+        top.location.href = '{{ route('staff.categorisation.game-category-suggestions.index')}}?filterStatus=' + selectedStatusFilter;
+    });
+    $(document).ready(function() {
+        var activeStatusId = '{{ FilterStatus }}';
+        $('#admin-nav-status-filter').val(activeStatusId);
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+    $('.lnk-approve-item').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-approve-item-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Approve this change?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.categorisation.game-category-suggestions.approve') }}', {'itemId': itemId}, function(data) {
+            $('#lnk-approve-item-' + itemId).parent().html('<em>Approved</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+    $('.lnk-deny-item').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        elemId = $(this).attr('id');
+        itemId = elemId.replace('lnk-deny-item-', '');
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm('Deny this change?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.categorisation.game-category-suggestions.deny') }}', {'itemId': itemId}, function(data) {
+            $('#lnk-deny-item-' + itemId).parent().html('<em>Denied</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+</script>
+
+{% endblock page_inner %}

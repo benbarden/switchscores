@@ -1,0 +1,56 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% if GameList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th>Title</th>
+            <th>Release date (EU)</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in GameList %}
+            <tr>
+                <td class="text-right">
+                    {{ item.id }}
+                </td>
+                <td>
+                    {% include 'modules/game/table/user-game-title.twig' with {'item': item} %}
+                </td>
+                <td class="text-center">
+                    {{ item.eu_release_date }}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': item.id}) }}">
+                        Suggest a category
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": ['0', 'asc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}
