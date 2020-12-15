@@ -63,7 +63,7 @@ class MigrationsCategoryController extends Controller
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
-        $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory();
+        $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithEshopDataAndNoCategory();
 
         $bindings['CustomHeader'] = 'Genres';
         $bindings['ListMode'] = 'category-migration';

@@ -8,21 +8,32 @@ use App\DataSource;
 
 class Category
 {
+    public function getGamesWithEshopDataAndNoCategory()
+    {
+        $games = DB::table('games')
+            ->leftJoin('data_source_parsed', 'games.id', '=', 'data_source_parsed.game_id')
+            ->select('games.*', 'data_source_parsed.genres_json')
+            ->where('data_source_parsed.source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->whereNull('games.category_id')
+            ->orderBy('data_source_parsed.genres_json', 'asc');
+
+        $games = $games->get();
+        return $games;
+    }
+
     public function getGamesWithNoCategory($year = null)
     {
         $year = (int) $year;
 
         $games = DB::table('games')
-            ->leftJoin('data_source_parsed', 'games.id', '=', 'data_source_parsed.game_id')
-            ->select('games.*', 'data_source_parsed.genres_json')
-            ->where('data_source_parsed.source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->select('games.*')
             ->whereNull('games.category_id');
 
         if ($year) {
             $games = $games->where('games.release_year', $year);
         }
 
-        $games = $games->orderBy('data_source_parsed.genres_json', 'asc');
+        $games = $games->orderBy('games.eu_release_date', 'asc');
 
         $games = $games->get();
         return $games;
