@@ -48,6 +48,11 @@ class DbEditGame extends Model
         return $this->hasOne('App\UserPointTransaction', 'id', 'point_transaction_id');
     }
 
+    public function currentDataAsCategory()
+    {
+        return $this->hasOne('App\Category', 'id', 'current_data');
+    }
+
     public function newDataAsCategory()
     {
         return $this->hasOne('App\Category', 'id', 'new_data');

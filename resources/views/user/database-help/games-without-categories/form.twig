@@ -2,43 +2,100 @@
 
 {% block page_inner %}
 
-<div class="alert alert-info">
-    You are suggesting a new category for the game: <strong>{{ GameData.title }}</strong>
-</div>
 <div class="alert alert-warning">
     <strong>Can't find a suitable category?</strong>
     <a href="https://twitter.com/switchscores" target="_blank">Send us a tweet</a> and let us
     know which category we should add.
 </div>
 
-{% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': GameId}) }}">
-    {{ csrf_field() }}
+<h2>{{ GameData.title }}</h2>
 
-    <div class="form-group">
-        <label for="category_id" class="col-md-4 control-label">Category</label>
-        <div class="col-md-6">
-            <select id="category_id" class="form-control" name="category_id" required>
-                <option value="">&nbsp;</option>
-                {% for item in CategoryList %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                    {% if item.children %}
-                        {% for child in item.children %}
-                            <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+<div class="row">
+
+    <div class="col-md-4">
+
+        <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-sm" target="_blank">View game page</a>
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
+        {% if boxartUrl %}
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
+        {% else %}
+            <div style="background: #ccc; height: 300px; width: 100%;" class="img-responsive"></div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% include 'common/form-errors.twig' %}
+        <form class="form-horizontal" role="form" method="post" action="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': GameId}) }}">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="category_id" class="col-md-2 control-label">Category</label>
+                <div class="col-md-6">
+                    <select id="category_id" class="form-control" name="category_id" required>
+                        <option value="">&nbsp;</option>
+                        {% for item in CategoryList %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% if item.children %}
+                                {% for child in item.children %}
+                                    <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </div>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <button type="submit" class="btn outline btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-primary">
-                Submit
-            </button>
-        </div>
-    </div>
-</form>
+</div>
+
+<script>
+
+    var existingCategoryId = '{{ GameData.category_id }}';
+    if (existingCategoryId != '') {
+        $('#category_id').val(existingCategoryId);
+    }
+
+</script>
 
 {% endblock page_inner %}
