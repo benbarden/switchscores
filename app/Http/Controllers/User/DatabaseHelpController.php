@@ -69,6 +69,8 @@ class DatabaseHelpController extends Controller
 
         $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory($year);
 
+        $bindings['PendingCategoryEditsGameIdList'] = $this->getServiceDbEditGame()->getPendingCategoryEditsGameIdList();
+
         $bindings['TopTitle'] = 'User - Database help - Games without categories';
         $bindings['PageTitle'] = 'Games without categories';
 

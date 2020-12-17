@@ -25,9 +25,13 @@
                     {{ item.eu_release_date }}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': item.id}) }}">
-                        Suggest a category
-                    </a>
+                    {% if item.id in PendingCategoryEditsGameIdList %}
+                        <em>Change already awaiting review</em>
+                    {% else %}
+                        <a href="{{ route('user.database-help.games-without-categories.submit-game-category-suggestion', {'gameId': item.id}) }}">
+                            Suggest a category
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

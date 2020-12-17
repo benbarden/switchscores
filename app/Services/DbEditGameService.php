@@ -43,6 +43,15 @@ class DbEditGameService
         return $this->getCategoryEditsByStatus($status);
     }
 
+    public function getPendingCategoryEditsGameIdList()
+    {
+        return DbEditGame::
+            where('data_to_update', DbEditGame::DATA_CATEGORY)
+            ->where('status', DbEditGame::STATUS_PENDING)
+            ->orderBy('game_id', 'asc')
+            ->pluck('game_id');
+    }
+
     public function getApprovedCategoryEdits()
     {
         $status = DbEditGame::STATUS_APPROVED;
