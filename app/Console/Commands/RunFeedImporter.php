@@ -98,9 +98,8 @@ class RunFeedImporter extends Command
                 $feedImporter = new Importer();
 
                 // If sites have CDATA in their feeds, we need to parse the feed as objects
-                if ($siteName == 'JPs Switchmania') {
-                    $parseAsObjects = true;
-                } elseif ($siteName == 'SwitchRPG') {
+                $cdataSiteNames = ['JPs Switchmania', 'SwitchRPG', 'Switchaboo'];
+                if (in_array($siteName, $cdataSiteNames)) {
                     $parseAsObjects = true;
                 } else {
                     $parseAsObjects = false;
@@ -113,6 +112,14 @@ class RunFeedImporter extends Command
                 $feedItemsToProcess = [];
 
                 if ($siteName == 'JPs Switchmania') {
+
+                    foreach ($feedData->channel->item as $feedItem) {
+
+                        $feedItemsToProcess[] = $feedItem;
+
+                    }
+
+                } elseif ($siteName == 'Switchaboo') {
 
                     foreach ($feedData->channel->item as $feedItem) {
 
