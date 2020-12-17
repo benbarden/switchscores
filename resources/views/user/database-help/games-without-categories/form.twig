@@ -12,13 +12,13 @@
 
 <div class="row">
 
-    <div class="col-md-4">
+    <div class="col-md-8">
 
         <a href="{{ LinkHelper.gameShow(GameData) }}" class="btn btn-primary btn-sm" target="_blank">View game page</a>
 
-    </div>
-
-    <div class="col-md-4">
+        {% if DataSourceNintendoCoUk %}
+            <a href="{{ LinkHelper.eshopUrl('eu', DataSourceNintendoCoUk.url) }}" class="btn btn-primary btn-sm" target="_blank">Visit Nintendo.co.uk page</a>
+        {% endif %}
 
     </div>
 

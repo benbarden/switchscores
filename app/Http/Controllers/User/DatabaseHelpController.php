@@ -115,6 +115,7 @@ class DatabaseHelpController extends Controller
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
 
         return view('user.database-help.games-without-categories.form', $bindings);
     }
