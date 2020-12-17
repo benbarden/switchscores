@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-    <h2>Hey, {{ auth_user().display_name }}!</h2>
+    <h2>Hey, {{ UserData.display_name }}!</h2>
 
     {% if SiteRole == 'review-partner' %}
 

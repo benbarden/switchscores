@@ -70,6 +70,8 @@ class IndexController extends Controller
         $bindings['PageTitle'] = $onPageTitle;
         $bindings['SiteRole'] = $siteRole;
 
+        $bindings['UserData'] = $authUser;
+
         // Database help
         $serviceMigrationsCategory = new MigrationsCategory();
         $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
