@@ -74,10 +74,6 @@ class GameCategorySuggestionController extends Controller
             return response()->json(['error' => 'Game not found for this record'], 400);
         }
 
-        // Approve item
-        $dbEditGame->setApproved();
-        $dbEditGame->save();
-
         // Make the change
         $game->category_id = $dbEditGame->new_data;
         $game->save();
@@ -94,7 +90,12 @@ class GameCategorySuggestionController extends Controller
             $pointsToAdd,
             null
         );
-        UserPointTransactionDirectorFactory::createNew($params);
+        $userPointTransaction = UserPointTransactionDirectorFactory::createNew($params);
+
+        // Approve item
+        $dbEditGame->setApproved();
+        $dbEditGame->point_transaction_id = $userPointTransaction->id;
+        $dbEditGame->save();
 
         $data = array(
             'status' => 'OK'
