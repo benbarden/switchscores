@@ -62,12 +62,7 @@
                     </em>
                 </p>
                 {% for item in QuickReviews %}
-                    <p>
-                        <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
-                            {{ item.game.title }}
-                        </a>
-                    </p>
-                    {% include 'modules/quick-review/item.twig' with {'QuickReview': item} %}
+                    {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
                 {% endfor %}
             </div>
         </div>
