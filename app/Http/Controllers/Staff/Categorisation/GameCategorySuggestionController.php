@@ -47,13 +47,6 @@ class GameCategorySuggestionController extends Controller
         $serviceUser = $this->getServiceUser();
         $serviceDbEdit = $this->getServiceDbEditGame();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
-
         $request = request();
 
         $itemId = $request->itemId;
@@ -64,6 +57,12 @@ class GameCategorySuggestionController extends Controller
         $dbEditGame = $serviceDbEdit->find($itemId);
         if (!$dbEditGame) {
             return response()->json(['error' => 'Record not found: '.$itemId], 400);
+        }
+
+        $userId = $dbEditGame->user_id;
+        $user = $serviceUser->find($userId);
+        if (!$user) {
+            return response()->json(['error' => 'Cannot find user!'], 400);
         }
 
         if (!$dbEditGame->isPending()) {
