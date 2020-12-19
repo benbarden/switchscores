@@ -132,6 +132,7 @@ class Images
             rename($storagePath.$destFilename, $destPath.$destFilename);
 
         } catch (\ErrorException $e) {
+            throw new \Exception('Error saving file: '.$e->getMessage());
             return false;
         }
 
