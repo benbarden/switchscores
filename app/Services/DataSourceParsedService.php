@@ -49,6 +49,38 @@ class DataSourceParsedService
         return $dsItemList;
     }
 
+    public function getBySourceNoGameIdWithEUDate($sourceId, $excludeLinkIdList = null, $excludeTitleList = null)
+    {
+        $dsItemList = DataSourceParsed
+            ::where('source_id', $sourceId)
+            ->whereNull('game_id')
+            ->whereNotNull('release_date_eu');
+        if ($excludeLinkIdList) {
+            $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);
+        }
+        if ($excludeTitleList) {
+            $dsItemList = $dsItemList->whereNotIn('title', $excludeTitleList);
+        }
+        $dsItemList = $dsItemList->orderBy('title', 'asc')->get();
+        return $dsItemList;
+    }
+
+    public function getBySourceNoGameIdNoEUDate($sourceId, $excludeLinkIdList = null, $excludeTitleList = null)
+    {
+        $dsItemList = DataSourceParsed
+            ::where('source_id', $sourceId)
+            ->whereNull('game_id')
+            ->whereNull('release_date_eu');
+        if ($excludeLinkIdList) {
+            $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);
+        }
+        if ($excludeTitleList) {
+            $dsItemList = $dsItemList->whereNotIn('title', $excludeTitleList);
+        }
+        $dsItemList = $dsItemList->orderBy('title', 'asc')->get();
+        return $dsItemList;
+    }
+
     public function getBySourceAndGame($sourceId, $gameId)
     {
         return DataSourceParsed::where('source_id', $sourceId)->where('game_id', $gameId)->first();
@@ -88,6 +120,18 @@ class DataSourceParsedService
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;
         return $this->getAllBySourceWithNoGameId($sourceId, $excludeLinkIdList);
+    }
+
+    public function getNintendoCoUkUnlinkedWithEUDate($excludeLinkIdList = null)
+    {
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        return $this->getBySourceNoGameIdWithEUDate($sourceId, $excludeLinkIdList);
+    }
+
+    public function getNintendoCoUkUnlinkedNoEUDate($excludeLinkIdList = null)
+    {
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        return $this->getBySourceNoGameIdNoEUDate($sourceId, $excludeLinkIdList);
     }
 
     public function getAllNintendoCoUkInLinkIdList($linkIdList)
@@ -155,6 +199,18 @@ class DataSourceParsedService
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         return $this->getAllBySourceWithNoGameId($sourceId, null, $excludeTitleList);
+    }
+
+    public function getWikipediaNoGameIdWithEUDate($excludeTitleList = null)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getBySourceNoGameIdWithEUDate($sourceId, null, $excludeTitleList);
+    }
+
+    public function getWikipediaNoGameIdNoEUDate($excludeTitleList = null)
+    {
+        $sourceId = DataSource::DSID_WIKIPEDIA;
+        return $this->getBySourceNoGameIdNoEUDate($sourceId, null, $excludeTitleList);
     }
 
     public function getAllWikipediaInTitleList($titleList)

@@ -35,7 +35,8 @@ class DataSourceParsedController extends Controller
 
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
 
-        $bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
+        $bindings['ItemsWithEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedWithEUDate($ignoreIdList);
+        $bindings['ItemsNoEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedNoEUDate($ignoreIdList);
         $bindings['jsInitialSort'] = "[ 2, 'asc' ]";
         $bindings['ListRef'] = 'unlinked';
 
@@ -166,7 +167,9 @@ class DataSourceParsedController extends Controller
 
         $ignoreTitleList = $this->getServiceDataSourceIgnore()->getWikipediaTitleList();
 
-        $bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllWikipediaWithNoGameId($ignoreTitleList);
+        //$bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllWikipediaWithNoGameId($ignoreTitleList);
+        $bindings['ItemsWithEUDate'] = $this->getServiceDataSourceParsed()->getWikipediaNoGameIdWithEUDate($ignoreTitleList);
+        $bindings['ItemsNoEUDate'] = $this->getServiceDataSourceParsed()->getWikipediaNoGameIdNoEUDate($ignoreTitleList);
         $bindings['jsInitialSort'] = "[ 1, 'asc' ]";
         $bindings['ListRef'] = 'unlinked';
 

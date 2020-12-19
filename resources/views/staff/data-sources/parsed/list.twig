@@ -9,76 +9,44 @@
 
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
-{% if ItemList.count > 0 %}
-    <table class="table data-sortable">
-        <thead>
-            <tr>
-                <th class="text-center">Link id</th>
-                <th class="text-left">Title</th>
-                <th class="text-center">Release date (EU)</th>
-                {% if DataSource.isWikipedia() %}
-                    <th class="text-center">Release date (US)</th>
-                    <th class="text-center">Release date (JP)</th>
-                {% endif %}
-                {% if DataSource.isNintendoCoUk() %}
-                <th class="text-center">Price (standard)</th>
-                <th class="text-center">Nintendo Url</th>
-                {% endif %}
-                <th class="text-center">Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in ItemList %}
-                <tr>
-                    <td class="text-center">
-                        {{ item.link_id }}
-                    </td>
-                    <td class="text-left">
-                        {{ item.title }}
-                    </td>
-                    <td class="text-center">
-                        {{ item.release_date_eu }}
-                    </td>
-                    {% if DataSource.isWikipedia() %}
-                        <td class="text-center">
-                            {{ item.release_date_us }}
-                        </td>
-                        <td class="text-center">
-                            {{ item.release_date_jp }}
-                        </td>
-                    {% endif %}
-                    {% if DataSource.isNintendoCoUk() %}
-                    <td class="text-center">
-                        {{ item.price_standard }}
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ LinkHelper.eshopUrl('eu', item.url) }}" target="_blank">View</a>
-                    </td>
-                    {% endif %}
-                    <td class="text-center">
-                        {% if DataSource.isNintendoCoUk() %}
-                            <a href="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': item.id}) }}">Add game</a> :
-                        {% elseif DataSource.isWikipedia() %}
-                            <a href="{{ route('staff.data-sources.wikipedia.add-link', {'itemId': item.id}) }}">Add link</a> :
-                        {% endif %}
-                        {% if ListRef == 'ignored' %}
-                            <a href="javascript:void(0);" id="lnk-remove-ignore-{{ item.id }}" class="lnk-remove-ignore">Un-ignore</a>
-                        {% else %}
-                            <a href="javascript:void(0);" id="lnk-add-ignore-{{ item.id }}" class="lnk-add-ignore">Ignore</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>No items found!</p>
-{% endif %}
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-with-eu-date">With EU date ({{ ItemsWithEUDate.count }})</a></li>
+                <li><a href="#tabs-no-eu-date">No EU date ({{ ItemsNoEUDate.count }})</a></li>
+            </ul>
+
+            <div id="tabs-with-eu-date">
+
+                <h2>With EU date</h2>
+                {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemsWithEUDate} %}
+
+            </div>
+
+            <div id="tabs-no-eu-date">
+
+                <h2>No EU date</h2>
+                {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemsNoEUDate} %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 {% include 'common/table-sorting.twig' %}
 <script>
 
     var sourceId = '{{ SourceId }}';
+
+    $('#tabs').tabs();
 
     $(document).ready(function() {
         $('.data-sortable').DataTable({
