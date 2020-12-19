@@ -12,11 +12,6 @@ class DataSourceIgnore extends Model
     protected $table = 'data_source_ignore';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

@@ -12,11 +12,6 @@ class GameDeveloper extends Model
     protected $table = 'game_developers';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

@@ -12,11 +12,6 @@ class GameRankYear extends Model
     protected $table = 'game_rank_year';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

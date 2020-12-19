@@ -9,29 +9,47 @@ class ReviewStatsService
 {
     public function calculateReviewCount(Collection $reviewLinks, Collection $quickReviews = null)
     {
-
-        $reviewLinkCount = $reviewLinks->count();
-        $quickReviewCount = $quickReviews->count();
+        $reviewLinkCount = 0;
+        $quickReviewCount = 0;
+        if ($reviewLinks) {
+            $reviewLinkCount = $reviewLinks->count();
+        }
+        if ($quickReviews) {
+            $quickReviewCount = $quickReviews->count();
+        }
         $totalReviewCount = $reviewLinkCount + $quickReviewCount;
         return $totalReviewCount;
     }
 
     public function calculateReviewAverage(Collection $reviewLinks, Collection $quickReviews = null)
     {
-        $reviewCount = $reviewLinks->count() + $quickReviews->count();
+        $reviewLinkCount = 0;
+        $quickReviewCount = 0;
+        if ($reviewLinks) {
+            $reviewLinkCount = $reviewLinks->count();
+        }
+        if ($quickReviews) {
+            $quickReviewCount = $quickReviews->count();
+        }
+
+        $reviewCount = $reviewLinkCount + $quickReviewCount;
 
         if ($reviewCount == 0) return null;
 
         $sumTotal = 0;
 
-        foreach ($reviewLinks as $review) {
-            $reviewScore = $review->rating_normalised;
-            $sumTotal += $reviewScore;
+        if ($reviewLinks) {
+            foreach ($reviewLinks as $review) {
+                $reviewScore = $review->rating_normalised;
+                $sumTotal += $reviewScore;
+            }
         }
 
-        foreach ($quickReviews as $review) {
-            $reviewScore = $review->review_score;
-            $sumTotal += $reviewScore;
+        if ($quickReviews) {
+            foreach ($quickReviews as $review) {
+                $reviewScore = $review->review_score;
+                $sumTotal += $reviewScore;
+            }
         }
 
         $avgScore = round(($sumTotal / $reviewCount), 2);
@@ -42,16 +60,29 @@ class ReviewStatsService
 
     public function calculateStandardDeviation(Collection $reviewLinks, Collection $quickReviews = null)
     {
-        $reviewCount = $reviewLinks->count() + $quickReviews->count();
+        $reviewLinkCount = 0;
+        $quickReviewCount = 0;
+        if ($reviewLinks) {
+            $reviewLinkCount = $reviewLinks->count();
+        }
+        if ($quickReviews) {
+            $quickReviewCount = $quickReviews->count();
+        }
+
+        $reviewCount = $reviewLinkCount + $quickReviewCount;
 
         if ($reviewCount == 0) return null;
 
         $reviewsArray = [];
-        foreach ($reviewLinks as $review) {
-            $reviewsArray[] = $review['rating_normalised'];
+        if ($reviewLinks) {
+            foreach ($reviewLinks as $review) {
+                $reviewsArray[] = $review['rating_normalised'];
+            }
         }
-        foreach ($quickReviews as $review) {
-            $reviewsArray[] = $review['review_score'];
+        if ($quickReviews) {
+            foreach ($quickReviews as $review) {
+                $reviewsArray[] = $review['review_score'];
+            }
         }
 
         $sdValue = $this->calculateSd($reviewsArray);

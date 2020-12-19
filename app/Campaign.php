@@ -12,11 +12,6 @@ class Campaign extends Model
     protected $table = 'campaigns';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

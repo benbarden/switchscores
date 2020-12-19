@@ -12,11 +12,6 @@ class GameTag extends Model
     protected $table = 'game_tags';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

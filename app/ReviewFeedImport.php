@@ -16,11 +16,6 @@ class ReviewFeedImport extends Model
     protected $table = 'review_feed_imports';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

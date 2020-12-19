@@ -12,11 +12,6 @@ class CampaignGame extends Model
     protected $table = 'campaign_games';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

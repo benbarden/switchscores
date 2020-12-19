@@ -25,11 +25,6 @@ class PartnerOutreach extends Model
     protected $table = 'partner_outreach';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

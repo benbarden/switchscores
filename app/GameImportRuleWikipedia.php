@@ -12,11 +12,6 @@ class GameImportRuleWikipedia extends Model
     protected $table = 'game_import_rules_wikipedia';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

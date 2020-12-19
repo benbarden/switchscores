@@ -12,11 +12,6 @@ class Tag extends Model
     protected $table = 'tags';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

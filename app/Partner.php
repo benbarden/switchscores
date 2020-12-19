@@ -50,11 +50,6 @@ class Partner extends Model implements Auditable
     protected $table = 'partners';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

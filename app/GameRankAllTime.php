@@ -12,11 +12,6 @@ class GameRankAllTime extends Model
     protected $table = 'game_rank_alltime';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

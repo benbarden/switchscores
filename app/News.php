@@ -12,11 +12,6 @@ class News extends Model
     protected $table = 'news';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

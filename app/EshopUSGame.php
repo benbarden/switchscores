@@ -12,11 +12,6 @@ class EshopUSGame extends Model
     protected $table = 'eshop_us_games';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

@@ -220,7 +220,7 @@ class QualityScoreDirectorTest extends TestCase
 
         $this->assertEquals(1, $qualityScore->has_publishers);
         $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
-        $this->assertEquals(68.75, $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildNintendoCoUkPublishersReverseOrderGamePub()
@@ -247,7 +247,7 @@ class QualityScoreDirectorTest extends TestCase
 
         $this->assertEquals(1, $qualityScore->has_publishers);
         $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
-        $this->assertEquals(68.75, $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 
     public function testBuildNintendoCoUkPublishersReverseOrderDataSource()
@@ -274,6 +274,6 @@ class QualityScoreDirectorTest extends TestCase
 
         $this->assertEquals(1, $qualityScore->has_publishers);
         $this->assertEquals(1, $qualityScore->no_conflict_nintendo_publishers);
-        $this->assertEquals(68.75, $qualityScore->quality_score);
+        $this->assertEquals(75.00, $qualityScore->quality_score);
     }
 }

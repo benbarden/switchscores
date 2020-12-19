@@ -29,11 +29,6 @@ class DataSource extends Model
     protected $table = 'data_sources';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

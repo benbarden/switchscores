@@ -16,11 +16,6 @@ class GameQualityScore extends Model
     protected $table = 'game_quality_scores';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

@@ -14,11 +14,6 @@ class UserGamesCollection extends Model
     protected $table = 'user_games_collection';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

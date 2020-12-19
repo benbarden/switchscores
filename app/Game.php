@@ -16,11 +16,6 @@ class Game extends Model implements Auditable
     protected $table = 'games';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

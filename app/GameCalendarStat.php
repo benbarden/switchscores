@@ -12,11 +12,6 @@ class GameCalendarStat extends Model
     protected $table = 'game_calendar_stats';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

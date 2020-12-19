@@ -16,11 +16,6 @@ class QuickReview extends Model
     protected $table = 'quick_reviews';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

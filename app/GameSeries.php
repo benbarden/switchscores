@@ -12,11 +12,6 @@ class GameSeries extends Model
     protected $table = 'game_series';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

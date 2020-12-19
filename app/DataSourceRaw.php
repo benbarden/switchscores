@@ -12,11 +12,6 @@ class DataSourceRaw extends Model
     protected $table = 'data_source_raw';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

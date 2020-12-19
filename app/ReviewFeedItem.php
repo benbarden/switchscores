@@ -15,11 +15,6 @@ class ReviewFeedItem extends Model
     protected $table = 'review_feed_items';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

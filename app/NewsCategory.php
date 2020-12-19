@@ -18,11 +18,6 @@ class NewsCategory extends Model
     protected $table = 'news_categories';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [

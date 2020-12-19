@@ -12,11 +12,6 @@ class Category extends Model
     protected $table = 'categories';
 
     /**
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
      * @var array
      */
     protected $fillable = [
