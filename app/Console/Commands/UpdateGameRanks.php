@@ -52,11 +52,16 @@ class UpdateGameRanks extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        // *** QUICK FIX FOR RELEASE YEARS *** //
+        // Fix release years
         DB::statement("
             UPDATE games
             SET release_year = YEAR(eu_release_date)
             WHERE eu_release_date IS NOT NULL AND release_year IS NULL
+        ");
+        DB::statement("
+            UPDATE games
+            SET release_year = YEAR(eu_release_date)
+            WHERE eu_release_date IS NOT NULL AND release_year != YEAR(eu_release_date);
         ");
 
         // *** 1. ALL-TIME RANK *** //
