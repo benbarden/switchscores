@@ -124,8 +124,14 @@ class Images
 
         try {
 
+            // Add protocol if needed
+            $protocolMatch = 'https:';
+            if (substr($remoteUrl, 0, strlen($protocolMatch)) != $protocolMatch) {
+                $remoteUrl = $protocolMatch.$remoteUrl;
+            }
+
             // Save the file
-            $imageData = file_get_contents('https:'.$remoteUrl);
+            $imageData = file_get_contents($remoteUrl);
             file_put_contents($storagePath.$destFilename, $imageData);
 
             // Move it to the right place
