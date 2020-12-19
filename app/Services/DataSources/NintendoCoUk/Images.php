@@ -78,10 +78,12 @@ class Images
             $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
             $destFilename = $this->generateDestFilename($remoteFile, 'sq-');
             if (!file_exists($destPath . $destFilename)) {
-                $this->downloadFile($remoteFile, $destPath, $destFilename);
+                $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
             }
-            $this->squareFilename = $destFilename;
-            $this->squareDownloaded = true;
+            if ($isDownloaded) {
+                $this->squareFilename = $destFilename;
+                $this->squareDownloaded = true;
+            }
         }
     }
 
@@ -92,10 +94,12 @@ class Images
             $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
             $destFilename = $this->generateDestFilename($remoteFile, 'hdr-');
             if (!file_exists($destPath.$destFilename)) {
-                $this->downloadFile($remoteFile, $destPath, $destFilename);
+                $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
             }
-            $this->headerFilename = $destFilename;
-            $this->headerDownloaded = true;
+            if ($isDownloaded) {
+                $this->headerFilename = $destFilename;
+                $this->headerDownloaded = true;
+            }
         }
     }
 
@@ -118,11 +122,20 @@ class Images
 
         $storagePath = storage_path().self::PATH_TMP;
 
-        // Save the file
-        $imageData = file_get_contents('https:'.$remoteUrl);
-        file_put_contents($storagePath.$destFilename, $imageData);
+        try {
 
-        // Move it to the right place
-        rename($storagePath.$destFilename, $destPath.$destFilename);
+            // Save the file
+            $imageData = file_get_contents('https:'.$remoteUrl);
+            file_put_contents($storagePath.$destFilename, $imageData);
+
+            // Move it to the right place
+            rename($storagePath.$destFilename, $destPath.$destFilename);
+
+        } catch (\ErrorException $e) {
+            return false;
+        }
+
+        // Success!
+        return true;
     }
 }
