@@ -49,12 +49,12 @@ class ImageHelper
                 break;
         }
 
-        if ($game->boxart_square_url) {
-            $boxartPath = '/img/games/square/';
-            $boxartUrl = $boxartPath . $game->boxart_square_url;
-        } elseif ($game->image_square) {
+        if ($game->image_square) {
             $boxartPath = GameImages::PATH_IMAGE_SQUARE;
             $boxartUrl = $game->image_square;
+        } elseif ($game->boxart_square_url) {
+            $boxartPath = '/img/games/square/';
+            $boxartUrl = $boxartPath . $game->boxart_square_url;
         } else {
             $boxartPath = null;
             $boxartUrl = null;
