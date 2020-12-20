@@ -79,6 +79,9 @@ class Images
             $destFilename = $this->generateDestFilename($remoteFile, 'sq-');
             if (!file_exists($destPath . $destFilename)) {
                 $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
+            } else {
+                // Already downloaded
+                $isDownloaded = true;
             }
             if ($isDownloaded) {
                 $this->squareFilename = $destFilename;
@@ -95,6 +98,9 @@ class Images
             $destFilename = $this->generateDestFilename($remoteFile, 'hdr-');
             if (!file_exists($destPath.$destFilename)) {
                 $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
+            } else {
+                // Already downloaded
+                $isDownloaded = true;
             }
             if ($isDownloaded) {
                 $this->headerFilename = $destFilename;
