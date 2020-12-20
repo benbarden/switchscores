@@ -52,6 +52,14 @@ class DbEditGameService
             ->pluck('game_id');
     }
 
+    public function getPendingCategoryEditForGame($gameId)
+    {
+        return DbEditGame::where('data_to_update', DbEditGame::DATA_CATEGORY)
+            ->where('status', DbEditGame::STATUS_PENDING)
+            ->where('game_id', $gameId)
+            ->first();
+    }
+
     public function getApprovedCategoryEdits()
     {
         $status = DbEditGame::STATUS_APPROVED;

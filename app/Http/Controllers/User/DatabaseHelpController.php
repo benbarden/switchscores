@@ -14,6 +14,7 @@ use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
+use Illuminate\Support\Facades\Validator;
 
 class DatabaseHelpController extends Controller
 {
@@ -25,8 +26,9 @@ class DatabaseHelpController extends Controller
     /**
      * @var array
      */
-    private $validationRulesAdd = [
-        'game_id' => 'required',
+    private $validationRules = [
+        //'game_id' => 'required',
+        'category_id' => 'required',
     ];
 
     public function landing()
@@ -88,6 +90,31 @@ class DatabaseHelpController extends Controller
 
         if ($request->isMethod('post')) {
 
+            $validator = Validator::make($request->all(), $this->validationRules);
+
+            if ($validator->fails()) {
+                return redirect(route('user.database-help.games-without-categories.submit-game-category-suggestion', ['gameId' => $gameId]))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $validator->after(function ($validator) use ($game, $request) {
+                // Block duplicate submissions
+                if ($this->getServiceDbEditGame()->getPendingCategoryEditForGame($game->id)) {
+                    $validator->errors()->add('title', 'There is already a pending change for this game.');
+                }
+                // Check if the value's changed
+                if ($game->category_id == $request->category_id) {
+                    $validator->errors()->add('title', 'The game already has this category assigned. Please select another.');
+                }
+            });
+
+            if ($validator->fails()) {
+                return redirect(route('user.database-help.games-without-categories.submit-game-category-suggestion', ['gameId' => $gameId]))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
             $dbEditDirector = new GameDirector();
             $dbEditBuilder = new GameBuilder();
 
@@ -120,86 +147,4 @@ class DatabaseHelpController extends Controller
         return view('user.database-help.games-without-categories.form', $bindings);
     }
 
-    ////////////////////////////////////////////////
-
-    public function add()
-    {
-        $serviceGame = $this->getServiceGame();
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
-        $request = request();
-
-        $userId = $this->getAuthId();
-
-        if ($request->isMethod('post')) {
-
-            $this->validate($request, $this->validationRulesAdd);
-
-            $serviceCollection->create(
-                $userId, $request->game_id, $request->owned_from, $request->owned_type,
-                $request->hours_played, $request->play_status
-            );
-
-            return redirect(route('user.collection.landing'));
-
-        }
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'User - Games collection - Add game';
-        $bindings['PageTitle'] = 'Add game to collection';
-        $bindings['FormMode'] = 'add';
-
-        $bindings['GamesList'] = $serviceGame->getAll();
-
-        $urlGameId = $request->gameId;
-        if ($urlGameId) {
-            $bindings['UrlGameId'] = $urlGameId;
-        }
-
-        return view('user.collection.add', $bindings);
-    }
-
-    public function edit($itemId)
-    {
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
-        $request = request();
-
-        $userId = $this->getAuthId();
-
-        $collectionData = $serviceCollection->find($itemId);
-        if (!$collectionData) abort(404);
-
-        if ($collectionData->user_id != $userId) abort(403);
-
-        $bindings = [];
-
-        if ($request->isMethod('post')) {
-
-            $bindings['FormMode'] = 'edit-post';
-
-            //$this->validate($request, $this->validationRules);
-
-            $serviceCollection->edit(
-                $collectionData, $request->owned_from, $request->owned_type,
-                $request->hours_played, $request->play_status
-            );
-
-            return redirect(route('user.collection.landing'));
-
-        } else {
-
-            $bindings['FormMode'] = 'edit';
-
-        }
-
-        $bindings['TopTitle'] = 'User - Games collection - Edit game';
-        $bindings['PageTitle'] = 'Edit games collection';
-
-        $bindings['CollectionData'] = $collectionData;
-        $bindings['ItemId'] = $itemId;
-
-        return view('user.collection.edit', $bindings);
-    }
 }
