@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use App\Game;
 use App\Services\Shortcode\DynamicShortcode;
 
-class GameTableTest extends TestCase
+class GameHeaderTest extends TestCase
 {
     /**
      * @var DynamicShortcode
@@ -33,10 +33,8 @@ class GameTableTest extends TestCase
         $seedGames->push($seedGamesItem);
         $seedGamesItem = new Game(['id' => 2, 'title' => '1-2-Switch', 'image_header' => 'test2.jpg']);
         $seedGames->push($seedGamesItem);
-        $seedGamesItem = new Game(['id' => 3, 'title' => 'Super Bomberman R', 'image_header' => 'test3.jpg']);
-        $seedGames->push($seedGamesItem);
 
-        $html = '<p>HELLO</p>[gametable ids="1,2,3"]<p>AND THIS IS A MIDDLE LINE</p>[gametable ids="4,5,6"]<p>BYE BYE</p>';
+        $html = '<p>HELLO</p>[gameheader ids="1"]<p>AND THIS IS A MIDDLE LINE</p>[gameheader ids="2"]<p>BYE BYE</p>';
 
         $this->serviceDynamicShortcode = new DynamicShortcode($html);
         $this->serviceDynamicShortcode->setSeedGames($seedGames);
@@ -45,6 +43,6 @@ class GameTableTest extends TestCase
 
         $output = $this->serviceDynamicShortcode->parseShortcodes();
         $this->assertIsString($output);
-//        $this->assertEquals($expected, $output);
+        //$this->assertEquals($expected, $output);
     }
 }

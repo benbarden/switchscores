@@ -3,11 +3,12 @@
 
 namespace App\Services\Shortcode;
 
+use Illuminate\Support\Collection;
 use App\Services\GameService;
 
-class GameTable
+class GameHeader
 {
-    private $pattern = "/\[gametable (.+?)\]/";
+    private $pattern = "/\[gameheader (.+?)\]/";
 
     /**
      * @var GameService
@@ -15,23 +16,24 @@ class GameTable
     private $serviceGame;
 
     /**
-     * @var array
+     * @var Collection
      */
-    private $seedGames;
+    private $seedGamesCollection;
 
     private $html;
 
-    public function __construct($html, $serviceGame = null, $seedGames = [])
+    public function __construct($html, $serviceGame = null)
     {
         $this->html = $html;
 
         if ($serviceGame) {
             $this->serviceGame = $serviceGame;
         }
+    }
 
-        if ($seedGames) {
-            $this->seedGames = $seedGames;
-        }
+    public function setSeedGames(Collection $seedGames)
+    {
+        $this->seedGamesCollection = $seedGames;
     }
 
     public function parseCode($matches)
@@ -46,16 +48,16 @@ class GameTable
 
         $bindings = [];
         switch ($matches[1]) {
-            case "gametable":
+            case "gameheader":
                 $idList = $params['ids'];
-                if ($this->seedGames) {
-                    $gameList = $this->seedGames;
+                if ($this->seedGamesCollection) {
+                    $gameList = $this->seedGamesCollection;
                 } else {
                     $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
                 }
 
                 $bindings['GameList'] = $gameList;
-                $shortcodeHtml = view('modules.shortcodes.game-table', $bindings);
+                $shortcodeHtml = view('modules.shortcodes.game-header', $bindings);
                 return $shortcodeHtml;
                 break;
         }
