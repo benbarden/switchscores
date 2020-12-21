@@ -7,16 +7,17 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\AuthUser;
-use App\UserGamesCollection;
 use App\Services\GamesCollection\PlayStatus;
 
 use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
+use App\Traits\MemberView;
 
 class CollectionController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -29,14 +30,11 @@ class CollectionController extends Controller
 
     public function landing()
     {
+        $bindings = $this->getBindingsDashboardGenericSubpage('Games collection');
+
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceQuickReview = $this->getServiceQuickReview();
         $serviceCollectionPlayStatus = new PlayStatus();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Games collection';
-        $bindings['PageTitle'] = 'Games collection';
 
         $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
@@ -65,6 +63,8 @@ class CollectionController extends Controller
 
     public function add()
     {
+        $bindings = $this->getBindingsDashboardGenericSubpage('Add game to collection');
+
         $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceCollectionPlayStatus = new PlayStatus();
@@ -86,10 +86,6 @@ class CollectionController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'User - Games collection - Add game';
-        $bindings['PageTitle'] = 'Add game to collection';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll();
@@ -105,6 +101,8 @@ class CollectionController extends Controller
 
     public function edit($itemId)
     {
+        $bindings = $this->getBindingsDashboardGenericSubpage('Edit games collection item');
+
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceCollectionPlayStatus = new PlayStatus();
 
@@ -116,8 +114,6 @@ class CollectionController extends Controller
         if (!$collectionData) abort(404);
 
         if ($collectionData->user_id != $userId) abort(403);
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -137,9 +133,6 @@ class CollectionController extends Controller
             $bindings['FormMode'] = 'edit';
 
         }
-
-        $bindings['TopTitle'] = 'User - Games collection - Edit game';
-        $bindings['PageTitle'] = 'Edit games collection';
 
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;

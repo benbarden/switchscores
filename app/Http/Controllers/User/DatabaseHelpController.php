@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Construction\DbEdit\GameBuilder;
-use App\Construction\DbEdit\GameDirector;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Validator;
 
 use App\DbEditGame;
+use App\Construction\DbEdit\GameBuilder;
+use App\Construction\DbEdit\GameDirector;
 use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
-use Illuminate\Support\Facades\Validator;
+use App\Traits\MemberView;
 
 class DatabaseHelpController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -33,23 +35,20 @@ class DatabaseHelpController extends Controller
 
     public function landing()
     {
-        $bindings = [];
+        $bindings = $this->getBindingsDashboardGenericSubpage('Database help');
 
         $serviceMigrationsCategory = new MigrationsCategory();
         $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
-
-        $bindings['TopTitle'] = 'User - Database help - Index';
-        $bindings['PageTitle'] = 'Database help';
 
         return view('user.database-help.index', $bindings);
     }
 
     public function gamesWithoutCategories()
     {
+        $bindings = $this->getBindingsDatabaseHelpSubpage('Games without categories');
+
         $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
         $serviceMigrationsCategory = new MigrationsCategory();
-
-        $bindings = [];
 
         $bindings['AllowedYears'] = $allowedYears;
 
@@ -57,36 +56,30 @@ class DatabaseHelpController extends Controller
             $bindings['NoCategoryCount'.$year] = $serviceMigrationsCategory->countGamesWithNoCategory($year);
         }
 
-        $bindings['TopTitle'] = 'User - Database help - Games without categories';
-        $bindings['PageTitle'] = 'Games without categories';
-
         return view('user.database-help.games-without-categories.index', $bindings);
     }
 
     public function gamesWithoutCategoriesByYear($year)
     {
-        $serviceMigrationsCategory = new MigrationsCategory();
+        $bindings = $this->getBindingsDatabaseHelpGamesWithoutCategoriesSubpage('Games without categories: '.$year);
 
-        $bindings = [];
+        $serviceMigrationsCategory = new MigrationsCategory();
 
         $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory($year);
 
         $bindings['PendingCategoryEditsGameIdList'] = $this->getServiceDbEditGame()->getPendingCategoryEditsGameIdList();
-
-        $bindings['TopTitle'] = 'User - Database help - Games without categories';
-        $bindings['PageTitle'] = 'Games without categories';
 
         return view('user.database-help.games-without-categories.list', $bindings);
     }
 
     public function submitGameCategorySuggestion($gameId)
     {
+        $bindings = $this->getBindingsDatabaseHelpGamesWithoutCategoriesSubpage('Submit category change suggestion');
+
         $request = request();
 
         $game = $this->getServiceGame()->find($gameId);
         if (!$game) abort(404);
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -135,8 +128,6 @@ class DatabaseHelpController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'User - Database help - Submit category change suggestion';
-        $bindings['PageTitle'] = 'Submit category change suggestion';
         $bindings['FormMode'] = 'add';
 
         $bindings['GameId'] = $gameId;

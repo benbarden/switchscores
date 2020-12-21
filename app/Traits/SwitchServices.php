@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Services\ViewHelper\Bindings;
+use App\Services\ViewHelper\MemberBreadcrumbs;
 use App\Services\ViewHelper\StaffBreadcrumbs;
 
 use App\Services\AuditService;
@@ -103,6 +104,14 @@ trait SwitchServices
     public function getServiceViewHelperBindings()
     {
         return $this->loadService("ViewHelper\\Bindings");
+    }
+
+    /**
+     * @return MemberBreadcrumbs
+     */
+    public function getServiceViewHelperMemberBreadcrumbs()
+    {
+        return $this->loadService("ViewHelper\\MemberBreadcrumbs");
     }
 
     /**
