@@ -44,12 +44,20 @@
 
     {% else %}
 
-        <p>
-            Got a question? Need help? Tweet us via
-            <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
-            You can also follow us for the latest updates.
-        </p>
-        {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
+        <div class="row member-dashboard">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <p>
+                    Got a question? Need help? Tweet us via
+                    <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
+                    You can also follow us for the latest updates.
+                </p>
+            </div>
+        </div>
+        <div class="row member-dashboard">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
+            </div>
+        </div>
 
     {% endif %}
 
