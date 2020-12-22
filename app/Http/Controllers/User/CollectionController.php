@@ -152,7 +152,7 @@ class CollectionController extends Controller
                 $request->hours_played, $request->play_status
             );
 
-            return redirect(route('user.collection.landing'));
+            return redirect(route('user.collection.list', ['listOption' => 'recently-added']));
 
         }
 
@@ -196,7 +196,7 @@ class CollectionController extends Controller
                 $request->hours_played, $request->play_status
             );
 
-            return redirect(route('user.collection.landing'));
+            return redirect(route('user.collection.list', ['listOption' => 'recently-added']));
 
         } else {
 
