@@ -73,10 +73,8 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ route('user.index') }}">Dashboard</a></li>
                         <li><a href="{{ route('user.collection.landing') }}">Games collection</a></li>
-                        {% if auth_user().site_id != 0 %}
-                            <li><a href="{{ route('user.partner-reviews.list') }}">Partner reviews</a></li>
-                        {% endif %}
                         <li><a href="{{ route('user.quick-reviews.list') }}">Quick reviews</a></li>
+                        <li><a href="{{ route('user.database-help.index') }}">Database help</a></li>
                         <li><a href="{{ route('user.settings') }}">Settings</a></li>
                         {% if auth_user().isStaff() %}
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
