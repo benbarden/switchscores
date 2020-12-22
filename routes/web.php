@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     // Collection
     Route::get('/user/collection/index', 'User\CollectionController@landing')->name('user.collection.landing');
+    Route::get('/user/collection/list/{listOption}', 'User\CollectionController@showList')->name('user.collection.list');
     Route::get('/user/collection/add', 'User\CollectionController@add')->name('user.collection.add');
     Route::post('/user/collection/add', 'User\CollectionController@add')->name('user.collection.add');
     Route::get('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');

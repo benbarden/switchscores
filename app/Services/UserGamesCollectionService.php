@@ -51,68 +51,78 @@ class UserGamesCollectionService
         return UserGamesCollection::find($id);
     }
 
-    public function getByUser($userId)
+    public function getByUser($userId, $limit = null)
     {
         $items = UserGamesCollection::
             where('user_id', $userId)
             ->orderBy('owned_from', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+            ->orderBy('id', 'desc');
+
+        if ($limit) {
+            $items = $items->limit($limit);
+        }
+
+        $items = $items->get();
+
         return $items;
     }
 
-    public function getNowPlayingByUser($userId)
+    public function getNowPlayingByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_NOW_PLAYING;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getPausedByUser($userId)
+    public function getPausedByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_PAUSED;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getNotStartedByUser($userId)
+    public function getNotStartedByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_NOT_STARTED;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getAbandonedByUser($userId)
+    public function getAbandonedByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_ABANDONED;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getCompletedByUser($userId)
+    public function getCompletedByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_COMPLETED;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getReplayingByUser($userId)
+    public function getReplayingByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_REPLAYING;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getEndlessByUser($userId)
+    public function getEndlessByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_ENDLESS;
-        return $this->getPlayStatusByUser($userId, $statusId);
+        return $this->getPlayStatusByUser($userId, $statusId, $limit);
     }
 
-    public function getPlayStatusByUser($userId, $playStatus)
+    public function getPlayStatusByUser($userId, $playStatus, $limit = null)
     {
         $items = UserGamesCollection::
             where('user_id', $userId)
             ->where('play_status', $playStatus)
             ->orderBy('owned_from', 'desc')
             ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
+            ->orderBy('id', 'desc');
+
+        if ($limit) {
+            $items = $items->limit($limit);
+        }
+
+        $items = $items->get();
         return $items;
     }
 
@@ -160,6 +170,18 @@ class UserGamesCollectionService
     public function getUserTotalCompleted($userId)
     {
         return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_COMPLETED)
+            ->count();
+    }
+
+    public function getUserTotalReplaying($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_REPLAYING)
+            ->count();
+    }
+
+    public function getUserTotalEndless($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('play_status', PlayStatus::PLAY_STATUS_ENDLESS)
             ->count();
     }
 

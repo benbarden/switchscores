@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Collection;
 
 use App\Services\GamesCollection\PlayStatus;
 
@@ -58,7 +59,76 @@ class CollectionController extends Controller
 
         $bindings['UserPlayStatusList'] = $userPlayStatusList;
 
+        // New layout
+        $bindings['ListRecentlyAdded'] = $this->getServiceUserGamesCollection()->getByUser($userId, 6);
+        $bindings['ListNotStarted'] = $this->getServiceUserGamesCollection()->getNotStartedByUser($userId, 5);
+        $bindings['ListPaused'] = $this->getServiceUserGamesCollection()->getPausedByUser($userId, 5);
+        $bindings['ListNowPlaying'] = $this->getServiceUserGamesCollection()->getNowPlayingByUser($userId, 5);
+        $bindings['ListReplaying'] = $this->getServiceUserGamesCollection()->getReplayingByUser($userId, 5);
+        $bindings['ListCompleted'] = $this->getServiceUserGamesCollection()->getCompletedByUser($userId, 5);
+        $bindings['ListAbandoned'] = $this->getServiceUserGamesCollection()->getAbandonedByUser($userId, 5);
+        $bindings['ListEndless'] = $this->getServiceUserGamesCollection()->getEndlessByUser($userId, 5);
+
+        $bindings['TotalNotStarted'] = $this->getServiceUserGamesCollection()->getUserTotalNotStarted($userId);
+        $bindings['TotalPaused'] = $this->getServiceUserGamesCollection()->getUserTotalPaused($userId);
+        $bindings['TotalNowPlaying'] = $this->getServiceUserGamesCollection()->getUserTotalNowPlaying($userId);
+        $bindings['TotalReplaying'] = $this->getServiceUserGamesCollection()->getUserTotalReplaying($userId);
+        $bindings['TotalCompleted'] = $this->getServiceUserGamesCollection()->getUserTotalCompleted($userId);
+        $bindings['TotalAbandoned'] = $this->getServiceUserGamesCollection()->getUserTotalAbandoned($userId);
+        $bindings['TotalEndless'] = $this->getServiceUserGamesCollection()->getUserTotalEndless($userId);
+
+        $bindings['TotalGames'] = $this->getServiceUserGamesCollection()->getUserTotalGames($userId);
+        $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
+
         return view('user.collection.index', $bindings);
+    }
+
+    public function showList($listOption)
+    {
+        $userId = $this->getAuthId();
+        $tableSort = '[4, "desc"]';
+
+        switch ($listOption) {
+            case PlayStatus::PLAY_STATUS_NOT_STARTED:
+                $pageTitle = 'Not started';
+                $collectionList = $this->getServiceUserGamesCollection()->getNotStartedByUser($userId);
+                break;
+            case PlayStatus::PLAY_STATUS_PAUSED:
+                $pageTitle = 'Paused';
+                $collectionList = $this->getServiceUserGamesCollection()->getPausedByUser($userId);
+                break;
+            case 'active':
+                $pageTitle = 'Active';
+                $collectionNowPlaying = $this->getServiceUserGamesCollection()->getNowPlayingByUser($userId);
+                $collectionReplaying = $this->getServiceUserGamesCollection()->getReplayingByUser($userId);
+                $collectionList = $collectionNowPlaying->merge($collectionReplaying);
+                break;
+            case PlayStatus::PLAY_STATUS_COMPLETED:
+                $pageTitle = 'Completed';
+                $collectionList = $this->getServiceUserGamesCollection()->getCompletedByUser($userId);
+                break;
+            case PlayStatus::PLAY_STATUS_ABANDONED:
+                $pageTitle = 'Abandoned';
+                $collectionList = $this->getServiceUserGamesCollection()->getAbandonedByUser($userId);
+                break;
+            case PlayStatus::PLAY_STATUS_ENDLESS:
+                $pageTitle = 'Endless';
+                $collectionList = $this->getServiceUserGamesCollection()->getEndlessByUser($userId);
+                break;
+            case 'recently-added':
+                $pageTitle = 'All games in your collection';
+                $collectionList = $this->getServiceUserGamesCollection()->getByUser($userId);
+                break;
+            default:
+                abort(404);
+        }
+
+        $bindings = $this->getBindingsCollectionSubpage($pageTitle, $tableSort);
+
+        $bindings['CollectionList'] = $collectionList;
+        $bindings['UserId'] = $userId;
+
+        return view('user.collection.list', $bindings);
     }
 
     public function add()

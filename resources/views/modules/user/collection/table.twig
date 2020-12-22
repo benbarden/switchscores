@@ -7,9 +7,10 @@
 {% if CollectionList.count > 0 %}
 
     <div class="table-responsive">
-        <table class="table">
+        <table class="table data-sortable">
             <thead>
             <tr>
+                <th class="text-center">#</th>
                 <th class="text-left">Game</th>
                 {% if PlayStatus is not defined %}
                     <th class="text-left">
@@ -28,26 +29,21 @@
                 <th class="text-center">
                     <abbr title="The number of hours you've played the game for.">Hours played</abbr>
                 </th>
+                <th class="text-center">
+                    Review
+                </th>
+                <th class="text-center">
+                    Options
+                </th>
             </tr>
             </thead>
             <tbody>
             {% for item in CollectionList %}
                 {% set RowGameId = item.game.id %}
                 <tr id="js-collection-row-{{ item.id }}">
+                    <td class="text-center">{{ item.id }}</td>
                     <td class="text-left">
                         <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
-                        <br>
-                        <small>
-                            {% if AsRole == 'user' %}
-                                <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
-                                <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a> :
-                                {% if RowGameId in QuickReviewGameIdList %}
-                                    <em>Review added</em>
-                                {% else %}
-                                    <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
-                                {% endif %}
-                            {% endif %}
-                        </small>
                     </td>
                     {% if PlayStatus is not defined %}
                         <td class="text-left" style="vertical-align: middle;">
@@ -86,6 +82,25 @@
                             Not set!
                         </td>
                     {% endif %}
+                    <td class="text-center">
+                        {% if AsRole == 'user' %}
+                            {% if item.play_status in ['completed', 'abandoned', 'endless'] %}
+                                {% if RowGameId in QuickReviewGameIdList %}
+                                    <em>Review added</em>
+                                {% else %}
+                                    <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if AsRole == 'user' %}
+                            <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
+                            <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -98,3 +113,24 @@
         <p>This user's games collection is empty.</p>
     {% endif %}
 {% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>

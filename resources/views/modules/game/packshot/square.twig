@@ -1,0 +1,8 @@
+{% set boxartUrl = ImageHelper.imageSquareUrl(item) %}
+<a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+    {% if boxartUrl %}
+        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+    {% else %}
+        <img src="/img/logo-grey-wide.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+    {% endif %}
+</a>

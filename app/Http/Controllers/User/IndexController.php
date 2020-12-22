@@ -60,7 +60,8 @@ class IndexController extends Controller
 
         $bindings['SiteRole'] = $siteRole;
         $bindings['UserData'] = $authUser;
-        $bindings['CollectionStats'] = $this->getServiceUserGamesCollection()->getStats($userId);
+        $bindings['TotalGames'] = $this->getServiceUserGamesCollection()->getUserTotalGames($userId);
+        $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
 
         // Database help
         $serviceMigrationsCategory = new MigrationsCategory();

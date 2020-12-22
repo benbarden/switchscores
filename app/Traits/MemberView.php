@@ -21,15 +21,20 @@ trait MemberView
      */
     private $pageTitle;
 
-    public function getBindings($pageTitle, $topTitle = 'Members', $tableSort = '')
+    /**
+     * @var string
+     */
+    private $tableSort;
+
+    public function getBindings($pageTitle, $topTitle = 'Members')
     {
         $this->bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)
             ->setTopTitleSuffix($topTitle)
             ->setBreadcrumbs($this->breadcrumbs);
 
-        if ($tableSort) {
-            $this->bindings = $this->bindings->setDatatablesSort($tableSort);
+        if ($this->tableSort) {
+            $this->bindings = $this->bindings->setDatatablesSort($this->tableSort);
         } else {
             $this->bindings = $this->bindings->setDatatablesSortDefault();
         }
@@ -49,9 +54,12 @@ trait MemberView
         return $this->getBindings($pageTitle);
     }
 
-    public function getBindingsCollectionSubpage($pageTitle)
+    public function getBindingsCollectionSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeCollectionSubpage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
         return $this->getBindings($pageTitle);
     }
 

@@ -1,0 +1,32 @@
+{% if CollectionList.count > 0 %}
+    <div class="table-responsive">
+        <table class="table">
+            {% for item in CollectionList %}
+                {% set RowGameId = item.game.id %}
+                {% set playStatusItem = item.getPlayStatus(item.play_status) %}
+                <tr id="js-collection-row-{{ item.id }}">
+                    <td class="text-left">
+                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    </td>
+                    {% if PlayStatus is not defined %}
+                        <td class="text-left" style="vertical-align: middle;">
+                            <i class="fas fa-{{ playStatusItem.getIcon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
+                            {{ playStatusItem.getDesc }}
+                        </td>
+                    {% endif %}
+                    <td class="text-center">
+                        {% if item.play_status in ['completed', 'abandoned', 'endless'] %}
+                            {% if RowGameId in QuickReviewGameIdList %}
+                                <em>Review added</em>
+                            {% else %}
+                                <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <p>No games to show in this list!</p>
+{% endif %}

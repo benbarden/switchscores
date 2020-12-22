@@ -1,17 +1,31 @@
 {% extends 'theme/wos/member/clean-wide.twig' %}
 
+{% set hideHeader = 'Y' %}
+
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
+        <h1>{{ PageTitle }}</h1>
         <p>
             Welcome to your Switch games collection. Get started by clicking "Add a game".
         </p>
+        <p>
+            <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>
+        </p>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>
+    <div class="col-md-4">
+        <h2>Quick stats</h2>
+        <table class="table">
+            <tr>
+                <td>Games in your collection</td>
+                <td>{{ TotalGames }}</td>
+            </tr>
+            <tr>
+                <td>Hours logged</td>
+                <td>{{ TotalHours }}</td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -19,45 +33,139 @@
 
 <div class="row">
 
-    <div class="col-sm-12 col-md-9">
-
-        <div id="tabs">
-
-            <ul>
-                {% for item in UserPlayStatusList %}
-                    <li>
-                        <a href="#tabs-{{ item.PlayStatus.getId }}">
-                        <i class="fas fa-{{ item.PlayStatus.getIcon }}" style="background: #efefef; color: {{ item.PlayStatus.getIconColor }}; font-size: 24px;"></i>
-                        ({{ item.ListItems|length }})
-                        </a>
-                    </li>
+    <div class="col-sm-12 col-md-12">
+        <h2>
+            Recently added
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'recently-added'}) }}">view all</a></span>
+        </h2>
+        {% if ListRecentlyAdded %}
+            <div class="row">
+                {% for item in ListRecentlyAdded %}
+                    <div class="col-md-4">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
+        {% endif %}
+    </div>
 
-            {% for item in UserPlayStatusList %}
-                <div id="tabs-{{ item.PlayStatus.getId }}">
-                    {% include 'modules/user/collection/table.twig' with {
-                        'ListTitle': item.PlayStatus.getDesc, 'PlayStatus': item.PlayStatus, 'CollectionList': item.ListItems, 'AsRole': 'user'}
-                    %}
-                </div>
-            {% endfor %}
+</div>
 
-        </div>
+<div class="row">
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>
+            Not started
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'not-started'}) }}">{{ TotalNotStarted }} total</a></span>
+        </h2>
+        {% if ListNotStarted %}
+            <div class="row">
+                {% for item in ListNotStarted %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
     </div>
 
-    <div class="col-sm-12 col-md-3">
+    <div class="col-sm-12 col-md-4">
 
-        <h3>Collection stats</h3>
-        {% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
+        <h2>
+            Paused
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'paused'}) }}">{{ TotalPaused }} total</a></span>
+        </h2>
+        {% if ListPaused %}
+            <div class="row">
+                {% for item in ListPaused %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>
+            Active
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'active'}) }}">{{ TotalNowPlaying + TotalReplaying }} total</a></span>
+        </h2>
+        {% if ListNowPlaying %}
+            <div class="row">
+                {% for item in ListNowPlaying %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if ListReplaying %}
+            <div class="row">
+                {% for item in ListReplaying %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
     </div>
 
 </div>
 
-<script>
+<div class="row">
 
-    $('#tabs').tabs();
+    <div class="col-sm-12 col-md-4">
+        <h2>Completed
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'completed'}) }}">{{ TotalCompleted }} total</a></span>
+        </h2>
+        {% if ListCompleted %}
+            <div class="row">
+                {% for item in ListCompleted %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <h2>Abandoned
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'abandoned'}) }}">{{ TotalAbandoned }} total</a></span>
+        </h2>
+        {% if ListAbandoned %}
+            <div class="row">
+                {% for item in ListAbandoned %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <h2>Endless
+            <span class="h5">- <a href="{{ route('user.collection.list', {'listOption': 'endless'}) }}">{{ TotalEndless }} total</a></span>
+        </h2>
+        {% if ListEndless %}
+            <div class="row">
+                {% for item in ListEndless %}
+                    <div class="col-md-12">
+                        {% include 'modules/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
 
     $('.js-remove-collection-item').on('click', function() {
         itemId = $(this).data('content');

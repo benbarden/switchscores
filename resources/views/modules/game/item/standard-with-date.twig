@@ -1,15 +1,7 @@
 <div class="row" style="margin-top: 16px;">
 
     <div class="col-sm-12 col-md-12 col-lg-12">
-        {# PACKSHOTS #}
-        {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
-        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
-            {% if boxartUrl %}
-                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
-            {% else %}
-                <img src="/img/logo-grey-wide.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
-            {% endif %}
-        </a>
+        {% include 'modules/game/packshot/header.twig' with {'item': item} %}
     </div>
 
 </div>

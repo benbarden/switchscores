@@ -1,6 +1,20 @@
 <h2>Games collection</h2>
 
-{% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
+<p>
+    We've refreshed the Games collection -
+    <a href="{{ route('user.collection.landing') }}">check it out</a>.
+</p>
+
+<table class="table">
+    <tr>
+        <td>Games in your collection</td>
+        <td>{{ TotalGames }}</td>
+    </tr>
+    <tr>
+        <td>Hours logged</td>
+        <td>{{ TotalHours }}</td>
+    </tr>
+</table>
 
 <a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-md">Manage collection</a>
 <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>

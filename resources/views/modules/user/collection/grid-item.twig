@@ -1,0 +1,46 @@
+<div class="row">
+
+    {% set playStatusItem = item.getPlayStatus(item.play_status) %}
+
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        {% include 'modules/game/packshot/square.twig' with {'item': game} %}
+    </div>
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        <table class="table">
+            <tr>
+                <td colspan="2">
+                    <span class="h5">
+                        <a href="{{ route('game.show', {'id': game.id, 'linkTitle': game.link_title}) }}">{{ game.title }}</a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 40px;">
+                    <i class="fas fa-{{ playStatusItem.getIcon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
+                </td>
+                <td style="vertical-align: middle;">
+                    <span class="h6">
+                        {{ playStatusItem.getDesc }}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span class="h6">
+                        <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
+                        <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
+                        {% if item.play_status in ['completed', 'abandoned', 'endless'] %}
+                            :
+                            {% if RowGameId in QuickReviewGameIdList %}
+                                <em>Review added</em>
+                            {% else %}
+                                <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>

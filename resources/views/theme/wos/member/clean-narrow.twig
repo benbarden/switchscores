@@ -21,7 +21,9 @@
                 {% endfor %}
             </ol>
             {% endif %}
-            <h1>{{ PageTitle }}</h1>
+            {% if hideHeader is not defined %}
+                <h1>{{ PageTitle }}</h1>
+            {% endif %}
             {% block page_inner %}{% endblock page_inner %}
         </div>
     </div>

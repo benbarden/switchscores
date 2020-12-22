@@ -1,0 +1,44 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12">
+
+        {% include 'modules/user/collection/table.twig' with {
+            'CollectionList': CollectionList, 'AsRole': 'user'}
+        %}
+
+    </div>
+
+</div>
+
+<script>
+
+    $('.js-remove-collection-item').on('click', function() {
+        itemId = $(this).data('content');
+
+        if (itemId == '') {
+            return false;
+        }
+
+        if (!window.confirm('Remove this game from your collection?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/user/collection/delete', {itemId: itemId}, function(data) {
+            $('#js-collection-row-' + itemId).remove();
+            return false;
+        });
+    });
+
+</script>
+
+{% endblock page_inner %}
