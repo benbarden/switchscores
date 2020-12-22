@@ -21,7 +21,7 @@ trait MemberView
      */
     private $pageTitle;
 
-    public function getBindings($pageTitle, $topTitle, $tableSort = '')
+    public function getBindings($pageTitle, $topTitle = 'Members', $tableSort = '')
     {
         $this->bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)
@@ -39,36 +39,37 @@ trait MemberView
 
     public function getBindingsDashboard($pageTitle)
     {
-        $topTitle = 'Members';
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeGenericSubpage('Dashboard');
-        return $this->getBindings($pageTitle, $topTitle);
+        return $this->getBindings($pageTitle);
     }
 
     public function getBindingsDashboardGenericSubpage($pageTitle)
     {
-        $topTitle = 'Members';
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeGenericSubpage($pageTitle);
-        return $this->getBindings($pageTitle, $topTitle);
+        return $this->getBindings($pageTitle);
     }
 
     public function getBindingsCollectionSubpage($pageTitle)
     {
-        $topTitle = 'Members';
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeCollectionSubpage($pageTitle);
-        return $this->getBindings($pageTitle, $topTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsQuickReviewsSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeQuickReviewsSubpage($pageTitle);
+        return $this->getBindings($pageTitle);
     }
 
     public function getBindingsDatabaseHelpSubpage($pageTitle)
     {
-        $topTitle = 'Members';
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeDatabaseHelpSubpage($pageTitle);
-        return $this->getBindings($pageTitle, $topTitle);
+        return $this->getBindings($pageTitle);
     }
 
     public function getBindingsDatabaseHelpGamesWithoutCategoriesSubpage($pageTitle)
     {
-        $topTitle = 'Members';
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeDatabaseHelpGamesWithoutCategoriesSubpage($pageTitle);
-        return $this->getBindings($pageTitle, $topTitle);
+        return $this->getBindings($pageTitle);
     }
 }

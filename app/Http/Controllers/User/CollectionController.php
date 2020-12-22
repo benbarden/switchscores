@@ -63,7 +63,7 @@ class CollectionController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Add game to collection');
+        $bindings = $this->getBindingsCollectionSubpage('Add game to collection');
 
         $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
@@ -101,7 +101,7 @@ class CollectionController extends Controller
 
     public function edit($itemId)
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Edit games collection item');
+        $bindings = $this->getBindingsCollectionSubpage('Edit games collection item');
 
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceCollectionPlayStatus = new PlayStatus();

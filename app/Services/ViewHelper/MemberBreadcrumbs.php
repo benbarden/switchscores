@@ -40,13 +40,28 @@ class MemberBreadcrumbs
 
     public function addCollectionDashboard()
     {
-        $crumbItem = ['url' => route('user.collection.index'), 'text' => 'Games collection'];
+        $crumbItem = ['url' => route('user.collection.landing'), 'text' => 'Games collection'];
         return $this->addCrumb($crumbItem);
     }
 
     public function makeCollectionSubpage($pageTitle)
     {
         return $this->addCollectionDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    // ***** Quick reviews ***** //
+
+    public function addQuickReviewsList()
+    {
+        $crumbItem = ['url' => route('user.quick-reviews.list'), 'text' => 'Quick reviews'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeQuickReviewsSubpage($pageTitle)
+    {
+        return $this->addQuickReviewsList()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }

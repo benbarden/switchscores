@@ -9,11 +9,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
+use App\Traits\MemberView;
 
 class QuickReviewController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -28,6 +30,10 @@ class QuickReviewController extends Controller
 
     public function add()
     {
+        $onPageTitle = 'Add quick review';
+
+        $bindings = $this->getBindingsQuickReviewsSubpage($onPageTitle);
+
         $userId = $this->getAuthId();
 
         $request = request();
@@ -51,10 +57,6 @@ class QuickReviewController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Add quick review';
-        $bindings['PageTitle'] = 'Add quick review';
         $bindings['FormMode'] = 'add';
 
         $bindings['GamesList'] = $serviceGame->getAll();
@@ -72,22 +74,19 @@ class QuickReviewController extends Controller
 
     public function showList()
     {
+        $onPageTitle = 'Quick reviews';
+
+        $bindings = $this->getBindingsDashboardGenericSubpage($onPageTitle);
+
         $urlMsg = \Request::get('msg');
 
-        $serviceQuickReview = $this->getServiceQuickReview();
-
         $userId = $this->getAuthId();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Quick reviews';
-        $bindings['PageTitle'] = 'Quick reviews';
 
         if ($urlMsg) {
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewList'] = $serviceQuickReview->getAllByUser($userId);
+        $bindings['ReviewList'] = $this->getServiceQuickReview()->getAllByUser($userId);
 
         return view('user.quick-reviews.list', $bindings);
     }
