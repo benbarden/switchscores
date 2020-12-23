@@ -1,0 +1,48 @@
+{% if GameList %}
+    <div class="row">
+
+    <div class="col-sm-12 col-md-12">
+
+    <div class="row">
+        {% for item in GameList %}
+        <div class="col-md-6">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                {% include 'modules/game/packshot/square.twig' with {'item': item} %}
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                <table class="table">
+                    <tr>
+                        <td colspan="2">
+                            <span class="h5">
+                                <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;">
+                            <span class="h6">
+                                Rank: {{ item.game_rank }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="h6">
+                            {% if item.rating_avg %}
+                                {% if item.game_rank %}
+                                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                                {% else %}
+                                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+                                {% endif %}
+                            {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    </div>
+
+    </div>
+{% endif %}

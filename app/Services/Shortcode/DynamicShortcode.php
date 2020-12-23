@@ -61,6 +61,18 @@ class DynamicShortcode
                 $shortcodeHtml = view('modules.shortcodes.game-table', $bindings);
                 return $shortcodeHtml;
                 break;
+            case "gamegrid":
+                $idList = $params['ids'];
+                if ($this->seedGamesCollection) {
+                    $gameList = $this->seedGamesCollection;
+                } else {
+                    $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
+                }
+
+                $bindings['GameList'] = $gameList;
+                $shortcodeHtml = view('modules.shortcodes.game-grid', $bindings);
+                return $shortcodeHtml;
+                break;
             case "gameheader":
                 $idList = $params['ids'];
                 if ($this->seedGamesCollection) {
