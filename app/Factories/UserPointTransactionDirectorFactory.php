@@ -5,6 +5,8 @@ namespace App\Factories;
 use App\Construction\User\PointTransactionBuilder;
 use App\Construction\User\PointTransactionDirector;
 
+use App\UserPointTransaction;
+
 class UserPointTransactionDirectorFactory
 {
     public static function createNew($params)
@@ -33,5 +35,14 @@ class UserPointTransactionDirectorFactory
             $params['points_debit'] = $pointsDebit;
         }
         return $params;
+    }
+
+    public static function addForQuickReview($userId, $gameId)
+    {
+        $actionTypeId = UserPointTransaction::ACTION_QUICK_REVIEW_ADD;
+        $pointsCredit = UserPointTransaction::POINTS_QUICK_REVIEW_ADD;
+
+        $params = self::buildParams($userId, $actionTypeId, $gameId, $pointsCredit);
+        $userPointTransaction = self::createNew($params);
     }
 }

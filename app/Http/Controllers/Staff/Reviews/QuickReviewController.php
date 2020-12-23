@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
+use App\Factories\UserFactory;
+use App\Factories\UserPointTransactionDirectorFactory;
+use App\UserPointTransaction;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\QuickReview;
 
 class QuickReviewController extends Controller
 {
@@ -68,6 +72,27 @@ class QuickReviewController extends Controller
             }
 
             $serviceQuickReview->editStatus($reviewData, $itemStatus);
+
+            if ($itemStatus == QuickReview::STATUS_ACTIVE) {
+
+                $userId = $reviewData->user_id;
+                $gameId = $reviewData->game_id;
+
+                // Update game review stats
+                $game = $this->getServiceGame()->find($gameId);
+                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+
+                // Credit points
+                $user = $this->getServiceUser()->find($userId);
+                $pointsToAdd = UserPointTransaction::POINTS_QUICK_REVIEW_ADD;
+                UserFactory::addToPointsBalance($user, $pointsToAdd);
+
+                // Store the transaction
+                UserPointTransactionDirectorFactory::addForQuickReview($userId, $gameId);
+
+            }
 
             // All done; send us back
             return redirect(route('staff.reviews.quick-reviews.list'));
