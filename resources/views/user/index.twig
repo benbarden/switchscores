@@ -2,63 +2,105 @@
 
 {% block page_inner %}
 
+
     <h2>Hey, {{ UserData.display_name }}!</h2>
 
-    {% if SiteRole == 'review-partner' %}
+    <div class="row member-dashboard">
 
-        <div class="row member-dashboard">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="alert alert-info">
-                    <strong>The reviewers dashboard has moved:</strong>
-                    <a href="{{ route('reviewers.index') }}">Reviewers dashboard</a>
-                </div>
-            </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            <h2>Your details</h2>
+            <table class="table">
+                <tr>
+                    <td>Display name</td>
+                    <td>{{ UserData.display_name }}</td>
+                </tr>
+                <tr>
+                    <td>Login method</td>
+                    <td>
+                        {% if UserData.twitter_user_id %}
+                            Twitter
+                        {% else %}
+                            Email
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Points</td>
+                    <td>{{ UserData.points_balance }}</td>
+                </tr>
+                <tr>
+                    <td>Registered</td>
+                    <td>{{ UserData.created_at|date('d M Y') }}</td>
+                </tr>
+            </table>
         </div>
-        <div class="row member-dashboard">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
-            </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            <h2>Help and feedback</h2>
+            <p>
+                We'd love to know how you're getting on with the Member dashboard.
+            </p>
+            <p>
+                If you've got feedback or need help, you can tweet us via
+                <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
+                Follow us for the latest updates.
+            </p>
         </div>
-
-    {% elseif SiteRole == 'games-company' %}
-
-        <div class="row member-dashboard">
-            <div class="col-xs-12 col-sm-8 col-md-8">
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            {% if SiteRole == 'review-partner' %}
+                <h2>Reviewers</h2>
                 <p>
-                    <strong>Thanks for being one of our partners!</strong>
-                    Being a partner means you can view details of all of your Switch games.
-                    We're working on additional features to help manage your games catalogue and reach out to
-                    review partners. More on this soon.
+                    Find all the tools and stats for reviewers here:
                 </p>
                 <p>
-                    Want to update your details? Got a question? Need help? Contact Ben via
-                    <a href="mailto:ben@switchscores.com">ben@switchscores.com</a>.
+                    <a href="{{ route('reviewers.index') }}" class="btn btn-sm btn-primary">Reviewers dashboard</a>
                 </p>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                {% include 'modules/user/dashboard/games-company-infobox.twig' %}
-            </div>
+            {% endif %}
         </div>
 
-        {% include 'user/dashboard/games-company.twig' with {'AuthUser': auth_user()} %}
+    </div>
 
-    {% else %}
+    <div class="row member-dashboard">
 
-        <div class="row member-dashboard">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <p>
-                    Got a question? Need help? Tweet us via
-                    <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
-                    You can also follow us for the latest updates.
-                </p>
-            </div>
-        </div>
-        <div class="row member-dashboard">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                {% include 'user/dashboard/member.twig' with {'AuthUser': auth_user()} %}
-            </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/user/dashboard/games-collection-member.twig' %}
+
         </div>
 
-    {% endif %}
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/user/dashboard/quick-reviews-member.twig' with {'siteRole': 'member'} %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/user/dashboard/database-help.twig' %}
+
+        </div>
+
+    </div>
+
+    {#
+    <div class="row member-dashboard">
+        <div class="col-xs-12 col-sm-8 col-md-8">
+            <p>
+                <strong>Thanks for being one of our partners!</strong>
+                Being a partner means you can view details of all of your Switch games.
+                We're working on additional features to help manage your games catalogue and reach out to
+                review partners. More on this soon.
+            </p>
+            <p>
+                Want to update your details? Got a question? Need help? Contact Ben via
+                <a href="mailto:ben@switchscores.com">ben@switchscores.com</a>.
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            {% include 'modules/user/dashboard/games-company-infobox.twig' %}
+        </div>
+    </div>
+
+    {% include 'user/dashboard/games-company.twig' with {'AuthUser': auth_user()} %}
+    #}
 
 {% endblock page_inner %}
