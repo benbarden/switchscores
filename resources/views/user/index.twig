@@ -63,19 +63,70 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% include 'modules/user/dashboard/games-collection-member.twig' %}
+            <h2>Games collection</h2>
+
+            <p>
+                We've refreshed the Games collection -
+                <a href="{{ route('user.collection.landing') }}">check it out</a>.
+            </p>
+
+            <table class="table">
+                <tr>
+                    <td>Games in your collection</td>
+                    <td>{{ TotalGames }}</td>
+                </tr>
+                <tr>
+                    <td>Hours logged</td>
+                    <td>{{ TotalHours }}</td>
+                </tr>
+            </table>
+
+            <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>
+            <a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-md">View your collection</a>
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% include 'modules/user/dashboard/quick-reviews-member.twig' with {'siteRole': 'member'} %}
+            <h2>Quick reviews</h2>
+            <p>
+                Tell other members what you think of a game by posting a quick review.
+            </p>
+
+            <p>
+                <strong>Got a website with Switch reviews?</strong>
+                You might be better off with our partner reviews feature. This allows you
+                to submit links to full-length reviews on your site.
+                Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+                more details.
+            </p>
+
+            <p>
+                <a href="{{ route('user.quick-reviews.add') }}" class="btn btn-primary btn-md">Add a quick review</a>
+                <a href="{{ route('user.quick-reviews.list') }}" class="btn btn-primary btn-md">View your reviews</a>
+            </p>
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% include 'modules/user/dashboard/database-help.twig' %}
+            <h2>Database help</h2>
+            <p>
+                We're building this section so you can do your bit to improve our database.
+            </p>
+            <table class="table">
+                <tr>
+                    <td>
+                        <a href="{{ route('user.database-help.games-without-categories') }}">Games without categories</a>
+                    </td>
+                    <td>
+                        <a href="{{ route('user.database-help.games-without-categories') }}" class="h4">{{ NoCategoryCount }}</a>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <a href="{{ route('user.database-help.index') }}">View all Database help links</a>.
+            </p>
 
         </div>
 
