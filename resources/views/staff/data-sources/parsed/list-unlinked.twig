@@ -1,0 +1,41 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-with-eu-date">With EU date ({{ ItemsWithEUDate.count }})</a></li>
+                <li><a href="#tabs-no-eu-date">No EU date ({{ ItemsNoEUDate.count }})</a></li>
+            </ul>
+
+            <div id="tabs-with-eu-date">
+
+                <h2>With EU date</h2>
+                {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemsWithEUDate} %}
+
+            </div>
+
+            <div id="tabs-no-eu-date">
+
+                <h2>No EU date</h2>
+                {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemsNoEUDate} %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'common/table-sorting.twig' %}
+{% include 'staff/data-sources/parsed/list-scripts.twig' %}
+
+{% endblock page_inner %}

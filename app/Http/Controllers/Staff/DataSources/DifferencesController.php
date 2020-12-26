@@ -12,10 +12,12 @@ use App\Construction\GameImportRule\WikipediaBuilder;
 use App\Construction\GameImportRule\WikipediaDirector;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class DifferencesController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function getCategoryId($genresJson)
     {
@@ -286,11 +288,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkEuReleaseDate()
     {
         $pageTitle = 'Differences: EU release date - Nintendo.co.uk API';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getReleaseDateEUNintendoCoUk();
@@ -308,11 +306,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPrice()
     {
         $pageTitle = 'Differences: Price - Nintendo.co.uk API';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPriceNintendoCoUk();
@@ -330,11 +324,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPlayers()
     {
         $pageTitle = 'Differences: Players - Nintendo.co.uk API';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPlayersNintendoCoUk();
@@ -352,11 +342,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPublishers()
     {
         $pageTitle = 'Differences: Publishers - Nintendo.co.uk API';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPublishersNintendoCoUk();
@@ -375,11 +361,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkGenres()
     {
         $pageTitle = 'Differences: Genres - Nintendo.co.uk API';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getGenresNintendoCoUk();
@@ -397,11 +379,7 @@ class DifferencesController extends Controller
     public function wikipediaEuReleaseDate()
     {
         $pageTitle = 'Differences: EU release date - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getReleaseDateEUWikipedia();
@@ -419,11 +397,7 @@ class DifferencesController extends Controller
     public function wikipediaUsReleaseDate()
     {
         $pageTitle = 'Differences: US release date - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getReleaseDateUSWikipedia();
@@ -441,11 +415,7 @@ class DifferencesController extends Controller
     public function wikipediaJpReleaseDate()
     {
         $pageTitle = 'Differences: JP release date - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getReleaseDateJPWikipedia();
@@ -463,11 +433,7 @@ class DifferencesController extends Controller
     public function wikipediaDevelopers()
     {
         $pageTitle = 'Differences: Developers - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getDevelopersWikipedia();
@@ -486,11 +452,7 @@ class DifferencesController extends Controller
     public function wikipediaPublishers()
     {
         $pageTitle = 'Differences: Publishers - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPublishersWikipedia();
@@ -509,11 +471,7 @@ class DifferencesController extends Controller
     public function wikipediaGenres()
     {
         $pageTitle = 'Differences: Genres - Wikipedia';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getGenresWikipedia();

@@ -5,26 +5,20 @@ namespace App\Http\Controllers\Staff\Stats;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $pageTitle = 'Stats dashboard';
+        $bindings = $this->getBindingsDashboardGenericSubpage('Stats dashboard');
 
-        $serviceGame = $this->getServiceGame();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle.' - Admin';
-        $bindings['PageTitle'] = $pageTitle;
-
-        $bindings['TotalGameCount'] = $serviceGame->getCount();
-        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
-        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
+        $bindings['TotalGameCount'] = $this->getServiceGame()->getCount();
+        $bindings['ReleasedGameCount'] = $this->getServiceGameReleaseDate()->countReleased();
+        $bindings['UpcomingGameCount'] = $this->getServiceGameReleaseDate()->countUpcoming();
 
         return view('staff.stats.dashboard', $bindings);
     }

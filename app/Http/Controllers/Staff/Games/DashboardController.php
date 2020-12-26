@@ -5,40 +5,34 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $pageTitle = 'Games dashboard';
+        $bindings = $this->getBindingsDashboardGenericSubpage('Games dashboard');
 
-        $serviceGame = $this->getServiceGame();
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
-        $bindings = [];
-
         // Games to release
-        $actionListGamesForReleaseCount = $serviceGame->getActionListGamesForRelease();
+        $actionListGamesForReleaseCount = $this->getServiceGame()->getActionListGamesForRelease();
         $bindings['GamesForReleaseCount'] = count($actionListGamesForReleaseCount);
 
         // Missing data
         $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->getServiceGame()->countWithoutPrices();
-        $missingVideoUrl = $serviceGame->getWithNoVideoUrl();
-        $missingAmazonUkLink = $serviceGame->getWithNoAmazonUkLink();
-        $bindings['MissingVideoUrlCount'] = count($missingVideoUrl);
-        $bindings['MissingAmazonUkLink'] = count($missingAmazonUkLink);
+        $bindings['MissingVideoUrlCount'] = $this->getServiceGame()->countWithNoVideoUrl();
+        $bindings['MissingAmazonUkLink'] = $this->getServiceGame()->countWithNoAmazonUkLink();
 
         // Release date stats
-        $bindings['TotalGameCount'] = $serviceGame->getCount();
+        $bindings['TotalGameCount'] = $this->getServiceGame()->getCount();
         $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
-
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('staff.games.dashboard', $bindings);
     }

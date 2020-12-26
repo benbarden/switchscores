@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
+use Illuminate\Routing\Controller as Controller;
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-
-use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\Validator;
 
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
-use Illuminate\Support\Facades\Validator;
+use App\Traits\StaffView;
 
 class CategoryController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -29,25 +31,18 @@ class CategoryController extends Controller
 
     public function showList()
     {
-        $serviceCategory = $this->getServiceCategory();
+        $bindings = $this->getBindingsCategorisationSubpage('Categories');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Categories';
-        $bindings['PageTitle'] = 'Categories';
-
-        $bindings['CategoryList'] = $serviceCategory->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
 
         return view('staff.categorisation.category.list', $bindings);
     }
 
     public function addCategory()
     {
-        $serviceCategory = $this->getServiceCategory();
+        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Add category');
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -61,7 +56,7 @@ class CategoryController extends Controller
                     ->withInput();
             }
 
-            $existingCategory = $serviceCategory->getByName($request->name);
+            $existingCategory = $this->getServiceCategory()->getByName($request->name);
 
             $validator->after(function ($validator) use ($existingCategory) {
                 // Check for duplicates
@@ -77,7 +72,7 @@ class CategoryController extends Controller
             }
 
             // All ok
-            $serviceCategory->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->getServiceCategory()->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -87,26 +82,22 @@ class CategoryController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Add category';
-        $bindings['PageTitle'] = 'Add category';
         $bindings['FormMode'] = 'add';
 
-        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
-        $bindings['BlurbOptionList'] = $serviceCategory->getBlurbOptions();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['BlurbOptionList'] = $this->getServiceCategory()->getBlurbOptions();
 
         return view('staff.categorisation.category.add', $bindings);
     }
 
     public function editCategory($categoryId)
     {
-        $serviceCategory = $this->getServiceCategory();
+        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Edit category');
 
-        $categoryData = $serviceCategory->find($categoryId);
+        $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -114,7 +105,7 @@ class CategoryController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceCategory->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->getServiceCategory()->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -124,33 +115,29 @@ class CategoryController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Edit category';
-        $bindings['PageTitle'] = 'Edit category';
         $bindings['CategoryData'] = $categoryData;
         $bindings['CategoryId'] = $categoryId;
 
-        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
-        $bindings['BlurbOptionList'] = $serviceCategory->getBlurbOptions();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['BlurbOptionList'] = $this->getServiceCategory()->getBlurbOptions();
 
         return view('staff.categorisation.category.edit', $bindings);
     }
 
     public function deleteCategory($categoryId)
     {
-        $serviceCategory = $this->getServiceCategory();
+        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Delete category');
 
-        $categoryData = $serviceCategory->find($categoryId);
+        $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceCategory->delete($categoryId);
+            $this->getServiceCategory()->delete($categoryId);
 
             // Done
 
@@ -162,8 +149,6 @@ class CategoryController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Categorisation - Delete category';
-        $bindings['PageTitle'] = 'Delete category';
         $bindings['CategoryData'] = $categoryData;
         $bindings['CategoryId'] = $categoryId;
 

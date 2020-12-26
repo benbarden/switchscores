@@ -8,10 +8,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class EditorController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -28,9 +30,7 @@ class EditorController extends Controller
 
     public function add()
     {
-        $serviceNews = $this->getServiceNews();
-        $serviceNewsCategory = $this->getServiceNewsCategory();
-        $serviceGame = $this->getServiceGame();
+        $bindings = $this->getBindingsNewsListSubpage('Add news');
 
         $request = request();
 
@@ -38,7 +38,7 @@ class EditorController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $news = $serviceNews->create(
+            $news = $this->getServiceNews()->create(
                 $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
@@ -47,28 +47,20 @@ class EditorController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - News - Add news';
-        $bindings['PageTitle'] = 'Add news';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
+        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
 
         return view('staff.news.editor.add', $bindings);
     }
 
     public function edit($newsId)
     {
-        $serviceNews = $this->getServiceNews();
-        $serviceNewsCategory = $this->getServiceNewsCategory();
-        $serviceGame = $this->getServiceGame();
+        $bindings = $this->getBindingsNewsListSubpage('Edit news');
 
-        $bindings = [];
-
-        $newsData = $serviceNews->find($newsId);
+        $newsData = $this->getServiceNews()->find($newsId);
         if (!$newsData) abort(404);
 
         $request = request();
@@ -79,7 +71,7 @@ class EditorController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceNews->edit(
+            $this->getServiceNews()->edit(
                 $newsData, $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
@@ -92,14 +84,12 @@ class EditorController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - News - Edit news';
-        $bindings['PageTitle'] = 'Edit news';
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['NewsCategoryList'] = $serviceNewsCategory->getAll();
+        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
 
         return view('staff.news.editor.edit', $bindings);
     }

@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class FindController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $bindings = [];
-
-        $pageTitle = 'Find a game';
+        $bindings = $this->getBindingsGamesSubpage('Find a game');
 
         if (request()->isMethod('post')) {
 
@@ -32,9 +32,6 @@ class FindController extends Controller
         }
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
-
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('staff.games.find.show', $bindings);
     }

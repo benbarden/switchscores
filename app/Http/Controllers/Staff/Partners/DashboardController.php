@@ -5,38 +5,33 @@ namespace App\Http\Controllers\Staff\Partners;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $pageTitle = 'Partners dashboard';
-
-        $servicePartner = $this->getServicePartner();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDashboardGenericSubpage('Partners dashboard');
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $this->getServiceGameDeveloper()->countGamesWithNoDeveloper();
         $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
 
-        $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $servicePartner->countGamesCompaniesWithoutWebsiteUrls();
-        $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $servicePartner->countGamesCompaniesWithoutTwitterIds();
+        $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $this->getServicePartner()->countGamesCompaniesWithoutWebsiteUrls();
+        $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $this->getServicePartner()->countGamesCompaniesWithoutTwitterIds();
 
-        $duplicateTwitterIdsList = $servicePartner->getGamesCompanyDuplicateTwitterIds();
-        $duplicateWebsiteUrlsList = $servicePartner->getGamesCompanyDuplicateWebsiteUrls();
+        $duplicateTwitterIdsList = $this->getServicePartner()->getGamesCompanyDuplicateTwitterIds();
+        $duplicateWebsiteUrlsList = $this->getServicePartner()->getGamesCompanyDuplicateWebsiteUrls();
         $bindings['GamesCompanyDuplicateTwitterIdsCount'] = count($duplicateTwitterIdsList);
         $bindings['GamesCompanyDuplicateWebsiteUrlsCount'] = count($duplicateWebsiteUrlsList);
 
         // Outreach
-        $devsWithUnrankedGames = $servicePartner->getDevelopersWithUnrankedGames();
+        $devsWithUnrankedGames = $this->getServicePartner()->getDevelopersWithUnrankedGames();
         $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
-        $pubsWithUnrankedGames = $servicePartner->getPublishersWithUnrankedGames();
+        $pubsWithUnrankedGames = $this->getServicePartner()->getPublishersWithUnrankedGames();
         $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGames);
 
         return view('staff.partners.dashboard', $bindings);

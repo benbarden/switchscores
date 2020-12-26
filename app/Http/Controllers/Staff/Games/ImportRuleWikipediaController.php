@@ -12,10 +12,12 @@ use App\Construction\GameImportRule\WikipediaDirector;
 use App\Construction\GameImportRule\WikipediaBuilder;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ImportRuleWikipediaController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -27,12 +29,11 @@ class ImportRuleWikipediaController extends Controller
 
     public function edit($gameId)
     {
-        $serviceImportRuleWikipedia = $this->getServiceGameImportRuleWikipedia();
+        $bindings = $this->getBindingsGamesDetailSubpage('Import rules: Wikipedia - Edit', $gameId);
 
-        $gameImportRuleWikipedia = $serviceImportRuleWikipedia->getByGameId($gameId);
+        $gameImportRuleWikipedia = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
 
         $request = request();
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -66,8 +67,6 @@ class ImportRuleWikipediaController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Import rules: Wikipedia - Edit';
-        $bindings['PageTitle'] = 'Import rules: Wikipedia';
         $bindings['GameImportRuleWikipedia'] = $gameImportRuleWikipedia;
         $bindings['GameId'] = $gameId;
 

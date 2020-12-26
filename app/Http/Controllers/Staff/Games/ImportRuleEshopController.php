@@ -12,10 +12,12 @@ use App\Construction\GameImportRule\EshopDirector;
 use App\Construction\GameImportRule\EshopBuilder;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ImportRuleEshopController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -27,12 +29,11 @@ class ImportRuleEshopController extends Controller
 
     public function edit($gameId)
     {
-        $serviceImportRuleEshop = $this->getServiceGameImportRuleEshop();
+        $bindings = $this->getBindingsGamesDetailSubpage('Import rules: eShop - Edit', $gameId);
 
-        $gameImportRuleEshop = $serviceImportRuleEshop->getByGameId($gameId);
+        $gameImportRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
 
         $request = request();
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -66,8 +67,6 @@ class ImportRuleEshopController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Import rules: eShop - Edit';
-        $bindings['PageTitle'] = 'Import rules: eShop';
         $bindings['GameImportRuleEshop'] = $gameImportRuleEshop;
         $bindings['GameId'] = $gameId;
 

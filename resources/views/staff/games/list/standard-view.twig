@@ -6,6 +6,12 @@
 <br>
 <br>
 
+{% if ListLimit %}
+    <div class="alert alert-warning" role="alert">
+        Page is limited to {{ ListLimit }} items to minimise performance issues.
+    </div>
+{% endif %}
+
 {% if GameList.count > 0 %}
     <table class="table data-sortable">
         <thead>

@@ -2,30 +2,27 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use App\Factories\UserFactory;
-use App\Factories\UserPointTransactionDirectorFactory;
-use App\UserPointTransaction;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
+use App\Traits\StaffView;
+
+use App\Factories\UserFactory;
+use App\Factories\UserPointTransactionDirectorFactory;
 
 class GameCategorySuggestionController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use StaffView;
 
     public function show()
     {
+        $bindings = $this->getBindingsCategorisationSubpage('Game category suggestions');
+
         $request = request();
         $filterStatus = $request->filterStatus;
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Categories - Game category suggestions';
-        $bindings['PageTitle'] = 'Game category suggestions';
-
-        $jsInitialSort = "[ 0, 'desc']";
 
         if (!isset($filterStatus)) {
             $bindings['FilterStatus'] = '';
@@ -37,7 +34,6 @@ class GameCategorySuggestionController extends Controller
 
         $bindings['DbEditList'] = $dbEditList;
         $bindings['StatusList'] = $this->getServiceDbEditGame()->getStatusList();
-        $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('staff.categorisation.game-category-suggestions.list', $bindings);
     }

@@ -2,33 +2,30 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\Wikipedia\UpdateGameFactory as WikiUpdateGameFactory;
-use Illuminate\Routing\Controller as Controller;
-
-use App\Services\UrlService;
 use App\Factories\GameDirectorFactory;
-use App\Events\GameCreated;
 
-use App\Traits\SwitchServices;
+use App\Events\GameCreated;
+use App\Services\UrlService;
 
 class DataSourceParsedController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function nintendoCoUkUnlinkedItems()
     {
         $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
-
         if (!$dataSource) abort(404);
 
-        $pageTitle = $dataSource->name.' - Unlinked items';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Unlinked items', "[ 2, 'asc' ]");
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -37,24 +34,17 @@ class DataSourceParsedController extends Controller
 
         $bindings['ItemsWithEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedWithEUDate($ignoreIdList);
         $bindings['ItemsNoEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedNoEUDate($ignoreIdList);
-        $bindings['jsInitialSort'] = "[ 2, 'asc' ]";
         $bindings['ListRef'] = 'unlinked';
 
-        return view('staff.data-sources.parsed.list', $bindings);
+        return view('staff.data-sources.parsed.list-unlinked', $bindings);
     }
 
     public function nintendoCoUkIgnoredItems()
     {
         $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
-
         if (!$dataSource) abort(404);
 
-        $pageTitle = $dataSource->name.' - Ignored items';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Ignored items', "[ 2, 'asc' ]");
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -62,27 +52,23 @@ class DataSourceParsedController extends Controller
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
 
         $bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllNintendoCoUkInLinkIdList($ignoreIdList);
-        $bindings['jsInitialSort'] = "[ 2, 'asc' ]";
         $bindings['ListRef'] = 'ignored';
 
-        return view('staff.data-sources.parsed.list', $bindings);
+        return view('staff.data-sources.parsed.list-ignored', $bindings);
     }
 
     public function addGameNintendoCoUk($itemId)
     {
-        $bindings = [];
-        $customErrors = [];
-
         $dsParsedItem = $this->getServiceDataSourceParsed()->find($itemId);
         if (!$dsParsedItem) abort(404);
 
+        $bindings = $this->getBindingsDataSourcesNintendoCoUkUnlinkedItemsSubpage('Add game from Nintendo.co.uk API');
+
         $bindings['DSParsedItem'] = $dsParsedItem;
+        $customErrors = [];
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
         $serviceUrl = new UrlService();
-
-        $bindings['TopTitle'] = 'Add game from Nintendo.co.uk API';
-        $bindings['PageTitle'] = 'Add game from Nintendo.co.uk API';
 
         $bindings['ItemId'] = $itemId;
 
@@ -152,42 +138,28 @@ class DataSourceParsedController extends Controller
     public function wikipediaUnlinkedItems()
     {
         $dataSource = $this->getServiceDataSource()->getSourceWikipedia();
-
         if (!$dataSource) abort(404);
 
-        $pageTitle = $dataSource->name.' - Unlinked items';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Unlinked items', "[ 1, 'asc' ]");
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
 
         $ignoreTitleList = $this->getServiceDataSourceIgnore()->getWikipediaTitleList();
 
-        //$bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllWikipediaWithNoGameId($ignoreTitleList);
         $bindings['ItemsWithEUDate'] = $this->getServiceDataSourceParsed()->getWikipediaNoGameIdWithEUDate($ignoreTitleList);
         $bindings['ItemsNoEUDate'] = $this->getServiceDataSourceParsed()->getWikipediaNoGameIdNoEUDate($ignoreTitleList);
-        $bindings['jsInitialSort'] = "[ 1, 'asc' ]";
         $bindings['ListRef'] = 'unlinked';
 
-        return view('staff.data-sources.parsed.list', $bindings);
+        return view('staff.data-sources.parsed.list-unlinked', $bindings);
     }
 
     public function wikipediaIgnoredItems()
     {
         $dataSource = $this->getServiceDataSource()->getSourceWikipedia();
-
         if (!$dataSource) abort(404);
 
-        $pageTitle = $dataSource->name.' - Ignored items';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Ignored items', "[ 1, 'asc' ]");
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -195,24 +167,23 @@ class DataSourceParsedController extends Controller
         $ignoreTitleList = $this->getServiceDataSourceIgnore()->getWikipediaTitleList();
 
         $bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllWikipediaInTitleList($ignoreTitleList);
-        $bindings['jsInitialSort'] = "[ 1, 'asc' ]";
         $bindings['ListRef'] = 'ignored';
 
-        return view('staff.data-sources.parsed.list', $bindings);
+        return view('staff.data-sources.parsed.list-ignored', $bindings);
     }
 
     public function wikipediaAddLink($itemId)
     {
-        $bindings = [];
-        $customErrors = [];
-
         $dsParsedItem = $this->getServiceDataSourceParsed()->find($itemId);
-
-        if (!$dsParsedItem) abort (404);
+        if (!$dsParsedItem) abort(404);
 
         if (!$dsParsedItem->isSourceWikipedia()) abort(500);
 
         if ($dsParsedItem->game_id != null) redirect(route('staff.data-sources.dashboard'));
+
+        $bindings = $this->getBindingsDataSourcesWikipediaUnlinkedItemsSubpage('Add game from Wikipedia');
+
+        $customErrors = [];
 
         $request = request();
         $okToProceed = true;

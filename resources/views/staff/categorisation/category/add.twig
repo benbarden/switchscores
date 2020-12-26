@@ -1,11 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [
-    {'url': route('staff.categorisation.dashboard'), 'text': 'Categorisation'},
-    {'url': route('staff.categorisation.category.list'), 'text': 'Categories'},
-    {'text': PageTitle}
-] %}
-
 {% block page_inner %}
 
 {% set formSubmitAction = route('staff.categorisation.category.add') %}

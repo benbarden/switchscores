@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Staff\Stats;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ReviewSiteController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $bindings = [];
+        $bindings = $this->getBindingsStatsSubpage('Review site stats');
 
         $serviceReviewLinks = $this->getServiceReviewLink();
         $servicePartner = $this->getServicePartner();
@@ -57,9 +59,6 @@ class ReviewSiteController extends Controller
         }
 
         $bindings['ReviewSitesArray'] = $reviewSitesRender;
-
-        $bindings['PageTitle'] = 'Review site stats';
-        $bindings['TopTitle'] = 'Staff - Stats - Review sites';
 
         return view('staff.stats.reviewSites', $bindings);
     }

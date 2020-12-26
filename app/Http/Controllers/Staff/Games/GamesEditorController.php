@@ -9,23 +9,25 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
+use App\Traits\StaffView;
+
 use App\Events\GameCreated;
 
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
 use App\Factories\GameDirectorFactory;
-use App\Services\Game\Images as GameImages;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
-
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
+use App\Services\Game\Images as GameImages;
 
 class GamesEditorController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -41,9 +43,7 @@ class GamesEditorController extends Controller
 
     public function add()
     {
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceCategory = $this->getServiceCategory();
-        $serviceGameSeries = $this->getServiceGameSeries();
+        $bindings = $this->getBindingsGamesSubpage('Add game');
 
         $request = request();
 
@@ -61,8 +61,8 @@ class GamesEditorController extends Controller
 
             // Check title hash is unique
             $titleLowercase = strtolower($request->title);
-            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
+            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
 
             $validator->after(function ($validator) use ($existingTitleHash) {
                 // Check for duplicates
@@ -87,7 +87,7 @@ class GamesEditorController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+            $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
 
             // Check eu_released_on
             if ($request->eu_is_released == 1) {
@@ -105,29 +105,21 @@ class GamesEditorController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games - Add game';
-        $bindings['PageTitle'] = 'Add game';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
+        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
 
         return view('staff.games.editor.add', $bindings);
     }
 
     public function edit($gameId)
     {
+        $bindings = $this->getBindingsGamesSubpage('Edit game');
+
         $request = request();
 
-        $serviceGame = $this->getServiceGame();
-        $serviceCategory = $this->getServiceCategory();
-        $serviceGameSeries = $this->getServiceGameSeries();
-
-        $bindings = [];
-
-        $gameData = $serviceGame->find($gameId);
+        $gameData = $this->getServiceGame()->find($gameId);
         if (!$gameData) abort(404);
 
         if ($request->isMethod('post')) {
@@ -147,29 +139,25 @@ class GamesEditorController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Games - Edit game';
-        $bindings['PageTitle'] = 'Edit game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
-        $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
-        $bindings['CategoryList'] = $serviceCategory->getAllWithoutParents();
+        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
 
         return view('staff.games.editor.edit', $bindings);
     }
 
     public function editNintendoCoUk($gameId)
     {
+        $bindings = $this->getBindingsGamesSubpage('Edit Nintendo.co.uk link');
+
         $request = request();
 
-        $serviceGame = $this->getServiceGame();
-
-        $game = $serviceGame->find($gameId);
+        $game = $this->getServiceGame()->find($gameId);
         if (!$game) abort(404);
 
         $dsCurrentParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -235,9 +223,6 @@ class GamesEditorController extends Controller
 
         }
 
-        $pageTitle = 'Edit Nintendo.co.uk link';
-        $bindings['TopTitle'] = 'Staff - Games - '.$pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
         $bindings['GameData'] = $game;
         $bindings['GameId'] = $gameId;
 
@@ -258,6 +243,8 @@ class GamesEditorController extends Controller
 
     public function delete($gameId)
     {
+        $bindings = $this->getBindingsGamesSubpage('Delete game');
+
         // Core
         $serviceGame = $this->getServiceGame();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
@@ -276,7 +263,6 @@ class GamesEditorController extends Controller
         $gameData = $serviceGame->find($gameId);
         if (!$gameData) abort(404);
 
-        $bindings = [];
         $customErrors = [];
 
         $request = request();
@@ -323,8 +309,6 @@ class GamesEditorController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Games - Delete game';
-        $bindings['PageTitle'] = 'Delete game';
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
         $bindings['ErrorsCustom'] = $customErrors;

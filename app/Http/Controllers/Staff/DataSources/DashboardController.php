@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Services\DataSources\Queries\Differences;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\Services\DataSources\Queries\Differences;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $pageTitle = 'Data sources dashboard';
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDashboardGenericSubpage('Data sources dashboard');
 
         $bindings['DataSources'] = $this->getServiceDataSource()->getAll();
 

@@ -4,39 +4,36 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
 use App\Game;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Services\DataSources\Queries\Differences;
 
-use App\Traits\SwitchServices;
-
 class GamesDetailController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show($gameId)
     {
-        $serviceGame = $this->getServiceGame();
-
-        $game = $serviceGame->find($gameId);
+        $game = $this->getServiceGame()->find($gameId);
         if (!$game) abort(404);
 
         $gameTitle = $game->title;
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = $gameTitle.' - Game detail - Staff';
-        $bindings['PageTitle'] = $gameTitle;
+        $bindings = $this->getBindingsGamesSubpage($gameTitle);
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceGame->countRanked();
+        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
 
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
 
         $lastGameId = \Request::get('lastgameid');
         if ($lastGameId) {
-            $lastGame = $serviceGame->find($lastGameId);
+            $lastGame = $this->getServiceGame()->find($lastGameId);
             if ($lastGame) {
                 $bindings['LastGame'] = $lastGame;
             }
@@ -90,11 +87,7 @@ class GamesDetailController extends Controller
     public function showFullAudit(Game $game)
     {
         $gameId = $game->id;
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $game->title.' - Game detail - Staff';
-        $bindings['PageTitle'] = $game->title;
+        $bindings = $this->getBindingsGamesDetailSubpage($game->title, $gameId);
 
         $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
         $bindings['GameAuditsCore'] = $gameAudits;

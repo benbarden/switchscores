@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\QuickReview;
-
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\QuickReview;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
-        $pageTitle = 'Reviews dashboard';
+        $bindings = $this->getBindingsDashboardGenericSubpage('Reviews dashboard');
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
@@ -22,8 +24,6 @@ class DashboardController extends Controller
         $serviceReviewLinks = $this->getServiceReviewLink();
         $serviceGame = $this->getServiceGame();
         $serviceTopRated = $this->getServiceTopRated();
-
-        $bindings = [];
 
         // Action lists
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
@@ -49,9 +49,6 @@ class DashboardController extends Controller
         $bindings['UnrankedYear2017'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2017);
 
         $bindings['ProcessStatusStats'] = $serviceReviewFeedItem->getProcessStatusStats();
-
-        $bindings['TopTitle'] = $pageTitle.' - Admin';
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('staff.reviews.dashboard', $bindings);
     }

@@ -2,36 +2,21 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use App\Services\Migrations\Category as MigrationsCategory;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\Services\Migrations\Category as MigrationsCategory;
 
 class MigrationsCategoryController extends Controller
 {
     use SwitchServices;
-
-    private function getListBindings($pageTitle, $tableSort = '')
-    {
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationSubPage($pageTitle);
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Categorisation - Migrations')
-            ->setBreadcrumbs($breadcrumbs);
-
-        if ($tableSort) {
-            $bindings = $bindings->setDatatablesSort($tableSort);
-        } else {
-            $bindings = $bindings->setDatatablesSortDefault();
-        }
-
-        return $bindings->getBindings();
-    }
+    use StaffView;
 
     public function gamesWithOneGenre()
     {
-        $bindings = $this->getListBindings('No category: Games with one genre and no category', "[ 3, 'asc']");
+        $bindings = $this->getBindingsCategorisationSubpage('No category: Games with one genre and no category', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
@@ -45,7 +30,7 @@ class MigrationsCategoryController extends Controller
 
     public function gamesWithNamedGenreAndOneOther($genre)
     {
-        $bindings = $this->getListBindings('No category: Games with '.$genre.' and one other', "[ 3, 'asc']");
+        $bindings = $this->getBindingsCategorisationSubpage('No category: Games with '.$genre.' and one other', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
@@ -59,7 +44,7 @@ class MigrationsCategoryController extends Controller
 
     public function allGamesWithNoCategory()
     {
-        $bindings = $this->getListBindings('All games with no category', "[ 3, 'asc']");
+        $bindings = $this->getBindingsCategorisationSubpage('All games with no category', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 

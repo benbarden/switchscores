@@ -8,10 +8,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class SearchController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -24,9 +26,7 @@ class SearchController extends Controller
 
     public function show()
     {
-        $bindings = [];
-
-        $pageTitle = 'Search';
+        $bindings = $this->getBindingsGamesSubpage('Search');
 
         $request = request();
 
@@ -42,11 +42,6 @@ class SearchController extends Controller
             }
 
         }
-
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
-
-        $bindings['jsInitialSort'] = "[0, 'desc']";
 
         return view('staff.games.search.show', $bindings);
     }

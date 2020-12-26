@@ -1,10 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [
-    {'url': route('staff.news.dashboard'), 'text': 'News dashboard'},
-    {'text': PageTitle}
-] %}
-
 {% block page_inner %}
 
 <a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>

@@ -4,29 +4,21 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\DataQuality\QualityStats;
-
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\Services\DataQuality\QualityStats;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {
+        $bindings = $this->getBindingsDashboardGenericSubpage('Data quality dashboard');
+
         $serviceQualityStats = new QualityStats();
-
-        $pageTitle = 'Data quality dashboard';
-
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeStaffDashboard($pageTitle);
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Data quality')
-            ->setBreadcrumbs($breadcrumbs)
-            ->getBindings();
-
-        // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         return view('staff.data-quality.dashboard', $bindings);
@@ -34,19 +26,9 @@ class DashboardController extends Controller
 
     public function duplicateReviews()
     {
+        $bindings = $this->getBindingsDataQualitySubpage('Duplicate reviews');
+
         $serviceQualityStats = new QualityStats();
-
-        $pageTitle = 'Duplicate reviews';
-
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataQualitySubPage($pageTitle);
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix($pageTitle)
-            ->setBreadcrumbs($breadcrumbs)
-            ->setDatatablesSortDefault()
-            ->getBindings();
-
         $bindings['DuplicateReviews'] = $serviceQualityStats->getDuplicateReviews();
 
         return view('staff.data-quality.duplicate-reviews', $bindings);

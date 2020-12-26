@@ -5,19 +5,17 @@ namespace App\Http\Controllers\Staff\DataSources;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ToolsController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function nintendoCoUkImportParseLink()
     {
         $pageTitle = 'Nintendo.co.uk API - Import/Parse/Link';
-        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('DSNintendoCoUkImportParseLink', []);
@@ -30,11 +28,7 @@ class ToolsController extends Controller
     public function nintendoCoUkUpdateGames()
     {
         $pageTitle = 'Nintendo.co.uk API - Update games';
-        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('DSNintendoCoUkUpdateGames', []);
@@ -47,11 +41,7 @@ class ToolsController extends Controller
     public function nintendoCoUkDownloadImages()
     {
         $pageTitle = 'Nintendo.co.uk API - Download images';
-        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('DSNintendoCoUkDownloadImages', []);
@@ -64,11 +54,7 @@ class ToolsController extends Controller
     public function wikipediaImportParseLink()
     {
         $pageTitle = 'Wikipedia - Import/Parse/Link';
-        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('DSWikipediaImportParseLink', []);
@@ -81,11 +67,7 @@ class ToolsController extends Controller
     public function wikipediaUpdateGames()
     {
         $pageTitle = 'Wikipedia - Update games';
-        $topTitle = $pageTitle.' - Tools - Data sources - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('DSWikipediaUpdateGames', []);

@@ -8,10 +8,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class CategoryController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -25,22 +27,17 @@ class CategoryController extends Controller
 
     public function showList()
     {
-        $serviceNewsCategory = $this->getServiceNewsCategory();
+        $bindings = $this->getBindingsNewsSubpage('News categories');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - News categories';
-        $bindings['PageTitle'] = 'News categories';
-
-        $newsCategoryList = $serviceNewsCategory->getAll();
-
-        $bindings['NewsCategoryList'] = $newsCategoryList;
+        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
 
         return view('staff.news.category.list', $bindings);
     }
 
     public function add()
     {
+        $bindings = $this->getBindingsNewsCategoriesSubpage('Add news category');
+
         $serviceNewsCategory = $this->getServiceNewsCategory();
 
         $request = request();
@@ -55,10 +52,6 @@ class CategoryController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - News - Add news category';
-        $bindings['PageTitle'] = 'Add news category';
         $bindings['FormMode'] = 'add';
 
         return view('staff.news.category.add', $bindings);
@@ -66,9 +59,9 @@ class CategoryController extends Controller
 
     public function edit($newsCategoryId)
     {
-        $serviceNewsCategory = $this->getServiceNewsCategory();
+        $bindings = $this->getBindingsNewsCategoriesSubpage('Edit news category');
 
-        $bindings = [];
+        $serviceNewsCategory = $this->getServiceNewsCategory();
 
         $newsCategory = $serviceNewsCategory->find($newsCategoryId);
         if (!$newsCategory) abort(404);
@@ -91,8 +84,6 @@ class CategoryController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - News - Edit news';
-        $bindings['PageTitle'] = 'Edit news';
         $bindings['NewsCategory'] = $newsCategory;
         $bindings['NewsCategoryId'] = $newsCategoryId;
 

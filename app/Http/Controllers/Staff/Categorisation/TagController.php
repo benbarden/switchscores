@@ -9,11 +9,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
+use App\Traits\StaffView;
 
 class TagController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -27,53 +29,38 @@ class TagController extends Controller
 
     public function showList()
     {
-        $serviceTag = $this->getServiceTag();
+        $bindings = $this->getBindingsCategorisationSubpage('Tags');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Tags';
-        $bindings['PageTitle'] = 'Tags';
-
-        $bindings['TagList'] = $serviceTag->getAll();
+        $bindings['TagList'] = $this->getServiceTag()->getAll();
 
         return view('staff.categorisation.tag.list', $bindings);
     }
 
     public function showGameTagList($gameId)
     {
-        $serviceGame = $this->getServiceGame();
-        $serviceGameTag = $this->getServiceGameTag();
-
-        $game = $serviceGame->find($gameId);
+        $game = $this->getServiceGame()->find($gameId);
         if (!$game) abort(404);
 
         $gameTitle = $game->title;
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Tags for game: '.$gameTitle;
-        $bindings['PageTitle'] = 'Tags for game: '.$gameTitle;
+        $bindings = $this->getBindingsCategorisationTagSubpage('Tags for game: '.$gameTitle);
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
-        $bindings['GameTagList'] = $serviceGameTag->getByGame($gameId);
-
-        $bindings['UnusedTagList'] = $serviceGameTag->getTagsNotOnGame($gameId);
+        $bindings['GameTagList'] = $this->getServiceGameTag()->getByGame($gameId);
+        $bindings['UnusedTagList'] = $this->getServiceGameTag()->getTagsNotOnGame($gameId);
 
         return view('staff.categorisation.tag.gameTags', $bindings);
     }
 
     public function editTag($tagId)
     {
-        $serviceTag = $this->getServiceTag();
-        $serviceCategory = $this->getServiceCategory();
+        $bindings = $this->getBindingsCategorisationTagSubpage('Edit tag');
 
-        $tagData = $serviceTag->find($tagId);
+        $tagData = $this->getServiceTag()->find($tagId);
         if (!$tagData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -85,7 +72,7 @@ class TagController extends Controller
             $linkTitle = $request->link_title;
             $categoryId = $request->category_id;
 
-            $serviceTag->edit($tagData, $tagName, $linkTitle, $categoryId);
+            $this->getServiceTag()->edit($tagData, $tagName, $linkTitle, $categoryId);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -95,25 +82,19 @@ class TagController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Edit tag';
-        $bindings['PageTitle'] = 'Edit tag';
         $bindings['TagData'] = $tagData;
         $bindings['TagId'] = $tagId;
 
-        $bindings['CategoryList'] = $serviceCategory->getAll();
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
 
         return view('staff.categorisation.tag.edit', $bindings);
     }
 
     public function addGameTag()
     {
-        $serviceTag = $this->getServiceTag();
-        $serviceUser = $this->getServiceUser();
-        $serviceGameTag = $this->getServiceGameTag();
-
         $userId = $this->getAuthId();
 
-        $user = $serviceUser->find($userId);
+        $user = $this->getServiceUser()->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -126,17 +107,17 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagId'], 400);
         }
 
-        $tagData = $serviceTag->find($tagId);
+        $tagData = $this->getServiceTag()->find($tagId);
         if (!$tagData) {
             return response()->json(['error' => 'Tag not found!'], 400);
         }
 
-        $existingGameTag = $serviceGameTag->gameHasTag($gameId, $tagId);
+        $existingGameTag = $this->getServiceGameTag()->gameHasTag($gameId, $tagId);
         if ($existingGameTag) {
             return response()->json(['error' => 'Game already has this tag!'], 400);
         }
 
-        $serviceGameTag->createGameTag($gameId, $tagId);
+        $this->getServiceGameTag()->createGameTag($gameId, $tagId);
 
         $data = array(
             'status' => 'OK'
@@ -146,12 +127,9 @@ class TagController extends Controller
 
     public function removeGameTag()
     {
-        $serviceUser = $this->getServiceUser();
-        $serviceGameTag = $this->getServiceGameTag();
-
         $userId = $this->getAuthId();
 
-        $user = $serviceUser->find($userId);
+        $user = $this->getServiceUser()->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -164,7 +142,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: gameTagId'], 400);
         }
 
-        $gameTagData = $serviceGameTag->find($gameTagId);
+        $gameTagData = $this->getServiceGameTag()->find($gameTagId);
         if (!$gameTagData) {
             return response()->json(['error' => 'Game tag not found!'], 400);
         }
@@ -173,7 +151,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Game id mismatch on game tag record!'], 400);
         }
 
-        $serviceGameTag->delete($gameTagId);
+        $this->getServiceGameTag()->delete($gameTagId);
 
         $data = array(
             'status' => 'OK'
@@ -183,13 +161,9 @@ class TagController extends Controller
 
     public function addTag()
     {
-        $serviceUser = $this->getServiceUser();
-        $serviceTag = $this->getServiceTag();
-        $serviceUrl = $this->getServiceUrl();
-
         $userId = $this->getAuthId();
 
-        $user = $serviceUser->find($userId);
+        $user = $this->getServiceUser()->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -201,14 +175,14 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagName'], 400);
         }
 
-        $existingTag = $serviceTag->getByName($tagName);
+        $existingTag = $this->getServiceTag()->getByName($tagName);
         if ($existingTag) {
             return response()->json(['error' => 'Tag already exists!'], 400);
         }
 
-        $linkTitle = $serviceUrl->generateLinkText($tagName);
+        $linkTitle = $this->getServiceUrl()->generateLinkText($tagName);
 
-        $serviceTag->create($tagName, $linkTitle);
+        $this->getServiceTag()->create($tagName, $linkTitle);
 
         $data = array(
             'status' => 'OK'
@@ -218,12 +192,9 @@ class TagController extends Controller
 
     public function deleteTag()
     {
-        $serviceUser = $this->getServiceUser();
-        $serviceTag = $this->getServiceTag();
-
         $userId = $this->getAuthId();
 
-        $user = $serviceUser->find($userId);
+        $user = $this->getServiceUser()->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -235,7 +206,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagId'], 400);
         }
 
-        $existingTag = $serviceTag->find($tagId);
+        $existingTag = $this->getServiceTag()->find($tagId);
         if (!$existingTag) {
             return response()->json(['error' => 'Tag does not exist!'], 400);
         }
@@ -244,7 +215,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Found '.$existingTag->gameTags()->count().' game(s) with this tag'], 400);
         }
 
-        $serviceTag->deleteTag($tagId);
+        $this->getServiceTag()->deleteTag($tagId);
 
         $data = array(
             'status' => 'OK'

@@ -5,19 +5,16 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ToolsController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function updateGameCalendarStats()
     {
-        $pageTitle = 'Update Game Calendar Stats';
-        $topTitle = $pageTitle.' - Tools - Games - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsGamesSubpage('Update Game Calendar Stats');
 
         if (request()->post()) {
             \Artisan::call('UpdateGameCalendarStats', []);

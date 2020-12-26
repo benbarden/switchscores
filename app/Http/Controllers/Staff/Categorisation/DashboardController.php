@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\Categorisation;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
 use App\Services\Migrations\Category as MigrationsCategory;
@@ -16,24 +17,7 @@ use App\Tag;
 class DashboardController extends Controller
 {
     use SwitchServices;
-
-    private function getListBindings($pageTitle, $tableSort = '')
-    {
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationSubPage($pageTitle);
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Categorisation')
-            ->setBreadcrumbs($breadcrumbs);
-
-        if ($tableSort) {
-            $bindings = $bindings->setDatatablesSort($tableSort);
-        } else {
-            $bindings = $bindings->setDatatablesSortDefault();
-        }
-
-        return $bindings->getBindings();
-    }
+    use StaffView;
 
     private function getCategoryMatchesStats()
     {
@@ -127,12 +111,10 @@ class DashboardController extends Controller
 
     public function show()
     {
-        $pageTitle = 'Categorisation dashboard';
+        $bindings = $this->getBindingsDashboardGenericSubpage('Categorisation dashboard');
 
         $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();
-
-        $bindings = [];
 
         // Migrations: Category
         $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
@@ -144,16 +126,12 @@ class DashboardController extends Controller
         $bindings['GameSeriesMatchList'] = $this->getSeriesMatchesStats();
         $bindings['GameTagMatchList'] = $this->getTagMatchesStats();
 
-        // Core stuff
-        $bindings['TopTitle'] = $pageTitle.' - Admin';
-        $bindings['PageTitle'] = $pageTitle;
-
         return view('staff.categorisation.dashboard', $bindings);
     }
 
     public function categoryTitleMatch(Category $category)
     {
-        $bindings = $this->getListBindings('Category matches: '.$category->name);
+        $bindings = $this->getBindingsCategorisationSubpage('Category matches: '.$category->name);
 
         $bindings['GameList'] = $this->getServiceGame()->getCategoryTitleMatch($category->name);
 
@@ -162,7 +140,7 @@ class DashboardController extends Controller
 
     public function seriesTitleMatch(GameSeries $gameSeries)
     {
-        $bindings = $this->getListBindings('Series matches: '.$gameSeries->series);
+        $bindings = $this->getBindingsCategorisationSubpage('Series matches: '.$gameSeries->series);
 
         $bindings['GameList'] = $this->getServiceGame()->getSeriesTitleMatch($gameSeries->series);
 
@@ -171,7 +149,7 @@ class DashboardController extends Controller
 
     public function tagTitleMatch(Tag $tag)
     {
-        $bindings = $this->getListBindings('Tag matches: '.$tag->tag_name);
+        $bindings = $this->getBindingsCategorisationSubpage('Tag matches: '.$tag->tag_name);
 
         $bindings['GameList'] = $this->getServiceGame()->getTagTitleMatch($tag);
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
 use App\QuickReview;
@@ -12,20 +13,17 @@ use App\QuickReview;
 class IndexController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function index()
     {
+        $bindings = $this->getBindingsDashboard('Staff index');
+
         $serviceQualityStats = new QualityStats();
         $serviceUser = $this->getServiceUser();
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
-
-        $bindings = [];
-
-        $pageTitle = 'Staff index';
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         // Updates requiring approval
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();

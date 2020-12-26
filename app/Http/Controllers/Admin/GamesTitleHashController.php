@@ -11,10 +11,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class GamesTitleHashController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -29,22 +31,15 @@ class GamesTitleHashController extends Controller
 
     public function showList($gameId = null)
     {
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Game title hashes';
-        $bindings['PageTitle'] = 'Game title hashes';
-
         if ($gameId) {
-            $titleHashList = $serviceGameTitleHash->getByGameId($gameId);
+            $bindings = $this->getBindingsGamesDetailSubpage('Game title hashes', $gameId);
+            $titleHashList = $this->getServiceGameTitleHash()->getByGameId($gameId);
         } else {
-            $titleHashList = $serviceGameTitleHash->getAll();
+            $bindings = $this->getBindingsGamesSubpage('Game title hashes');
+            $titleHashList = $this->getServiceGameTitleHash()->getAll();
         }
-        $jsInitialSort = "[ 0, 'desc']";
 
         $bindings['TitleHashList'] = $titleHashList;
-        $bindings['jsInitialSort'] = $jsInitialSort;
 
         $bindings['GameId'] = $gameId;
 
@@ -53,12 +48,15 @@ class GamesTitleHashController extends Controller
 
     public function add()
     {
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceGame = $this->getServiceGame();
+        $urlGameId = \Request::get('gameId');
+
+        if ($urlGameId) {
+            $bindings = $this->getBindingsGamesDetailSubpage('Add game title hash', $urlGameId);
+        } else {
+            $bindings = $this->getBindingsGamesTitleHashesSubpage('Add game title hash');
+        }
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -71,8 +69,8 @@ class GamesTitleHashController extends Controller
             }
 
             $titleLowercase = strtolower($request->title);
-            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
+            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
 
             $validator->after(function ($validator) use ($existingTitleHash) {
                 // Check for duplicates
@@ -89,7 +87,7 @@ class GamesTitleHashController extends Controller
 
             // Add to DB
             $gameId = $request->game_id;
-            $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+            $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
 
             // Done
             //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
@@ -97,32 +95,27 @@ class GamesTitleHashController extends Controller
 
         } else {
 
-            $urlGameId = \Request::get('gameId');
             if ($urlGameId) {
                 $bindings['UrlGameId'] = $urlGameId;
             }
         }
 
-        $bindings['TopTitle'] = 'Admin - Games - Add game title hash';
-        $bindings['PageTitle'] = 'Add game title hash';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         return view('admin.games-title-hash.add', $bindings);
     }
 
     public function edit($gameTitleHashId)
     {
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceGame = $this->getServiceGame();
-
-        $gameTitleHashData = $serviceGameTitleHash->find($gameTitleHashId);
+        $gameTitleHashData = $this->getServiceGameTitleHash()->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
 
-        $request = request();
+        $gameId = $gameTitleHashData->game_id;
+        $bindings = $this->getBindingsGamesDetailSubpage('Edit game title hash', $gameId);
 
-        $bindings = [];
+        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -131,10 +124,10 @@ class GamesTitleHashController extends Controller
             $this->validate($request, $this->validationRules);
 
             $titleLowercase = strtolower($request->title);
-            $hashedTitle = $serviceGameTitleHash->generateHash($request->title);
+            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
 
             $gameId = $request->game_id;
-            $serviceGameTitleHash->edit($gameTitleHashData, $titleLowercase, $hashedTitle, $gameId);
+            $this->getServiceGameTitleHash()->edit($gameTitleHashData, $titleLowercase, $hashedTitle, $gameId);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
@@ -145,28 +138,22 @@ class GamesTitleHashController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Games - Edit game title hash';
-        $bindings['PageTitle'] = 'Edit game title hash';
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
         $bindings['FormMode'] = 'edit';
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         return view('admin.games-title-hash.edit', $bindings);
     }
 
     public function delete($gameTitleHashId)
     {
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-
-        $gameTitleHashData = $serviceGameTitleHash->find($gameTitleHashId);
+        $gameTitleHashData = $this->getServiceGameTitleHash()->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
 
         $gameId = $gameTitleHashData->game_id;
-
-        $bindings = [];
-        $customErrors = [];
+        $bindings = $this->getBindingsGamesDetailSubpage('Delete game title hash', $gameId);
 
         $request = request();
 
@@ -174,7 +161,7 @@ class GamesTitleHashController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceGameTitleHash->delete($gameTitleHashId);
+            $this->getServiceGameTitleHash()->delete($gameTitleHashId);
 
             // Done
 
@@ -186,8 +173,6 @@ class GamesTitleHashController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Games - Delete game title hash';
-        $bindings['PageTitle'] = 'Delete game title hash';
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
 

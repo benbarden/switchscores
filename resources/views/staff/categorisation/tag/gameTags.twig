@@ -1,11 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [
-    {'url': route('staff.games.dashboard'), 'text': 'Games'},
-    {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Detail'},
-    {'text': PageTitle}
-] %}
-
 {% block page_inner %}
 
 <h2>Game tags</h2>

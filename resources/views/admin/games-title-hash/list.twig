@@ -1,31 +1,16 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% if GameId %}
-    {% set crumbNav = [
-        {'url': route('staff.games.dashboard'), 'text': 'Games'},
-        {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Detail'},
-        {'text': PageTitle}
-    ] %}
-{% else %}
-    {% set crumbNav = [
-        {'url': route('staff.games.dashboard'), 'text': 'Games'},
-        {'text': PageTitle}
-    ] %}
-{% endif %}
-
 {% block page_inner %}
-
-<div class="row">
-    <div class="col-xs-12 col-sm-3">
-        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add">
-    </div>
-</div>
-
-<hr>
 
 {% if TitleHashList.count > 0 %}
     {% include 'staff/games/title-hash/table.twig' with {'TitleHashList': TitleHashList} %}
 {% else %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add">
+        </div>
+    </div>
+    <hr>
     <p>No records found!</p>
 {% endif %}
 

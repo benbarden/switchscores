@@ -6,22 +6,19 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
+use App\Traits\StaffView;
 
 class GameSeriesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+    use StaffView;
 
     public function showList()
     {
-        $serviceGameSeries = $this->getServiceGameSeries();
+        $bindings = $this->getBindingsCategorisationSubpage('Game series');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Game series';
-        $bindings['PageTitle'] = 'Game series';
-
-        $bindings['GameSeriesList'] = $serviceGameSeries->getAll();
+        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
 
         return view('staff.categorisation.game-series.list', $bindings);
     }

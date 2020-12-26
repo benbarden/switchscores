@@ -216,14 +216,24 @@ class GameService
         return Game::where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->orderBy('eu_released_on', 'desc')->limit($limit)->get();
     }
 
-    public function getWithNoAmazonUkLink()
+    public function getWithNoVideoUrl($limit = 200)
     {
-        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->get();
+        return Game::whereNull('video_url')->orderBy('id', 'asc')->limit($limit)->get();
     }
 
-    public function getWithNoVideoUrl()
+    public function getWithNoAmazonUkLink($limit = 200)
     {
-        return Game::whereNull('video_url')->orderBy('id', 'asc')->get();
+        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->limit($limit)->get();
+    }
+
+    public function countWithNoVideoUrl()
+    {
+        return Game::whereNull('video_url')->orderBy('id', 'asc')->count();
+    }
+
+    public function countWithNoAmazonUkLink()
+    {
+        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->count();
     }
 
     // ********************************************************** //

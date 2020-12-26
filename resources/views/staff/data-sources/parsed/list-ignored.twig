@@ -1,0 +1,20 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemList} %}
+
+    </div>
+
+</div>
+
+{% include 'common/table-sorting.twig' %}
+{% include 'staff/data-sources/parsed/list-scripts.twig' %}
+
+{% endblock page_inner %}
