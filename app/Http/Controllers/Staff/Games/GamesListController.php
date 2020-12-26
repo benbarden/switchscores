@@ -82,7 +82,7 @@ class GamesListController extends Controller
 
     public function noEshopPrice()
     {
-        $bindings = $this->getListBindings('No eShop price', "[ 0, 'desc']");
+        $bindings = $this->getListBindings('No eShop price', "[ 5, 'desc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getWithoutPrices();
 
