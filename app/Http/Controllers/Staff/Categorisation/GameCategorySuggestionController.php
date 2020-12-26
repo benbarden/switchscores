@@ -78,19 +78,14 @@ class GameCategorySuggestionController extends Controller
         $game->category_id = $dbEditGame->new_data;
         $game->save();
 
+        $gameId = $dbEditGame->game_id;
+
         // Credit points
-        $pointsToAdd = UserPointTransaction::POINTS_DB_EDIT;
-        UserFactory::addToPointsBalance($user, $pointsToAdd);
+        $user = $this->getServiceUser()->find($userId);
+        UserFactory::addPointsForGameCategorySuggestion($user);
 
         // Store the transaction
-        $params = UserPointTransactionDirectorFactory::buildParams(
-            $userId,
-            UserPointTransaction::ACTION_DB_CATEGORY,
-            $dbEditGame->game_id,
-            $pointsToAdd,
-            null
-        );
-        $userPointTransaction = UserPointTransactionDirectorFactory::createNew($params);
+        $userPointTransaction = UserPointTransactionDirectorFactory::addForGameCategorySuggestion($userId, $gameId);
 
         // Approve item
         $dbEditGame->setApproved();

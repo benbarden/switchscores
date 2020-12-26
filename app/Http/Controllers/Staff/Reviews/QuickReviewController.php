@@ -86,8 +86,7 @@ class QuickReviewController extends Controller
 
                 // Credit points
                 $user = $this->getServiceUser()->find($userId);
-                $pointsToAdd = UserPointTransaction::POINTS_QUICK_REVIEW_ADD;
-                UserFactory::addToPointsBalance($user, $pointsToAdd);
+                UserFactory::addPointsForQuickReview($user);
 
                 // Store the transaction
                 UserPointTransactionDirectorFactory::addForQuickReview($userId, $gameId);
