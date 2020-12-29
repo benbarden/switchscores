@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review">
+        <a href="{{ route('user.quick-reviews.add') }}" class="btn outline btn-primary">+ Add a review</a>
     </div>
 </div>
 
@@ -69,9 +69,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('user.quick-reviews.add') }}';
-    });
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],

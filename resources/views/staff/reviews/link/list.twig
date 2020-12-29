@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <input id="js-btn-add" type="button" class="btn outline btn-primary" value="Add a review link">
+        <a href="{{ route('staff.reviews.link.add') }}" class="btn outline btn-primary">+ Add review link</a>
     </div>
     <div class="col-xs-12 col-sm-9">
         <div class="pull-right">
@@ -40,9 +40,6 @@
 
 {% include 'common/table-sorting.twig' %}
 <script>
-    $('#js-btn-add').on('click', function() {
-        top.location.href = '{{ route('staff.reviews.link.add') }}';
-    });
     $('#admin-nav-site-filter').on('change', function() {
         selectedSiteFilter = $(this).val();
         top.location.href = '{{ route('staff.reviews.link.list')}}?siteId=' + selectedSiteFilter;
