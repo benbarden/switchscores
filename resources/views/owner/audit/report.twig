@@ -1,10 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [
-    {'url': route('owner.audit.index'), 'text': 'Audit reports'},
-    {'text': PageTitle}
-] %}
-
 {% block page_inner %}
 
 {% if ItemList|length %}

@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\Owner;
 
-use App\UserRole;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\UserRole;
 
 class UserController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -26,54 +29,38 @@ class UserController extends Controller
 
     public function showList()
     {
-        $serviceUser = $this->getServiceUser();
+        $bindings = $this->getBindingsDashboardGenericSubpage('Users');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - Users';
-        $bindings['PageTitle'] = 'Users';
-
-        $userList = $serviceUser->getAll();
-
-        $bindings['UserList'] = $userList;
+        $bindings['UserList'] = $this->getServiceUser()->getAll();
 
         return view('owner.user.list', $bindings);
     }
 
     public function showUser($userId)
     {
-        $serviceUser = $this->getServiceUser();
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
-        $userData = $serviceUser->find($userId);
+        $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);
 
         $displayName = $userData->display_name;
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Admin - View user - '.$displayName;
-        $bindings['PageTitle'] = 'View user - '.$displayName;
+        $bindings = $this->getBindingsUsersSubpage('View user: '.$displayName);
 
         $bindings['UserData'] = $userData;
 
-        $bindings['CollectionList'] = $serviceCollection->getByUser($userId);
-        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
+        $bindings['CollectionList'] = $this->getServiceUserGamesCollection()->getByUser($userId);
+        $bindings['CollectionStats'] = $this->getServiceUserGamesCollection()->getStats($userId);
 
         return view('owner.user.view', $bindings);
     }
 
     public function editUser($userId)
     {
-        $serviceUser = $this->getServiceUser();
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsUsersSubpage('Edit user');
 
-        $userData = $serviceUser->find($userId);
+        $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -88,7 +75,7 @@ class UserController extends Controller
             $isStaff = $request->is_staff;
             $isDeveloper = $request->is_developer;
 
-            $serviceUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper);
+            $this->getServiceUser()->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper);
 
             // Clear roles
             $userData->setRoles([]);
@@ -113,12 +100,10 @@ class UserController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Edit user';
-        $bindings['PageTitle'] = 'Edit user';
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 
-        $bindings['PartnerList'] = $servicePartner->getAllForUserAssignment();
+        $bindings['PartnerList'] = $this->getServicePartner()->getAllForUserAssignment();
 
         $bindings['RoleList'] = UserRole::getRoleList();
 
@@ -137,30 +122,21 @@ class UserController extends Controller
 
     public function deleteUser($userId)
     {
-        // Core
-        $serviceUser = $this->getServiceUser();
+        $bindings = $this->getBindingsUsersSubpage('Delete user');
 
-        // Validation
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceQuickReview = $this->getServiceQuickReview();
-
-        // Deletion
-        $serviceUserGamesCollection = $this->getServiceUserGamesCollection();
-
-        $userData = $serviceUser->find($userId);
+        $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);
 
-        $bindings = [];
         $customErrors = [];
 
         $request = request();
 
         // Validation: check for any reason we should not allow the user to be deleted.
-        $reviewLinks = $serviceReviewLink->getByUser($userId);
+        $reviewLinks = $this->getServiceReviewLink()->getByUser($userId);
         if (count($reviewLinks) > 0) {
             $customErrors[] = 'User has created '.count($reviewLinks).' review link(s)';
         }
-        $quickReviews = $serviceQuickReview->getAllByUser($userId);
+        $quickReviews = $this->getServiceQuickReview()->getAllByUser($userId);
         if (count($quickReviews) > 0) {
             $customErrors[] = 'User has created '.count($quickReviews).' quick review(s)';
         }
@@ -169,8 +145,8 @@ class UserController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceUserGamesCollection->deleteByUserId($userId);
-            $serviceUser->deleteUser($userId);
+            $this->getServiceUserGamesCollection()->deleteByUserId($userId);
+            $this->getServiceUser()->deleteUser($userId);
 
             // Done
 
@@ -182,8 +158,6 @@ class UserController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Admin - Users - Delete user';
-        $bindings['PageTitle'] = 'Delete user';
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
         $bindings['ErrorsCustom'] = $customErrors;

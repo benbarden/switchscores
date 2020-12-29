@@ -5,49 +5,45 @@ namespace App\Http\Controllers\Owner;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class AuditController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function showReport($reportName)
     {
-        $bindings = [];
-
         switch ($reportName) {
             case 'all':
                 $pageTitle = 'Audit report: All';
-                $bindings['ItemList'] = $this->getServiceAudit()->getAll(250);
+                $itemList = $this->getServiceAudit()->getAll(250);
                 break;
             case 'games':
                 $pageTitle = 'Audit report: Games';
-                $bindings['ItemList'] = $this->getServiceAudit()->getGame(250);
+                $itemList = $this->getServiceAudit()->getGame(250);
                 break;
             case 'review-links':
                 $pageTitle = 'Audit report: Review links';
-                $bindings['ItemList'] = $this->getServiceAudit()->getReviewLink(250);
+                $itemList = $this->getServiceAudit()->getReviewLink(250);
                 break;
             case 'partners':
                 $pageTitle = 'Audit report: Partners';
-                $bindings['ItemList'] = $this->getServiceAudit()->getPartner(250);
+                $itemList = $this->getServiceAudit()->getPartner(250);
                 break;
             default:
                 abort(404);
         }
 
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
+        $bindings = $this->getBindingsAuditSubpage($pageTitle);
+        $bindings['ItemList'] = $itemList;
 
         return view('owner.audit.report', $bindings);
     }
 
     public function index()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Audit';
-        $bindings['PageTitle'] = 'Audit';
+        $bindings = $this->getBindingsDashboardGenericSubpage('Audit');
 
         return view('owner.audit.index', $bindings);
     }

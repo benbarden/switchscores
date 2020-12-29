@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use App\DataSource;
 
 trait StaffView
@@ -264,6 +263,22 @@ trait StaffView
     public function getBindingsStatsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeStatsSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    // ***** Users ***** //
+
+    public function getBindingsUsersSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeUsersSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    // ***** Audit ***** //
+
+    public function getBindingsAuditSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeAuditSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 }

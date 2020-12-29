@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Services\ViewHelper;
 
 use App\DataSource;
@@ -443,6 +444,36 @@ class StaffBreadcrumbs
     public function makeStatsSubPage($pageTitle)
     {
         return $this->addStatsDashboard()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    // ***** Users ***** //
+
+    private function addUsersList()
+    {
+        $crumbItem = ['url' => route('owner.user.list'), 'text' => 'Users'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeUsersSubPage($pageTitle)
+    {
+        return $this->addUsersList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    // ***** Audit ***** //
+
+    private function addAuditDashboard()
+    {
+        $crumbItem = ['url' => route('owner.audit.index'), 'text' => 'Audit'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeAuditSubPage($pageTitle)
+    {
+        return $this->addAuditDashboard()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }
