@@ -24,12 +24,13 @@
     To temporarily make a site inactive but keep their reviews, remove the feed URL.
 </p>
 
-<h2>Active sites</h2>
+<h2>Active sites with feeds</h2>
+{% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActiveWithFeeds} %}
 
-{% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
+<h2>Active sites, no feeds</h2>
+{% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesActiveNoFeeds} %}
 
 <h2>Inactive sites</h2>
-
 {% include 'staff/partners/review-site/list-table.twig' with {'ReviewSites': ReviewSitesInactive} %}
 
 <script>

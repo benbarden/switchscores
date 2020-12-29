@@ -36,7 +36,8 @@ class ReviewSiteController extends Controller
         $bindings['TopTitle'] = 'Staff - Review sites';
         $bindings['PageTitle'] = 'Review sites';
 
-        $bindings['ReviewSitesActive'] = $servicePartner->getActiveReviewSites();
+        $bindings['ReviewSitesActiveWithFeeds'] = $servicePartner->getActiveReviewSitesWithFeeds();
+        $bindings['ReviewSitesActiveNoFeeds'] = $servicePartner->getActiveReviewSitesNoFeeds();
         $bindings['ReviewSitesInactive'] = $servicePartner->getInactiveReviewSites();
 
         return view('staff.partners.review-site.list', $bindings);

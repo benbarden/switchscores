@@ -7,9 +7,9 @@
             <th class="text-center">Twitter ID?</th>
             <th class="text-center">Login?</th>
             <th class="text-center">Scale</th>
-            <th class="text-center">Feed?</th>
-            <th class="text-center">Match rule?</th>
-            <th class="text-center">Reviews</th>
+            <th class="text-center">Review count</th>
+            <th class="text-center">Last review</th>
+            <th class="text-center">View reviews</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -40,28 +40,10 @@
                     {{ item.rating_scale }}
                 </td>
                 <td class="text-center">
-                    {% if item.feed_url %}
-                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    {% else %}
-                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    {% endif %}
+                    {{ item.links().count }}
                 </td>
                 <td class="text-center">
-                    {% if item.feed_url == '' %}
-                        -
-                    {% elseif item.title_match_rule_pattern != '' %}
-                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    {% else %}
-                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    {% endif %}
+                    {{ item.last_review_date }}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.link.list') }}?siteId={{ item.id }}">View</a>

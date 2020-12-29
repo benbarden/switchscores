@@ -183,6 +183,17 @@ class PartnerService
         return $reviewSites;
     }
 
+    public function getActiveReviewSitesNoFeeds()
+    {
+        $reviewSites = Partner::
+        where('type_id', Partner::TYPE_REVIEW_SITE)
+            ->where('status', Partner::STATUS_ACTIVE)
+            ->whereNull('feed_url')
+            ->orderBy('name', 'asc')
+            ->get();
+        return $reviewSites;
+    }
+
     public function getReviewSitesWithRecentReviews($days = 30)
     {
         return Partner::
