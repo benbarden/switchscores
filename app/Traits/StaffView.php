@@ -81,9 +81,60 @@ trait StaffView
 
     // ***** Reviews ***** //
 
-    public function getBindingsReviewsSubpage($pageTitle)
+    public function getBindingsReviewsSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsSubPage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsLinkListSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsLinkListSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsQuickReviewsSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsQuickReviewsSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsCampaignsSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsCampaignsSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsFeedItemsSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedItemsSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsFeedImportsSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedImportsSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsUnrankedByReleaseYearSubpage($pageTitle, $tableSort = '')
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewsUnrankedByReviewCountSubpage($pageTitle, $tableSort = '')
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReviewCountSubPage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
         return $this->getBindings($pageTitle);
     }
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Factories\UserFactory;
-use App\Factories\UserPointTransactionDirectorFactory;
-use App\Traits\StaffView;
-use App\UserPointTransaction;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
 use App\QuickReview;
+use App\Factories\UserFactory;
+use App\Factories\UserPointTransactionDirectorFactory;
 
 class QuickReviewController extends Controller
 {
@@ -18,45 +18,35 @@ class QuickReviewController extends Controller
 
     public function showList()
     {
+        $bindings = $this->getBindingsReviewsSubpage('Quick reviews');
+
         $request = request();
         $filterStatus = $request->filterStatus;
 
-        $serviceQuickReview = $this->getServiceQuickReview();
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Reviews - Quick reviews';
-        $bindings['PageTitle'] = 'Quick reviews';
-
-        $jsInitialSort = "[ 0, 'desc']";
-
         if (!isset($filterStatus)) {
             $bindings['FilterStatus'] = '';
-            $reviewList = $serviceQuickReview->getAll();
+            $reviewList = $this->getServiceQuickReview()->getAll();
         } else {
             $bindings['FilterStatus'] = $filterStatus;
-            $reviewList = $serviceQuickReview->getByStatus($filterStatus);
+            $reviewList = $this->getServiceQuickReview()->getByStatus($filterStatus);
         }
 
         $bindings['QuickReviewList'] = $reviewList;
-        $bindings['QuickReviewStatusList'] = $serviceQuickReview->getStatusList();
-        $bindings['jsInitialSort'] = $jsInitialSort;
+        $bindings['QuickReviewStatusList'] = $this->getServiceQuickReview()->getStatusList();
 
         return view('staff.reviews.quick-reviews.list', $bindings);
     }
 
     public function edit($reviewId)
     {
+        $bindings = $this->getBindingsReviewsQuickReviewsSubpage('Edit quick review');
+
         $request = request();
 
-        $serviceQuickReview = $this->getServiceQuickReview();
-
-        $reviewData = $serviceQuickReview->find($reviewId);
+        $reviewData = $this->getServiceQuickReview()->find($reviewId);
         if (!$reviewData) abort(404);
 
-        $statusList = $serviceQuickReview->getStatusList();
-
-        $bindings = [];
+        $statusList = $this->getServiceQuickReview()->getStatusList();
 
         if ($request->isMethod('post')) {
 
@@ -73,7 +63,7 @@ class QuickReviewController extends Controller
                 throw new \Exception('Unknown status: '.$itemStatus);
             }
 
-            $serviceQuickReview->editStatus($reviewData, $itemStatus);
+            $this->getServiceQuickReview()->editStatus($reviewData, $itemStatus);
 
             if ($itemStatus == QuickReview::STATUS_ACTIVE) {
 
@@ -104,8 +94,6 @@ class QuickReviewController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Quick reviews - Edit';
-        $bindings['PageTitle'] = 'Edit quick review';
         $bindings['ReviewData'] = $reviewData;
         $bindings['ReviewId'] = $reviewId;
 
@@ -116,10 +104,10 @@ class QuickReviewController extends Controller
 
     public function delete($reviewId)
     {
+        $bindings = $this->getBindingsReviewsQuickReviewsSubpage('Delete quick review');
+
         $reviewData = $this->getServiceQuickReview()->find($reviewId);
         if (!$reviewData) abort(404);
-
-        $bindings = [];
 
         $request = request();
 
@@ -149,8 +137,6 @@ class QuickReviewController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Delete quick review';
-        $bindings['PageTitle'] = 'Delete link';
         $bindings['QuickReview'] = $reviewData;
         $bindings['ReviewId'] = $reviewId;
 

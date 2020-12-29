@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class FeedItemsController extends Controller
 {
@@ -26,17 +26,13 @@ class FeedItemsController extends Controller
 
     public function showList($report = null)
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Reviews - Feed items';
-        $bindings['PageTitle'] = 'Feed items';
+        $bindings = $this->getBindingsReviewsSubpage('Feed items');
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
 
         if ($report == null) {
             $bindings['ActiveNav'] = '';
             $feedItems = $serviceReviewFeedItem->getUnprocessed();
-            $jsInitialSort = "[ 0, 'desc']";
         } else {
             $bindings['ActiveNav'] = $report;
             switch ($report) {
@@ -44,7 +40,6 @@ class FeedItemsController extends Controller
                     $itemLimit = 250;
                     $bindings['TableLimit'] = $itemLimit;
                     $feedItems = $serviceReviewFeedItem->getProcessed($itemLimit);
-                    $jsInitialSort = "[ 0, 'desc']";
                     break;
                 default:
                     abort(404);
@@ -53,20 +48,15 @@ class FeedItemsController extends Controller
         }
 
         $bindings['FeedItems'] = $feedItems;
-        $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('staff.reviews.feed-items.list', $bindings);
     }
 
     public function byProcessStatus($status)
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Reviews - Feed items';
-        $bindings['PageTitle'] = 'Feed items';
+        $bindings = $this->getBindingsReviewsSubpage('Feed items');
 
         $bindings['FeedItems'] = $this->getServiceReviewFeedItem()->getByProcessStatus($status);
-        $bindings['jsInitialSort'] = "[ 0, 'desc' ]";
 
         $bindings['HideFilters'] = 'Y';
 
@@ -75,14 +65,10 @@ class FeedItemsController extends Controller
 
     public function edit($itemId)
     {
-        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
-        $serviceGame = $this->getServiceGame();
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsReviewsFeedItemsSubpage('Edit feed item');
 
-        $feedItemData = $serviceReviewFeedItem->find($itemId);
+        $feedItemData = $this->getServiceReviewFeedItem()->find($itemId);
         if (!$feedItemData) abort(404);
-
-        $bindings = [];
 
         $request = request();
 
@@ -92,7 +78,7 @@ class FeedItemsController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceReviewFeedItem->edit(
+            $this->getServiceReviewFeedItem()->edit(
                 $feedItemData, $request->site_id, $request->game_id, $request->item_rating,
                 $request->process_status
             );
@@ -106,17 +92,15 @@ class FeedItemsController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Reviews - Feed items - Edit';
-        $bindings['PageTitle'] = 'Edit feed item';
         $bindings['FeedItemData'] = $feedItemData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
 
-        $bindings['ProcessStatusSuccess'] = $serviceReviewFeedItem->getProcessOptionsSuccess();
-        $bindings['ProcessStatusFailure'] = $serviceReviewFeedItem->getProcessOptionsFailure();
+        $bindings['ProcessStatusSuccess'] = $this->getServiceReviewFeedItem()->getProcessOptionsSuccess();
+        $bindings['ProcessStatusFailure'] = $this->getServiceReviewFeedItem()->getProcessOptionsFailure();
 
         return view('staff.reviews.feed-items.edit', $bindings);
     }

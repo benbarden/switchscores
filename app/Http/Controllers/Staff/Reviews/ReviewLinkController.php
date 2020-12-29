@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
 use App\ReviewLink;
 
 use App\Events\ReviewLinkCreated;
-
-use App\Traits\SwitchServices;
 
 class ReviewLinkController extends Controller
 {
@@ -33,45 +33,33 @@ class ReviewLinkController extends Controller
 
     public function showList()
     {
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $servicePartner = $this->getServicePartner();
-
-        $bindings = [];
+        $bindings = $this->getBindingsReviewsSubpage('Review links', "[ 3, 'desc']");
 
         $siteId = request()->siteId;
 
-        $reviewSites = $servicePartner->getAllReviewSites();
-
-        $bindings['TopTitle'] = 'Staff - Review links';
-        $bindings['PageTitle'] = 'Review links';
-
-        $jsInitialSort = "[ 3, 'desc']";
+        $reviewSites = $this->getServicePartner()->getAllReviewSites();
 
         if (!$siteId) {
             $bindings['ActiveSiteId'] = '';
             $tableLimit = 250;
-            $reviewLinks = $serviceReviewLink->getAll($tableLimit);
+            $reviewLinks = $this->getServiceReviewLink()->getAll($tableLimit);
             $bindings['TableLimit'] = $tableLimit;
         } else {
             $bindings['ActiveSiteId'] = $siteId;
-            $reviewLinks = $serviceReviewLink->getAllBySite($siteId);
+            $reviewLinks = $this->getServiceReviewLink()->getAllBySite($siteId);
         }
 
         $bindings['ReviewLinks'] = $reviewLinks;
         $bindings['ReviewSites'] = $reviewSites;
-        $bindings['jsInitialSort'] = $jsInitialSort;
 
         return view('staff.reviews.link.list', $bindings);
     }
 
     public function add()
     {
-        $request = request();
+        $bindings = $this->getBindingsReviewsLinkListSubpage('Add review link');
 
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGame = $this->getServiceGame();
-        $serviceReviewStats = $this->getServiceReviewStats();
-        $servicePartner = $this->getServicePartner();
+        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -80,21 +68,21 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $servicePartner->find($siteId);
+            $reviewSite = $this->getServicePartner()->find($siteId);
             $gameId = $request->game_id;
 
-            $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $reviewLink = $serviceReviewLink->create(
+            $reviewLink = $this->getServiceReviewLink()->create(
                 $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, ReviewLink::TYPE_MANUAL, $request->description
             );
 
             // Update game review stats
-            $game = $serviceGame->find($gameId);
+            $game = $this->getServiceGame()->find($gameId);
             $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
             $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
-            $serviceReviewStats->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
@@ -104,32 +92,23 @@ class ReviewLinkController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Review links - Add link';
-        $bindings['PageTitle'] = 'Add review link';
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
 
         return view('staff.reviews.link.add', $bindings);
     }
 
     public function edit($linkId)
     {
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGame = $this->getServiceGame();
-        $serviceReviewStats = $this->getServiceReviewStats();
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsReviewsLinkListSubpage('Edit review link');
 
-        $reviewLinkData = $serviceReviewLink->find($linkId);
+        $reviewLinkData = $this->getServiceReviewLink()->find($linkId);
         if (!$reviewLinkData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -140,19 +119,19 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $servicePartner->find($siteId);
+            $reviewSite = $this->getServicePartner()->find($siteId);
             $gameId = $request->game_id;
 
-            $ratingNormalised = $serviceReviewLink->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $serviceReviewLink->edit(
+            $this->getServiceReviewLink()->edit(
                 $reviewLinkData,
                 $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, $request->description
             );
 
             // Update game review stats
-            $game = $serviceGame->find($gameId);
+            $game = $this->getServiceGame()->find($gameId);
             $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
             $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
             $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
@@ -169,27 +148,22 @@ class ReviewLinkController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Review links - Edit link';
-        $bindings['PageTitle'] = 'Edit review link';
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $servicePartner->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
 
         return view('staff.reviews.link.edit', $bindings);
     }
 
     public function delete($linkId)
     {
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceGame = $this->getServiceGame();
+        $bindings = $this->getBindingsReviewsLinkListSubpage('Delete review link');
 
-        $reviewLink = $serviceReviewLink->find($linkId);
+        $reviewLink = $this->getServiceReviewLink()->find($linkId);
         if (!$reviewLink) abort(404);
-
-        $bindings = [];
 
         $request = request();
 
@@ -199,9 +173,9 @@ class ReviewLinkController extends Controller
 
             $gameId = $request->game_id;
 
-            $serviceReviewLink->delete($linkId);
+            $this->getServiceReviewLink()->delete($linkId);
 
-            $game = $serviceGame->find($reviewLink->game_id);
+            $game = $this->getServiceGame()->find($reviewLink->game_id);
             if ($game) {
                 // Update game review stats
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
@@ -219,8 +193,6 @@ class ReviewLinkController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Review links - Delete link';
-        $bindings['PageTitle'] = 'Delete link';
         $bindings['ReviewLinkData'] = $reviewLink;
         $bindings['LinkId'] = $linkId;
 

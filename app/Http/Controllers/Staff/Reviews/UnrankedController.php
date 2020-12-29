@@ -2,44 +2,19 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class UnrankedController extends Controller
 {
     use SwitchServices;
     use StaffView;
 
-    private function getBindings($functionName, $pageTitle, $tableSort = '')
-    {
-        switch ($functionName) {
-            case 'reviewCountList':
-                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReviewCountSubPage($pageTitle);
-                break;
-            case 'releaseYearList':
-                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);
-                break;
-            default:
-                $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsSubPage($pageTitle);
-        }
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Reviews')
-            ->setBreadcrumbs($breadcrumbs);
-
-        if ($tableSort) {
-            $bindings = $bindings->setDatatablesSort($tableSort);
-        }
-
-        return $bindings->getBindings();
-    }
-
     public function reviewCountLanding()
     {
-        $bindings = $this->getBindings(__FUNCTION__, 'Unranked games: By review count');
+        $bindings = $this->getBindingsReviewsSubpage('Unranked games: By review count');
 
         // Unranked breakdown
         $bindings['UnrankedReviews2List'] = $this->getServiceTopRated()->getUnrankedListByReviewCount(2, 15);
@@ -51,7 +26,7 @@ class UnrankedController extends Controller
 
     public function reviewCountList($reviewCount)
     {
-        $bindings = $this->getBindings(__FUNCTION__, 'Unranked games: '.$reviewCount.' review(s)', "[ 4, 'desc'], [ 2, 'desc']");
+        $bindings = $this->getBindingsReviewsUnrankedByReviewCountSubpage('Unranked games: '.$reviewCount.' review(s)', "[ 4, 'desc'], [ 2, 'desc']");
 
         $bindings['GameList'] = $this->getServiceTopRated()->getUnrankedListByReviewCount($reviewCount);
 
@@ -60,7 +35,7 @@ class UnrankedController extends Controller
 
     public function releaseYearLanding()
     {
-        $bindings = $this->getBindings(__FUNCTION__, 'Unranked games: By release year');
+        $bindings = $this->getBindingsReviewsSubpage('Unranked games: By release year');
 
         // Unranked breakdown
         $bindings['UnrankedYear2020List'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear(2020, 15);
@@ -73,7 +48,7 @@ class UnrankedController extends Controller
 
     public function releaseYearList($releaseYear)
     {
-        $bindings = $this->getBindings(__FUNCTION__, 'Unranked games: released '.$releaseYear, "[ 4, 'desc'], [ 2, 'desc']");
+        $bindings = $this->getBindingsReviewsUnrankedByReleaseYearSubpage('Unranked games: released '.$releaseYear, "[ 4, 'desc'], [ 2, 'desc']");
 
         $bindings['GameList'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear($releaseYear);
 

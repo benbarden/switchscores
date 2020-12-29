@@ -89,9 +89,33 @@ class StaffBreadcrumbs
         return $this->addCrumb($crumbItem);
     }
 
+    private function addReviewsLinkList()
+    {
+        $crumbItem = ['url' => route('staff.reviews.link.list'), 'text' => 'Review links'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    private function addReviewsQuickReviewsList()
+    {
+        $crumbItem = ['url' => route('staff.reviews.quick-reviews.list'), 'text' => 'Quick reviews'];
+        return $this->addCrumb($crumbItem);
+    }
+
     private function addReviewsCampaignsIndex()
     {
         $crumbItem = ['url' => route('staff.reviews.campaigns'), 'text' => 'Campaigns'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    private function addReviewsFeedItemsIndex()
+    {
+        $crumbItem = ['url' => route('staff.reviews.feed-items.list'), 'text' => 'Feed items'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    private function addReviewsFeedImportsIndex()
+    {
+        $crumbItem = ['url' => route('staff.reviews.feed-imports.list'), 'text' => 'Feed imports'];
         return $this->addCrumb($crumbItem);
     }
 
@@ -114,10 +138,42 @@ class StaffBreadcrumbs
             ->getBreadcrumbs();
     }
 
+    public function makeReviewsLinkListSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsLinkList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function makeReviewsQuickReviewsSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsQuickReviewsList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     public function makeReviewsCampaignsSubPage($pageTitle)
     {
         return $this->addReviewsDashboard()
             ->addReviewsCampaignsIndex()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function makeReviewsFeedItemsSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsFeedItemsIndex()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function makeReviewsFeedImportsSubPage($pageTitle)
+    {
+        return $this->addReviewsDashboard()
+            ->addReviewsFeedImportsIndex()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class ToolsController extends Controller
 {
@@ -14,12 +14,7 @@ class ToolsController extends Controller
 
     public function runFeedImporter()
     {
-        $pageTitle = 'Run Feed Importer';
-        $topTitle = $pageTitle.' - Tools - Reviews - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsReviewsSubpage('Run Feed Importer');
 
         if (request()->post()) {
             \Artisan::call('RunFeedImporter', []);
@@ -31,12 +26,7 @@ class ToolsController extends Controller
 
     public function runFeedParser()
     {
-        $pageTitle = 'Run Feed Parser';
-        $topTitle = $pageTitle.' - Tools - Reviews - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsReviewsSubpage('Run Feed Parser');
 
         if (request()->post()) {
             \Artisan::call('RunFeedParser', []);
@@ -48,12 +38,7 @@ class ToolsController extends Controller
 
     public function runFeedReviewGenerator()
     {
-        $pageTitle = 'Run Feed Review Generator';
-        $topTitle = $pageTitle.' - Tools - Reviews - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsReviewsSubpage('Run Feed Review Generator');
 
         if (request()->post()) {
             \Artisan::call('RunFeedReviewGenerator', []);
@@ -65,12 +50,7 @@ class ToolsController extends Controller
 
     public function updateGameRanks()
     {
-        $pageTitle = 'Update Game Ranks';
-        $topTitle = $pageTitle.' - Tools - Reviews - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsReviewsSubpage('Update Game Ranks');
 
         if (request()->post()) {
             \Artisan::call('UpdateGameRanks', []);
@@ -82,12 +62,7 @@ class ToolsController extends Controller
 
     public function updateGameReviewStats()
     {
-        $pageTitle = 'Update Game Review Stats';
-        $topTitle = $pageTitle.' - Tools - Reviews - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsReviewsSubpage('Update Game Review Stats');
 
         if (request()->post()) {
             \Artisan::call('UpdateGameReviewStats', []);

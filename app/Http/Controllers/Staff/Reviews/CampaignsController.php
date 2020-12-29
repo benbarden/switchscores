@@ -8,8 +8,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Campaign;
-
 use App\Traits\SwitchServices;
 
 class CampaignsController extends Controller
@@ -26,31 +24,9 @@ class CampaignsController extends Controller
         'name' => 'required|max:50',
     ];
 
-    private function getListBindings($pageTitle, $tableSort = '')
-    {
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs();
-
-        if ($pageTitle == 'Review campaigns') {
-            $breadcrumbs = $breadcrumbs->makeReviewsSubPage($pageTitle);
-        } else {
-            $breadcrumbs = $breadcrumbs->makeReviewsCampaignsSubPage($pageTitle);
-        }
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Reviews')
-            ->setBreadcrumbs($breadcrumbs);
-
-        if ($tableSort) {
-            $bindings = $bindings->setDatatablesSort($tableSort);
-        }
-
-        return $bindings->getBindings();
-    }
-
     public function show()
     {
-        $bindings = $this->getListBindings('Review campaigns', "[ 0, 'desc']");
+        $bindings = $this->getBindingsReviewsSubpage('Review campaigns');
 
         $bindings['CampaignsList'] = $this->getServiceCampaign()->getAll();
 
@@ -59,7 +35,7 @@ class CampaignsController extends Controller
 
     public function add()
     {
-        $bindings = $this->getListBindings('Add campaign');
+        $bindings = $this->getBindingsReviewsCampaignsSubpage('Add campaign');
 
         $request = request();
 
@@ -91,7 +67,7 @@ class CampaignsController extends Controller
 
     public function edit($campaignId)
     {
-        $bindings = $this->getListBindings('Edit campaign');
+        $bindings = $this->getBindingsReviewsCampaignsSubpage('Edit campaign');
 
         $request = request();
 
@@ -129,7 +105,7 @@ class CampaignsController extends Controller
 
     public function editGames($campaignId)
     {
-        $bindings = $this->getListBindings('Edit campaign games');
+        $bindings = $this->getBindingsReviewsCampaignsSubpage('Edit campaign games');
 
         $request = request();
 
