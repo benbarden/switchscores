@@ -1,11 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [
-    {'url': route('staff.partners.dashboard'), 'text': 'Partners'},
-    {'url': route('staff.partners.outreach.list'), 'text': 'Outreach list'},
-    {'text': PageTitle}
-] %}
-
 {% block page_inner %}
 
 {% set formSubmitAction = route('staff.partners.outreach.edit', {'partnerOutreach': OutreachData}) %}

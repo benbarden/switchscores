@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff\Reviews;
 
 use App\ReviewFeedImport;
+use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
@@ -10,6 +11,7 @@ use App\Traits\SwitchServices;
 class FeedImportsController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function show()
     {

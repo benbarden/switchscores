@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
+use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -16,6 +17,7 @@ use App\Traits\SwitchServices;
 class ReviewLinkController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

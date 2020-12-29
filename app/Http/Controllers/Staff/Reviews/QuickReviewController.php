@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
+use App\Traits\StaffView;
 use App\UserPointTransaction;
 use Illuminate\Routing\Controller as Controller;
 
@@ -13,6 +14,7 @@ use App\QuickReview;
 class QuickReviewController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function showList()
     {

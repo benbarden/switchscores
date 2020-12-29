@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
+use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -16,6 +17,7 @@ use App\PartnerOutreach;
 class OutreachController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -36,10 +38,7 @@ class OutreachController extends Controller
 
     public function showList(Partner $partner = null)
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Partner outreach';
-        $bindings['PageTitle'] = 'Partner outreach';
+        $bindings = $this->getBindingsPartnersSubpage('Partner outreach');
 
         if ($partner) {
             $outreachList = $this->getServicePartnerOutreach()->getByPartnerId($partner->id);
@@ -48,15 +47,13 @@ class OutreachController extends Controller
         }
 
         $bindings['OutreachList'] = $outreachList;
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.outreach.list', $bindings);
     }
 
     public function add()
     {
-        $servicePartnerOutreach = $this->getServicePartnerOutreach();
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsPartnersOutreachSubpage('Add partner outreach');
 
         $request = request();
 
@@ -66,28 +63,24 @@ class OutreachController extends Controller
 
             $partnerId = $request->partner_id;
 
-            $partnerOutreach = $servicePartnerOutreach->create(
+            $partnerOutreach = $this->getServicePartnerOutreach()->create(
                 $partnerId, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
             );
             $partnerOutreach->save();
 
             // Update last outreach for partner
-            $partner = $servicePartner->find($partnerId);
-            $servicePartner->editOutreach($partner, $partnerOutreach);
+            $partner = $this->getServicePartner()->find($partnerId);
+            $this->getServicePartner()->editOutreach($partner, $partnerOutreach);
 
             return redirect(route('staff.partners.games-company.show', ['partner' => $partner]));
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Add partner outreach';
-        $bindings['PageTitle'] = 'Add partner outreach';
         $bindings['FormMode'] = 'add';
 
         $bindings['PartnerList'] = $this->getServicePartner()->getAllGamesCompanies();
-        $bindings['StatusList'] = $servicePartnerOutreach->getStatusList();
-        $bindings['MethodList'] = $servicePartnerOutreach->getContactMethodList();
+        $bindings['StatusList'] = $this->getServicePartnerOutreach()->getStatusList();
+        $bindings['MethodList'] = $this->getServicePartnerOutreach()->getContactMethodList();
 
         $urlPartnerId = $request->partnerId;
         if ($urlPartnerId) {
@@ -99,11 +92,9 @@ class OutreachController extends Controller
 
     public function edit(PartnerOutreach $partnerOutreach)
     {
-        $servicePartnerOutreach = $this->getServicePartnerOutreach();
+        $bindings = $this->getBindingsPartnersOutreachSubpage('Edit partner outreach');
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -111,7 +102,7 @@ class OutreachController extends Controller
 
             $this->validate($request, $this->validationRulesEdit);
 
-            $servicePartnerOutreach->edit(
+            $this->getServicePartnerOutreach()->edit(
                 $partnerOutreach, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
             );
 
@@ -124,13 +115,11 @@ class OutreachController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Edit partner outreach';
-        $bindings['PageTitle'] = 'Edit partner outreach';
         $bindings['OutreachData'] = $partnerOutreach;
         $bindings['OutreachId'] = $partnerOutreach->id;
 
-        $bindings['StatusList'] = $servicePartnerOutreach->getStatusList();
-        $bindings['MethodList'] = $servicePartnerOutreach->getContactMethodList();
+        $bindings['StatusList'] = $this->getServicePartnerOutreach()->getStatusList();
+        $bindings['MethodList'] = $this->getServicePartnerOutreach()->getContactMethodList();
 
         return view('staff.partners.outreach.edit', $bindings);
     }

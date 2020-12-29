@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 use App\Factories\GamesCompanyFactory;
 use App\Partner;
@@ -15,6 +16,7 @@ use App\Partner;
 class GamesCompanyController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -28,49 +30,34 @@ class GamesCompanyController extends Controller
 
     public function showList()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games companies';
-        $bindings['PageTitle'] = 'Games companies';
+        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
 
         $bindings['GamesCompanyList'] = $this->getServicePartner()->getAllGamesCompanies();
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.games-company.list', $bindings);
     }
 
     public function withoutTwitterIds()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games companies without Twitter Ids';
-        $bindings['PageTitle'] = 'Games companies without Twitter Ids';
+        $bindings = $this->getBindingsPartnersSubpage('Games companies without Twitter Ids', "[ 0, 'desc']");
 
         $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithoutTwitterIds();
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.games-company.list', $bindings);
     }
 
     public function withoutWebsiteUrls()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games companies without website URLs';
-        $bindings['PageTitle'] = 'Games companies without website URLs';
+        $bindings = $this->getBindingsPartnersSubpage('Games companies without website URLs', "[ 0, 'desc']");
 
         $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithoutWebsiteUrls();
-        $bindings['jsInitialSort'] = "[ 0, 'desc']";
 
         return view('staff.partners.games-company.list', $bindings);
     }
 
     public function duplicateTwitterIds()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games companies with duplicate Twitter Ids';
-        $bindings['PageTitle'] = 'Games companies with duplicate Twitter Ids';
+        $bindings = $this->getBindingsPartnersSubpage('Games companies with duplicate Twitter Ids', "[ 0, 'desc']");
 
         $duplicateTwitterIdsList = $this->getServicePartner()->getGamesCompanyDuplicateTwitterIds();
         if ($duplicateTwitterIdsList) {
@@ -81,17 +68,12 @@ class GamesCompanyController extends Controller
             $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithTwitterIdList($idList);
         }
 
-//        $bindings['jsInitialSort'] = "[ 0, 'desc']";
-
         return view('staff.partners.games-company.list', $bindings);
     }
 
     public function duplicateWebsiteUrls()
     {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Games companies with duplicate website URLs';
-        $bindings['PageTitle'] = 'Games companies with duplicate website URLs';
+        $bindings = $this->getBindingsPartnersSubpage('Games companies with duplicate website URLs', "[ 0, 'desc']");
 
         $duplicateWebsiteUrlsList = $this->getServicePartner()->getGamesCompanyDuplicateWebsiteUrls();
         if ($duplicateWebsiteUrlsList) {
@@ -102,8 +84,6 @@ class GamesCompanyController extends Controller
             $bindings['GamesCompanyList'] = $this->getServicePartner()->getGamesCompaniesWithWebsiteUrlList($idList);
         }
 
-//        $bindings['jsInitialSort'] = "[ 0, 'desc']";
-
         return view('staff.partners.games-company.list', $bindings);
     }
 
@@ -111,22 +91,14 @@ class GamesCompanyController extends Controller
     {
         if (!$partner->isGamesCompany()) abort(404);
 
-        $servicePartner = $this->getServicePartner();
-
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $bindings = $this->getBindingsPartnersSubpage($partner->name);
 
         $partnerId = $partner->id;
 
-        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, false);
-        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, false);
+        $gameDevList = $this->getServiceGameDeveloper()->getGamesByDeveloper($partnerId, false);
+        $gamePubList = $this->getServiceGamePublisher()->getGamesByPublisher($partnerId, false);
 
-        $mergedGameList = $servicePartner->getMergedGameList($gameDevList, $gamePubList);
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = $partner->name;
-        $bindings['PageTitle'] = $partner->name;
+        $mergedGameList = $this->getServicePartner()->getMergedGameList($gameDevList, $gamePubList);
 
         $bindings['PartnerData'] = $partner;
         $bindings['PartnerId'] = $partnerId;
@@ -138,32 +110,20 @@ class GamesCompanyController extends Controller
 
     public function devsWithUnrankedGames()
     {
-        $servicePartner = $this->getServicePartner();
+        $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
+        $bindings = $this->getBindingsPartnersSubpage('Outreach targets: Developers with unranked games', $tableSort);
 
-        $bindings = [];
-
-        $pageTitle = 'Outreach targets: Developers with unranked games';
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
-
-        $bindings['GamesCompanyList'] = $servicePartner->getDevelopersWithUnrankedGames();
-
-        $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
+        $bindings['GamesCompanyList'] = $this->getServicePartner()->getDevelopersWithUnrankedGames();
 
         return view('staff.partners.games-company.list-unranked', $bindings);
     }
 
     public function pubsWithUnrankedGames()
     {
-        $servicePartner = $this->getServicePartner();
+        $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
+        $bindings = $this->getBindingsPartnersSubpage('Outreach targets: Publishers with unranked games', $tableSort);
 
-        $bindings = [];
-
-        $pageTitle = 'Outreach targets: Publishers with unranked games';
-        $bindings['TopTitle'] = $pageTitle.' - Staff';
-        $bindings['PageTitle'] = $pageTitle;
-
-        $bindings['GamesCompanyList'] = $servicePartner->getPublishersWithUnrankedGames();
+        $bindings['GamesCompanyList'] = $this->getServicePartner()->getPublishersWithUnrankedGames();
         $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
 
         return view('staff.partners.games-company.list-unranked', $bindings);
@@ -171,7 +131,7 @@ class GamesCompanyController extends Controller
 
     public function add()
     {
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsGamesCompaniesSubpage('Add games company');
 
         $request = request();
 
@@ -188,10 +148,6 @@ class GamesCompanyController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Add games company';
-        $bindings['PageTitle'] = 'Add games company';
         $bindings['FormMode'] = 'add';
 
         return view('staff.partners.games-company.add', $bindings);
@@ -199,14 +155,12 @@ class GamesCompanyController extends Controller
 
     public function edit($partnerId)
     {
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsGamesCompaniesSubpage('Edit games company');
 
-        $partnerData = $servicePartner->find($partnerId);
+        $partnerData = $this->getServicePartner()->find($partnerId);
         if (!$partnerData) abort(404);
 
         $request = request();
-
-        $bindings = [];
 
         if ($request->isMethod('post')) {
 
@@ -214,7 +168,7 @@ class GamesCompanyController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $servicePartner->editGamesCompany(
+            $this->getServicePartner()->editGamesCompany(
                 $partnerData, $request->name, $request->link_title, $request->website_url, $request->twitter_id
             );
 
@@ -226,8 +180,6 @@ class GamesCompanyController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Edit games company';
-        $bindings['PageTitle'] = 'Edit games company';
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;
 
@@ -243,24 +195,21 @@ class GamesCompanyController extends Controller
 
     public function delete($partnerId)
     {
-        $servicePartner = $this->getServicePartner();
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $bindings = $this->getBindingsGamesCompaniesSubpage('Delete games company');
 
-        $partnerData = $servicePartner->find($partnerId);
+        $partnerData = $this->getServicePartner()->find($partnerId);
         if (!$partnerData) abort(404);
 
-        $bindings = [];
         $customErrors = [];
 
         $request = request();
 
-        // Validation: check for any reason we should not allow the game to be deleted.
-        $gameDevelopers = $serviceGameDeveloper->getByDeveloperId($partnerId);
+        // Validation: check for any reason we should not allow the record to be deleted.
+        $gameDevelopers = $this->getServiceGameDeveloper()->getByDeveloperId($partnerId);
         if (count($gameDevelopers) > 0) {
             $customErrors[] = 'Games company is marked as the developer for '.count($gameDevelopers).' game(s)';
         }
-        $gamePublishers = $serviceGamePublisher->getByPublisherId($partnerId);
+        $gamePublishers = $this->getServiceGamePublisher()->getByPublisherId($partnerId);
         if (count($gamePublishers) > 0) {
             $customErrors[] = 'Games company is marked as the publisher for '.count($gamePublishers).' game(s)';
         }
@@ -269,7 +218,7 @@ class GamesCompanyController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $servicePartner->deleteGamesCompany($partnerId);
+            $this->getServicePartner()->deleteGamesCompany($partnerId);
 
             return redirect(route('staff.partners.games-company.list'));
 
@@ -279,8 +228,6 @@ class GamesCompanyController extends Controller
 
         }
 
-        $bindings['TopTitle'] = 'Staff - Delete games company';
-        $bindings['PageTitle'] = 'Delete games company';
         $bindings['PartnerData'] = $partnerData;
         $bindings['PartnerId'] = $partnerId;
         $bindings['ErrorsCustom'] = $customErrors;

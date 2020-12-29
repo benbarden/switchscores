@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
+use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
@@ -9,15 +10,11 @@ use App\Traits\SwitchServices;
 class ToolsController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     public function partnerUpdateFields()
     {
-        $pageTitle = 'Partner Update Fields';
-        $topTitle = $pageTitle.' - Tools - Partners - Staff';
-
-        $bindings = [];
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->getBindingsPartnersSubpage('Partner Update Fields');
 
         if (request()->post()) {
             \Artisan::call('PartnerUpdateFields', []);

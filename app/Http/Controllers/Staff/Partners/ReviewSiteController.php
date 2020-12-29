@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
+use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -14,6 +15,7 @@ use App\Traits\SwitchServices;
 class ReviewSiteController extends Controller
 {
     use SwitchServices;
+    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -29,23 +31,18 @@ class ReviewSiteController extends Controller
 
     public function showList()
     {
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsPartnersSubpage('Review sites');
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Review sites';
-        $bindings['PageTitle'] = 'Review sites';
-
-        $bindings['ReviewSitesActiveWithFeeds'] = $servicePartner->getActiveReviewSitesWithFeeds();
-        $bindings['ReviewSitesActiveNoFeeds'] = $servicePartner->getActiveReviewSitesNoFeeds();
-        $bindings['ReviewSitesInactive'] = $servicePartner->getInactiveReviewSites();
+        $bindings['ReviewSitesActiveWithFeeds'] = $this->getServicePartner()->getActiveReviewSitesWithFeeds();
+        $bindings['ReviewSitesActiveNoFeeds'] = $this->getServicePartner()->getActiveReviewSitesNoFeeds();
+        $bindings['ReviewSitesInactive'] = $this->getServicePartner()->getInactiveReviewSites();
 
         return view('staff.partners.review-site.list', $bindings);
     }
 
     public function add()
     {
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsReviewSitesSubpage('Add review site');
 
         $request = request();
 
@@ -61,7 +58,7 @@ class ReviewSiteController extends Controller
                 $ratingScale = 10;
             }
 
-            $servicePartner->createReviewSite(
+            $this->getServicePartner()->createReviewSite(
                 Partner::STATUS_ACTIVE,
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id,
                 $request->feed_url, $request->feed_url_prefix,
@@ -74,10 +71,6 @@ class ReviewSiteController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Review sites - Add site';
-        $bindings['PageTitle'] = 'Add site';
         $bindings['FormMode'] = 'add';
 
         return view('staff.partners.review-site.add', $bindings);
@@ -85,9 +78,9 @@ class ReviewSiteController extends Controller
 
     public function edit($siteId)
     {
-        $servicePartner = $this->getServicePartner();
+        $bindings = $this->getBindingsReviewSitesSubpage('Edit review site');
 
-        $partnerData = $servicePartner->find($siteId);
+        $partnerData = $this->getServicePartner()->find($siteId);
         if (!$partnerData) abort(404);
 
         $request = request();
@@ -106,7 +99,7 @@ class ReviewSiteController extends Controller
                 $ratingScale = 10;
             }
 
-            $servicePartner->editReviewSite(
+            $this->getServicePartner()->editReviewSite(
                 $partnerData,
                 $request->status,
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id,
@@ -120,10 +113,6 @@ class ReviewSiteController extends Controller
 
         }
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Review sites - Edit site';
-        $bindings['PageTitle'] = 'Edit site';
         $bindings['ReviewSiteData'] = $partnerData;
         $bindings['SiteId'] = $siteId;
 

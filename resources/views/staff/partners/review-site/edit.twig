@@ -1,7 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('staff.reviews.site.list'), 'text': 'Review sites'}, {'text': PageTitle}] %}
-
 {% block page_inner %}
 
 {% set formSubmitAction = route('staff.reviews.site.edit', {'siteId': SiteId}) %}

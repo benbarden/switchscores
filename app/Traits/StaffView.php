@@ -138,9 +138,30 @@ trait StaffView
 
     // ***** Partners ***** //
 
-    public function getBindingsPartnersSubpage($pageTitle)
+    public function getBindingsPartnersSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersSubPage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsReviewSitesSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewSitesSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsGamesCompaniesSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesCompaniesSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
+    public function getBindingsPartnersOutreachSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersOutreachSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 

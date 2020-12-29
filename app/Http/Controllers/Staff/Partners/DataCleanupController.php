@@ -5,51 +5,27 @@ namespace App\Http\Controllers\Staff\Partners;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class DataCleanupController extends Controller
 {
     use SwitchServices;
-
-    private function getListBindings($pageTitle, $tableSort = '')
-    {
-        $breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersSubPage($pageTitle);
-
-        $bindings = $this->getServiceViewHelperBindings()
-            ->setPageTitle($pageTitle)
-            ->setTopTitlePrefix('Partners')
-            ->setBreadcrumbs($breadcrumbs);
-
-        if ($tableSort) {
-            $bindings = $bindings->setDatatablesSort($tableSort);
-        } else {
-            $bindings = $bindings->setDatatablesSortDefault();
-        }
-
-        return $bindings->getBindings();
-    }
+    use StaffView;
 
     public function gamesWithMissingDeveloper()
     {
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
+        $bindings = $this->getBindingsPartnersSubpage('Games with missing developer');
 
-        $pageTitle = 'Games with missing developer';
-
-        $bindings = $this->getListBindings($pageTitle, "[ 0, 'asc']");
-
-        $bindings['ItemList'] = $serviceGameDeveloper->getGamesWithNoDeveloper();
+        $bindings['ItemList'] = $this->getServiceGameDeveloper()->getGamesWithNoDeveloper();
 
         return view('staff.partners.data-cleanup.games-with-missing-developer', $bindings);
     }
 
     public function gamesWithMissingPublisher()
     {
-        $serviceGamePublisher = $this->getServiceGamePublisher();
+        $bindings = $this->getBindingsPartnersSubpage('Games with missing publisher');
 
-        $pageTitle = 'Games with missing publisher';
-
-        $bindings = $this->getListBindings($pageTitle, "[ 0, 'asc']");
-
-        $bindings['ItemList'] = $serviceGamePublisher->getGamesWithNoPublisher();
+        $bindings['ItemList'] = $this->getServiceGamePublisher()->getGamesWithNoPublisher();
 
         return view('staff.partners.data-cleanup.games-with-missing-publisher', $bindings);
     }

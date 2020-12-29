@@ -239,6 +239,48 @@ class StaffBreadcrumbs
             ->getBreadcrumbs();
     }
 
+    private function addReviewSitesList()
+    {
+        $crumbItem = ['url' => route('staff.reviews.site.list'), 'text' => 'Review sites'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeReviewSitesSubPage($pageTitle)
+    {
+        return $this->addPartnersDashboard()
+            ->addReviewSitesList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    private function addGamesCompaniesList()
+    {
+        $crumbItem = ['url' => route('staff.partners.games-company.list'), 'text' => 'Games companies'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeGamesCompaniesSubPage($pageTitle)
+    {
+        return $this->addPartnersDashboard()
+            ->addGamesCompaniesList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    private function addPartnersOutreach()
+    {
+        $crumbItem = ['url' => route('staff.partners.outreach.list'), 'text' => 'Outreach'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makePartnersOutreachSubPage($pageTitle)
+    {
+        return $this->addPartnersDashboard()
+            ->addPartnersOutreach()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     // ***** Data sources ***** //
 
     private function addDataSourcesDashboard()
