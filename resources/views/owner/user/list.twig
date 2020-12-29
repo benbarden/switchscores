@@ -103,15 +103,7 @@
         $('.data-sortable').DataTable({
             "order": [0, 'desc'],
             "pageLength": 25,
-            "columns": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            ]
+            "columnDefs": [{ "targets": [ 2, 4, 5, 7 ], "orderable": false }]
         });
     });
 </script>
