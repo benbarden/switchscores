@@ -16,43 +16,16 @@
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
+            <h2>
+                Review campaigns
+            </h2>
+            <p>
+                This is where we highlight games that we'd love to see reviews of next.
+                This gets more of our database ranked. Pick a campaign and jump right in!
+            </p>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <h2>
-                        Campaigns
-                        <div class="label label-info h6">New!</div>
-                    </h2>
-                    {% if ActiveCampaigns %}
-                        <p>
-                            Campaigns are a way to get more games ranked.
-                        </p>
-                        <table class="table table-condensed">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th class="text-right">Progress</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for item in ActiveCampaigns %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
-                                            {{ item.name }}
-                                        </a>
-                                    </td>
-                                    <td class="text-right">
-                                        {{ item.progress }}%
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>
-                            There are currently no active campaigns. Check back soon for more!
-                        </p>
-                    {% endif %}
+                    {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
                 </div>
             </div>
         </div>

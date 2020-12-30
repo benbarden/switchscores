@@ -118,6 +118,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/quick-reviews/add', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
     Route::get('/user/quick-reviews/{report?}', 'User\QuickReviewController@showList')->name('user.quick-reviews.list');
 
+    // Campaigns
+    Route::get('/user/campaigns/{campaignId}', 'User\CampaignsController@show')->name('user.campaigns.show');
+
     // Games companies: Games list
     Route::get('/user/games-list/{report}', 'User\GamesListController@landing')->name('user.games-list.landing');
 

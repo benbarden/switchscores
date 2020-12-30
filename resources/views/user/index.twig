@@ -2,8 +2,13 @@
 
 {% block page_inner %}
 
-
     <h2>Hey, {{ UserData.display_name }}!</h2>
+    <p>
+        We'd love to know how you're getting on with the Member dashboard.
+        If you've got feedback or need help, you can tweet us via
+        <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
+        Follow us for the latest updates.
+    </p>
 
     <div class="row member-dashboard">
 
@@ -34,27 +39,41 @@
                 </tr>
             </table>
         </div>
+
         <div class="col-xs-12 col-sm-4 col-md-4">
-            <h2>Help and feedback</h2>
+
+            <h2>Quick reviews</h2>
             <p>
-                We'd love to know how you're getting on with the Member dashboard.
+                Tell other members what you think of a game by posting a quick review.
             </p>
             <p>
-                If you've got feedback or need help, you can tweet us via
-                <a href="http://twitter.com/switchscores" target="_blank">@switchscores</a>.
-                Follow us for the latest updates.
+                <a href="{{ route('user.quick-reviews.add') }}" class="btn btn-sm btn-primary">Add a quick review</a>
+                <a href="{{ route('user.quick-reviews.list') }}" class="btn btn-sm btn-primary">View your reviews</a>
             </p>
+
         </div>
+
         <div class="col-xs-12 col-sm-4 col-md-4">
+
             {% if SiteRole == 'review-partner' %}
                 <h2>Reviewers</h2>
                 <p>
-                    Find all the tools and stats for reviewers here:
+                    Find all the tools and stats for reviewers here.
                 </p>
                 <p>
                     <a href="{{ route('reviewers.index') }}" class="btn btn-sm btn-primary">Reviewers dashboard</a>
                 </p>
+            {% else %}
+                <h2>Partners</h2>
+                <p>
+                    <strong>Got a website with Switch reviews?</strong>
+                    You might be interested in joining as a review partner.
+                    Partners have their reviews linked from Switch Scores.
+                    Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+                    more details.
+                </p>
             {% endif %}
+
         </div>
 
     </div>
@@ -81,30 +100,21 @@
                 </tr>
             </table>
 
-            <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>
-            <a href="{{ route('user.collection.landing') }}" class="btn btn-primary btn-md">View your collection</a>
+            <a href="{{ route('user.collection.add') }}" class="btn btn-sm btn-primary">Add a game</a>
+            <a href="{{ route('user.collection.landing') }}" class="btn btn-sm btn-primary">View your collection</a>
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Quick reviews</h2>
+            <h2>
+                Review campaigns
+            </h2>
             <p>
-                Tell other members what you think of a game by posting a quick review.
+                This is where we highlight games that we'd love to see reviews of next.
+                This gets more of our database ranked. Pick a campaign and jump right in!
             </p>
-
-            <p>
-                <strong>Got a website with Switch reviews?</strong>
-                You might be better off with our partner reviews feature. This allows you
-                to submit links to full-length reviews on your site.
-                Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
-                more details.
-            </p>
-
-            <p>
-                <a href="{{ route('user.quick-reviews.add') }}" class="btn btn-primary btn-md">Add a quick review</a>
-                <a href="{{ route('user.quick-reviews.list') }}" class="btn btn-primary btn-md">View your reviews</a>
-            </p>
+            {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'user'} %}
 
         </div>
 

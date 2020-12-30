@@ -1,0 +1,19 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+
+            <h2>Games</h2>
+            <p>
+                Games need 3 reviews to be ranked.
+            </p>
+            {% include 'user/campaigns/campaign-games-table.twig' with {'GameList': GameList} %}
+
+        </div>
+
+    </div>
+
+{% endblock page_inner %}

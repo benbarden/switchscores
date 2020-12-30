@@ -1,0 +1,34 @@
+{% if ActiveCampaigns %}
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th class="text-right">Progress</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ActiveCampaigns %}
+            <tr>
+                <td>
+                    {% if SiteRole == 'reviewer' %}
+                        <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
+                            {{ item.name }}
+                        </a>
+                    {% else %}
+                        <a href="{{ route('user.campaigns.show', {'campaignId': item.id}) }}">
+                            {{ item.name }}
+                        </a>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    {{ item.progress }}%
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>
+        There are currently no active campaigns. Check back soon for more!
+    </p>
+{% endif %}

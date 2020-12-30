@@ -48,9 +48,12 @@ trait MemberView
         return $this->getBindings($pageTitle);
     }
 
-    public function getBindingsDashboardGenericSubpage($pageTitle)
+    public function getBindingsDashboardGenericSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeGenericSubpage($pageTitle);
+        if ($tableSort) {
+            $this->tableSort = $tableSort;
+        }
         return $this->getBindings($pageTitle);
     }
 
