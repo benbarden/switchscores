@@ -22,8 +22,8 @@
                 <th class="text-center">Twitter</th>
                 <th class="text-center">Points</th>
                 <th class="text-left">Partner name</th>
-                <th class="text-left">Roles</th>
                 <th class="text-center">Joined</th>
+                <th class="text-center">Last access</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -59,6 +59,7 @@
                             </small>
                         {% endif %}
                     </td>
+                    {#
                     <td class="text-left">
                         {% if item.is_owner %}
                             <small>Owner</small>
@@ -82,8 +83,12 @@
                             {% endif %}
                         {% endif %}
                     </td>
+                    #}
                     <td class="text-center">
                         {{ item.created_at|date('Y-m-d') }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.last_access_date }}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('owner.user.edit', {'userId': item.id}) }}">Edit</a> :
