@@ -19,7 +19,7 @@ class CampaignsController extends Controller
         $campaign = $this->getServiceCampaign()->find($campaignId);
         if (!$campaign) abort(404);
 
-        $tableSort = "[3, 'asc'], [2, 'desc']";
+        $tableSort = "[6, 'asc'], [5, 'asc'], [4, 'desc']";
         $bindings = $this->getBindingsDashboardGenericSubpage('View campaign: '.$campaign->name, $tableSort);
 
         $bindings['CampaignData'] = $campaign;

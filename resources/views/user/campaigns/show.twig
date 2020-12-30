@@ -6,9 +6,8 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
 
-            <h2>Games</h2>
             <p>
-                Games need 3 reviews to be ranked.
+                {{ CampaignData.description }}
             </p>
             {% include 'user/campaigns/campaign-games-table.twig' with {'GameList': GameList} %}
 
