@@ -49,7 +49,12 @@ class IndexController extends Controller
         $bindings['FeedItemsFailed'] = $this->getServiceReviewFeedItem()->getFailedBySite($partnerId, 5);
 
         // Campaigns
-        $bindings['ActiveCampaigns'] = $this->getServiceCampaign()->getActive();
+        $activeCampaigns = $this->getServiceCampaign()->getActive();
+        foreach ($activeCampaigns as &$item) {
+            $campaignId = $item->id;
+            $item['ranked_count'] = $this->getServiceCampaignGame()->countRankedGames($campaignId);
+        }
+        $bindings['ActiveCampaigns'] = $activeCampaigns;
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;

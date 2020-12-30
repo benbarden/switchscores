@@ -3,7 +3,8 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th class="text-right">Progress</th>
+            <th class="text-center">Ranked</th>
+            <th class="text-center">To go</th>
         </tr>
         </thead>
         <tbody>
@@ -20,8 +21,11 @@
                         </a>
                     {% endif %}
                 </td>
-                <td class="text-right">
-                    {{ item.progress }}%
+                <td class="text-center">
+                    {{ item.ranked_count }}
+                </td>
+                <td class="text-center">
+                    {{ item.games().count - item.ranked_count }}
                 </td>
             </tr>
         {% endfor %}

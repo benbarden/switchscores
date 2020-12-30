@@ -68,7 +68,12 @@ class IndexController extends Controller
         $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
 
         // Campaigns
-        $bindings['ActiveCampaigns'] = $this->getServiceCampaign()->getActive();
+        $activeCampaigns = $this->getServiceCampaign()->getActive();
+        foreach ($activeCampaigns as &$item) {
+            $campaignId = $item->id;
+            $item['ranked_count'] = $this->getServiceCampaignGame()->countRankedGames($campaignId);
+        }
+        $bindings['ActiveCampaigns'] = $activeCampaigns;
 
         return view('user.index', $bindings);
     }
