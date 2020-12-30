@@ -16,8 +16,8 @@ class User extends Authenticatable
     protected $fillable = [
         'is_admin', 'is_owner', 'is_staff', 'is_developer', 'user_roles',
         'display_name', 'email', 'password', 'partner_id',
-        'twitter_user_id', 'twitter_name', 'login_date', 'points_balance',
-        'signup_alpha', 'signup_beta'
+        'twitter_user_id', 'twitter_name', 'points_balance',
+        'signup_alpha', 'signup_beta', 'last_access_date'
     ];
 
     /**

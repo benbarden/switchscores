@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\User;
 
-
 class UserService
 {
     public function createFromTwitterLogin(
@@ -53,6 +52,17 @@ class UserService
         $userData->save();
     }
 
+    public function setLastAccessDate(User $user, $todaysDate)
+    {
+        $user->last_access_date = $todaysDate;
+        $user->save();
+    }
+
+    public function deleteUser($userId)
+    {
+        User::where('id', $userId)->delete();
+    }
+
     /**
      * @param $id
      * @return User
@@ -60,11 +70,6 @@ class UserService
     public function find($id)
     {
         return User::find($id);
-    }
-
-    public function deleteUser($userId)
-    {
-        User::where('id', $userId)->delete();
     }
 
     public function getAll()
