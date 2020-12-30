@@ -2,12 +2,10 @@
 
     var formMode = '{{ FormMode }}';
     var formVals = [];
-    var urlGameId = '{{ UrlGameId }}';
 
     if (formMode == 'edit') {
 
         // This is used when editing existing games.
-        formVals['game_id'] = "{{ ReviewUserData.game_id }}";
         formVals['review_score'] = "{{ ReviewUserData.review_score }}";
         formVals['review_body'] = "{{ ReviewUserData.review_body }}"
 
@@ -15,23 +13,14 @@
 
         // This is used for new games.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
-        gameId = "{{ old('game_id') }}";
-        if (gameId == '') {
-            if (urlGameId != '') {
-                gameId = urlGameId;
-            }
-        }
-
-        formVals['game_id'] = gameId;
         formVals['review_score'] = "{{ old('review_score') }}";
         formVals['review_body'] = "{{ old('review_body')|e('js') }}"
 
     }
 
-    $('#game_id').val(formVals['game_id']);
     $('#review_score').val(formVals['review_score']);
     $('#review_body').text(formVals['review_body']);
 
-    $('#game_id').select2();
+    $('#review_score').focus();
 
 </script>

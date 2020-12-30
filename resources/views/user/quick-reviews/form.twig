@@ -1,30 +1,30 @@
+<div class="alert alert-info">
+    You're submitting a review of: <strong>{{ GameData.title }}</strong>.
+    {% if GameData.review_count < 3 %}
+        <br>
+        {% if GameData.review_count == 0 %}
+            This will be the game's first review. Way to get the ball rolling!
+        {% elseif GameData.review_count == 1 %}
+            This will be the game's second review. Great stuff!
+        {% elseif GameData.review_count == 2 %}
+            This will be the game's third review. That's all we need to give it a rank!
+        {% endif %}
+    {% endif %}
+</div>
 {% include 'common/form-errors.twig' %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="form-group">
-        <label for="game_id" class="col-md-4 control-label">Game</label>
-        <div class="col-md-6">
-            <select id="game_id" class="form-control" name="game_id" required autofocus>
-                <option value="">&nbsp;</option>
-                {% for item in GamesList %}
-                    <option value="{{ item.id }}">{{ item.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-md-4 control-label">Your score</label>
-        <div class="col-md-6">
-            {% for item in ScoreList %}
-                <div class="col-md-2">
-                    <input id="review_score_{{ item }}" name="review_score" value="{{ item }}" type="radio">
-                    <label for="review_score_{{ item }}" style="margin: 10px 0;">
-                        {% include 'modules/rating/badge.twig' with {'score': item} %}
-                    </label>
-                </div>
-            {% endfor %}
+        <label for="review_score" class="col-md-4 control-label">Your score</label>
+        <div class="col-md-4">
+            <input id="review_score" type="text" class="form-control" name="review_score">
+            <p>
+                <small>
+                    Enter the score out of 10 here. Decimals are allowed (e.g. 7.5). Scores will
+                    be rounded to 1 decimal place.
+                </small>
+            </p>
         </div>
     </div>
 
@@ -34,9 +34,8 @@
             <textarea id="review_body" name="review_body" cols="50" rows="10"></textarea>
             <p>
                 <small>
-                    Write your review here. If you prefer to rate the game but not write a review,
-                    that's ok!
-                    <br>Please don't include any special formatting - it will be stripped out.
+                    Write your review here.
+                    Please don't include any special formatting - it will be stripped out.
                     Line breaks will be preserved.
                     <br><strong>Maximum 800 characters.</strong> Keep it short and sweet :)
                 </small>

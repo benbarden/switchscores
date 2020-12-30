@@ -22,24 +22,58 @@ class QuickReviewController extends Controller
     /**
      * @var array
      */
-    private $validationRules = [
-        'game_id' => 'required|exists:games,id',
-        'review_score' => 'required|numeric|between:0,10',
-        'review_body' => 'max:800'
+    private $validationRulesFindGame = [
+        'search_keywords' => 'required|min:3',
     ];
 
-    public function add()
+    /**
+     * @var array
+     */
+    private $validationRules = [
+        'review_score' => 'required|numeric|between:0,10',
+        'review_body' => 'required|max:800'
+    ];
+
+    public function findGame()
     {
-        $onPageTitle = 'Add quick review';
-
-        $bindings = $this->getBindingsQuickReviewsSubpage($onPageTitle);
-
-        $userId = $this->getAuthId();
+        $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review: Find game');
 
         $request = request();
 
-        $serviceGame = $this->getServiceGame();
-        $serviceQuickReview = $this->getServiceQuickReview();
+        if ($request->isMethod('post')) {
+
+            $this->validate($request, $this->validationRulesFindGame);
+
+            $keywords = request()->search_keywords;
+
+            if ($keywords) {
+                $bindings['SearchKeywords'] = $keywords;
+                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
+            }
+
+        }
+
+        $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
+
+        return view('user.quick-reviews.game-search', $bindings);
+    }
+
+    public function add($gameId)
+    {
+        $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review');
+
+        $userId = $this->getAuthId();
+
+        $gameData = $this->getServiceGame()->find($gameId);
+        if (!$gameData) abort(404);
+
+        // Don't allow duplicate reviews
+        $reviewedGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
+        if ($reviewedGameIdList->contains($gameId)) {
+            return redirect(route('user.quick-reviews.list'));
+        }
+
+        $request = request();
 
         $reviewBody = $request->review_body;
         $reviewBody = strip_tags($reviewBody);
@@ -49,8 +83,8 @@ class QuickReviewController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $quickReview = $serviceQuickReview->create(
-                $userId, $request->game_id, $request->review_score, $reviewBody
+            $quickReview = $this->getServiceQuickReview()->create(
+                $userId, $gameId, $request->review_score, $reviewBody
             );
 
             return redirect(route('user.quick-reviews.list').'?msg=success');
@@ -58,25 +92,15 @@ class QuickReviewController extends Controller
         }
 
         $bindings['FormMode'] = 'add';
-
-        $bindings['GamesList'] = $serviceGame->getAll();
-
-        $scoreList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        $bindings['ScoreList'] = $scoreList;
-
-        $urlGameId = $request->gameId;
-        if ($urlGameId) {
-            $bindings['UrlGameId'] = $urlGameId;
-        }
+        $bindings['GameId'] = $gameId;
+        $bindings['GameData'] = $gameData;
 
         return view('user.quick-reviews.add', $bindings);
     }
 
     public function showList()
     {
-        $onPageTitle = 'Quick reviews';
-
-        $bindings = $this->getBindingsDashboardGenericSubpage($onPageTitle);
+        $bindings = $this->getBindingsDashboardGenericSubpage('Quick reviews');
 
         $urlMsg = \Request::get('msg');
 

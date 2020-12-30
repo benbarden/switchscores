@@ -114,8 +114,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 
     // Quick reviews
-    Route::get('/user/quick-reviews/add', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
-    Route::post('/user/quick-reviews/add', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
+    Route::match(['get', 'post'], '/user/quick-reviews/find-game', 'User\QuickReviewController@findGame')->name('user.quick-reviews.find-game');
+    Route::match(['get', 'post'], '/user/quick-reviews/add/{gameId}', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
     Route::get('/user/quick-reviews/{report?}', 'User\QuickReviewController@showList')->name('user.quick-reviews.list');
 
     // Campaigns
