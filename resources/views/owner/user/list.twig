@@ -21,7 +21,6 @@
                 <th>Display name</th>
                 <th class="text-center">Twitter</th>
                 <th class="text-center">Points</th>
-                <th class="text-left">Partner access</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Last access</th>
                 <th class="text-center">Options</th>
@@ -52,11 +51,6 @@
                     </td>
                     <td class="text-center">
                         {{ item.points_balance }}
-                    </td>
-                    <td class="text-left">
-                        {% if item.partner.name is not null %}
-                            {{ item.partner.name }}
-                        {% endif %}
                     </td>
                     {#
                     <td class="text-left">
@@ -107,7 +101,7 @@
         $('.data-sortable').DataTable({
             "order": [0, 'desc'],
             "pageLength": 25,
-            "columnDefs": [{ "targets": [ 2, 4, 5, 7 ], "orderable": false }]
+            "columnDefs": [{ "targets": [ 2, 4, 6 ], "orderable": false }]
         });
     });
 </script>

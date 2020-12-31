@@ -37,10 +37,6 @@
             </td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Registered</td>
-            <td>{{ UserData.created_at }}</td>
-        </tr>
-        <tr>
             <td style="font-weight: bold;">Points</td>
             <td>{{ UserData.points_balance }}</td>
         </tr>
@@ -57,7 +53,7 @@
         <tr>
             <td style="font-weight: bold;">Twitter</td>
             <td>
-                {% if UserData.twitter_user_id %}
+                {% if UserData.twitter_name %}
                     <a href="https://twitter.com/{{ UserData.twitter_name }}" target="_blank">{{ UserData.twitter_name }}</a>
                 {% else %}
                     -
@@ -71,6 +67,14 @@
             <td>
                 {{ UserData.partner.name }}
             </td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Registered</td>
+            <td>{{ UserData.created_at }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Last access</td>
+            <td>{{ UserData.last_access_date }}</td>
         </tr>
         </tbody>
     </table>
