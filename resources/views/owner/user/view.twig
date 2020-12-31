@@ -6,59 +6,70 @@
     <div class="col-md-8">
 
     <table class="table">
-        <thead>
-        <tr>
-            <th class="text-right">Field</th>
-            <th class="text-left">Value</th>
-        </tr>
-        </thead>
         <tbody>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
-                Id
+            <td style="font-weight: bold;">
+                #
             </td>
-            <td class="text-left">
+            <td>
                 {{ UserData.id }}
             </td>
         </tr>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
-                Display name
-            </td>
-            <td class="text-left">
+            <td style="font-weight: bold;">Display name</td>
+            <td>
                 {{ UserData.display_name }}
+                {% if UserData.isOwner() %}
+                    <span class="label label-primary">Staff</span>
+                {% elseif UserData.partner.isReviewSite() %}
+                    <span class="label label-success">Reviewer</span>
+                {% elseif UserData.partner.isGamesCompany() %}
+                    <span class="label label-info">Games company</span>
+                {% endif %}
             </td>
         </tr>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
+            <td style="font-weight: bold;">
                 Email
             </td>
-            <td class="text-left">
+            <td>
                 {{ UserData.email }}
             </td>
         </tr>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
-                Site id
-            </td>
-            <td class="text-left">
-                {{ UserData.site_id }}
+            <td style="font-weight: bold;">Registered</td>
+            <td>{{ UserData.created_at }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Points</td>
+            <td>{{ UserData.points_balance }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Login method</td>
+            <td>
+                {% if UserData.twitter_user_id %}
+                    Twitter
+                {% else %}
+                    Email
+                {% endif %}
             </td>
         </tr>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
-                Points
-            </td>
-            <td class="text-left">
-                {{ UserData.points_balance }}
+            <td style="font-weight: bold;">Twitter</td>
+            <td>
+                {% if UserData.twitter_user_id %}
+                    <a href="https://twitter.com/{{ UserData.twitter_name }}" target="_blank">{{ UserData.twitter_name }}</a>
+                {% else %}
+                    -
+                {% endif %}
             </td>
         </tr>
         <tr>
-            <td class="text-right" style="font-weight: bold;">
-                Registered
+            <td style="font-weight: bold;">
+                Partner access
             </td>
-            <td class="text-left">
-                {{ UserData.created_at }}
+            <td>
+                {{ UserData.partner.name }}
             </td>
         </tr>
         </tbody>

@@ -21,7 +21,7 @@
                 <th>Display name</th>
                 <th class="text-center">Twitter</th>
                 <th class="text-center">Points</th>
-                <th class="text-left">Partner name</th>
+                <th class="text-left">Partner access</th>
                 <th class="text-center">Joined</th>
                 <th class="text-center">Last access</th>
                 <th class="text-center">Options</th>
@@ -35,6 +35,13 @@
                     </td>
                     <td>
                         <a href="{{ route('owner.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
+                        {% if item.isOwner() %}
+                            <span class="label label-primary">Staff</span>
+                        {% elseif item.partner.isReviewSite() %}
+                            <span class="label label-success">Reviewer</span>
+                        {% elseif item.partner.isGamesCompany() %}
+                            <span class="label label-info">Games company</span>
+                        {% endif %}
                         <br>
                         <small>{{ item.email }}</small>
                     </td>
@@ -48,15 +55,7 @@
                     </td>
                     <td class="text-left">
                         {% if item.partner.name is not null %}
-                            <small>
-                                {% if item.partner.isReviewSite() == true %}
-                                    <strong>Review site</strong>
-                                    <br>{{ item.partner.name }}
-                                {% elseif item.partner.isGamesCompany() == true %}
-                                    <strong>Games company</strong>
-                                    <br>{{ item.partner.name }}
-                                {% endif %}
-                            </small>
+                            {{ item.partner.name }}
                         {% endif %}
                     </td>
                     {#
