@@ -21,14 +21,20 @@ class GameCategorySuggestionController extends Controller
 
     public function show()
     {
-        $bindings = $this->getBindingsCategorisationSubpage('Game category suggestions');
-
         $request = request();
         $filterStatus = $request->filterStatus;
 
         if (!isset($filterStatus)) {
             $filterStatus = DbEditGame::STATUS_PENDING;
         }
+
+        if ($filterStatus == DbEditGame::STATUS_PENDING) {
+            $tableSort = "[0, 'asc']";
+        } else {
+            $tableSort = "[0, 'desc']";
+        }
+
+        $bindings = $this->getBindingsCategorisationSubpage('Game category suggestions', $tableSort);
 
         $bindings['FilterStatus'] = $filterStatus;
         $dbEditList = $this->getServiceDbEditGame()->getCategoryEditsByStatus($filterStatus);
