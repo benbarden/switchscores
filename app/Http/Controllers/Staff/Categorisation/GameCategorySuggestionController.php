@@ -11,6 +11,8 @@ use App\Traits\StaffView;
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 
+use App\DbEditGame;
+
 class GameCategorySuggestionController extends Controller
 {
     use SwitchServices;
@@ -25,12 +27,11 @@ class GameCategorySuggestionController extends Controller
         $filterStatus = $request->filterStatus;
 
         if (!isset($filterStatus)) {
-            $bindings['FilterStatus'] = '';
-            $dbEditList = $this->getServiceDbEditGame()->getAllCategoryEdits();
-        } else {
-            $bindings['FilterStatus'] = $filterStatus;
-            $dbEditList = $this->getServiceDbEditGame()->getCategoryEditsByStatus($filterStatus);
+            $filterStatus = DbEditGame::STATUS_PENDING;
         }
+
+        $bindings['FilterStatus'] = $filterStatus;
+        $dbEditList = $this->getServiceDbEditGame()->getCategoryEditsByStatus($filterStatus);
 
         $bindings['DbEditList'] = $dbEditList;
         $bindings['StatusList'] = $this->getServiceDbEditGame()->getStatusList();

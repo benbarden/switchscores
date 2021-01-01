@@ -7,7 +7,6 @@
         <div class="pull-right">
             <label for="admin-nav-status-filter">Filter by status:</label>
             <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
-                <option value="">All</option>
                 {% for item in StatusList %}
                     <option value="{{ item.id }}">{{ item.title }}</option>
                 {% endfor %}
