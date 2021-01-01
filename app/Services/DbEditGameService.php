@@ -3,9 +3,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
 use App\DbEditGame;
-
 
 class DbEditGameService
 {
@@ -70,5 +68,13 @@ class DbEditGameService
     {
         $status = DbEditGame::STATUS_DENIED;
         return $this->getCategoryEditsByStatus($status);
+    }
+
+    public function countApprovedCategoryEditsByUser($userId)
+    {
+        return DbEditGame::where('data_to_update', DbEditGame::DATA_CATEGORY)
+            ->where('status', DbEditGame::STATUS_APPROVED)
+            ->where('user_id', $userId)
+            ->count();
     }
 }

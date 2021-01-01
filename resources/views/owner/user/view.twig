@@ -3,94 +3,114 @@
 {% block page_inner %}
 
 <div class="row">
+
     <div class="col-md-8">
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <td style="font-weight: bold;">
-                #
-            </td>
-            <td>
-                {{ UserData.id }}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Display name</td>
-            <td>
-                {{ UserData.display_name }}
-                {% if UserData.isOwner() %}
-                    <span class="label label-primary">Staff</span>
-                {% elseif UserData.partner.isReviewSite() %}
-                    <span class="label label-success">Reviewer</span>
-                {% elseif UserData.partner.isGamesCompany() %}
-                    <span class="label label-info">Games company</span>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">
-                Email
-            </td>
-            <td>
-                {{ UserData.email }}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Points</td>
-            <td>{{ UserData.points_balance }}</td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Login method</td>
-            <td>
-                {% if UserData.twitter_user_id %}
-                    Twitter
-                {% else %}
+        <h2>Main details</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td style="font-weight: bold;">
+                    #
+                </td>
+                <td>
+                    {{ UserData.id }}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Display name</td>
+                <td>
+                    {{ UserData.display_name }}
+                    {% if UserData.isOwner() %}
+                        <span class="label label-primary">Staff</span>
+                    {% elseif UserData.partner.isReviewSite() %}
+                        <span class="label label-success">Reviewer</span>
+                    {% elseif UserData.partner.isGamesCompany() %}
+                        <span class="label label-info">Games company</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">
                     Email
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Twitter</td>
-            <td>
-                {% if UserData.twitter_name %}
-                    <a href="https://twitter.com/{{ UserData.twitter_name }}" target="_blank">{{ UserData.twitter_name }}</a>
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">
-                Partner access
-            </td>
-            <td>
-                {{ UserData.partner.name }}
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Registered</td>
-            <td>{{ UserData.created_at }}</td>
-        </tr>
-        <tr>
-            <td style="font-weight: bold;">Last access</td>
-            <td>{{ UserData.last_access_date }}</td>
-        </tr>
-        </tbody>
-    </table>
+                </td>
+                <td>
+                    {{ UserData.email }}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Points</td>
+                <td>{{ UserData.points_balance }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Login method</td>
+                <td>
+                    {% if UserData.twitter_user_id %}
+                        Twitter
+                    {% else %}
+                        Email
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Twitter</td>
+                <td>
+                    {% if UserData.twitter_name %}
+                        <a href="https://twitter.com/{{ UserData.twitter_name }}" target="_blank">{{ UserData.twitter_name }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">
+                    Partner access
+                </td>
+                <td>
+                    {{ UserData.partner.name }}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Registered</td>
+                <td>{{ UserData.created_at }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Last access</td>
+                <td>{{ UserData.last_access_date }}</td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
+
     <div class="col-md-4">
-        <h3>Collection stats</h3>
-        {% include 'modules/user/collection/stats.twig' with {'CollectionStats': CollectionStats} %}
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-12">
-        <h3>Games collection</h3>
-        {% include 'modules/user/collection/table.twig' with {'CollectionList': CollectionList, 'AsRole': 'admin'} %}
+        <h2>Approved contributions</h2>
+
+        <table class="table">
+            <tr>
+                <td>Quick reviews</td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsQuickReviews }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Game category suggestions</td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsGameCategorySuggestions }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Games collection</td>
+                <td class="text-right">
+                    <span class="h4">{{ StatsCollection }}</span>
+                </td>
+            </tr>
+        </table>
+
     </div>
+
 </div>
 
 {% endblock page_inner %}
