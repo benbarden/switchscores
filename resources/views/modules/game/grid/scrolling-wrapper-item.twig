@@ -1,0 +1,11 @@
+{% if GameList|length %}
+    {% for item in GameList %}
+        <div class="row sw-item">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                {% include 'modules/game/item/standard-with-date.twig' with {'item': item, 'ShowOnSale': ShowOnSale} %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No games found!</p>
+{% endif %}

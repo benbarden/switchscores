@@ -17,7 +17,12 @@ class GamesController extends Controller
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(20);
-        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming(20);
+        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming(30);
+
+        $bindings['RecentWithGoodRanks'] = $this->getServiceGameReleaseDate()->getRecentWithGoodRanks(7, 35, 15);
+        $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
+        $bindings['HighlightsStillUnranked'] = $this->getServiceReviewLink()->getHighlightsStillUnranked();
+        $bindings['TopRatedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 

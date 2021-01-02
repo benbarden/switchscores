@@ -1,0 +1,18 @@
+{% if GameList|length %}
+    {% for item in GameList %}
+        <div class="row" style="margin-top: 8px;">
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <span class="h6">
+                    {% include 'modules/game/release-date-no-year.twig' with {'item': item} %}
+                </span>
+            </div>
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <span class="h6">
+                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+                </span>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No games found!</p>
+{% endif %}

@@ -4,56 +4,60 @@
 
 {% block page_body %}
 
-{% include 'modules/game/search/form.twig' %}
-
 <div class="row">
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
 
-        <h2>Browse all Nintendo Switch games</h2>
-        <ul>
-            <li><a href="{{ route('games.browse.byTitle.landing') }}">Browse by title (A-Z)</a></li>
-            <li><a href="{{ route('games.browse.byDate.landing') }}">Browse by date (calendar)</a></li>
-            <li><a href="{{ route('games.browse.byCategory.landing') }}">Browse by category</a> - <em>work in progress</em></li>
-            <li><a href="{{ route('games.browse.byTag.landing') }}">Browse by tag</a> - <em>work in progress</em></li>
-            <li><a href="{{ route('games.browse.bySeries.landing') }}">Browse by series</a> - <em>work in progress</em></li>
-        </ul>
+        {% include 'modules/game/search/form.twig' %}
 
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
-        <h2>Additional links</h2>
-        <ul>
-            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-            <li><a href="{{ route('games.recentReleases') }}">Recent releases</a></li>
-            <li><a href="{{ route('games.upcomingReleases') }}">Upcoming releases</a></li>
-        </ul>
-
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <h2>
-            Newest
-            <span class="h4">
+            Latest releases
+            <span class="h5">
                 (<a href="{{ route('games.recentReleases') }}">view more</a>)
                 (<a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">all this month</a>)
             </span>
         </h2>
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': NewReleases} %}
+        <div class="scrolling-wrapper">
+            {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': NewReleases} %}
+        </div>
+
+        <h2>Recent Top Rated</h2>
+        <div class="scrolling-wrapper">
+            {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': RecentWithGoodRanks} %}
+        </div>
+
+        <h2>Recently reviewed, still unranked</h2>
+        <div class="scrolling-wrapper">
+            {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': HighlightsStillUnranked} %}
+        </div>
+
+        <h2>Top Rated discounts</h2>
+        <div class="scrolling-wrapper">
+            {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': TopRatedDiscounts, 'ShowOnSale': 'Y'} %}
+        </div>
+
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="border-left: 1px solid #c9c9c9;">
+
+        <h2>Browse Switch games</h2>
+        <ul>
+            <li><a href="{{ route('games.browse.byTitle.landing') }}">By title (A-Z)</a></li>
+            <li><a href="{{ route('games.browse.byDate.landing') }}">By date (calendar)</a></li>
+            <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
+            <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
+            <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
+            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+        </ul>
+
         <h2>
             Upcoming
-            <span class="h4">(<a href="{{ route('games.upcomingReleases') }}">all upcoming</a>)</span>
+            <span class="h5">(<a href="{{ route('games.upcomingReleases') }}">view all</a>)</span>
         </h2>
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UpcomingReleases} %}
+        {% include 'modules/game/list/upcoming.twig' with {'GameList': UpcomingReleases} %}
+
     </div>
+
 </div>
 
 {% endblock page_body %}

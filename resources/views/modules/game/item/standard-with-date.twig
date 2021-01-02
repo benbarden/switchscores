@@ -22,6 +22,14 @@
                 {{ item.ExtraDetailLine }}
             </span>
         {% endif %}
+        {% if ShowOnSale == 'Y' %}
+            <br>
+            <span class="h5">
+                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
+                <span class="h4" style="font-weight: bold;">&pound;{{ item.price_discounted }}</span>
+                <span style="color: #f00;">{{ item.price_discount_pc }}% off</span>
+            </span>
+        {% endif %}
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
         <div class="pull-right">

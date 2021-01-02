@@ -142,3 +142,17 @@ blockquote {
     font-size: 13px;
     padding: 5px;
 }
+
+/* Scrolling wrappers */
+.scrolling-wrapper {
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.scrolling-wrapper .sw-item {
+    flex: 0 0 auto;
+    padding-right: 20px;
+    width: 350px;
+}
