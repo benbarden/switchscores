@@ -22,6 +22,10 @@
     You'll also be able to see the top rated games for each month, down the right side of the page.
 </p>
 
+{% if DateList2021|length %}
+    {% include 'games/browse/byDateLandingYearItem.twig' with {'Year': '2021', 'DateList': DateList2021} %}
+{% endif %}
+
 {% if DateList2020|length %}
     {% include 'games/browse/byDateLandingYearItem.twig' with {'Year': '2020', 'DateList': DateList2020} %}
 {% endif %}
