@@ -10,6 +10,9 @@
         formVals['link_title'] = "{{ ReviewSiteData.link_title }}";
         formVals['website_url'] = "{{ ReviewSiteData.website_url }}";
         formVals['twitter_id'] = "{{ ReviewSiteData.twitter_id }}";
+        formVals['contact_name'] = "{{ ReviewSiteData.contact_name }}";
+        formVals['contact_email'] = "{{ ReviewSiteData.contact_email }}";
+        formVals['contact_form_link'] = "{{ ReviewSiteData.contact_form_link }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
         formVals['feed_url'] = "{{ ReviewSiteData.feed_url|e('js') }}";
         formVals['feed_url_prefix'] = "{{ ReviewSiteData.feed_url_prefix }}";
@@ -26,6 +29,9 @@
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['website_url'] = "{{ old('website_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
+        formVals['contact_name'] = "{{ old('contact_name') }}";
+        formVals['contact_email'] = "{{ old('contact_email') }}";
+        formVals['contact_form_link'] = "{{ old('contact_form_link') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
         formVals['feed_url'] = "{{ old('feed_url')|e('js') }}";
         formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
@@ -45,6 +51,9 @@
     $('#link_title').val(formVals['link_title']);
     $('#website_url').val(formVals['website_url']);
     $('#twitter_id').val(formVals['twitter_id']);
+    $('#contact_name').val(formVals['contact_name']);
+    $('#contact_email').val(formVals['contact_email']);
+    $('#contact_form_link').val(formVals['contact_form_link']);
     $('#rating_scale').val(formVals['rating_scale']);
     $('#feed_url').val(formVals['feed_url']);
     $('#feed_url_prefix').val(formVals['feed_url_prefix']);

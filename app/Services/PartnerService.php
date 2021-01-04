@@ -12,7 +12,8 @@ class PartnerService
     public function createReviewSite(
         $status, $name, $linkTitle, $websiteUrl, $twitterId,
         $feedUrl, $feedUrlPrefix, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        $contactName, $contactEmail, $contactFormLink
     )
     {
         $typeId = Partner::TYPE_REVIEW_SITE;
@@ -30,13 +31,17 @@ class PartnerService
             'allow_historic_content' => $allowHistoricContent,
             'title_match_rule_pattern' => $titleMatchRulePattern,
             'title_match_index' => $titleMatchIndex,
+            'contact_name' => $contactName,
+            'contact_email' => $contactEmail,
+            'contact_form_link' => $contactFormLink,
         ]);
     }
 
     public function editReviewSite(
         Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId,
         $feedUrl, $feedUrlPrefix, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex
+        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        $contactName, $contactEmail, $contactFormLink
     )
     {
         $values = [
@@ -51,6 +56,9 @@ class PartnerService
             'allow_historic_content' => $allowHistoricContent,
             'title_match_rule_pattern' => $titleMatchRulePattern,
             'title_match_index' => $titleMatchIndex,
+            'contact_name' => $contactName,
+            'contact_email' => $contactEmail,
+            'contact_form_link' => $contactFormLink,
         ];
 
         $partnerData->fill($values);
