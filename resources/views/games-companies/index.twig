@@ -1,0 +1,72 @@
+{% extends 'theme/wos/games-companies/clean-wide.twig' %}
+{% set hideHeader = 'Y' %}
+
+{% block page_inner %}
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h1>{{ PageTitle }}</h1>
+            <p>
+                Welcome, {{ auth_user().display_name }} - thanks for checking out the
+                Games company dashboard. This is currently a work in progress - more
+                tools will be added shortly.
+            </p>
+            <p>
+                Please send questions or feedback to Ben via
+                <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                <a href="mailto:ben@switchscores.com">email</a>.
+            </p>
+
+            {% if ReviewSitesWithContactDetails %}
+
+                <h2>Reviewer contact details</h2>
+
+                <p>
+                    The following sites have agreed to be contacted by publishers and
+                    developers of Switch games. You can get in touch with each site using the
+                    contact details shown below.
+                </p>
+                <p>
+                    <strong>Please keep this information strictly confidential</strong>. It is made
+                    available to you as a games company registered at Switch Scores. It should
+                    not be shared with anyone else. Do not add email addresses to any mailing lists
+                    without the explicit consent of the owner.
+                </p>
+
+                <table class="table table-responsive">
+                    <thead>
+                        <th>Site name</th>
+                        <th>Contact name</th>
+                        <th>Email or contact form</th>
+                    </thead>
+                    <tbody>
+                        {% for item in ReviewSitesWithContactDetails %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.contact_name }}</td>
+                                <td>
+                                    {% if item.contact_email %}
+                                        <a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a>
+                                    {% elseif item.contact_form_link %}
+                                        <a href="{{ item.contact_form_link }}" target="_blank">Contact form</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+        </div>
+
+    </div>
+
+{% endblock page_inner %}

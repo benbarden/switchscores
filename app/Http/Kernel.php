@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'auth.staff' => \App\Http\Middleware\AuthenticateStaff::class,
         'auth.reviewer' => \App\Http\Middleware\AuthenticateReviewer::class,
         'auth.developer' => \App\Http\Middleware\AuthenticateDeveloper::class,
+        'auth.gamescompany' => \App\Http\Middleware\AuthenticateGamesCompany::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

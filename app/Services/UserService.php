@@ -31,13 +31,16 @@ class UserService
      * @param $twitterUserId
      * @param $isStaff
      * @param $isDeveloper
+     * @param $isGamesCompany
      */
     public function edit(
-        User $userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper
+        User $userData, $displayName, $email, $partnerId, $twitterUserId,
+        $isStaff, $isDeveloper, $isGamesCompany
     )
     {
         $dbIsStaff     = $isStaff     == 'on' ? 1 : 0;
         $dbIsDeveloper = $isDeveloper == 'on' ? 1 : 0;
+        $dbIsGamesCompany = $isGamesCompany == 'on' ? 1 : 0;
 
         $values = [
             'display_name' => $displayName,
@@ -46,6 +49,7 @@ class UserService
             'twitter_user_id' => $twitterUserId,
             'is_staff' => $dbIsStaff,
             'is_developer' => $dbIsDeveloper,
+            'is_games_company' => $dbIsGamesCompany,
         ];
 
         $userData->fill($values);

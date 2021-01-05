@@ -90,6 +90,9 @@
                             {% if auth_user().isDeveloper() %}
                                 <li><a href="{{ route('developer-hub.index') }}">Developer hub</a></li>
                             {% endif %}
+                            {% if auth_user().isGamesCompany() %}
+                                <li><a href="{{ route('games-companies.index') }}">Games company dashboard</a></li>
+                            {% endif %}
                             {% if auth_user().isStaff() %}
                                 <li><a href="{{ route('staff.index') }}">Staff index</a></li>
                             {% endif %}

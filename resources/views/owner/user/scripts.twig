@@ -12,6 +12,7 @@
         formVals['partner_id'] = "{{ UserData.partner_id }}";
         formVals['is_staff'] = "{{ UserData.is_staff }}";
         formVals['is_developer'] = "{{ UserData.is_developer }}";
+        formVals['is_games_company'] = "{{ UserData.is_games_company }}";
 
     } else {
 
@@ -23,6 +24,7 @@
         formVals['partner_id'] = "{{ old('partner_id') }}";
         formVals['is_staff'] = "{{ old('is_staff') }}";
         formVals['is_developer'] = "{{ old('is_developer') }}";
+        formVals['is_games_company'] = "{{ old('is_games_company') }}";
 
     }
 
@@ -39,6 +41,11 @@
         $('#is_developer').attr('checked', true);
     } else {
         $('#is_developer').attr('checked', false);
+    }
+    if (formVals['is_games_company'] == '1') {
+        $('#is_games_company').attr('checked', true);
+    } else {
+        $('#is_games_company').attr('checked', false);
     }
 
     // Roles

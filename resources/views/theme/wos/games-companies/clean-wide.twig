@@ -1,0 +1,31 @@
+{% extends 'theme/wos/games-companies/base.twig' %}
+
+{% block page_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            {% if crumbNav is defined %}
+            <ol class="breadcrumb">
+                <li><a href="{{ route('games-companies.index') }}">Dashboard</a></li>
+                {% for item in crumbNav %}
+                    {% if loop.last %}
+                        {% set crumbClass = ' class="active"' %}
+                    {% else %}
+                        {% set crumbClass = '' %}
+                    {% endif %}
+                    {% if item.url %}
+                        <li{{ crumbClass|raw }}><a href="{{ item.url }}">{{ item.text }}</a></li>
+                    {% else %}
+                        <li{{ crumbClass|raw }}>{{ item.text }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+            {% endif %}
+            {% if hideHeader is not defined %}
+            <h1>{{ PageTitle }}</h1>
+            {% endif %}
+        </div>
+    </div>
+    {% block page_inner %}{% endblock page_inner %}
+</div>
+{% endblock page_body %}

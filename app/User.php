@@ -17,7 +17,7 @@ class User extends Authenticatable
         'is_admin', 'is_owner', 'is_staff', 'is_developer', 'user_roles',
         'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'points_balance',
-        'signup_alpha', 'signup_beta', 'last_access_date'
+        'signup_alpha', 'signup_beta', 'last_access_date', 'is_games_company'
     ];
 
     /**
@@ -35,6 +35,7 @@ class User extends Authenticatable
         'is_owner' => 'boolean',
         'is_staff' => 'boolean',
         'is_developer' => 'boolean',
+        'is_games_company' => 'boolean',
         'user_roles' => 'array',
     ];
 
@@ -83,6 +84,14 @@ class User extends Authenticatable
         }
 
         return $isReviewer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGamesCompany()
+    {
+        return $this->is_games_company == 1;
     }
 
     public function partner()

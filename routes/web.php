@@ -165,6 +165,15 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
 });
 
 
+// *************** Games companies *************** //
+Route::group(['middleware' => ['auth.gamescompany']], function() {
+
+    // *************** Reviewers: Dashboard *************** //
+    Route::get('/games-companies', 'GamesCompanies\IndexController@show')->name('games-companies.index');
+
+});
+
+
 // *************** Developers *************** //
 Route::group(['middleware' => ['auth.developer']], function() {
 

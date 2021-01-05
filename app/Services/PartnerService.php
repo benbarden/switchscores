@@ -202,6 +202,17 @@ class PartnerService
         return $reviewSites;
     }
 
+    public function getActiveReviewSitesWithContactDetails()
+    {
+        $reviewSites = Partner::
+            where('type_id', Partner::TYPE_REVIEW_SITE)
+            ->where('status', Partner::STATUS_ACTIVE)
+            ->whereNotNull('contact_email')->orWhereNotNull('contact_form_link')
+            ->orderBy('name', 'asc')
+            ->get();
+        return $reviewSites;
+    }
+
     public function getReviewSitesWithRecentReviews($days = 30)
     {
         return Partner::
