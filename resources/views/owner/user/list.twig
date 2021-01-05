@@ -38,7 +38,7 @@
                             <span class="label label-primary">Staff</span>
                         {% elseif item.partner.isReviewSite() %}
                             <span class="label label-success">Reviewer</span>
-                        {% elseif item.partner.isGamesCompany() %}
+                        {% elseif item.isGamesCompany() %}
                             <span class="label label-info">Games company</span>
                         {% endif %}
                         <br>
