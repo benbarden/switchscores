@@ -6,6 +6,9 @@
 
     <div class="col-sm-12 col-md-12">
 
+        <p>
+            <a href="{{ route('user.collection.add') }}" class="btn btn-primary btn-md">Add a game</a>
+        </p>
         {% include 'modules/user/collection/table.twig' with {
             'CollectionList': CollectionList, 'AsRole': 'user'}
         %}
