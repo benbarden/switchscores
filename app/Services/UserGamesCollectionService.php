@@ -67,6 +67,16 @@ class UserGamesCollectionService
         return $items;
     }
 
+    public function isGameInCollection($userId, $gameId)
+    {
+        $item = UserGamesCollection::where('user_id', $userId)->where('game_id', $gameId)->first();
+        if ($item) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getNowPlayingByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_NOW_PLAYING;

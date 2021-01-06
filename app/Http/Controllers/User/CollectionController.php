@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
 use App\Services\GamesCollection\PlayStatus;
@@ -145,7 +146,22 @@ class CollectionController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, $this->validationRulesAdd);
+            $gameId = $request->game_id;
+
+            $validator = Validator::make($request->all(), $this->validationRulesAdd);
+
+            $validator->after(function ($validator) use ($userId, $gameId) {
+                // Check for duplicates
+                if ($this->getServiceUserGamesCollection()->isGameInCollection($userId, $gameId)) {
+                    $validator->errors()->add('title', 'This game is already in your collection.');
+                }
+            });
+
+            if ($validator->fails()) {
+                return redirect(route('user.collection.add'))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
 
             $serviceCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
