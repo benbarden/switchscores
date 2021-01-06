@@ -158,6 +158,8 @@ class Importer
 
             if (array_key_exists('score', $feedItem)) {
                 $reviewFeedItem->item_rating = $feedItem['score'];
+            } elseif (array_key_exists('note', $feedItem)) {
+                $reviewFeedItem->item_rating = $feedItem['note'];
             }
 
         }
