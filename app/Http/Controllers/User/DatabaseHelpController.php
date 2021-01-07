@@ -124,7 +124,8 @@ class DatabaseHelpController extends Controller
             $dbEditGame = $dbEditBuilder->getDbEditGame();
             $dbEditGame->save();
 
-            return redirect(route('user.database-help.games-without-categories'));
+            $itemYear = $game->release_year;
+            return redirect(route('user.database-help.games-without-categories.byYear', ['year' => $itemYear]));
 
         }
 
