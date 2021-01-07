@@ -29,6 +29,10 @@
                     contact details shown below.
                 </p>
                 <p>
+                    The "Regions" column shows which regions can be used by each review site
+                    if you wish to send them a review code.
+                </p>
+                <p>
                     <strong>Please keep this information strictly confidential</strong>. It is made
                     available to you as a games company registered at Switch Scores. It should
                     not be shared with anyone else. Do not add email addresses to any mailing lists
@@ -38,6 +42,7 @@
                 <table class="table table-responsive">
                     <thead>
                         <th>Site name</th>
+                        <th>Regions</th>
                         <th>Contact name</th>
                         <th>Email or contact form</th>
                     </thead>
@@ -45,6 +50,7 @@
                         {% for item in ReviewSitesWithContactDetails %}
                             <tr>
                                 <td>{{ item.name }}</td>
+                                <td>{{ item.review_code_regions }}</td>
                                 <td>{{ item.contact_name }}</td>
                                 <td>
                                     {% if item.contact_email %}

@@ -13,7 +13,7 @@ class PartnerService
         $status, $name, $linkTitle, $websiteUrl, $twitterId,
         $feedUrl, $feedUrlPrefix, $ratingScale,
         $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
-        $contactName, $contactEmail, $contactFormLink
+        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
     )
     {
         $typeId = Partner::TYPE_REVIEW_SITE;
@@ -34,6 +34,7 @@ class PartnerService
             'contact_name' => $contactName,
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
+            'review_code_regions' => $reviewCodeRegions,
         ]);
     }
 
@@ -41,7 +42,7 @@ class PartnerService
         Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId,
         $feedUrl, $feedUrlPrefix, $ratingScale,
         $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
-        $contactName, $contactEmail, $contactFormLink
+        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
     )
     {
         $values = [
@@ -59,6 +60,7 @@ class PartnerService
             'contact_name' => $contactName,
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
+            'review_code_regions' => $reviewCodeRegions,
         ];
 
         $partnerData->fill($values);

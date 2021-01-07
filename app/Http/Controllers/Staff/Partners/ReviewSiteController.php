@@ -65,7 +65,8 @@ class ReviewSiteController extends Controller
                 $ratingScale, $allowHistoricContent,
                 $request->title_match_rule_pattern,
                 $request->title_match_index,
-                $request->contact_name, $request->contact_email, $request->contact_form_link
+                $request->contact_name, $request->contact_email, $request->contact_form_link,
+                $request->review_code_regions
             );
 
             return redirect(route('staff.reviews.site.list'));
@@ -108,7 +109,8 @@ class ReviewSiteController extends Controller
                 $ratingScale, $allowHistoricContent,
                 $request->title_match_rule_pattern,
                 $request->title_match_index,
-                $request->contact_name, $request->contact_email, $request->contact_form_link
+                $request->contact_name, $request->contact_email, $request->contact_form_link,
+                $request->review_code_regions
             );
 
             return redirect(route('staff.reviews.site.list'));
