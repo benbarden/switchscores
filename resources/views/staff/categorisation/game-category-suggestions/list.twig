@@ -3,7 +3,12 @@
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12">
+    <div class="col-xs-12 col-sm-6 col-md-6">
+        {% if DbEditList.count > 0 %}
+            <a href="javascript:void(0);" id="btn-approve-all" class="btn btn-primary">Approve all</a>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
         <div class="pull-right">
             <label for="admin-nav-status-filter">Filter by status:</label>
             <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
@@ -95,6 +100,29 @@
                 { "orderable": false },
                 { "orderable": false }
             ]
+        });
+    });
+    $('#btn-approve-all').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        if (!window.confirm('Are you sure you want to approve all pending changes?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('{{ route('staff.categorisation.game-category-suggestions.approve-all') }}', {}, function(data) {
+            $('#js-admin-notify').text('Successfully approved all suggestions.');
+            $('#js-admin-notify').show();
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
         });
     });
     $('.lnk-approve-item').on('click', function() {

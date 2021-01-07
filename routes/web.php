@@ -304,6 +304,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Member suggestions
     Route::get('/staff/categorisation/game-category-suggestions', 'Staff\Categorisation\GameCategorySuggestionController@show')->name('staff.categorisation.game-category-suggestions.index');
     Route::get('/staff/categorisation/game-category-suggestions/approve', 'Staff\Categorisation\GameCategorySuggestionController@approve')->name('staff.categorisation.game-category-suggestions.approve');
+    Route::get('/staff/categorisation/game-category-suggestions/approve-all', 'Staff\Categorisation\GameCategorySuggestionController@approveAll')->name('staff.categorisation.game-category-suggestions.approve-all');
     Route::get('/staff/categorisation/game-category-suggestions/deny', 'Staff\Categorisation\GameCategorySuggestionController@deny')->name('staff.categorisation.game-category-suggestions.deny');
 
     // Categories

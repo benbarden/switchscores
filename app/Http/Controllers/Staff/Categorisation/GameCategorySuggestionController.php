@@ -12,6 +12,8 @@ use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 
 use App\DbEditGame;
+use App\Game;
+use App\User;
 
 class GameCategorySuggestionController extends Controller
 {
@@ -47,9 +49,6 @@ class GameCategorySuggestionController extends Controller
 
     public function approve()
     {
-        $serviceUser = $this->getServiceUser();
-        $serviceDbEdit = $this->getServiceDbEditGame();
-
         $request = request();
 
         $itemId = $request->itemId;
@@ -57,13 +56,13 @@ class GameCategorySuggestionController extends Controller
             return response()->json(['error' => 'Missing data: itemId'], 400);
         }
 
-        $dbEditGame = $serviceDbEdit->find($itemId);
+        $dbEditGame = $this->getServiceDbEditGame()->find($itemId);
         if (!$dbEditGame) {
             return response()->json(['error' => 'Record not found: '.$itemId], 400);
         }
 
         $userId = $dbEditGame->user_id;
-        $user = $serviceUser->find($userId);
+        $user = $this->getServiceUser()->find($userId);
         if (!$user) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
@@ -77,6 +76,17 @@ class GameCategorySuggestionController extends Controller
             return response()->json(['error' => 'Game not found for this record'], 400);
         }
 
+        // Approve the item
+        $this->approveItem($dbEditGame, $game, $user);
+
+        $data = array(
+            'status' => 'OK'
+        );
+        return response()->json($data, 200);
+    }
+
+    public function approveItem(DbEditGame $dbEditGame, Game $game, User $user)
+    {
         // Make the change
         $game->category_id = $dbEditGame->new_data;
         $game->save();
@@ -84,7 +94,7 @@ class GameCategorySuggestionController extends Controller
         $gameId = $dbEditGame->game_id;
 
         // Credit points
-        $user = $this->getServiceUser()->find($userId);
+        $userId = $user->id;
         UserFactory::addPointsForGameCategorySuggestion($user);
 
         // Store the transaction
@@ -94,6 +104,25 @@ class GameCategorySuggestionController extends Controller
         $dbEditGame->setApproved();
         $dbEditGame->point_transaction_id = $userPointTransaction->id;
         $dbEditGame->save();
+    }
+
+    public function approveAll()
+    {
+        $dbEditList = $this->getServiceDbEditGame()->getPendingCategoryEdits();
+        if (!$dbEditList) {
+            return response()->json(['error' => 'No category edits to approve'], 400);
+        }
+
+        foreach ($dbEditList as $dbEditGame) {
+
+            $userId = $dbEditGame->user_id;
+            $user = $this->getServiceUser()->find($userId);
+            $game = $this->getServiceGame()->find($dbEditGame->game_id);
+            if ($user && $game) {
+                $this->approveItem($dbEditGame, $game, $user);
+            }
+
+        }
 
         $data = array(
             'status' => 'OK'
