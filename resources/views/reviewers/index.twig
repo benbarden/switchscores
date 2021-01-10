@@ -85,7 +85,12 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
 
             <h2>Feed status</h2>
-            {% if PartnerData.feed_url == '' %}
+            {% if IsYoutubeChannel %}
+                <div class="alert alert-info">
+                    <strong>As you're submitting Youtube videos, you don't need to worry about this section</strong>.
+                    Keep those reviews coming. We really appreciate everything you do! &hearts;
+                </div>
+            {% elseif PartnerData.feed_url == '' %}
                 <div class="alert alert-danger">
                     <strong>We don't have a feed for your site</strong>. This means your reviews won't be imported.
                     Get in touch and let's get things up and running.

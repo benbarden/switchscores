@@ -26,6 +26,7 @@ class IndexController extends Controller
         $partnerId = $authUser->partner_id;
 
         $partnerData = $servicePartner->find($partnerId);
+        $partnerUrl = $partnerData->website_url;
 
         // These shouldn't be possible but it saves problems later on
         if (!$partnerData) abort(400);
@@ -58,6 +59,14 @@ class IndexController extends Controller
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
+
+        $youtubeBaseLink = 'https://youtube.com/';
+        if (substr($partnerUrl, 0, strlen('https://youtube.com/')) == $youtubeBaseLink) {
+            $isYoutubeChannel = true;
+        } else {
+            $isYoutubeChannel = false;
+        }
+        $bindings['IsYoutubeChannel'] = $isYoutubeChannel;
 
         return view('reviewers.index', $bindings);
     }
