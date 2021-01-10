@@ -46,6 +46,7 @@ class UserController extends Controller
         $bindings = $this->getBindingsUsersSubpage('View user: '.$displayName);
 
         $bindings['UserData'] = $userData;
+        $bindings['UserId'] = $userId;
 
         $statsQuickReviews = $this->getServiceQuickReview()->getAllByUser($userId);
         $statsCollection = $this->getServiceUserGamesCollection()->getByUser($userId);
@@ -97,7 +98,7 @@ class UserController extends Controller
 
             }
 
-            return redirect(route('owner.user.list'));
+            return redirect(route('owner.user.view', ['userId' => $userId]));
 
         } else {
 
