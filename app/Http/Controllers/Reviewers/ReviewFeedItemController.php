@@ -70,6 +70,7 @@ class ReviewFeedItemController extends Controller
         if (!$siteId) abort(403);
 
         $partnerData = $this->getServicePartner()->find($siteId);
+        $partnerUrl = $partnerData->website_url;
 
         $gameData = $this->getServiceGame()->find($gameId);
         if (!$gameData) abort(400);
@@ -79,6 +80,13 @@ class ReviewFeedItemController extends Controller
         if ($reviewLinkIdList->contains($gameId)) {
             abort(500);
             return redirect(route('reviewers.index'));
+        }
+
+        $youtubeBaseLink = 'https://youtube.com/';
+        if (substr($partnerUrl, 0, strlen('https://youtube.com/')) == $youtubeBaseLink) {
+            $isYoutubeChannel = true;
+        } else {
+            $isYoutubeChannel = false;
         }
 
         $bindings = [];
@@ -95,7 +103,7 @@ class ReviewFeedItemController extends Controller
             }
 
             // Custom rules
-            $validator->after(function ($validator) use ($partnerData, $request) {
+            $validator->after(function ($validator) use ($partnerData, $request, $partnerUrl, $isYoutubeChannel) {
 
                 if (!$request->item_url) {
                     $validator->errors()->add('title', 'Please enter a URL.');
@@ -121,12 +129,26 @@ class ReviewFeedItemController extends Controller
 
                 // Check URL starts with the partner domain name
                 if ($feedItemUrl) {
-                    $partnerUrl = $partnerData->website_url;
+
                     if ($feedItemUrl == $partnerUrl) {
                         $validator->errors()->add('title', 'The URL needs to include a full link to the review, not just your homepage link.');
+                    }
+
+                    // Handle Youtube channels differently
+                    if ($isYoutubeChannel) {
+                        $youtubeMatchLinkFull = 'https://www.youtube.com/watch?v=';
+                        $youtubeMatchLinkShort = 'https://youtu.be/';
+                        if (substr($feedItemUrl, 0, strlen($youtubeMatchLinkFull)) == $youtubeMatchLinkFull) {
+                            // OK
+                        } elseif (substr($feedItemUrl, 0, strlen($youtubeMatchLinkShort)) == $youtubeMatchLinkShort) {
+                            // OK
+                        } else {
+                            $validator->errors()->add('title', 'The URL you\'ve entered doesn\'t appear to be a YouTube link. Please try another.');
+                        }
                     } elseif (substr($feedItemUrl, 0, strlen($partnerUrl)) != $partnerUrl) {
                         $validator->errors()->add('title', 'The URL you\'ve entered doesn\'t appear to be from your site. Please try another.');
                     }
+
                 }
 
                 // Check rating doesn't exceed the scale
@@ -162,6 +184,8 @@ class ReviewFeedItemController extends Controller
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['ReviewSite'] = $partnerData;
+
+        $bindings['IsYoutubeChannel'] = $isYoutubeChannel;
 
         return view('reviewers.reviews.feed-item.add', $bindings);
     }

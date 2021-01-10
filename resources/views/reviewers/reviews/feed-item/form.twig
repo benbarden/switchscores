@@ -21,9 +21,13 @@
             <input id="item_url" type="text" class="form-control" name="item_url">
             <p>
                 <small>
-                    A link to the review on your site.
-                    <br>This must start with: <strong>{{ ReviewSite.website_url }}</strong>
-                    <br>If this looks wrong, let us know.
+                    {% if IsYoutubeChannel %}
+                        A link to the review on your Youtube channel.
+                    {% else %}
+                        A link to the review on your site.
+                        <br>This must start with: <strong>{{ ReviewSite.website_url }}</strong>
+                        <br>If this looks wrong, let us know.
+                    {% endif %}
                 </small>
             </p>
         </div>
