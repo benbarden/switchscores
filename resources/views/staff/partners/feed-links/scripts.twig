@@ -1,0 +1,51 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['feed_status'] = "{{ FeedLinkData.feed_status }}";
+        formVals['site_id'] = "{{ FeedLinkData.site_id }}";
+        formVals['feed_url'] = "{{ FeedLinkData.feed_url|e('js') }}";
+        formVals['feed_url_prefix'] = "{{ FeedLinkData.feed_url_prefix }}";
+        formVals['data_type'] = "{{ FeedLinkData.data_type }}";
+        formVals['item_node'] = "{{ FeedLinkData.item_node }}";
+        formVals['title_match_rule_pattern'] = "{{ FeedLinkData.title_match_rule_pattern|e('js') }}";
+        formVals['title_match_rule_index'] = "{{ FeedLinkData.title_match_rule_index }}";
+        formVals['allow_historic_content'] = "{{ FeedLinkData.allow_historic_content }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['feed_status'] = "{{ old('feed_status') }}";
+        formVals['site_id'] = "{{ old('site_id') }}";
+        formVals['feed_url'] = "{{ old('feed_url')|e('js') }}";
+        formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
+        formVals['data_type'] = "{{ old('data_type') }}";
+        formVals['item_node'] = "{{ old('item_node') }}";
+        formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
+        formVals['title_match_rule_index'] = "{{ old('title_match_rule_index') }}";
+        formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
+
+    }
+
+    $('#feed_status').val(formVals['feed_status']);
+    $('#site_id').val(formVals['site_id']);
+    $('#feed_url').val(formVals['feed_url']);
+    $('#feed_url_prefix').val(formVals['feed_url_prefix']);
+    $('#data_type').val(formVals['data_type']);
+    $('#item_node').val(formVals['item_node']);
+    $('#title_match_rule_pattern').val(formVals['title_match_rule_pattern']);
+    $('#title_match_rule_index').val(formVals['title_match_rule_index']);
+    if (formVals['allow_historic_content'] == '1') {
+        $('#allow_historic_content').attr('checked', true);
+    } else {
+        $('#allow_historic_content').attr('checked', false);
+    }
+
+    $('#feed_status').focus();
+
+</script>

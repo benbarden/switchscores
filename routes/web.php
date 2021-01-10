@@ -360,9 +360,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
 
     // Partners: Review sites
-    Route::get('/staff/partners/review-site', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
-    Route::match(['get', 'post'], '/staff/partners/review-site/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
-    Route::match(['get', 'post'], '/staff/partners/review-site/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
+    Route::get('/staff/partners/review-sites', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
+    Route::match(['get', 'post'], '/staff/partners/review-sites/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
+    Route::match(['get', 'post'], '/staff/partners/review-sites/edit/{siteId}', 'Staff\Partners\ReviewSiteController@edit')->name('staff.reviews.site.edit');
+
+    // Partners: Feed links
+    Route::get('/staff/partners/feed-links', 'Staff\Partners\FeedLinksController@showList')->name('staff.partners.feed-links.list');
+    Route::match(['get', 'post'], '/staff/partners/feed-links/add', 'Staff\Partners\FeedLinksController@add')->name('staff.partners.feed-links.add');
+    Route::match(['get', 'post'], '/staff/partners/feed-links/edit/{linkId}', 'Staff\Partners\FeedLinksController@edit')->name('staff.partners.feed-links.edit');
 
     // Partners: Games companies
     Route::get('/staff/partners/games-company/list', 'Staff\Partners\GamesCompanyController@showList')->name('staff.partners.games-company.list');

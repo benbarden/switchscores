@@ -19,7 +19,7 @@ class ReviewFeedImport extends Model
      * @var array
      */
     protected $fillable = [
-        'import_method', 'site_id', 'user_id'
+        'import_method', 'site_id', 'user_id', 'is_test'
     ];
 
     public function site()

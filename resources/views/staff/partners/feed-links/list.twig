@@ -1,0 +1,55 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<a href="{{ route('staff.partners.feed-links.add') }}" class="btn outline btn-primary">+ Add a feed link</a>
+
+<hr>
+
+{% if FeedLinks.count > 0 %}
+    <table class="table table-responsive table-condensed">
+        <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">Status</th>
+            <th>Site</th>
+            <th>Feed URL</th>
+            <th class="text-center">Data type</th>
+            <th class="text-center">Item node</th>
+            <th class="text-center">Last run successful?</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in FeedLinks %}
+            <tr>
+                <td class="text-center">
+                    {{ item.id }}
+                </td>
+                <td class="text-center">
+                    {{ item.getFeedStatusDesc() }}
+                </td>
+                <td>
+                    <a href="{{ route('reviews.site', {'linkTitle': item.site.link_title}) }}" target="_blank">
+                        {{ item.site.name }}
+                    </a>
+                </td>
+                <td>{{ item.feed_url }}</td>
+                <td class="text-center">{{ item.getDataTypeDesc() }}</td>
+                <td class="text-center">{{ item.getItemNodeDesc() }}</td>
+                <td>
+                    {{ item.was_last_run_successful }}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.partners.feed-links.edit', {'linkId': item.id}) }}">Edit</a> :
+                    Delete
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>There are no feed links yet.</p>
+{% endif %}
+
+{% endblock page_inner %}

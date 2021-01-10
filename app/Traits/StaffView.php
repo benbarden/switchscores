@@ -203,6 +203,12 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    public function getBindingsFeedLinksSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeFeedLinksSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
     public function getBindingsGamesCompaniesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesCompaniesSubPage($pageTitle);

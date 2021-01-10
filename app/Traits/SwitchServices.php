@@ -31,6 +31,7 @@ use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
 use App\Services\NewsCategoryService;
 use App\Services\NewsService;
+use App\Services\PartnerFeedLinkService;
 use App\Services\PartnerService;
 use App\Services\PartnerOutreachService;
 use App\Services\QuickReviewService;
@@ -330,6 +331,14 @@ trait SwitchServices
     public function getServicePartner()
     {
         return $this->loadService('PartnerService');
+    }
+
+    /**
+     * @return PartnerFeedLinkService
+     */
+    public function getServicePartnerFeedLink()
+    {
+        return $this->loadService('PartnerFeedLinkService');
     }
 
     /**

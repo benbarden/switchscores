@@ -310,6 +310,20 @@ class StaffBreadcrumbs
             ->getBreadcrumbs();
     }
 
+    private function addFeedLinksList()
+    {
+        $crumbItem = ['url' => route('staff.partners.feed-links.list'), 'text' => 'Feed links'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeFeedLinksSubPage($pageTitle)
+    {
+        return $this->addPartnersDashboard()
+            ->addFeedLinksList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     private function addGamesCompaniesList()
     {
         $crumbItem = ['url' => route('staff.partners.games-company.list'), 'text' => 'Games companies'];
