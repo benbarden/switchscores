@@ -220,7 +220,7 @@ class PartnerService
         return Partner::
             where('type_id', Partner::TYPE_REVIEW_SITE)
             ->where('status', Partner::STATUS_ACTIVE)
-            ->whereNotNull('feed_url')
+//            ->whereNotNull('feed_url')
             ->whereRaw('last_review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
             ->orderBy('name', 'asc')
             ->get();
