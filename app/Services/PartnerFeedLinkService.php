@@ -25,6 +25,11 @@ class PartnerFeedLinkService
         return PartnerFeedLink::orderBy('id', 'asc')->get();
     }
 
+    public function getActive()
+    {
+        return PartnerFeedLink::where('feed_status', PartnerFeedLink::FEED_STATUS_LIVE)->orderBy('id', 'asc')->get();
+    }
+
     /**
      * @param $id
      * @return PartnerFeedLink
@@ -57,6 +62,7 @@ class PartnerFeedLinkService
         $options[PartnerFeedLink::ITEM_NODE_CHANNEL_ITEM] = PartnerFeedLink::DESC_ITEM_NODE_CHANNEL_ITEM;
         $options[PartnerFeedLink::ITEM_NODE_POST] = PartnerFeedLink::DESC_ITEM_NODE_POST;
         $options[PartnerFeedLink::ITEM_NODE_ITEM] = PartnerFeedLink::DESC_ITEM_NODE_ITEM;
+        $options[PartnerFeedLink::ITEM_NODE_ENTRY] = PartnerFeedLink::DESC_ITEM_NODE_ENTRY_ATOM;
         return $options;
     }
 }

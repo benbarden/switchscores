@@ -23,10 +23,12 @@ class PartnerFeedLink extends Model
     const ITEM_NODE_CHANNEL_ITEM = 1;
     const ITEM_NODE_POST = 2;
     const ITEM_NODE_ITEM = 3;
+    const ITEM_NODE_ENTRY = 4;
 
     const DESC_ITEM_NODE_CHANNEL_ITEM = 'channel > item';
     const DESC_ITEM_NODE_POST = 'post';
     const DESC_ITEM_NODE_ITEM = 'item';
+    const DESC_ITEM_NODE_ENTRY_ATOM = 'entry (Atom)';
 
     /**
      * @var string
@@ -47,14 +49,19 @@ class PartnerFeedLink extends Model
         return $this->hasOne('App\Partner', 'id', 'site_id');
     }
 
-    public function isHistoric()
+    public function allowHistoric()
     {
-        // If the review date is older than 30 days from today, it's history!
-        if (date('Y-m-d', strtotime('-30 days')) > $this->item_date) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->allow_historic_content == 1;
+    }
+
+    public function isParseAsObjects()
+    {
+        return $this->data_type == self::DATA_TYPE_OBJECT;
+    }
+
+    public function isAtom()
+    {
+        return $this->item_node == self::ITEM_NODE_ENTRY;
     }
 
     public function getFeedStatusDesc()
@@ -105,6 +112,9 @@ class PartnerFeedLink extends Model
                 break;
             case self::ITEM_NODE_ITEM:
                 $desc = self::DESC_ITEM_NODE_ITEM;
+                break;
+            case self::ITEM_NODE_ENTRY:
+                $desc = self::DESC_ITEM_NODE_ENTRY_ATOM;
                 break;
         }
 

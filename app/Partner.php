@@ -80,6 +80,11 @@ class Partner extends Model implements Auditable
         return $this->hasMany('App\ReviewLink', 'site_id', 'id');
     }
 
+    public function feedLinks()
+    {
+        return $this->hasMany('App\PartnerFeedLink', 'site_id', 'id');
+    }
+
     public function developerGames()
     {
         return $this->hasMany('App\GameDeveloper', 'developer_id', 'id');

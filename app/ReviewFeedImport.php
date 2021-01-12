@@ -19,12 +19,17 @@ class ReviewFeedImport extends Model
      * @var array
      */
     protected $fillable = [
-        'import_method', 'site_id', 'user_id', 'is_test'
+        'import_method', 'site_id', 'user_id', 'is_test', 'feed_id'
     ];
 
     public function site()
     {
         return $this->hasOne('App\Partner', 'id', 'site_id');
+    }
+
+    public function feed()
+    {
+        return $this->hasOne('App\PartnerFeedLink', 'id', 'feed_id');
     }
 
     public function user()
@@ -35,5 +40,15 @@ class ReviewFeedImport extends Model
     public function feedItems()
     {
         return $this->hasMany('App\ReviewFeedItem', 'import_id', 'id');
+    }
+
+    public function feedItemsTest()
+    {
+        return $this->hasMany('App\ReviewFeedItemTest', 'import_id', 'id');
+    }
+
+    public function isTest()
+    {
+        return $this->is_test == 1;
     }
 }

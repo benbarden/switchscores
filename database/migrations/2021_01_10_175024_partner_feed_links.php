@@ -21,8 +21,8 @@ class PartnerFeedLinks extends Migration
             $table->string('feed_url_prefix', 50)->nullable();
             $table->tinyInteger('data_type');
             $table->tinyInteger('item_node');
-            $table->text('title_match_rule_pattern');
-            $table->integer('title_match_rule_index');
+            $table->text('title_match_rule_pattern')->nullable();
+            $table->integer('title_match_rule_index')->nullable();
             $table->tinyInteger('allow_historic_content');
             $table->tinyInteger('was_last_run_successful')->nullable();
             $table->text('last_run_status')->nullable();
@@ -50,6 +50,8 @@ class PartnerFeedLinks extends Migration
         Schema::table('review_feed_imports', function(Blueprint $table) {
             $table->tinyInteger('is_test')->default(0);
             $table->index('is_test', 'is_test');
+            $table->integer('feed_id')->nullable();
+            $table->index('feed_id', 'feed_id');
         });
     }
 
@@ -66,6 +68,8 @@ class PartnerFeedLinks extends Migration
         Schema::table('review_feed_imports', function(Blueprint $table) {
             $table->dropIndex('is_test');
             $table->dropColumn('is_test');
+            $table->dropIndex('feed_id');
+            $table->dropColumn('feed_id');
         });
     }
 }

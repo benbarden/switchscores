@@ -37,6 +37,7 @@ use App\Services\PartnerOutreachService;
 use App\Services\QuickReviewService;
 use App\Services\ReviewFeedImportService;
 use App\Services\ReviewFeedItemService;
+use App\Services\ReviewFeedItemTestService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 use App\Services\TagService;
@@ -371,6 +372,14 @@ trait SwitchServices
     public function getServiceReviewFeedItem()
     {
         return $this->loadService('ReviewFeedItemService');
+    }
+
+    /**
+     * @return ReviewFeedItemTestService
+     */
+    public function getServiceReviewFeedItemTest()
+    {
+        return $this->loadService('ReviewFeedItemTestService');
     }
 
     /**

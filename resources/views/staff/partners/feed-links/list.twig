@@ -11,12 +11,13 @@
         <thead>
         <tr>
             <th class="text-center">#</th>
-            <th class="text-center">Status</th>
             <th>Site</th>
-            <th>Feed URL</th>
+            <th class="text-center">Status</th>
             <th class="text-center">Data type</th>
             <th class="text-center">Item node</th>
-            <th class="text-center">Last run successful?</th>
+            <th class="text-center">Historic</th>
+            <th class="text-center">Last run</th>
+            <th class="text-center">Tools</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -26,19 +27,37 @@
                 <td class="text-center">
                     {{ item.id }}
                 </td>
-                <td class="text-center">
-                    {{ item.getFeedStatusDesc() }}
-                </td>
                 <td>
                     <a href="{{ route('reviews.site', {'linkTitle': item.site.link_title}) }}" target="_blank">
                         {{ item.site.name }}
                     </a>
                 </td>
-                <td>{{ item.feed_url }}</td>
+                <td class="text-center">
+                    {{ item.getFeedStatusDesc() }}
+                </td>
                 <td class="text-center">{{ item.getDataTypeDesc() }}</td>
                 <td class="text-center">{{ item.getItemNodeDesc() }}</td>
-                <td>
-                    {{ item.was_last_run_successful }}
+                <td class="text-center">
+                    {% if item.allowHistoric() %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+                <td style="width: 250px;">
+                    <small>
+                        {{ item.last_run_status }}
+                    </small>
+                </td>
+                <td class="text-center">
+                    {% if item.lastFeedImport %}
+                        <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item.lastFeedImport}) }}">
+                            View last import
+                        </a>
+                    {% endif %}
+                    {#
+                    <a href="{{ route('staff.reviews.tools.reviewFeedImporter') }}">Test import</a>
+                    #}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.partners.feed-links.edit', {'linkId': item.id}) }}">Edit</a> :

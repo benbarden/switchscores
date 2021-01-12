@@ -94,9 +94,6 @@ class RunFeedImporter extends Command
 
             try {
 
-                // Set up the importer for this site
-                $feedImporter = new Importer();
-
                 // If sites have CDATA in their feeds, we need to parse the feed as objects
                 $cdataSiteNames = ['JPs Switchmania', 'SwitchRPG', 'Switchaboo'];
                 if (in_array($siteName, $cdataSiteNames)) {
@@ -104,7 +101,13 @@ class RunFeedImporter extends Command
                 } else {
                     $parseAsObjects = false;
                 }
-                $feedImporter->loadRemoteFeedData($feedUrl, $parseAsObjects);
+
+                // Set up the importer for this site
+                $feedImporter = new Importer();
+                if ($parseAsObjects) {
+                    $feedImporter->setParseAsObjects($parseAsObjects);
+                }
+                $feedImporter->loadRemoteFeedData($feedUrl);
                 $feedImporter->setSiteId($siteId);
                 $feedData = $feedImporter->getFeedData();
 
@@ -159,11 +162,15 @@ class RunFeedImporter extends Command
 
                 if (count($feedItemsToProcess) > 0) {
 
+                    $feedImporter->setReviewSite($reviewSite);
+                    $feedImporter->setServiceUrl($serviceUrl);
+                    $feedImporter->setServiceReviewFeedItem($serviceReviewFeedItem);
+
                     foreach ($feedItemsToProcess as $feedItem) {
 
                         try {
 
-                            $reviewFeedItem = $feedImporter->processItemRss($parseAsObjects, $feedItem, $reviewSite, $serviceUrl, $serviceReviewFeedItem);
+                            $reviewFeedItem = $feedImporter->processItemRss($feedItem);
                             $logger->info('Importing item with date: '.$reviewFeedItem->item_date.'; URL: '.$reviewFeedItem->item_url);
                             $reviewFeedItem->import_id = $feedImportId;
                             $reviewFeedItem->save();

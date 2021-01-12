@@ -284,6 +284,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/reviews/unranked/release-year/{releaseYear}/list', 'Staff\Reviews\UnrankedController@releaseYearList')->name('staff.reviews.unranked.release-year-list');
 
     // Reviews: Tools
+    Route::match(['get', 'post'], '/staff/reviews/tools/review-feed-importer', 'Staff\Reviews\ToolsController@reviewFeedImporter')->name('staff.reviews.tools.reviewFeedImporter');
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-importer', 'Staff\Reviews\ToolsController@runFeedImporter')->name('staff.reviews.tools.runFeedImporter');
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-parser', 'Staff\Reviews\ToolsController@runFeedParser')->name('staff.reviews.tools.runFeedParser');
     Route::match(['get', 'post'], '/staff/reviews/tools/run-feed-review-generator', 'Staff\Reviews\ToolsController@runFeedReviewGenerator')->name('staff.reviews.tools.runFeedReviewGenerator');

@@ -27,8 +27,17 @@ class FeedImportsController extends Controller
     {
         $bindings = $this->getBindingsReviewsFeedImportsSubpage('Feed imports - Item list');
 
+        $importId = $feedImport->id;
+
         $bindings['FeedImport'] = $feedImport;
-        $bindings['ItemList'] = $this->getServiceReviewFeedItem()->getByImportId($feedImport->id);
+
+        if ($feedImport->isTest()) {
+            $itemList = $this->getServiceReviewFeedItemTest()->getByImportId($importId);
+        } else {
+            $itemList = $this->getServiceReviewFeedItem()->getByImportId($importId);
+        }
+
+        $bindings['ItemList'] = $itemList;
 
         return view('staff.reviews.feed-imports.import-items', $bindings);
     }

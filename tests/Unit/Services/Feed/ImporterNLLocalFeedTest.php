@@ -74,7 +74,7 @@ class ImporterNLLocalFeedTest extends TestCase
 
         foreach ($feedData['channel']['item'] as $feedItem) {
 
-            $reviewFeedItem = $this->feedImporter->generateModel(false, $feedItem);
+            $reviewFeedItem = $this->feedImporter->generateModel($feedItem);
 
             // Check model type
             $this->assertInstanceOf(ReviewFeedItem::class, $reviewFeedItem);

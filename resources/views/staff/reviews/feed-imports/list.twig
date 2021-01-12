@@ -11,6 +11,7 @@
             <th class="text-center">Day of week</th>
             <th class="text-center">Items</th>
             <th class="text-center">Date</th>
+            <th class="text-center">Test?</th>
             <th class="text-left">Method</th>
             <th class="text-center">Site</th>
         </tr>
@@ -26,11 +27,22 @@
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item}) }}">
-                        {{ item.feedItems.count() }}
+                        {% if item.is_test == 1 %}
+                            {{ item.feedItemsTest.count() }}
+                        {% else %}
+                            {{ item.feedItems.count() }}
+                        {% endif %}
                     </a>
                 </td>
                 <td class="text-center">
                     {{ item.created_at|date('Y-m-d H:i') }}
+                </td>
+                <td class="text-center">
+                    {% if item.is_test == 1 %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
                 </td>
                 <td class="text-left">
                     {{ item.import_method }}
@@ -55,6 +67,7 @@
             "columns": [
                 null,
                 { "orderable": false },
+                null,
                 null,
                 null,
                 { "orderable": false },

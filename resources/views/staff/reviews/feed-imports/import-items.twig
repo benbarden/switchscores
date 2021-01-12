@@ -16,6 +16,8 @@
             <th class="text-right">#</th>
             <th class="text-left">Site</th>
             <th class="text-left">Title from feed</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Date</th>
             <th class="text-center">Parse status</th>
             <th class="text-center">Process status</th>
         </tr>
@@ -30,7 +32,17 @@
                     {{ item.site.name }}
                 </td>
                 <td class="text-left">
-                    <small>{{ item.item_title }}</small>
+                    <small>
+                        <a href="{{ item.item_url }}" target="_blank">
+                            {{ item.item_title }}
+                        </a>
+                    </small>
+                </td>
+                <td class="text-center">
+                    {{ item.item_rating }}
+                </td>
+                <td class="text-center">
+                    {{ item.item_date }}
                 </td>
                 <td class="text-center">
                     {{ item.parse_status }}
@@ -54,6 +66,8 @@
             "pageLength": 50,
             "columns": [
                 null,
+                { "orderable": false },
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },

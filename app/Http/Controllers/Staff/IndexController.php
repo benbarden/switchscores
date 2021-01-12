@@ -48,7 +48,7 @@ class IndexController extends Controller
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         // Feed imports
-        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getAll(5);
+        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getLive(5);
 
         // Information and site stats
         $bindings['RegisteredUserCount'] = $serviceUser->getCount();

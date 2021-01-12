@@ -7,8 +7,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Partner;
-
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -28,16 +26,25 @@ class FeedLinksController extends Controller
         'feed_url' => 'required|max:255',
         'data_type' => 'required',
         'item_node' => 'required',
-        'title_match_rule_pattern' => 'required',
-        'title_match_rule_index' => 'required',
-        'allow_historic_content' => 'required',
     ];
 
     public function showList()
     {
         $bindings = $this->getBindingsPartnersSubpage('Partner feed links');
 
-        $bindings['FeedLinks'] = $this->getServicePartnerFeedLink()->getAll();
+        $feedLinks = $this->getServicePartnerFeedLink()->getAll();
+
+        foreach ($feedLinks as &$feedLink) {
+
+            $feedId = $feedLink->id;
+            $feedImport = $this->getServiceReviewFeedImport()->getLatestByFeedId($feedId);
+            if ($feedImport) {
+                $feedLink->lastFeedImport = $feedImport;
+            }
+
+        }
+
+        $bindings['FeedLinks'] = $feedLinks;
 
         return view('staff.partners.feed-links.list', $bindings);
     }

@@ -1,16 +1,17 @@
 {% if ReviewSites.count > 0 %}
-    <table class="table">
+    <table class="table table-condensed table-responsive">
         <thead>
         <tr>
             <th class="text-center">#</th>
             <th>Site</th>
-            <th class="text-center">Twitter ID?</th>
-            <th class="text-center">Contact details?</th>
-            <th class="text-center">Login?</th>
-            <th class="text-center">Scale</th>
-            <th class="text-center">Review count</th>
+            <th class="text-center">Reviews</th>
             <th class="text-center">Last review</th>
-            <th class="text-center">View reviews</th>
+            <th class="text-center">Scale</th>
+            <th class="text-center">Login</th>
+            <th class="text-center">Feed v1</th>
+            <th class="text-center">Feed v2</th>
+            <th class="text-center">Twitter</th>
+            <th class="text-center">Contact details</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -24,6 +25,44 @@
                     <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}" target="_blank">
                         {{ item.name }}
                     </a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.reviews.link.list') }}?siteId={{ item.id }}">
+                        {{ item.links().count }}
+                    </a>
+                </td>
+                <td class="text-center">
+                    {{ item.last_review_date }}
+                </td>
+                <td class="text-center">
+                    {{ item.rating_scale }}
+                </td>
+                <td class="text-center">
+                    {% if item.user.id %}
+                        <i class="fas fa-key"></i>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.feed_url %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.feedLinks.count > 0 %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {% if item.twitter_id %}
@@ -46,23 +85,6 @@
                             <i class="fas fa-times"></i>
                         </div>
                     {% endif %}
-                </td>
-                <td class="text-center">
-                    {% if item.user.id %}
-                        <i class="fas fa-key"></i>
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                    {{ item.rating_scale }}
-                </td>
-                <td class="text-center">
-                    {{ item.links().count }}
-                </td>
-                <td class="text-center">
-                    {{ item.last_review_date }}
-                </td>
-                <td class="text-center">
-                    <a href="{{ route('staff.reviews.link.list') }}?siteId={{ item.id }}">View</a>
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.site.edit', {'siteId': item.id}) }}">Edit</a>

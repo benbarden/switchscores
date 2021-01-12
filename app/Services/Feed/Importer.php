@@ -3,21 +3,36 @@
 
 namespace App\Services\Feed;
 
+
 use App\Partner;
+use App\PartnerFeedLink;
 use App\ReviewFeedItem;
+use App\ReviewFeedItemTest;
 use App\Services\ReviewFeedItemService;
 use App\Services\UrlService;
-use Carbon\Carbon;
-
-use GuzzleHttp\Client as GuzzleClient;
+use App\Services\Game\TitleMatch as ServiceTitleMatch;
 
 use App\Exceptions\Review\AlreadyImported;
-use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
+use App\Exceptions\Review\HistoricEntry;
+use App\Exceptions\Review\TitleRuleNotMatched;
+
+use Carbon\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
 
 
 class Importer
 {
+    /**
+     * @var boolean
+     */
+    private $isTestMode;
+
+    /**
+     * @var boolean
+     */
+    private $parseAsObjects;
+
     /**
      * @var array
      */
@@ -29,12 +44,58 @@ class Importer
     private $siteId;
 
     /**
+     * @var Partner
+     */
+    private $reviewSite;
+
+    /**
+     * @var PartnerFeedLink
+     */
+    private $partnerFeedLink;
+
+    /**
+     * @var UrlService
+     */
+    private $serviceUrl;
+
+    /**
+     * @var ReviewFeedItemService
+     */
+    private $serviceReviewFeedItem;
+
+    public function __construct()
+    {
+        $this->isTestMode = false;
+        $this->parseAsObjects = false;
+    }
+
+    /**
      * @param integer $siteId
      * @return void
      */
     public function setSiteId($siteId)
     {
         $this->siteId = $siteId;
+    }
+
+    public function setReviewSite(Partner $reviewSite)
+    {
+        $this->reviewSite = $reviewSite;
+    }
+
+    public function setPartnerFeedLink(PartnerFeedLink $partnerFeedLink)
+    {
+        $this->partnerFeedLink = $partnerFeedLink;
+    }
+
+    public function setServiceUrl(UrlService $serviceUrl)
+    {
+        $this->serviceUrl = $serviceUrl;
+    }
+
+    public function setServiceReviewFeedItem(ReviewFeedItemService $serviceReviewFeedItem)
+    {
+        $this->serviceReviewFeedItem = $serviceReviewFeedItem;
     }
 
     /**
@@ -56,6 +117,16 @@ class Importer
         $this->siteId = 0;
     }
 
+    public function setTestMode()
+    {
+        $this->isTestMode = true;
+    }
+
+    public function setParseAsObjects($parseAsObjects = true)
+    {
+        $this->parseAsObjects = $parseAsObjects;
+    }
+
     /**
      * @return void
      */
@@ -71,7 +142,7 @@ class Importer
      * @param bool $parseAsObjects
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function loadRemoteFeedData($feedUrl, $parseAsObjects = false)
+    public function loadRemoteFeedData($feedUrl)
     {
         try {
             $client = new GuzzleClient(['verify' => false]);
@@ -93,7 +164,7 @@ class Importer
         }
 
         try {
-            $this->feedData = $this->convertResponseToJson($body, $parseAsObjects);
+            $this->feedData = $this->convertResponseToJson($body);
         } catch (\Exception $e) {
             throw new \Exception('Error loading data! Error details: '.$e->getMessage().'; Raw data: '.$body);
         }
@@ -101,12 +172,11 @@ class Importer
 
     /**
      * @param $body
-     * @param $parseAsObjects
      * @return mixed
      */
-    public function convertResponseToJson($body, $parseAsObjects = false)
+    public function convertResponseToJson($body)
     {
-        if ($parseAsObjects) {
+        if ($this->parseAsObjects) {
             // Don't do the JSON conversion for Wix sites or others using CDATA - it breaks the SimpleXMLElements
             $xmlObject = simplexml_load_string($body);
             $decodedJson = $xmlObject;
@@ -118,19 +188,75 @@ class Importer
         return $decodedJson;
     }
 
-    /**
-     * @param $parseAsObjects
-     * @param $feedItem
-     * @return ReviewFeedItem
-     */
-    public function generateModel($parseAsObjects, $feedItem)
+    public function generateItemsArray(PartnerFeedLink $partnerFeedLink)
     {
-        $reviewFeedItem = new ReviewFeedItem();
+        $feedItemsToProcess = [];
 
-        // Basic fields
+        if ($partnerFeedLink->isParseAsObjects()) {
+
+            switch ($partnerFeedLink->item_node) {
+
+                case PartnerFeedLink::ITEM_NODE_CHANNEL_ITEM:
+                    foreach ($this->feedData->channel->item as $feedItem) {
+                        $feedItemsToProcess[] = $feedItem;
+                    }
+                    break;
+                case PartnerFeedLink::ITEM_NODE_POST:
+                    foreach ($this->feedData->post as $feedItem) {
+                        $feedItemsToProcess[] = $feedItem;
+                    }
+                    break;
+            }
+
+        } else {
+
+            switch ($partnerFeedLink->item_node) {
+
+                case PartnerFeedLink::ITEM_NODE_CHANNEL_ITEM:
+                    foreach ($this->feedData['channel']['item'] as $feedItem) {
+                        $feedItemsToProcess[] = $feedItem;
+                    }
+                    break;
+                case PartnerFeedLink::ITEM_NODE_ITEM:
+                    foreach ($this->feedData['item'] as $feedItem) {
+                        $feedItemsToProcess[] = $feedItem;
+                    }
+                    break;
+                case PartnerFeedLink::ITEM_NODE_ENTRY:
+                    foreach ($this->feedData['entry'] as $feedItem) {
+                        $feedItemsToProcess[] = $feedItem;
+                    }
+                    break;
+            }
+
+        }
+
+        return $feedItemsToProcess;
+
+    }
+
+    /**
+     * @param $feedItem
+     * @return ReviewFeedItem|ReviewFeedItemTest
+     */
+    public function generateBasicModel($feedItem)
+    {
+        if ($this->isTestMode) {
+            $reviewFeedItem = new ReviewFeedItemTest();
+        } else {
+            $reviewFeedItem = new ReviewFeedItem();
+        }
         $reviewFeedItem->site_id = $this->siteId;
+        return $reviewFeedItem;
+    }
 
-        if ($parseAsObjects) {
+    /**
+     * @param $feedItem
+     * @return ReviewFeedItem|ReviewFeedItemTest
+     */
+    public function generateModel($reviewFeedItem, $feedItem)
+    {
+        if ($this->parseAsObjects) {
 
             $reviewFeedItem->item_url = $feedItem->link;
 
@@ -170,33 +296,47 @@ class Importer
         return $reviewFeedItem;
     }
 
-    public function processItemRss($parseAsObjects, $feedItem, Partner $reviewSite, UrlService $serviceUrl, ReviewFeedItemService $serviceReviewFeedItem)
+    public function processItemRss($feedItem)
     {
         // Generate the model
-        $reviewFeedItem = $this->generateModel($parseAsObjects, $feedItem);
+        $reviewFeedItem = $this->generateBasicModel($feedItem);
+        $reviewFeedItem = $this->generateModel($reviewFeedItem, $feedItem);
         $itemTitle = $reviewFeedItem->item_title;
         $itemUrl = $reviewFeedItem->item_url;
         $itemDate = $reviewFeedItem->item_date;
 
         // Clean up URL
-        $itemUrl = $serviceUrl->cleanReviewFeedUrl($itemUrl);
+        $itemUrl = $this->serviceUrl->cleanReviewFeedUrl($itemUrl);
         $reviewFeedItem->item_url = $itemUrl;
 
         // Check if it's already been imported
-        $dbExistingItem = $serviceReviewFeedItem->getByItemUrl($itemUrl);
-        if ($dbExistingItem) {
-            throw new AlreadyImported('Already imported: '.$itemUrl);
+        if (!$this->isTestMode) {
+            $dbExistingItem = $this->serviceReviewFeedItem->getByItemUrl($itemUrl);
+            if ($dbExistingItem) {
+                throw new AlreadyImported('Already imported: '.$itemUrl);
+            }
         }
 
         // Silently bypass historic reviews - removes some log noise
-        if ($reviewFeedItem->isHistoric() && !$reviewSite->allowHistoric()) {
-            throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+        if ($this->partnerFeedLink) {
+            if ($reviewFeedItem->isHistoric() && !$this->partnerFeedLink->allowHistoric()) {
+                throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+            }
+        } elseif ($this->reviewSite) {
+            if ($reviewFeedItem->isHistoric() && !$this->reviewSite->allowHistoric()) {
+                throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+            }
         }
 
         // Check if a feed URL prefix is set, and if so, compare it
-        $feedUrlPrefix = $reviewSite->feed_url_prefix;
+        $feedUrlPrefix = '';
+        if ($this->partnerFeedLink) {
+            $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
+        } elseif ($this->reviewSite) {
+            $feedUrlPrefix = $this->reviewSite->feed_url_prefix;
+        }
         if ($feedUrlPrefix) {
-            $fullPrefix = $reviewSite->website_url.$feedUrlPrefix;
+            $fullPrefix = $this->reviewSite->website_url.$feedUrlPrefix;
             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
                 throw new FeedUrlPrefixNotMatched('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
             }
@@ -209,6 +349,79 @@ class Importer
 
     public function processItemAtom($feedItem)
     {
+        // Generate the model
+        $reviewFeedItem = $this->generateBasicModel($feedItem);
 
+        $itemTitle = $feedItem['title'];
+        $reviewFeedItem->item_title = $itemTitle;
+
+        // URL
+        $itemUrl = null;
+        $feedItemLinks = $feedItem['link'];
+        foreach ($feedItemLinks as $itemLinkTemp) {
+            $itemLinkTempData = $itemLinkTemp['@attributes'];
+            if ($itemLinkTempData['rel'] == 'alternate') {
+                $itemUrl = $itemLinkTempData['href'];
+                break;
+            }
+        }
+        if ($itemUrl != null) {
+            $reviewFeedItem->item_url = $itemUrl;
+        }
+
+        // Date
+        $itemDateModel = new Carbon($feedItem['published']);
+        $itemDate = $itemDateModel->format('Y-m-d H:i:s');
+        $reviewFeedItem->item_date = $itemDate;
+
+        // Check if it's already been imported
+        if (!$this->isTestMode) {
+            $dbExistingItem = $this->serviceReviewFeedItem->getByItemUrl($itemUrl);
+            if ($dbExistingItem) {
+                throw new AlreadyImported('Already imported: ' . $itemUrl);
+            }
+        }
+
+        // Special rules for Digitally Downloaded
+        if ($this->reviewSite->name == 'Digitally Downloaded') {
+
+            $serviceTitleMatch = new ServiceTitleMatch();
+
+            $titleMatchRulePattern = $this->reviewSite->title_match_rule_pattern;
+            $titleMatchIndex = $this->reviewSite->title_match_index;
+            if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
+
+                // New method
+                $serviceTitleMatch->setMatchRule($titleMatchRulePattern);
+                $serviceTitleMatch->prepareMatchRule();
+                $serviceTitleMatch->setMatchIndex($titleMatchIndex);
+                $parsedTitle = $serviceTitleMatch->generate($itemTitle);
+
+                // Can we find a game from this title?
+                // NB. If there's no match, we'll skip this item altogether
+                if (!$parsedTitle) {
+                    throw new TitleRuleNotMatched('Does not match title rule: '.$itemUrl);
+                }
+
+            }
+        }
+
+        // Check if a feed URL prefix is set, and if so, compare it
+        $feedUrlPrefix = $this->reviewSite->feed_url_prefix;
+        if ($feedUrlPrefix) {
+            $fullPrefix = $this->reviewSite->url.$feedUrlPrefix;
+            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+                throw new FeedUrlPrefixNotMatched('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+            }
+        }
+
+        // Check that it's not a historic review
+        if ($reviewFeedItem->isHistoric() && !$this->reviewSite->allowHistoric()) {
+            throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+        }
+
+        // All good - add it as a feed item
+        $reviewFeedItem->load_status = 'Loaded OK';
+        return $reviewFeedItem;
     }
 }

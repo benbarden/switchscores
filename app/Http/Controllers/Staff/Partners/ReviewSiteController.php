@@ -33,8 +33,7 @@ class ReviewSiteController extends Controller
     {
         $bindings = $this->getBindingsPartnersSubpage('Review sites');
 
-        $bindings['ReviewSitesActiveWithFeeds'] = $this->getServicePartner()->getActiveReviewSitesWithFeeds();
-        $bindings['ReviewSitesActiveNoFeeds'] = $this->getServicePartner()->getActiveReviewSitesNoFeeds();
+        $bindings['ReviewSitesActive'] = $this->getServicePartner()->getActiveReviewSites();
         $bindings['ReviewSitesInactive'] = $this->getServicePartner()->getInactiveReviewSites();
 
         return view('staff.partners.review-site.list', $bindings);
