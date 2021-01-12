@@ -63,11 +63,24 @@ class ImportReviewFeed
         }
     }
 
+    public function createBatchFeedImport()
+    {
+        $reviewFeedImport = $this->getServiceReviewFeedImport()->createCron(null, null, $this->isTest);
+        $this->reviewFeedImport = $reviewFeedImport;
+        return $reviewFeedImport;
+    }
+
     public function createFeedImport()
     {
         $feedId = $this->partnerFeedLink->id;
         $siteId = $this->partnerFeedLink->site_id;
         $reviewFeedImport = $this->getServiceReviewFeedImport()->createSiteCron($feedId, $siteId, $this->isTest);
+        $this->reviewFeedImport = $reviewFeedImport;
+        return $reviewFeedImport;
+    }
+
+    public function setFeedImport(ReviewFeedImport $reviewFeedImport)
+    {
         $this->reviewFeedImport = $reviewFeedImport;
     }
 

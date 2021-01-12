@@ -8,9 +8,16 @@ use App\ReviewFeedImport;
 
 class ReviewFeedImportService
 {
-    public function createCron($siteId = null, $userId = null)
+    public function createCron($siteId = null, $userId = null, $isTest = false)
     {
-        return $this->create(ReviewFeedImport::METHOD_CRON, $siteId, $userId);
+        $isTestValue = $isTest == true ? 1 : 0;
+
+        return ReviewFeedImport::create([
+            'import_method' => ReviewFeedImport::METHOD_CRON,
+            'site_id' => $siteId,
+            'is_test' => $isTestValue,
+            'user_id' => $userId,
+        ]);
     }
 
     public function createSiteCron($feedId, $siteId, $isTest = false)
