@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
+use App\Traits\AuthUser;
 
 class GamesController extends Controller
 {
     use SwitchServices;
+    use AuthUser;
 
     public function landing()
     {
@@ -98,16 +100,9 @@ class GamesController extends Controller
      */
     public function show($gameId, $linkTitle)
     {
-        $serviceGame = $this->getServiceGame();
-        $serviceReviewLink = $this->getServiceReviewLink();
-        $serviceQuickReview = $this->getServiceQuickReview();
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-        $serviceGameTag = $this->getServiceGameTag();
-
         $bindings = [];
 
-        $gameData = $serviceGame->find($gameId);
+        $gameData = $this->getServiceGame()->find($gameId);
         if (!$gameData) {
             abort(404);
         }
@@ -117,36 +112,32 @@ class GamesController extends Controller
             return redirect($redirUrl, 301);
         }
 
-        // Get reviews
-        $gameReviews = $serviceReviewLink->getByGame($gameId);
-
-        // Get user reviews
-        $gameQuickReviews = $serviceQuickReview->getActiveByGame($gameId);
-
-        // Get game metadata
-        $gameDevelopers = $serviceGameDeveloper->getByGame($gameId);
-        $gamePublishers = $serviceGamePublisher->getByGame($gameId);
-        $gameTags = $serviceGameTag->getByGame($gameId);
-
-        // Data sources
-        $dsNintendoCoUk = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-        $bindings['DSNintendoCoUk'] = $dsNintendoCoUk;
-
-        // News
-        $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
-
+        // Main data
         $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game ratings, reviews and information';
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
-        $bindings['GameReviews'] = $gameReviews;
-        $bindings['GameQuickReviewList'] = $gameQuickReviews;
-        $bindings['GameDevelopers'] = $gameDevelopers;
-        $bindings['GamePublishers'] = $gamePublishers;
-        $bindings['GameTags'] = $gameTags;
+        $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
+        $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
+        $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
+        $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+        $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+
+        // Data sources
+        $bindings['DSNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+
+        // News
+        $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceGame->countRanked();
+        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
+
+        // Logged in user data
+        $userId = $this->getAuthId();
+        if ($userId) {
+            $bindings['UserCollectionItem'] = $this->getServiceUserGamesCollection()->getUserGameItem($userId, $gameId);
+            $bindings['UserCollectionGame'] = $gameData;
+        }
 
         // Game blurb
         $blurb = '';

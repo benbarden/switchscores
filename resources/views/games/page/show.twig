@@ -58,6 +58,36 @@
         {% include 'modules/game/rank/review-count.twig' %}
         {% include 'modules/game/rank/rating-avg.twig' %}
 
+        <h2 class="standout-header">Collection</h2>
+        {% if auth_user() %}
+            {% if UserCollectionItem %}
+                <p>
+                    This game is in your collection.
+                </p>
+                {% include 'modules/user/collection/grid-item.twig' with {'item': UserCollectionItem, 'game': UserCollectionGame, 'displayMode': 'hide-extra-links'} %}
+            {% else %}
+                <p>
+                    This game is not in your collection.
+                </p>
+                <p>
+                    <a class="btn btn-sm btn-primary" href="{{ route('user.collection.add', {'gameId': GameId}) }}">Add to your collection</a>
+                </p>
+            {% endif %}
+        {% else %}
+            <p>
+                <a href="{{ route('auth.login') }}">Login</a> to add this game to your collection.
+            </p>
+        {% endif %}
+
+        {% if GameReviews.count > 2 %}
+            {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
+        {% endif %}
+
+        <h2>Infobox</h2>
+
+        {% include 'games/page/infobox-eshop.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+        {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'title': GameData.link_title}) %}
 
         {% set boxartUrl = ImageHelper.imageSquareUrl(GameData) %}
@@ -75,15 +105,6 @@
                 </div>
             </div>
         {% endif %}
-
-        {% if GameReviews.count > 2 %}
-            {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
-        {% endif %}
-
-        <h2>Infobox</h2>
-
-        {% include 'games/page/infobox-eshop.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
-        {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
     </div>
 

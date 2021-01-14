@@ -77,6 +77,11 @@ class UserGamesCollectionService
         }
     }
 
+    public function getUserGameItem($userId, $gameId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->where('game_id', $gameId)->first();
+    }
+
     public function getNowPlayingByUser($userId, $limit = null)
     {
         $statusId = PlayStatus::PLAY_STATUS_NOW_PLAYING;
