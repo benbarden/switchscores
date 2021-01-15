@@ -37,6 +37,9 @@ h6, .h6 {font-size: 14px;}
 .navbar-static-top {
     background: #c9302c;
 }
+.navbar .navbar-form button {
+    padding: 4px 6px;
+}
 #navbar-footer, #navbar-footer a {
     background: #18C0DF;
     color: #ffffff;

@@ -71,6 +71,18 @@
                 <li><a href="{{ route('about') }}">About</a></li>
             </ul>
 
+            <!-- Search form -->
+            <form class="navbar-form navbar-left hidden-sm hidden-xs" role="form" method="post" action="{{ route('games.search') }}">
+                {{ csrf_field() }}
+
+                <div class="form-group">
+                    <input id="search_keywords_topnav" name="search_keywords" type="text" class="form-control" placeholder="Search games">
+                    <button type="submit" class="btn outline btn-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </form>
+
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
