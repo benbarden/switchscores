@@ -17,22 +17,79 @@
                 (<a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">all this month</a>)
             </span>
         </h2>
-        <div class="scrolling-wrapper">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <button id="btn-nav-new-releases-left" class="btn-nav-left">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="pull-right">
+                    <button id="btn-nav-new-releases-right" class="btn-nav-right">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="wrap-new-releases" class="scrolling-wrapper">
             {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': NewReleases} %}
         </div>
 
         <h2>Recent Top Rated</h2>
-        <div class="scrolling-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <button id="btn-nav-recent-top-rated-left" class="btn-nav-left">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="pull-right">
+                    <button id="btn-nav-recent-top-rated-right" class="btn-nav-right">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="wrap-recent-top-rated" class="scrolling-wrapper">
             {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': RecentWithGoodRanks} %}
         </div>
 
         <h2>Recently reviewed, still unranked</h2>
-        <div class="scrolling-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <button id="btn-nav-recently-reviewed-left" class="btn-nav-left">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="pull-right">
+                    <button id="btn-nav-recently-reviewed-right" class="btn-nav-right">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="wrap-recently-reviewed" class="scrolling-wrapper">
             {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': HighlightsStillUnranked} %}
         </div>
 
         <h2>Top Rated discounts</h2>
-        <div class="scrolling-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left">
+                    <button id="btn-nav-top-rated-discounts-left" class="btn-nav-left">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="pull-right">
+                    <button id="btn-nav-top-rated-discounts-right" class="btn-nav-right">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="wrap-top-rated-discounts" class="scrolling-wrapper">
             {% include 'modules/game/grid/scrolling-wrapper-item.twig' with {'GameList': TopRatedDiscounts, 'ShowOnSale': 'Y'} %}
         </div>
 
@@ -59,5 +116,43 @@
     </div>
 
 </div>
+
+<script>
+
+    var amountToMove = 300;
+
+    $('.btn-nav-left').click(function() {
+
+        var divId = $(this).attr('id');
+        divId = divId.replace('btn-nav-', '');
+        divId = divId.replace('-left', '');
+        divId = 'wrap-' + divId;
+
+        var $divToScroll = $('#' + divId);
+        var oldScrollLeft = $divToScroll.scrollLeft();
+        var newScrollLeft = oldScrollLeft - amountToMove;
+        $divToScroll.animate({
+            scrollLeft: newScrollLeft
+        }, 500);
+
+    });
+
+    $('.btn-nav-right').click(function() {
+
+        var divId = $(this).attr('id');
+        divId = divId.replace('btn-nav-', '');
+        divId = divId.replace('-right', '');
+        divId = 'wrap-' + divId;
+
+        var $divToScroll = $('#' + divId);
+        var oldScrollLeft = $divToScroll.scrollLeft();
+        var newScrollLeft = oldScrollLeft + amountToMove;
+        $divToScroll.animate({
+            scrollLeft: newScrollLeft
+        }, 400);
+
+    });
+
+</script>
 
 {% endblock page_body %}
