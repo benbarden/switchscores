@@ -22,8 +22,8 @@ class UserPointTransaction extends Model
     // Points
     const POINTS_REGISTER = 100;
     const POINTS_BACKLOG_ADD = 10;
-    const POINTS_QUICK_REVIEW_ADD = 50;
-    const POINTS_DB_EDIT = 50;
+    const POINTS_QUICK_REVIEW_ADD = 250;
+    const POINTS_DB_EDIT = 20;
 
     /**
      * @var array
