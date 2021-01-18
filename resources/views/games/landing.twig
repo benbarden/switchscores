@@ -119,8 +119,6 @@
 
 <script>
 
-    var amountToMove = 550;
-
     $('.btn-nav-left').click(function() {
 
         var divId = $(this).attr('id');
@@ -129,6 +127,7 @@
         divId = 'wrap-' + divId;
 
         var $divToScroll = $('#' + divId);
+        var amountToMove = $divToScroll.width() - 100;
         var oldScrollLeft = $divToScroll.scrollLeft();
         var newScrollLeft = oldScrollLeft - amountToMove;
         $divToScroll.animate({
@@ -145,6 +144,7 @@
         divId = 'wrap-' + divId;
 
         var $divToScroll = $('#' + divId);
+        var amountToMove = $divToScroll.width() - 100;
         var oldScrollLeft = $divToScroll.scrollLeft();
         var newScrollLeft = oldScrollLeft + amountToMove;
         $divToScroll.animate({
