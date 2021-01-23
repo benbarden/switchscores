@@ -38,12 +38,14 @@ class WelcomeController extends Controller
         $todaysDateYmd = $todaysDate->format('Y-m-d');
         $featuredGame = $this->repoFeaturedGames->getActiveByDateOrRandom($todaysDateYmd);
         // Make it into a usable collection
-        $fGameList = new Collection();
-        $fGameModel = $this->getServiceGame()->find($featuredGame->game_id);
-        $fGameModel->featured_game = $featuredGame;
-        $fGameList->push($fGameModel);
-        $bindings['FeaturedGameList'] = $fGameList;
-        $bindings['FeaturedGameData'] = $featuredGame;
+        if ($featuredGame) {
+            $fGameList = new Collection();
+            $fGameModel = $this->getServiceGame()->find($featuredGame->game_id);
+            $fGameModel->featured_game = $featuredGame;
+            $fGameList->push($fGameModel);
+            $bindings['FeaturedGameList'] = $fGameList;
+            $bindings['FeaturedGameData'] = $featuredGame;
+        }
 
         // Latest quick reviews
         $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
