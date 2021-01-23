@@ -1,0 +1,61 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12">
+
+        {% if RankedGameList %}
+            <p>
+                Showing top rated games in {{ Category.name }}.
+            </p>
+            <table class="table table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Game</th>
+                        <th class="text-center">Rating</th>
+                        <th class="text-center">Rank</th>
+                        <th class="text-center">Reviews</th>
+                        <th class="text-center">Release date (EU)</th>
+                        <th class="text-center">In your collection?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in RankedGameList %}
+                        <tr>
+                            <td class="text-center">{{ item.id }}</td>
+                            <td>{{ item.title }}</td>
+                            <td class="text-center">
+                                {% if item.review_count > 2 %}
+                                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                                {% else %}
+                                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ item.game_rank }}</td>
+                            <td class="text-center">{{ item.review_count }}</td>
+                            <td class="text-center">{{ item.eu_release_date }}</td>
+                            <td class="text-center">
+                                {% if item.id in OwnedGamedIdList %}
+                                    <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>
+                No games to display! Maybe something went wrong...
+            </p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

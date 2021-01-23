@@ -112,6 +112,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');
     Route::post('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');
     Route::get('/user/collection/delete', 'User\CollectionController@delete')->name('user.collection.delete');
+    Route::get('/user/collection/category-breakdown', 'User\CollectionController@categoryBreakdown')->name('user.collection.category-breakdown');
+    Route::get('/user/collection/top-rated-by-category/{category}', 'User\CollectionController@topRatedByCategory')->name('user.collection.top-rated-by-category');
 
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');

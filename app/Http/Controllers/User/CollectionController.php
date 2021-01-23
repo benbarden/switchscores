@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
 use App\Services\GamesCollection\PlayStatus;
+use App\Services\UserGamesCollectionService;
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Category;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -29,6 +32,18 @@ class CollectionController extends Controller
     private $validationRulesAdd = [
         'game_id' => 'required',
     ];
+
+    protected $serviceUserGamesCollection;
+    protected $repoUserGamesCollection;
+
+    public function __construct(
+        UserGamesCollectionService $serviceUserGamesCollection,
+        UserGamesCollectionRepository $repoUserGamesCollection
+    )
+    {
+        $this->serviceUserGamesCollection = $serviceUserGamesCollection;
+        $this->repoUserGamesCollection = $repoUserGamesCollection;
+    }
 
     public function landing()
     {
@@ -82,6 +97,26 @@ class CollectionController extends Controller
         $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
 
         return view('user.collection.index', $bindings);
+    }
+
+    public function categoryBreakdown()
+    {
+        $bindings = $this->getBindingsCollectionSubpage('Category breakdown');
+
+        $bindings['CategoryBreakdown'] = $this->repoUserGamesCollection->getCategoryBreakdown($this->getAuthId());
+
+        return view('user.collection.category-breakdown', $bindings);
+    }
+
+    public function topRatedByCategory(Category $category)
+    {
+        $bindings = $this->getBindingsCollectionSubpage('Category breakdown: '.$category->name);
+
+        $bindings['Category'] = $category;
+        $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($category->id);
+        $bindings['OwnedGamedIdList'] = $this->getServiceUserGamesCollection()->getGameIdsByUser($this->getAuthId());
+
+        return view('user.collection.top-rated-by-category', $bindings);
     }
 
     public function showList($listOption)

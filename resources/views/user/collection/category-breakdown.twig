@@ -1,0 +1,42 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-9">
+
+        {% if CategoryBreakdown %}
+        <table class="table table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th class="text-center">Number of games</th>
+                    <th class="text-left">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in CategoryBreakdown %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td class="text-center">{{ item.count }}</td>
+                        <td class="text-left">
+                            <a href="{{ route('user.collection.top-rated-by-category', {'categoryId': item.category_id}) }}">
+                                Find more in {{ item.name }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>
+                Whoops, looks like your collection is empty!
+            </p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

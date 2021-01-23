@@ -67,6 +67,11 @@ class UserGamesCollectionService
         return $items;
     }
 
+    public function getGameIdsByUser($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->pluck('game_id');
+    }
+
     public function isGameInCollection($userId, $gameId)
     {
         $item = UserGamesCollection::where('user_id', $userId)->where('game_id', $gameId)->first();
