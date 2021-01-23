@@ -51,6 +51,25 @@
             {% include 'news/tiled-item.twig' with {'item': LatestNewsPost, 'batchOverride': 1} %}
         </div>
 
+        {% if FeaturedGameList %}
+            <h2 class="standout-header">
+                Featured game
+            </h2>
+            <p>
+                <small>
+                    Featured games are titles that look interesting or unusual. You might like to
+                    check them out. They are selected by members and staff.
+                </small>
+            </p>
+            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+            {#
+            <div class="label label-success">
+                {{ FeaturedGameData.getTypeDesc() }}
+            </div>
+            #}
+        {% endif %}
+
+        {#
         <h2 class="standout-header">Recent member reviews</h2>
         <div class="row homepage-quick-reviews">
             <div class="col-sm-12 col-md-12 col-lg-12">
@@ -66,6 +85,7 @@
                 {% endfor %}
             </div>
         </div>
+        #}
 
         <h2 class="standout-header">
             Recently ranked

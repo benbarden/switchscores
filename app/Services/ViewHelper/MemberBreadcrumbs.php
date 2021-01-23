@@ -66,6 +66,22 @@ class MemberBreadcrumbs
             ->getBreadcrumbs();
     }
 
+    // ***** Featured games ***** //
+
+    public function addFeaturedGames()
+    {
+        // No list page, so just include the text
+        $crumbItem = ['text' => 'Featured games'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeFeaturedGamesSubpage($pageTitle)
+    {
+        return $this->addFeaturedGames()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     // ***** Database help ***** //
 
     public function addDatabaseHelpDashboard()

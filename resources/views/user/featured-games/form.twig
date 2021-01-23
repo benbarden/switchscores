@@ -1,0 +1,34 @@
+<div class="alert alert-info">
+    You're suggesting a game to be featured at Switch Scores.
+    The game is: <strong>{{ GameData.title }}</strong>.
+</div>
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label class="col-md-4 control-label">Featured type</label>
+        <div class="col-md-6">
+            <p>
+                What do you think makes this game worth being featured?
+            </p>
+            <input id="featured_type_interesting" name="featured_type" value="1" type="radio">
+            <label for="featured_type_interesting">
+                Interesting
+            </label>
+            <br>
+            <input id="featured_type_hidden_gem" name="featured_type" value="2" type="radio">
+            <label for="featured_type_hidden_gem">
+                Hidden gem
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>

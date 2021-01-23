@@ -82,6 +82,20 @@ class StaffBreadcrumbs
             ->getBreadcrumbs();
     }
 
+    private function addGamesFeaturedGamesList()
+    {
+        $crumbItem = ['url' => route('staff.games.featured-games.list'), 'text' => 'Featured games'];
+        return $this->addCrumb($crumbItem);
+    }
+
+    public function makeGamesFeaturedGamesSubPage($pageTitle)
+    {
+        return $this->addGamesDashboard()
+            ->addGamesFeaturedGamesList()
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
     // ***** Reviews ***** //
 
     private function addReviewsDashboard()

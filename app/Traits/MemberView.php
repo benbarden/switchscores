@@ -72,6 +72,12 @@ trait MemberView
         return $this->getBindings($pageTitle);
     }
 
+    public function getBindingsFeaturedGamesSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeFeaturedGamesSubpage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
     public function getBindingsDatabaseHelpSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeDatabaseHelpSubpage($pageTitle);

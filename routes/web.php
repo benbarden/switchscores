@@ -94,6 +94,9 @@ Route::group(['middleware' => ['auth']], function() {
     // Index
     Route::get('/user', 'User\IndexController@show')->name('user.index');
 
+    // Search (modular)
+    Route::match(['get', 'post'], '/user/search-modular/{searchMode}', 'User\SearchModularController@findGame')->name('user.search-modular.find-game');
+
     // Database help
     Route::get('/user/database-help/index', 'User\DatabaseHelpController@landing')->name('user.database-help.index');
     Route::get('/user/database-help/games-without-categories', 'User\DatabaseHelpController@gamesWithoutCategories')->name('user.database-help.games-without-categories');
@@ -114,9 +117,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 
     // Quick reviews
-    Route::match(['get', 'post'], '/user/quick-reviews/find-game', 'User\QuickReviewController@findGame')->name('user.quick-reviews.find-game');
     Route::match(['get', 'post'], '/user/quick-reviews/add/{gameId}', 'User\QuickReviewController@add')->name('user.quick-reviews.add');
     Route::get('/user/quick-reviews/{report?}', 'User\QuickReviewController@showList')->name('user.quick-reviews.list');
+
+    // Featured games
+    Route::match(['get', 'post'], '/user/featured-games/add/{gameId}', 'User\FeaturedGameController@add')->name('user.featured-games.add');
 
     // Campaigns
     Route::get('/user/campaigns/{campaignId}', 'User\CampaignsController@show')->name('user.campaigns.show');
@@ -239,6 +244,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Games: Tools
     Route::match(['get', 'post'], '/staff/games/tools/update-game-calendar-stats', 'Staff\Games\ToolsController@updateGameCalendarStats')->name('staff.games.tools.updateGameCalendarStats');
+
+    // Featured games
+    Route::get('/staff/games/featured-games/list', 'Staff\Games\FeaturedGameController@showList')->name('staff.games.featured-games.list');
+    Route::get('/staff/games/featured-games/accept-item', 'Staff\Games\FeaturedGameController@acceptItem')->name('staff.games.featured-games.acceptItem');
+    Route::get('/staff/games/featured-games/reject-item', 'Staff\Games\FeaturedGameController@rejectItem')->name('staff.games.featured-games.rejectItem');
+    Route::get('/staff/games/featured-games/archive-item', 'Staff\Games\FeaturedGameController@archiveItem')->name('staff.games.featured-games.archiveItem');
 
 });
 

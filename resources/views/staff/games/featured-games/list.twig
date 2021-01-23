@@ -1,0 +1,144 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div id="js-admin-notify" style="display: none;" class="alert alert-danger"></div>
+
+{% if FeaturedGamesList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th class="text-center">Featured date</th>
+                <th class="text-center">Featured type</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in FeaturedGamesList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                    </td>
+                    <td>
+                        {{ item.game.category.name }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.featured_date }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.getTypeDesc() }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.getStatusDesc() }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.getStatusDesc() == 'Pending' %}
+                            <a href="javascript:void(0);" id="lnk-accept-item-{{ item.id }}" class="lnk-accept-item">Accept</a> :
+                            <a href="javascript:void(0);" id="lnk-reject-item-{{ item.id }}" class="lnk-reject-item">Reject</a>
+                        {% elseif item.getStatusDesc() == 'Accepted' %}
+                            <a href="javascript:void(0);" id="lnk-archive-item-{{ item.id }}" class="lnk-archive-item">Archive</a>
+                        {% elseif item.getStatusDesc() == 'Rejected' %}
+                            <a href="javascript:void(0);" id="lnk-accept-item-{{ item.id }}" class="lnk-accept-item">Accept</a>
+                        {% elseif item.getStatusDesc() == 'Archived' %}
+                            <a href="javascript:void(0);" id="lnk-accept-item-{{ item.id }}" class="lnk-accept-item">Accept</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+    $('.lnk-accept-item, .lnk-reject-item, .lnk-archive-item').on('click', function() {
+
+        $('#js-admin-notify').hide();
+
+        var className = $(this).attr('class');
+        var elemId = $(this).attr('id');
+        var itemId = elemId.replace(className + '-', '');
+
+        var actionToTake = null;
+        var actionTaken = null;
+
+        var routeAcceptItem = '{{ route('staff.games.featured-games.acceptItem') }}';
+        var routeRejectItem = '{{ route('staff.games.featured-games.rejectItem') }}';
+        var routeArchiveItem = '{{ route('staff.games.featured-games.archiveItem') }}';
+        var actionRoutePath = null;
+
+        switch (className) {
+            case 'lnk-accept-item':
+                actionToTake = 'Accept';
+                actionTaken = 'Accepted';
+                actionRoutePath = routeAcceptItem;
+                break;
+            case 'lnk-reject-item':
+                actionToTake = 'Reject';
+                actionTaken = 'Rejected';
+                actionRoutePath = routeRejectItem;
+                break;
+            case 'lnk-archive-item':
+                actionToTake = 'Archive';
+                actionTaken = 'Archived';
+                actionRoutePath = routeArchiveItem;
+                break;
+        }
+
+        if (actionToTake == null) {
+            window.alert('Unknown action');
+            return false;
+        }
+
+
+        if (itemId == '') {
+            $('#js-admin-notify').text('Missing itemId');
+            $('#js-admin-notify').show();
+            return false;
+        }
+
+        if (!window.confirm(actionToTake + '?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON(actionRoutePath, {'itemId': itemId, 'elemId': elemId, 'actionTaken': actionTaken}, function(data) {
+            $('#' + elemId).parent().html('<em>' + actionTaken + '</em>');
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+</script>
+
+{% endblock page_inner %}

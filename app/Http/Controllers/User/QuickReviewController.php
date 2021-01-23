@@ -22,41 +22,10 @@ class QuickReviewController extends Controller
     /**
      * @var array
      */
-    private $validationRulesFindGame = [
-        'search_keywords' => 'required|min:3',
-    ];
-
-    /**
-     * @var array
-     */
     private $validationRules = [
         'review_score' => 'required|numeric|between:0,10',
         'review_body' => 'required|max:800'
     ];
-
-    public function findGame()
-    {
-        $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review: Find game');
-
-        $request = request();
-
-        if ($request->isMethod('post')) {
-
-            $this->validate($request, $this->validationRulesFindGame);
-
-            $keywords = request()->search_keywords;
-
-            if ($keywords) {
-                $bindings['SearchKeywords'] = $keywords;
-                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
-            }
-
-        }
-
-        $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
-
-        return view('user.quick-reviews.game-search', $bindings);
-    }
 
     public function add($gameId)
     {

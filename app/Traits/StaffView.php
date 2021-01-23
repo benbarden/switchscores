@@ -78,6 +78,12 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    public function getBindingsGamesFeaturedGamesSubpage($pageTitle)
+    {
+        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesFeaturedGamesSubPage($pageTitle);
+        return $this->getBindings($pageTitle);
+    }
+
     // ***** Reviews ***** //
 
     public function getBindingsReviewsSubpage($pageTitle, $tableSort = '')

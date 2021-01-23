@@ -2,12 +2,8 @@
 
 {% block page_inner %}
 
-<p>
-    Start by searching for the game you wish to submit a review of.
-</p>
-
 {% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ route('user.quick-reviews.find-game') }}">
+<form class="form-horizontal" role="form" method="post" action="{{ route('user.search-modular.find-game', {'searchMode': SearchMode}) }}">
     {{ csrf_field() }}
 
     <div class="form-group">
@@ -52,10 +48,18 @@
                         </td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
                         <td class="text-center">
-                            {% if item.id in ReviewedGameIdList %}
-                                <em>Already reviewed</em>
-                            {% else %}
-                                <a href="{{ route('user.quick-reviews.add', {'gameId': item.id}) }}">Add review</a>
+                            {% if SearchMode == 'add-quick-review' %}
+                                {% if item.id in ReviewedGameIdList %}
+                                    <em>Already reviewed</em>
+                                {% else %}
+                                    <a href="{{ route('user.quick-reviews.add', {'gameId': item.id}) }}">Add review</a>
+                                {% endif %}
+                            {% elseif SearchMode == 'add-featured-game' %}
+                                {% if item.id in FeaturedGameIdList %}
+                                    <em>Already submitted</em>
+                                {% else %}
+                                    <a href="{{ route('user.featured-games.add', {'gameId': item.id}) }}">Add featured game</a>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

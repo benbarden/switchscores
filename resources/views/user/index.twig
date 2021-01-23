@@ -34,6 +34,10 @@
                     <td>{{ UserData.points_balance }}</td>
                 </tr>
                 <tr>
+                    <td>Games in your collection</td>
+                    <td>{{ TotalGames }}</td>
+                </tr>
+                <tr>
                     <td>Registered</td>
                     <td>{{ UserData.created_at|date('d M Y') }}</td>
                 </tr>
@@ -42,14 +46,34 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Quick reviews</h2>
-            <p>
-                Tell other members what you think of a game by posting a quick review.
-            </p>
-            <p>
-                <a href="{{ route('user.quick-reviews.find-game') }}" class="btn btn-sm btn-primary">Add a quick review</a>
-                <a href="{{ route('user.quick-reviews.list') }}" class="btn btn-sm btn-primary">View your reviews</a>
-            </p>
+            <h2>Quick links</h2>
+            <table class="table">
+                <tr>
+                    <td>
+                        <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('user.quick-reviews.list') }}">View your quick reviews</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('user.collection.add') }}">Add a game to your collection</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('user.collection.landing') }}">View your collection</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">Suggest a featured game</a>
+                    </td>
+                </tr>
+            </table>
 
         </div>
 
@@ -83,25 +107,6 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
 
             <h2>Games collection</h2>
-
-            <p>
-                We've refreshed the Games collection -
-                <a href="{{ route('user.collection.landing') }}">check it out</a>.
-            </p>
-
-            <table class="table">
-                <tr>
-                    <td>Games in your collection</td>
-                    <td>{{ TotalGames }}</td>
-                </tr>
-                <tr>
-                    <td>Hours logged</td>
-                    <td>{{ TotalHours }}</td>
-                </tr>
-            </table>
-
-            <a href="{{ route('user.collection.add') }}" class="btn btn-sm btn-primary">Add a game</a>
-            <a href="{{ route('user.collection.landing') }}" class="btn btn-sm btn-primary">View your collection</a>
 
         </div>
 
