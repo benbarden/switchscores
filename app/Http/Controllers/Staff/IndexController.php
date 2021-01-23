@@ -9,11 +9,19 @@ use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
 use App\QuickReview;
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 
 class IndexController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoFeaturedGames;
+
+    public function __construct(FeaturedGameRepository $featuredGames)
+    {
+        $this->repoFeaturedGames = $featuredGames;
+    }
 
     public function index()
     {
@@ -34,6 +42,9 @@ class IndexController extends Controller
         // Game category suggestions
         $pendingCategoryEdits = $this->getServiceDbEditGame()->getPendingCategoryEdits();
         $bindings['PendingGameCategorySuggestionCount'] = count($pendingCategoryEdits);
+
+        // Featured games
+        $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
 
         // Nintendo.co.uk: Unlinked items
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();

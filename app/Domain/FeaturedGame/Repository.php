@@ -89,4 +89,9 @@ class Repository
             return $randomGame;
         }
     }
+
+    public function countPending()
+    {
+        return FeaturedGame::where('status', FeaturedGame::STATUS_PENDING)->count();
+    }
 }

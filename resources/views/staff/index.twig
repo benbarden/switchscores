@@ -2,11 +2,6 @@
 
 {% block page_inner %}
 
-<p>
-    Need help with the staff pages? Contact Ben via
-    <a href="https://twitter.com/switchscores">Twitter</a> or <a href="mailto:ben@switchscores.com">email</a>.
-</p>
-
 <div class="row">
 
     <div class="col-md-4">
@@ -63,6 +58,16 @@
                     </td>
                     <td class="text-right">
                         <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}" class="h4">{{ PendingGameCategorySuggestionCount }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('staff.games.featured-games.list') }}" class="h4">{{ PendingFeaturedGameCount }}</a>
                     </td>
                 </tr>
             {% endif %}
