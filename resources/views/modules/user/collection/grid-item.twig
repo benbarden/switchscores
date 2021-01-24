@@ -33,10 +33,10 @@
                             <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
                             {% if item.play_status in ['completed', 'abandoned', 'endless'] %}
                                 :
-                                {% if RowGameId in QuickReviewGameIdList %}
+                                {% if game.id in QuickReviewGameIdList %}
                                     <em>Review added</em>
                                 {% else %}
-                                    <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
+                                    <a href="{{ route('user.quick-reviews.add', {'gameId': game.id}) }}">Add review</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
