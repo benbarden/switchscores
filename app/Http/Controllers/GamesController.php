@@ -191,7 +191,7 @@ class GamesController extends Controller
         }
 
         $bindings['GameBlurb'] = $blurb;
-        $bindings['OgDescription'] = $blurb;
+        $bindings['MetaDescription'] = strip_tags($blurb);
 
         return view('games.page.show', $bindings);
     }

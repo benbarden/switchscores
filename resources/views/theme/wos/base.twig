@@ -25,6 +25,9 @@
     <link href="/js/select2/css/select2.min.css" rel="stylesheet" />
     <script src="/js/select2/js/select2.min.js"></script>
 
+    {% if MetaDescription %}
+        <meta name="description" content="{{ MetaDescription }}" />
+    {% endif %}
     {% if GameData.boxart_header_image %}
         <meta name="twitter:card" content="summary_large_image" />
     {% else %}
@@ -34,8 +37,8 @@
     <meta name="twitter:creator" content="@benbarden" />
     <meta property="og:url" content="{{ url().current() }}" />
     <meta property="og:title" content="{{ PageTitle }}" />
-    {% if OgDescription %}
-        <meta property="og:description" content="{{ OgDescription }}" />
+    {% if MetaDescription %}
+        <meta property="og:description" content="{{ MetaDescription }}" />
     {% endif %}
     {% if GameData %}
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
