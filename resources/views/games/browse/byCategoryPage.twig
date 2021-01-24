@@ -21,18 +21,12 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <p>There are {{ CategoryGameCount }} {{ Category.name }} games.</p>
-    </div>
-</div>
-
-<div class="row">
 
     {% if RankedGameList|length %}
         {% set UnrankedListCss = ' style="border-left: 1px solid #c9c9c9;"' %}
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h2>
-                Ranked
+                {{ RankedGameList|length }} ranked
                 <span class="h5">(3 or more reviews)</span>
             </h2>
             {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': RankedGameList} %}
@@ -51,7 +45,7 @@
         {% endif %}
     <div class="{{ UnrankedListClasses }}"{{ UnrankedListCss }}>
         <h2>
-            Unranked
+            {{ UnrankedGameList|length }} unranked
             <span class="h5">(0, 1 or 2 reviews)</span>
         </h2>
         {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UnrankedGameList, 'batchOverride': batchOverride} %}
