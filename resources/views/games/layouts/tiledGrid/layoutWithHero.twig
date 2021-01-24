@@ -1,8 +1,6 @@
 {% if GameList|length %}
     {% set firstItem = GameList.first() %}
-        <div class="row">
-            {% include 'games/layouts/tiledGrid/tileHero.twig' with {'item': firstItem} %}
-        </div>
+        {% include 'games/layouts/tiledGrid/tileHero.twig' with {'item': firstItem} %}
     {% if GameList|length > 1 %}
         {% for item in GameList|slice(1)|batch(2) %}
             <div class="row">

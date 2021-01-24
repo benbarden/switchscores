@@ -1,55 +1,44 @@
 {# PACKSHOTS #}
 {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    {% if item.category_id %}
-        <div style="position: absolute; top: 2px;">
-            <span class="h5 label label-default">{{ item.category_name }}</span>
-        </div>
-    {% endif %}
-    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
-        {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
-        {% else %}
-            <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
+<div class="row" style="margin-top: 16px;">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {% if item.category_id %}
+            <div style="position: absolute; top: 2px;">
+                <span class="h5 label label-default">{{ item.category_name }}</span>
+            </div>
         {% endif %}
-    </a>
-</div>
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            &nbsp;
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-            <span class="h4">
-                <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
-            </span>
-            <br>
-            <span class="h5">
-                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
-                <span class="h4" style="font-weight: bold;">&pound;{{ item.price_discounted }}</span>
-                <span style="color: #f00;">{{ item.price_discount_pc }}% off</span>
-            </span>
-            {% if item.game_rank is null %}
-                <br>
-                Reviews: {{ item.review_count }}
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+            {% if boxartUrl %}
+                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+            {% else %}
+                <img src="/img/logo-grey-wide.png" class="img-responsive" alt="{{ item.title }}">
             {% endif %}
-        </div>
-        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        </a>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 8px;">
+    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+        <span class="h5">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
+        <br>
+        <span class="h6">
+            <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
+            <span class="h4" style="font-weight: bold;">&pound;{{ item.price_discounted }}</span>
+            <span style="color: #f00;">{{ item.price_discount_pc }}% off</span>
+        </span>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="pull-right">
             {% if item.rating_avg %}
                 {% if item.game_rank %}
                     {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
                 {% else %}
-                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5'} %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
                 {% endif %}
             {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            &nbsp;
         </div>
     </div>
 </div>

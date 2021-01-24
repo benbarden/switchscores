@@ -3,5 +3,16 @@
 {% else %}
     {% set scoreSizeHeader = 'h4' %}
 {% endif %}
+{% if reviewCount is defined %}
+    {% set badgeText = reviewCount~'/3' %}
+{% else %}
+    {% set badgeText = 'TBC' %}
+{% endif %}
 
-<span class="{{ scoreSizeHeader }} label label-default">TBC</span>
+<span class="{{ scoreSizeHeader }} label label-default">
+    {{ badgeText }}
+</span>
+{% if reviewCount is defined %}
+<br>
+<span class="text-center center-block"><small>reviews</small></span>
+{% endif %}
