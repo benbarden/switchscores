@@ -22,40 +22,41 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h2>Games in {{ Category.name }}</h2>
-        <p><small>{{ CategoryGameCount }} games with this category.</small></p>
+        <p>There are {{ CategoryGameCount }} {{ Category.name }} games.</p>
     </div>
 </div>
 
 <div class="row">
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <h2>
-            Ranked
-        </h2>
-        {% if RankedGameList|length %}
-            <p>
-                Games with 3 or more reviews.
-            </p>
+    {% if RankedGameList|length %}
+        {% set UnrankedListCss = ' style="border-left: 1px solid #c9c9c9;"' %}
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h2>
+                Ranked
+                <span class="h5">(3 or more reviews)</span>
+            </h2>
             {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': RankedGameList} %}
-        {% else %}
-            <p>Looks like we don't have any ranked games in this category.</p>
-        {% endif %}
-    </div>
+        </div>
+    {% else %}
+        {% set NoRankedGames = 'Y' %}
+    {% endif %}
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 1px solid #c9c9c9;">
+    {% if UnrankedGameList|length %}
+        {% if NoRankedGames == 'Y' %}
+            {% set UnrankedListClasses = 'col-xs-12 col-sm-12 col-md-12 col-lg-12' %}
+            {% set batchOverride = 4 %}
+        {% else %}
+            {% set UnrankedListClasses = 'col-xs-12 col-sm-6 col-md-6 col-lg-6' %}
+            {% set batchOverride = 2 %}
+        {% endif %}
+    <div class="{{ UnrankedListClasses }}"{{ UnrankedListCss }}>
         <h2>
             Unranked
+            <span class="h5">(0, 1 or 2 reviews)</span>
         </h2>
-        {% if UnrankedGameList|length %}
-            <p>
-                Games with fewer than 3 reviews - or no reviews.
-            </p>
-            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UnrankedGameList} %}
-        {% else %}
-            <p>Looks like we don't have any unranked games in this category.</p>
-        {% endif %}
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UnrankedGameList, 'batchOverride': batchOverride} %}
     </div>
+    {% endif %}
 </div>
 
 {% endblock page_body %}
