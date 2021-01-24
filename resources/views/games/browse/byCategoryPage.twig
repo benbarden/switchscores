@@ -43,7 +43,7 @@
             {% set UnrankedListClasses = 'col-xs-12 col-sm-6 col-md-6 col-lg-6' %}
             {% set batchOverride = 2 %}
         {% endif %}
-    <div class="{{ UnrankedListClasses }}"{{ UnrankedListCss }}>
+    <div class="{{ UnrankedListClasses }}"{{ UnrankedListCss|raw }}>
         <h2>
             {{ UnrankedGameList|length }} unranked
             <span class="h5">(0, 1 or 2 reviews)</span>
