@@ -399,4 +399,14 @@ class ReviewLinkService
 
         return $reviewScores;
     }
+
+    public function getMonthlyReviewsBySite($siteId)
+    {
+        return DB::select("
+            SELECT DATE_FORMAT(review_date, '%Y-%m') AS review_month, count(*) AS count
+            FROM review_links
+            WHERE site_id = ?
+            GROUP BY review_month, site_id
+        ", [$siteId]);
+    }
 }

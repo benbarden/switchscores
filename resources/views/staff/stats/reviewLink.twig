@@ -1,0 +1,74 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <script src="/js/chartjs/Chart.min.js?v=2.8.0"></script>
+        <style>
+            canvas {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
+        </style>
+
+        <div style="width: 100%;">
+            <canvas id="review-link-stats" height="200" style="background: #f7f7f7;"></canvas>
+        </div>
+        <script>
+
+            var ctx = document.getElementById('review-link-stats');
+            var barChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [
+                        {% for item in ChartDataSet %}
+                        '{{ item.review_month }}'
+                        {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'Reviews this month',
+                        data: [
+                            {% for item in ChartDataSet %}
+                            {{ item.count }}
+                            {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                        ],
+                        borderColor: [
+                            {% for i in range(1, ChartColourGroups) %}
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+        </script>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

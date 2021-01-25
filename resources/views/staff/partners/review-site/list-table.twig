@@ -12,6 +12,7 @@
             <th class="text-center">Feed v2</th>
             <th class="text-center">Twitter</th>
             <th class="text-center">Contact details</th>
+            <th class="text-center">Stats</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -85,6 +86,9 @@
                             <i class="fas fa-times"></i>
                         </div>
                     {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.stats.reviewLink', {'partnerId': item.id}) }}">View</a>
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.reviews.site.edit', {'siteId': item.id}) }}">Edit</a>

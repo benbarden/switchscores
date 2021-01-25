@@ -495,6 +495,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::get('/staff/stats/dashboard', 'Staff\Stats\DashboardController@show')->name('staff.stats.dashboard');
 
     Route::get('/staff/stats/review-site', 'Staff\Stats\ReviewSiteController@show')->name('staff.stats.reviewSite');
+    Route::get('/staff/stats/review-link/{partnerId}', 'Staff\Stats\ReviewLinkController@show')->name('staff.stats.reviewLink');
 
 });
 
