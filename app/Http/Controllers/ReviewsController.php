@@ -18,8 +18,8 @@ class ReviewsController extends Controller
         $bindings['PageTitle'] = 'Reviews';
 
         $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
-        $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
-        $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked();
+        $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(14);
+        $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked(14);
 
         foreach ($highlightsRecentlyRanked as &$item) {
             $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
