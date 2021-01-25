@@ -314,4 +314,16 @@ class TitleMatchTest extends TestCase
         $actual = $this->gameTitleMatch->generate($title);
         $this->assertEquals($expected, $actual);
     }
+
+    public function testKeenGamerRedoutSpaceAssault()
+    {
+        $title = 'Redout: Space Assault Review: Prepare for Launch (Switch)';
+        $matchRule = "/^(.*) Review: (.*) \(Switch\)$/";
+        $expected = 'Redout: Space Assault';
+
+        $this->gameTitleMatch->setMatchRule($matchRule);
+        $this->gameTitleMatch->setMatchIndex(1);
+        $actual = $this->gameTitleMatch->generate($title);
+        $this->assertEquals($expected, $actual);
+    }
 }

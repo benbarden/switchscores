@@ -82,9 +82,16 @@ class RunFeedParser extends Command
                 continue;
             }
 
+            $feedId = $feedItem->feedImport->feed_id;
+            $partnerFeed = $this->getServicePartnerFeedLink()->find($feedId);
+            if (!$partnerFeed) {
+                $logger->error('Cannot find partner feed: '.$feedId);
+                continue;
+            }
+
             $siteName = $reviewSite->name;
-            $titleMatchRulePattern = $reviewSite->title_match_rule_pattern;
-            $titleMatchIndex = $reviewSite->title_match_index;
+            $titleMatchRulePattern = $partnerFeed->title_match_rule_pattern;
+            $titleMatchRuleIndex = $partnerFeed->title_match_rule_index;
 
             try {
 
@@ -92,12 +99,12 @@ class RunFeedParser extends Command
                 $logger->info("Site: $siteName ($siteId)");
                 $logger->info('Processing item: '.$itemTitle);
 
-                if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
+                if ($titleMatchRulePattern && ($titleMatchRuleIndex != null)) {
 
                     // New method
                     $serviceTitleMatch->setMatchRule($titleMatchRulePattern);
                     $serviceTitleMatch->prepareMatchRule();
-                    $serviceTitleMatch->setMatchIndex($titleMatchIndex);
+                    $serviceTitleMatch->setMatchIndex($titleMatchRuleIndex);
                     $parsedTitle = $serviceTitleMatch->generate($itemTitle);
                     $logger->info('Using new parser');
 
