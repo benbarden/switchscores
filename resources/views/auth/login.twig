@@ -6,7 +6,25 @@
 
     <div class="col-md-6">
 
-        <h2>Email/password</h2>
+        <h2>Twitter</h2>
+
+        <p>
+            Use the button shown below to register with Twitter, or login to your existing account.
+        </p>
+
+        <a href="{{ route('auth.login.twitter') }}">
+            <img src="/img/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" style="border: 0;">
+        </a>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <h2>Standard login</h2>
+
+        <p>
+            If you have a standard account, you can login here.
+        </p>
 
         {% if errors.any %}
             {% for error in errors.all %}
@@ -17,26 +35,29 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="email" class="col-md-4 control-label">Email address</label>
-
-                <div class="col-md-8">
+                <div class="col-md-8 text-left">
+                    <label for="email" class="control-label">Email address</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
                     <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="password" class="col-md-4 control-label">Password</label>
-
-                <div class="col-md-8">
+                <div class="col-md-8 text-left">
+                    <label for="password" class="control-label">Password</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
                     <input id="password" type="password" class="form-control" name="password" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-8">
+                <div class="col-md-8 text-left">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember me
@@ -46,26 +67,13 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-8">
+                <div class="col-md-8 text-left">
                     <button type="submit" class="btn btn-primary">
                         Login
                     </button>
                 </div>
             </div>
         </form>
-
-    </div>
-
-    <div class="col-md-6">
-
-        <h2>Twitter login</h2>
-
-        <a href="{{ route('auth.login.twitter') }}">
-            <img src="/img/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" style="border: 0;">
-        </a>
 
     </div>
 
