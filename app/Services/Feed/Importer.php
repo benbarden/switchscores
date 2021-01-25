@@ -150,7 +150,7 @@ class Importer
                     'headers' => [
                         'User-Agent' => 'switchscores/v1.0',
                         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-                        'Accept-Encoding' => 'gzip, deflate, br',
+                        'Accept-Encoding' => 'gzip, deflate',
                     ],
                     'verify' => false
                 ]
