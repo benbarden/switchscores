@@ -9,10 +9,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
+use App\Category;
+
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
+
 use App\Services\GamesCollection\PlayStatus;
 use App\Services\UserGamesCollectionService;
-use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
-use App\Category;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -35,14 +38,17 @@ class CollectionController extends Controller
 
     protected $serviceUserGamesCollection;
     protected $repoUserGamesCollection;
+    protected $dbUserGamesCollection;
 
     public function __construct(
         UserGamesCollectionService $serviceUserGamesCollection,
-        UserGamesCollectionRepository $repoUserGamesCollection
+        UserGamesCollectionRepository $repoUserGamesCollection,
+        UserGamesCollectionDbQueries $dbUserGamesCollection
     )
     {
         $this->serviceUserGamesCollection = $serviceUserGamesCollection;
         $this->repoUserGamesCollection = $repoUserGamesCollection;
+        $this->dbUserGamesCollection = $dbUserGamesCollection;
     }
 
     public function landing()
@@ -103,7 +109,7 @@ class CollectionController extends Controller
     {
         $bindings = $this->getBindingsCollectionSubpage('Category breakdown');
 
-        $bindings['CategoryBreakdown'] = $this->repoUserGamesCollection->getCategoryBreakdown($this->getAuthId());
+        $bindings['CategoryBreakdown'] = $this->dbUserGamesCollection->getCategoryBreakdown($this->getAuthId());
 
         return view('user.collection.category-breakdown', $bindings);
     }
