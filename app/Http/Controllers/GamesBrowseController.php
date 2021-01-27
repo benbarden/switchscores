@@ -14,8 +14,8 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Browse Switch games by title';
-        $bindings['PageTitle'] = 'Browse Switch games by title';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by title';
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by title';
 
         $bindings['LetterList'] = range('A', 'Z');
 
@@ -31,8 +31,8 @@ class GamesBrowseController extends Controller
         $bindings['GameList'] = $gamesList;
         $bindings['GameLetter'] = $letter;
 
-        $bindings['TopTitle'] = 'Browse Switch games by title: '.$letter;
-        $bindings['PageTitle'] = 'Browse Switch games by title: '.$letter;
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
 
         return view('games.browse.byTitlePage', $bindings);
     }
@@ -43,8 +43,8 @@ class GamesBrowseController extends Controller
 
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
 
-        $bindings['PageTitle'] = 'Browse Switch games by category';
-        $bindings['TopTitle'] = 'Browse Switch games by category';
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by category';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by category';
 
         return view('games.browse.byCategoryLanding', $bindings);
     }
@@ -65,8 +65,8 @@ class GamesBrowseController extends Controller
         $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($categoryId);
         $bindings['UnrankedGameList'] = $this->getServiceCategory()->getUnrankedByCategory($categoryId);
 
-        $bindings['PageTitle'] = 'Browse Switch games by category: '.$categoryName;
-        $bindings['TopTitle'] = 'Browse Switch games by category: '.$categoryName;
+        $bindings['PageTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
+        $bindings['TopTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
 
         return view('games.browse.byCategoryPage', $bindings);
     }
@@ -90,8 +90,8 @@ class GamesBrowseController extends Controller
 
         $bindings['SeriesList'] = $this->getServiceGameSeries()->getAll();
 
-        $bindings['PageTitle'] = 'Browse Switch games by series';
-        $bindings['TopTitle'] = 'Browse Switch games by series';
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series';
 
         return view('games.browse.bySeriesLanding', $bindings);
     }
@@ -110,8 +110,8 @@ class GamesBrowseController extends Controller
 
         $bindings['GameList'] = $gameList;
 
-        $bindings['PageTitle'] = 'Browse Switch games by series: '.$seriesName;
-        $bindings['TopTitle'] = 'Browse Switch games by series: '.$seriesName;
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
 
         return view('games.browse.bySeriesPage', $bindings);
     }
@@ -122,8 +122,8 @@ class GamesBrowseController extends Controller
 
         $bindings['TagList'] = $this->getServiceTag()->getAll();
 
-        $bindings['PageTitle'] = 'Browse Switch games by tag';
-        $bindings['TopTitle'] = 'Browse Switch games by tag';
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag';
 
         return view('games.browse.byTagLanding', $bindings);
     }
@@ -143,8 +143,8 @@ class GamesBrowseController extends Controller
 
         $bindings['GameList'] = $gameList;
 
-        $bindings['PageTitle'] = 'Browse Switch games by tag: '.$tagName;
-        $bindings['TopTitle'] = 'Browse Switch games by tag: '.$tagName;
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
 
         return view('games.browse.byTagPage', $bindings);
     }
@@ -153,8 +153,8 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Nintendo Switch - Release calendar';
-        $bindings['PageTitle'] = 'Nintendo Switch - Release calendar';
+        $bindings['TopTitle'] = 'Nintendo Switch games by release date:';
+        $bindings['PageTitle'] = 'Nintendo Switch games by release date:';
 
         $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
         $dateListArray = [];
@@ -240,8 +240,8 @@ class GamesBrowseController extends Controller
         }
         $bindings['CalendarGamesList'] = $calendarGames;
 
-        $bindings['TopTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
-        $bindings['PageTitle'] = 'Nintendo Switch - Release calendar: '.$dtDateDesc;
+        $bindings['TopTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
+        $bindings['PageTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
 
         $bindings['CalendarDateDesc'] = $dtDateDesc;
         $bindings['CalendarDateUrl'] = $dateUrl;
