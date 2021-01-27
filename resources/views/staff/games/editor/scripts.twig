@@ -21,6 +21,10 @@
         // *** Additional *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
+        formVals['image_square'] = "{{ GameData.image_square }}";
+        formVals['image_header'] = "{{ GameData.image_header }}";
+        formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
+        formVals['boxart_header_image'] = "{{ GameData.boxart_header_image }}";
 
     } else {
 
@@ -42,6 +46,10 @@
         // *** Additional *** //
         formVals['video_url'] = "{{ old('video_url') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
+        formVals['image_square'] = "{{ old('image_square') }}";
+        formVals['image_header'] = "{{ old('image_header') }}";
+        formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
+        formVals['boxart_header_image'] = "{{ old('boxart_header_image') }}";
 
     }
 
@@ -66,6 +74,10 @@
     // *** Additional *** //
     $('#video_url').val(formVals['video_url']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
+    $('#image_square').val(formVals['image_square']);
+    $('#image_header').val(formVals['image_header']);
+    $('#boxart_square_url').val(formVals['boxart_square_url']);
+    $('#boxart_header_image').val(formVals['boxart_header_image']);
 
     // Autogenerate link URL
     $('#title').on('blur', function() {
