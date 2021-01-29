@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
 use App\Services\Shortcode\DynamicShortcode;
@@ -13,6 +16,18 @@ use App\Traits\SwitchServices;
 class NewsController extends Controller
 {
     use SwitchServices;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function landing()
     {
@@ -83,7 +98,7 @@ class NewsController extends Controller
         $bindings['NewsContentParsed'] = $contentHtml;
 
         // Total rank count
-        $bindings['RankMaximum'] = $serviceGame->countRanked();
+        $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
 
         // Next/Previous links
         $newsNext = $serviceNews->getNext($newsItem);

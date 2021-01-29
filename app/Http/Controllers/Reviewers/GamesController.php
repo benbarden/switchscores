@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -11,6 +14,18 @@ class GamesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function show($gameId)
     {
@@ -22,7 +37,7 @@ class GamesController extends Controller
         $pageTitle = 'Game detail: '.$game->title;
 
         $bindings['GameData'] = $game;
-        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
+        $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
 
         $authUser = $this->getValidUser($this->getServiceUser());
         $partnerId = $authUser->partner_id;

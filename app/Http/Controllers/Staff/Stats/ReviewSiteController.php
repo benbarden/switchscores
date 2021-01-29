@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -11,6 +14,18 @@ class ReviewSiteController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function show()
     {
@@ -23,10 +38,10 @@ class ReviewSiteController extends Controller
         $serviceTopRated = $this->getServiceTopRated();
         $serviceReviewStats = $this->getServiceReviewStats();
 
-        $bindings['RankedGameCount'] = $serviceGame->countRanked();
+        $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
-        $releasedGameCount = $serviceGameReleaseDate->countReleased();
+        $releasedGameCount = $this->repoGameStats->totalReleased();
         $reviewLinkCount = $serviceReviewLinks->countActive();
 
         $bindings['ReleasedGameCount'] = $releasedGameCount;

@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Collection;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
 
 use App\Traits\SwitchServices;
 
@@ -14,10 +15,15 @@ class WelcomeController extends Controller
     use SwitchServices;
 
     protected $repoFeaturedGames;
+    protected $repoGameStats;
 
-    public function __construct(FeaturedGameRepository $featuredGames)
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
     {
         $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
     }
 
     public function show()
@@ -51,8 +57,8 @@ class WelcomeController extends Controller
         $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
 
         // Quick stats
-        $bindings['TotalReleasedGames'] = $this->getServiceGameReleaseDate()->countReleased();
-        $bindings['TotalRanked'] = $this->getServiceGame()->countRanked();
+        $bindings['TotalReleasedGames'] = $this->repoGameStats->totalReleased();
+        $bindings['TotalRanked'] = $this->repoGameStats->totalRanked();
         $bindings['TotalReviews'] = $this->getServiceReviewLink()->countActive();
 
         $bindings['TopTitle'] = 'Welcome';

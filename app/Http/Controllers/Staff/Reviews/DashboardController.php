@@ -9,10 +9,25 @@ use App\Traits\StaffView;
 
 use App\QuickReview;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 class DashboardController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function show()
     {
@@ -36,7 +51,7 @@ class DashboardController extends Controller
 
         // Stats
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
-        $bindings['RankedGameCount'] = $serviceGame->countRanked();
+        $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         // Unranked breakdown

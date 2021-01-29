@@ -82,18 +82,6 @@ class GameService
         $game->save();
     }
 
-    public function clearOldDeveloperField(Game $game)
-    {
-        $game->developer = null;
-        $game->save();
-    }
-
-    public function clearOldPublisherField(Game $game)
-    {
-        $game->publisher = null;
-        $game->save();
-    }
-
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -171,35 +159,6 @@ class GameService
         $games = $games->get();
 
         return $games;
-    }
-    /**
-     * @param $region
-     * @param $fsId
-     * @return Game
-     * @throws \Exception
-     */
-    public function getByFsId($region, $fsId)
-    {
-        switch ($region) {
-            case 'eu':
-                $field = 'eshop_europe_fs_id';
-                break;
-            default:
-                throw new \Exception('Unsupported region: '.$region);
-                break;
-        }
-
-        $game = Game::where($field, $fsId)->first();
-        return $game;
-    }
-
-    // ********************************************************** //
-    // Get number of ranked games
-    // ********************************************************** //
-
-    public function countRanked()
-    {
-        return Game::whereNotNull('game_rank')->count();
     }
 
     // ********************************************************** //

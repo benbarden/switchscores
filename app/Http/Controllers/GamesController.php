@@ -7,10 +7,25 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 class GamesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function landing()
     {
@@ -130,7 +145,7 @@ class GamesController extends Controller
         $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
 
         // Total rank count
-        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
+        $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
 
         // Logged in user data
         $userId = $this->getAuthId();

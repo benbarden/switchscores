@@ -15,15 +15,6 @@ class GameReleaseDateService
     // ********************************************** //
 
     /**
-     * Welcome page stats
-     * @return integer
-     */
-    public function countReleased()
-    {
-        return Game::where('games.eu_is_released', 1)->count();
-    }
-
-    /**
      * @param int $limit
      * @return mixed
      */

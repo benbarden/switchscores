@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -11,6 +14,18 @@ class DashboardController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function show()
     {
@@ -31,7 +46,7 @@ class DashboardController extends Controller
 
         // Release date stats
         $bindings['TotalGameCount'] = $this->getServiceGame()->getCount();
-        $bindings['ReleasedGameCount'] = $serviceGameReleaseDate->countReleased();
+        $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 
         return view('staff.games.dashboard', $bindings);

@@ -4,18 +4,34 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
 use App\Game;
+
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Services\DataSources\Queries\Differences;
+
+use App\Traits\SwitchServices;
+use App\Traits\StaffView;
 
 class GamesDetailController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoFeaturedGames;
+    protected $repoGameStats;
+
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
+    }
 
     public function show($gameId)
     {
@@ -27,7 +43,7 @@ class GamesDetailController extends Controller
         $bindings = $this->getBindingsGamesSubpage($gameTitle);
 
         // Total rank count
-        $bindings['RankMaximum'] = $this->getServiceGame()->countRanked();
+        $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
 
         $bindings['LastAction'] = $lastAction = \Request::get('lastaction');
 
