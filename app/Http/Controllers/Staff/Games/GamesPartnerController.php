@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -10,7 +10,7 @@ use App\Factories\GamesCompanyFactory;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
-class GamePartnerController extends Controller
+class GamesPartnerController extends Controller
 {
     use SwitchServices;
     use AuthUser;
@@ -41,7 +41,7 @@ class GamePartnerController extends Controller
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
         $bindings['DataSourceWikipedia'] = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
 
-        return view('admin.games.partner.gamePartners', $bindings);
+        return view('staff.games.partner.gamePartners', $bindings);
     }
 
     public function addGameDeveloper()

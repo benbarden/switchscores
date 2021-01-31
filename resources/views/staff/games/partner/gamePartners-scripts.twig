@@ -29,7 +29,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game.developer.add', {'gameId': GameId}) }}', {gameId: gameId, developerId: developerId}, function(data) {
+        $.getJSON('{{ route('staff.game.developer.add', {'gameId': GameId}) }}', {gameId: gameId, developerId: developerId}, function(data) {
             $('#js-developer-notify').text('Developer added!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
@@ -63,7 +63,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
+        $.getJSON('{{ route('staff.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
             $('#js-developer-notify').text('Developer removed!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
@@ -92,7 +92,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
+        $.getJSON('{{ route('staff.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher added!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');
@@ -126,7 +126,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
+        $.getJSON('{{ route('staff.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher removed!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');
@@ -151,7 +151,7 @@
             }
         });
 
-        $.getJSON('{{ route('admin.game.partner.createNewCompany') }}', {name: newName, linkTitle: newLinkTitle}, function(data) {
+        $.getJSON('{{ route('staff.game.partner.createNewCompany') }}', {name: newName, linkTitle: newLinkTitle}, function(data) {
             $('#js-quick-create-notify').text('Saved!');
             $('#js-quick-create-notify').show();
             $('#quick-create-games-company-name').val('');

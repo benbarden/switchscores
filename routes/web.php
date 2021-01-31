@@ -253,6 +253,20 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/featured-games/reject-item', 'Staff\Games\FeaturedGameController@rejectItem')->name('staff.games.featured-games.rejectItem');
     Route::get('/staff/games/featured-games/archive-item', 'Staff\Games\FeaturedGameController@archiveItem')->name('staff.games.featured-games.archiveItem');
 
+    // Games: Title hashes
+    Route::get('/staff/games-title-hash/list/{gameId?}', 'Staff\Games\GamesTitleHashController@showList')->name('staff.games-title-hash.list');
+    Route::match(['get', 'post'], '/staff/games-title-hash/add', 'Staff\Games\GamesTitleHashController@add')->name('staff.games-title-hash.add');
+    Route::match(['get', 'post'], '/staff/games-title-hash/edit/{itemId}', 'Staff\Games\GamesTitleHashController@edit')->name('staff.games-title-hash.edit');
+    Route::match(['get', 'post'], '/staff/games-title-hash/delete/{itemId}', 'Staff\Games\GamesTitleHashController@delete')->name('staff.games-title-hash.delete');
+
+    // Games partner links
+    Route::get('/staff/game/partner/{gameId}/list', 'Staff\Games\GamesPartnerController@showGamePartners')->name('staff.game.partner.list');
+    Route::get('/staff/game/partner/create-new-company', 'Staff\Games\GamesPartnerController@createNewCompany')->name('staff.game.partner.createNewCompany');
+    Route::get('/staff/game/developer/{gameId}/add', 'Staff\Games\GamesPartnerController@addGameDeveloper')->name('staff.game.developer.add');
+    Route::get('/staff/game/developer/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGameDeveloper')->name('staff.game.developer.remove');
+    Route::get('/staff/game/publisher/{gameId}/add', 'Staff\Games\GamesPartnerController@addGamePublisher')->name('staff.game.publisher.add');
+    Route::get('/staff/game/publisher/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGamePublisher')->name('staff.game.publisher.remove');
+
 });
 
 
@@ -499,28 +513,5 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 
 });
 
-
-
-/*
- * Admin - old routes
- * To be gradually moved into Staff routes
- */
-Route::group(['middleware' => ['auth.admin:admin']], function() {
-
-    // Games: Title hashes
-    Route::get('/admin/games-title-hash/list/{gameId?}', 'Admin\GamesTitleHashController@showList')->name('admin.games-title-hash.list');
-    Route::match(['get', 'post'], '/admin/games-title-hash/add', 'Admin\GamesTitleHashController@add')->name('admin.games-title-hash.add');
-    Route::match(['get', 'post'], '/admin/games-title-hash/edit/{itemId}', 'Admin\GamesTitleHashController@edit')->name('admin.games-title-hash.edit');
-    Route::match(['get', 'post'], '/admin/games-title-hash/delete/{itemId}', 'Admin\GamesTitleHashController@delete')->name('admin.games-title-hash.delete');
-
-    // Games partner links
-    Route::get('/admin/game/partner/{gameId}/list', 'Admin\GamePartnerController@showGamePartners')->name('admin.game.partner.list');
-    Route::get('/admin/game/partner/create-new-company', 'Admin\GamePartnerController@createNewCompany')->name('admin.game.partner.createNewCompany');
-    Route::get('/admin/game/developer/{gameId}/add', 'Admin\GamePartnerController@addGameDeveloper')->name('admin.game.developer.add');
-    Route::get('/admin/game/developer/{gameId}/remove', 'Admin\GamePartnerController@removeGameDeveloper')->name('admin.game.developer.remove');
-    Route::get('/admin/game/publisher/{gameId}/add', 'Admin\GamePartnerController@addGamePublisher')->name('admin.game.publisher.add');
-    Route::get('/admin/game/publisher/{gameId}/remove', 'Admin\GamePartnerController@removeGamePublisher')->name('admin.game.publisher.remove');
-
-});
 
 Auth::routes();

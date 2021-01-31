@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -43,7 +43,7 @@ class GamesTitleHashController extends Controller
 
         $bindings['GameId'] = $gameId;
 
-        return view('admin.games-title-hash.list', $bindings);
+        return view('staff.games.title-hash.list', $bindings);
     }
 
     public function add()
@@ -63,7 +63,7 @@ class GamesTitleHashController extends Controller
             $validator = Validator::make($request->all(), $this->validationRules);
 
             if ($validator->fails()) {
-                return redirect(route('admin.games-title-hash.add'))
+                return redirect(route('staff.games-title-hash.add'))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -80,7 +80,7 @@ class GamesTitleHashController extends Controller
             });
 
             if ($validator->fails()) {
-                return redirect(route('admin.games-title-hash.add'))
+                return redirect(route('staff.games-title-hash.add'))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -90,7 +90,6 @@ class GamesTitleHashController extends Controller
             $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
 
             // Done
-            //return redirect(route('admin.games-title-hash.list', ['gameId' => $gameId]));
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
 
         } else {
@@ -104,7 +103,7 @@ class GamesTitleHashController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        return view('admin.games-title-hash.add', $bindings);
+        return view('staff.games.title-hash.add', $bindings);
     }
 
     public function edit($gameTitleHashId)
@@ -144,7 +143,7 @@ class GamesTitleHashController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        return view('admin.games-title-hash.edit', $bindings);
+        return view('staff.games.title-hash.edit', $bindings);
     }
 
     public function delete($gameTitleHashId)
@@ -176,6 +175,6 @@ class GamesTitleHashController extends Controller
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
 
-        return view('admin.games-title-hash.delete', $bindings);
+        return view('staff.games.title-hash.delete', $bindings);
     }
 }

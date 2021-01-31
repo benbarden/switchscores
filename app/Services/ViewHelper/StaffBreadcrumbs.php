@@ -70,7 +70,7 @@ class StaffBreadcrumbs
 
     private function addGamesTitleHashesList()
     {
-        $crumbItem = ['url' => route('admin.games-title-hash.list'), 'text' => 'Game title hashes'];
+        $crumbItem = ['url' => route('staff.games-title-hash.list'), 'text' => 'Game title hashes'];
         return $this->addCrumb($crumbItem);
     }
 
