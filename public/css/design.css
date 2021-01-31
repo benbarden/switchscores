@@ -1,6 +1,6 @@
 /* Background */
 html, body {min-height: 100%;}
-body {background: url('../img/background2.png') #ec414d fixed center bottom no-repeat;}
+body {background: url('../img/background3.jpg') #ec414d fixed top right repeat;}
 #wos-body {background: #fff; padding: 8px;}
 .navbar {margin-bottom: 0px !important;}
 .push {height: 100px;}
