@@ -71,7 +71,7 @@ class MainPageTest extends TestCase
         $navLinks = [
             '/top-rated/by-year',
             '/top-rated/by-year/2016',
-            '/top-rated/by-year/2021',
+            '/top-rated/by-year/2022',
             '/reviews/site/not-really-a-site',
             '/news/20180317/fake-post',
             '/news/what/is-going-on',

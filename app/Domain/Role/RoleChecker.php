@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Role;
+namespace App\Domain\Role;
 
 use App\User;
 
