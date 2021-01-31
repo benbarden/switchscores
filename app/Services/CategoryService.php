@@ -166,6 +166,7 @@ class CategoryService
             ->where('games.category_id', $categoryId)
             ->whereNull('games.game_rank')
             ->orderBy('games.review_count', 'desc')
+            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
