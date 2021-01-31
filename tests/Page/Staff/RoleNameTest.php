@@ -53,24 +53,42 @@ class RoleNameTest extends TestCase
         parent::setUp();
 
         $this->userNotStaff = new User(
-            ['display_name' => 'Jaegerbomb', 'email' => 'jaegerbomb@switchscores.com']
+            ['display_name' => 'Jaegerbomb', 'email' => 'xx.role.name.test.jaegerbomb@switchscores.com']
         );
         $this->userOwner = new User(
-            ['display_name' => 'Bananaman', 'email' => 'bananaman@switchscores.com', 'is_owner' => '1']
+            ['display_name' => 'Bananaman', 'email' => 'xx.role.name.test.bananaman@switchscores.com', 'is_owner' => '1']
         );
 
-        $staffUserArray = [
-            'display_name' => 'Jimminy Billybob',
-            'email' => 'jimminy.billybob@switchscores.com',
+        $gamesManager = new User([
+            'display_name' => 'Games Manager',
+            'email' => 'xx.role.name.test.games.manager@switchscores.com',
             'is_staff' => '1'
-        ];
-
-        $gamesManager = new User($staffUserArray);
-        $reviewsManager = new User($staffUserArray);
-        $categoryManager = new User($staffUserArray);
-        $partnershipsManager = new User($staffUserArray);
-        $newsManager = new User($staffUserArray);
-        $dsManager = new User($staffUserArray);
+        ]);
+        $reviewsManager = new User([
+            'display_name' => 'Reviews Manager',
+            'email' => 'xx.role.name.test.reviews.manager@switchscores.com',
+            'is_staff' => '1'
+        ]);
+        $categoryManager = new User([
+            'display_name' => 'Category Manager',
+            'email' => 'xx.role.name.test.category.manager@switchscores.com',
+            'is_staff' => '1'
+        ]);
+        $partnershipsManager = new User([
+            'display_name' => 'Partnerships Manager',
+            'email' => 'xx.role.name.test.partnerships.manager@switchscores.com',
+            'is_staff' => '1'
+        ]);
+        $newsManager = new User([
+            'display_name' => 'News Manager',
+            'email' => 'xx.role.name.test.news.manager@switchscores.com',
+            'is_staff' => '1'
+        ]);
+        $dsManager = new User([
+            'display_name' => 'Data Source Manager',
+            'email' => 'xx.role.name.test.data.source.manager@switchscores.com',
+            'is_staff' => '1'
+        ]);
 
         $gamesManager->addRole(UserRole::ROLE_GAMES_MANAGER);
         $reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
@@ -89,6 +107,14 @@ class RoleNameTest extends TestCase
 
     public function tearDown(): void
     {
+        User::where('email', 'xx.role.name.test.jaegerbomb@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.bananaman@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.games.manager@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.reviews.manager@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.category.manager@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.partnerships.manager@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.news.manager@switchscores.com')->delete();
+        User::where('email', 'xx.role.name.test.data.source.manager@switchscores.com')->delete();
         parent::tearDown();
         unset($this->userOwner);
         unset($this->userNotStaff);

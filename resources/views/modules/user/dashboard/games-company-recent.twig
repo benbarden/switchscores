@@ -11,7 +11,7 @@
         {% for item in PartnerGameList %}
             <tr>
                 <td class="text-left">
-                    <a href="{{ route('game.show', {'id': item.id, 'title': item.link_title}) }}" target="_blank">{{ item.title }}</a>
+                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank">{{ item.title }}</a>
                     <br><small>Release date: {{ item.eu_release_date }}</small>
                 </td>
                 <td class="text-center">

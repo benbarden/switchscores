@@ -23,15 +23,17 @@ class LegacyAdminTest extends TestCase
         parent::setUp();
 
         $this->userStandard = new User(
-            ['display_name' => 'Stuart', 'email' => 'stu@switchscores.com']
+            ['display_name' => 'Stuart', 'email' => 'xx.tester.stu@switchscores.com']
         );
         $this->userAdmin = new User(
-            ['display_name' => 'Adam', 'email' => 'adam@switchscores.com', 'is_owner' => '1']
+            ['display_name' => 'Adam', 'email' => 'xx.tester.adam@switchscores.com', 'is_owner' => '1']
         );
     }
 
     public function tearDown(): void
     {
+        User::where('email', 'xx.tester.stu@switchscores.com')->delete();
+        User::where('email', 'xx.tester.adam@switchscores.com')->delete();
         parent::tearDown();
         unset($this->userStandard);
         unset($this->userAdmin);

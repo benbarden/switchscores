@@ -7,7 +7,7 @@ class LinkHelper
 {
     static function gameShow($game)
     {
-        return route('game.show', ['id' => $game->id, 'link_title' => $game->link_title]);
+        return route('game.show', ['id' => $game->id, 'linkTitle' => $game->link_title]);
     }
 
     static function eshopUrl($region, $url)

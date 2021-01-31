@@ -23,12 +23,12 @@ class NewsPageTest extends TestCase
         parent::setUp();
 
         $this->userOwner = new User(
-            ['display_name' => 'Bananaman', 'email' => 'bananaman@switchscores.com', 'is_owner' => '1']
+            ['display_name' => 'Bananaman', 'email' => 'xx.news.page.test.bananaman@switchscores.com', 'is_owner' => '1']
         );
 
         $staffUserArray = [
             'display_name' => 'Jimminy Billybob',
-            'email' => 'jimminy.billybob@switchscores.com',
+            'email' => 'xx.news.page.test.jimminy.billybob@switchscores.com',
             'is_staff' => '1'
         ];
 
@@ -39,6 +39,8 @@ class NewsPageTest extends TestCase
 
     public function tearDown(): void
     {
+        User::where('email', 'xx.news.page.test.bananaman@switchscores.com')->delete();
+        User::where('email', 'xx.news.page.test.jimminy.billybob@switchscores.com')->delete();
         parent::tearDown();
         unset($this->userOwner);
         unset($this->newsManager);

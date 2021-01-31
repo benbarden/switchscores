@@ -4,6 +4,7 @@ namespace Tests\Page\Staff;
 
 use App\User;
 use App\UserRole;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GeneralPageTest extends TestCase
@@ -22,18 +23,30 @@ class GeneralPageTest extends TestCase
     {
         parent::setUp();
 
-        $this->userOwner = new User(
-            ['display_name' => 'Bananaman', 'email' => 'bananaman@switchscores.com', 'is_owner' => '1']
-        );
+        $ownerUserArray = [
+            'display_name' => 'Bananaman',
+            'email' => 'bananaman@switchscores.com',
+        ];
 
         $staffUserArray = [
             'display_name' => 'Jimminy Billybob',
             'email' => 'jimminy.billybob@switchscores.com',
-            'is_staff' => '1'
         ];
 
-        $reviewsManager = new User($staffUserArray);
+        $owner = new User;
+        $owner->display_name = $ownerUserArray['display_name'];
+        $owner->email = $ownerUserArray['email'];
+        $owner->is_owner = 1;
+
+        $reviewsManager = new User;
+        $reviewsManager->display_name = $staffUserArray['display_name'];
+        $reviewsManager->email = $staffUserArray['email'];
+        $reviewsManager->is_staff = 1;
         $reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
+
+        //$reviewsManager = new User($staffUserArray);
+        //$reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
+        $this->userOwner = $owner;
         $this->userReviewsManager = $reviewsManager;
     }
 

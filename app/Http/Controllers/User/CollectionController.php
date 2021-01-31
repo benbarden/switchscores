@@ -114,8 +114,11 @@ class CollectionController extends Controller
         return view('user.collection.category-breakdown', $bindings);
     }
 
-    public function topRatedByCategory(Category $category)
+    public function topRatedByCategory($categoryId)
     {
+        $category = $this->getServiceCategory()->find($categoryId);
+        if (!$category) abort(404);
+
         $bindings = $this->getBindingsCollectionSubpage('Category breakdown: '.$category->name);
 
         $bindings['Category'] = $category;

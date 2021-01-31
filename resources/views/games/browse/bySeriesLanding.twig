@@ -8,7 +8,7 @@
     <ul>
         {% for item in SeriesList %}
         <li>
-            <a href="{{ route('games.browse.bySeries.page', {'tag': item.link_title}) }}">{{ item.series }}</a>
+            <a href="{{ route('games.browse.bySeries.page', {'series': item.link_title}) }}">{{ item.series }}</a>
         </li>
         {% endfor %}
     </ul>

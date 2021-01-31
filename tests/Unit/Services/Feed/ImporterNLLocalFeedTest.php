@@ -5,6 +5,7 @@ namespace Tests\Unit\Services\Feed;
 use Tests\TestCase;
 
 use App\ReviewFeedItem;
+use App\ReviewFeedItemTest;
 use App\Partner;
 
 use App\Services\Feed\Importer;
@@ -74,10 +75,12 @@ class ImporterNLLocalFeedTest extends TestCase
 
         foreach ($feedData['channel']['item'] as $feedItem) {
 
-            $reviewFeedItem = $this->feedImporter->generateModel($feedItem);
+            $testReviewFeedItem = new ReviewFeedItemTest;
+
+            $reviewFeedItem = $this->feedImporter->generateModel($testReviewFeedItem, $feedItem);
 
             // Check model type
-            $this->assertInstanceOf(ReviewFeedItem::class, $reviewFeedItem);
+            $this->assertInstanceOf(ReviewFeedItemTest::class, $reviewFeedItem);
 
             // Compare model against feed data
             $feedLink = $feedData['channel']['item'][$counter]['link'];

@@ -53,7 +53,7 @@ Route::get('/games/by-type/{primaryType}', 'GamesBrowseController@byPrimaryTypeP
 
 // These must be after the game redirects
 Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
-Route::get('/games/{id}/{title}', 'GamesController@show')->name('game.show');
+Route::get('/games/{id}/{linkTitle}', 'GamesController@show')->name('game.show');
 
 /* Top Rated */
 Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
@@ -113,7 +113,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/user/collection/edit/{itemId}', 'User\CollectionController@edit')->name('user.collection.edit');
     Route::get('/user/collection/delete', 'User\CollectionController@delete')->name('user.collection.delete');
     Route::get('/user/collection/category-breakdown', 'User\CollectionController@categoryBreakdown')->name('user.collection.category-breakdown');
-    Route::get('/user/collection/top-rated-by-category/{category}', 'User\CollectionController@topRatedByCategory')->name('user.collection.top-rated-by-category');
+    Route::get('/user/collection/top-rated-by-category/{categoryId}', 'User\CollectionController@topRatedByCategory')->name('user.collection.top-rated-by-category');
 
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
@@ -254,18 +254,18 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/featured-games/archive-item', 'Staff\Games\FeaturedGameController@archiveItem')->name('staff.games.featured-games.archiveItem');
 
     // Games: Title hashes
-    Route::get('/staff/games-title-hash/list/{gameId?}', 'Staff\Games\GamesTitleHashController@showList')->name('staff.games-title-hash.list');
-    Route::match(['get', 'post'], '/staff/games-title-hash/add', 'Staff\Games\GamesTitleHashController@add')->name('staff.games-title-hash.add');
-    Route::match(['get', 'post'], '/staff/games-title-hash/edit/{itemId}', 'Staff\Games\GamesTitleHashController@edit')->name('staff.games-title-hash.edit');
-    Route::match(['get', 'post'], '/staff/games-title-hash/delete/{itemId}', 'Staff\Games\GamesTitleHashController@delete')->name('staff.games-title-hash.delete');
+    Route::get('/staff/games/title-hash/list/{gameId?}', 'Staff\Games\GamesTitleHashController@showList')->name('staff.games-title-hash.list');
+    Route::match(['get', 'post'], '/staff/games/title-hash/add', 'Staff\Games\GamesTitleHashController@add')->name('staff.games-title-hash.add');
+    Route::match(['get', 'post'], '/staff/games/title-hash/edit/{itemId}', 'Staff\Games\GamesTitleHashController@edit')->name('staff.games-title-hash.edit');
+    Route::match(['get', 'post'], '/staff/games/title-hash/delete/{itemId}', 'Staff\Games\GamesTitleHashController@delete')->name('staff.games-title-hash.delete');
 
     // Games partner links
-    Route::get('/staff/game/partner/{gameId}/list', 'Staff\Games\GamesPartnerController@showGamePartners')->name('staff.game.partner.list');
-    Route::get('/staff/game/partner/create-new-company', 'Staff\Games\GamesPartnerController@createNewCompany')->name('staff.game.partner.createNewCompany');
-    Route::get('/staff/game/developer/{gameId}/add', 'Staff\Games\GamesPartnerController@addGameDeveloper')->name('staff.game.developer.add');
-    Route::get('/staff/game/developer/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGameDeveloper')->name('staff.game.developer.remove');
-    Route::get('/staff/game/publisher/{gameId}/add', 'Staff\Games\GamesPartnerController@addGamePublisher')->name('staff.game.publisher.add');
-    Route::get('/staff/game/publisher/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGamePublisher')->name('staff.game.publisher.remove');
+    Route::get('/staff/games/partner/{gameId}/list', 'Staff\Games\GamesPartnerController@showGamePartners')->name('staff.game.partner.list');
+    Route::get('/staff/games/partner/create-new-company', 'Staff\Games\GamesPartnerController@createNewCompany')->name('staff.game.partner.createNewCompany');
+    Route::get('/staff/games/developer/{gameId}/add', 'Staff\Games\GamesPartnerController@addGameDeveloper')->name('staff.game.developer.add');
+    Route::get('/staff/games/developer/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGameDeveloper')->name('staff.game.developer.remove');
+    Route::get('/staff/games/publisher/{gameId}/add', 'Staff\Games\GamesPartnerController@addGamePublisher')->name('staff.game.publisher.add');
+    Route::get('/staff/games/publisher/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGamePublisher')->name('staff.game.publisher.remove');
 
 });
 
@@ -289,7 +289,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     // Review feed items
     Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
     Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');
-    Route::match(['get', 'post'], '/staff/reviews/feed-items/edit/{linkId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
+    Route::match(['get', 'post'], '/staff/reviews/feed-items/edit/{itemId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
 
     // Review feed imports
     Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports.list');

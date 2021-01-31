@@ -7,9 +7,11 @@ use Illuminate\Support\Collection;
 
 use App\Game;
 use App\Services\Shortcode\DynamicShortcode;
+use App\Services\GameService;
 
 class GameHeaderTest extends TestCase
 {
+
     /**
      * @var DynamicShortcode
      */
@@ -28,11 +30,11 @@ class GameHeaderTest extends TestCase
 
     public function testSimpleTable()
     {
+        $serviceGame = new GameService();
+
         $seedGames = new Collection();
-        $seedGamesItem = new Game(['id' => 1, 'title' => 'Zelda BOTW', 'image_header' => 'test1.jpg']);
-        $seedGames->push($seedGamesItem);
-        $seedGamesItem = new Game(['id' => 2, 'title' => '1-2-Switch', 'image_header' => 'test2.jpg']);
-        $seedGames->push($seedGamesItem);
+        $seedGames->push($serviceGame->find(1));
+        $seedGames->push($serviceGame->find(2));
 
         $html = '<p>HELLO</p>[gameheader ids="1"]<p>AND THIS IS A MIDDLE LINE</p>[gameheader ids="2"]<p>BYE BYE</p>';
 
