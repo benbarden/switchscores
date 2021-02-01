@@ -201,45 +201,51 @@ class Parser
             $parsedPublishers = $this->rawJsonData['publisher'];
 
             // Clean up junk text
-            $parsedPublishers = str_replace('Co.,Ltd', '', $parsedPublishers);
-            $parsedPublishers = str_replace('Co., Ltd.', '', $parsedPublishers);
-            $parsedPublishers = str_replace('Co. Ltd', '', $parsedPublishers);
-            $parsedPublishers = str_replace('CO.,LTD.', '', $parsedPublishers);
-            $parsedPublishers = str_replace('CO., LTD', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Ltd.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Ltd', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' LTD.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' LTD', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' LIMITED', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', LLC', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' LLC', '', $parsedPublishers);
-            $parsedPublishers = str_replace('LLC', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', Incorporated', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', Inc.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', Inc', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', inc', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Inc.', '', $parsedPublishers);
-            $parsedPublishers = str_replace('®', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', S.L.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' S.L', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Sp. z.o.o Sp.K', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Sp. z.o.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Sp.z.o.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' sp. z.o.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' S.r.l.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' S.R.L', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' srl', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', s.r.o.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' s.r.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' G.K', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' B.V', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' d.o.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Pty', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' Pty Ltd', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' (Pty.)', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' PTY', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' FK AB', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' GmbH', '', $parsedPublishers);
+            $pubReplacementsBlanks = [
+                'Co.,Ltd',
+                'Co., Ltd.',
+                'Co. Ltd',
+                'CO.,LTD.',
+                'CO., LTD',
+                ' Ltd.',
+                ' Ltd',
+                ' LTD.',
+                ' LTD',
+                ' LIMITED',
+                ', LLC',
+                ' LLC',
+                'LLC',
+                ', Incorporated',
+                ', Inc.',
+                ', Inc',
+                ', inc',
+                ' Inc.',
+                '®',
+                ', S.L.',
+                ' S.L',
+                ' Sp. z.o.o Sp.K',
+                ' Sp. z.o.o',
+                ' Sp.z.o.o',
+                ' sp. z.o.o',
+                ' S.r.l.',
+                ' S.R.L',
+                ' srl',
+                ', s.r.o.',
+                ' s.r.o',
+                ' G.K',
+                ' B.V',
+                ' d.o.o',
+                ' Pty',
+                ' Pty Ltd',
+                ' (Pty.)',
+                ' PTY',
+                ' FK AB',
+                ' GmbH',
+            ];
+
+            foreach ($pubReplacementsBlanks as $pubReplacement) {
+                $parsedPublishers = str_replace($pubReplacement, '', $parsedPublishers);
+            }
 
             // Consistency
             $parsedPublishers = str_replace(' ENTMT', ' Entertainment', $parsedPublishers);
