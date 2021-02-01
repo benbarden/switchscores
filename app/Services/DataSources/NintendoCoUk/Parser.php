@@ -211,26 +211,26 @@ class Parser
             $parsedPublishers = str_replace(' LTD.', '', $parsedPublishers);
             $parsedPublishers = str_replace(' LTD', '', $parsedPublishers);
             $parsedPublishers = str_replace(' LIMITED', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', S.L.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(', s.r.o.', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' S.r.l.', '', $parsedPublishers);
             $parsedPublishers = str_replace(', LLC', '', $parsedPublishers);
             $parsedPublishers = str_replace(' LLC', '', $parsedPublishers);
-            $parsedPublishers = str_replace('LLC ', '', $parsedPublishers);
+            $parsedPublishers = str_replace('LLC', '', $parsedPublishers);
             $parsedPublishers = str_replace(', Incorporated', '', $parsedPublishers);
             $parsedPublishers = str_replace(', Inc.', '', $parsedPublishers);
             $parsedPublishers = str_replace(', Inc', '', $parsedPublishers);
             $parsedPublishers = str_replace(', inc', '', $parsedPublishers);
             $parsedPublishers = str_replace(' Inc.', '', $parsedPublishers);
             $parsedPublishers = str_replace('®', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', S.L.', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' S.L', '', $parsedPublishers);
             $parsedPublishers = str_replace(' Sp. z.o.o Sp.K', '', $parsedPublishers);
             $parsedPublishers = str_replace(' Sp. z.o.o', '', $parsedPublishers);
             $parsedPublishers = str_replace(' Sp.z.o.o', '', $parsedPublishers);
             $parsedPublishers = str_replace(' sp. z.o.o', '', $parsedPublishers);
+            $parsedPublishers = str_replace(' S.r.l.', '', $parsedPublishers);
             $parsedPublishers = str_replace(' S.R.L', '', $parsedPublishers);
             $parsedPublishers = str_replace(' srl', '', $parsedPublishers);
+            $parsedPublishers = str_replace(', s.r.o.', '', $parsedPublishers);
             $parsedPublishers = str_replace(' s.r.o', '', $parsedPublishers);
-            $parsedPublishers = str_replace(' S.L', '', $parsedPublishers);
             $parsedPublishers = str_replace(' G.K', '', $parsedPublishers);
             $parsedPublishers = str_replace(' B.V', '', $parsedPublishers);
             $parsedPublishers = str_replace(' d.o.o', '', $parsedPublishers);
@@ -245,6 +245,7 @@ class Parser
             $parsedPublishers = str_replace(' ENTMT', ' Entertainment', $parsedPublishers);
             $parsedPublishers = str_replace(' Ent.', ' Entertainment', $parsedPublishers);
             //$parsedPublishers = str_replace(' Ent', ' Entertainment', $parsedPublishers);
+            $parsedPublishers = trim($parsedPublishers);
             $parsedPublishers = rtrim($parsedPublishers, ".");
 
             if (is_array($parsedPublishers)) {
