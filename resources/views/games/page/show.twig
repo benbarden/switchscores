@@ -29,14 +29,14 @@
                     <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
                 {% endif %}
 
-                {% if GameData.video_url %}
-                    {% include 'games/page/video-bootstrap.twig' with {'VideoUrl': GameData.video_url} %}
-                {% endif %}
-
                 {% if GameBlurb %}
                     <p>
                         {{ GameBlurb|raw }}
                     </p>
+                {% endif %}
+
+                {% if GameData.video_url %}
+                    {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url} %}
                 {% endif %}
 
                 {% include 'games/page/reviews.twig' with {'GameReviews': GameReviews} %}

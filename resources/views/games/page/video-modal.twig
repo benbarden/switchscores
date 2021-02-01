@@ -1,0 +1,79 @@
+
+{% set VideoUrl = VideoUrl|replace({'watch?v=': 'embed/'}) %}
+
+<div id="player-controls" style="display: none;">
+    <p>
+        This game has a video.
+    <button id="player-control-play" class="btn btn-primary btn-sm" onclick="playVideo();">Play video</button>
+    <button id="player-control-pause" class="btn btn-primary btn-sm" onclick="pauseVideo();">Pause video</button>
+    </p>
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#videoModal" onclick="playVideo();">
+    Play video
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            {#
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            #}
+            <div class="modal-body">
+                <div id="player-wrapper" class="embed-responsive embed-responsive-16by9">
+                    <iframe id="existing-iframe-example" class="embed-responsive-item" src="{{ VideoUrl }}?enablejsapi=1"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $('#videoModal').on('hidden.bs.modal', function (e) {
+        pauseVideo();
+    })
+
+    var tag = document.createElement('script');
+    tag.id = 'iframe-demo';
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('existing-iframe-example', {
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(){
+        //console.info(player);
+        //$('#player-controls').show();
+    }
+
+    function playVideo() {
+        //$('#player-wrapper').show();
+        //$('html, body').animate({
+        //    scrollTop: ($('#player-controls').offset().top) - 10
+        //}, 'slow');
+        player.playVideo();
+    }
+
+    function pauseVideo() {
+        player.pauseVideo();
+    }
+
+    function onPlayerStateChange(event) {
+    }
+
+</script>
