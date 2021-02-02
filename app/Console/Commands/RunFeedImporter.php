@@ -227,7 +227,7 @@ class RunFeedImporter extends Command
                         // Check if it's already been imported
                         $dbExistingItem = $serviceReviewFeedItem->getByItemUrl($itemUrl);
                         if ($dbExistingItem) {
-                            //$logger->warn('Already imported: '.$itemUrl);
+                            //$logger->warning('Already imported: '.$itemUrl);
                             continue;
                         }
 
@@ -252,7 +252,7 @@ class RunFeedImporter extends Command
                                 //$logger->info('Parsed title: '.$parsedTitle);
                                 if (!$parsedTitle) {
                                     $parseStatus = 'Does not match title rule; skipping';
-                                    $logger->warn($parseStatus);
+                                    $logger->warning($parseStatus);
                                     continue;
                                 }
 
@@ -264,17 +264,17 @@ class RunFeedImporter extends Command
                         if ($feedUrlPrefix) {
                             $fullPrefix = $reviewSite->url.$feedUrlPrefix;
                             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
-                                $logger->warn('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
+                                $logger->warning('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
                                 continue;
                             } else {
-                                //$logger->warn('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
+                                //$logger->warning('URL prefix matched!: '.$itemUrl.' - Date: '.$itemDate);
                                 //continue;
                             }
                         }
 
                         // Check that it's not a historic review
                         if ($reviewFeedItem->isHistoric() && !$reviewSite->allowHistoric()) {
-                            $logger->warn('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
+                            $logger->warning('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
                             continue;
                         }
 

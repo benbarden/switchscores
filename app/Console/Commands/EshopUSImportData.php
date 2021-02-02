@@ -57,15 +57,15 @@ class EshopUSImportData extends Command
         }
 
         if (!is_array($responseArray['games'])) {
-            $logger->warn('No more game data to load');
+            $logger->warning('No more game data to load');
             return false;
         } elseif (!array_key_exists('game', $responseArray['games'])) {
-            $logger->warn('No more game data to load');
+            $logger->warning('No more game data to load');
             return false;
         }
 
         if ($offset >= 5) {
-            //$logger->warn('Triggering failsafe to avoid hitting API too much during testing');
+            //$logger->warning('Triggering failsafe to avoid hitting API too much during testing');
             //return false;
         }
 
@@ -117,7 +117,7 @@ class EshopUSImportData extends Command
             } else {
 
                 // LIVE data load. Need to do it in stages.
-                $logger->warn('Loading LIVE data from eShop. Do not abuse!');
+                $logger->warning('Loading LIVE data from eShop. Do not abuse!');
                 $this->totalItemCount = 0;
                 $this->loadLiveData($logger, $eshopLoader);
 

@@ -82,7 +82,7 @@ class RunFeedReviewGenerator extends Command
                 if ($gameId && $siteId) {
                     $existingReview = $serviceReviewLink->getByGameAndSite($gameId, $siteId);
                     if ($existingReview) {
-                        $logger->warn('Existing review found for this game/site. Marking as a duplicate.');
+                        $logger->warning('Existing review found for this game/site. Marking as a duplicate.');
                         $feedItem->process_status = 'Duplicate';
                         $feedItem->processed = 1;
                         $feedItem->save();

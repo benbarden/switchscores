@@ -67,7 +67,7 @@ class ImportParseLink extends Command
                     $logger->info('Loading local data from JSON file');
                     $importer->loadLocalData('europe-test-1500-games.json');
                 } else {
-                    $logger->warn('Loading LIVE data from eShop. Do not abuse!');
+                    $logger->warning('Loading LIVE data from eShop. Do not abuse!');
                     $importer->loadGames();
                 }
                 $responseArray = $importer->getResponseData();

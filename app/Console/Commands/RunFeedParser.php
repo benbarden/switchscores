@@ -115,7 +115,7 @@ class RunFeedParser extends Command
                     $parser->getTitleParser()->setTitle($itemTitle);
                     $parser->parseBySiteRules();
                     $parsedTitle = $parser->getTitleParser()->getTitle();
-                    $logger->warn('Using old parser');
+                    $logger->warning('Using old parser');
 
                 }
 
@@ -141,7 +141,7 @@ class RunFeedParser extends Command
                     $feedItem->parsed = 1;
                 } else {
                     $parseStatus = ReviewFeedItem::PARSE_STATUS_COULD_NOT_LOCATE;
-                    $logger->warn($parseStatus);
+                    $logger->warning($parseStatus);
                 }
 
                 $feedItem->parse_status = $parseStatus;
