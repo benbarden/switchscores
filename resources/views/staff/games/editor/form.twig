@@ -101,6 +101,11 @@
                     <div class="col-md-6">
                         <input id="video_url" type="text" class="form-control" name="video_url">
                     </div>
+                    <div class="col-md-2">
+                        {% if GameData %}
+                            <a class="btn btn-default btn-sm" href="https://www.youtube.com/results?search_query=trailer+{{ GameData.title }}" target="_blank">Search YouTube</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="amazon_uk_link" class="col-md-4 control-label">Amazon UK link</label>
