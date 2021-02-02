@@ -62,11 +62,12 @@ class ImportActiveFeeds extends Command
         }
 
         $serviceImporter = new ImportReviewFeed($logger);
-        $reviewFeedImport = $serviceImporter->createBatchFeedImport();
+        //$reviewFeedImport = $serviceImporter->createBatchFeedImport();
 
         foreach ($partnerFeedLinks as $partnerFeedLink) {
             $serviceImporter->setPartnerFeedLink($partnerFeedLink);
-            $serviceImporter->setFeedImport($reviewFeedImport);
+            $serviceImporter->createFeedImport();
+            //$serviceImporter->setFeedImport($reviewFeedImport);
             $serviceImporter->runImport();
         }
 
