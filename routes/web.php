@@ -206,9 +206,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     Route::get('/staff/games/dashboard', 'Staff\Games\DashboardController@show')->name('staff.games.dashboard');
 
-    // Find a game
-    Route::match(['get', 'post'], '/staff/games/find', 'Staff\Games\FindController@show')->name('staff.games.find');
-
     // Search
     Route::match(['get', 'post'], '/staff/games/search', 'Staff\Games\SearchController@show')->name('staff.games.search');
 
