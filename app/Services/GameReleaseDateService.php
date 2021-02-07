@@ -9,59 +9,6 @@ use App\Game;
 
 class GameReleaseDateService
 {
-
-    // ********************************************** //
-    // Released games
-    // ********************************************** //
-
-    /**
-     * @param int $limit
-     * @return mixed
-     */
-    public function getReleased($limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.eu_released_on', 'desc')
-            ->orderBy('games.updated_at', 'desc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    // ********************************************** //
-    // Upcoming games
-    // ********************************************** //
-
-    /**
-     * This is used on the public site. Games with no release date are hidden.
-     * @param int $limit
-     * @return mixed
-     */
-    public function getUpcoming($limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 0)
-            ->whereNotNull('games.eu_release_date')
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
     /**
      * @param int $daysLimit
      * @return mixed

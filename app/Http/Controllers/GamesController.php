@@ -8,6 +8,7 @@ use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
 class GamesController extends Controller
@@ -16,14 +17,17 @@ class GamesController extends Controller
     use AuthUser;
 
     protected $repoFeaturedGames;
+    protected $repoGameLists;
     protected $repoGameStats;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
+        GameListsRepository $repoGameLists,
         GameStatsRepository $repoGameStats
     )
     {
         $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
     }
 
@@ -31,10 +35,8 @@ class GamesController extends Controller
     {
         $bindings = [];
 
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(20);
-        $bindings['UpcomingReleases'] = $serviceGameReleaseDate->getUpcoming(30);
+        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(20);
+        $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming(30);
 
         $bindings['RecentWithGoodRanks'] = $this->getServiceGameReleaseDate()->getRecentWithGoodRanks(7, 35, 15);
         $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
@@ -51,11 +53,9 @@ class GamesController extends Controller
 
     public function recentReleases()
     {
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-
         $bindings = [];
 
-        $bindings['NewReleases'] = $serviceGameReleaseDate->getReleased(50);
+        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(50);
         $bindings['CalendarThisMonth'] = date('Y-m');
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';
@@ -66,25 +66,9 @@ class GamesController extends Controller
 
     public function upcomingReleases()
     {
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-
         $bindings = [];
 
-        $bindings['UpcomingGames'] = $serviceGameReleaseDate->getUpcoming();
-
-        $featuredIdList = [
-            1237, // Ninjala
-            1224, // Killer Queen Black
-            86, // Fire Emblem Three Houses
-            1222, // Daemon X Machina
-            2126, // Super Mario Maker 2
-            1487, // Dragon Quest Builders 2
-            2146, // Astral Chain
-            2147, // Dragon Quest XI S
-            2578, // Zelda Link's Awakening
-            2148, // Marvel Ultimate Alliance
-        ];
-        $bindings['FeaturedGames'] = $serviceGameReleaseDate->getByIdList($featuredIdList);
+        $bindings['UpcomingGames'] = $this->repoGameLists->upcoming();
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
