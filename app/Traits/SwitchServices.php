@@ -7,7 +7,6 @@ use App\Services\ViewHelper\MemberBreadcrumbs;
 use App\Services\ViewHelper\StaffBreadcrumbs;
 
 use App\Services\AuditService;
-use App\Services\CampaignService;
 use App\Services\CampaignGameService;
 use App\Services\CategoryService;
 use App\Services\DataSourceService;
@@ -132,14 +131,6 @@ trait SwitchServices
     public function getServiceAudit()
     {
         return $this->loadService('AuditService');
-    }
-
-    /**
-     * @return CampaignService
-     */
-    public function getServiceCampaign()
-    {
-        return $this->loadService('CampaignService');
     }
 
     /**

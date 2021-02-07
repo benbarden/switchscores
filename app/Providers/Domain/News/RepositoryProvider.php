@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Domain\News;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\CampaignService;
+use App\Domain\News\Repository as NewsRepository;
 
-class CampaignServiceProvider extends ServiceProvider
+class RepositoryProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class CampaignServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\CampaignService', function($app) {
-            return new CampaignService();
+        $this->app->bind('Domain\News\Repository', function($app) {
+            return new NewsRepository();
         });
     }
 }

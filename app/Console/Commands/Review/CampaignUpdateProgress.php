@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Traits\SwitchServices;
 
+use App\Domain\Campaign\Repository as CampaignRepository;
+
 class CampaignUpdateProgress extends Command
 {
     use SwitchServices;
@@ -25,13 +27,18 @@ class CampaignUpdateProgress extends Command
      */
     protected $description = 'Updates progress for review campaigns.';
 
+    protected $repoCampaign;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        CampaignRepository $repoCampaign
+    )
     {
+        $this->repoCampaign = $repoCampaign;
         parent::__construct();
     }
 
@@ -46,7 +53,7 @@ class CampaignUpdateProgress extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $campaignsActive = $this->getServiceCampaign()->getActive();
+        $campaignsActive = $this->repoCampaign->getActive();
 
         if (!$campaignsActive) {
             $logger->error('No active campaigns!');

@@ -4,17 +4,28 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Services\Migrations\Category as MigrationsCategory;
-
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\MemberView;
+
+use App\Services\Migrations\Category as MigrationsCategory;
+
+use App\Domain\Campaign\Repository as CampaignRepository;
 
 class IndexController extends Controller
 {
     use SwitchServices;
     use AuthUser;
     use MemberView;
+
+    protected $repoCampaign;
+
+    public function __construct(
+        CampaignRepository $repoCampaign
+    )
+    {
+        $this->repoCampaign = $repoCampaign;
+    }
 
     public function show()
     {
@@ -68,7 +79,7 @@ class IndexController extends Controller
         $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
 
         // Campaigns
-        $activeCampaigns = $this->getServiceCampaign()->getActive();
+        $activeCampaigns = $this->repoCampaign->getActive();
         foreach ($activeCampaigns as &$item) {
             $campaignId = $item->id;
             $item['ranked_count'] = $this->getServiceCampaignGame()->countRankedGames($campaignId);

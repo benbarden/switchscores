@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Domain\Campaign;
 
-use Illuminate\Support\Facades\DB;
+
 use App\Campaign;
 
-class CampaignService
+class Repository
 {
     public function create($name, $description, $progress, $isActive)
     {

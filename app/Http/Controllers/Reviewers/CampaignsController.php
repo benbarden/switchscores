@@ -7,16 +7,27 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
+use App\Domain\Campaign\Repository as CampaignRepository;
+
 class CampaignsController extends Controller
 {
     use SwitchServices;
     use AuthUser;
 
+    protected $repoCampaign;
+
+    public function __construct(
+        CampaignRepository $repoCampaign
+    )
+    {
+        $this->repoCampaign = $repoCampaign;
+    }
+
     public function show($campaignId)
     {
         $bindings = [];
 
-        $campaign = $this->getServiceCampaign()->find($campaignId);
+        $campaign = $this->repoCampaign->find($campaignId);
         if (!$campaign) abort(404);
 
         $pageTitle = 'View campaign: '.$campaign->name;

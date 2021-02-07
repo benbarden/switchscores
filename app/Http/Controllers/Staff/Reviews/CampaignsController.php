@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\Domain\Campaign\Repository as CampaignRepository;
 
 class CampaignsController extends Controller
 {
@@ -24,11 +26,20 @@ class CampaignsController extends Controller
         'name' => 'required|max:50',
     ];
 
+    protected $repoCampaign;
+
+    public function __construct(
+        CampaignRepository $repoCampaign
+    )
+    {
+        $this->repoCampaign = $repoCampaign;
+    }
+
     public function show()
     {
         $bindings = $this->getBindingsReviewsSubpage('Review campaigns');
 
-        $bindings['CampaignsList'] = $this->getServiceCampaign()->getAll();
+        $bindings['CampaignsList'] = $this->repoCampaign->getAll();
 
         return view('staff.reviews.campaigns.index', $bindings);
     }
@@ -38,8 +49,6 @@ class CampaignsController extends Controller
         $bindings = $this->getBindingsReviewsCampaignsSubpage('Add campaign');
 
         $request = request();
-
-        $serviceCampaign = $this->getServiceCampaign();
 
         if ($request->isMethod('post')) {
 
@@ -54,7 +63,7 @@ class CampaignsController extends Controller
                 $progress = 0;
             }
 
-            $campaign = $serviceCampaign->create($name, $desc, $progress, $isActive);
+            $campaign = $this->repoCampaign->create($name, $desc, $progress, $isActive);
 
             return redirect(route('staff.reviews.campaigns'));
 
@@ -71,9 +80,7 @@ class CampaignsController extends Controller
 
         $request = request();
 
-        $serviceCampaign = $this->getServiceCampaign();
-
-        $campaignData = $serviceCampaign->find($campaignId);
+        $campaignData = $this->repoCampaign->find($campaignId);
         if (!$campaignData) abort(404);
 
         if ($request->isMethod('post')) {
@@ -87,7 +94,7 @@ class CampaignsController extends Controller
             $progress = $request->progress;
             $isActive = $request->is_active == 'on' ? 1 : 0;
 
-            $serviceCampaign->edit($campaignData, $name, $desc, $progress, $isActive);
+            $this->repoCampaign->edit($campaignData, $name, $desc, $progress, $isActive);
 
             return redirect(route('staff.reviews.campaigns'));
 
@@ -109,10 +116,9 @@ class CampaignsController extends Controller
 
         $request = request();
 
-        $serviceCampaign = $this->getServiceCampaign();
         $serviceCampaignGame = $this->getServiceCampaignGame();
 
-        $campaignData = $serviceCampaign->find($campaignId);
+        $campaignData = $this->repoCampaign->find($campaignId);
         if (!$campaignData) abort(404);
 
         if ($request->isMethod('post')) {
