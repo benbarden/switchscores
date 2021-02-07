@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-md-2">
                         {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.youtube.com/results?search_query=trailer+{{ GameData.title }}" target="_blank">Search YouTube</a>
+                            <a class="btn btn-default btn-sm" href="https://www.youtube.com/results?search_query={{ GameData.title|url_encode }}+switch+trailer" target="_blank">Search YouTube</a>
                         {% endif %}
                     </div>
                 </div>
