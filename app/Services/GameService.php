@@ -343,7 +343,6 @@ class GameService
     {
         $options = [];
         $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_INCLUDED_IN_BUNDLE;
         $options[] = self::FORMAT_DISCONTINUED;
         $options[] = self::FORMAT_NOT_AVAILABLE;
 
