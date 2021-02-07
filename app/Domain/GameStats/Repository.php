@@ -6,6 +6,8 @@ namespace App\Domain\GameStats;
 
 use App\Game;
 
+use Illuminate\Support\Facades\DB;
+
 class Repository
 {
     /**
@@ -34,5 +36,30 @@ class Repository
             ->count();
 
         return $games;
+    }
+
+    public function tableFormatOptions()
+    {
+        return DB::select("
+            SELECT 
+                   CASE WHEN format_digital IS NULL THEN 'HdrDigital' ELSE format_digital END AS format_desc, 
+                   'Digital' AS format_type,
+                   count(*) AS count FROM games GROUP BY format_digital
+            UNION
+            SELECT 
+                   CASE WHEN format_physical IS NULL THEN 'HdrPhysical' ELSE format_physical END AS format_desc, 
+                   'Physical' AS format_type,
+                   count(*) AS count FROM games GROUP BY format_physical
+            UNION
+            SELECT 
+                   CASE WHEN format_dlc IS NULL THEN 'HdrDLC' ELSE format_dlc END AS format_desc, 
+                   'DLC' AS format_type,
+                   count(*) AS count FROM games GROUP BY format_dlc
+            UNION
+            SELECT 
+                   CASE WHEN format_demo IS NULL THEN 'HdrDemo' ELSE format_demo END AS format_desc, 
+                   'Demo' AS format_type,
+                   count(*) AS count FROM games GROUP BY format_demo
+        ");
     }
 }

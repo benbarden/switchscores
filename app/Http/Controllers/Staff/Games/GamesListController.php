@@ -122,6 +122,20 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
+    public function formatOptionList($format, $value = null)
+    {
+        if ($value == null) {
+            $valueDesc = '(Not set)';
+        } else {
+            $valueDesc = $value;
+        }
+        $bindings = $this->getBindingsGamesSubpage('By format option: '.$format.' - '.$valueDesc);
+
+        $bindings['GameList'] = $this->repoGameLists->formatOption($format, $value);
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
     public function byCategory(Category $category)
     {
         $bindings = $this->getBindingsGamesSubpage('By category: '.$category->name, "[ 1, 'asc']");

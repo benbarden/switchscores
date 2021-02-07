@@ -5,6 +5,7 @@ namespace App\Domain\GameLists;
 
 
 use App\Game;
+use App\Services\GameService;
 
 class Repository
 {
@@ -43,6 +44,38 @@ class Repository
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('title', 'asc')
             ->get();
+
+        return $games;
+    }
+
+    public function formatOption($format, $value = null)
+    {
+        $allowedFormats = ['Physical', 'Digital', 'DLC', 'Demo'];
+        if (!$allowedFormats) throw new \Exception('Unknown format: '.$format);
+
+        $dbField = '';
+        switch ($format) {
+            case 'Physical':
+                $dbField = 'format_physical';
+                break;
+            case 'Digital':
+                $dbField = 'format_digital';
+                break;
+            case 'DLC':
+                $dbField = 'format_dlc';
+                break;
+            case 'Demo':
+                $dbField = 'format_demo';
+                break;
+        }
+
+        if (!$dbField) throw new \Exception('Cannot determine dbField!');
+
+        if ($value == null) {
+            $games = Game::whereNull($dbField)->get();
+        } else {
+            $games = Game::where($dbField, $value)->get();
+        }
 
         return $games;
     }

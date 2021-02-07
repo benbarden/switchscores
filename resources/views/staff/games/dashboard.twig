@@ -72,11 +72,42 @@
             </tbody>
         </table>
 
+        <h2>Game stats</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    Total games
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ TotalGameCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Released games
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ ReleasedGameCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Upcoming games
+                </td>
+                <td class="text-right">
+                    <span class="h4">{{ UpcomingGameCount }}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 
     <div class="col-md-4">
 
-        <h2>Find game</h2>
+        <h2>Navigation</h2>
         <table class="table">
             <tbody>
             <tr>
@@ -84,12 +115,6 @@
                     <a href="{{ route('staff.games.search') }}">Search games</a>
                 </td>
             </tr>
-            </tbody>
-        </table>
-
-        <h2>Game lists</h2>
-        <table class="table">
-            <tbody>
             <tr>
                 <td>
                     <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
@@ -145,36 +170,58 @@
 
     <div class="col-md-4">
 
-        <h2>Game stats</h2>
+        <h2>Formats</h2>
 
+        {% if FormatOptionTable %}
         <table class="table">
             <tbody>
-            <tr>
-                <td>
-                    Total games
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ TotalGameCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Released games
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ ReleasedGameCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Upcoming games
-                </td>
-                <td class="text-right">
-                    <span class="h4">{{ UpcomingGameCount }}</span>
-                </td>
-            </tr>
+                {% for row in FormatOptionTable %}
+                    {% if row.format_desc == 'HdrDigital'
+                        or row.format_desc == 'HdrPhysical'
+                        or row.format_desc == 'HdrDLC'
+                        or row.format_desc == 'HdrDemo' %}
+                        {% set isHeaderRow = 1 %}
+                    {% else %}
+                        {% set isHeaderRow = 0 %}
+                    {% endif %}
+                    {% if isHeaderRow == 1 %}
+                        <tr>
+                            <td>
+                                <span class="h4">{{ row.format_type }}</span>
+                            </td>
+                            <td class="text-right">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                (Not set)
+                            </td>
+                            <td class="text-right">
+                                <span class="h4">
+                                    <a href="{{ route('staff.games.list.format-option', {'format': row.format_type}) }}">
+                                        {{ row.count }}
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>
+                                {{ row.format_desc }}
+                            </td>
+                            <td class="text-right">
+                                <span class="h4">
+                                    <a href="{{ route('staff.games.list.format-option', {'format': row.format_type, 'option': row.format_desc}) }}">
+                                    {{ row.count }}
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             </tbody>
         </table>
+        {% endif %}
 
     </div>
 

@@ -48,6 +48,9 @@ class DashboardController extends Controller
         $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 
+        // Format stats
+        $bindings['FormatOptionTable'] = $this->repoGameStats->tableFormatOptions();
+
         return view('staff.games.dashboard', $bindings);
     }
 }

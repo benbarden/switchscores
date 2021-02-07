@@ -237,6 +237,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/no-amazon-uk-link', 'Staff\Games\GamesListController@noAmazonUkLink')->name('staff.games.list.no-amazon-uk-link');
     Route::get('/staff/games/list/no-nintendo-co-uk-link', 'Staff\Games\GamesListController@noNintendoCoUkLink')->name('staff.games.list.no-nintendo-co-uk-link');
     Route::get('/staff/games/list/broken-nintendo-co-uk-link', 'Staff\Games\GamesListController@brokenNintendoCoUkLink')->name('staff.games.list.broken-nintendo-co-uk-link');
+    Route::get('/staff/games/list/format-option/{format}/{option?}', 'Staff\Games\GamesListController@formatOptionList')->name('staff.games.list.format-option');
     Route::get('/staff/games/list/by-category/{category}', 'Staff\Games\GamesListController@byCategory')->name('staff.games.list.by-category');
     Route::get('/staff/games/list/by-series/{gameSeries}', 'Staff\Games\GamesListController@bySeries')->name('staff.games.list.by-series');
     Route::get('/staff/games/list/by-tag/{tag}', 'Staff\Games\GamesListController@byTag')->name('staff.games.list.by-tag');
