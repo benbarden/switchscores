@@ -22,7 +22,7 @@ class GameService
     const FORMAT_INCLUDED_IN_BUNDLE = 'Included in bundle';
     const FORMAT_LIMITED_EDITION = 'Limited edition';
     const FORMAT_NOT_AVAILABLE = 'Not available';
-    const FORMAT_DISCONTINUED = 'Discontinued';
+    const FORMAT_DELISTED = 'De-listed';
 
     /**
      * @param $title
@@ -343,7 +343,7 @@ class GameService
     {
         $options = [];
         $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_DISCONTINUED;
+        $options[] = self::FORMAT_DELISTED;
         $options[] = self::FORMAT_NOT_AVAILABLE;
 
         return $options;
