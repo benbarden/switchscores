@@ -23,4 +23,16 @@ class Repository
     {
         return Game::whereNotNull('game_rank')->count();
     }
+
+    /**
+     * @return integer
+     */
+    public function totalToBeReleased()
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereRaw('DATE(games.eu_release_date) <= CURDATE()')
+            ->count();
+
+        return $games;
+    }
 }

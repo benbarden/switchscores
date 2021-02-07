@@ -34,8 +34,7 @@ class DashboardController extends Controller
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
 
         // Games to release
-        $actionListGamesForReleaseCount = $this->getServiceGame()->getActionListGamesForRelease();
-        $bindings['GamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+        $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
 
         // Missing data
         $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();

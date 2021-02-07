@@ -222,28 +222,6 @@ class GameService
         return $gameList->get();
     }
 
-    /**
-     * @param int $limit
-     * @return mixed
-     */
-    public function getActionListGamesForRelease($limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 0)
-            ->whereRaw('DATE(games.eu_release_date) <= CURDATE()');
-
-        $games = $games->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
     // ********************************************************** //
     // Stuff to sort through
     // ********************************************************** //

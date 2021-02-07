@@ -9,7 +9,9 @@ use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
 use App\QuickReview;
+
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
 
 class IndexController extends Controller
 {
@@ -17,10 +19,15 @@ class IndexController extends Controller
     use StaffView;
 
     protected $repoFeaturedGames;
+    protected $repoGameStats;
 
-    public function __construct(FeaturedGameRepository $featuredGames)
+    public function __construct(
+        FeaturedGameRepository $featuredGames,
+        GameStatsRepository $repoGameStats
+    )
     {
         $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameStats = $repoGameStats;
     }
 
     public function index()
@@ -52,8 +59,7 @@ class IndexController extends Controller
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Games to release
-        $actionListGamesForReleaseCount = $this->getServiceGame()->getActionListGamesForRelease();
-        $bindings['GamesForReleaseCount'] = count($actionListGamesForReleaseCount);
+        $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
 
         // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());

@@ -4,23 +4,34 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Traits\SwitchServices;
+use App\Traits\StaffView;
+
+use App\Domain\GameLists\Repository as GameListsRepository;
+
 use App\Category;
 use App\GameSeries;
 use App\Tag;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class GamesListController extends Controller
 {
     use SwitchServices;
     use StaffView;
 
+    protected $repoGameLists;
+
+    public function __construct(
+        GameListsRepository $repoGameLists
+    )
+    {
+        $this->repoGameLists = $repoGameLists;
+    }
+
     public function gamesToRelease()
     {
         $bindings = $this->getBindingsGamesSubpage('Games to release', "[ 5, 'asc'], [ 1, 'asc']");
 
-        $bindings['GameList'] = $this->getServiceGame()->getActionListGamesForRelease();
+        $bindings['GameList'] = $this->repoGameLists->gamesForRelease();
 
         $bindings['CustomHeader'] = 'Action';
         $bindings['ListMode'] = 'games-to-release';
