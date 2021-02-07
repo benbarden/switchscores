@@ -19,7 +19,8 @@ class DataSourceParsed extends Model
         'release_date_eu', 'release_date_us', 'release_date_jp',
         'price_standard', 'price_discounted', 'price_discount_pc',
         'developers', 'publishers', 'genres_json', 'players', 'url',
-        'image_square', 'image_header'
+        'image_square', 'image_header',
+        'has_physical_version', 'has_dlc', 'has_demo'
     ];
 
     public function isSourceNintendoCoUk()

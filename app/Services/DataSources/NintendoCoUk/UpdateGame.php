@@ -5,6 +5,7 @@ namespace App\Services\DataSources\NintendoCoUk;
 use App\Game;
 use App\GameImportRuleEshop;
 use App\DataSourceParsed;
+use App\Services\GameService;
 
 class UpdateGame
 {
@@ -106,5 +107,38 @@ class UpdateGame
         if ($this->game->players != null) return false;
 
         $this->game->players = $this->dsParsedItem->players;
+    }
+
+    public function updatePhysicalVersion()
+    {
+        if ($this->game->format_physical != null) return false;
+
+        if ($this->dsParsedItem->has_physical_version == 1) {
+            $this->game->format_physical = GameService::FORMAT_AVAILABLE;
+        } else {
+            $this->game->format_physical = GameService::FORMAT_NOT_AVAILABLE;
+        }
+    }
+
+    public function updateDLC()
+    {
+        if ($this->game->format_dlc != null) return false;
+
+        if ($this->dsParsedItem->has_dlc == 1) {
+            $this->game->format_dlc = GameService::FORMAT_AVAILABLE;
+        } else {
+            $this->game->format_dlc = GameService::FORMAT_NOT_AVAILABLE;
+        }
+    }
+
+    public function updateDemo()
+    {
+        if ($this->game->format_demo != null) return false;
+
+        if ($this->dsParsedItem->has_demo == 1) {
+            $this->game->format_demo = GameService::FORMAT_AVAILABLE;
+        } else {
+            $this->game->format_demo = GameService::FORMAT_NOT_AVAILABLE;
+        }
     }
 }

@@ -103,6 +103,20 @@ class Parser
             $this->dataSourceParsed->image_header = $parsedImageHeader;
         }
 
+        // Format options
+        $parsedPhysicalVersion = $this->parsePhysicalVersion();
+        $parsedDLC = $this->parseDLC();
+        $parsedDemo = $this->parseDemo();
+        if (!is_null($parsedPhysicalVersion)) {
+            $this->dataSourceParsed->has_physical_version = $parsedPhysicalVersion;
+        }
+        if (!is_null($parsedDLC)) {
+            $this->dataSourceParsed->has_dlc = $parsedDLC;
+        }
+        if (!is_null($parsedDemo)) {
+            $this->dataSourceParsed->has_demo = $parsedDemo;
+        }
+
         return $this->dataSourceParsed;
     }
 
@@ -340,5 +354,32 @@ class Parser
         $parsedImage = $this->rawJsonData['image_url_h2x1_s'];
 
         return $parsedImage;
+    }
+
+    public function parsePhysicalVersion()
+    {
+        if (!array_key_exists('physical_version_b', $this->rawJsonData)) {
+            return null;
+        }
+
+        return $this->rawJsonData['physical_version_b'];
+    }
+
+    public function parseDLC()
+    {
+        if (!array_key_exists('dlc_shown_b', $this->rawJsonData)) {
+            return null;
+        }
+
+        return $this->rawJsonData['dlc_shown_b'];
+    }
+
+    public function parseDemo()
+    {
+        if (!array_key_exists('demo_availability', $this->rawJsonData)) {
+            return null;
+        }
+
+        return $this->rawJsonData['demo_availability'];
     }
 }
