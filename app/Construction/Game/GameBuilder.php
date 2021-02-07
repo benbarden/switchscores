@@ -162,4 +162,28 @@ class GameBuilder
         $this->game->game_rank = $gameRank;
         return $this;
     }
+
+    public function setFormatDigital($format): GameBuilder
+    {
+        $this->game->format_digital = $format;
+        return $this;
+    }
+
+    public function setFormatPhysical($format): GameBuilder
+    {
+        $this->game->format_physical = $format;
+        return $this;
+    }
+
+    public function setFormatDLC($format): GameBuilder
+    {
+        $this->game->format_dlc = $format;
+        return $this;
+    }
+
+    public function setFormatDemo($format): GameBuilder
+    {
+        $this->game->format_demo = $format;
+        return $this;
+    }
 }

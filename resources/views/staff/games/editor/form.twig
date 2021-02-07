@@ -95,6 +95,54 @@
             </fieldset>
 
             <fieldset>
+                <legend>Format options</legend>
+                <div class="form-group">
+                    <label for="format_digital" class="col-md-4 control-label">Digital</label>
+                    <div class="col-md-6">
+                        <select id="format_digital" class="form-control" name="format_digital">
+                            <option value="">&nbsp;</option>
+                            {% for item in FormatDigitalList %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="format_physical" class="col-md-4 control-label">Physical</label>
+                    <div class="col-md-6">
+                        <select id="format_physical" class="form-control" name="format_physical">
+                            <option value="">&nbsp;</option>
+                            {% for item in FormatPhysicalList %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="format_dlc" class="col-md-4 control-label">DLC</label>
+                    <div class="col-md-6">
+                        <select id="format_dlc" class="form-control" name="format_dlc">
+                            <option value="">&nbsp;</option>
+                            {% for item in FormatDLCList %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="format_demo" class="col-md-4 control-label">Demo</label>
+                    <div class="col-md-6">
+                        <select id="format_demo" class="form-control" name="format_demo">
+                            <option value="">&nbsp;</option>
+                            {% for item in FormatDemoList %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
                 <legend>Additional</legend>
                 <div class="form-group">
                     <label for="video_url" class="col-md-4 control-label">Video URL</label>

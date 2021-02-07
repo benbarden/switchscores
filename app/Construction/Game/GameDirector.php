@@ -91,6 +91,18 @@ class GameDirector
         if (array_key_exists('series_id', $params)) {
             $this->builder->setGameSeriesId($params['series_id']);
         }
+        if (array_key_exists('format_digital', $params)) {
+            $this->builder->setFormatDigital($params['format_digital']);
+        }
+        if (array_key_exists('format_physical', $params)) {
+            $this->builder->setFormatPhysical($params['format_physical']);
+        }
+        if (array_key_exists('format_dlc', $params)) {
+            $this->builder->setFormatDLC($params['format_dlc']);
+        }
+        if (array_key_exists('format_demo', $params)) {
+            $this->builder->setFormatDemo($params['format_demo']);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

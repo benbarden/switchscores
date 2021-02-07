@@ -18,6 +18,12 @@ class GameService
     const ORDER_NEWEST = 1;
     const ORDER_OLDEST = 2;
 
+    const FORMAT_AVAILABLE = 'Available';
+    const FORMAT_INCLUDED_IN_BUNDLE = 'Included in bundle';
+    const FORMAT_LIMITED_EDITION = 'Limited edition';
+    const FORMAT_NOT_AVAILABLE = 'Not available';
+    const FORMAT_DISCONTINUED = 'Discontinued';
+
     /**
      * @param $title
      * @param $linkTitle
@@ -322,4 +328,43 @@ class GameService
             ->get();
     }
 
+    public function getFormatOptionsPhysical()
+    {
+        $options = [];
+        $options[] = self::FORMAT_AVAILABLE;
+        $options[] = self::FORMAT_INCLUDED_IN_BUNDLE;
+        $options[] = self::FORMAT_LIMITED_EDITION;
+        $options[] = self::FORMAT_NOT_AVAILABLE;
+
+        return $options;
+    }
+
+    public function getFormatOptionsDigital()
+    {
+        $options = [];
+        $options[] = self::FORMAT_AVAILABLE;
+        $options[] = self::FORMAT_INCLUDED_IN_BUNDLE;
+        $options[] = self::FORMAT_DISCONTINUED;
+        $options[] = self::FORMAT_NOT_AVAILABLE;
+
+        return $options;
+    }
+
+    public function getFormatOptionsDLC()
+    {
+        $options = [];
+        $options[] = self::FORMAT_AVAILABLE;
+        $options[] = self::FORMAT_NOT_AVAILABLE;
+
+        return $options;
+    }
+
+    public function getFormatOptionsDemo()
+    {
+        $options = [];
+        $options[] = self::FORMAT_AVAILABLE;
+        $options[] = self::FORMAT_NOT_AVAILABLE;
+
+        return $options;
+    }
 }

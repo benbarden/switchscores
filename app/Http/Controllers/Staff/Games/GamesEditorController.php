@@ -110,6 +110,11 @@ class GamesEditorController extends Controller
         $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
 
+        $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
+        $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
+        $bindings['FormatDLCList'] = $this->getServiceGame()->getFormatOptionsDLC();
+        $bindings['FormatDemoList'] = $this->getServiceGame()->getFormatOptionsDemo();
+
         return view('staff.games.editor.add', $bindings);
     }
 
@@ -144,6 +149,11 @@ class GamesEditorController extends Controller
 
         $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+
+        $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
+        $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
+        $bindings['FormatDLCList'] = $this->getServiceGame()->getFormatOptionsDLC();
+        $bindings['FormatDemoList'] = $this->getServiceGame()->getFormatOptionsDemo();
 
         return view('staff.games.editor.edit', $bindings);
     }

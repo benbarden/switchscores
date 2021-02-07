@@ -18,6 +18,11 @@
         formVals['jp_release_date'] = "{{ GameData.jp_release_date }}";
         formVals['eu_is_released'] = "{{ GameData.eu_is_released }}";
         formVals['eu_released_on'] = "{{ GameData.eu_released_on }}";
+        // *** Format options *** //
+        formVals['format_digital'] = "{{ GameData.format_digital }}";
+        formVals['format_physical'] = "{{ GameData.format_physical }}";
+        formVals['format_dlc'] = "{{ GameData.format_dlc }}";
+        formVals['format_demo'] = "{{ GameData.format_demo }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
@@ -43,6 +48,11 @@
         formVals['jp_release_date'] = "{{ old('jp_release_date') }}";
         formVals['eu_is_released'] = "{{ old('eu_is_released') }}";
         formVals['eu_released_on'] = "{{ old('eu_released_on') }}";
+        // *** Format options *** //
+        formVals['format_digital'] = "{{ old('format_digital') }}";
+        formVals['format_physical'] = "{{ old('format_physical') }}";
+        formVals['format_dlc'] = "{{ old('format_dlc') }}";
+        formVals['format_demo'] = "{{ old('format_demo') }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ old('video_url') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
@@ -71,6 +81,11 @@
         $('#eu_is_released').attr('checked', true);
     }
     $('#eu_released_on').val(formVals['eu_released_on']);
+    // *** Format options *** //
+    $('#format_digital').val(formVals['format_digital']);
+    $('#format_physical').val(formVals['format_physical']);
+    $('#format_dlc').val(formVals['format_dlc']);
+    $('#format_demo').val(formVals['format_demo']);
     // *** Additional *** //
     $('#video_url').val(formVals['video_url']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
