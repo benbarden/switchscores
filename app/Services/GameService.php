@@ -188,7 +188,11 @@ class GameService
 
     public function getWithNoAmazonUkLink($limit = 200)
     {
-        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->limit($limit)->get();
+        return Game::where('format_physical', self::FORMAT_AVAILABLE)
+            ->whereNull('amazon_uk_link')
+            ->orderBy('id', 'asc')
+            ->limit($limit)
+            ->get();
     }
 
     public function countWithNoVideoUrl()
@@ -198,7 +202,10 @@ class GameService
 
     public function countWithNoAmazonUkLink()
     {
-        return Game::whereNull('amazon_uk_link')->orderBy('id', 'asc')->count();
+        return Game::where('format_physical', self::FORMAT_AVAILABLE)
+            ->whereNull('amazon_uk_link')
+            ->orderBy('id', 'asc')
+            ->count();
     }
 
     // ********************************************************** //
