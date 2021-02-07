@@ -181,6 +181,30 @@ class DataSourceParsedService
         ', [$sourceId]);
     }
 
+    public function updateNintendoCoUkDigitalAvailable()
+    {
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        DB::update('
+            UPDATE games
+            SET format_digital = ?
+            WHERE eshop_europe_fs_id IN (
+                SELECT link_id FROM data_source_parsed WHERE source_id = ?
+            );
+        ', [GameService::FORMAT_AVAILABLE, $sourceId]);
+    }
+
+    public function updateNintendoCoUkDigitalDelisted()
+    {
+        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
+        DB::update('
+            UPDATE games
+            SET format_digital = ?
+            WHERE eshop_europe_fs_id NOT IN (
+                SELECT link_id FROM data_source_parsed WHERE source_id = ?
+            );
+        ', [GameService::FORMAT_DELISTED, $sourceId]);
+    }
+
     // ********** Wikipedia ********** //
 
     public function getAllWikipedia()

@@ -105,6 +105,12 @@ class ImportParseLink extends Command
             $this->getServiceDataSourceParsed()->updateNintendoCoUkGameIds();
             $logger->info('Linking complete');
 
+            // Update digital availability
+            $logger->info('Updating digital availability...');
+            $this->getServiceDataSourceParsed()->updateNintendoCoUkDigitalAvailable();
+            $this->getServiceDataSourceParsed()->updateNintendoCoUkDigitalDelisted();
+            $logger->info('Complete');
+
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
         }
