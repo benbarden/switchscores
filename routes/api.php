@@ -25,6 +25,9 @@ Route::get('/game/title-match', 'Api\Game\TitleMatch@getByTitle');
 Route::get('/game/list', 'Api\Game\GameController@getList');
 // Game details
 Route::get('/game/{id}', 'Api\Game\GameController@getDetails');
+// Game details from linkid
+Route::get('/game/linkid/{id}', 'Api\Game\GameController@getDetailsByLinkId');
+
 // Game reviews
 Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviews');
 

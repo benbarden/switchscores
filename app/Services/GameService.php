@@ -119,9 +119,16 @@ class GameService
      */
     public function getByTitle($title)
     {
-        $game = Game::where('title', $title)
-            ->first();
-        return $game;
+        return Game::where('title', $title)->first();
+    }
+
+    /**
+     * @param $linkId
+     * @return Game
+     */
+    public function getByEshopEuropeId($linkId)
+    {
+        return Game::where('eshop_europe_fs_id', $linkId)->first();
     }
 
     public function searchByTitle($keywords)
