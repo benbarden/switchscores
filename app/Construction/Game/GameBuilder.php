@@ -103,6 +103,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setNintendoStoreUrlOverride($storeUrl): GameBuilder
+    {
+        $this->game->nintendo_store_url_override = $storeUrl;
+        return $this;
+    }
+
     public function setVideoUrl($videoUrl): GameBuilder
     {
         $this->game->video_url = $videoUrl;

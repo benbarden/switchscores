@@ -199,7 +199,8 @@ class DataSourceParsedService
         DB::update('
             UPDATE games
             SET format_digital = ?
-            WHERE eshop_europe_fs_id NOT IN (
+            WHERE nintendo_store_url_override IS NULL
+            AND eshop_europe_fs_id NOT IN (
                 SELECT link_id FROM data_source_parsed WHERE source_id = ?
             );
         ', [GameService::FORMAT_DELISTED, $sourceId]);
