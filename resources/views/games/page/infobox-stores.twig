@@ -29,6 +29,14 @@
                 <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" class="btn btn-primary btn-sm" target="_blank">Buy at Nintendo.co.uk</a>
             </td>
         </tr>
+    {% elseif GameData.nintendo_store_url_override %}
+        <tr>
+            <td style="vertical-align: middle;">
+            </td>
+            <td style="vertical-align: middle;">
+                <a href="{{ GameData.nintendo_store_url_override }}" class="btn btn-primary btn-sm" target="_blank">Buy at Nintendo store</a>
+            </td>
+        </tr>
     {% endif %}
     {% if GameData.amazon_uk_link %}
         <tr>
