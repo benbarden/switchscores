@@ -61,6 +61,9 @@ class DatabaseHelpController extends Controller
 
     public function gamesWithoutCategoriesByYear($year)
     {
+        $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
+        if (!in_array($year, $allowedYears)) abort(404);
+
         $bindings = $this->getBindingsDatabaseHelpGamesWithoutCategoriesSubpage('Games without categories: '.$year);
 
         $serviceMigrationsCategory = new MigrationsCategory();
