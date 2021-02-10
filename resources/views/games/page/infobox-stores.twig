@@ -1,10 +1,7 @@
 <table class="table table-condensed table-responsive">
     <tr>
-        <th colspan="2" style="background: #dedede;">eShop details</th>
-    </tr>
-    <tr>
         <td style="width: 150px;">
-            <span style="font-weight: bold;">eShop price</span>
+            <span style="font-weight: bold;">Price</span>
         </td>
         <td>
             {% if GameData.price_eshop %}
@@ -24,43 +21,21 @@
             {% endif %}
         </td>
     </tr>
-    {% if GameData.eu_release_date %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Europe release</span>
-            </td>
-            <td>
-                {{ GameData.eu_release_date|date('jS M Y') }}
-            </td>
-        </tr>
-    {% endif %}
-    {% if GameData.us_release_date %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">US release</span>
-            </td>
-            <td>
-                {{ GameData.us_release_date|date('jS M Y') }}
-            </td>
-        </tr>
-    {% endif %}
-    {% if GameData.jp_release_date %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Japan release</span>
-            </td>
-            <td>
-                {{ GameData.jp_release_date|date('jS M Y') }}
-            </td>
-        </tr>
-    {% endif %}
     {% if DSNintendoCoUk is not null %}
         <tr>
-            <td>
-                <span style="font-weight: bold;">Link to eShop</span>
+            <td style="vertical-align: middle;">
             </td>
-            <td>
-                <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" target="_blank">Visit eShop page</a>
+            <td style="vertical-align: middle;">
+                <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" class="btn btn-primary btn-sm" target="_blank">Buy at Nintendo.co.uk</a>
+            </td>
+        </tr>
+    {% endif %}
+    {% if GameData.amazon_uk_link %}
+        <tr>
+            <td style="vertical-align: middle;">
+            </td>
+            <td style="vertical-align: middle;">
+                <a href="{{ GameData.amazon_uk_link }}?tag=switchscores-21" class="btn btn-primary btn-sm" target="_blank">Buy at Amazon UK</a>
             </td>
         </tr>
     {% endif %}

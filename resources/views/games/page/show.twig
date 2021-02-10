@@ -62,6 +62,12 @@
         {% include 'modules/game/rank/review-count.twig' %}
         {% include 'modules/game/rank/rating-avg.twig' %}
 
+        <h2 class="standout-header">Buy this game</h2>
+        {% include 'games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
+
+        <h2 class="standout-header">Infobox</h2>
+        {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+
         <h2 class="standout-header">Collection</h2>
         {% if auth_user() %}
             {% if UserCollectionItem %}
@@ -86,11 +92,6 @@
         {% if GameReviews.count > 2 %}
             {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
         {% endif %}
-
-        <h2>Infobox</h2>
-
-        {% include 'games/page/infobox-eshop.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
-        {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
 

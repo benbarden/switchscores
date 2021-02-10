@@ -1,7 +1,48 @@
 <table class="table table-condensed table-responsive">
-    <tr>
-        <th colspan="2" style="background: #dedede;">General details</th>
-    </tr>
+
+    {% if GameData.category_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Category</span>
+            </td>
+            <td>
+                {% if GameData.category.parent.id %}
+                    <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                {% endif %}
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Tag(s)</span>
+            </td>
+            <td>
+                {% for item in GameTags %}
+                    <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                        <nobr>{{ item.tag.tag_name }}</nobr>
+                    </a>
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% endif %}
+
+    {% if GameData.series_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Series</span>
+            </td>
+            <td>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
     <tr>
         <td style="width: 150px;">
             <span style="font-weight: bold;">Players</span>
@@ -59,56 +100,33 @@
 
     {% endif %}
 
-    {% if GameData.category_id %}
+    {% if GameData.eu_release_date %}
         <tr>
             <td>
-                <span style="font-weight: bold;">Category</span>
+                <span style="font-weight: bold;">Europe release</span>
             </td>
             <td>
-                {% if GameData.category.parent.id %}
-                    <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
-                {% endif %}
-                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                {{ GameData.eu_release_date|date('jS M Y') }}
             </td>
         </tr>
     {% endif %}
-
-    {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
-
-    <tr>
-        <td>
-            <span style="font-weight: bold;">Tag(s)</span>
-        </td>
-        <td>
-            {% for item in GameTags %}
-                <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
-                    <nobr>{{ item.tag.tag_name }}</nobr>
-                </a>
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </td>
-    </tr>
-
-    {% endif %}
-
-    {% if GameData.series_id %}
+    {% if GameData.us_release_date %}
         <tr>
             <td>
-                <span style="font-weight: bold;">Series</span>
+                <span style="font-weight: bold;">US release</span>
             </td>
             <td>
-                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+                {{ GameData.us_release_date|date('jS M Y') }}
             </td>
         </tr>
     {% endif %}
-
-    {% if GameData.amazon_uk_link %}
+    {% if GameData.jp_release_date %}
         <tr>
             <td>
-                <span style="font-weight: bold;">Buy this game</span>
+                <span style="font-weight: bold;">Japan release</span>
             </td>
             <td>
-                <a href="{{ GameData.amazon_uk_link }}" target="_blank">Amazon UK</a>
+                {{ GameData.jp_release_date|date('jS M Y') }}
             </td>
         </tr>
     {% endif %}
