@@ -76,14 +76,28 @@ class GameController
 
     public function getDetailsByLinkId($linkId)
     {
-        $game = $this->getServiceGame()->getByEshopEuropeId($linkId);
-        if (!$game) {
-            return response()->json(['message' => 'Not found'], 404);
+        if (strpos($linkId, ",") !== false) {
+            $linkIdList = explode(",", $linkId);
+        } else {
+            $linkIdList = [$linkId];
         }
 
-        $gameData = $this->parseGameData($game);
+        $gameDataList = [];
 
-        return response()->json(['game' => $gameData], 200);
+        foreach ($linkIdList as $linkIdItem) {
+
+            $game = $this->getServiceGame()->getByEshopEuropeId($linkIdItem);
+            if ($game) {
+                $gameDataList[] = ['game' => $this->parseGameData($game)];
+            }
+
+        }
+
+        if (count($gameDataList) == 0) {
+            return response()->json(['message' => 'No records found'], 404);
+        }
+
+        return response()->json($gameDataList, 200);
     }
 
     public function getReviews($gameId)
