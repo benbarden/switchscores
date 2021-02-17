@@ -276,6 +276,8 @@ class Importer
 
             if (property_exists($feedItem, 'score')) {
                 $reviewFeedItem->item_rating = $feedItem->score;
+            } elseif (property_exists($feedItem, 'note')) {
+                $reviewFeedItem->item_rating = $feedItem->note;
             }
 
         } else {
