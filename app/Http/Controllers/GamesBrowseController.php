@@ -81,7 +81,7 @@ class GamesBrowseController extends Controller
         $category = $this->getServiceCategory()->getByLinkTitle($linkTitle);
         if (!$category) abort(404);
 
-        return redirect(route('games.browse.byCategory.page', ['link_title' => $linkTitle]));
+        return redirect(route('games.browse.byCategory.page', ['category' => $category->link_title]));
     }
 
     public function bySeriesLanding()
