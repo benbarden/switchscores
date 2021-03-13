@@ -192,4 +192,10 @@ class GameBuilder
         $this->game->format_demo = $format;
         return $this;
     }
+
+    public function setEshopEuropeOrder($eshopOrder): GameBuilder
+    {
+        $this->game->eshop_europe_order = $eshopOrder;
+        return $this;
+    }
 }

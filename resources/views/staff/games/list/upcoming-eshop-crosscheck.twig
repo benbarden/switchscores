@@ -1,0 +1,13 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% if GameList.count > 0 %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            {% include 'modules/game/grid/staff-eshop-order.twig' with {'GameList': GameList, 'batchOverride': 2} %}
+        </div>
+    </div>
+{% endif %}
+
+{% endblock page_inner %}

@@ -231,6 +231,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/recently-added', 'Staff\Games\GamesListController@recentlyAdded')->name('staff.games.list.recently-added');
     Route::get('/staff/games/list/recently-released', 'Staff\Games\GamesListController@recentlyReleased')->name('staff.games.list.recently-released');
     Route::get('/staff/games/list/upcoming-games', 'Staff\Games\GamesListController@upcomingGames')->name('staff.games.list.upcoming-games');
+    Route::get('/staff/games/list/upcoming-eshop-crosscheck', 'Staff\Games\GamesListController@upcomingEshopCrosscheck')->name('staff.games.list.upcoming-eshop-crosscheck');
     Route::get('/staff/games/list/no-eu-release-date', 'Staff\Games\GamesListController@noEuReleaseDate')->name('staff.games.list.no-eu-release-date');
     Route::get('/staff/games/list/no-eshop-price', 'Staff\Games\GamesListController@noEshopPrice')->name('staff.games.list.no-eshop-price');
     Route::get('/staff/games/list/no-video-url', 'Staff\Games\GamesListController@noVideoUrl')->name('staff.games.list.no-video-url');

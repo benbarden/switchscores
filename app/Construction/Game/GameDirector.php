@@ -106,6 +106,9 @@ class GameDirector
         if (array_key_exists('format_demo', $params)) {
             $this->builder->setFormatDemo($params['format_demo']);
         }
+        if (array_key_exists('eshop_europe_order', $params)) {
+            $this->builder->setEshopEuropeOrder($params['eshop_europe_order']);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

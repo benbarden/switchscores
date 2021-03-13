@@ -66,6 +66,15 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
+    public function upcomingEshopCrosscheck()
+    {
+        $bindings = $this->getBindingsGamesSubpage('Upcoming (eShop crosscheck)', "[ 5, 'asc']");
+
+        $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
+
+        return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);
+    }
+
     public function noEuReleaseDate()
     {
         $bindings = $this->getBindingsGamesSubpage('No EU release date', "[ 0, 'desc']");

@@ -3,9 +3,7 @@
 
 namespace App\Domain\GameLists;
 
-
 use App\Game;
-use App\Services\GameService;
 
 class Repository
 {
@@ -28,6 +26,21 @@ class Repository
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function upcomingEshopCrosscheck($limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
