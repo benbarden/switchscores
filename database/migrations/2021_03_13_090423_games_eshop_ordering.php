@@ -14,7 +14,7 @@ class GamesEshopOrdering extends Migration
     public function up()
     {
         Schema::table('games', function(Blueprint $table) {
-            $table->text('eshop_europe_order')->nullable();
+            $table->integer('eshop_europe_order')->nullable();
         });
     }
 
