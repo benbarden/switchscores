@@ -5,7 +5,7 @@
 {% if GameList.count > 0 %}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            {% include 'modules/game/grid/staff-eshop-order.twig' with {'GameList': GameList, 'batchOverride': 2} %}
+            {% include 'games/layouts/gridStaffEshopOrder/layout.twig' with {'GameList': GameList, 'batchOverride': 2} %}
         </div>
     </div>
 {% endif %}
