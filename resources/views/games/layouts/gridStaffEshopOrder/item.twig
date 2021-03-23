@@ -8,7 +8,7 @@
 
 <div class="row" style="margin-top: 8px;">
 
-    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
         <span class="h5">
             <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
         </span>
@@ -16,32 +16,23 @@
         <span class="h6">
             Release date: {% include 'modules/game/release-date.twig' with {'item': item} %}
         </span>
-        {% if item.ExtraDetailLine != '' %}
-            <br>
-            <span class="h6">
-                {{ item.ExtraDetailLine }}
-            </span>
-        {% endif %}
-        {% if ShowOnSale == 'Y' %}
-            <br>
-            <span class="h5">
-                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
-                <span class="h4" style="font-weight: bold;">&pound;{{ item.price_discounted }}</span>
-                <span style="color: #f00;">{{ item.price_discount_pc }}% off</span>
-            </span>
-        {% endif %}
     </div>
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
         <div class="pull-right">
-            <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit</a>
+            {% include 'modules/game/table/staff-game-title.twig' with {'LinkDesc': 'Detail'} %} :
+            {% include 'modules/game/table/staff-game-edit.twig' %}
+        </div>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="pull-right">
             {% if item.eshop_europe_order %}
                 <span class="h4 label label-info">
-                    {{ item.eshop_europe_order }}
-                </span>
+                {{ item.eshop_europe_order }}
+            </span>
             {% else %}
                 <span class="h4 label label-default">
-                    -
-                </span>
+                -
+            </span>
             {% endif %}
         </div>
     </div>
