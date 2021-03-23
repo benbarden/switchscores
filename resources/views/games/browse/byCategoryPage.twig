@@ -46,19 +46,19 @@
                     <div class="col-md-4">
                         <h2>Top rated</h2>
                         {% if SnapshotTopRated|length %}
-                            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': SnapshotTopRated, 'batchOverride': 1} %}
+                            {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SnapshotTopRated, 'batchOverride': 1} %}
                         {% endif %}
                     </div>
                     <div class="col-md-4" style="border-left: 1px solid #c9c9c9;">
                         <h2>New releases</h2>
                         {% if SnapshotNewReleases|length %}
-                            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': SnapshotNewReleases, 'batchOverride': 1} %}
+                            {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SnapshotNewReleases, 'batchOverride': 1} %}
                         {% endif %}
                     </div>
                     <div class="col-md-4" style="border-left: 1px solid #c9c9c9;">
                         <h2>Unranked <span class="h5">(2 reviews or fewer)</span></h2>
                         {% if SnapshotUnranked|length %}
-                            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': SnapshotUnranked, 'batchOverride': 1} %}
+                            {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SnapshotUnranked, 'batchOverride': 1} %}
                         {% endif %}
                     </div>
                 </div>

@@ -1,0 +1,54 @@
+<div class="row" style="margin-top: 16px;">
+
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        {% include 'modules/game/packshot/header.twig' with {'item': item} %}
+    </div>
+
+</div>
+
+<div class="row" style="margin-top: 8px;">
+
+    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+        <span class="h5">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
+        <br>
+        <span class="h6">
+            Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
+        </span>
+        {% if item.ExtraDetailLine != '' %}
+            <br>
+            <span class="h6">
+                {{ item.ExtraDetailLine }}
+            </span>
+        {% endif %}
+        {% if item.dspNintendoCoUk|length %}
+            {% set PriceDiscounted = item.dspNintendoCoUk[0]['price_discounted'] %}
+            {% set PriceDiscountPC = item.dspNintendoCoUk[0]['price_discount_pc'] %}
+        {% endif %}
+        <br>
+        <span class="h5">
+            {% if PriceDiscounted and PriceDiscountPC %}
+                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
+                <span class="h4" style="font-weight: bold;">&pound;{{ PriceDiscounted }}</span>
+                <span style="color: #f00;">{{ PriceDiscountPC }}% off</span>
+            {% else %}
+                <span class="h4">&pound;{{ item.price_eshop }}</span>
+            {% endif %}
+        </span>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="pull-right">
+            {% if item.rating_avg %}
+                {% if item.game_rank %}
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                {% else %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
+                {% endif %}
+            {% else %}
+                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
