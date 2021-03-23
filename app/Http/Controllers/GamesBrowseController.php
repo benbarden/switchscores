@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\GameLists\Repository as GameListsRepository;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
@@ -9,6 +10,15 @@ use App\Traits\SwitchServices;
 class GamesBrowseController extends Controller
 {
     use SwitchServices;
+
+    protected $repoGameLists;
+
+    public function __construct(
+        GameListsRepository $repoGameLists
+    )
+    {
+        $this->repoGameLists = $repoGameLists;
+    }
 
     public function byTitleLanding()
     {
@@ -49,7 +59,7 @@ class GamesBrowseController extends Controller
         return view('games.browse.byCategoryLanding', $bindings);
     }
 
-    public function byCategoryPage($category)
+    public function byCategoryPageOld($category)
     {
         $bindings = [];
 
@@ -67,6 +77,35 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
         $bindings['TopTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
+
+        return view('games.browse.byCategoryPage', $bindings);
+    }
+
+    public function byCategoryPage($category)
+    {
+        $bindings = [];
+
+        $category = $this->getServiceCategory()->getByLinkTitle($category);
+        if (!$category) abort(404);
+
+        $categoryId = $category->id;
+        $categoryName = $category->name;
+
+        $bindings['Category'] = $category;
+
+        // Snapshot
+        $bindings['SnapshotTopRated'] = $this->repoGameLists->rankedByCategory($categoryId, 10);
+        $bindings['SnapshotNewReleases'] = $this->repoGameLists->recentlyReleasedByCategory($categoryId, 10);
+        $bindings['SnapshotUnranked'] = $this->repoGameLists->unrankedByCategory($categoryId, 10);
+
+        // Tables
+        $bindings['RankedGameList'] = $this->repoGameLists->rankedByCategory($categoryId);
+        $bindings['UnrankedGameList'] = $this->repoGameLists->unrankedByCategory($categoryId);
+        $bindings['RankedListSort'] = "[4, 'desc']";
+        $bindings['UnrankedListSort'] = "[5, 'desc'], [2, 'asc']";
+
+        $bindings['PageTitle'] = 'Nintendo Switch '.$categoryName.' games';
+        $bindings['TopTitle'] = 'Nintendo Switch '.$categoryName.' games';
 
         return view('games.browse.byCategoryPage', $bindings);
     }

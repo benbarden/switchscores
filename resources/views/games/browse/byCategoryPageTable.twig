@@ -1,0 +1,42 @@
+{% if GameList.count > 0 %}
+    <table id="{{ TableId }}" class="table data-sortable">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">Release date (EU)</th>
+            <th class="text-center">Rank</th>
+            <th class="text-center">Avg rating</th>
+            <th class="text-center">Reviews</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in GameList %}
+            <tr>
+                <td>
+                    {% include 'modules/game/table/user-game-title.twig' with {'item': item} %}
+                </td>
+                <td class="text-center">
+                    {{ item.category.name }}
+                </td>
+                <td class="text-center">
+                    {{ item.eu_release_date }}
+                </td>
+                <td class="text-center">
+                    {{ item.game_rank }}
+                </td>
+                <td class="text-center">
+                    {% if item.game_rank %}
+                        {{ item.rating_avg }}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {{ item.review_count }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No games found!</p>
+{% endif %}

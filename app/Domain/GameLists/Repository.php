@@ -35,6 +35,66 @@ class Repository
         return $games;
     }
 
+    public function byCategory($categoryId, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->orderBy('title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
+    public function recentlyReleasedByCategory($categoryId, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->orderBy('eu_release_date', 'desc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
+    public function rankedByCategory($categoryId, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->whereNotNull('game_rank')
+            ->orderBy('game_rank', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
+    public function unrankedByCategory($categoryId, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->whereNull('game_rank')
+            ->orderBy('review_count', 'desc')
+            ->orderBy('eu_release_date', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
     public function upcomingEshopCrosscheck($limit = null)
     {
         $games = Game::where('eu_is_released', 0)

@@ -7,6 +7,8 @@
     {% set colBreak = '3' %}
 {% elseif batchItemCount == 3 %}
     {% set colBreak = '4' %}
+{% elseif batchItemCount == 1 %}
+    {% set colBreak = '12' %}
 {% else %}
     {% set colBreak = '6' %}
 {% endif %}
