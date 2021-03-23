@@ -22,20 +22,7 @@
                 {{ item.ExtraDetailLine }}
             </span>
         {% endif %}
-        {% if item.dspNintendoCoUk|length %}
-            {% set PriceDiscounted = item.dspNintendoCoUk[0]['price_discounted'] %}
-            {% set PriceDiscountPC = item.dspNintendoCoUk[0]['price_discount_pc'] %}
-        {% endif %}
-        <br>
-        <span class="h5">
-            {% if PriceDiscounted and PriceDiscountPC %}
-                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
-                <span class="h4" style="font-weight: bold;">&pound;{{ PriceDiscounted }}</span>
-                <span style="color: #f00;">{{ PriceDiscountPC }}% off</span>
-            {% else %}
-                <span class="h4">&pound;{{ item.price_eshop }}</span>
-            {% endif %}
-        </span>
+        {% include 'modules/game/price/standard.twig' %}
     </div>
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
         <div class="pull-right">

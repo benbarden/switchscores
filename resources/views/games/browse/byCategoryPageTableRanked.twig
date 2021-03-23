@@ -2,24 +2,27 @@
     <table id="{{ TableId }}" class="table data-sortable">
         <thead>
         <tr>
+            <th class="text-center"></th>
             <th>Title</th>
-            <th class="text-center">Category</th>
             <th class="text-center">Release date (EU)</th>
             <th class="text-center">Site rank</th>
             <th class="text-center">Avg rating</th>
             <th class="text-center">Reviews</th>
+            <th class="text-center">Price</th>
         </tr>
         </thead>
         <tbody>
         {% for item in GameList %}
             <tr>
+                <td class="text-center">
+                    <div style="width: 100px;">
+                        {% include 'modules/game/packshot/square.twig' %}
+                    </div>
+                </td>
                 <td>
                     <a href="{{ LinkHelper.gameShow(item) }}">
                         {{ item.title }}
                     </a>
-                </td>
-                <td class="text-center">
-                    {{ item.category.name }}
                 </td>
                 <td class="text-center">
                     {{ item.eu_release_date }}
@@ -35,10 +38,22 @@
                 <td class="text-center">
                     {{ item.review_count }}
                 </td>
+                <td class="text-center">
+                    {% include 'modules/game/price/table-clean.twig' %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <script>
+        $(document).ready(function() {
+            $('#table-index-ranked').DataTable({
+                "order": [{{ RankedListSort|raw }}],
+                "pageLength": 25,
+                "columnDefs": [{ "targets": [ 0 ], "orderable": false }]
+            });
+        });
+    </script>
 {% else %}
     <p>No games found!</p>
 {% endif %}

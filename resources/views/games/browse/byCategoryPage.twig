@@ -93,17 +93,4 @@
 
 {% include 'common/table-sorting.twig' %}
 
-<script>
-    $(document).ready(function() {
-        $('#table-index-ranked').DataTable({
-            "order": [{{ RankedListSort|raw }}],
-            "pageLength": 25
-        });
-        $('#table-index-unranked').DataTable({
-            "order": [{{ UnrankedListSort|raw }}],
-            "pageLength": 25
-        });
-    });
-</script>
-
 {% endblock page_body %}
