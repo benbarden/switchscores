@@ -12,6 +12,9 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 400;
 }
+table {
+    font-size: 14px;
+}
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: 'Fira Sans', sans-serif;

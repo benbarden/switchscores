@@ -102,7 +102,7 @@ class GamesBrowseController extends Controller
         $bindings['RankedGameList'] = $this->repoGameLists->rankedByCategory($categoryId);
         $bindings['UnrankedGameList'] = $this->repoGameLists->unrankedByCategory($categoryId);
         $bindings['RankedListSort'] = "[4, 'desc']";
-        $bindings['UnrankedListSort'] = "[5, 'desc'], [2, 'asc']";
+        $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
         $bindings['PageTitle'] = 'Nintendo Switch '.$categoryName.' games';
         $bindings['TopTitle'] = 'Nintendo Switch '.$categoryName.' games';

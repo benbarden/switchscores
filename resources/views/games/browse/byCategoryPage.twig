@@ -14,14 +14,16 @@
 {% if Category.children.count() > 0 %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <p>
+        <div class="alert" style="background: #efefef;">
+            <span class="h5">
             <strong>Subcategories</strong>:
             {% for item in Category.children %}
                 <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}">{{ item.name }}</a>
                 {% if not loop.last %} |
                 {% endif %}
             {% endfor %}
-        </p>
+            </span>
+        </div>
     </div>
 </div>
 {% endif %}
@@ -67,7 +69,7 @@
 
                 <h2>All ranked</h2>
 
-                {% include 'games/browse/byCategoryPageTable.twig' with {'GameList': RankedGameList, 'TableId': 'table-index-ranked'} %}
+                {% include 'games/browse/byCategoryPageTableRanked.twig' with {'GameList': RankedGameList, 'TableId': 'table-index-ranked'} %}
 
             </div>
 
@@ -75,7 +77,7 @@
 
                 <h2>All unranked</h2>
 
-                {% include 'games/browse/byCategoryPageTable.twig' with {'GameList': UnrankedGameList, 'TableId': 'table-index-unranked'} %}
+                {% include 'games/browse/byCategoryPageTableUnranked.twig' with {'GameList': UnrankedGameList, 'TableId': 'table-index-unranked'} %}
 
             </div>
 
