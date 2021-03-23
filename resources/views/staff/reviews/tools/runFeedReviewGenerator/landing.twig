@@ -14,6 +14,9 @@
     have ratings attached. If there are entries on the Feed Items page that are missing these fields,
     they will be left alone until the details are filled in.
 </p>
+<p>
+    Once complete, UpdateGameRanks will be run automatically.
+</p>
 
 <form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.tools.runFeedReviewGenerator') }}">
     {{ csrf_field() }}

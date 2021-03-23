@@ -42,6 +42,7 @@ class ToolsController extends Controller
 
         if (request()->post()) {
             \Artisan::call('RunFeedReviewGenerator', []);
+            \Artisan::call('UpdateGameRanks', []);
             return view('staff.reviews.tools.runFeedReviewGenerator.process', $bindings);
         } else {
             return view('staff.reviews.tools.runFeedReviewGenerator.landing', $bindings);
