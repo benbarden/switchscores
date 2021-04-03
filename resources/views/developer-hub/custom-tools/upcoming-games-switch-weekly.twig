@@ -69,6 +69,11 @@
                 <tr>
                     <th class="text-center">#</th>
                     <th>Title</th>
+                    <th class="text-center">eShop link</th>
+                    <th class="text-center">Digital</th>
+                    <th class="text-center">Physical</th>
+                    <th class="text-center">DLC</th>
+                    <th class="text-center">Demo</th>
                     <th class="text-center">EU release date</th>
                     <th class="text-center">US release date</th>
                     <th class="text-center">Price</th>
@@ -79,6 +84,49 @@
                     <tr>
                         <td class="text-center">{{ item.id }}</td>
                         <td>{{ item.title }}</td>
+                        <td class="text-center">
+                            {% if item.eshop_europe_fs_id %}
+                                {% include 'modules/icons/green-tick.twig' %}
+                            {% else %}
+                                {% include 'modules/icons/red-cross.twig' %}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.format_digital == 'Available' %}
+                                {% include 'modules/icons/green-tick.twig' %}
+                            {% elseif item.format_digital == 'Not available' %}
+                                {% include 'modules/icons/red-cross.twig' %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.format_physical == 'Available' %}
+                                {% include 'modules/icons/green-tick.twig' %}
+                            {% elseif item.format_physical == 'Not available' %}
+                                {% include 'modules/icons/red-cross.twig' %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.format_dlc == 'Available' %}
+                                {% include 'modules/icons/green-tick.twig' %}
+                            {% elseif item.format_dlc == 'Not available' %}
+                                {% include 'modules/icons/red-cross.twig' %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.format_demo == 'Available' %}
+                                {% include 'modules/icons/green-tick.twig' %}
+                            {% elseif item.format_demo == 'Not available' %}
+                                {% include 'modules/icons/red-cross.twig' %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
                         <td class="text-center">{{ item.us_release_date }}</td>
                         <td class="text-center">{{ item.price_eshop }}</td>
