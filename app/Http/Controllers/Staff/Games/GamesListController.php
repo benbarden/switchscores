@@ -71,6 +71,7 @@ class GamesListController extends Controller
         $bindings = $this->getBindingsGamesSubpage('Upcoming (eShop crosscheck)', "[ 5, 'asc']");
 
         $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
+        $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
 
         return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);
     }

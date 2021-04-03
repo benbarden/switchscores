@@ -110,6 +110,22 @@ class Repository
         return $games;
     }
 
+    public function upcomingEshopCrosscheckNoDate($limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereNull('games.eu_release_date')
+            ->whereNotNull('games.eshop_europe_fs_id')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('games.id', 'desc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
     public function gamesForRelease()
     {
         $games = Game::where('eu_is_released', 0)
