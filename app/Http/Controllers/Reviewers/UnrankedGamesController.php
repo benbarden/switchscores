@@ -7,12 +7,21 @@ use Illuminate\Routing\Controller as Controller;
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
-use App\Services\Reviewer\UnrankedGames;
+use App\Domain\Unranked\Repository as UnrankedRepository;
 
 class UnrankedGamesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+
+    private $repoUnranked;
+
+    public function __construct(
+        UnrankedRepository $repoUnranked
+    )
+    {
+        $this->repoUnranked = $repoUnranked;
+    }
 
     public function landing()
     {
@@ -21,41 +30,7 @@ class UnrankedGamesController extends Controller
             abort(403);
         }
 
-        $serviceUnrankedGames = new UnrankedGames();
-
         $bindings = [];
-
-        $totalReviewedBySite = $serviceUnrankedGames->getReviewedBySite($partnerId);
-        $totalUnranked = $serviceUnrankedGames->getTotalUnranked();
-        $totalUnrankedReviewedBySite = $serviceUnrankedGames->getUnrankedReviewedBySite($partnerId);
-
-        $totals = [];
-
-        foreach ($totalReviewedBySite as $item) {
-
-            $year = $item->release_year;
-            $count = $item->count;
-            $totals[$year]['TotalReviewed'] = $count;
-
-        }
-
-        foreach ($totalUnranked as $item) {
-
-            $year = $item->release_year;
-            $count = $item->count;
-            $totals[$year]['TotalUnranked'] = $count;
-
-        }
-
-        foreach ($totalUnrankedReviewedBySite as $item) {
-
-            $year = $item->release_year;
-            $count = $item->count;
-            $totals[$year]['TotalUnrankedReviewed'] = $count;
-
-        }
-
-        $bindings['UnrankedSiteTotals'] = $totals;
 
         $bindings['TopTitle'] = 'Unranked games';
         $bindings['PageTitle'] = 'Unranked games';
@@ -82,14 +57,22 @@ class UnrankedGamesController extends Controller
 
             case 'by-count':
                 if (!in_array($filter, ['0', '1', '2'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $gameIdsReviewedBySite);
-                $tableSort = "[1, 'asc']";
+                //$gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $gameIdsReviewedBySite);
+                $gamesList = $this->repoUnranked->getByReviewCount($filter, $gameIdsReviewedBySite);
+                if ($filter == 0) {
+                    $tableSort = "[3, 'asc']";
+                } else {
+                    $tableSort = "[5, 'desc']";
+                }
+                $bindings['FilterOnLoad'] = 'by-count-'.$filter;
                 break;
 
             case 'by-year':
-                if (!in_array($filter, ['2017', '2018', '2019'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
-                $tableSort = "[1, 'asc']";
+                if (!in_array($filter, ['2017', '2018', '2019', '2020', '2021'])) abort(404);
+                //$gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
+                $gamesList = $this->repoUnranked->getByYear($filter, $gameIdsReviewedBySite);
+                $tableSort = "[3, 'asc']";
+                $bindings['FilterOnLoad'] = 'by-year-'.$filter;
                 break;
 
             case 'by-list':

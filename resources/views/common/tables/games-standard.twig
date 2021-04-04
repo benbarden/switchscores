@@ -3,12 +3,12 @@
         <thead>
             <tr>
                 <th class="text-center">Rank</th>
-                <th style="text-align: left;">Title</th>
-                <th class="text-center">Media</th>
-                <th style="text-align: left;">Release date</th>
-                <th style="text-align: right;">eShop price</th>
-                <th style="text-align: right;">Avg rating</th>
-                <th style="text-align: right;">Total reviews</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th class="text-center">Release date</th>
+                <th class="text-right">eShop price</th>
+                <th class="text-center">Avg rating</th>
+                <th class="text-center">Total reviews</th>
             </tr>
         </thead>
         <tbody>
@@ -21,42 +21,36 @@
                         &nbsp;
                         {% endif %}
                     </td>
-                    <td style="text-align: left;">
-                        {% if item.eu_is_released == 0 %}
-                            <span class="label label-info">Upcoming</span>
-                        {% elseif DateHelper.isNew(item.eu_release_date) %}
-                            <span class="label label-primary">New</span>
-                        {% endif %}
+                    <td>
                         <a href="{{ LinkHelper.gameShow(item) }}">
                             {{ item.title }}
                         </a>
                     </td>
-                    <td class="text-center">
-                        {% if item.video_url %}
-                            <span class="glyphicon glyphicon-facetime-video" aria-hidden="true" title="Game has a video"></span>
-                        {% endif %}
+                    <td>
+                        <a href="{{ route('games.browse.byCategory.page', {'category': item.category.link_title}) }}">{{ item.category.name }}</a>
                     </td>
-                    <td style="text-align: left;">
+                    <td class="text-center">
                         {{ item.eu_release_date }}
                     </td>
-                    <td style="text-align: right;">
+                    <td class="text-right">
                         {% if item.price_eshop %}
                             &pound;{{ item.price_eshop }}
                         {% else %}
                             &nbsp;
                         {% endif %}
                     </td>
-                    <td style="text-align: right;">
-                        {{ item.rating_avg }}
+                    <td class="text-center">
+                        {% if item.rating_avg %}
+                            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                        {% endif %}
                     </td>
-                    <td style="text-align: right;">
+                    <td class="text-center">
                         {{ item.review_count }}
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    {#<p><em>{{ GamesList.count }} games.</em></p>#}
 {% else %}
     <p>No games to display!</p>
 {% endif %}
@@ -64,7 +58,7 @@
 {% include 'common/table-sorting.twig' %}
 <script>
     {% if GamesTableSort is not defined %}
-    {% set GamesTableSort = "[2, 'desc']" %}
+    {% set GamesTableSort = "[3, 'desc']" %}
     {% endif %}
     $(document).ready(function() {
         $('.data-sortable').DataTable({
@@ -73,7 +67,7 @@
             "columns": [
                 null,
                 null,
-                { "orderable": false },
+                null,
                 null,
                 null,
                 null,

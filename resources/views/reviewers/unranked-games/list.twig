@@ -1,16 +1,17 @@
 {% extends 'theme/wos/reviewers/clean-wide.twig' %}
 
-{% set crumbNav = [{'url': route('reviewers.unranked-games.landing'), 'text': 'Unranked games'}, {'text': 'Games list'}] %}
+{% set crumbNav = [
+    {'text': 'Games list'}
+] %}
 
 {% block page_inner %}
 
 <p>
-    Below is a list of the unranked games on the site. As a review partner, you can help by
-    reviewing some of these games. Once a game has 3 reviews, it will disappear from this list.
+    Below is a list of the unranked games on the site. We've excluded any games you've already reviewed.
 </p>
 <p>
-    We've also excluded any games you've already reviewed. Currently, you've reviewed
-    {{ GamesReviewedCount }} games.
+    As a reviewer, you can help by reviewing some of these games.
+    Once a game has 3 reviews, it will disappear from this list.
 </p>
 
 {% if PageMode == 'by-count' %}
@@ -27,6 +28,76 @@
     {% endif %}
 {% endif %}
 
+<div class="row">
+    <div class="col-md-4">
+        <select id="page-filter" name="page-filter" class="form-control">
+            <optgroup label="By review count">
+                <option value="by-count-2">2 reviews</option>
+                <option value="by-count-1">1 review</option>
+                <option value="by-count-0">0 reviews</option>
+            </optgroup>
+            <optgroup label="By year released">
+                <option value="by-year-2021">2021</option>
+                <option value="by-year-2020">2020</option>
+                <option value="by-year-2019">2019</option>
+                <option value="by-year-2018">2018</option>
+                <option value="by-year-2017">2017</option>
+            </optgroup>
+        </select>
+    </div>
+</div>
+<br>
+
 {% include 'common/tables/games-standard.twig' with {'GamesList': GamesList} %}
+
+<script>
+
+    var filterOnLoad = '{{ FilterOnLoad }}';
+
+    $(document).ready(function() {
+        if (filterOnLoad != '') {
+            $('#page-filter').val(filterOnLoad);
+        }
+    });
+
+    $('#page-filter').on('change', function() {
+
+        var filterVal = $(this).val();
+        var destUrl = '';
+
+        switch (filterVal) {
+            case 'by-count-2':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}';
+                break;
+            case 'by-count-1':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '1'}) }}';
+                break;
+            case 'by-count-0':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '0'}) }}';
+                break;
+            case 'by-year-2021':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2021'}) }}';
+                break;
+            case 'by-year-2020':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2020'}) }}';
+                break;
+            case 'by-year-2019':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2019'}) }}';
+                break;
+            case 'by-year-2018':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2018'}) }}';
+                break;
+            case 'by-year-2017':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2017'}) }}';
+                break;
+        }
+
+        if (destUrl != '') {
+            top.location.href = destUrl;
+        }
+
+    });
+
+</script>
 
 {% endblock page_inner %}

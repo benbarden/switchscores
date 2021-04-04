@@ -13,19 +13,75 @@
                 <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
                 <a href="mailto:ben@switchscores.com">email</a>.
             </p>
+            <h2>Unranked games</h2>
+            <p>
+                We've recently updated the unranked games page to make it easier to use.
+                You can use this list to help get more of our database ranked.
+            </p>
+            <p>
+                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
+            </p>
+
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
-            <h2>
-                Review campaigns
-            </h2>
-            <p>
-                This is where we highlight games that we'd love to see reviews of next.
-                This gets more of our database ranked. Pick a campaign and jump right in!
-            </p>
+            <h2>Your details</h2>
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Switch Scores profile</span>
+                    </td>
+                    <td>
+                        <a href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Your site</span>
+                    </td>
+                    <td>
+                        <a href="{{ PartnerData.website_url }}" target="_blank">Visit site</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Twitter ID</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.twitter_id %}
+                            <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+                        {% else %}
+                            <p><em>None!</em></p>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <h2>Quick stats</h2>
+
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ PartnerData.review_count }}
+                        <br>
+                        <span class="h4">reviews</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    {#
+                    <h2>
+                        {{ ReviewAvg }}
+                        <br>
+                        <span class="h4">average</span>
+                    </h2>
+                    #}
                 </div>
             </div>
         </div>
@@ -173,71 +229,16 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Your details</h2>
-            <table class="table table-condensed table-responsive">
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Switch Scores profile</span>
-                    </td>
-                    <td>
-                        <a href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Your site</span>
-                    </td>
-                    <td>
-                        <a href="{{ PartnerData.website_url }}" target="_blank">Visit site</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Twitter ID</span>
-                    </td>
-                    <td>
-                        {% if PartnerData.twitter_id %}
-                            <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
-                        {% else %}
-                            <p><em>None!</em></p>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
-
-            <h2>Unranked games</h2>
+            <h2>
+                Review campaigns
+            </h2>
             <p>
-                Help to get more of our database ranked.
+                This is where we highlight games that we'd love to see reviews of next.
+                This gets more of our database ranked. Pick a campaign and jump right in!
             </p>
-            <p>
-                <a href="{{ route('reviewers.unranked-games.landing') }}" class="btn btn-primary btn-md">View unranked games</a>
-            </p>
-
-            <h2>Quick stats</h2>
-
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    <h2>
-                        {{ PartnerData.review_count }}
-                        <br>
-                        <span class="h4">reviews</span>
-                    </h2>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    <h2>
-                        {{ ReviewAvg }}
-                        <br>
-                        <span class="h4">average</span>
-                    </h2>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    {#
-                    <h2>
-                        {{ ReviewAvg }}
-                        <br>
-                        <span class="h4">average</span>
-                    </h2>
-                    #}
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
                 </div>
             </div>
 

@@ -166,7 +166,6 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
     Route::get('/reviewers/reviews/{report?}', 'Reviewers\ReviewLinkController@landing')->name('reviewers.reviews.landing');
 
     // *************** Reviewers: Unranked games *************** //
-    Route::get('/reviewers/unranked-games', 'Reviewers\UnrankedGamesController@landing')->name('reviewers.unranked-games.landing');
     Route::get('/reviewers/unranked-games/{mode}/{filter}', 'Reviewers\UnrankedGamesController@showList')->name('reviewers.unranked-games.list');
 
 });

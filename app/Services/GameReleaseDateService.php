@@ -156,45 +156,6 @@ class GameReleaseDateService
     }
 
     /**
-     * @param $reviewCount
-     * @param $gameIdsReviewedBySite
-     * @return mixed
-     */
-    public function getUnrankedByReviewCount($reviewCount, $gameIdsReviewedBySite)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('review_count', '=', $reviewCount)
-            ->whereNotIn('games.id', $gameIdsReviewedBySite)
-            ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc')
-            ->get();
-
-        return $games;
-    }
-
-    /**
-     * @param $year
-     * @param $gameIdsReviewedBySite
-     * @return mixed
-     */
-    public function getUnrankedByYear($year, $gameIdsReviewedBySite)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('games.release_year', '=', $year)
-            ->where('review_count', '<', '3')
-            ->whereNotIn('games.id', $gameIdsReviewedBySite)
-            ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc')
-            ->get();
-
-        return $games;
-    }
-
-    /**
      * @param $filter
      * @param $gameIdsReviewedBySite
      * @return mixed
