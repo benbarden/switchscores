@@ -23,6 +23,9 @@ use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Services\Game\Images as GameImages;
 
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+
 class GamesEditorController extends Controller
 {
     use SwitchServices;
@@ -40,6 +43,18 @@ class GamesEditorController extends Controller
         'price_eshop' => 'max:6',
         'players' => 'max:10',
     ];
+
+    protected $repoGameTitleHash;
+    protected $gameTitleHashGenerator;
+
+    public function __construct(
+        GameTitleHashRepository $repoGameTitleHash,
+        HashGeneratorRepository $gameTitleHashGenerator
+    )
+    {
+        $this->repoGameTitleHash = $repoGameTitleHash;
+        $this->gameTitleHashGenerator = $gameTitleHashGenerator;
+    }
 
     public function add()
     {
@@ -60,13 +75,12 @@ class GamesEditorController extends Controller
             }
 
             // Check title hash is unique
-            $titleLowercase = strtolower($request->title);
-            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
-            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
+            $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
+            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
 
-            $validator->after(function ($validator) use ($existingTitleHash) {
+            $validator->after(function ($validator) use ($hashExists) {
                 // Check for duplicates
-                if ($existingTitleHash != null) {
+                if ($hashExists) {
                     $validator->errors()->add('title', 'Title already exists for another record!');
                 }
             });
@@ -87,7 +101,7 @@ class GamesEditorController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
+            $this->repoGameTitleHash->create($request->title, $hashedTitle, $gameId);
 
             // Check eu_released_on
             if ($request->eu_is_released == 1) {
