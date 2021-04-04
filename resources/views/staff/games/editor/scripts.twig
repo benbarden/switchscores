@@ -2,6 +2,8 @@
     var formMode = '{{ FormMode }}';
     var formVals = [];
 
+    var gameId = '{{ GameId }}';
+
     if (formMode == 'edit') {
 
         // This is used when editing existing games.
@@ -100,9 +102,14 @@
     $('#boxart_square_url').val(formVals['boxart_square_url']);
     $('#boxart_header_image').val(formVals['boxart_header_image']);
 
-    // Autogenerate link URL
     $('#title').on('blur', function() {
+
+        // Autogenerate link URL
         ssAdminTools.convertToLinkTitle('title', 'link_title');
+        // Check for duplicates
+        ssAdminTools.checkForExistingGameTitle('title', gameId);
+
     });
+
 
 </script>

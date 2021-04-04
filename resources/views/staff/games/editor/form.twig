@@ -4,23 +4,39 @@
 
     <div class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-10">
 
             <fieldset>
                 <div class="form-group">
-                    <label for="title" class="col-md-4 control-label">Title</label>
+                    <label for="title" class="col-md-3 control-label">Title</label>
                     <div class="col-md-6">
                         <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
                     </div>
+                    <div class="col-md-3">
+                        <div id="js-game-title-pass" style="display: none;">
+                            <div class="pull-left" style="padding: 0 10px;">
+                                {% include 'modules/icons/green-tick.twig' %}
+                            </div>
+                            OK
+                        </div>
+                        <div id="js-game-title-fail" style="display: none;">
+                            <div class="pull-left" style="padding: 0 10px;">
+                                {% include 'modules/icons/red-cross.twig' %}
+                            </div>
+                            <div id="js-game-title-fail-desc">
+                                Title exists
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="link_title" class="col-md-4 control-label">Link title</label>
+                    <label for="link_title" class="col-md-3 control-label">Link title</label>
                     <div class="col-md-6">
                         <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="category_id" class="col-md-4 control-label">Category</label>
+                    <label for="category_id" class="col-md-3 control-label">Category</label>
                     <div class="col-md-6">
                         <select id="category_id" class="form-control" name="category_id">
                             <option value="">&nbsp;</option>
@@ -36,7 +52,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="series_id" class="col-md-4 control-label">Series</label>
+                    <label for="series_id" class="col-md-3 control-label">Series</label>
                     <div class="col-md-6">
                         <select id="series_id" class="form-control" name="series_id">
                             <option value="">&nbsp;</option>
@@ -47,13 +63,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="price_eshop" class="col-md-4 control-label">Price</label>
+                    <label for="price_eshop" class="col-md-3 control-label">Price</label>
                     <div class="col-md-6">
                         <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="players" class="col-md-4 control-label">No of players</label>
+                    <label for="players" class="col-md-3 control-label">No of players</label>
                     <div class="col-md-6">
                         <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
                     </div>
@@ -63,31 +79,31 @@
             <fieldset>
                 <legend>Dates</legend>
                 <div class="form-group">
-                    <label for="eu_release_date" class="col-md-4 control-label">EU release date</label>
+                    <label for="eu_release_date" class="col-md-3 control-label">EU release date</label>
                     <div class="col-md-6">
                         <input id="eu_release_date" type="date" class="form-control" name="eu_release_date">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="us_release_date" class="col-md-4 control-label">US release date</label>
+                    <label for="us_release_date" class="col-md-3 control-label">US release date</label>
                     <div class="col-md-6">
                         <input id="us_release_date" type="date" class="form-control" name="us_release_date">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="jp_release_date" class="col-md-4 control-label">JP release date</label>
+                    <label for="jp_release_date" class="col-md-3 control-label">JP release date</label>
                     <div class="col-md-6">
                         <input id="jp_release_date" type="date" class="form-control" name="jp_release_date">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="eu_is_released" class="col-md-4 control-label">Released (in EU)?</label>
+                    <label for="eu_is_released" class="col-md-3 control-label">Released (in EU)?</label>
                     <div class="col-md-6">
                         <input id="eu_is_released" type="checkbox" name="eu_is_released">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="eu_released_on" class="col-md-4 control-label">EU released on</label>
+                    <label for="eu_released_on" class="col-md-3 control-label">EU released on</label>
                     <div class="col-md-6">
                         <input id="eu_released_on" type="text" class="form-control" name="eu_released_on" size="20" maxlength="24">
                     </div>
@@ -97,7 +113,7 @@
             <fieldset>
                 <legend>Format options</legend>
                 <div class="form-group">
-                    <label for="format_digital" class="col-md-4 control-label">Digital</label>
+                    <label for="format_digital" class="col-md-3 control-label">Digital</label>
                     <div class="col-md-6">
                         <select id="format_digital" class="form-control" name="format_digital">
                             <option value="">&nbsp;</option>
@@ -108,7 +124,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="format_physical" class="col-md-4 control-label">Physical</label>
+                    <label for="format_physical" class="col-md-3 control-label">Physical</label>
                     <div class="col-md-6">
                         <select id="format_physical" class="form-control" name="format_physical">
                             <option value="">&nbsp;</option>
@@ -119,7 +135,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="format_dlc" class="col-md-4 control-label">DLC</label>
+                    <label for="format_dlc" class="col-md-3 control-label">DLC</label>
                     <div class="col-md-6">
                         <select id="format_dlc" class="form-control" name="format_dlc">
                             <option value="">&nbsp;</option>
@@ -130,7 +146,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="format_demo" class="col-md-4 control-label">Demo</label>
+                    <label for="format_demo" class="col-md-3 control-label">Demo</label>
                     <div class="col-md-6">
                         <select id="format_demo" class="form-control" name="format_demo">
                             <option value="">&nbsp;</option>
@@ -145,7 +161,7 @@
             <fieldset>
                 <legend>Additional</legend>
                 <div class="form-group">
-                    <label for="video_url" class="col-md-4 control-label">Video URL</label>
+                    <label for="video_url" class="col-md-3 control-label">Video URL</label>
                     <div class="col-md-6">
                         <input id="video_url" type="text" class="form-control" name="video_url">
                     </div>
@@ -156,13 +172,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="amazon_uk_link" class="col-md-4 control-label">Amazon UK link</label>
+                    <label for="amazon_uk_link" class="col-md-3 control-label">Amazon UK link</label>
                     <div class="col-md-6">
                         <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="nintendo_store_url_override" class="col-md-4 control-label">Nintendo store URL override</label>
+                    <label for="nintendo_store_url_override" class="col-md-3 control-label">Nintendo store URL override</label>
                     <div class="col-md-6">
                         <input id="nintendo_store_url_override" type="text" class="form-control" name="nintendo_store_url_override">
                         <small>
@@ -171,7 +187,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="eshop_europe_order" class="col-md-4 control-label">eShop order</label>
+                    <label for="eshop_europe_order" class="col-md-3 control-label">eShop order</label>
                     <div class="col-md-6">
                         <input id="eshop_europe_order" type="text" class="form-control" name="eshop_europe_order">
                         <small>
@@ -183,25 +199,25 @@
             <fieldset>
                 <legend>eShop assets</legend>
                 <div class="form-group">
-                    <label for="image_square" class="col-md-4 control-label">Image square</label>
+                    <label for="image_square" class="col-md-3 control-label">Image square</label>
                     <div class="col-md-6">
                         <input id="image_square" type="text" class="form-control" name="image_square">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="image_header" class="col-md-4 control-label">Image header</label>
+                    <label for="image_header" class="col-md-3 control-label">Image header</label>
                     <div class="col-md-6">
                         <input id="image_header" type="text" class="form-control" name="image_header">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="boxart_square_url" class="col-md-4 control-label">Boxart square URL (Legacy)</label>
+                    <label for="boxart_square_url" class="col-md-3 control-label">Boxart square URL (Legacy)</label>
                     <div class="col-md-6">
                         <input id="boxart_square_url" type="text" class="form-control" name="boxart_square_url">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="boxart_header_image" class="col-md-4 control-label">Boxart header image (Legacy)</label>
+                    <label for="boxart_header_image" class="col-md-3 control-label">Boxart header image (Legacy)</label>
                     <div class="col-md-6">
                         <input id="boxart_header_image" type="text" class="form-control" name="boxart_header_image">
                     </div>
@@ -210,7 +226,7 @@
 
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
 
         </div>
 

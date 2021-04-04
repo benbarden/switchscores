@@ -20,6 +20,30 @@ var ssAdminTools = {
 
     },
 
+    checkForExistingGameTitle: function(idOfFieldToCheck, gameId) {
+
+        textToCheck = $('#' + idOfFieldToCheck).val();
+        if (textToCheck == '') {
+            return false;
+        }
+
+        $.getJSON('/api/game/get-by-exact-title-match', {title: textToCheck, gameId: gameId}, function(data) {
+            existingGameId = data.gameId;
+            if (existingGameId == null) {
+                //console.log('No game found');
+                $('#js-game-title-pass').show();
+                $('#js-game-title-fail').hide();
+            } else {
+                //console.log('Found game: ' + existingGameId)
+                $('#js-game-title-pass').hide();
+                failDescHtml = 'Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>';
+                $('#js-game-title-fail-desc').html(failDescHtml);
+                $('#js-game-title-fail').show();
+            }
+        });
+
+    },
+
     generateNewsUrl: function(idOfFieldToCheck, idOfFieldToUpdate, newsId) {
 
         if ($('#' + idOfFieldToUpdate).val() != '') {
