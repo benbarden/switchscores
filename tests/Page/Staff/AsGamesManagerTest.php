@@ -48,7 +48,6 @@ class AsGamesManagerTest extends TestCase
     {
         $this->be($this->activeUser);
         $this->doPageTest("/staff/games/dashboard");
-        $this->doPageTest("/staff/games/find");
         $this->doPageTest("/staff/games/search");
         $this->doPageTest("/staff/games/detail/1");
         $this->doPageTest("/staff/games/detail/full-audit/1");
