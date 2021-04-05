@@ -114,6 +114,11 @@ class DateHandler
 
         }
 
+        // Notes
+        if (strpos($releaseDateRaw, '[note ') !== false) {
+            return $releaseDateRaw;
+        }
+
         // Should be a real date - ok to continue
         $upcomingDate = null;
 
