@@ -17,8 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/* Game */
+// Game
 Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');
+
+// Partner
+Route::get('/partner/games-company/search', 'Api\Partner\GamesCompanyController@findByName');
 
 /* LP */
 // Game ids
