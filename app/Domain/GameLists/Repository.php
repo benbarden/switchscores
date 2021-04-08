@@ -168,4 +168,9 @@ class Repository
 
         return $games;
     }
+
+    public function noVideoType($limit = 200)
+    {
+        return Game::whereNull('video_type')->orderBy('id', 'asc')->limit($limit)->get();
+    }
 }

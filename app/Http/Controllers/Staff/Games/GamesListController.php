@@ -94,11 +94,11 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
-    public function noVideoUrl()
+    public function noVideoType()
     {
-        $bindings = $this->getBindingsGamesSubpage('No video URL', "[ 0, 'asc']");
+        $bindings = $this->getBindingsGamesSubpage('No video type', "[ 0, 'asc']");
 
-        $bindings['GameList'] = $this->getServiceGame()->getWithNoVideoUrl();
+        $bindings['GameList'] = $this->repoGameLists->noVideoType();
         $bindings['ListLimit'] = "200";
 
         return view('staff.games.list.standard-view', $bindings);

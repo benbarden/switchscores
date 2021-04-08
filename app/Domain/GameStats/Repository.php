@@ -62,4 +62,9 @@ class Repository
                    count(*) AS count FROM games GROUP BY format_demo
         ");
     }
+
+    public function totalNoVideoType()
+    {
+        return Game::whereNull('video_type')->count();
+    }
 }
