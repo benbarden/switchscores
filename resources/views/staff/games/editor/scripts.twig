@@ -27,6 +27,7 @@
         formVals['format_demo'] = "{{ GameData.format_demo }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
+        formVals['video_type'] = "{{ GameData.video_type }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
         formVals['nintendo_store_url_override'] = "{{ GameData.nintendo_store_url_override }}";
         formVals['eshop_europe_order'] = "{{ GameData.eshop_europe_order }}";
@@ -59,6 +60,7 @@
         formVals['format_demo'] = "{{ old('format_demo') }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ old('video_url') }}";
+        formVals['video_type'] = "{{ old('video_type') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
         formVals['nintendo_store_url_override'] = "{{ old('nintendo_store_url_override') }}";
         formVals['eshop_europe_order'] = "{{ old('eshop_europe_order') }}";
@@ -94,6 +96,7 @@
     $('#format_demo').val(formVals['format_demo']);
     // *** Additional *** //
     $('#video_url').val(formVals['video_url']);
+    $('#video_type').val(formVals['video_type']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
     $('#nintendo_store_url_override').val(formVals['nintendo_store_url_override']);
     $('#eshop_europe_order').val(formVals['eshop_europe_order']);

@@ -1,6 +1,12 @@
 
 {% set VideoUrl = VideoUrl|replace({'watch?v=': 'embed/'}) %}
 
+{% if VideoType != '' %}
+    {% set VideoButtonText = 'Watch '~VideoType %}
+{% else %}
+    {% set VideoButtonText = 'Watch video' %}
+{% endif %}
+
 <div id="player-controls" style="display: none;">
     <p>
         This game has a video.
@@ -10,7 +16,7 @@
 </div>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#videoModal" onclick="playVideo();">
-    <i class="fa fa-play"></i>&nbsp;&nbsp;&nbsp;Watch trailer
+    <i class="fa fa-play"></i>&nbsp;&nbsp;&nbsp;{{ VideoButtonText }}
 </button>
 
 <!-- Modal -->

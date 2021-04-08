@@ -36,7 +36,8 @@
                 {% endif %}
 
                 {% if GameData.video_url %}
-                    {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url} %}
+                    {% set VideoTypeDesc = GameData.getVideoTypeDesc() %}
+                    {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
                 {% endif %}
 
                 {% include 'games/page/reviews.twig' with {'GameReviews': GameReviews} %}

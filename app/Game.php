@@ -10,6 +10,10 @@ class Game extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    const VIDEO_TYPE_NONE = 0;
+    const VIDEO_TYPE_TRAILER = 1;
+    const VIDEO_TYPE_GAMEPLAY = 2;
+
     /**
      * @var string
      */
@@ -27,7 +31,7 @@ class Game extends Model implements Auditable
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
         'format_digital', 'format_physical', 'format_dlc', 'format_demo',
-        'eshop_europe_order'
+        'eshop_europe_order', 'video_type'
     ];
 
     public function gameQualityScore()
@@ -110,5 +114,21 @@ class Game extends Model implements Auditable
     {
         return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
             ->where('source_id', DataSource::DSID_WIKIPEDIA);
+    }
+
+    public function getVideoTypeDesc()
+    {
+        switch ($this->video_type) {
+            case self::VIDEO_TYPE_TRAILER:
+                $videoType = 'trailer';
+                break;
+            case self::VIDEO_TYPE_GAMEPLAY:
+                $videoType = 'gameplay';
+                break;
+            default:
+                $videoType = '';
+        }
+
+        return $videoType;
     }
 }

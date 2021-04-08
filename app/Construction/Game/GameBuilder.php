@@ -115,6 +115,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setVideoType($videoType): GameBuilder
+    {
+        $this->game->video_type = $videoType;
+        return $this;
+    }
+
     public function setBoxartSquareUrl($boxartSquareUrl): GameBuilder
     {
         $this->game->boxart_square_url = $boxartSquareUrl;
