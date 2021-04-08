@@ -153,7 +153,21 @@ class GamesController extends Controller
 
             }
 
-            $blurb .= '<strong>'.$gameData->title.'</strong> is '.$categoryBlurb.'. ';
+            if ($gameData->isDigitalDelisted()) {
+
+                $blurb .= '<strong>' . $gameData->title . '</strong> is ' . $categoryBlurb .
+                    '. It has been <strong>de-listed</strong> from the eShop. ';
+
+            } else {
+
+                $blurb .= '<strong>' . $gameData->title . '</strong> is ' . $categoryBlurb . '. ';
+
+            }
+
+        } elseif ($gameData->isDigitalDelisted()) {
+
+            $blurb .= '<strong>'.$gameData->title.'</strong> is a game for the Nintendo Switch' .
+                '. It has been <strong>de-listed</strong> from the eShop. ';
 
         } elseif ($gameData->eu_is_released == 1) {
 
@@ -165,26 +179,34 @@ class GamesController extends Controller
 
         }
 
-        if ($gameData->game_rank) {
+        if ($gameData->isDigitalDelisted()) {
 
-            $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
-                'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
+            $blurb .= 'De-listed games are no longer included in our site rankings.';
 
-        } elseif ($gameData->eu_is_released == 1) {
+        } else {
 
-            // If the game has no reviews but isn't released, this part can be ignored
-            switch ($gameData->review_count) {
-                case 0:
-                    $blurb .= 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
-                    break;
-                case 1:
-                    $blurb .= 'As it only has 1 review, it is currently unranked. We need 2 more reviews to give the game a rank. ';
-                    break;
-                case 2:
-                    $blurb .= 'As it only has 2 reviews, it is currently unranked. We need 1 more review to give the game a rank. ';
-                    break;
-                default:
-                    break;
+            if ($gameData->game_rank) {
+
+                $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
+                    'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
+
+            } elseif ($gameData->eu_is_released == 1) {
+
+                // If the game has no reviews but isn't released, this part can be ignored
+                switch ($gameData->review_count) {
+                    case 0:
+                        $blurb .= 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
+                        break;
+                    case 1:
+                        $blurb .= 'As it only has 1 review, it is currently unranked. We need 2 more reviews to give the game a rank. ';
+                        break;
+                    case 2:
+                        $blurb .= 'As it only has 2 reviews, it is currently unranked. We need 1 more review to give the game a rank. ';
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
         }

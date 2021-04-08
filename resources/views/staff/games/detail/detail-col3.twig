@@ -7,12 +7,17 @@
             <span style="font-weight: bold;">Link</span>
         </td>
         <td>
-            {% if DataSourceNintendoCoUk %}
-                <i class="fas fa-link"></i>
-                {{ DataSourceNintendoCoUk.link_id }}
-            {% else %}
+            {% if GameData.isDigitalDelisted() %}
                 <i class="fas fa-unlink"></i>
-                Not linked
+                De-listed
+            {% else %}
+                {% if DataSourceNintendoCoUk %}
+                    <i class="fas fa-link"></i>
+                    {{ DataSourceNintendoCoUk.link_id }}
+                {% else %}
+                    <i class="fas fa-unlink"></i>
+                    Not linked
+                {% endif %}
             {% endif %}
             {% if mode == 'reviewers' %}
 

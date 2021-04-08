@@ -26,6 +26,8 @@ use App\Services\Game\Images as GameImages;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
+use App\Game;
+
 class GamesEditorController extends Controller
 {
     use SwitchServices;
@@ -225,6 +227,10 @@ class GamesEditorController extends Controller
 
                     // Link the game to the parsed item (not sure we need a two-way link?)
                     $game->eshop_europe_fs_id = $dsNewParsedItem->link_id;
+
+                    // Update availability
+                    $game->format_digital = Game::FORMAT_AVAILABLE;
+
                     $game->save();
 
                 }
@@ -235,6 +241,12 @@ class GamesEditorController extends Controller
 
                 UpdateGameFactory::doUpdate($game, $dsNewParsedItem);
                 DownloadImageFactory::downloadImages($game, $dsNewParsedItem);
+
+            } else {
+
+                // Clear digital status
+                $game->format_digital = null;
+                $game->save();
 
             }
 

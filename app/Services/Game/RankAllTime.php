@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Log\Logger;
 use Carbon\Carbon;
 
+use App\Game;
+
 class RankAllTime
 {
     /**
@@ -37,8 +39,9 @@ class RankAllTime
             SELECT g.id AS game_id, g.title, g.rating_avg, g.game_rank
             FROM games g
             WHERE review_count > 2
+            AND format_digital != ?
             ORDER BY rating_avg DESC
-        ");
+        ", [Game::FORMAT_DELISTED]);
     }
 
     public function process()
@@ -46,6 +49,11 @@ class RankAllTime
         $gameList = $this->getGameList();
 
         $this->log('info', 'All-time rank: checking '.count($gameList).' games');
+
+        $this->log('info', 'Clearing previous ranks');
+        DB::update('UPDATE games SET game_rank = NULL');
+
+        $this->log('info', 'Calculating new ranks');
 
         $rankCounter = 1;
         $actualRank = 1;
@@ -59,9 +67,7 @@ class RankAllTime
         foreach ($gameList as $game) {
 
             $gameId = $game->game_id;
-            $gameTitle = $game->title;
             $ratingAvg = $game->rating_avg;
-            $prevRank = $game->game_rank;
 
             if ($lastRatingAvg == -1) {
                 // First record
@@ -75,9 +81,7 @@ class RankAllTime
             }
 
             // Save rank to DB
-            if ($actualRank != $prevRank) {
-                DB::update("UPDATE games SET game_rank = ? WHERE id = ?", [$actualRank, $gameId]);
-            }
+            DB::update("UPDATE games SET game_rank = ? WHERE id = ?", [$actualRank, $gameId]);
 
             $lastRatingAvg = $ratingAvg;
             $lastRank = $actualRank;

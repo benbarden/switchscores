@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Log\Logger;
 use Carbon\Carbon;
 
+use App\Game;
+
 class RankYear
 {
     /**
@@ -38,8 +40,9 @@ class RankYear
             from games g
             where g.release_year = ?
             and g.review_count > 2
+            and g.format_digital != ?
             order by rating_avg desc
-        ", [$year]);
+        ", [$year, Game::FORMAT_DELISTED]);
     }
 
     public function process($year)

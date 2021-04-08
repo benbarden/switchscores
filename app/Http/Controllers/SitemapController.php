@@ -66,7 +66,7 @@ class SitemapController extends Controller
             $timestamp = $this->getTimestampNow();
             $bindings['TimestampNow'] = $timestamp;
 
-            $bindings['GameList'] = $serviceGame->getAll();
+            $bindings['GameList'] = $serviceGame->getGamesForSitemap();
 
             return response()->view('sitemap.games', $bindings)->header('Content-Type', 'text/xml');
 

@@ -10,6 +10,12 @@ class Game extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    const FORMAT_AVAILABLE = 'Available';
+    const FORMAT_INCLUDED_IN_BUNDLE = 'Included in bundle';
+    const FORMAT_LIMITED_EDITION = 'Limited edition';
+    const FORMAT_NOT_AVAILABLE = 'Not available';
+    const FORMAT_DELISTED = 'De-listed';
+
     const VIDEO_TYPE_NONE = 0;
     const VIDEO_TYPE_TRAILER = 1;
     const VIDEO_TYPE_GAMEPLAY = 2;
@@ -114,6 +120,11 @@ class Game extends Model implements Auditable
     {
         return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
             ->where('source_id', DataSource::DSID_WIKIPEDIA);
+    }
+
+    public function isDigitalDelisted()
+    {
+        return $this->format_digital == self::FORMAT_DELISTED;
     }
 
     public function getVideoTypeDesc()

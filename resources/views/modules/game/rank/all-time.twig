@@ -34,7 +34,13 @@
                 <span class="rating-v2">
                     <span class="rank"></span>
                     <span class="separator"></span>
-                    <span class="suffix">TBC</span>
+                    <span class="suffix">
+                        {% if GameData.isDigitalDelisted() %}
+                            N/A (De-listed)
+                        {% else %}
+                            TBC
+                        {% endif %}
+                    </span>
                 </span>
             </h4>
         </div>

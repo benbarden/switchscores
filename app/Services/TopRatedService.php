@@ -17,6 +17,7 @@ class TopRatedService
             ->select('games.*')
             ->where('games.eu_is_released', '=', '1')
             ->where('games.review_count', '<', '3')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.rating_avg', 'desc');
 
         $topRatedCounter = $games->count();
@@ -27,6 +28,7 @@ class TopRatedService
     {
         $gamesCount = Game::where('eu_is_released', 1)
             ->where('review_count', $reviewCount)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->count();
 
         return $gamesCount;
@@ -36,6 +38,7 @@ class TopRatedService
     {
         $gamesList = Game::where('eu_is_released', 1)
             ->where('review_count', $reviewCount)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('rating_avg', 'desc')
             ->orderBy('eu_release_date', 'desc');
 
@@ -51,6 +54,7 @@ class TopRatedService
         $gamesCount = Game::where('eu_is_released', 1)
             ->where('release_year', $releaseYear)
             ->where('review_count', '<', '3')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->count();
 
         return $gamesCount;
@@ -61,6 +65,7 @@ class TopRatedService
         $gamesList = Game::where('eu_is_released', 1)
             ->where('release_year', $releaseYear)
             ->where('review_count', '<', '3')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('rating_avg', 'desc')
             ->orderBy('eu_release_date', 'desc');
 
@@ -86,8 +91,9 @@ class TopRatedService
             count(*) AS count
             FROM games
             WHERE release_year = ?
+            AND format_digital <> ?
             GROUP BY is_ranked
-        ', [$year]);
+        ', [$year, Game::FORMAT_DELISTED]);
 
         return $rankCount;
     }

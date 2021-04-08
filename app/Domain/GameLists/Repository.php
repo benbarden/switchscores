@@ -53,6 +53,7 @@ class Repository
     {
         $games = Game::where('category_id', $categoryId)
             ->where('eu_is_released', 1)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('eu_release_date', 'desc');
 
         if ($limit) {
@@ -68,6 +69,7 @@ class Repository
         $games = Game::where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('game_rank', 'asc')
             ->orderBy('title', 'asc');
 
@@ -84,6 +86,7 @@ class Repository
         $games = Game::where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('review_count', 'desc')
             ->orderBy('eu_release_date', 'asc');
 

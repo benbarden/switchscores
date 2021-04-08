@@ -6,7 +6,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 use App\GameCalendarStat;
-
+use App\Game;
 
 class GameCalendarService
 {
@@ -81,6 +81,7 @@ class GameCalendarService
             ->select('games.*')
             ->whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 
@@ -100,6 +101,7 @@ class GameCalendarService
             ->where('games.eu_is_released', 1)
             ->whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc');
 

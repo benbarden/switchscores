@@ -80,6 +80,7 @@ class GameReleaseDateService
         $games = DB::table('games')
             ->select('games.*')
             ->where('games.series_id', $seriesId)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
@@ -99,6 +100,7 @@ class GameReleaseDateService
     {
         $games = Game::where('eu_is_released', 1)
             ->where('title', 'LIKE', $letter.'%')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('title', 'asc');
 
         if ($limit != null) {

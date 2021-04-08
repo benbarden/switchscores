@@ -15,7 +15,7 @@ class Repository
      */
     public function totalReleased()
     {
-        return Game::where('eu_is_released', 1)->count();
+        return Game::where('eu_is_released', 1)->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
     }
 
     /**

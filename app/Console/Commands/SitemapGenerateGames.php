@@ -55,7 +55,7 @@ class SitemapGenerateGames extends Command
 
         $serviceGame = $this->getServiceGame();
 
-        $bindings['GameList'] = $serviceGame->getAll();
+        $bindings['GameList'] = $serviceGame->getGamesForSitemap();
 
         $xmlOutput = response()->view('sitemap.games', $bindings)->content();
         file_put_contents(storage_path().'/app/public/sitemaps/sitemap-games.xml', $xmlOutput);

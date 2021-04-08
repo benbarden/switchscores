@@ -18,12 +18,6 @@ class GameService
     const ORDER_NEWEST = 1;
     const ORDER_OLDEST = 2;
 
-    const FORMAT_AVAILABLE = 'Available';
-    const FORMAT_INCLUDED_IN_BUNDLE = 'Included in bundle';
-    const FORMAT_LIMITED_EDITION = 'Limited edition';
-    const FORMAT_NOT_AVAILABLE = 'Not available';
-    const FORMAT_DELISTED = 'De-listed';
-
     /**
      * @param $title
      * @param $linkTitle
@@ -195,7 +189,7 @@ class GameService
 
     public function getWithNoAmazonUkLink($limit = 200)
     {
-        return Game::where('format_physical', self::FORMAT_AVAILABLE)
+        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
             ->whereNull('amazon_uk_link')
             ->orderBy('id', 'asc')
             ->limit($limit)
@@ -209,7 +203,7 @@ class GameService
 
     public function countWithNoAmazonUkLink()
     {
-        return Game::where('format_physical', self::FORMAT_AVAILABLE)
+        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
             ->whereNull('amazon_uk_link')
             ->orderBy('id', 'asc')
             ->count();
@@ -250,6 +244,17 @@ class GameService
     {
         $games = DB::table('games')
             ->select('games.*')
+            ->orderBy('games.title', 'asc');
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function getGamesForSitemap()
+    {
+        $games = DB::table('games')
+            ->select('games.*')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.title', 'asc');
         $games = $games->get();
 
@@ -345,10 +350,10 @@ class GameService
     public function getFormatOptionsPhysical()
     {
         $options = [];
-        $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_INCLUDED_IN_BUNDLE;
-        $options[] = self::FORMAT_LIMITED_EDITION;
-        $options[] = self::FORMAT_NOT_AVAILABLE;
+        $options[] = Game::FORMAT_AVAILABLE;
+        $options[] = Game::FORMAT_INCLUDED_IN_BUNDLE;
+        $options[] = Game::FORMAT_LIMITED_EDITION;
+        $options[] = Game::FORMAT_NOT_AVAILABLE;
 
         return $options;
     }
@@ -356,9 +361,9 @@ class GameService
     public function getFormatOptionsDigital()
     {
         $options = [];
-        $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_DELISTED;
-        $options[] = self::FORMAT_NOT_AVAILABLE;
+        $options[] = Game::FORMAT_AVAILABLE;
+        $options[] = Game::FORMAT_DELISTED;
+        $options[] = Game::FORMAT_NOT_AVAILABLE;
 
         return $options;
     }
@@ -366,8 +371,8 @@ class GameService
     public function getFormatOptionsDLC()
     {
         $options = [];
-        $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_NOT_AVAILABLE;
+        $options[] = Game::FORMAT_AVAILABLE;
+        $options[] = Game::FORMAT_NOT_AVAILABLE;
 
         return $options;
     }
@@ -375,8 +380,8 @@ class GameService
     public function getFormatOptionsDemo()
     {
         $options = [];
-        $options[] = self::FORMAT_AVAILABLE;
-        $options[] = self::FORMAT_NOT_AVAILABLE;
+        $options[] = Game::FORMAT_AVAILABLE;
+        $options[] = Game::FORMAT_NOT_AVAILABLE;
 
         return $options;
     }
