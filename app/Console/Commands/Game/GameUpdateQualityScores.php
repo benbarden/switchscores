@@ -62,7 +62,7 @@ class GameUpdateQualityScores extends Command
             $game = $this->getServiceGame()->find($gameRow->id);
             $gameId = $game->id;
 
-            $logger->info('Processing game: '.$game->id.' - '.$game->title);
+            //$logger->info('Processing game: '.$game->id.' - '.$game->title);
 
             if ($argGameId) {
                 // Make it more verbose when running against individual games
