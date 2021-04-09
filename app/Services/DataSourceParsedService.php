@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\DataSourceParsed;
 use App\DataSource;
+use App\Game;
 
 use Illuminate\Support\Facades\DB;
 
@@ -190,7 +191,7 @@ class DataSourceParsedService
             WHERE eshop_europe_fs_id IN (
                 SELECT link_id FROM data_source_parsed WHERE source_id = ?
             );
-        ', [GameService::FORMAT_AVAILABLE, $sourceId]);
+        ', [Game::FORMAT_AVAILABLE, $sourceId]);
     }
 
     public function updateNintendoCoUkDigitalDelisted()
@@ -203,7 +204,7 @@ class DataSourceParsedService
             AND eshop_europe_fs_id NOT IN (
                 SELECT link_id FROM data_source_parsed WHERE source_id = ?
             );
-        ', [GameService::FORMAT_DELISTED, $sourceId]);
+        ', [Game::FORMAT_DELISTED, $sourceId]);
     }
 
     // ********** Wikipedia ********** //
