@@ -2,12 +2,9 @@
 
 {% block page_inner %}
 
-<h2>Add a tag</h2>
-<label for="txt-new-tag-name">Name of tag</label>
-<input id="txt-new-tag-name" type="text" maxlength="50">
-<input id="btn-save-tag" type="button" class="btn btn-primary" value="Save">
-<div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;">
-</div>
+<a href="{{ route('staff.categorisation.tag.add') }}" class="btn outline btn-primary">Add a tag</a>
+<br>
+<br>
 
 <h2>All tags</h2>
 {% if TagList.count > 0 %}
@@ -15,8 +12,8 @@
         <thead>
             <tr>
                 <th class="text-right">#</th>
-                <th>Tag</th>
-                <th>Category</th>
+                <th class="text-left">Tag name</th>
+                <th class="text-left">Tag category</th>
                 <th class="text-center">Games with tag</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -27,14 +24,12 @@
                     <td class="text-right">
                         {{ item.id }}
                     </td>
-                    <td>
+                    <td class="text-left">
                         <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
                     </td>
-                    <td>
+                    <td class="text-left">
                         {% if item.category.id is not null %}
-                            <a href="{{ route('games.browse.byCategory.page', {'category': item.category.link_title}) }}" target="_blank">
-                                {{ item.category.name }}
-                            </a>
+                            {{ item.category.name }}
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -69,33 +64,6 @@
                 null,
                 null
             ]
-        });
-    });
-    $('#btn-save-tag').on('click', function() {
-
-        tagName = $('#txt-new-tag-name').val();
-        if (tagName == '') {
-            $('#js-admin-notify').text('No tag name set.');
-            $('#js-admin-notify').show();
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('staff.categorisation.tag.add') }}', {tagName: tagName}, function(data) {
-            $('#js-admin-notify').text('Tag saved!');
-            $('#js-admin-notify').show();
-            $('#txt-new-tag-name').val('');
-            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1000);
-        })
-        .fail(function(data) {
-            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-admin-notify').show();
-            $('#txt-new-tag-name').val('');
         });
     });
     $('.lnk-delete-tag').on('click', function() {

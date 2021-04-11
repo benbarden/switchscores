@@ -7,6 +7,11 @@ use App\Game;
 
 class Repository
 {
+    public function find($id)
+    {
+        return Game::find($id);
+    }
+
     /**
      * @param $title
      * @param null $excludeGameId
@@ -28,6 +33,6 @@ class Repository
      */
     public function getByTitle($title): Game
     {
-        return $game = Game::where('title', $title)->first();
+        return Game::where('title', $title)->first();
     }
 }

@@ -4,14 +4,20 @@
 
 {% block page_body %}
 
-{% if TagList %}
-    <ul>
-        {% for item in TagList %}
-        <li>
-            <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}">{{ item.tag_name }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+{% if TagCategoryList %}
+    {% for item in TagCategoryList %}
+        {% if item.tags.count > 0 %}
+            <h2>{{ item.name }}</h2>
+            <ul>
+                {% for categoryItem in item.tags %}
+                    <li>
+                        <a href="{{ route('games.browse.byTag.page', {'tag': categoryItem.link_title}) }}">{{ categoryItem.tag_name }}</a>
+                        ({{ categoryItem.gameTags.count }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
 {% else %}
     <p>No tags found!</p>
 {% endif %}

@@ -8,26 +8,6 @@ use App\Tag;
 
 class TagService
 {
-    public function create($tagName, $linkTitle)
-    {
-        Tag::create([
-            'tag_name' => $tagName,
-            'link_title' => $linkTitle
-        ]);
-    }
-
-    public function edit(Tag $tagData, $tagName, $linkTitle, $categoryId)
-    {
-        $values = [
-            'tag_name' => $tagName,
-            'link_title' => $linkTitle,
-            'category_id' => $categoryId
-        ];
-
-        $tagData->fill($values);
-        $tagData->save();
-    }
-
     public function deleteTag($tagId)
     {
         Tag::where('id', $tagId)->delete();

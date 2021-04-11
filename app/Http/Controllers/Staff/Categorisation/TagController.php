@@ -11,6 +11,9 @@ use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\StaffView;
 
+use App\Domain\Tag\Repository as TagRepository;
+use App\Domain\TagCategory\Repository as TagCategoryRepository;
+
 class TagController extends Controller
 {
     use SwitchServices;
@@ -27,11 +30,23 @@ class TagController extends Controller
         'link_title' => 'required',
     ];
 
+    private $repoTag;
+    private $repoTagCategory;
+
+    public function __construct(
+        TagRepository $repoTag,
+        TagCategoryRepository $repoTagCategory
+    )
+    {
+        $this->repoTag = $repoTag;
+        $this->repoTagCategory = $repoTagCategory;
+    }
+
     public function showList()
     {
         $bindings = $this->getBindingsCategorisationSubpage('Tags');
 
-        $bindings['TagList'] = $this->getServiceTag()->getAll();
+        $bindings['TagList'] = $this->repoTag->getAll();
 
         return view('staff.categorisation.tag.list', $bindings);
     }
@@ -53,11 +68,42 @@ class TagController extends Controller
         return view('staff.categorisation.tag.gameTags', $bindings);
     }
 
+    public function addTag()
+    {
+        $bindings = $this->getBindingsCategorisationTagSubpage('Add tag');
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'add-post';
+
+            $this->validate($request, $this->validationRules);
+
+            $tagName = $request->tag_name;
+            $linkTitle = $request->link_title;
+            $tagCategoryId = $request->tag_category_id;
+
+            $this->repoTag->create($tagName, $linkTitle, $tagCategoryId);
+
+            return redirect(route('staff.categorisation.tag.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'add';
+
+        }
+
+        $bindings['CategoryList'] = $this->repoTagCategory->getAll();
+
+        return view('staff.categorisation.tag.add', $bindings);
+    }
+
     public function editTag($tagId)
     {
         $bindings = $this->getBindingsCategorisationTagSubpage('Edit tag');
 
-        $tagData = $this->getServiceTag()->find($tagId);
+        $tagData = $this->repoTag->find($tagId);
         if (!$tagData) abort(404);
 
         $request = request();
@@ -70,9 +116,9 @@ class TagController extends Controller
 
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
-            $categoryId = $request->category_id;
+            $tagCategoryId = $request->tag_category_id;
 
-            $this->getServiceTag()->edit($tagData, $tagName, $linkTitle, $categoryId);
+            $this->repoTag->edit($tagData, $tagName, $linkTitle, $tagCategoryId);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -85,7 +131,7 @@ class TagController extends Controller
         $bindings['TagData'] = $tagData;
         $bindings['TagId'] = $tagId;
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
+        $bindings['CategoryList'] = $this->repoTagCategory->getAll();
 
         return view('staff.categorisation.tag.edit', $bindings);
     }
@@ -152,37 +198,6 @@ class TagController extends Controller
         }
 
         $this->getServiceGameTag()->delete($gameTagId);
-
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
-    }
-
-    public function addTag()
-    {
-        $userId = $this->getAuthId();
-
-        $user = $this->getServiceUser()->find($userId);
-        if (!$user) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
-
-        $request = request();
-
-        $tagName = $request->tagName;
-        if (!$tagName) {
-            return response()->json(['error' => 'Missing data: tagName'], 400);
-        }
-
-        $existingTag = $this->getServiceTag()->getByName($tagName);
-        if ($existingTag) {
-            return response()->json(['error' => 'Tag already exists!'], 400);
-        }
-
-        $linkTitle = $this->getServiceUrl()->generateLinkText($tagName);
-
-        $this->getServiceTag()->create($tagName, $linkTitle);
 
         $data = array(
             'status' => 'OK'

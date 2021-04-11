@@ -6,26 +6,30 @@
     if (formMode == 'edit') {
 
         // This is used when editing existing records.
+        formVals['tag_category_id'] = "{{ TagData.tag_category_id }}";
         formVals['tag_name'] = "{{ TagData.tag_name }}";
         formVals['link_title'] = "{{ TagData.link_title }}";
-        formVals['category_id'] = "{{ TagData.category_id }}";
 
     } else {
 
         // This is used for new records.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['tag_category_id'] = "{{ old('tag_category_id') }}";
         formVals['tag_name'] = "{{ old('tag_name') }}";
         formVals['link_title'] = "{{ old('link_title') }}";
-        formVals['category_id'] = "{{ old('category_id') }}";
 
     }
 
+    $('#tag_category_id').val(formVals['tag_category_id']);
     $('#tag_name').val(formVals['tag_name']);
     $('#link_title').val(formVals['link_title']);
-    $('#category_id').val(formVals['category_id']);
 
     $('#tag_name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('tag_name', 'link_title');
+    });
+
+    $(document).ready(function() {
+        $('#tag_category_id').focus();
     });
 
 </script>

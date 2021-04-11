@@ -29,7 +29,7 @@
             {% if mode == 'reviewers' %}
                 <strong>Tags</strong>
             {% else %}
-                <a href="{{ route('staff.categorisation.tag.game.list', {'gameId': GameId}) }}"><strong>Tags</strong></a>
+                <a href="{{ route('staff.game.tag.edit', {'gameId': GameId}) }}"><strong>Tags</strong></a>
             {% endif %}
         </td>
         <td>

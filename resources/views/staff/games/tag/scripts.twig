@@ -1,0 +1,11 @@
+<script>
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    var gameId = '{{ GameId }}';
+
+    {% for item in GameTagList %}
+        $('#tag_item_{{ item.tag_id }}').attr('checked', true);
+    {% endfor %}
+
+</script>

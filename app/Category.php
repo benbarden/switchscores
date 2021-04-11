@@ -23,11 +23,6 @@ class Category extends Model
         return $this->hasMany('App\Game', 'category_id', 'id');
     }
 
-    public function tags()
-    {
-        return $this->hasMany('App\Tag', 'category_id', 'id');
-    }
-
     public function children()
     {
         return $this->hasMany('App\Category', 'parent_id', 'id')->orderBy('name', 'asc');

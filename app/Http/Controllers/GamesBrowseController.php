@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\GameLists\Repository as GameListsRepository;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\Tag\Repository as TagRepository;
+use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
 use App\Traits\SwitchServices;
 
@@ -12,12 +15,18 @@ class GamesBrowseController extends Controller
     use SwitchServices;
 
     protected $repoGameLists;
+    protected $repoTag;
+    protected $repoTagCategory;
 
     public function __construct(
-        GameListsRepository $repoGameLists
+        GameListsRepository $repoGameLists,
+        TagRepository $repoTag,
+        TagCategoryRepository $repoTagCategory
     )
     {
         $this->repoGameLists = $repoGameLists;
+        $this->repoTag = $repoTag;
+        $this->repoTagCategory = $repoTagCategory;
     }
 
     public function byTitleLanding()
@@ -159,7 +168,7 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['TagList'] = $this->getServiceTag()->getAll();
+        $bindings['TagCategoryList'] = $this->repoTagCategory->getAll();
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag';

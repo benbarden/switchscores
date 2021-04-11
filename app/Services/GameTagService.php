@@ -9,17 +9,6 @@ use App\GameTag;
 
 class GameTagService
 {
-    public function createTagGenreList(
-        $gameId, $tagIdList
-    )
-    {
-        if (count($tagIdList) == 0) return false;
-
-        foreach ($tagIdList as $tagId) {
-            $this->createGameTag($gameId, $tagId);
-        }
-    }
-
     public function createGameTag($gameId, $tagId)
     {
         GameTag::create([

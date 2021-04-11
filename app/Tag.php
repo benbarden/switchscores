@@ -15,7 +15,7 @@ class Tag extends Model
      * @var array
      */
     protected $fillable = [
-        'tag_name', 'link_title', 'category_id'
+        'tag_name', 'link_title', 'tag_category_id'
     ];
 
     public function gameTags()
@@ -25,6 +25,6 @@ class Tag extends Model
 
     public function category()
     {
-        return $this->hasOne('App\Category', 'id', 'category_id');
+        return $this->hasOne('App\TagCategory', 'id', 'tag_category_id');
     }
 }
