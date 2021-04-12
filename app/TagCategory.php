@@ -18,6 +18,7 @@ class TagCategory extends Model
     const CATEGORY_AUDIENCE = 10;
     const CATEGORY_RETROGAMING_ERA = 11;
     const CATEGORY_SCORING = 12;
+    const CATEGORY_VIEWPOINT = 13;
 
     /**
      * @var string
@@ -33,6 +34,7 @@ class TagCategory extends Model
 
     public function tags()
     {
-        return $this->hasMany('App\Tag', 'tag_category_id', 'id');
+        return $this->hasMany('App\Tag', 'tag_category_id', 'id')
+            ->orderBy('tag_name');
     }
 }
