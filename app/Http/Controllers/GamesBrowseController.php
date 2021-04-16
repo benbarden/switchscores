@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
@@ -15,16 +16,19 @@ class GamesBrowseController extends Controller
     use SwitchServices;
 
     protected $repoGameLists;
+    protected $dbGameLists;
     protected $repoTag;
     protected $repoTagCategory;
 
     public function __construct(
         GameListsRepository $repoGameLists,
+        GameListsDbQueries $dbGameLists,
         TagRepository $repoTag,
         TagCategoryRepository $repoTagCategory
     )
     {
         $this->repoGameLists = $repoGameLists;
+        $this->dbGameLists = $dbGameLists;
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
     }
@@ -187,7 +191,7 @@ class GamesBrowseController extends Controller
         $tagId = $tag->id;
         $tagName = $tag->tag_name;
 
-        $gameList = $this->getServiceGameFilterList()->getByTagWithDates($tagId);
+        $gameList = $this->dbGameLists->getByTagWithDates($tagId);
 
         $bindings['GameList'] = $gameList;
 

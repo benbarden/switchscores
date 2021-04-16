@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Services;
+
+namespace App\Domain\GameLists;
+
 
 use Illuminate\Support\Facades\DB;
-
 use App\Game;
 
-class GameFilterListService
+class DbQueries
 {
-
-    /**
-     * @param $tagId
-     * @return mixed
-     */
     public function getByTagWithDates($tagId)
     {
         $games = DB::table('games')

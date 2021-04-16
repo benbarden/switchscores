@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Domain\GameLists;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\GameFilterListService;
+use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 
-class GameFilterListServiceProvider extends ServiceProvider
+class DbQueriesProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class GameFilterListServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\GameFilterListService', function($app) {
-            return new GameFilterListService();
+        $this->app->bind('Domain\GameLists\DbQueries', function($app) {
+            return new GameListsDbQueries();
         });
     }
 }

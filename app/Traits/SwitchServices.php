@@ -16,7 +16,6 @@ use App\Services\DataSourceRawService;
 use App\Services\DbEditGameService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
-use App\Services\GameFilterListService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameImportRuleWikipediaService;
 use App\Services\GamePublisherService;
@@ -203,14 +202,6 @@ trait SwitchServices
     public function getServiceGameDeveloper()
     {
         return $this->loadService('GameDeveloperService');
-    }
-
-    /**
-     * @return GameFilterListService
-     */
-    public function getServiceGameFilterList()
-    {
-        return $this->loadService('GameFilterListService');
     }
 
     /**
