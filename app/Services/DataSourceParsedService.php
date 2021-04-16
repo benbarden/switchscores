@@ -313,6 +313,7 @@ class DataSourceParsedService
             ->whereNotNull('games.game_rank')
             ->where('games.rating_avg', '>', '7.9')
             ->whereNotNull('data_source_parsed.price_discounted')
+            ->where('data_source_parsed.price_discount_pc', '>=', '25.0')
             ->orderBy('games.rating_avg', 'desc');
         if ($limit) {
             $games = $games->limit($limit);
