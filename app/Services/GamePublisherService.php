@@ -135,6 +135,7 @@ class GamePublisherService
                 'partners.name')
             ->whereNull('partners.id')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->orWhereNull('games.format_digital')
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -149,7 +150,7 @@ class GamePublisherService
             left join game_publishers gp on g.id = gp.game_id
             left join partners p on p.id = gp.publisher_id
             where p.id is null
-            and format_digital <> ?
+            and (format_digital <> ? OR format_digital IS NULL)
         ', [Game::FORMAT_DELISTED]);
 
         return $games[0]->count;
