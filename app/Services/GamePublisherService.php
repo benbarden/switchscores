@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\GamePublisher;
 use App\Partner;
 use App\DataSource;
+use App\Game;
 
 
 class GamePublisherService
@@ -133,6 +134,7 @@ class GamePublisherService
                 'dsp_wikipedia.publishers AS wikipedia_publishers',
                 'partners.name')
             ->whereNull('partners.id')
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -147,7 +149,8 @@ class GamePublisherService
             left join game_publishers gp on g.id = gp.game_id
             left join partners p on p.id = gp.publisher_id
             where p.id is null
-        ');
+            and format_digital <> ?
+        ', [Game::FORMAT_DELISTED]);
 
         return $games[0]->count;
     }
