@@ -38,6 +38,7 @@ class GamesController extends Controller
 
         $bindings['GameData'] = $game;
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
+        $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
 
         $authUser = $this->getValidUser($this->getServiceUser());
         $partnerId = $authUser->partner_id;
