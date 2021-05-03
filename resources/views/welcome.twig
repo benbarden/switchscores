@@ -100,7 +100,7 @@
         <h2 class="standout-header">
             Recently ranked
         </h2>
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': HighlightsRecentlyRanked} %}
+        {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': HighlightsRecentlyRanked} %}
 
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
@@ -121,7 +121,7 @@
         <h2 class="standout-header">
             Best of {{ Year }}
         </h2>
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': TopRatedThisYear} %}
+        {% include 'games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYear} %}
         <h3 class="text-center">
             <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
         </h3>

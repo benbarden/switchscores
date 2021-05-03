@@ -175,8 +175,15 @@ class ReviewLinkService
         return $reviewLinks;
     }
 
-    public function getHighlightsRecentlyRanked($dayInterval = 7)
+    public function getHighlightsRecentlyRanked($dayInterval = 7, $limit = null)
     {
+        $limitSql = '';
+        if ($limit) {
+            $limit = (int) $limit;
+            if ($limit) {
+                $limitSql = 'LIMIT '.$limit;
+            }
+        }
         $reviewLinks = DB::select('
             SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
@@ -187,7 +194,7 @@ class ReviewLinkService
             GROUP BY rl.game_id
             HAVING g.review_count - count(rl.id) < 3
             ORDER BY g.rating_avg DESC, g.eu_release_date DESC, g.id ASC
-        ', [$dayInterval]);
+        '.$limitSql, [$dayInterval]);
 
         return $reviewLinks;
     }

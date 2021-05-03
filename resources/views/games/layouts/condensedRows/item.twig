@@ -1,0 +1,35 @@
+<div class="row" style="margin-top: 8px;">
+
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        {% include 'modules/game/packshot/square.twig' with {'item': item} %}
+    </div>
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        <span class="h4">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
+        {% if item.category %}
+        <br>
+        <span class="h6">
+            <a href="{{ route('games.browse.byCategory.page', {'category': item.category}) }}">{{ item.category.name }}</a>
+        </span>
+        {% endif %}
+        <br>
+        <span class="h6">
+            Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
+        </span>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="pull-right">
+            {% if item.rating_avg %}
+                {% if item.game_rank %}
+                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                {% else %}
+                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
+                {% endif %}
+            {% else %}
+                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>

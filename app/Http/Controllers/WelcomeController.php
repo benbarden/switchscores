@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
 
 use App\Traits\SwitchServices;
 
@@ -16,14 +17,17 @@ class WelcomeController extends Controller
 
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $repoGameLists;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        GameListsRepository $repoGameLists
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->repoGameLists = $repoGameLists;
     }
 
     public function show()
@@ -32,8 +36,8 @@ class WelcomeController extends Controller
 
         $thisYear = date('Y');
         $bindings['Year'] = $thisYear;
-        $bindings['RecentWithGoodRanks'] = $this->getServiceGameReleaseDate()->getRecentWithGoodRanks(7, 35, 15);
-        $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(14);
+        $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, 35, 14);
+        $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(14, 10);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 10);
 
         // Get latest News post
