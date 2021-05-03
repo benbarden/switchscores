@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'topRated/navTopLinks.twig' with {'currentNav': 'btn-nav-'~Year} %}
+
 <p>
     A list of Nintendo Switch games released in Europe, sorted to show the highest
     average rating across the reviews we've collated at Switch Scores.
