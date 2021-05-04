@@ -21,7 +21,8 @@ Route::get('login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->n
 Route::get('login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
 
 // Static content
-Route::get('/about', 'AboutController@show')->name('about');
+Route::get('/about', 'AboutController@landing')->name('about.landing');
+Route::get('/about/changelog', 'AboutController@changelog')->name('about.changelog');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
 // Main game pages

@@ -1,0 +1,64 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [{'text': 'About'}] %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+
+        <img src="/img/about/switch-scores-fez.jpeg" alt="Switch Scores - FEZ" class="img-responsive">
+        <p>
+            Thanks for visiting Switch Scores! We're a site dedicated to ranking as much of the
+            Nintendo Switch library as possible.
+        </p>
+        <p>
+            With over 5000 games on the Switch
+            <a href="{{ route('games.browse.byDate.landing') }}">and over 100 more coming out every month</a>,
+            this is an ongoing challenge - so <strong>we need your help</strong>!
+        </p>
+        <h2>How you can help</h2>
+        <p>
+            We're always looking for new <a href="{{ route('partners.landing') }}">review partners</a> -
+            get in touch if you publish reviews on your own site.
+        </p>
+        <p>
+            You can also <a href="{{ route('register') }}">register</a> and start adding your own
+            quick reviews.
+        </p>
+        <ul>
+            <li><a href="{{ route('about.changelog') }}">See our changelog</a> - notable changes since the site launched.</li>
+        </ul>
+
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <h2>Support the site</h2>
+        <p>
+            If you enjoy Switch Scores, consider becoming a Patron to show your support.
+            We really appreciate any help you can give.
+        </p>
+        <ul>
+            <li><a href="https://www.patreon.com/switchscores" target="_blank">Become a Patron</a></li>
+        </ul>
+        <h2>Get in touch</h2>
+        <ul>
+            <li>Twitter: <a href="https://twitter.com/switchscores">switchscores</a></li>
+            <li>Email: <a href="mailto:hello@switchscores.com">hello@switchscores.com</a></li>
+        </ul>
+        <p>
+            Follow us on Twitter for news and updates. You can send questions, feedback and comments
+            on Twitter or via email.
+        </p>
+        <h2>Contact the owner</h2>
+        <p>
+            Switch Scores is run by Ben Barden.
+        </p>
+        <ul>
+            <li>Twitter: <a href="https://twitter.com/benbarden">benbarden</a></li>
+            <li>Email: <a href="mailto:ben@switchscores.com">ben@switchscores.com</a></li>
+        </ul>
+        <img src="/img/about/switch-scores-grindstone.jpeg" alt="Switch Scores - Grindstone" class="img-responsive">
+    </div>
+</div>
+
+{% endblock page_body %}

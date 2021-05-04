@@ -10,13 +10,23 @@ class AboutController extends Controller
 {
     use SwitchServices;
 
-    public function show()
+    public function landing()
     {
         $bindings = [];
 
         $bindings['TopTitle'] = 'About';
         $bindings['PageTitle'] = 'About Switch Scores';
 
-        return view('about', $bindings);
+        return view('about.landing', $bindings);
+    }
+
+    public function changelog()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Changelog';
+        $bindings['PageTitle'] = 'Changelog';
+
+        return view('about.changelog', $bindings);
     }
 }

@@ -1,21 +1,11 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'text': 'About'}] %}
+{% set crumbNav = [{'text': 'History'}] %}
 
 {% block page_body %}
 
 <div class="row wos-content-page">
     <div class="col-xs-12 col-sm-8 col-md-8">
-
-        <p>
-            Switch Scores is a site dedicated to the Nintendo Switch.
-            The main focus is on reviews, stats, and providing a database
-            of Switch games.
-        </p>
-        <p>
-            The games database is updated frequently throughout the week.
-            Reviews and rankings are updated daily, if new reviews are available to add.
-        </p>
 
         <h2>A quick history</h2>
         <p>
@@ -24,12 +14,12 @@
             reviews, and ranks.
         </p>
 
-        <h3>2021</h3>
+        <h3 id="changelog-2021">2021</h3>
         <ul>
             <li>6th Jan - Games company dashboard</li>
         </ul>
 
-        <h3>2020</h3>
+        <h3 id="changelog-2020">2020</h3>
         <ul>
             <li>23rd Dec - New member tools</li>
             <li>11th Dec - Member review scores included in site rankings</li>
@@ -44,7 +34,7 @@
             <li>16th Jan - Stats milestone: 3000 games!</li>
         </ul>
 
-        <h3>2019</h3>
+        <h3 id="changelog-2019">2019</h3>
         <ul>
             <li>1st Dec - Relaunched as Switch Scores!</li>
         </ul>
@@ -65,7 +55,7 @@
             <li>6th Jan - Added developer and publisher pages</li>
         </ul>
 
-        <h3>2018</h3>
+        <h3 id="changelog-2018">2018</h3>
         <ul>
             <li>24th Dec - Added Games collection</li>
             <li>29th Nov - Added Tags</li>
@@ -79,7 +69,7 @@
             <li>4th Feb - Added member registration</li>
         </ul>
 
-        <h3>2017</h3>
+        <h3 id="changelog-2017">2017</h3>
         <ul>
             <li>27th Dec - Completed work on the review importer</li>
             <li>21st Oct - Improvements to navigation, charts, News, sortable tables</li>
@@ -96,31 +86,16 @@
 
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>Support the site</h2>
-        <p>
-            If you enjoy Switch Scores, consider becoming a Patron to show your support.
-            We really appreciate any help you can give.
-        </p>
+        <h2>Jump to...</h2>
         <ul>
-            <li><a href="https://www.patreon.com/switchscores" target="_blank">Become a Patron</a></li>
+            <li><a href="#changelog-2021">2021</a></li>
+            <li><a href="#changelog-2020">2020</a></li>
+            <li><a href="#changelog-2019">2019</a></li>
+            <li><a href="#changelog-2018">2018</a></li>
+            <li><a href="#changelog-2017">2017</a></li>
+            <li><a href="{{ route('about.landing') }}">Back to the About page</a></li>
         </ul>
-        <h2>Get in touch</h2>
-        <ul>
-            <li>Twitter: <a href="https://twitter.com/switchscores">switchscores</a></li>
-            <li>Email: <a href="mailto:hello@switchscores.com">hello@switchscores.com</a></li>
-        </ul>
-        <p>
-            Follow us on Twitter for news and updates. You can send questions, feedback and comments
-            on Twitter or via email.
-        </p>
-        <h2>Contact the owner</h2>
-        <p>
-            Switch Scores is run by Ben Barden.
-        </p>
-        <ul>
-            <li>Twitter: <a href="https://twitter.com/benbarden">benbarden</a></li>
-            <li>Email: <a href="mailto:ben@switchscores.com">ben@switchscores.com</a></li>
-        </ul>
+        <img src="/img/about/switch-scores-undermine.jpeg" alt="Switch Scores - UnderMine" class="img-responsive">
     </div>
 </div>
 
