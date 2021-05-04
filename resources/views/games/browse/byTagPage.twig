@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-tag'} %}
+
 {% if GameList|length %}
 <p><small>{{ GameList|length }} games with this tag.</small></p>
 {% endif %}

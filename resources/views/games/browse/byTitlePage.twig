@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-title'} %}
+
 <p>
     A list of Nintendo Switch games, starting with {{ GameLetter }} and sorted alphabetically.
 </p>

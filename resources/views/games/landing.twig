@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-landing'} %}
+
 <div class="row">
 
     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
@@ -96,16 +98,6 @@
     </div>
 
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="border-left: 1px solid #c9c9c9;">
-
-        <h2>Browse Switch games</h2>
-        <ul>
-            <li><a href="{{ route('games.browse.byTitle.landing') }}">By title (A-Z)</a></li>
-            <li><a href="{{ route('games.browse.byDate.landing') }}">By date (calendar)</a></li>
-            <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
-            <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
-            <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
-            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-        </ul>
 
         <h2>
             Upcoming

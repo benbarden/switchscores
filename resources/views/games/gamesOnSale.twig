@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-on-sale'} %}
+
 <div class="row">
 
     <div class="col-xs-12 col-sm-12">
@@ -56,7 +58,7 @@
             These games are on sale, but we haven't ranked them yet. Highest discounts shown first.
         </p>
         <p>
-            Look out for the games that do have 1 or 2 reviews (we need 3 to rank the game), and look out for
+            Look out for the games that have 1 or 2 reviews (we need 3 to rank the game), and look out for
             big discounts. If you try a game listed here, we'd love to get a review from you!
         </p>
         {% if UnrankedDiscounts|length %}

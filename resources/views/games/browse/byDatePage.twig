@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-date'} %}
+
 <p>
     This page lists all of the Nintendo Switch games released in {{ CalendarDateDesc }}.
 </p>

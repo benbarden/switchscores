@@ -11,6 +11,8 @@
 <script src="/js/jquery-ui-1.12.1.min.js"></script>
 <link href="/css/jquery-ui-1.12.1.min.css" rel="stylesheet" />
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-category'} %}
+
 {% if Category.children.count() > 0 %}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">

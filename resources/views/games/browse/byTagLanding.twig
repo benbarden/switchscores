@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-tag'} %}
+
 {% if TagCategoryList %}
     {% for item in TagCategoryList %}
         {% if item.tags.count > 0 %}

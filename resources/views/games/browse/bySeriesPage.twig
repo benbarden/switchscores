@@ -4,6 +4,8 @@
 
 {% block page_body %}
 
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-series'} %}
+
 {% if GameList|length %}
 <p><small>{{ GameList|length }} games with this series.</small></p>
 {% endif %}
