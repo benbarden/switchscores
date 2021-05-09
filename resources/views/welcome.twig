@@ -18,31 +18,45 @@
                     </span>
                 </h4>
             </div>
-            <div class="col-md-2 text-center">
-                <h4 class="rating-title">
+            <div class="col-md-6 text-left">
+                <h5 class="rating-title-home">
                     <span class="rating-v2">
-                        <a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a>
+                        <a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a> -
                     </span>
-                </h4>
-            </div>
-            <div class="col-md-2 text-center">
-                <h4 class="rating-title">
                     <span class="rating-v2">
-                        <a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a>
+                        <a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a> -
                     </span>
-                </h4>
-            </div>
-            <div class="col-md-2 text-center">
-                <h4 class="rating-title">
                     <span class="rating-v2">
                         <a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a>
                     </span>
-                </h4>
+                </h5>
             </div>
         </div>
     </div>
 
 </div>
+
+<div class="row hidden-md hidden-lg">
+
+    <div class="col-sm-12 col-xs-12">
+        <form role="form" method="post" action="{{ route('games.search') }}">
+            {{ csrf_field() }}
+
+            <div class="row hidden-md hidden-lg">
+                <div class="col-sm-10 col-xs-10">
+                    <input name="search_keywords" type="text" class="form-control" placeholder="Search games">
+                </div>
+                <div class="col-sm-2 col-xs-2">
+                    <button type="submit" class="btn outline btn-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
 
 {% if auth_user() is null %}
     <a href="{{ route('auth.login.twitter') }}">

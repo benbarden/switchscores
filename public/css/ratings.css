@@ -3,6 +3,9 @@
     font-size: 20px;
     margin: 6px 0;
 }
+.rating-title-home {
+    margin: 6px 0;
+}
 .rating-v2 {
     font-weight: bold;
     font-family: 'Noto Sans KR', serif;

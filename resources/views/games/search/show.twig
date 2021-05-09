@@ -19,7 +19,7 @@
                 {% else %}
                     <p>{{ SearchResults|length }} results found.</p>
                 {% endif %}
-                {% include 'games/layouts/tableView/standard.twig' with {'GameList': SearchResults} %}
+                {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SearchResults, 'batchOverride': 3} %}
             {% else %}
                 <p>No results found.</p>
             {% endif %}
