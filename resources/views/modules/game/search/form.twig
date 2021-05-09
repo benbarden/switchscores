@@ -22,9 +22,11 @@
 
 <script>
 
+    {% if SearchResults is empty %}
     $(document).ready(function() {
         $('#search_keywords').focus();
     });
+    {% endif %}
 
     var searchKeywords = '{{ SearchKeywords }}';
 
