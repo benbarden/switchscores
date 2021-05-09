@@ -1,0 +1,5 @@
+<script>
+    {% for item in GameList %}
+        $('#eshop_europe_order_{{ item.id }}').val({{ item.eshop_europe_order }});
+    {% endfor %}
+</script>

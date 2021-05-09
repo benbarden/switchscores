@@ -1,0 +1,11 @@
+<select id="category_id_{{ GameId }}" class="form-control" name="category_id_{{ GameId }}">
+    <option value="">&nbsp;</option>
+    {% for item in CategoryList %}
+        <option value="{{ item.id }}">{{ item.name }}</option>
+        {% if item.children %}
+            {% for child in item.children %}
+                <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</select>
