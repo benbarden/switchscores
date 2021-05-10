@@ -1,0 +1,80 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [
+    {'url': route('partners.landing'), 'text': 'Partners'},
+    {'url': route('partners.review-sites'), 'text': 'Review sites'},
+    {'text': 'Guide: '~PageTitle}
+] %}
+
+{% block page_body %}
+
+    <div class="row wos-content-page">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <p>
+                Thanks for joining Switch Scores as a review site - we're excited to have you on board!
+            </p>
+            <p>
+                This guide is to cover some of the basics, and get you up and running.
+            </p>
+
+            <h2>Help us to import all of your reviews</h2>
+            <p>
+                With over 10,000 review scores on the site, we have scripts to import reviews
+                with minimal manual intervention. We load reviews from your RSS feed - most blogging tools
+                and content management systems provide feeds that we can use.
+            </p>
+            <p>
+                If you're using WordPress, your RSS feed is probably set to include a default of 10 items.
+                That's fine for ordinary usage, but when adding a new partner, we'd like to get all of your
+                reviews in one go. Unless you're a new site, you probably have more than 10 reviews.
+            </p>
+            <p>
+                You can easily change this setting - <a href="https://www.wpbeginner.com/wp-tutorials/how-to-limit-the-number-of-posts-displayed-in-rss-feed/" target="_blank">see this guide</a>
+                for details. Change it to 500 items, tell us when you're ready, and we'll import your reviews.
+                Then, we'll tell you when you can change it back to 10 - or whatever it was before.
+            </p>
+            <p>
+                For platforms other than WordPress, look for help guides that show you how to add more items to
+                your RSS feed.
+            </p>
+
+            <h2>Connect with publishers</h2>
+            <p>
+                We have a private dashboard for games companies who may be looking for people to review their
+                games. As a partner, you can opt in to share your contact details with these companies.
+            </p>
+            <p>
+                To participate, let us know the following:
+            </p>
+            <ul>
+                <li>A contact name</li>
+                <li>A contact email address - or a link to your contact form <em>(email preferred)</em></li>
+                <li>Which regions you can receive review codes for</li>
+            </ul>
+
+            <h2>Register and log in</h2>
+            <p>
+                We have a dedicated reviewers dashboard where you can find unranked games to review,
+                add reviews manually (if we can't import everything from your feed), plus keep an eye on
+                your stats and the health of your feed.
+            </p>
+            <p>
+                To join, go to the <a href="{{ route('login') }}">login page</a> and click the "Sign in with
+                Twitter" button. For now, this is the only way to sign in - but if there's sufficient interest,
+                we may reinstate the option to sign in with email/password.
+            </p>
+            <p>
+                Once you've joined, get in touch and we'll give you access to the reviewers dashboard.
+            </p>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+        </div>
+
+    </div>
+
+{% endblock page_body %}

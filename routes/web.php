@@ -71,6 +71,7 @@ Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('r
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
 Route::get('/partners/review-sites', 'PartnersController@reviewSites')->name('partners.review-sites');
 Route::get('/partners/developers-publishers', 'PartnersController@developersPublishers')->name('partners.developers-publishers');
+Route::get('/partners/guides/{guideTitle}', 'PartnersController@guidesShow')->name('partners.guides.show');
 
 Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesCompany')->name('partners.detail.games-company');
 

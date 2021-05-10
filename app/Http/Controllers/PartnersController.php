@@ -26,6 +26,27 @@ class PartnersController extends Controller
         return view('partners.landing', $bindings);
     }
 
+    public function guidesShow($guideTitle)
+    {
+        $bindings = [];
+        $guide = [];
+        $guideView = '';
+
+        switch ($guideTitle) {
+            case 'new-review-site-welcome':
+                $guide['title'] = 'New review site welcome guide';
+                $guideView = 'partners.guides.newReviewSiteWelcome';
+                break;
+            default:
+                abort(404);
+        }
+
+        $bindings['TopTitle'] = $guide['title'];
+        $bindings['PageTitle'] = $guide['title'];
+
+        return view($guideView, $bindings);
+    }
+
     public function reviewSites()
     {
         $bindings = [];
