@@ -44,7 +44,7 @@ class MigrationsCategoryController extends Controller
 
     public function allGamesWithNoCategory()
     {
-        $bindings = $this->getBindingsCategorisationSubpage('All games with no category', "[ 3, 'asc']");
+        $bindings = $this->getBindingsCategorisationSubpage('No category - with eShop data', "[ 3, 'asc']");
 
         $serviceMigrationsCategory = new MigrationsCategory();
 

@@ -8,6 +8,7 @@ use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Category;
 use App\GameSeries;
@@ -74,6 +75,17 @@ class GamesListController extends Controller
         $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
 
         return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);
+    }
+
+    public function noCategory()
+    {
+        $bindings = $this->getBindingsGamesSubpage('No category', "[ 0, 'desc']");
+
+        $serviceMigrationsCategory = new MigrationsCategory();
+
+        $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory();
+
+        return view('staff.games.list.standard-view', $bindings);
     }
 
     public function noEuReleaseDate()

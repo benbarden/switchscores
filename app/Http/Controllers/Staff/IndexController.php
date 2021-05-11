@@ -63,7 +63,7 @@ class IndexController extends Controller
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Missing data
-        $bindings['AllGamesWithNoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+        $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
         $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
 
         // New games

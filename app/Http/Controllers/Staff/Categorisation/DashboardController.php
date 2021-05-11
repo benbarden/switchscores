@@ -118,7 +118,8 @@ class DashboardController extends Controller
         // Migrations: Category
         $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
         $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
-        $bindings['AllGamesWithNoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+        $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+        $bindings['NoCategoryEshopDataCount'] = count($serviceMigrationsCategory->getGamesWithEshopDataAndNoCategory());
 
         // Title matches
         $bindings['GameCategoryMatchList'] = $this->getCategoryMatchesStats();
