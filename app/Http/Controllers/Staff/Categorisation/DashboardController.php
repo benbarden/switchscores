@@ -122,9 +122,7 @@ class DashboardController extends Controller
         $bindings['NoCategoryEshopDataCount'] = count($serviceMigrationsCategory->getGamesWithEshopDataAndNoCategory());
 
         // Title matches
-        $bindings['GameCategoryMatchList'] = $this->getCategoryMatchesStats();
         $bindings['GameSeriesMatchList'] = $this->getSeriesMatchesStats();
-        $bindings['GameTagMatchList'] = $this->getTagMatchesStats();
 
         return view('staff.categorisation.dashboard', $bindings);
     }
