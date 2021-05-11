@@ -6,8 +6,7 @@
 
     <div class="col-md-4">
 
-        {% if auth_user().hasRole('Games manager') or auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-        <h2>Action lists</h2>
+        <h2>Submissions</h2>
 
         <table class="table">
             <tbody>
@@ -18,26 +17,6 @@
                     </td>
                     <td class="text-right">
                         <a href="{{ route('staff.reviews.feed-items.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
-            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
-                </td>
-            </tr>
-            {% endif %}
-            {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API: Unlinked items</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
                     </td>
                 </tr>
             {% endif %}
@@ -73,33 +52,141 @@
             {% endif %}
             </tbody>
         </table>
-        {% endif %}
 
-        {% if auth_user().isOwner() %}
-        <h2>Data integrity</h2>
+        <h2>Games to add</h2>
+
+        <table class="table">
+            <tbody>
+            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API: Unlinked items</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+        <h2>Missing data</h2>
 
         <table class="table">
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
+                    <a href="{{ route('staff.categorisation.migrations.category.all-games-with-no-category') }}">
+                        Games with no category
+                    </a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
+                    <span class="h4">{{ AllGamesWithNoCategoryCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
                 </td>
             </tr>
             </tbody>
         </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <h2>New games</h2>
+            {% if RecentlyAddedGames.count > 0 %}
+                <table class="table table-responsive">
+                    <tbody>
+                    {% for item in RecentlyAddedGames %}
+                        <tr>
+                            <td class="text-left">
+                                {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                                <br>
+                                <small>
+                                    ID: {{ item.id }} |
+                                    Added: {{ item.created_at|date('d M @ H:i') }}
+                                </small>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No items found!</p>
+            {% endif %}
+            <p><a href="{{ route('staff.games.list.recently-added') }}">View all recently added games</a>.</p>
         {% endif %}
 
     </div>
 
     <div class="col-md-4">
 
+        {% if auth_user().isOwner() %}
+            <h2>Owner links</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('owner.user.list') }}">Registered users</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('owner.audit.index') }}">Audit</a>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.stats.dashboard') }}">Stats</a>
+                    </td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if auth_user().isOwner() %}
+            <h2>Data integrity</h2>
+
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+
         {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
             <h2>Recent imports</h2>
             {% if ReviewFeedImportList.count > 0 %}
-                <table class="table data-sortable table-responsive">
+                <table class="table table-responsive">
                     <thead>
                     <tr>
                         <th class="text-center">Day of week</th>
@@ -129,38 +216,6 @@
                 <p>No items found!</p>
             {% endif %}
             <p><a href="{{ route('staff.reviews.feed-imports.list') }}">View all imports</a>.</p>
-        {% endif %}
-
-    </div>
-
-    <div class="col-md-4">
-
-        {% if auth_user().isOwner() %}
-        <h2>Owner links</h2>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.user.list') }}">Registered users</a>
-                    </td>
-                    <td class="text-right">
-                        <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.audit.index') }}">Audit</a>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.stats.dashboard') }}">Stats</a>
-                    </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
         {% endif %}
 
     </div>

@@ -8,10 +8,13 @@ use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
-use App\QuickReview;
+use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
+
+use App\QuickReview;
 
 class IndexController extends Controller
 {
@@ -20,14 +23,17 @@ class IndexController extends Controller
 
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $repoGameLists;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        GameListsRepository $repoGameLists
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->repoGameLists = $repoGameLists;
     }
 
     public function index()
@@ -35,40 +41,42 @@ class IndexController extends Controller
         $bindings = $this->getBindingsDashboard('Staff index');
 
         $serviceQualityStats = new QualityStats();
+        $serviceMigrationsCategory = new MigrationsCategory();
         $serviceUser = $this->getServiceUser();
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
 
-        // Updates requiring approval
+        // Submissions
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
-        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
+        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
-
-        // Game category suggestions
         $pendingCategoryEdits = $this->getServiceDbEditGame()->getPendingCategoryEdits();
         $bindings['PendingGameCategorySuggestionCount'] = count($pendingCategoryEdits);
-
-        // Featured games
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
 
-        // Nintendo.co.uk: Unlinked items
+        // Games to add
+        $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
         $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
         $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
-        // Games to release
-        $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
+        // Missing data
+        $bindings['AllGamesWithNoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+        $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
+
+        // New games
+        $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(10);
+
+        // Owner links
+        $bindings['RegisteredUserCount'] = $serviceUser->getCount();
 
         // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
-        // Feed imports
+        // Recent imports
         $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getLive(5);
-
-        // Information and site stats
-        $bindings['RegisteredUserCount'] = $serviceUser->getCount();
 
         return view('staff.index', $bindings);
     }

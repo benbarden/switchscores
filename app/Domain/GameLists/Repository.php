@@ -20,6 +20,11 @@ class Repository
         return $games;
     }
 
+    public function recentlyAdded($limit = 100)
+    {
+        return Game::orderBy('id', 'desc')->limit($limit)->get();
+    }
+
     public function upcoming($limit = null)
     {
         $games = Game::where('eu_is_released', 0)

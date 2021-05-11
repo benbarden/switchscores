@@ -113,7 +113,6 @@ class DashboardController extends Controller
     {
         $bindings = $this->getBindingsDashboardGenericSubpage('Categorisation dashboard');
 
-        $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();
 
         // Migrations: Category

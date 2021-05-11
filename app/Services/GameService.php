@@ -172,11 +172,6 @@ class GameService
     // Rewritten lists for Staff > Games
     // ********************************************************** //
 
-    public function getRecentlyAdded($limit = 100)
-    {
-        return Game::orderBy('id', 'desc')->limit($limit)->get();
-    }
-
     public function getRecentlyReleased($limit = 100)
     {
         return Game::where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->orderBy('eu_released_on', 'desc')->limit($limit)->get();

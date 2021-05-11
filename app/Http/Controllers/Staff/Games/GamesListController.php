@@ -43,7 +43,7 @@ class GamesListController extends Controller
     {
         $bindings = $this->getBindingsGamesSubpage('Recently added');
 
-        $bindings['GameList'] = $this->getServiceGame()->getRecentlyAdded(100);
+        $bindings['GameList'] = $this->repoGameLists->recentlyAdded(100);
 
         return view('staff.games.list.standard-view', $bindings);
     }
