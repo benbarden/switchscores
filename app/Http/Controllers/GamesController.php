@@ -112,7 +112,7 @@ class GamesController extends Controller
         }
 
         // Main data
-        $bindings['TopTitle'] = $gameData->title.' - Nintendo Switch game ratings, reviews and information';
+        $bindings['TopTitle'] = $gameData->title.' Nintendo Switch reviews';
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
