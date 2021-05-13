@@ -65,6 +65,7 @@ class IndexController extends Controller
         // Missing data
         $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
         $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
+        $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // New games
         $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(10);

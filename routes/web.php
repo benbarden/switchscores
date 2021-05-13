@@ -238,6 +238,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::get('/staff/games/list/upcoming-games', 'Staff\Games\GamesListController@upcomingGames')->name('staff.games.list.upcoming-games');
     Route::get('/staff/games/list/upcoming-eshop-crosscheck', 'Staff\Games\GamesListController@upcomingEshopCrosscheck')->name('staff.games.list.upcoming-eshop-crosscheck');
     Route::get('/staff/games/list/no-category', 'Staff\Games\GamesListController@noCategory')->name('staff.games.list.no-category');
+    Route::get('/staff/games/list/no-tag', 'Staff\Games\GamesListController@noTag')->name('staff.games.list.no-tag');
     Route::get('/staff/games/list/no-eu-release-date', 'Staff\Games\GamesListController@noEuReleaseDate')->name('staff.games.list.no-eu-release-date');
     Route::get('/staff/games/list/no-eshop-price', 'Staff\Games\GamesListController@noEshopPrice')->name('staff.games.list.no-eshop-price');
     Route::get('/staff/games/list/no-video-type', 'Staff\Games\GamesListController@noVideoType')->name('staff.games.list.no-video-type');
@@ -363,8 +364,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     //Route::get('/staff/categorisation/tag/game/{gameId}/remove', 'Staff\Categorisation\TagController@removeGameTag')->name('staff.categorisation.tag.game.remove');
 
     // Migrations
-    Route::get('/staff/categorisation/migrations/category/games-with-one-genre', 'Staff\Categorisation\MigrationsCategoryController@gamesWithOneGenre')->name('staff.categorisation.migrations.category.games-with-one-genre');
-    Route::get('/staff/categorisation/migrations/category/games-with-named-genre-and-one-other/{genre}', 'Staff\Categorisation\MigrationsCategoryController@gamesWithNamedGenreAndOneOther')->name('staff.categorisation.migrations.category.games-with-named-genre-and-one-other');
     Route::get('/staff/categorisation/migrations/category/all-games-with-no-category', 'Staff\Categorisation\MigrationsCategoryController@allGamesWithNoCategory')->name('staff.categorisation.migrations.category.all-games-with-no-category');
 
 });

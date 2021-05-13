@@ -199,4 +199,9 @@ class Repository
     {
         return Game::whereNull('video_type')->orderBy('id', 'asc')->limit($limit)->get();
     }
+
+    public function noTag()
+    {
+        return Game::whereDoesntHave('gameTags')->get();
+    }
 }

@@ -8,6 +8,7 @@ use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+
 use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Category;
@@ -84,6 +85,15 @@ class GamesListController extends Controller
         $serviceMigrationsCategory = new MigrationsCategory();
 
         $bindings['GameList'] = $serviceMigrationsCategory->getGamesWithNoCategory();
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function noTag()
+    {
+        $bindings = $this->getBindingsGamesSubpage('No tag', "[ 0, 'desc']");
+
+        $bindings['GameList'] = $this->repoGameLists->noTag();
 
         return view('staff.games.list.standard-view', $bindings);
     }

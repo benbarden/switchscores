@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
+use App\Domain\GameStats\Repository as GameStatsRepository;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
-use App\Services\DataQuality\QualityStats;
 use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Category;
@@ -18,6 +18,15 @@ class DashboardController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $repoGameStats;
+
+    public function __construct(
+        GameStatsRepository $repoGameStats
+    )
+    {
+        $this->repoGameStats = $repoGameStats;
+    }
 
     private function getCategoryMatchesStats()
     {
@@ -120,6 +129,7 @@ class DashboardController extends Controller
         $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
         $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
         $bindings['NoCategoryEshopDataCount'] = count($serviceMigrationsCategory->getGamesWithEshopDataAndNoCategory());
+        $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // Title matches
         $bindings['GameSeriesMatchList'] = $this->getSeriesMatchesStats();

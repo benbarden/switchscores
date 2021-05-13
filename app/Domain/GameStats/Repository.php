@@ -26,6 +26,11 @@ class Repository
         return Game::whereNotNull('game_rank')->count();
     }
 
+    public function totalUntagged()
+    {
+        return Game::whereDoesntHave('gameTags')->count();
+    }
+
     /**
      * @return integer
      */
