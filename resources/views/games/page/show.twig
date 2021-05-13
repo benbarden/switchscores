@@ -29,15 +29,29 @@
                     <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
                 {% endif %}
 
+                {% if GameData.video_url %}
+                    {% set VideoTypeDesc = GameData.getVideoTypeDesc() %}
+                    {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
+                {% endif %}
+
                 {% if GameBlurb %}
-                    <p>
+                    <p style="margin-top: 15px;">
                         {{ GameBlurb|raw }}
                     </p>
                 {% endif %}
 
-                {% if GameData.video_url %}
-                    {% set VideoTypeDesc = GameData.getVideoTypeDesc() %}
-                    {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
+                {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
+
+                    <p>
+                        <strong>Tags:</strong>
+                        {% for item in GameTags %}
+                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                                <nobr>{{ item.tag.tag_name }}</nobr>
+                            </a>
+                            {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </p>
+
                 {% endif %}
 
                 {% include 'games/page/reviews.twig' with {'GameReviews': GameReviews} %}
