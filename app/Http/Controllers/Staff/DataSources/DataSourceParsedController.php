@@ -15,6 +15,8 @@ use App\Factories\GameDirectorFactory;
 use App\Events\GameCreated;
 use App\Services\UrlService;
 
+use App\Game;
+
 class DataSourceParsedController extends Controller
 {
     use SwitchServices;
@@ -116,6 +118,10 @@ class DataSourceParsedController extends Controller
                 $game = $game->fresh();
                 UpdateGameFactory::doUpdate($game, $dsParsedItem);
                 DownloadImageFactory::downloadImages($game, $dsParsedItem);
+
+                // Set digital format
+                $game->format_digital = Game::FORMAT_AVAILABLE;
+                $game->save();
 
                 // Add game id to parsed item
                 $dsParsedItem->game_id = $gameId;
