@@ -42,6 +42,9 @@ Route::get('/games/by-category/{category}', 'GamesBrowseController@byCategoryPag
 Route::get('/games/by-series', 'GamesBrowseController@bySeriesLanding')->name('games.browse.bySeries.landing');
 Route::get('/games/by-series/{series}', 'GamesBrowseController@bySeriesPage')->name('games.browse.bySeries.page');
 
+Route::get('/games/by-collection', 'GamesBrowseController@byCollectionLanding')->name('games.browse.byCollection.landing');
+Route::get('/games/by-collection/{collection}', 'GamesBrowseController@byCollectionPage')->name('games.browse.byCollection.page');
+
 Route::get('/games/by-tag', 'GamesBrowseController@byTagLanding')->name('games.browse.byTag.landing');
 Route::get('/games/by-tag/{tag}', 'GamesBrowseController@byTagPage')->name('games.browse.byTag.page');
 
@@ -349,6 +352,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::match(['get', 'post'], '/staff/categorisation/category/add', 'Staff\Categorisation\CategoryController@addCategory')->name('staff.categorisation.category.add');
     Route::match(['get', 'post'], '/staff/categorisation/category/edit/{categoryId}', 'Staff\Categorisation\CategoryController@editCategory')->name('staff.categorisation.category.edit');
     Route::match(['get', 'post'], '/staff/categorisation/category/delete/{categoryId}', 'Staff\Categorisation\CategoryController@deleteCategory')->name('staff.categorisation.category.delete');
+
+    // Collections
+    Route::get('/staff/categorisation/game-collection/list', 'Staff\Categorisation\GameCollectionController@showList')->name('staff.categorisation.game-collection.list');
+    Route::match(['get', 'post'], '/staff/categorisation/game-collection/add', 'Staff\Categorisation\GameCollectionController@addCollection')->name('staff.categorisation.game-collection.add');
+    Route::match(['get', 'post'], '/staff/categorisation/game-collection/edit/{collectionId}', 'Staff\Categorisation\GameCollectionController@editCollection')->name('staff.categorisation.game-collection.edit');
+    Route::match(['get', 'post'], '/staff/categorisation/game-collection/delete/{collectionId}', 'Staff\Categorisation\GameCollectionController@deleteCollection')->name('staff.categorisation.game-collection.delete');
 
     // Series
     Route::get('/staff/categorisation/game-series/list', 'Staff\Categorisation\GameSeriesController@showList')->name('staff.categorisation.game-series.list');

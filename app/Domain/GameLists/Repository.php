@@ -54,6 +54,20 @@ class Repository
 
     }
 
+    public function byCollection($collectionId, $limit = null)
+    {
+        $games = Game::where('collection_id', $collectionId)
+            ->where('eu_is_released', 1)
+            ->orderBy('title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
     public function recentWithGoodRanks($minimumRating = 7, $dateInterval = 30, $limit = 15)
     {
         $games = Game::where('games.eu_is_released', 1)

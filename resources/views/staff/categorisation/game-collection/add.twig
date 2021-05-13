@@ -1,0 +1,10 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.categorisation.game-collection.add') %}
+{% include 'staff/categorisation/game-collection/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/categorisation/game-collection/scripts.twig' %}
+
+{% endblock page_inner %}

@@ -97,6 +97,9 @@ class GameDirector
         if (array_key_exists('series_id', $params)) {
             $this->builder->setGameSeriesId($params['series_id']);
         }
+        if (array_key_exists('collection_id', $params)) {
+            $this->builder->setGameCollectionId($params['collection_id']);
+        }
         if (array_key_exists('format_digital', $params)) {
             $this->builder->setFormatDigital($params['format_digital']);
         }

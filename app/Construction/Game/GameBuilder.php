@@ -163,6 +163,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setGameCollectionId($gameCollectionId): GameBuilder
+    {
+        $this->game->collection_id = $gameCollectionId;
+        return $this;
+    }
+
     public function setRatingAvg($ratingAvg): GameBuilder
     {
         $this->game->rating_avg = $ratingAvg;

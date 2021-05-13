@@ -8,6 +8,7 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
 
 use App\Traits\SwitchServices;
 
@@ -19,18 +20,21 @@ class GamesBrowseController extends Controller
     protected $dbGameLists;
     protected $repoTag;
     protected $repoTagCategory;
+    protected $repoGameCollection;
 
     public function __construct(
         GameListsRepository $repoGameLists,
         GameListsDbQueries $dbGameLists,
         TagRepository $repoTag,
-        TagCategoryRepository $repoTagCategory
+        TagCategoryRepository $repoTagCategory,
+        GameCollectionRepository $repoGameCollection
     )
     {
         $this->repoGameLists = $repoGameLists;
         $this->dbGameLists = $dbGameLists;
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
+        $this->repoGameCollection = $repoGameCollection;
     }
 
     public function byTitleLanding()
@@ -166,6 +170,38 @@ class GamesBrowseController extends Controller
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
 
         return view('games.browse.bySeriesPage', $bindings);
+    }
+
+    public function byCollectionLanding()
+    {
+        $bindings = [];
+
+        $bindings['CollectionList'] = $this->repoGameCollection->getAll();
+
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by collection';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by collection';
+
+        return view('games.browse.byCollectionLanding', $bindings);
+    }
+
+    public function byCollectionPage($collection)
+    {
+        $bindings = [];
+
+        $gameCollection = $this->repoGameCollection->getByLinkTitle($collection);
+        if (!$gameCollection) abort(404);
+
+        $collectionId = $gameCollection->id;
+        $collectionName = $gameCollection->name;
+
+        $gameList = $this->repoGameLists->byCollection($collectionId);
+
+        $bindings['GameList'] = $gameList;
+
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by collection: '.$collectionName;
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by collection: '.$collectionName;
+
+        return view('games.browse.byCollectionPage', $bindings);
     }
 
     public function byTagLanding()

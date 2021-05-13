@@ -1,0 +1,23 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [
+    {'url': route('games.landing'), 'text': 'Games'},
+    {'url': route('games.browse.byCollection.landing'), 'text': 'Browse by collection'},
+    {'text': PageTitle}
+] %}
+
+{% block page_body %}
+
+{% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-by-collection'} %}
+
+{% if GameList|length %}
+<p><small>{{ GameList|length }} games with this collection.</small></p>
+{% endif %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+    </div>
+</div>
+
+{% endblock page_body %}

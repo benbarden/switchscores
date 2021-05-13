@@ -26,6 +26,17 @@
 
     <tr>
         <td>
+            <span style="font-weight: bold;">Collection</span>
+        </td>
+        <td>
+            {% if GameData.collection_id %}
+                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">{{ GameData.gameCollection.name }}</a>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
             {% if mode == 'reviewers' %}
                 <strong>Tags</strong>
             {% else %}

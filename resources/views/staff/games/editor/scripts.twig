@@ -12,6 +12,7 @@
         formVals['link_title'] = "{{ GameData.link_title }}";
         formVals['category_id'] = "{{ GameData.category_id }}";
         formVals['series_id'] = "{{ GameData.series_id }}";
+        formVals['collection_id'] = "{{ GameData.collection_id }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
         formVals['players'] = "{{ GameData.players }}";
         // *** Dates *** //
@@ -45,6 +46,7 @@
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['category_id'] = "{{ old('category_id') }}";
         formVals['series_id'] = "{{ old('series_id') }}";
+        formVals['collection_id'] = "{{ old('collection_id') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
         formVals['players'] = "{{ old('players') }}";
         // *** Dates *** //
@@ -79,6 +81,7 @@
     $('#link_title').val(formVals['link_title']);
     $('#category_id').val(formVals['category_id']);
     $('#series_id').val(formVals['series_id']);
+    $('#collection_id').val(formVals['collection_id']);
     $('#price_eshop').val(formVals['price_eshop']);
     $('#players').val(formVals['players']);
     // *** Dates *** //

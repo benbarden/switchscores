@@ -25,6 +25,7 @@ use App\Services\Game\Images as GameImages;
 
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
 
 use App\Game;
 
@@ -48,14 +49,17 @@ class GamesEditorController extends Controller
 
     protected $repoGameTitleHash;
     protected $gameTitleHashGenerator;
+    protected $repoGameCollection;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
-        HashGeneratorRepository $gameTitleHashGenerator
+        HashGeneratorRepository $gameTitleHashGenerator,
+        GameCollectionRepository $repoGameCollection
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
         $this->gameTitleHashGenerator = $gameTitleHashGenerator;
+        $this->repoGameCollection = $repoGameCollection;
     }
 
     public function add()
@@ -123,8 +127,9 @@ class GamesEditorController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
@@ -163,8 +168,9 @@ class GamesEditorController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
-        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();

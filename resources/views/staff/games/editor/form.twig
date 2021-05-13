@@ -63,6 +63,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="collection_id" class="col-md-3 control-label">Collection</label>
+                    <div class="col-md-6">
+                        <select id="collection_id" class="form-control" name="collection_id">
+                            <option value="">&nbsp;</option>
+                            {% for item in CollectionList %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="price_eshop" class="col-md-3 control-label">Price</label>
                     <div class="col-md-6">
                         <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">

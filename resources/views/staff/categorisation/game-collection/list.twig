@@ -1,0 +1,73 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<a href="{{ route('staff.categorisation.game-collection.add') }}" class="btn outline btn-primary">Add a collection</a>
+<br>
+<br>
+
+{% if CollectionList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th>Collection</th>
+                <th class="text-center">Game count</th>
+                <th class="text-center">View</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in CollectionList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        {{ item.name }}
+                        {#
+                        <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}" target="_blank">
+                            {{ item.name }}
+                        </a>
+                        #}
+                    </td>
+                    <td class="text-center">
+                        {{ item.games().count }}
+                    </td>
+                    <td class="text-center">
+                        {#
+                        <a href="{{ route('staff.games.list.by-category', {'category': item}) }}">View games</a>
+                        #}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.categorisation.game-collection.edit', {'collectionId': item.id}) }}">Edit</a>
+                        {% if item.games().count == 0 %}
+                            : <a href="{{ route('staff.categorisation.game-collection.delete', {'collectionId': item.id}) }}">Delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No collections found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

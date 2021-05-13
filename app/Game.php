@@ -33,7 +33,7 @@ class Game extends Model implements Auditable
         'amazon_uk_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
-        'series_id', 'category_id',
+        'series_id', 'category_id', 'collection_id',
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
         'format_digital', 'format_physical', 'format_dlc', 'format_demo',
@@ -63,6 +63,11 @@ class Game extends Model implements Auditable
     public function series()
     {
         return $this->hasOne('App\GameSeries', 'id', 'series_id');
+    }
+
+    public function gameCollection()
+    {
+        return $this->hasOne('App\GameCollection', 'id', 'collection_id');
     }
 
     public function titleHashes()
