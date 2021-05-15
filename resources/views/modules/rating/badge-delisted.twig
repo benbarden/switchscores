@@ -1,0 +1,9 @@
+{% if scoreSize is defined %}
+    {% set scoreSizeHeader = scoreSize %}
+{% else %}
+    {% set scoreSizeHeader = 'h4' %}
+{% endif %}
+
+<span class="{{ scoreSizeHeader }} label label-default">
+    De-listed
+</span>

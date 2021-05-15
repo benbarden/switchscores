@@ -191,6 +191,7 @@ class ReviewLinkService
             JOIN partners p ON rl.site_id = p.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             AND g.review_count > 2
+            AND g.format_digital != "De-listed"
             GROUP BY rl.game_id
             HAVING g.review_count - count(rl.id) < 3
             ORDER BY g.rating_avg DESC, g.eu_release_date DESC, g.id ASC

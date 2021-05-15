@@ -29,6 +29,8 @@
             {% if item.rating_avg %}
                 {% if item.game_rank %}
                     {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                {% elseif item.format_digital == 'De-listed' %}
+                    {% include 'modules/rating/badge-delisted.twig' with {'scoreSize': 'h6'} %}
                 {% else %}
                     {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count} %}
                 {% endif %}
