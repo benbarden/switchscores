@@ -41,7 +41,8 @@
                 {% if GameTags|length > 0 and GameData.eu_is_released == 1 %}
 
                     <p>
-                        <strong>Tags:</strong>
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        <strong>Tags -</strong>
                         {% for item in GameTags %}
                             <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
                                 <nobr>{{ item.tag.tag_name }}</nobr>
