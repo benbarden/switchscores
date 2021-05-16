@@ -4,11 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 
 class TopRatedController extends Controller
 {
     use SwitchServices;
+
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
 
     public function landing()
     {
@@ -25,6 +36,7 @@ class TopRatedController extends Controller
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Top Rated');
 
         return view('topRated.landing', $bindings);
     }
@@ -39,6 +51,7 @@ class TopRatedController extends Controller
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch multiplayer games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch multiplayer games';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('Multiplayer');
 
         return view('topRated.multiplayer', $bindings);
     }
@@ -54,6 +67,7 @@ class TopRatedController extends Controller
 
         $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
         $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
 
         return view('topRated.allTime', $bindings);
     }
@@ -77,6 +91,7 @@ class TopRatedController extends Controller
 
         $bindings['TopTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
         $bindings['PageTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage($year);
 
         return view('topRated.byYear', $bindings);
     }

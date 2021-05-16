@@ -10,6 +10,7 @@ use App\Traits\AuthUser;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 class GamesController extends Controller
 {
@@ -19,16 +20,19 @@ class GamesController extends Controller
     protected $repoFeaturedGames;
     protected $repoGameLists;
     protected $repoGameStats;
+    protected $viewBreadcrumbs;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameListsRepository $repoGameLists,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()
@@ -47,6 +51,7 @@ class GamesController extends Controller
 
         $bindings['TopTitle'] = 'Nintendo Switch games database';
         $bindings['PageTitle'] = 'Nintendo Switch games database';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Games');
 
         return view('games.landing', $bindings);
     }
@@ -60,6 +65,7 @@ class GamesController extends Controller
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';
         $bindings['PageTitle'] = 'Nintendo Switch recent releases';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('Recent');
 
         return view('games.recentReleases', $bindings);
     }
@@ -72,6 +78,7 @@ class GamesController extends Controller
 
         $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
         $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('Upcoming');
 
         return view('games.upcomingReleases', $bindings);
     }
@@ -82,6 +89,7 @@ class GamesController extends Controller
 
         $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('On sale');
 
         $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
         $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(50);
@@ -110,6 +118,8 @@ class GamesController extends Controller
             $redirUrl = sprintf('/games/%s/%s', $gameId, $gameData->link_title);
             return redirect($redirUrl, 301);
         }
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage($gameData->title);
 
         // Main data
         $bindings['TopTitle'] = $gameData->title.' Nintendo Switch reviews';

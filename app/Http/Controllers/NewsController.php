@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
@@ -19,19 +20,24 @@ class NewsController extends Controller
 
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $viewBreadcrumbs;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()
     {
         $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('News');
 
         $newsList = $this->getServiceNews()->getPaginated(12);
 
@@ -54,6 +60,8 @@ class NewsController extends Controller
         $categoryId = $category->id;
         $categoryName = $category->name;
 
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($categoryName);
+
         $newsList = $this->getServiceNews()->getPaginatedByCategory($categoryId, 12);
 
         $bindings['NewsList'] = $newsList;
@@ -68,7 +76,6 @@ class NewsController extends Controller
     public function displayContent()
     {
         $serviceNews = $this->getServiceNews();
-        $serviceGame = $this->getServiceGame();
 
         $request = request();
         $requestUri = $request->getPathInfo();
@@ -82,6 +89,8 @@ class NewsController extends Controller
         $bindings['PageTitle'] = $newsItem->title;
         $bindings['TopTitle'] = $newsItem->title;
         $bindings['NewsItem'] = $newsItem;
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($newsItem->title);
 
         // Content
         $contentHtml = $newsItem->content_html;

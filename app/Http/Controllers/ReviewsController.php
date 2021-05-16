@@ -4,15 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 
 class ReviewsController extends Controller
 {
     use SwitchServices;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function landing()
     {
         $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Reviews');
 
         $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
         $bindings['PageTitle'] = 'Reviews';
@@ -37,6 +50,12 @@ class ReviewsController extends Controller
     public function landingByYear($year)
     {
         $bindings = [];
+
+        $bindings['TopTitle'] = 'Review stats - '.$year;
+        $bindings['PageTitle'] = 'Review stats - '.$year;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage('Review stats - '.$year);
+
+        $bindings['ReviewYear'] = $year;
 
         // Review counts
         $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
@@ -82,11 +101,6 @@ class ReviewsController extends Controller
         $bindings['DateList'] = $dateListArray;
         $bindings['ReviewTotal'.$year] = $reviewTotal;
 
-        $bindings['ReviewYear'] = $year;
-
-        $bindings['TopTitle'] = 'Review stats - '.$year;
-        $bindings['PageTitle'] = 'Review stats - '.$year;
-
         return view('reviews.landingByYear', $bindings);
     }
 
@@ -107,6 +121,7 @@ class ReviewsController extends Controller
 
         $bindings['TopTitle'] = $reviewSite->name.' - Site profile';
         $bindings['PageTitle'] = $reviewSite->name.' - Site profile';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage($reviewSite->name.' - Site profile');
 
         $bindings['PartnerData'] = $reviewSite;
 

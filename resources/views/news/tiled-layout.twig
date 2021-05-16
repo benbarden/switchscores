@@ -1,16 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% if DisplayMode == 'category' %}
-    {% set crumbNav = [
-        {'url': route('news.landing'), 'text': 'News'},
-        {'text': PageTitle}
-    ] %}
-{% else %}
-    {% set crumbNav = [
-        {'text': 'News'}
-    ] %}
-{% endif %}
-
 {% block page_body %}
 
 {% for newsItem in NewsList|batch(3, null) %}

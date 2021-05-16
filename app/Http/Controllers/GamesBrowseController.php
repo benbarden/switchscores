@@ -9,6 +9,7 @@ use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 use App\Traits\SwitchServices;
 
@@ -21,13 +22,15 @@ class GamesBrowseController extends Controller
     protected $repoTag;
     protected $repoTagCategory;
     protected $repoGameCollection;
+    protected $viewBreadcrumbs;
 
     public function __construct(
         GameListsRepository $repoGameLists,
         GameListsDbQueries $dbGameLists,
         TagRepository $repoTag,
         TagCategoryRepository $repoTagCategory,
-        GameCollectionRepository $repoGameCollection
+        GameCollectionRepository $repoGameCollection,
+        Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoGameLists = $repoGameLists;
@@ -35,6 +38,7 @@ class GamesBrowseController extends Controller
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
         $this->repoGameCollection = $repoGameCollection;
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function byTitleLanding()
@@ -43,6 +47,7 @@ class GamesBrowseController extends Controller
 
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by title';
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by title';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By title');
 
         $bindings['LetterList'] = range('A', 'Z');
 
@@ -60,6 +65,7 @@ class GamesBrowseController extends Controller
 
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTitleSubpage($letter);
 
         return view('games.browse.byTitlePage', $bindings);
     }
@@ -72,30 +78,9 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by category';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by category';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By category');
 
         return view('games.browse.byCategoryLanding', $bindings);
-    }
-
-    public function byCategoryPageOld($category)
-    {
-        $bindings = [];
-
-        $category = $this->getServiceCategory()->getByLinkTitle($category);
-        if (!$category) abort(404);
-
-        $categoryId = $category->id;
-        $categoryName = $category->name;
-
-        $bindings['Category'] = $category;
-
-        $bindings['CategoryGameCount'] = $this->getServiceCategory()->countReleasedByCategory($categoryId);
-        $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($categoryId);
-        $bindings['UnrankedGameList'] = $this->getServiceCategory()->getUnrankedByCategory($categoryId);
-
-        $bindings['PageTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
-        $bindings['TopTitle'] = 'Best '.$categoryName.' Nintendo Switch games';
-
-        return view('games.browse.byCategoryPage', $bindings);
     }
 
     public function byCategoryPage($category)
@@ -123,6 +108,13 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Nintendo Switch '.$categoryName.' games';
         $bindings['TopTitle'] = 'Nintendo Switch '.$categoryName.' games';
+        if ($category->parent_id) {
+            $categoryParent = $this->getServiceCategory()->find($category->parent_id);
+            if (!$categoryParent) abort(500);
+            $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySubcategorySubpage($categoryParent, $categoryName);
+        } else {
+            $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCategorySubpage($categoryName);
+        }
 
         return view('games.browse.byCategoryPage', $bindings);
     }
@@ -148,6 +140,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by series';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by series';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By series');
 
         return view('games.browse.bySeriesLanding', $bindings);
     }
@@ -168,6 +161,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySeriesSubpage($seriesName);
 
         return view('games.browse.bySeriesPage', $bindings);
     }
@@ -180,6 +174,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by collection';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by collection';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By collection');
 
         return view('games.browse.byCollectionLanding', $bindings);
     }
@@ -200,6 +195,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by collection: '.$collectionName;
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by collection: '.$collectionName;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCollectionSubpage($collectionName);
 
         return view('games.browse.byCollectionPage', $bindings);
     }
@@ -212,6 +208,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By tag');
 
         return view('games.browse.byTagLanding', $bindings);
     }
@@ -233,6 +230,7 @@ class GamesBrowseController extends Controller
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTagSubpage($tagName);
 
         return view('games.browse.byTagPage', $bindings);
     }
@@ -241,8 +239,9 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Nintendo Switch games by release date:';
-        $bindings['PageTitle'] = 'Nintendo Switch games by release date:';
+        $bindings['TopTitle'] = 'Nintendo Switch games by release date';
+        $bindings['PageTitle'] = 'Nintendo Switch games by release date';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By date');
 
         $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
         $dateListArray = [];
@@ -330,6 +329,7 @@ class GamesBrowseController extends Controller
 
         $bindings['TopTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
         $bindings['PageTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByDateSubpage($dtDateDesc);
 
         $bindings['CalendarDateDesc'] = $dtDateDesc;
         $bindings['CalendarDateUrl'] = $dateUrl;

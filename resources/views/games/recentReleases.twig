@@ -1,7 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('games.landing'), 'text': 'Games'}, {'text': 'Recent releases'}] %}
-
 {% block page_body %}
 
 {% include 'games/navBrowse.twig' with {'currentNav': 'btn-nav-recent'} %}

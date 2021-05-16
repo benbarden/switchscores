@@ -1,7 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
 
-{% set crumbNav = [{'url': route('topRated.landing'), 'text': 'Top rated'}, {'text': Year}] %}
-
 {% block page_body %}
 
 {% include 'topRated/navTopLinks.twig' with {'currentNav': 'btn-nav-'~Year} %}

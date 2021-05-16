@@ -74,18 +74,7 @@
     <div class="container">
         <div class="row">
             <div id="wos-body" class="col-sm-12">
-                {% if crumbNav is defined %}
-                <ol class="breadcrumb" style="border: 0; margin-bottom: 5px !important;">
-                    <li><a href="{{ route('welcome') }}">Home</a></li>
-                    {% for item in crumbNav %}
-                        {% if loop.last %}
-                            <li>{{ item.text }}</li>
-                        {% else %}
-                            <li class="active"><a href="{{ item.url }}">{{ item.text }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                </ol>
-                {% endif %}
+                {% include 'theme/wos/breadcrumbs.twig' %}
                 {% if hideHeader is not defined %}
                 <h1>
                     {{ PageTitle }}

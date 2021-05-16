@@ -6,15 +6,28 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Partner;
 
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 
 class PartnersController extends Controller
 {
     use SwitchServices;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function landing()
     {
         $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Partners');
 
         $servicePartner = $this->getServicePartner();
         $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
@@ -29,12 +42,14 @@ class PartnersController extends Controller
     public function guidesShow($guideTitle)
     {
         $bindings = [];
+
         $guide = [];
         $guideView = '';
 
         switch ($guideTitle) {
             case 'new-review-site-welcome':
                 $guide['title'] = 'New review site welcome guide';
+                $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($guide['title']);
                 $guideView = 'partners.guides.newReviewSiteWelcome';
                 break;
             default:
@@ -51,6 +66,8 @@ class PartnersController extends Controller
     {
         $bindings = [];
 
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage('Review partners');
+
         $bindings['TopTitle'] = 'Review partners';
         $bindings['PageTitle'] = 'Review partners';
 
@@ -60,6 +77,8 @@ class PartnersController extends Controller
     public function developersPublishers()
     {
         $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage('Developers and publishers');
 
         $bindings['TopTitle'] = 'Developers and Publishers';
         $bindings['PageTitle'] = 'Developers and Publishers';
@@ -87,6 +106,8 @@ class PartnersController extends Controller
         $mergedGameList = collect($mergedGameList)->sortBy('eu_release_date')->reverse()->toArray();
 
         $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($partnerData->name);
 
         $bindings['TopTitle'] = $partnerData->name;
         $bindings['PageTitle'] = $partnerData->name;
