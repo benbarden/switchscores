@@ -29,7 +29,7 @@
                 {{ RankedGameList|length }} ranked
                 <span class="h5">(3 reviews or more)</span>
             </h2>
-            {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': RankedGameList} %}
+            {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': RankedGameList} %}
         </div>
     {% else %}
         {% set NoRankedGames = 'Y' %}
@@ -48,7 +48,7 @@
             {{ UnrankedGameList|length }} unranked
             <span class="h5">(2 reviews or fewer)</span>
         </h2>
-        {% include 'modules/game/grid/standard-no-hero.twig' with {'GameList': UnrankedGameList, 'batchOverride': batchOverride} %}
+        {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': UnrankedGameList, 'batchOverride': batchOverride} %}
     </div>
     {% endif %}
 </div>
