@@ -29,6 +29,7 @@ sudo apt-get install php7.2 -y
 sudo apt-get install php7.2-cli -y
 sudo apt-get install php7.2-common -y
 sudo apt-get install php7.2-curl -y
+sudo apt-get install php7.2-gd -y
 sudo apt-get install php7.2-json -y
 sudo apt-get install php7.2-opcache -y
 sudo apt-get install php7.2-mysql -y

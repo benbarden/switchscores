@@ -9,6 +9,7 @@
 /public/img/games/*
 /public/img/ps-square/*
 /public/img/ps-header/*
+/public/img/gen/series/*
 /storage/*.key
 /storage/tmp/*
 /vagrant-tmp/*

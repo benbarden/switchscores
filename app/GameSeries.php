@@ -15,7 +15,7 @@ class GameSeries extends Model
      * @var array
      */
     protected $fillable = [
-        'series', 'link_title'
+        'series', 'link_title', 'landing_image'
     ];
 
     public function games()

@@ -150,6 +150,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -214,9 +215,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // Third-party
         'Twig' => TwigBridge\Facade\Twig::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
-        // WOS
+        // Switch Scores
 
         'DateHelper' => App\Helpers\DateHelper::class,
         'ImageHelper' => App\Helpers\ImageHelper::class,

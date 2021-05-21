@@ -4,6 +4,7 @@
 namespace App\Domain\GameLists;
 
 use App\Game;
+use App\GameSeries;
 
 class Repository
 {
@@ -51,7 +52,6 @@ class Repository
         }
 
         return $games->get();
-
     }
 
     public function byCollection($collectionId, $limit = null)
@@ -65,7 +65,25 @@ class Repository
         }
 
         return $games->get();
+    }
 
+    public function bySeries(GameSeries $gameSeries)
+    {
+        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
+    }
+
+    public function bySeriesWithImages(GameSeries $gameSeries, $limit = null)
+    {
+        $games = Game::where('series_id', $gameSeries->id)
+            ->whereNotNull('image_header')
+            ->whereNotNull('image_square')
+            ->orderBy('rating_avg', 'desc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
     }
 
     public function recentWithGoodRanks($minimumRating = 7, $dateInterval = 30, $limit = 15)
