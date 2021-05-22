@@ -1,13 +1,11 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Domain\GameSeries;
 
-use Illuminate\Support\Facades\DB;
 use App\GameSeries;
 
-
-class GameSeriesService
+class Repository
 {
     public function create($name, $linkTitle)
     {
@@ -15,6 +13,17 @@ class GameSeriesService
             'series' => $name,
             'link_title' => $linkTitle
         ]);
+    }
+
+    public function edit(GameSeries $collection, $name, $linkTitle)
+    {
+        $values = [
+            'series' => $name,
+            'link_title' => $linkTitle,
+        ];
+
+        $collection->fill($values);
+        $collection->save();
     }
 
     public function find($seriesId)
@@ -27,23 +36,14 @@ class GameSeriesService
         GameSeries::where('id', $seriesId)->delete();
     }
 
-    /**
-     * @return mixed
-     */
     public function getAll()
     {
-        $seriesList = GameSeries::
-            orderBy('series', 'asc')
-            ->get();
-        return $seriesList;
+        return GameSeries::orderBy('series', 'asc')->get();
     }
 
     public function getByName($name)
     {
-        $series = GameSeries::
-            where('series', $name)
-            ->first();
-        return $series;
+        return GameSeries::where('series', $name)->first();
     }
 
     public function getByLinkTitle($linkTitle)
