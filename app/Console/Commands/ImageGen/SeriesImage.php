@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\SwitchServices;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
 use Intervention\Image\Facades\Image;
 
@@ -30,6 +31,7 @@ class SeriesImage extends Command
     protected $description = 'Generate an image for a series';
 
     private $repoGameLists;
+    private $repoGameSeries;
 
     /**
      * Create a new command instance.
@@ -37,10 +39,12 @@ class SeriesImage extends Command
      * @return void
      */
     public function __construct(
-        GameListsRepository $repoGameLists
+        GameListsRepository $repoGameLists,
+        GameSeriesRepository $repoGameSeries
     )
     {
         $this->repoGameLists = $repoGameLists;
+        $this->repoGameSeries = $repoGameSeries;
         parent::__construct();
     }
 
@@ -53,7 +57,7 @@ class SeriesImage extends Command
     {
         $logger = Log::channel('cron');
 
-        $seriesList = $this->getServiceGameSeries()->getAll();
+        $seriesList = $this->repoGameSeries->getAll();
 
         foreach ($seriesList as $series) {
 

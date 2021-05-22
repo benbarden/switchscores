@@ -23,7 +23,6 @@ use App\Services\GameRankAllTimeService;
 use App\Services\GameRankYearService;
 use App\Services\GameRankYearMonthService;
 use App\Services\GameReleaseDateService;
-use App\Services\GameSeriesService;
 use App\Services\GameService;
 use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
@@ -258,14 +257,6 @@ trait SwitchServices
     public function getServiceGameReleaseDate()
     {
         return $this->loadService('GameReleaseDateService');
-    }
-
-    /**
-     * @return GameSeriesService
-     */
-    public function getServiceGameSeries()
-    {
-        return $this->loadService('GameSeriesService');
     }
 
     /**

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Domain\GameSeries;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\GameSeriesService;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
-class GameSeriesServiceProvider extends ServiceProvider
+class RepositoryProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -25,8 +25,8 @@ class GameSeriesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Services\GameSeriesService', function($app) {
-            return new GameSeriesService();
+        $this->app->bind('Domain\GameSeries\Repository', function($app) {
+            return new GameSeriesRepository();
         });
     }
 }

@@ -2,14 +2,10 @@
 
 {% block page_inner %}
 
-<h2>Add a game series</h2>
-<label for="txt-new-game-series-name">Name</label>
-<input id="txt-new-game-series-name" type="text" maxlength="50">
-<input id="btn-save-game-series" type="button" class="btn btn-primary" value="Save">
-<div id="js-new-game-series-notify" class="alert alert-success" role="alert" style="display: none;">
-</div>
+<a href="{{ route('staff.categorisation.game-series.add') }}" class="btn outline btn-primary">Add a series</a>
+<br>
+<br>
 
-<h2>All game series</h2>
 {% if GameSeriesList.count > 0 %}
     <table class="table data-sortable">
         <thead>
@@ -37,8 +33,9 @@
                         <a href="{{ route('staff.games.list.by-series', {'gameSeries': item}) }}">View games</a>
                     </td>
                     <td class="text-center">
+                        <a href="{{ route('staff.categorisation.game-series.edit', {'seriesId': item.id}) }}">Edit</a>
                         {% if item.games().count == 0 %}
-                            Delete
+                            : <a href="{{ route('staff.categorisation.game-series.delete', {'seriesId': item.id}) }}">Delete</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -62,33 +59,6 @@
                 null,
                 null
             ]
-        });
-    });
-    $('#btn-save-game-series').on('click', function() {
-
-        seriesName = $('#txt-new-game-series-name').val();
-        if (seriesName == '') {
-            $('#js-new-game-series-notify').text('No series name set.');
-            $('#js-new-game-series-notify').show();
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('staff.categorisation.game-series.add') }}', {seriesName: seriesName}, function(data) {
-            $('#js-new-game-series-notify').text('Game series saved!');
-            $('#js-new-game-series-notify').show();
-            $('#txt-new-game-series-name').val('');
-            setTimeout("$('#js-new-game-series-notify').fadeOut(); window.location.reload(true);", 1000);
-        })
-        .fail(function(data) {
-            $('#js-new-game-series-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-new-game-series-notify').show();
-            $('#txt-new-game-series-name').val('');
         });
     });
 </script>

@@ -25,6 +25,7 @@ use App\Services\Game\Images as GameImages;
 
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 
 use App\Game;
@@ -49,16 +50,19 @@ class GamesEditorController extends Controller
 
     protected $repoGameTitleHash;
     protected $gameTitleHashGenerator;
+    protected $repoGameSeries;
     protected $repoGameCollection;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
         HashGeneratorRepository $gameTitleHashGenerator,
+        GameSeriesRepository $repoGameSeries,
         GameCollectionRepository $repoGameCollection
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
         $this->gameTitleHashGenerator = $gameTitleHashGenerator;
+        $this->repoGameSeries = $repoGameSeries;
         $this->repoGameCollection = $repoGameCollection;
     }
 
@@ -128,7 +132,7 @@ class GamesEditorController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
-        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
@@ -169,7 +173,7 @@ class GamesEditorController extends Controller
         $bindings['GameId'] = $gameId;
 
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
-        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();

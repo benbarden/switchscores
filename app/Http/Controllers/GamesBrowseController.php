@@ -8,6 +8,7 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
@@ -21,6 +22,7 @@ class GamesBrowseController extends Controller
     protected $dbGameLists;
     protected $repoTag;
     protected $repoTagCategory;
+    protected $repoGameSeries;
     protected $repoGameCollection;
     protected $viewBreadcrumbs;
 
@@ -29,6 +31,7 @@ class GamesBrowseController extends Controller
         GameListsDbQueries $dbGameLists,
         TagRepository $repoTag,
         TagCategoryRepository $repoTagCategory,
+        GameSeriesRepository $repoGameSeries,
         GameCollectionRepository $repoGameCollection,
         Breadcrumbs $viewBreadcrumbs
     )
@@ -37,6 +40,7 @@ class GamesBrowseController extends Controller
         $this->dbGameLists = $dbGameLists;
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
+        $this->repoGameSeries = $repoGameSeries;
         $this->repoGameCollection = $repoGameCollection;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
@@ -136,7 +140,7 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $bindings['SeriesList'] = $this->getServiceGameSeries()->getAll();
+        $bindings['SeriesList'] = $this->repoGameSeries->getAll();
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by series';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by series';
@@ -149,7 +153,7 @@ class GamesBrowseController extends Controller
     {
         $bindings = [];
 
-        $gameSeries = $this->getServiceGameSeries()->getByLinkTitle($series);
+        $gameSeries = $this->repoGameSeries->getByLinkTitle($series);
         if (!$gameSeries) abort(404);
 
         $seriesId = $gameSeries->id;

@@ -361,7 +361,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
 
     // Series
     Route::get('/staff/categorisation/game-series/list', 'Staff\Categorisation\GameSeriesController@showList')->name('staff.categorisation.game-series.list');
-    Route::get('/staff/categorisation/game-series/add', 'Staff\Categorisation\GameSeriesController@addGameSeries')->name('staff.categorisation.game-series.add');
+    Route::match(['get', 'post'], '/staff/categorisation/game-series/add', 'Staff\Categorisation\GameSeriesController@addSeries')->name('staff.categorisation.game-series.add');
+    Route::match(['get', 'post'], '/staff/categorisation/game-series/edit/{seriesId}', 'Staff\Categorisation\GameSeriesController@editSeries')->name('staff.categorisation.game-series.edit');
+    Route::match(['get', 'post'], '/staff/categorisation/game-series/delete/{seriesId}', 'Staff\Categorisation\GameSeriesController@deleteSeries')->name('staff.categorisation.game-series.delete');
 
     // Tags
     Route::get('/staff/categorisation/tag/list', 'Staff\Categorisation\TagController@showList')->name('staff.categorisation.tag.list');

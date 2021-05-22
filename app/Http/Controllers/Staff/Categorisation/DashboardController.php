@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use App\Domain\GameStats\Repository as GameStatsRepository;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -20,12 +22,15 @@ class DashboardController extends Controller
     use StaffView;
 
     protected $repoGameStats;
+    protected $repoGameSeries;
 
     public function __construct(
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        GameSeriesRepository $repoGameSeries
     )
     {
         $this->repoGameStats = $repoGameStats;
+        $this->repoGameSeries = $repoGameSeries;
     }
 
     private function getCategoryMatchesStats()
@@ -60,7 +65,7 @@ class DashboardController extends Controller
 
     private function getSeriesMatchesStats()
     {
-        $seriesList = $this->getServiceGameSeries()->getAll();
+        $seriesList = $this->repoGameSeries->getAll();
 
         $seriesArray = [];
 
