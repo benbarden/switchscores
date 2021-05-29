@@ -44,6 +44,17 @@
         </tr>
     {% endif %}
 
+    {% if GameData.collection_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Collection</span>
+            </td>
+            <td>
+                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">{{ GameData.gameCollection.name }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
     <tr>
         <td style="width: 150px;">
             <span style="font-weight: bold;">Players</span>
