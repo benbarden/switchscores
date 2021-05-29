@@ -519,6 +519,13 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::match(['get', 'post'], '/owner/user/edit/{userId}', 'Owner\UserController@editUser')->name('owner.user.edit');
     Route::match(['get', 'post'], '/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
 
+    // Invite codes
+    Route::get('/owner/invite-code/list', 'Owner\InviteCodeController@showList')->name('owner.invite-code.list');
+    Route::match(['get', 'post'], '/owner/invite-code/add', 'Owner\InviteCodeController@addInviteCode')->name('owner.invite-code.add');
+    Route::match(['get', 'post'], '/owner/invite-code/edit/{inviteCodeId}', 'Owner\InviteCodeController@editInviteCode')->name('owner.invite-code.edit');
+    Route::match(['get', 'post'], '/owner/invite-code/delete/{inviteCodeId}', 'Owner\InviteCodeController@deleteInviteCode')->name('owner.invite-code.delete');
+    Route::match(['get', 'post'], '/owner/invite-code/generate-codes', 'Owner\InviteCodeController@generateCodes')->name('owner.invite-code.generate-codes');
+
     // Audit
     Route::get('/owner/audit/index', 'Owner\AuditController@index')->name('owner.audit.index');
     Route::get('/owner/audit/{reportName}', 'Owner\AuditController@showReport')->name('owner.audit.report');

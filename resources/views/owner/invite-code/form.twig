@@ -1,0 +1,48 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="invite_code" class="col-md-4 control-label">Invite code</label>
+        <div class="col-md-6">
+            <input id="invite_code" name="invite_code" type="text" class="form-control" required>
+            <small>Must be unique.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="times_used" class="col-md-4 control-label">Times used</label>
+        <div class="col-md-6">
+            <input id="times_used" name="times_used" type="text" class="form-control">
+            <small>Will be auto-populated as the code is used.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="times_left" class="col-md-4 control-label">Times left</label>
+        <div class="col-md-6">
+            <input id="times_left" name="times_left" type="text" class="form-control">
+            <small>Set to 1 for a single-use code, or more for multi-use.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="is_active" class="col-md-4 control-label">Is active?</label>
+        <div class="col-md-6">
+            <div class="checkbox">
+                <label>
+                    <input id="is_active" name="is_active" class="checkbox" type="checkbox">
+                </label>
+                <small><label for="is_active">Untick to disable access to the code.</label></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>

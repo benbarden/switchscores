@@ -17,7 +17,8 @@ class User extends Authenticatable
         'is_admin', 'is_owner', 'is_staff', 'is_developer', 'user_roles',
         'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'points_balance',
-        'signup_alpha', 'signup_beta', 'last_access_date', 'is_games_company'
+        'signup_alpha', 'signup_beta', 'last_access_date', 'is_games_company',
+        'invite_code_id'
     ];
 
     /**
@@ -102,6 +103,11 @@ class User extends Authenticatable
     public function pointsTransactions()
     {
         return $this->hasMany('App\UserPointTransaction', 'user_id', 'id');
+    }
+
+    public function inviteCode()
+    {
+        return $this->hasOne('App\InviteCode', 'id', 'invite_code_id');
     }
 
     // Roles

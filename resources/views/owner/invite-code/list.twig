@@ -1,0 +1,72 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<a href="{{ route('owner.invite-code.add') }}" class="btn outline btn-primary">Add code manually</a>
+<a href="{{ route('owner.invite-code.generate-codes') }}" class="btn outline btn-primary">Generate codes</a>
+<hr>
+
+{% if InviteCodeList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-right">#</th>
+                <th class="text-left">Code</th>
+                <th class="text-center">Times used</th>
+                <th class="text-center">Times left</th>
+                <th class="text-center">Is active?</th>
+                <th class="text-center">Created</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in InviteCodeList %}
+                <tr>
+                    <td class="text-right">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        <span style="font-family: Monospace">
+                            {{ item.invite_code }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        {{ item.times_used }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.times_left }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.is_active == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at|date('Y-m-d') }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('owner.invite-code.edit', {'inviteCodeId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('owner.invite-code.delete', {'inviteCodeId': item.id}) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No invite codes found!</p>
+{% endif %}
+
+{% include 'common/table-sorting.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 6 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

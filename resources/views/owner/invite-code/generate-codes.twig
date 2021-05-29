@@ -1,0 +1,31 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('owner.invite-code.generate-codes') %}
+{% include 'common/form-errors.twig' %}
+    <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+        {{ csrf_field() }}
+
+        <div class="form-group">
+            <label for="codes_count" class="col-md-4 control-label">Number of codes to generate</label>
+            <div class="col-md-6">
+                <input id="codes_count" name="codes_count" type="text" class="form-control">
+                <small>Enter a number from 1 to 10.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-4">
+                <button type="submit" class="btn outline btn-primary">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </form>
+
+<script>
+    $('#codes_count').focus();
+</script>
+
+{% endblock page_inner %}
