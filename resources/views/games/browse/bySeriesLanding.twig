@@ -14,12 +14,12 @@
                     </a>
                 {% endif %}
                 <div class="row" style="margin: 15px 0;">
-                    <div class="col-md-10">
-                        <span class="h4">
+                    <div class="col-md-10" style="padding-left: 0;">
+                        <span class="h5">
                             <a href="{{ route('games.browse.bySeries.page', {'series': item.link_title}) }}">{{ item.series }}</a>
                         </span>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="padding-right: 0;">
                         <span class="h4 text-right">
                             {{ item.games.count }}
                         </span>
