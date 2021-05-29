@@ -24,14 +24,22 @@
                                 {{ item.yearmonth }}
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('staff.data-quality.games-with-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                {% if item.release_year and item.release_month %}
+                                    <a href="{{ route('staff.data-quality.games-with-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                        {{ item.has_category }}
+                                    </a>
+                                {% else %}
                                     {{ item.has_category }}
-                                </a>
+                                {% endif %}
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('staff.data-quality.games-without-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                {% if item.release_year and item.release_month %}
+                                    <a href="{{ route('staff.data-quality.games-without-categories', {'year': item.release_year, 'month': item.release_month}) }}">
+                                        {{ item.no_category }}
+                                    </a>
+                                {% else %}
                                     {{ item.no_category }}
-                                </a>
+                                {% endif %}
                             </td>
                             <td class="text-center">{{ item.total_count }}</td>
                             <td class="text-center">
