@@ -7,13 +7,13 @@
 {% if SeriesList %}
     <div class="row">
         {% for item in SeriesList %}
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {% if item.landing_image %}
                     <a href="{{ route('games.browse.bySeries.page', {'series': item.link_title}) }}">
                         <img src="/img/gen/series/{{ item.landing_image }}" alt="{{ item.series }}" title="{{ item.series }}" style="border: 0;" class="img-responsive">
                     </a>
                 {% endif %}
-                <div class="row" style="margin: 10px 0;">
+                <div class="row" style="margin: 15px 0;">
                     <div class="col-md-10">
                         <span class="h4">
                             <a href="{{ route('games.browse.bySeries.page', {'series': item.link_title}) }}">{{ item.series }}</a>

@@ -67,8 +67,8 @@ class SeriesImage extends Command
             $seriesFilename = $series->link_title.'.jpg';
 
             // Make a blank canvas to put the images onto.
-            $imageWidth = 500;
-            $img = Image::canvas($imageWidth, 250, '#ccc');
+            $imageWidth = 400;
+            $img = Image::canvas($imageWidth, 200, '#ccc');
 
             if (count($gamesWithSeries) == 0) {
                 // Just save the blank image and go to the next record
@@ -96,9 +96,12 @@ class SeriesImage extends Command
                     $imageSquareFullPath = 'public/img/ps-square/'.$imageSquare;
                     if (file_exists($imageSquareFullPath)) {
                         $gameImage = Image::make($imageSquareFullPath);
-                        $gameImage->resize(250, 250);
+                        $gameImage->resize(200, 200);
+                        if (count($gamesWithSeries) == 3) {
+                            $gameImage->crop(200, 200, 25, 0);
+                        }
 
-                        $img->insert($gameImage, 'top-left', $imageOffset, 0);
+                        $img->insert($gameImage, 'left', $imageOffset, 0);
                     } else {
                         $logger->error($imageSquareFullPath.' - File not found');
                     }
