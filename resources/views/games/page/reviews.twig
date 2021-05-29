@@ -4,19 +4,14 @@
     </h2>
     {% if GameReviews.count > 0 %}
         <table class="table table-condensed table-responsive game-page-review-table">
-            <thead>
-                <tr>
-                    <th>Site</th>
-                    <th class="text-center">Rating</th>
-                    <th class="text-center">Review date</th>
-                    <th class="text-center">Link</th>
-                </tr>
-            </thead>
             <tbody>
                 {% for Review in GameReviews %}
                     <tr class="review-header">
+                        <td class="text-left">
+                            {{ Review.review_date|date('jS M Y') }}
+                        </td>
                         <td>
-                            <a href="{{ route('reviews.site', {'linkTitle': Review.site.link_title}) }}">{{ Review.site.name }}</a>
+                            {{ Review.site.name }}
                         </td>
                         <td class="text-center">
                             {% if Review.rating_normalised %}
@@ -26,15 +21,15 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            {{ Review.review_date|date('jS M Y') }}
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ Review.url }}" target="_blank">Go to review</a>
+                            <a href="{{ Review.url }}" target="_blank" title="Go to review (will open in new tab)">
+                                Read review
+                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            </a>
                         </td>
                     </tr>
                     {% if Review.description %}
                         <tr class="review-description">
-                            <td colspan="4">
+                            <td colspan="3">
                                 {{ Review.description }}
                             </td>
                         </tr>

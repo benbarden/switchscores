@@ -265,9 +265,9 @@ class ReviewLinkService
             ->join('partners', 'review_links.site_id', '=', 'partners.id')
             ->where('game_id', $gameId)
             ->where('partners.status', '=', Partner::STATUS_ACTIVE)
-            ->orderBy('review_links.rating_normalised', 'asc')
-            //->orderBy('review_links.review_date', 'desc')
-            //->orderBy('partners.name', 'asc')
+            ->orderBy('review_links.rating_normalised', 'desc')
+            ->orderBy('review_links.review_date', 'asc')
+            ->orderBy('partners.last_review_date', 'desc')
             ->get();
         return $gameReviews;
     }

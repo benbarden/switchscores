@@ -198,7 +198,7 @@ class GamesController extends Controller
             if ($gameData->game_rank) {
 
                 $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
-                    'with a total of '.$gameData->review_count.' reviews. It has an average rating of '.$gameData->rating_avg.'.';
+                    'with a total of '.$gameData->review_count.' reviews and an average score of '.$gameData->rating_avg.'. ';
 
             } elseif ($gameData->eu_is_released == 1) {
 
@@ -218,6 +218,18 @@ class GamesController extends Controller
                 }
 
             }
+
+        }
+
+        if ($gameData->series_id) {
+
+            $blurb .= 'It is part of the '.$gameData->series->series.' series. ';
+
+        }
+
+        if ($gameData->collection_id) {
+
+            $blurb .= 'It is part of the '.$gameData->gameCollection->name.' collection. ';
 
         }
 
