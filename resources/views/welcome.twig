@@ -68,30 +68,14 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
+        {#
         <h2 class="standout-header">
             Latest news
         </h2>
         <div class="row">
             {% include 'news/tiled-item.twig' with {'item': LatestNewsPost, 'batchOverride': 1} %}
         </div>
-
-        {% if FeaturedGameList %}
-            <h2 class="standout-header">
-                Featured game
-            </h2>
-            <p>
-                <small>
-                    Featured games are titles that look interesting or unusual. You might like to
-                    check them out. They are selected by members and staff.
-                </small>
-            </p>
-            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
-            {#
-            <div class="label label-success">
-                {{ FeaturedGameData.getTypeDesc() }}
-            </div>
-            #}
-        {% endif %}
+        #}
 
         {#
         <h2 class="standout-header">Recent member reviews</h2>
@@ -119,6 +103,24 @@
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
+
+        {% if FeaturedGameList %}
+            <h2 class="standout-header">
+                Featured game
+            </h2>
+            <p>
+                <small>
+                    Featured games are titles that look interesting or unusual. You might like to
+                    check them out. They are selected by members and staff.
+                </small>
+            </p>
+            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+            {#
+            <div class="label label-success">
+                {{ FeaturedGameData.getTypeDesc() }}
+            </div>
+            #}
+        {% endif %}
 
     </div>
 
