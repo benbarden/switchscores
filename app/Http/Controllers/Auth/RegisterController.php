@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserCreated;
-use App\User;
-
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\View;
+
+use App\Events\UserCreated;
+use App\User;
+
+use App\Domain\InviteCode\Repository as InviteCodeRepository;
+use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 
 class RegisterController extends Controller
 {
@@ -32,13 +35,19 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
 
+    private $repoInviteCode;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        InviteCodeRepository $repoInviteCode
+    )
     {
+        $this->repoInviteCode = $repoInviteCode;
+
         $this->middleware('guest');
         View::share('PageTitle', 'Register');
         View::share('TopTitle', 'Register');
@@ -64,6 +73,21 @@ class RegisterController extends Controller
             ],
             'signup_email' => 'required|string|email|min:6|max:100|unique:users,email',
             'signup_pass' => 'required|string|min:6|confirmed',
+            'invite_code' => [
+                'required', 'string',
+                function($attribute, $value, $fail) {
+                    $inviteCode = $this->repoInviteCode->getByCode($value);
+                    if (!$inviteCode) {
+                        return $fail('Invalid invite code.');
+                    } else {
+                        if ($inviteCode->is_active == 0) {
+                            return $fail('Invalid invite code.');
+                        } elseif ($inviteCode->times_left == 0) {
+                            return $fail('Invalid invite code.');
+                        }
+                    }
+                }
+            ]
         ]);
     }
 
@@ -75,8 +99,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        abort(404);
-        /*
         $values = [];
         if (array_key_exists('signup_name', $data)) {
             $values['display_name'] = $data['signup_name'];
@@ -93,12 +115,23 @@ class RegisterController extends Controller
         if (array_key_exists('signup_beta', $data)) {
             $values['signup_beta'] = $data['signup_beta'];
         }
+        if (array_key_exists('invite_code', $data)) {
+            $inviteCode = $this->repoInviteCode->getByCode($data['invite_code']);
+            $values['invite_code_id'] = $inviteCode->id;
+            $hasInviteCode = true;
+        } else {
+            $hasInviteCode = false;
+        }
 
         $user = User::create($values);
+
+        if ($hasInviteCode) {
+            $redeemInviteCode = new InviteCodeRedemption($inviteCode);
+            $redeemInviteCode->redeemOnce();
+        }
 
         event(new UserCreated($user));
 
         return $user;
-        */
     }
 }

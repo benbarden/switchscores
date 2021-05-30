@@ -86,6 +86,6 @@ class Collections extends Migration
             $table->dropColumn('collection_id');
         });
 
-        Schema::dropIfExists('collections');
+        Schema::dropIfExists('game_collections');
     }
 }

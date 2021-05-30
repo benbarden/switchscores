@@ -64,6 +64,16 @@
                 </td>
             </tr>
             <tr>
+                <td style="font-weight: bold;">Invite code</td>
+                <td>
+                    {% if UserData.invite_code_id %}
+                        {{ UserData.inviteCode.invite_code }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <td style="font-weight: bold;">Twitter</td>
                 <td>
                     {% if UserData.twitter_name %}

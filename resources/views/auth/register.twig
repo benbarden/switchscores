@@ -6,16 +6,24 @@
 
     <div class="col-md-12">
 
-        <div class="alert alert-warning">
-            Registration with email and password has been disabled. You can still register with Twitter -
-            to do so, <a href="{{ route('login') }}" style="color: #fff; font-weight: bold;">go to the login screen</a>
+        <p>
+            To register with your email address and a password, you need an invite code. This is
+            to stop spam. <a href="{{ route('about.landing') }}">Get in touch</a> and we'll be happy
+            to give you a code.
+        </p>
+        <p>
+            You can also register with Twitter - this doesn't need a code.
+            <a href="{{ route('login') }}">Go to the login screen</a>
             and click the Twitter button.
-        </div>
+        </p>
+
         <h3>Enter your details</h3>
         {% if errors.any %}
-            {% for error in errors.all %}
-                <p>{{ error }}</p>
-            {% endfor %}
+            <div class="alert alert-danger">
+                {% for error in errors.all %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
         {% endif %}
         <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
             {{ csrf_field() }}
@@ -49,6 +57,14 @@
 
                 <div class="col-md-4">
                     <input id="signup_pass_confirmation" type="password" class="form-control" name="signup_pass_confirmation" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="invite_code" class="col-md-2 control-label">Invite code</label>
+
+                <div class="col-md-4">
+                    <input id="invite_code" type="text" class="form-control" name="invite_code" value="{{ old('invite_code') }}" maxlength="50" required>
                 </div>
             </div>
 
