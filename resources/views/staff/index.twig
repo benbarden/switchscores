@@ -6,7 +6,7 @@
 
     <div class="col-md-4">
 
-        <h2>Submissions</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Submissions'} %}
 
         <table class="table">
             <tbody>
@@ -53,7 +53,7 @@
             </tbody>
         </table>
 
-        <h2>Games to add</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Games to add'} %}
 
         <table class="table">
             <tbody>
@@ -80,7 +80,7 @@
             </tbody>
         </table>
 
-        <h2>Missing data</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Missing data'} %}
 
         <table class="table">
             <tbody>
@@ -120,7 +120,7 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            <h2>New games</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'New games'} %}
             {% if RecentlyAddedGames.count > 0 %}
                 <table class="table table-responsive">
                     <tbody>
@@ -149,7 +149,7 @@
     <div class="col-md-4">
 
         {% if auth_user().isOwner() %}
-            <h2>Owner links</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Owner links'} %}
             <table class="table">
                 <tbody>
                 <tr>
@@ -183,7 +183,7 @@
         {% endif %}
 
         {% if auth_user().isOwner() %}
-            <h2>Data integrity</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Data integrity'} %}
 
             <table class="table">
                 <tbody>
@@ -200,7 +200,7 @@
         {% endif %}
 
         {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-            <h2>Recent imports</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Recent imports'} %}
             {% if ReviewFeedImportList.count > 0 %}
                 <table class="table table-responsive">
                     <thead>
