@@ -50,11 +50,11 @@ class SearchController extends Controller
 
         $request = request();
 
-        if ($request->isMethod('post')) {
+        if ($request->isMethod('get')) {
 
             $this->validate($request, $this->validationRules);
 
-            $searchResults = $this->searchBuilder->build($request->post(), $bindings);
+            $searchResults = $this->searchBuilder->build($request->all(), $bindings);
             $bindings['SearchResults'] = $searchResults;
 
         }
