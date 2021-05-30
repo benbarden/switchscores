@@ -5,8 +5,19 @@ namespace App\Domain\GameSearch;
 
 use App\Game;
 
+use App\Domain\Category\Repository as CategoryRepository;
+
 class Builder
 {
+    private $repoCategory;
+
+    public function __construct(
+        CategoryRepository $repoCategory
+    )
+    {
+        $this->repoCategory = $repoCategory;
+    }
+
     public function build($params, &$bindings)
     {
         $paramsEntered = 0;
@@ -60,6 +71,25 @@ class Builder
 
         if ($paramsEntered == 0) return null;
 
+        // Category id list
+        if ($categoryId) {
+
+            $categoryIdList = [$categoryId];
+            $category = $this->repoCategory->find($categoryId);
+            if ($category) {
+                if ($category->children) {
+                    foreach ($category->children as $child) {
+                        $categoryIdList[] = $child->id;
+                    }
+                }
+            }
+
+        } else {
+
+            $categoryIdList = null;
+
+        }
+
         // Re-populate form
         $bindings['SearchKeywords'] = $title;
         $bindings['SearchScoreMinimum'] = $scoreMinimum;
@@ -73,7 +103,7 @@ class Builder
             ->searchShowRankedUnranked($showRankedUnranked)
             ->searchScoreMinimum($scoreMinimum)
             ->searchPriceMaximum($priceMaximum)
-            ->searchCategoryId($categoryId)
+            ->searchCategoryId($categoryIdList)
             ->searchSeriesId($seriesId)
             ->searchCollectionId($collectionId);
 

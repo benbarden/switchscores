@@ -176,9 +176,9 @@ class Game extends Model implements Auditable
         if ($priceMaximum) $query->where('price_eshop', '<=', $priceMaximum);
     }
 
-    public function scopeSearchCategoryId($query, $categoryId)
+    public function scopeSearchCategoryId($query, $categoryIdList)
     {
-        if ($categoryId) $query->where('category_id', $categoryId);
+        if ($categoryIdList) $query->whereIn('category_id', $categoryIdList);
     }
 
     public function scopeSearchSeriesId($query, $seriesId)
