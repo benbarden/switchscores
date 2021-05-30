@@ -7,6 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\GameSearch\Builder as GameSearchBuilder;
+
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+
 use App\Traits\SwitchServices;
 
 class SearchController extends Controller
@@ -19,8 +24,23 @@ class SearchController extends Controller
      * @var array
      */
     private $validationRules = [
-        'search_keywords' => 'required|min:3',
+        //'search_keywords' => 'required|min:3',
     ];
+
+    private $searchBuilder;
+    protected $repoGameSeries;
+    protected $repoGameCollection;
+
+    public function __construct(
+        GameSearchBuilder $searchBuilder,
+        GameSeriesRepository $repoGameSeries,
+        GameCollectionRepository $repoGameCollection
+    )
+    {
+        $this->searchBuilder = $searchBuilder;
+        $this->repoGameSeries = $repoGameSeries;
+        $this->repoGameCollection = $repoGameCollection;
+    }
 
     public function show()
     {
@@ -34,14 +54,15 @@ class SearchController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $keywords = request()->search_keywords;
-
-            if ($keywords) {
-                $bindings['SearchKeywords'] = $keywords;
-                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
-            }
+            $searchResults = $this->searchBuilder->build($request->post(), $bindings);
+            $bindings['SearchResults'] = $searchResults;
 
         }
+
+        // Search options
+        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
+        $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;

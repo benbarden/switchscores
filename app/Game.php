@@ -118,7 +118,7 @@ class Game extends Model implements Auditable
     public function dspNintendoCoUk()
     {
         return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
-                    ->where('source_id', DataSource::DSID_NINTENDO_CO_UK);
+            ->where('source_id', DataSource::DSID_NINTENDO_CO_UK);
     }
 
     public function dspWikipedia()
@@ -146,5 +146,48 @@ class Game extends Model implements Auditable
         }
 
         return $videoType;
+    }
+
+    // Searches
+
+    public function scopeSearchTitle($query, $title)
+    {
+        if ($title) $query->where('title', 'like', '%'.$title.'%');
+    }
+
+    public function scopeSearchShowRankedUnranked($query, $showRankedUnranked)
+    {
+        if ($showRankedUnranked) {
+            if ($showRankedUnranked == 'Ranked') {
+                $query->whereNotNull('game_rank');
+            } elseif ($showRankedUnranked == 'Unranked') {
+                $query->whereNull('game_rank');
+            }
+        }
+    }
+
+    public function scopeSearchScoreMinimum($query, $scoreMinimum)
+    {
+        if ($scoreMinimum) $query->where('rating_avg', '>=', $scoreMinimum)->whereNotNull('game_rank');
+    }
+
+    public function scopeSearchPriceMaximum($query, $priceMaximum)
+    {
+        if ($priceMaximum) $query->where('price_eshop', '<=', $priceMaximum);
+    }
+
+    public function scopeSearchCategoryId($query, $categoryId)
+    {
+        if ($categoryId) $query->where('category_id', $categoryId);
+    }
+
+    public function scopeSearchSeriesId($query, $seriesId)
+    {
+        if ($seriesId) $query->where('series_id', $seriesId);
+    }
+
+    public function scopeSearchCollectionId($query, $collectionId)
+    {
+        if ($collectionId) $query->where('collection_id', $collectionId);
     }
 }

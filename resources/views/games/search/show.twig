@@ -7,21 +7,29 @@
 
 {% block page_body %}
 
-{% include 'modules/game/search/form.twig' with {'SearchResults': SearchResults} %}
+{% include 'modules/game/search/form.twig' with {'AdvancedSearch': 'Y', 'SearchResults': SearchResults} %}
 
 <div class="row">
     <div class="col-md-12">
         {% if SearchResults %}
-            <h2>Results</h2>
+            {% if SearchResults|length == 1 %}
+                {% set ResultsTitle = '1 result' %}
+            {% else %}
+                {% set ResultsTitle = SearchResults|length~' results' %}
+            {% endif %}
+            <h2>{{ ResultsTitle }}</h2>
             {% if SearchResults|length > 0 %}
-                {% if SearchResults|length == 1 %}
-                    <p>1 result found.</p>
-                {% else %}
-                    <p>{{ SearchResults|length }} results found.</p>
+                <p>
+                    {{ OrderingBlurb }}
+                </p>
+                {% if SearchResults|length == 200 %}
+                    <p>
+                        A maximum of 200 results are shown. Try narrowing your criteria a bit.
+                    </p>
                 {% endif %}
                 {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SearchResults, 'batchOverride': 3} %}
             {% else %}
-                <p>No results found.</p>
+                <p>No results. Try expanding your search criteria.</p>
             {% endif %}
         {% endif %}
     </div>

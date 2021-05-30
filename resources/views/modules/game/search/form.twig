@@ -5,7 +5,7 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="search_keywords" class="col-md-2 control-label">Search for a game:</label>
+                <label for="search_keywords" class="col-md-2 control-label">Name of game</label>
                 <div class="col-md-6">
                     <input id="search_keywords" name="search_keywords" type="text" class="form-control">
                 </div>
@@ -15,6 +15,75 @@
                     </button>
                 </div>
             </div>
+
+            {% if AdvancedSearch == 'Y' %}
+                <fieldset>
+
+                    <legend>Search options</legend>
+
+                    <div class="form-group">
+                        <label for="search_ranked_unranked" class="col-md-2 control-label">Show ranked/unranked</label>
+                        <div class="col-md-6">
+                            <select id="search_ranked_unranked" name="search_ranked_unranked" class="form-control">
+                                <option value="Show all">Show all</option>
+                                <option value="Ranked">Ranked only</option>
+                                <option value="Unranked">Unranked only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_score_minimum" class="col-md-2 control-label">Minimum score</label>
+                        <div class="col-md-6">
+                            <input id="search_score_minimum" name="search_score_minimum" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_price_maximum" class="col-md-2 control-label">Maximum price</label>
+                        <div class="col-md-6">
+                            <input id="search_price_maximum" name="search_price_maximum" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_category" class="col-md-2 control-label">Category</label>
+                        <div class="col-md-6">
+                            <select id="search_category" name="search_category" class="form-control">
+                                <option value=""></option>
+                                {% for item in CategoryList %}
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% if item.children %}
+                                        {% for child in item.children %}
+                                            <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_series" class="col-md-2 control-label">Series</label>
+                        <div class="col-md-6">
+                            <select id="search_series" name="search_series" class="form-control">
+                                <option value=""></option>
+                                {% for item in GameSeriesList %}
+                                    <option value="{{ item.id }}">{{ item.series }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_collection" class="col-md-2 control-label">Collection</label>
+                        <div class="col-md-6">
+                            <select id="search_collection" name="search_collection" class="form-control">
+                                <option value=""></option>
+                                {% for item in CollectionList %}
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                </fieldset>
+            {% endif %}
 
         </form>
     </div>
@@ -29,9 +98,35 @@
     {% endif %}
 
     var searchKeywords = '{{ SearchKeywords }}';
+    var searchShowRankedUnranked = '{{ SearchShowRankedUnranked }}';
+    var searchScoreMinimum = '{{ SearchScoreMinimum }}';
+    var searchPriceMaximum = '{{ SearchPriceMaximum }}';
+    var searchCategoryId = '{{ SearchCategoryId }}';
+    var searchSeriesId = '{{ SearchSeriesId }}';
+    var searchCollectionId = '{{ SearchCollectionId }}';
 
     if (searchKeywords != '') {
         $('#search_keywords').val(searchKeywords);
+    }
+    if (searchShowRankedUnranked != '') {
+        $('#search_ranked_unranked').val(searchShowRankedUnranked);
+    } else {
+        $('#search_ranked_unranked').val('Show all');
+    }
+    if (searchScoreMinimum != '') {
+        $('#search_score_minimum').val(searchScoreMinimum);
+    }
+    if (searchPriceMaximum != '') {
+        $('#search_price_maximum').val(searchPriceMaximum);
+    }
+    if (searchCategoryId != '') {
+        $('#search_category').val(searchCategoryId);
+    }
+    if (searchSeriesId != '') {
+        $('#search_series').val(searchSeriesId);
+    }
+    if (searchCollectionId != '') {
+        $('#search_collection').val(searchCollectionId);
     }
 
 </script>
