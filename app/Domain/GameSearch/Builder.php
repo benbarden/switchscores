@@ -30,6 +30,12 @@ class Builder
         } else {
             $title = null;
         }
+        if (array_key_exists('search_year_released', $params)) {
+            $yearReleased = $params['search_year_released'];
+            $paramsEntered++;
+        } else {
+            $yearReleased = null;
+        }
         if (array_key_exists('search_score_minimum', $params)) {
             $scoreMinimum = $params['search_score_minimum'];
             $paramsEntered++;
@@ -92,8 +98,9 @@ class Builder
 
         // Re-populate form
         $bindings['SearchKeywords'] = $title;
-        $bindings['SearchScoreMinimum'] = $scoreMinimum;
         $bindings['SearchShowRankedUnranked'] = $showRankedUnranked;
+        $bindings['SearchYearReleased'] = $yearReleased;
+        $bindings['SearchScoreMinimum'] = $scoreMinimum;
         $bindings['SearchPriceMaximum'] = $priceMaximum;
         $bindings['SearchCategoryId'] = $categoryId;
         $bindings['SearchSeriesId'] = $seriesId;
@@ -101,6 +108,7 @@ class Builder
 
         $searchResults = Game::searchTitle($title)
             ->searchShowRankedUnranked($showRankedUnranked)
+            ->searchYearReleased($yearReleased)
             ->searchScoreMinimum($scoreMinimum)
             ->searchPriceMaximum($priceMaximum)
             ->searchCategoryId($categoryIdList)

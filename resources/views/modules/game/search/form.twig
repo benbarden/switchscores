@@ -34,6 +34,17 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="search_year_released" class="col-md-2 control-label">Year released (Europe)</label>
+                        <div class="col-md-6">
+                            <select id="search_year_released" name="search_year_released" class="form-control">
+                                <option value=""></option>
+                                {% for item in YearList %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="search_score_minimum" class="col-md-2 control-label">Minimum score</label>
                         <div class="col-md-6">
                             <input id="search_score_minimum" name="search_score_minimum" type="text" class="form-control">
@@ -105,6 +116,7 @@
 
     var searchKeywords = '{{ SearchKeywords }}';
     var searchShowRankedUnranked = '{{ SearchShowRankedUnranked }}';
+    var searchYearReleased = '{{ SearchYearReleased }}';
     var searchScoreMinimum = '{{ SearchScoreMinimum }}';
     var searchPriceMaximum = '{{ SearchPriceMaximum }}';
     var searchCategoryId = '{{ SearchCategoryId }}';
@@ -113,6 +125,9 @@
 
     if (searchKeywords != '') {
         $('#search_keywords').val(searchKeywords);
+    }
+    if (searchYearReleased != '') {
+        $('#search_year_released').val(searchYearReleased);
     }
     if (searchShowRankedUnranked != '') {
         $('#search_ranked_unranked').val(searchShowRankedUnranked);

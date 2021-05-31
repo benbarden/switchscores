@@ -60,6 +60,7 @@ class SearchController extends Controller
         }
 
         // Search options
+        $bindings['YearList'] = array_reverse($this->getServiceGameCalendar()->getAllowedYears());
         $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
