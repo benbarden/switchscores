@@ -83,6 +83,9 @@ Route::get('/news', 'NewsController@landing')->name('news.landing');
 Route::get('/news/category/{linkName}', 'NewsController@categoryLanding')->name('news.category.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
 
+// Community
+Route::get('/community', 'CommunityController@landing')->name('community.landing');
+
 // Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
 Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');

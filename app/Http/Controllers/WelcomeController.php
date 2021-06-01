@@ -57,9 +57,6 @@ class WelcomeController extends Controller
             $bindings['FeaturedGameData'] = $featuredGame;
         }
 
-        // Latest quick reviews
-        $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
-
         // Quick stats
         $bindings['TotalReleasedGames'] = $this->repoGameStats->totalReleased();
         $bindings['TotalRanked'] = $this->repoGameStats->totalRanked();

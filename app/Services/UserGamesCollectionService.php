@@ -235,4 +235,9 @@ class UserGamesCollectionService
 
         return $collectionStats;
     }
+
+    public function countAllCollections()
+    {
+        return UserGamesCollection::count();
+    }
 }

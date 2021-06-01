@@ -1,0 +1,85 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<p>
+    Recent activity across the site.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Recent quick reviews'} %}
+        <div class="row homepage-quick-reviews">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <p>
+                    <em>
+                        <small>
+                            These reviews were submitted directly to Switch Scores by members.
+                        </small>
+                    </em>
+                </p>
+                {% for item in QuickReviews %}
+                    {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Member activity'} %}
+        <table class="table table-responsive">
+            <tr>
+                <td style="width: 60%;">
+                    Newest member
+                </td>
+                <td>
+                    <span class="h5">
+                        {{ NewestUser.display_name }}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Games added to member collections
+                </td>
+                <td>
+                    <span class="h5">
+                        {{ CollectionCount }}
+                    </span>
+                </td>
+            </tr>
+        </table>
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Hall of Fame'} %}
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th style="width: 60%;">Member</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in HallOfFame %}
+                    <tr>
+                        <td>
+                            {{ item.display_name }}
+                        </td>
+                        <td>
+                            <span class="h5">
+                                {{ item.points_balance }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

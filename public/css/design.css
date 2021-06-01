@@ -77,6 +77,21 @@ blockquote {
     text-align: left;
 }
 
+/* Slick headers */
+.slick-header-container {
+    background: #c9daf9;
+    border-left: 2px solid #000;
+    margin: 0 0 10px 0;
+    padding: 5px 0px 5px 10px;
+}
+
+.slick-header-text {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 /* Game page */
 .fotorama {margin-top: 0px;}
 .game-rating {text-align: right;}
@@ -124,9 +139,8 @@ blockquote {
 
 /* Quick reviews */
 .quick-reviews-title {
-    background-color: #b5edf7;
     color: #000;
-    font-size: 1.2em;
+    font-size: 1.1em;
     margin: 10px 2px 2px 0;
     padding: 5px;
 }

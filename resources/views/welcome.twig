@@ -76,24 +76,6 @@
         </div>
         #}
 
-        {#
-        <h2 class="standout-header">Recent member reviews</h2>
-        <div class="row homepage-quick-reviews">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <p>
-                    <em>
-                        <small>
-                            These reviews were submitted directly to Switch Scores by members.
-                        </small>
-                    </em>
-                </p>
-                {% for item in QuickReviews %}
-                    {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
-                {% endfor %}
-            </div>
-        </div>
-        #}
-
         <h2 class="standout-header">
             Recently ranked
         </h2>
