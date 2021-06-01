@@ -39,8 +39,7 @@
 <div class="row hidden-md hidden-lg">
 
     <div class="col-sm-12 col-xs-12">
-        <form role="form" method="post" action="{{ route('games.search') }}">
-            {{ csrf_field() }}
+        <form role="form" method="get" action="{{ route('games.search') }}">
 
             <div class="row hidden-md hidden-lg">
                 <div class="col-sm-10 col-xs-10">
