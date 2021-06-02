@@ -84,15 +84,13 @@
                     {% endif %}
                     <td class="text-center">
                         {% if AsRole == 'user' %}
-                            {% if item.play_status in ['completed', 'abandoned', 'endless'] %}
-                                {% if RowGameId in QuickReviewGameIdList %}
-                                    <em>Review added</em>
-                                {% else %}
-                                    <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
-                                {% endif %}
+                            {% if RowGameId in QuickReviewGameIdList %}
+                                <em>Review added</em>
                             {% else %}
-                                -
+                                <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
                             {% endif %}
+                        {% else %}
+                            -
                         {% endif %}
                     </td>
                     <td class="text-center">

@@ -55,17 +55,15 @@ class CollectionController extends Controller
     {
         $bindings = $this->getBindingsDashboardGenericSubpage('Games collection');
 
-        $serviceCollection = $this->getServiceUserGamesCollection();
-        $serviceQuickReview = $this->getServiceQuickReview();
         $serviceCollectionPlayStatus = new PlayStatus();
 
         $userId = $this->getAuthId();
         $bindings['UserId'] = $userId;
 
-        $quickReviewGameIdList = $serviceQuickReview->getAllByUserGameIdList($userId);
+        $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
-        $bindings['CollectionStats'] = $serviceCollection->getStats($userId);
+        $bindings['CollectionStats'] = $this->getServiceUserGamesCollection()->getStats($userId);
 
         $playStatusList = $serviceCollectionPlayStatus->generateAll();
 
@@ -74,7 +72,7 @@ class CollectionController extends Controller
         foreach ($playStatusList as $playStatus) {
 
             $statusId = $playStatus->getId();
-            $listItems = $serviceCollection->getPlayStatusByUser($userId, $statusId);
+            $listItems = $this->getServiceUserGamesCollection()->getPlayStatusByUser($userId, $statusId);
             $userPlayStatusList[] = ['PlayStatus' => $playStatus, 'ListItems' => $listItems];
 
         }
@@ -172,6 +170,9 @@ class CollectionController extends Controller
 
         $bindings['CollectionList'] = $collectionList;
         $bindings['UserId'] = $userId;
+
+        $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
+        $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
         return view('user.collection.list', $bindings);
     }
