@@ -139,7 +139,16 @@ class GamesController extends Controller
         $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
 
         // Total rank count
-        $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
+        $rankMaximum = $this->repoGameStats->totalRanked();
+        $bindings['RankMaximum'] = $rankMaximum;
+
+        // Top %
+        if ($gameData->game_rank && $rankMaximum) {
+            $topPercent = ($gameData->game_rank / $rankMaximum) * 100;
+            if ($topPercent <= 50) {
+                $bindings['TopPercent'] = round($topPercent, 0);
+            }
+        }
 
         // Logged in user data
         $userId = $this->getAuthId();

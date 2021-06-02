@@ -2,7 +2,7 @@
     <!-- All-time -->
     <div class="row">
 
-        <div class="col-md-4 col-sm-4 col-xs-6">
+        <div class="col-md-4 col-sm-6 col-xs-6">
             <h4 class="rating-title">
                 <a href="{{ route('topRated.allTime') }}">All-time</a>
             </h4>
@@ -20,6 +20,26 @@
         </div>
 
     </div>
+
+    {% if TopPercent %}
+    <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-6">
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <h4 style="margin: 5px 0;">
+                <span class="rating-v2">
+                    <span class="suffix">
+                        Top {{ TopPercent }} %
+                    </span>
+                </span>
+            </h4>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+
+    {% endif %}
+
 {% else %}
     <!-- All-time -->
     <div class="row">
