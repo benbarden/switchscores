@@ -66,7 +66,7 @@
 
         <tr>
             <td>
-                <span style="font-weight: bold;">Developer(s)</span>
+                <span style="font-weight: bold;">Developed by</span>
             </td>
             <td>
                 {% for item in GameDevelopers %}
@@ -76,22 +76,13 @@
             </td>
         </tr>
 
-    {% else %}
-
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Developer(s)</span>
-            </td>
-            <td>{{ GameData.developer }}</td>
-        </tr>
-
     {% endif %}
 
     {% if GamePublishers|length > 0 %}
 
         <tr>
             <td>
-                <span style="font-weight: bold;">Publisher(s)</span>
+                <span style="font-weight: bold;">Published by</span>
             </td>
             <td>
                 {% for item in GamePublishers %}
@@ -99,15 +90,6 @@
                     <br>
                 {% endfor %}
             </td>
-        </tr>
-
-    {% else %}
-
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Publisher(s)</span>
-            </td>
-            <td>{{ GameData.publisher }}</td>
         </tr>
 
     {% endif %}
