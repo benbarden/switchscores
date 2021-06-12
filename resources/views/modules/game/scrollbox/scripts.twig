@@ -1,0 +1,37 @@
+<script>
+
+    $('.btn-nav-left').click(function() {
+
+        var divId = $(this).attr('id');
+        divId = divId.replace('btn-nav-', '');
+        divId = divId.replace('-left', '');
+        divId = 'wrap-' + divId;
+
+        var $divToScroll = $('#' + divId);
+        var amountToMove = $divToScroll.width() - 100;
+        var oldScrollLeft = $divToScroll.scrollLeft();
+        var newScrollLeft = oldScrollLeft - amountToMove;
+        $divToScroll.animate({
+            scrollLeft: newScrollLeft
+        }, 500);
+
+    });
+
+    $('.btn-nav-right').click(function() {
+
+        var divId = $(this).attr('id');
+        divId = divId.replace('btn-nav-', '');
+        divId = divId.replace('-right', '');
+        divId = 'wrap-' + divId;
+
+        var $divToScroll = $('#' + divId);
+        var amountToMove = $divToScroll.width() - 100;
+        var oldScrollLeft = $divToScroll.scrollLeft();
+        var newScrollLeft = oldScrollLeft + amountToMove;
+        $divToScroll.animate({
+            scrollLeft: newScrollLeft
+        }, 400);
+
+    });
+
+</script>
