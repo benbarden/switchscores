@@ -61,6 +61,27 @@
 
         </div>
 
+        {% if RelatedByCategory %}
+            <h2>More in this category: {{ CategoryName }}</h2>
+            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-category'} %}
+            <div id="wrap-related-by-category" class="scrolling-wrapper">
+                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedByCategory} %}
+            </div>
+        {% endif %}
+        {% if RelatedByCollection %}
+            <h2>More in this collection: {{ CollectionName }}</h2>
+            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-collection'} %}
+            <div id="wrap-related-by-collection" class="scrolling-wrapper">
+                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedByCollection} %}
+            </div>
+        {% elseif RelatedBySeries %}
+            <h2>More in this series: {{ SeriesName }}</h2>
+            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-series'} %}
+            <div id="wrap-related-by-series" class="scrolling-wrapper">
+                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedBySeries} %}
+            </div>
+        {% endif %}
+
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4">
@@ -144,5 +165,7 @@
     </div>
 
 </div>
+
+{% include 'modules/game/scrollbox/scripts.twig' %}
 
 {% endblock page_body %}

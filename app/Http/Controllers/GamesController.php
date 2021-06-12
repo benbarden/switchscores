@@ -138,6 +138,20 @@ class GamesController extends Controller
         // News
         $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
 
+        // Related games
+        if ($gameData->category_id) {
+            $bindings['CategoryName'] = $gameData->category->name;
+            $bindings['RelatedByCategory'] = $this->repoGameLists->relatedByCategory($gameData->category_id, $gameId, 6);
+        }
+        if ($gameData->series_id) {
+            $bindings['SeriesName'] = $gameData->series->series;
+            $bindings['RelatedBySeries'] = $this->repoGameLists->relatedBySeries($gameData->series_id, $gameId, 6);
+        }
+        if ($gameData->collection_id) {
+            $bindings['CollectionName'] = $gameData->gameCollection->name;
+            $bindings['RelatedByCollection'] = $this->repoGameLists->relatedByCollection($gameData->collection_id, $gameId, 6);
+        }
+
         // Total rank count
         $rankMaximum = $this->repoGameStats->totalRanked();
         $bindings['RankMaximum'] = $rankMaximum;

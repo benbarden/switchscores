@@ -236,4 +236,37 @@ class Repository
     {
         return Game::whereDoesntHave('gameTags')->get();
     }
+
+    public function relatedByCategory($categoryId, $excludeGameId, $limit = 3)
+    {
+        return Game::where('category_id', $categoryId)
+            ->where('id', '<>', $excludeGameId)
+            ->where('eu_is_released', 1)
+            ->where('rating_avg', '>=', '7.0')
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    public function relatedBySeries($seriesId, $excludeGameId, $limit = 3)
+    {
+        return Game::where('series_id', $seriesId)
+            ->where('id', '<>', $excludeGameId)
+            ->where('eu_is_released', 1)
+            ->where('rating_avg', '>=', '7.0')
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    public function relatedByCollection($collectionId, $excludeGameId, $limit = 3)
+    {
+        return Game::where('collection_id', $collectionId)
+            ->where('id', '<>', $excludeGameId)
+            ->where('eu_is_released', 1)
+            ->where('rating_avg', '>=', '7.0')
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
 }
