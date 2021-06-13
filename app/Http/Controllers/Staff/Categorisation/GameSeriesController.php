@@ -10,6 +10,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\StaffView;
@@ -32,18 +34,22 @@ class GameSeriesController extends Controller
         'link_title' => 'required',
     ];
 
+    protected $viewBreadcrumbs;
     protected $repoGameSeries;
 
     public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
         GameSeriesRepository $repoGameSeries
     )
     {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoGameSeries = $repoGameSeries;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindingsCategorisationSubpage('Game series');
+        $bindings = $this->getBindings('Game series');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Game series');
 
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
 
@@ -52,7 +58,8 @@ class GameSeriesController extends Controller
 
     public function addSeries()
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Add series');
+        $bindings = $this->getBindings('Add series');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Add series');
 
         $request = request();
 
@@ -101,7 +108,8 @@ class GameSeriesController extends Controller
 
     public function editSeries($seriesId)
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Edit series');
+        $bindings = $this->getBindings('Edit series');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Edit series');
 
         $seriesData = $this->repoGameSeries->find($seriesId);
         if (!$seriesData) abort(404);
@@ -132,7 +140,8 @@ class GameSeriesController extends Controller
 
     public function deleteSeries($seriesId)
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Delete series');
+        $bindings = $this->getBindings('Delete series');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Delete series');
 
         $seriesData = $this->repoGameSeries->find($seriesId);
         if (!$seriesData) abort(404);
@@ -144,9 +153,11 @@ class GameSeriesController extends Controller
             $bindings['FormMode'] = 'delete-post';
 
             // Delete the image, if it exists
-            $landingImagePath = public_path('img/gen/series/'.$seriesData->landing_image);
-            if (file_exists($landingImagePath)) {
-                unlink($landingImagePath);
+            if ($seriesData->landing_image) {
+                $landingImagePath = public_path('img/gen/series/'.$seriesData->landing_image);
+                if (file_exists($landingImagePath)) {
+                    unlink($landingImagePath);
+                }
             }
 
             // Delete the record

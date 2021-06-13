@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
@@ -15,26 +17,28 @@ class ReviewSiteController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
 
     public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats
     )
     {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
     }
 
     public function show()
     {
-        $bindings = $this->getBindingsStatsSubpage('Review site stats');
+        $bindings = $this->getBindings('Review site stats');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->statsSubpage('Review site stats');
 
         $serviceReviewLinks = $this->getServiceReviewLink();
         $servicePartner = $this->getServicePartner();
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
-        $serviceGame = $this->getServiceGame();
         $serviceTopRated = $this->getServiceTopRated();
         $serviceReviewStats = $this->getServiceReviewStats();
 

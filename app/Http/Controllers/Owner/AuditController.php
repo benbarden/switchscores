@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Owner;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -11,6 +13,24 @@ class AuditController extends Controller
 {
     use SwitchServices;
     use StaffView;
+
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
+    public function index()
+    {
+        $bindings = $this->getBindings('Audit');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Audit');
+
+        return view('owner.audit.index', $bindings);
+    }
 
     public function showReport($reportName)
     {
@@ -35,16 +55,10 @@ class AuditController extends Controller
                 abort(404);
         }
 
-        $bindings = $this->getBindingsAuditSubpage($pageTitle);
+        $bindings = $this->getBindings($pageTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->auditSubpage($pageTitle);
         $bindings['ItemList'] = $itemList;
 
         return view('owner.audit.report', $bindings);
-    }
-
-    public function index()
-    {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Audit');
-
-        return view('owner.audit.index', $bindings);
     }
 }

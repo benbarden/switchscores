@@ -30,4 +30,9 @@ abstract class Base
     {
         return $this->breadcrumbs;
     }
+
+    public function addTitleAndReturn($pageTitle)
+    {
+        return $this->addPageTitle($pageTitle)->getBreadcrumbs();
+    }
 }

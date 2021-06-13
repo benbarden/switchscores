@@ -9,6 +9,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -35,18 +37,23 @@ class InviteCodeController extends Controller
         'codes_count' => 'required|numeric|min:1|max:10',
     ];
 
+    protected $viewBreadcrumbs;
     protected $repoInviteCode;
 
     public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
         InviteCodeRepository $repoInviteCode
     )
     {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoInviteCode = $repoInviteCode;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Invite codes');
+        $bindings = $this->getBindings('Invite codes');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Invite codes');
 
         $bindings['InviteCodeList'] = $this->repoInviteCode->getAll();
 
@@ -55,7 +62,9 @@ class InviteCodeController extends Controller
 
     public function generateCodes()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Generate invite codes');
+        $bindings = $this->getBindings('Generate invite codes');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->inviteCodesSubpage('Generate invite codes');
 
         $request = request();
 
@@ -96,7 +105,9 @@ class InviteCodeController extends Controller
 
     public function addInviteCode()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Add invite code');
+        $bindings = $this->getBindings('Add invite code');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->inviteCodesSubpage('Add invite code');
 
         $request = request();
 
@@ -154,7 +165,9 @@ class InviteCodeController extends Controller
 
     public function editInviteCode($inviteCodeId)
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Edit invite code');
+        $bindings = $this->getBindings('Edit invite code');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->inviteCodesSubpage('Edit invite code');
 
         $inviteCodeData = $this->repoInviteCode->find($inviteCodeId);
         if (!$inviteCodeData) abort(404);
@@ -194,7 +207,9 @@ class InviteCodeController extends Controller
 
     public function deleteInviteCode($inviteCodeId)
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Delete invite code');
+        $bindings = $this->getBindings('Delete invite code');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->inviteCodesSubpage('Delete invite code');
 
         $inviteCodeData = $this->repoInviteCode->find($inviteCodeId);
         if (!$inviteCodeData) abort(404);

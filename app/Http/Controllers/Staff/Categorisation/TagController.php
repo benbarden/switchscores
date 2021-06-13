@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\StaffView;
@@ -30,21 +32,25 @@ class TagController extends Controller
         'link_title' => 'required',
     ];
 
+    protected $viewBreadcrumbs;
     private $repoTag;
     private $repoTagCategory;
 
     public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
         TagRepository $repoTag,
         TagCategoryRepository $repoTagCategory
     )
     {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindingsCategorisationSubpage('Tags');
+        $bindings = $this->getBindings('Tags');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Tags');
 
         $bindings['TagList'] = $this->repoTag->getAll();
 
@@ -58,7 +64,8 @@ class TagController extends Controller
 
         $gameTitle = $game->title;
 
-        $bindings = $this->getBindingsCategorisationTagSubpage('Tags for game: '.$gameTitle);
+        $bindings = $this->getBindings('Tags for game: '.$gameTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Tags for game: '.$gameTitle);
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
@@ -70,7 +77,8 @@ class TagController extends Controller
 
     public function addTag()
     {
-        $bindings = $this->getBindingsCategorisationTagSubpage('Add tag');
+        $bindings = $this->getBindings('Add tag');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Add tag');
 
         $request = request();
 
@@ -101,7 +109,8 @@ class TagController extends Controller
 
     public function editTag($tagId)
     {
-        $bindings = $this->getBindingsCategorisationTagSubpage('Edit tag');
+        $bindings = $this->getBindings('Edit tag');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Edit tag');
 
         $tagData = $this->repoTag->find($tagId);
         if (!$tagData) abort(404);

@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -27,9 +29,20 @@ class UserController extends Controller
         //'email' => 'required',
     ];
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function showList()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Users');
+        $bindings = $this->getBindings('Users');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Users');
 
         $bindings['UserList'] = $this->getServiceUser()->getAll();
 
@@ -43,7 +56,8 @@ class UserController extends Controller
 
         $displayName = $userData->display_name;
 
-        $bindings = $this->getBindingsUsersSubpage('View user: '.$displayName);
+        $bindings = $this->getBindings('View user: '.$displayName);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('View user: '.$displayName);
 
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
@@ -60,7 +74,8 @@ class UserController extends Controller
 
     public function editUser($userId)
     {
-        $bindings = $this->getBindingsUsersSubpage('Edit user');
+        $bindings = $this->getBindings('Edit user');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('Edit user');
 
         $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);
@@ -128,7 +143,8 @@ class UserController extends Controller
 
     public function deleteUser($userId)
     {
-        $bindings = $this->getBindingsUsersSubpage('Delete user');
+        $bindings = $this->getBindings('Delete user');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('Delete user');
 
         $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);

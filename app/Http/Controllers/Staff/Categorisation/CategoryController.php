@@ -9,6 +9,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -29,9 +31,19 @@ class CategoryController extends Controller
         'link_title' => 'required',
     ];
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function showList()
     {
-        $bindings = $this->getBindingsCategorisationSubpage('Categories');
+        $bindings = $this->getBindings('Categories');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Categories');
 
         $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
 
@@ -40,7 +52,8 @@ class CategoryController extends Controller
 
     public function addCategory()
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Add category');
+        $bindings = $this->getBindings('Add category');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Add category');
 
         $request = request();
 
@@ -92,7 +105,8 @@ class CategoryController extends Controller
 
     public function editCategory($categoryId)
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Edit category');
+        $bindings = $this->getBindings('Edit category');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Edit category');
 
         $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);
@@ -126,7 +140,8 @@ class CategoryController extends Controller
 
     public function deleteCategory($categoryId)
     {
-        $bindings = $this->getBindingsCategorisationCategoriesSubpage('Delete category');
+        $bindings = $this->getBindings('Delete category');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Delete category');
 
         $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);

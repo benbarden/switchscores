@@ -31,8 +31,11 @@ trait StaffView
     {
         $this->bindings = $this->getServiceViewHelperBindings()
             ->setPageTitle($pageTitle)
-            ->setTopTitleSuffix($topTitle)
-            ->setBreadcrumbs($this->breadcrumbs);
+            ->setTopTitleSuffix($topTitle);
+
+        if ($this->breadcrumbs) {
+            $this->bindings = $this->bindings->setBreadcrumbs($this->breadcrumbs);
+        }
 
         if ($this->tableSort) {
             $this->bindings = $this->bindings->setDatatablesSort($this->tableSort);
@@ -43,20 +46,16 @@ trait StaffView
         return $this->bindings->getBindings();
     }
 
-    public function getBindingsDashboard($pageTitle)
+    public function setTableSort($tableSort)
     {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGenericSubpage('Dashboard');
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsDashboardGenericSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGenericSubpage($pageTitle);
-        return $this->getBindings($pageTitle);
+        $this->tableSort = $tableSort;
     }
 
     // ***** Games ***** //
 
+    /**
+     * @deprecated
+     */
     public function getBindingsGamesSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesSubPage($pageTitle);
@@ -66,18 +65,27 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsGamesDetailSubpage($pageTitle, $gameId)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesDetailSubPage($pageTitle, $gameId);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsGamesTitleHashesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesTitleHashesSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsGamesFeaturedGamesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesFeaturedGamesSubPage($pageTitle);
@@ -86,6 +94,9 @@ trait StaffView
 
     // ***** Reviews ***** //
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsSubPage($pageTitle);
@@ -95,36 +106,54 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsLinkListSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsLinkListSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsQuickReviewsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsQuickReviewsSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsCampaignsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsCampaignsSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsFeedItemsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedItemsSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsFeedImportsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedImportsSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsUnrankedByReleaseYearSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);
@@ -134,6 +163,9 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewsUnrankedByReviewCountSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReviewCountSubPage($pageTitle);
@@ -143,57 +175,11 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
-    // ***** Categorisation ***** //
-
-    public function getBindingsCategorisationSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationSubPage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsCategorisationCategoriesSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationCategoriesSubPage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsCategorisationTagSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeCategorisationTagSubPage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
-    // ***** News ***** //
-
-    public function getBindingsNewsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeNewsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsNewsListSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeNewsListSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsNewsCategoriesSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeNewsCategoriesSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
     // ***** Partners ***** //
 
+    /**
+     * @deprecated
+     */
     public function getBindingsPartnersSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersSubPage($pageTitle);
@@ -203,24 +189,36 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsReviewSitesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewSitesSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsFeedLinksSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeFeedLinksSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsGamesCompaniesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesCompaniesSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsPartnersOutreachSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersOutreachSubPage($pageTitle);
@@ -229,6 +227,9 @@ trait StaffView
 
     // ***** Data sources ***** //
 
+    /**
+     * @deprecated
+     */
     public function getBindingsDataSourcesSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataSourcesSubPage($pageTitle);
@@ -238,59 +239,12 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
+    /**
+     * @deprecated
+     */
     public function getBindingsDataSourcesListRawSubpage($pageTitle, DataSource $dataSource)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataSourcesListRawSubPage($pageTitle, $dataSource);
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsDataSourcesNintendoCoUkUnlinkedItemsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataSourcesNintendoCoUkUnlinkedItemsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsDataSourcesWikipediaUnlinkedItemsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataSourcesWikipediaUnlinkedItemsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    // ***** Data quality ***** //
-
-    public function getBindingsDataQualitySubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataQualitySubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    public function getBindingsDataQualityCategorySubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataQualityCategorySubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    // ***** Stats ***** //
-
-    public function getBindingsStatsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeStatsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    // ***** Users ***** //
-
-    public function getBindingsUsersSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeUsersSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    // ***** Audit ***** //
-
-    public function getBindingsAuditSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeAuditSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 }

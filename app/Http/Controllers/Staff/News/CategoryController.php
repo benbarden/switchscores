@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -25,9 +27,19 @@ class CategoryController extends Controller
         'link_name' => 'required|max:100',
     ];
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function showList()
     {
-        $bindings = $this->getBindingsNewsSubpage('News categories');
+        $bindings = $this->getBindings('News categories');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('News categories');
 
         $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
 
@@ -36,7 +48,8 @@ class CategoryController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsNewsCategoriesSubpage('Add news category');
+        $bindings = $this->getBindings('Add news category');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsCategoriesSubpage('Add news category');
 
         $serviceNewsCategory = $this->getServiceNewsCategory();
 
@@ -59,7 +72,8 @@ class CategoryController extends Controller
 
     public function edit($newsCategoryId)
     {
-        $bindings = $this->getBindingsNewsCategoriesSubpage('Edit news category');
+        $bindings = $this->getBindings('Edit news category');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsCategoriesSubpage('Edit news category');
 
         $serviceNewsCategory = $this->getServiceNewsCategory();
 

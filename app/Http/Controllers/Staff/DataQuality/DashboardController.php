@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -14,9 +16,19 @@ class DashboardController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function show()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Data quality dashboard');
+        $bindings = $this->getBindings('Data quality dashboard');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Data quality dashboard');
 
         $serviceQualityStats = new QualityStats();
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
@@ -26,7 +38,8 @@ class DashboardController extends Controller
 
     public function duplicateReviews()
     {
-        $bindings = $this->getBindingsDataQualitySubpage('Duplicate reviews');
+        $bindings = $this->getBindings('Duplicate reviews');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataQualitySubpage('Duplicate reviews');
 
         $serviceQualityStats = new QualityStats();
         $bindings['DuplicateReviews'] = $serviceQualityStats->getDuplicateReviews();

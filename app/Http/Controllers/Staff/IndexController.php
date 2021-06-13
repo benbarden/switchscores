@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -21,16 +23,19 @@ class IndexController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
     protected $repoGameLists;
 
     public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         GameListsRepository $repoGameLists
     )
     {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameLists = $repoGameLists;
@@ -38,7 +43,9 @@ class IndexController extends Controller
 
     public function index()
     {
-        $bindings = $this->getBindingsDashboard('Staff index');
+        $bindings = $this->getBindings('Staff index');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Dashboard');
 
         $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();

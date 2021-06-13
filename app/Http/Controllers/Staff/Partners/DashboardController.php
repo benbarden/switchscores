@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\Partners;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -12,9 +14,20 @@ class DashboardController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function show()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Partners dashboard');
+        $bindings = $this->getBindings('Partners dashboard');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Partners dashboard');
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $this->getServiceGameDeveloper()->countGamesWithNoDeveloper();

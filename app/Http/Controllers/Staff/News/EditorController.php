@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -28,9 +30,19 @@ class EditorController extends Controller
         //'game_id' => 'exists:games,id',
     ];
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function add()
     {
-        $bindings = $this->getBindingsNewsListSubpage('Add news');
+        $bindings = $this->getBindings('Add news');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsListSubpage('Add news');
 
         $request = request();
 
@@ -58,7 +70,8 @@ class EditorController extends Controller
 
     public function edit($newsId)
     {
-        $bindings = $this->getBindingsNewsListSubpage('Edit news');
+        $bindings = $this->getBindings('Edit news');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsListSubpage('Edit news');
 
         $newsData = $this->getServiceNews()->find($newsId);
         if (!$newsData) abort(404);

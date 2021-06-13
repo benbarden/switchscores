@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -22,12 +24,25 @@ class DataSourceParsedController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function nintendoCoUkUnlinkedItems()
     {
         $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
         if (!$dataSource) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Unlinked items', "[ 2, 'asc' ]");
+        $pageTitle = $dataSource->name.' - Unlinked items';
+
+        $this->setTableSort("[ 2, 'asc' ]");
+        $bindings = $this->getBindings($pageTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -46,7 +61,11 @@ class DataSourceParsedController extends Controller
         $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
         if (!$dataSource) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Ignored items', "[ 2, 'asc' ]");
+        $pageTitle = $dataSource->name.' - Ignored items';
+
+        $this->setTableSort("[ 2, 'asc' ]");
+        $bindings = $this->getBindings($pageTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -64,7 +83,8 @@ class DataSourceParsedController extends Controller
         $dsParsedItem = $this->getServiceDataSourceParsed()->find($itemId);
         if (!$dsParsedItem) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesNintendoCoUkUnlinkedItemsSubpage('Add game from Nintendo.co.uk API');
+        $bindings = $this->getBindings('Add game from Nintendo.co.uk API');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesNintendoCoUkUnlinkedSubpage('Add game from Nintendo.co.uk API');
 
         $bindings['DSParsedItem'] = $dsParsedItem;
         $customErrors = [];
@@ -146,7 +166,11 @@ class DataSourceParsedController extends Controller
         $dataSource = $this->getServiceDataSource()->getSourceWikipedia();
         if (!$dataSource) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Unlinked items', "[ 1, 'asc' ]");
+        $pageTitle = $dataSource->name.' - Unlinked items';
+
+        $this->setTableSort("[ 1, 'asc' ]");
+        $bindings = $this->getBindings($pageTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -165,7 +189,11 @@ class DataSourceParsedController extends Controller
         $dataSource = $this->getServiceDataSource()->getSourceWikipedia();
         if (!$dataSource) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Ignored items', "[ 1, 'asc' ]");
+        $pageTitle = $dataSource->name.' - Ignored items';
+
+        $this->setTableSort("[ 1, 'asc' ]");
+        $bindings = $this->getBindings($pageTitle);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -187,7 +215,8 @@ class DataSourceParsedController extends Controller
 
         if ($dsParsedItem->game_id != null) redirect(route('staff.data-sources.dashboard'));
 
-        $bindings = $this->getBindingsDataSourcesWikipediaUnlinkedItemsSubpage('Add game from Wikipedia');
+        $bindings = $this->getBindings('Add game from Wikipedia');
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesWikipediaUnlinkedSubpage('Add game from Wikipedia');
 
         $customErrors = [];
 

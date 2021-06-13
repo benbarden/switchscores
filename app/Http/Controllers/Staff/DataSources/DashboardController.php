@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -14,9 +16,20 @@ class DashboardController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function show()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Data sources dashboard');
+        $bindings = $this->getBindings('Data sources dashboard');
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Data sources dashboard');
 
         $bindings['DataSources'] = $this->getServiceDataSource()->getAll();
 

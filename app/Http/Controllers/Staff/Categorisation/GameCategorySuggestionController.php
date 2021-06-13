@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\StaffView;
@@ -21,6 +23,15 @@ class GameCategorySuggestionController extends Controller
     use AuthUser;
     use StaffView;
 
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
     public function show()
     {
         $request = request();
@@ -36,7 +47,9 @@ class GameCategorySuggestionController extends Controller
             $tableSort = "[0, 'desc']";
         }
 
-        $bindings = $this->getBindingsCategorisationSubpage('Game category suggestions', $tableSort);
+        $bindings = $this->getBindings('Game category suggestions');
+        $this->setTableSort($tableSort);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Game category suggestions');
 
         $bindings['FilterStatus'] = $filterStatus;
         $dbEditList = $this->getServiceDbEditGame()->getCategoryEditsByStatus($filterStatus);
