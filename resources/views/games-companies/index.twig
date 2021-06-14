@@ -33,10 +33,14 @@
                     Here's a list of the Switch games we have linked to your company
                     in the Switch Scores database. Let us know if anything needs changing.
                 </p>
-                <h3>Released games</h3>
-                {% include 'games-companies/games-table.twig' with {'GameList': ReleasedGames} %}
-                <h3>Upcoming games</h3>
-                {% include 'games-companies/games-table.twig' with {'GameList': UpcomingGames} %}
+                {% if ReleasedGames %}
+                    <h3>Released games</h3>
+                    {% include 'games-companies/games-table.twig' with {'GameList': ReleasedGames} %}
+                {% endif %}
+                {% if UpcomingGames %}
+                    <h3>Upcoming games</h3>
+                    {% include 'games-companies/games-table.twig' with {'GameList': UpcomingGames} %}
+                {% endif %}
             {% else %}
                 <p>
                     Looks like we don't have any Switch games linked to your company yet. Get in touch
