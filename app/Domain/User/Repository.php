@@ -9,12 +9,11 @@ class Repository
 {
     public function edit(
         User $userData, $displayName, $email, $partnerId, $twitterUserId,
-        $isStaff, $isDeveloper, $isGamesCompany, $gamesCompanyId
+        $isStaff, $isDeveloper, $gamesCompanyId
     )
     {
         $dbIsStaff     = $isStaff     == 'on' ? 1 : 0;
         $dbIsDeveloper = $isDeveloper == 'on' ? 1 : 0;
-        $dbIsGamesCompany = $isGamesCompany == 'on' ? 1 : 0;
 
         $values = [
             'display_name' => $displayName,
@@ -23,7 +22,6 @@ class Repository
             'twitter_user_id' => $twitterUserId,
             'is_staff' => $dbIsStaff,
             'is_developer' => $dbIsDeveloper,
-            'is_games_company' => $dbIsGamesCompany,
             'games_company_id' => $gamesCompanyId,
         ];
 

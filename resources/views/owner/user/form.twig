@@ -42,29 +42,6 @@
     </div>
 
     <div class="form-group">
-        <label for="is_developer" class="col-md-4 control-label">Developer hub access</label>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <label>
-                    <input id="is_developer" class="checkbox" name="is_developer" type="checkbox">
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="is_games_company" class="col-md-4 control-label">Is games company?</label>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <label>
-                    <input id="is_games_company" class="checkbox" name="is_games_company" type="checkbox">
-                </label>
-                <br><small>Legacy - to be removed soon</small>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
         <label for="games_company_id" class="col-md-4 control-label">Games company access</label>
         <div class="col-md-6">
             <select id="games_company_id" class="form-control" name="games_company_id">
@@ -73,6 +50,17 @@
                     <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="is_developer" class="col-md-4 control-label">Developer hub access</label>
+        <div class="col-md-6">
+            <div class="checkbox">
+                <label>
+                    <input id="is_developer" class="checkbox" name="is_developer" type="checkbox">
+                </label>
+            </div>
         </div>
     </div>
 

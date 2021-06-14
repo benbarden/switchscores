@@ -10,10 +10,9 @@
         formVals['email'] = "{{ UserData.email }}";
         formVals['twitter_user_id'] = "{{ UserData.twitter_user_id }}";
         formVals['partner_id'] = "{{ UserData.partner_id }}";
-        formVals['is_staff'] = "{{ UserData.is_staff }}";
-        formVals['is_developer'] = "{{ UserData.is_developer }}";
-        formVals['is_games_company'] = "{{ UserData.is_games_company }}";
         formVals['games_company_id'] = "{{ UserData.games_company_id }}";
+        formVals['is_developer'] = "{{ UserData.is_developer }}";
+        formVals['is_staff'] = "{{ UserData.is_staff }}";
 
     } else {
 
@@ -23,10 +22,9 @@
         formVals['email'] = "{{ old('email') }}";
         formVals['twitter_user_id'] = "{{ old('twitter_user_id') }}";
         formVals['partner_id'] = "{{ old('partner_id') }}";
-        formVals['is_staff'] = "{{ old('is_staff') }}";
-        formVals['is_developer'] = "{{ old('is_developer') }}";
-        formVals['is_games_company'] = "{{ old('is_games_company') }}";
         formVals['games_company_id'] = "{{ old('games_company_id') }}";
+        formVals['is_developer'] = "{{ old('is_developer') }}";
+        formVals['is_staff'] = "{{ old('is_staff') }}";
 
     }
 
@@ -34,22 +32,17 @@
     $('#email').val(formVals['email']);
     $('#twitter_user_id').val(formVals['twitter_user_id']);
     $('#partner_id').val(formVals['partner_id']);
-    if (formVals['is_staff'] == '1') {
-        $('#is_staff').attr('checked', true);
-    } else {
-        $('#is_staff').attr('checked', false);
-    }
+    $('#games_company_id').val(formVals['games_company_id']);
     if (formVals['is_developer'] == '1') {
         $('#is_developer').attr('checked', true);
     } else {
         $('#is_developer').attr('checked', false);
     }
-    if (formVals['is_games_company'] == '1') {
-        $('#is_games_company').attr('checked', true);
+    if (formVals['is_staff'] == '1') {
+        $('#is_staff').attr('checked', true);
     } else {
-        $('#is_games_company').attr('checked', false);
+        $('#is_staff').attr('checked', false);
     }
-    $('#games_company_id').val(formVals['games_company_id']);
 
     // Roles
     {% if UserRoleList %}

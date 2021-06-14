@@ -102,11 +102,10 @@ class UserController extends Controller
             $partnerId = $request->partner_id;
             $isStaff = $request->is_staff;
             $isDeveloper = $request->is_developer;
-            $isGamesCompany = $request->is_games_company;
             $gamesCompanyId = $request->games_company_id;
 
             $this->repoUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId,
-                $isStaff, $isDeveloper, $isGamesCompany, $gamesCompanyId);
+                $isStaff, $isDeveloper, $gamesCompanyId);
 
             // Clear roles
             $userData->setRoles([]);
