@@ -5,7 +5,7 @@
 
     <div class="row member-dashboard">
 
-        <div class="col-xs-12 col-sm-8 col-md-8">
+        <div class="col-xs-12 col-sm-12 col-md-12">
 
             <h1>{{ PageTitle }}</h1>
             <p>
@@ -18,6 +18,116 @@
                 <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
                 <a href="mailto:ben@switchscores.com">email</a>.
             </p>
+
+        </div>
+
+    </div>
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
+            {% if ReleasedGames or UpcomingGames %}
+                <p>
+                    Here's a list of the Switch games we have linked to your company
+                    in the Switch Scores database. Let us know if anything needs changing.
+                </p>
+                <h3>Released games</h3>
+                {% include 'games-companies/games-table.twig' with {'GameList': ReleasedGames} %}
+                <h3>Upcoming games</h3>
+                {% include 'games-companies/games-table.twig' with {'GameList': UpcomingGames} %}
+            {% else %}
+                <p>
+                    Looks like we don't have any Switch games linked to your company yet. Get in touch
+                    if this is incorrect.
+                </p>
+            {% endif %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Your details</h2>
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Company name</span>
+                    </td>
+                    <td>
+                        {{ PartnerData.name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Switch Scores profile</span>
+                    </td>
+                    <td>
+                        <a href="{{ route('partners.detail.games-company', {'linkTitle': PartnerData.link_title}) }}" target="_blank" title="Opens in a new tab">View profile</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Website</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.website_url %}
+                            <a href="{{ PartnerData.website_url }}" target="_blank">Visit site</a>
+                        {% else %}
+                            <em>Not set!</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Twitter</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.twitter_id %}
+                            <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+                        {% else %}
+                            <em>Not set!</em>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <h2>Quick stats</h2>
+            <p>
+                These stats only include released games.
+            </p>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ ReleasedGames|length }}
+                        <br>
+                        <span class="h4">games</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ RankedGames|length }}
+                        <br>
+                        <span class="h4">ranked</span>
+                    </h2>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 text-center">
+                    <h2>
+                        {{ UnrankedGames|length }}
+                        <br>
+                        <span class="h4">unranked</span>
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
 
             {% if ReviewSitesWithContactDetails %}
 
@@ -41,28 +151,28 @@
 
                 <table class="table table-responsive">
                     <thead>
-                        <th>Site name</th>
-                        <th>Regions</th>
-                        <th>Contact name</th>
-                        <th>Email or contact form</th>
+                    <th>Site name</th>
+                    <th>Regions</th>
+                    <th>Contact name</th>
+                    <th>Email or contact form</th>
                     </thead>
                     <tbody>
-                        {% for item in ReviewSitesWithContactDetails %}
-                            <tr>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.review_code_regions }}</td>
-                                <td>{{ item.contact_name }}</td>
-                                <td>
-                                    {% if item.contact_email %}
-                                        <a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a>
-                                    {% elseif item.contact_form_link %}
-                                        <a href="{{ item.contact_form_link }}" target="_blank">Contact form</a>
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                    {% for item in ReviewSitesWithContactDetails %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.review_code_regions }}</td>
+                            <td>{{ item.contact_name }}</td>
+                            <td>
+                                {% if item.contact_email %}
+                                    <a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a>
+                                {% elseif item.contact_form_link %}
+                                    <a href="{{ item.contact_form_link }}" target="_blank">Contact form</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
 
@@ -71,6 +181,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
+
         </div>
 
     </div>
