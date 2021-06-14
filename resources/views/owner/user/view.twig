@@ -85,10 +85,26 @@
             </tr>
             <tr>
                 <td style="font-weight: bold;">
-                    Partner access
+                    Review site access
                 </td>
                 <td>
-                    {{ UserData.partner.name }}
+                    {% if UserData.partner.id %}
+                        {{ UserData.partner.name }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">
+                    Games company access
+                </td>
+                <td>
+                    {% if UserData.gamesCompany.id %}
+                        {{ UserData.gamesCompany.name }}
+                    {% else %}
+                        -
+                    {% endif %}
                 </td>
             </tr>
             <tr>

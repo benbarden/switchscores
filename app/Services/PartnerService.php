@@ -148,17 +148,6 @@ class PartnerService
 
     // ********************************************************** //
 
-    public function getAllForUserAssignment()
-    {
-        return Partner::
-            where('status', Partner::STATUS_ACTIVE)
-            ->orderBy('type_id', 'asc')
-            ->orderBy('name', 'asc')
-            ->get();
-    }
-
-    // ********************************************************** //
-
     public function getAllReviewSites()
     {
         return Partner::where('type_id', Partner::TYPE_REVIEW_SITE)->orderBy('name', 'asc')->get();

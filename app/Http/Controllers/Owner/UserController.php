@@ -8,6 +8,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Domain\User\Repository as UserRepository;
+use App\Domain\Partner\Repository as PartnerRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -30,12 +32,18 @@ class UserController extends Controller
     ];
 
     protected $viewBreadcrumbs;
+    protected $repoUser;
+    protected $repoPartner;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        Breadcrumbs $viewBreadcrumbs,
+        UserRepository $repoUser,
+        PartnerRepository $repoPartner
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoUser = $repoUser;
+        $this->repoPartner = $repoPartner;
     }
 
     public function showList()
@@ -44,14 +52,14 @@ class UserController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Users');
 
-        $bindings['UserList'] = $this->getServiceUser()->getAll();
+        $bindings['UserList'] = $this->repoUser->getAll();
 
         return view('owner.user.list', $bindings);
     }
 
     public function showUser($userId)
     {
-        $userData = $this->getServiceUser()->find($userId);
+        $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);
 
         $displayName = $userData->display_name;
@@ -95,8 +103,10 @@ class UserController extends Controller
             $isStaff = $request->is_staff;
             $isDeveloper = $request->is_developer;
             $isGamesCompany = $request->is_games_company;
+            $gamesCompanyId = $request->games_company_id;
 
-            $this->getServiceUser()->edit($userData, $displayName, $email, $partnerId, $twitterUserId, $isStaff, $isDeveloper, $isGamesCompany);
+            $this->repoUser->edit($userData, $displayName, $email, $partnerId, $twitterUserId,
+                $isStaff, $isDeveloper, $isGamesCompany, $gamesCompanyId);
 
             // Clear roles
             $userData->setRoles([]);
@@ -124,7 +134,8 @@ class UserController extends Controller
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 
-        $bindings['PartnerList'] = $this->getServicePartner()->getAllForUserAssignment();
+        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         $bindings['RoleList'] = UserRole::getRoleList();
 
@@ -146,7 +157,7 @@ class UserController extends Controller
         $bindings = $this->getBindings('Delete user');
         $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('Delete user');
 
-        $userData = $this->getServiceUser()->find($userId);
+        $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);
 
         $customErrors = [];
@@ -168,7 +179,7 @@ class UserController extends Controller
             $bindings['FormMode'] = 'delete-post';
 
             $this->getServiceUserGamesCollection()->deleteByUserId($userId);
-            $this->getServiceUser()->deleteUser($userId);
+            $this->repoUser->deleteUser($userId);
 
             // Done
 

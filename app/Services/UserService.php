@@ -23,62 +23,20 @@ class UserService
         return $user;
     }
 
-    /**
-     * @param User $userData
-     * @param $displayName
-     * @param $email
-     * @param $partnerId
-     * @param $twitterUserId
-     * @param $isStaff
-     * @param $isDeveloper
-     * @param $isGamesCompany
-     */
-    public function edit(
-        User $userData, $displayName, $email, $partnerId, $twitterUserId,
-        $isStaff, $isDeveloper, $isGamesCompany
-    )
-    {
-        $dbIsStaff     = $isStaff     == 'on' ? 1 : 0;
-        $dbIsDeveloper = $isDeveloper == 'on' ? 1 : 0;
-        $dbIsGamesCompany = $isGamesCompany == 'on' ? 1 : 0;
-
-        $values = [
-            'display_name' => $displayName,
-            'email' => $email,
-            'partner_id' => $partnerId,
-            'twitter_user_id' => $twitterUserId,
-            'is_staff' => $dbIsStaff,
-            'is_developer' => $dbIsDeveloper,
-            'is_games_company' => $dbIsGamesCompany,
-        ];
-
-        $userData->fill($values);
-        $userData->save();
-    }
-
     public function setLastAccessDate(User $user, $todaysDate)
     {
         $user->last_access_date = $todaysDate;
         $user->save();
     }
 
-    public function deleteUser($userId)
-    {
-        User::where('id', $userId)->delete();
-    }
-
     /**
+     * @deprecated
      * @param $id
      * @return User
      */
     public function find($id)
     {
         return User::find($id);
-    }
-
-    public function getAll()
-    {
-        return User::orderBy('created_at', 'desc')->get();
     }
 
     public function getCount()

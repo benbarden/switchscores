@@ -18,7 +18,7 @@ class User extends Authenticatable
         'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'points_balance',
         'signup_alpha', 'signup_beta', 'last_access_date', 'is_games_company',
-        'invite_code_id'
+        'invite_code_id', 'games_company_id'
     ];
 
     /**
@@ -98,6 +98,11 @@ class User extends Authenticatable
     public function partner()
     {
         return $this->hasOne('App\Partner', 'id', 'partner_id');
+    }
+
+    public function gamesCompany()
+    {
+        return $this->hasOne('App\Partner', 'id', 'games_company_id');
     }
 
     public function pointsTransactions()

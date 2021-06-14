@@ -30,32 +30,24 @@
     </div>
 
     <div class="form-group">
-        <label for="site_id" class="col-md-4 control-label">Partner access</label>
+        <label for="partner_id" class="col-md-4 control-label">Reviewer access</label>
         <div class="col-md-6">
             <select id="partner_id" class="form-control" name="partner_id">
                 <option value="">&nbsp;</option>
                 {% for item in PartnerList %}
-                    {% if item.isReviewSite() == true %}
-                        {% set PartnerPrefix = 'Review site' %}
-                    {% elseif item.isGamesCompany() == true %}
-                        {% set PartnerPrefix = 'Games company' %}
-                    {% else %}
-                        {% set PartnerPrefix = 'UNKNOWN' %}
-                    {% endif %}
-                    <option value="{{ item.id }}">[{{ PartnerPrefix }}] {{ item.name }}</option>
+                    <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="is_developer" class="col-md-4 control-label">Is developer?</label>
+        <label for="is_developer" class="col-md-4 control-label">Developer hub access</label>
         <div class="col-md-6">
             <div class="checkbox">
                 <label>
                     <input id="is_developer" class="checkbox" name="is_developer" type="checkbox">
                 </label>
-                <br><small>Provides access to the developer hub</small>
             </div>
         </div>
     </div>
@@ -67,8 +59,20 @@
                 <label>
                     <input id="is_games_company" class="checkbox" name="is_games_company" type="checkbox">
                 </label>
-                <br><small>Provides access to the games company dashboard</small>
+                <br><small>Legacy - to be removed soon</small>
             </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="games_company_id" class="col-md-4 control-label">Games company access</label>
+        <div class="col-md-6">
+            <select id="games_company_id" class="form-control" name="games_company_id">
+                <option value="">&nbsp;</option>
+                {% for item in GamesCompanyList %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
 
