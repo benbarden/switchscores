@@ -56,6 +56,10 @@ h6, .h6 {font-size: 14px;}
     padding: 5px 0px 5px 10px;
 }
 
+.slick-header-spaced {
+    margin: 0 0 10px 0;
+}
+
 .slick-header-text {
     font-family: 'Open Sans', Helvetica, Arial, sans-serif;
     font-size: 14px;

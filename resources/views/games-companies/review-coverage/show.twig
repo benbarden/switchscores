@@ -10,8 +10,8 @@
             <h1>{{ PageTitle }}</h1>
             <h2>{{ GameData.title }}</h2>
 
-            <h3>Reviewed</h3>
-            {% if ReviewLinkList %}
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Reviewed'} %}
+            {% if ReviewLinkList|length %}
                 <p>
                     Below is a list of the review partners who have already reviewed this game.
                 </p>
@@ -19,7 +19,8 @@
                     <thead>
                         <tr>
                             <th>Site</th>
-                            <th class="text-center">Date of review</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Score</th>
                             <th class="text-center">Link</th>
                         </tr>
                     </thead>
@@ -28,6 +29,9 @@
                             <tr>
                                 <td>{{ item.site.name }}</td>
                                 <td class="text-center">{{ item.review_date }}</td>
+                                <td class="text-center">
+                                    {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
+                                </td>
                                 <td class="text-center">
                                     <a href="{{ item.url }}" target="_blank" title="Opens in a new tab">Read review</a>
                                 </td>
@@ -41,19 +45,24 @@
                 </p>
             {% endif %}
 
-            <h3>Not reviewed</h3>
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Not reviewed'} %}
             {% if NotReviewedPartnerList %}
                 <p>
                     Below is a list of the review partners who have not yet reviewed this game.
                     We've excluded any sites that have not published a Switch review in the last 30 days.
                 </p>
+                <p>
+                    For reviewers without contact details listed, try contacting via Twitter or
+                    through their website.
+                </p>
                 <table class="table table-responsive">
                     <thead>
                     <tr>
                         <th>Site</th>
-                        <th class="text-center">Date of last review</th>
-                        <th class="text-center">Link</th>
-                        <th>Twitter</th>
+                        <th class="text-center">Latest review</th>
+                        <th>Regions</th>
+                        <th>Contact details</th>
+                        <th>Links</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,14 +70,31 @@
                             <tr>
                                 <td>{{ item.name }}</td>
                                 <td class="text-center">{{ item.last_review_date }}</td>
-                                <td class="text-center">
-                                    {% if item.website_url %}
-                                        <a href="{{ item.website_url }}" target="_blank" title="Opens in a new tab">Visit website</a>
+                                <td>
+                                    {% if item.review_code_regions %}
+                                        {{ item.review_code_regions }}
                                     {% else %}
                                         -
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% if item.contact_name %}
+                                        {{ item.contact_name }}
+                                        <br>
+                                    {% endif %}
+                                    {% if item.contact_email %}
+                                        <a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a>
+                                    {% elseif item.contact_form_link %}
+                                        <a href="{{ item.contact_form_link }}" target="_blank">Contact form</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.website_url %}
+                                        <a href="{{ item.website_url }}" target="_blank" title="Opens in a new tab">Website</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                    <br>
                                     {% if item.twitter_id %}
                                         <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank" title="Opens in a new tab">@{{ item.twitter_id }}</a>
                                     {% else %}
@@ -80,6 +106,31 @@
                     </tbody>
                 </table>
             {% endif %}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>About this page</h2>
+            <p>
+                Review coverage is a handy way of finding sites that haven't reviewed your games already.
+            </p>
+            <p>
+                We're hopeful that this tool will be particularly useful to smaller publishers who don't already have
+                a list of potential reviewers to send review codes to.
+            </p>
+            <p>
+                Reviewers do get busy, and can't commit to reviewing every game. Please keep their contact details
+                private, and avoid adding them to marketing emails without their express consent.
+            </p>
+
+            <h2>Show your support</h2>
+            <p>
+                If you're finding Switch Scores to be a useful tool, please consider
+                becoming a patron.
+            </p>
+            <a href="https://www.patreon.com/bePatron?u=16978897" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
+            <script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
 
         </div>
 

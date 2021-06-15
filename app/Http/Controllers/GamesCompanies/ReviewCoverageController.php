@@ -39,13 +39,15 @@ class ReviewCoverageController extends Controller
         $bindings = [];
 
         $bindings['GameData'] = $game;
-        $reviewLinkList = $this->repoReviewLink->byGame($gameId);
+        $reviewLinkList = $this->repoReviewLink->byGame($gameId)->sortByDesc('review_date');
         $bindings['ReviewLinkList'] = $reviewLinkList;
 
-        $reviewedPartnerIdList = $reviewLinkList->pluck('partner_id');
+        $reviewedPartnerIdList = $reviewLinkList->pluck('site_id');
         $activeReviewSites = $this->repoPartner->reviewSitesActiveRecent();
         $notReviewedList = $activeReviewSites->whereNotIn('id', $reviewedPartnerIdList)->sortByDesc('last_review_date');
         $bindings['NotReviewedPartnerList'] = $notReviewedList;
+
+        $bindings['ReviewSitesWithContactDetails'] = $this->getServicePartner()->getActiveReviewSitesWithContactDetails();
 
         $pageTitle = 'Review coverage';
         $bindings['TopTitle'] = $pageTitle;
