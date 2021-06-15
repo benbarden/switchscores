@@ -18,6 +18,10 @@
         <tr>
             <td>
                 {% include 'modules/game/table/user-game-title.twig' with {'item': item} %}
+                <br>
+                <small>
+                    <a href="{{ route('games-companies.review-coverage.show', {'gameId': item.id}) }}">Review coverage</a>
+                </small>
             </td>
             <td class="text-center">{{ ExtraDetailLine }}</td>
             <td class="text-center">{{ item.eu_release_date }}</td>

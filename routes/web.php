@@ -182,8 +182,10 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
 // *************** Games companies *************** //
 Route::group(['middleware' => ['auth.gamescompany']], function() {
 
-    // *************** Reviewers: Dashboard *************** //
+    // *************** Games companies: Dashboard *************** //
     Route::get('/games-companies', 'GamesCompanies\IndexController@show')->name('games-companies.index');
+
+    Route::get('/games-companies/review-coverage/{gameId}', 'GamesCompanies\ReviewCoverageController@show')->name('games-companies.review-coverage.show');
 
 });
 

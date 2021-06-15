@@ -1,0 +1,88 @@
+{% extends 'theme/wos/games-companies/clean-wide.twig' %}
+{% set hideHeader = 'Y' %}
+
+{% block page_inner %}
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            <h1>{{ PageTitle }}</h1>
+            <h2>{{ GameData.title }}</h2>
+
+            <h3>Reviewed</h3>
+            {% if ReviewLinkList %}
+                <p>
+                    Below is a list of the review partners who have already reviewed this game.
+                </p>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Site</th>
+                            <th class="text-center">Date of review</th>
+                            <th class="text-center">Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in ReviewLinkList %}
+                            <tr>
+                                <td>{{ item.site.name }}</td>
+                                <td class="text-center">{{ item.review_date }}</td>
+                                <td class="text-center">
+                                    <a href="{{ item.url }}" target="_blank" title="Opens in a new tab">Read review</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>
+                    There are no reviews of this game yet.
+                </p>
+            {% endif %}
+
+            <h3>Not reviewed</h3>
+            {% if NotReviewedPartnerList %}
+                <p>
+                    Below is a list of the review partners who have not yet reviewed this game.
+                    We've excluded any sites that have not published a Switch review in the last 30 days.
+                </p>
+                <table class="table table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th class="text-center">Date of last review</th>
+                        <th class="text-center">Link</th>
+                        <th>Twitter</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in NotReviewedPartnerList %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td class="text-center">{{ item.last_review_date }}</td>
+                                <td class="text-center">
+                                    {% if item.website_url %}
+                                        <a href="{{ item.website_url }}" target="_blank" title="Opens in a new tab">Visit website</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.twitter_id %}
+                                        <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank" title="Opens in a new tab">@{{ item.twitter_id }}</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endblock page_inner %}
