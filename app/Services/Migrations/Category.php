@@ -4,6 +4,7 @@ namespace App\Services\Migrations;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Game;
 use App\DataSource;
 
 class Category
@@ -25,10 +26,7 @@ class Category
     {
         $year = (int) $year;
 
-        $games = DB::table('games')
-            ->select('games.*')
-            ->whereNull('games.category_id');
-
+        $games = Game::whereNull('category_id');
         if ($year) {
             $games = $games->where('games.release_year', $year);
         }
