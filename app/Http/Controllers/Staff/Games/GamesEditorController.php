@@ -256,6 +256,8 @@ class GamesEditorController extends Controller
 
                 // Clear digital status
                 $game->format_digital = null;
+                // Clear fs_id
+                $game->eshop_europe_fs_id = null;
                 $game->save();
 
             }

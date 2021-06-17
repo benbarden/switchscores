@@ -1,5 +1,42 @@
-<h2>External data</h2>
-<h3>Nintendo.co.uk API</h3>
+{% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Format options'} %}
+
+<table class="table table-condensed table-responsive">
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Digital</span>
+        </td>
+        <td>
+            {{ GameData.format_digital }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Physical</span>
+        </td>
+        <td>
+            {{ GameData.format_physical }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">DLC</span>
+        </td>
+        <td>
+            {{ GameData.format_dlc }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Demo</span>
+        </td>
+        <td>
+            {{ GameData.format_demo }}
+        </td>
+    </tr>
+</table>
+
+{% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Nintendo.co.uk API'} %}
+
 <table class="table table-condensed table-responsive">
 
     <tr>
@@ -7,17 +44,17 @@
             <span style="font-weight: bold;">Link</span>
         </td>
         <td>
-            {% if GameData.isDigitalDelisted() %}
+            {% if DataSourceNintendoCoUk %}
+                <i class="fas fa-link"></i>
+                {{ DataSourceNintendoCoUk.link_id }}
+            {% elseif GameData.eshop_europe_fs_id %}
                 <i class="fas fa-unlink"></i>
-                De-listed
+                Broken
+                <br>
+                <i class="fas fa-exclamation-triangle"></i> Still linked to {{ GameData.eshop_europe_fs_id }}
             {% else %}
-                {% if DataSourceNintendoCoUk %}
-                    <i class="fas fa-link"></i>
-                    {{ DataSourceNintendoCoUk.link_id }}
-                {% else %}
-                    <i class="fas fa-unlink"></i>
-                    Not linked
-                {% endif %}
+                <i class="fas fa-unlink"></i>
+                Not linked
             {% endif %}
             {% if mode == 'reviewers' %}
 

@@ -47,10 +47,22 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {% if item.eshop_europe_fs_id %}
-                            <i class="fas fa-link"></i>
+                        {% if item.dspNintendoCoUk %}
+                            {# Used to determine if we can rely on this data - only works with repo code #}
+                            {% if item.dspNintendoCoUk|length %}
+                                <i class="fas fa-link"></i>
+                            {% elseif item.eshop_europe_fs_id %}
+                                <i class="fas fa-unlink"></i>
+                            {% else %}
+                                -
+                            {% endif %}
                         {% else %}
-                            -
+                            {# Legacy code - for DB queries #}
+                            {% if item.eshop_europe_fs_id %}
+                                <i class="fas fa-link"></i>
+                            {% else %}
+                                -
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="text-center">
