@@ -4,25 +4,48 @@
 
 <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-12">
 
-        <h2>Categories</h2>
+        <h2>Integrity checks</h2>
 
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-quality.category.dashboard') }}">Category dashboard</a>
-                </td>
-                <td class="text-right">
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-md-6">
+        {% if IntegrityChecks %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Entity</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Failing count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in IntegrityChecks %}
+                    <tr>
+                        <td>{{ item.check_name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.entity_name }}</td>
+                        <td class="text-center">
+                            {% if item.is_passing is null %}
+                                <span class="label label-default h6">Never run!</span>
+                            {% elseif item.is_passing == 1 %}
+                                <span class="label label-success h6">Passing</span>
+                            {% elseif item.is_passing == 0 %}
+                                <span class="label label-warning h6">Failing</span>
+                            {% else %}
+                                <span class="label label-danger h6">Error</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ item.failing_count }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No integrity checks found.</p>
+        {% endif %}
 
         <h2>Data integrity</h2>
 
@@ -36,6 +59,28 @@
                         <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>Categories</h2>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-quality.category.dashboard') }}">Category dashboard</a>
+                </td>
+                <td class="text-right">
+                </td>
+            </tr>
             </tbody>
         </table>
 
