@@ -20,6 +20,7 @@
 35 5 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameReviewStats >/dev/null 2>&1
 40 5 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameCalendarStats >/dev/null 2>&1
 45 5 * * * www-data cd /var/www/switchscores.com && php artisan GameUpdateQualityScores >/dev/null 2>&1
+55 5 * * * www-data cd /var/www/switchscores.com && php artisan IntegrityCheckChecker >/dev/null 2>&1
 
 0 6 * * * www-data cd /var/www/switchscores.com && php artisan SitemapGenerateGames >/dev/null 2>&1
 2 6 * * * www-data cd /var/www/switchscores.com && php artisan SitemapGenerateCalendar >/dev/null 2>&1
