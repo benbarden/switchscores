@@ -1,0 +1,32 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['contact_name'] = "{{ PartnerData.contact_name }}";
+        formVals['contact_email'] = "{{ PartnerData.contact_email }}";
+        formVals['contact_form_link'] = "{{ PartnerData.contact_form_link }}";
+        formVals['review_code_regions'] = "{{ PartnerData.review_code_regions }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['contact_name'] = "{{ old('contact_name') }}";
+        formVals['contact_email'] = "{{ old('contact_email') }}";
+        formVals['contact_form_link'] = "{{ old('contact_form_link') }}";
+        formVals['review_code_regions'] = "{{ old('review_code_regions') }}";
+
+    }
+
+    $('#contact_name').val(formVals['contact_name']);
+    $('#contact_email').val(formVals['contact_email']);
+    $('#contact_form_link').val(formVals['contact_form_link']);
+    $('#review_code_regions').val(formVals['review_code_regions']);
+
+    $('#contact_name').focus();
+
+</script>

@@ -13,31 +13,16 @@
                 <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
                 <a href="mailto:ben@switchscores.com">email</a>.
             </p>
-            <h2>Unranked games</h2>
-            <p>
-                We've recently updated the unranked games page to make it easier to use.
-                You can use this list to help get more of our database ranked.
-            </p>
-            <p>
-                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
-            </p>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-4 col-md-4">
             <h2>Your details</h2>
+            <p>
+                We encourage you to fill out these details so your profile page is up to date, and to allow
+                publishers and developers to contact you with review codes. Only publishers and developers
+                will be able to view this information.
+            </p>
             <table class="table table-condensed table-responsive">
                 <tr>
                     <td>
-                        <span style="font-weight: bold;">Switch Scores profile</span>
-                    </td>
-                    <td>
-                        <a href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Your site</span>
+                        <span style="font-weight: bold;">Website URL</span>
                     </td>
                     <td>
                         <a href="{{ PartnerData.website_url }}" target="_blank">Visit site</a>
@@ -55,10 +40,50 @@
                         {% endif %}
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Contact name</span>
+                    </td>
+                    <td>{{ PartnerData.contact_name }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Contact method</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.contact_email %}
+                            <a href="mailto:{{ PartnerData.contact_email }}">{{ PartnerData.contact_email }}</a>
+                        {% elseif PartnerData.contact_form_link %}
+                            <a href="{{ PartnerData.contact_form_link }}" target="_blank">Contact form</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Review code regions</span>
+                    </td>
+                    <td>{{ PartnerData.review_code_regions }}</td>
+                </tr>
             </table>
+            <a class="btn btn-primary" href="{{ route('reviewers.profile.edit') }}">Edit details</a>
+            <a class="btn btn-primary" href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
 
-            <h2>Quick stats</h2>
+        </div>
 
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Unranked games'} %}
+            <p>
+                We've recently updated the unranked games page to make it easier to use.
+                You can use this list to help get more of our database ranked.
+            </p>
+            <p>
+                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
+            </p>
+
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Quick stats'} %}
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-4 text-center">
                     <h2>
@@ -75,15 +100,9 @@
                     </h2>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 text-center">
-                    {#
-                    <h2>
-                        {{ ReviewAvg }}
-                        <br>
-                        <span class="h4">average</span>
-                    </h2>
-                    #}
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -140,7 +159,8 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Feed status</h2>
+            <br>
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Feed status'} %}
             {% if IsYoutubeChannel %}
                 <div class="alert alert-info">
                     <strong>As you're submitting Youtube videos, you don't need to worry about this section</strong>.
@@ -229,9 +249,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>
-                Review campaigns
-            </h2>
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Review campaigns'} %}
             <p>
                 This is where we highlight games that we'd love to see reviews of next.
                 This gets more of our database ranked. Pick a campaign and jump right in!

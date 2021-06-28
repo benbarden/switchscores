@@ -151,6 +151,9 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
     // *************** Reviewers: Dashboard *************** //
     Route::get('/reviewers', 'Reviewers\IndexController@show')->name('reviewers.index');
 
+    // *************** Reviewers: Edit details *************** //
+    Route::match(['get', 'post'], '/reviewers/edit-details', 'Reviewers\ProfileController@edit')->name('reviewers.profile.edit');
+
     // *************** Reviewers: Manually add reviews *************** //
     Route::match(['get', 'post'], '/reviewers/reviews/feed-item/find-game', 'Reviewers\ReviewFeedItemController@findGame')->name('reviewers.review-feed-item.find-game');
     Route::match(['get', 'post'], '/reviewers/reviews/feed-item/add/{gameId}', 'Reviewers\ReviewFeedItemController@add')->name('reviewers.review-feed-item.add');

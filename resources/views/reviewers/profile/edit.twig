@@ -1,0 +1,65 @@
+{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('reviewers.profile.edit') %}
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="form-group">
+        <label for="website_url" class="col-md-4 control-label">Site URL (include http://)</label>
+        <div class="col-md-6">
+            {{ PartnerData.website_url }}
+            <br><small>Please get in touch if you need to change this.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="contact_name" class="col-md-4 control-label">
+            Contact name
+        </label>
+        <div class="col-md-6">
+            <input id="contact_name" type="text" class="form-control" name="contact_name" maxlength="100">
+            <small>The name that any queries should be addressed to.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="contact_email" class="col-md-4 control-label">
+            Contact email
+        </label>
+        <div class="col-md-6">
+            <input id="contact_email" type="text" class="form-control" name="contact_email">
+            <small>The email address you want publishers and developers to use for getting in touch.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="contact_form_link" class="col-md-4 control-label">
+            Contact form link
+        </label>
+        <div class="col-md-6">
+            <input id="contact_form_link" type="text" class="form-control" name="contact_form_link">
+            <small>Optional - if you'd prefer not to include your email, you can also use a contact form link.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="review_code_regions" class="col-md-4 control-label">
+            Review code regions
+        </label>
+        <div class="col-md-6">
+            <input id="review_code_regions" type="text" class="form-control" name="review_code_regions" maxlength="100">
+            <small>List the regions you will codes for. Keep it brief - e.g. UK, Europe, US.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <button type="submit" class="btn outline btn-primary">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>
+
+{% include 'reviewers/profile/scripts.twig' %}
+
+{% endblock page_inner %}
