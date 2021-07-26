@@ -29,11 +29,12 @@
     </div>
 {% endif %}
 
-<table class="table data-sortable table-responsive">
+<table class="table data-sortable table-condensed table-responsive">
     <thead>
         <tr>
-            <th class="text-center">#</th>
+            <th class="text-center">Date</th>
             <th class="text-left">Title</th>
+            <th class="text-left">Site</th>
             <th class="text-center">Game</th>
             <th class="text-center">Score</th>
             <th class="text-center"></th>
@@ -44,21 +45,14 @@
             <tr>
                 <td class="text-center">
                     <small>
-                        {{ item.id }}
+                        {{ item.item_date|date('Y-m-d') }}
                     </small>
                 </td>
                 <td class="text-left" style="max-width: 300px;">
                     <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
-                    {% if item.game.id is not null %}
-                        <div class="pull-right">
-                            <small>
-                                {% include 'modules/game/table/staff-game-edit.twig' with {'item': item.game, 'LinkDesc': 'edit game details'} %}
-                            </small>
-                        </div>
-                    {% endif %}
-                    <br>
+                </td>
+                <td class="text-left">
                     <small>
-                        {{ item.item_date|date('Y-m-d') }} |
                         {{ item.site.name }}
                     </small>
                 </td>
@@ -113,6 +107,7 @@
             "order": [{{ jsInitialSort|raw }}],
             "pageLength": 50,
             "columns": [
+                null,
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
