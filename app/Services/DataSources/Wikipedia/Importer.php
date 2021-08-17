@@ -14,6 +14,13 @@ class Importer
     const WIKI_PAGE_LIST_2 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(G%E2%80%93P)';
     const WIKI_PAGE_LIST_3 = 'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(Q%E2%80%93Z)';
 
+    protected $wikiPageList = [
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(A%E2%80%93C)',
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(D%E2%80%93F)',
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(G%E2%80%93P)',
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(Q%E2%80%93Z)'
+    ];
+
     /**
      * @var GoutteClient
      */
@@ -69,6 +76,16 @@ class Importer
         $html = '<html><head><body><table id="softwarelist">'.$row.'</table></body></head></html>';
         $this->domCrawler = new DomCrawler();
         $this->domCrawler->addHtmlContent($html);
+    }
+
+    public function crawlExtractImportAll($logger, $sourceId)
+    {
+        foreach ($this->wikiPageList as $pageUrl) {
+            $logger->info('Crawling page: '.$pageUrl);
+            $this->domCrawler = $this->goutteClient->request('GET', $pageUrl);
+            $this->extractRows();
+            $this->importToDb($sourceId);
+        }
     }
 
     public function crawlPage()
