@@ -1,0 +1,22 @@
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        Reviews <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ route('staff.reviews.dashboard') }}">Reviews dashboard</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ route('staff.reviews.feed-items.list') }}">Review feed items - pending</a></li>
+        <li><a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ route('staff.reviews.link.list') }}">Review links</a></li>
+        <li><a href="{{ route('staff.reviews.feed-imports.list') }}">Feed imports</a></li>
+        <li><a href="{{ route('staff.reviews.highlights') }}">Review highlights</a></li>
+        <li><a href="{{ route('staff.reviews.campaigns') }}">Review campaigns</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ route('staff.reviews.tools.runFeedImporter') }}">RunFeedImporter</a></li>
+        <li><a href="{{ route('staff.reviews.tools.runFeedParser') }}">RunFeedParser</a></li>
+        <li><a href="{{ route('staff.reviews.tools.runFeedReviewGenerator') }}">RunFeedReviewGenerator</a></li>
+        <li><a href="{{ route('staff.reviews.tools.updateGameRanks') }}">UpdateGameRanks</a></li>
+        <li><a href="{{ route('staff.reviews.tools.updateGameReviewStats') }}">UpdateGameReviewStats</a></li>
+    </ul>
+</li>

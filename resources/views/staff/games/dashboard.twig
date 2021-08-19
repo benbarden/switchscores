@@ -11,13 +11,12 @@
 
     <div class="col-md-4">
 
-        <h2>Action lists</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Weekly updates'} %}
 
         <table class="table">
             <tbody>
             <tr>
                 <td>
-                    <div class="label alert-danger">High</div>
                     <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
                 </td>
                 <td class="text-right">
@@ -26,16 +25,6 @@
             </tr>
             <tr>
                 <td>
-                    <div class="label alert-danger">High</div>
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="label alert-warning">Medium</div>
                     <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
                 </td>
                 <td class="text-right">
@@ -44,7 +33,36 @@
             </tr>
             <tr>
                 <td>
-                    <div class="label alert-warning">Medium</div>
+                    <a href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Watchlists'} %}
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
+                </td>
+                <td class="text-right">
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{{ route('staff.games.list.no-eshop-price') }}">No price</a>
                 </td>
                 <td class="text-right">
@@ -53,7 +71,6 @@
             </tr>
             <tr>
                 <td>
-                    <div class="label alert-info">Low</div>
                     <a href="{{ route('staff.games.list.no-video-type') }}">No video type</a>
                 </td>
                 <td class="text-right">
@@ -62,7 +79,6 @@
             </tr>
             <tr>
                 <td>
-                    <div class="label alert-info">Low</div>
                     <a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a>
                 </td>
                 <td class="text-right">
@@ -72,7 +88,7 @@
             </tbody>
         </table>
 
-        <h2>Game stats</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Game stats'} %}
 
         <table class="table">
             <tbody>
@@ -107,19 +123,9 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Lists'} %}
         <table class="table">
             <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.search') }}">Search games</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
-                </td>
-            </tr>
             <tr>
                 <td>
                     <a href="{{ route('staff.games.list.recently-added') }}">Recently added</a>
@@ -135,20 +141,26 @@
                     <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
                 </td>
             </tr>
+            </tbody>
+        </table>
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Admin tools'} %}
+        <table class="table">
+            <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a>
+                    <a href="{{ route('staff.games.search') }}">Search</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a>
+                    <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <h2>Archive</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Archive'} %}
         <table class="table">
             <tbody>
             <tr>
@@ -159,7 +171,7 @@
             </tbody>
         </table>
 
-        <h2>Tools</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Crons'} %}
         <table class="table">
             <tbody>
             <tr>
@@ -175,7 +187,7 @@
 
     <div class="col-md-4">
 
-        <h2>Formats</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Formats'} %}
 
         {% if FormatOptionTable %}
         <table class="table">
