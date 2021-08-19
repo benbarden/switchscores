@@ -7,29 +7,60 @@
     <div class="col-xs-12 col-sm-8 col-md-8">
 
         <p>
-            Switch Scores includes lots of useful information for each game, including
-            partner pages for a game's publisher and developer.
+            If you're a Switch developer or publisher, join Switch Scores and get access to
+            our <strong>games company dashboard</strong>.
         </p>
 
-        <p>
-            If you're a developer or publisher of Switch games, we can link you up with reviewers
-            to help get your games seen. To get started, <a href="{{ route('login') }}">register</a> an
-            account.
-        </p>
+        <img src="/img/static/partners/games-company-dashboard.png" alt="Switch Scores - Games company dashboard" class="img-responsive">
+
+        <h2>Benefits</h2>
+        <ul>
+            <li>
+                <strong>Get in touch with reviewers</strong>.
+                If you're looking for sites to review your games, we've got you covered. Reviewers who have opted in to share
+                their details with games companies will be listed on the dashboard.
+                (Not shown on the screenshot for privacy reasons.)
+            </li>
+            <li>
+                <strong>Fill in the gaps with review coverage</strong>.
+                If your game has already been covered by a few sites and you're not sure who to ask next,
+                our unique review coverage feature will show you who has and hasn't covered your game. We suggest you
+                keep track of who you've already asked :)
+            </li>
+            <li>
+                <strong>A public profile page for your company</strong>.
+                Our pages are often ranked highly on Google - particularly for smaller studios.
+            </li>
+            <li>
+                <strong>Keep track of reviews for your Switch titles</strong>.
+                If your games are reviewed by our review partners, you'll be able to access these from the
+                dashboard.
+            </li>
+            <li>
+                <strong>See which of your games are ranked or unranked</strong>.
+                We need a minimum of 3 reviews to rank a game. If any of your games are unranked, you'll
+                be able to see this here.
+            </li>
+        </ul>
+
+        <h2>How to join</h2>
 
         <p>
-            Once you've registered, <a href="{{ about.landing }}">get in touch</a> and we'll set you up.
-            Let us know the following details:
+            There are two ways you can get access to the games company dashboard:
         </p>
 
         <ol>
-            <li>the email address you used to register</li>
-            <li>the name of your company - this will be the name we display on the site</li>
-            <li>a link to your website along with your Twitter handle - if you have multiple regional sites, just go with the
-                UK / Europe version, or any English-language version</li>
-            <li>a list of the games you have released for Switch, so we can cross-check these against our database
-                and ensure they are linked up correctly</li>
-            <li>whether you want to be able to connect with reviewers via the site</li>
+            <li>
+                Go to the <a href="{{ route('login') }}">login page</a> and sign up with Twitter. Then
+                <a href="{{ route('about.landing') }}">get in touch</a> and we'll complete the setup for you.
+            </li>
+            <li>
+                If you've got an invite code, you can <a href="{{ route('register') }}">register</a> with
+                your email address and a password - no need to use Twitter.
+                There's an added bonus if you go this route: we can create an invite
+                code that will automatically give you access to your details on the games company dashboard.
+                <a href="{{ route('about.landing') }}">Get in touch</a> and we'll be happy to give you an invite code.
+            </li>
         </ol>
 
     </div>
@@ -43,10 +74,10 @@
             but we may need a bit more help with filling in any missing details.
         </p>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Signing up'} %}
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Need help?'} %}
         <p>
-            If you'd prefer to sign up with email/password rather than Twitter,
-            <a href="{{ about.landing }}">get in touch</a> and we'll happily send you an invite code.
+            If you run into any issues, or you'd like an invite code,
+            <a href="{{ route('about.landing') }}">get in touch</a> and we'll be happy to help.
         </p>
 
     </div>
