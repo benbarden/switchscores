@@ -17,6 +17,7 @@ use App\Traits\StaffView;
 
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\InviteCode\CodeGenerator;
+use App\Domain\Partner\Repository as PartnerRepository;
 
 class InviteCodeController extends Controller
 {
@@ -39,14 +40,17 @@ class InviteCodeController extends Controller
 
     protected $viewBreadcrumbs;
     protected $repoInviteCode;
+    protected $repoPartner;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
-        InviteCodeRepository $repoInviteCode
+        InviteCodeRepository $repoInviteCode,
+        PartnerRepository $repoPartner
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoInviteCode = $repoInviteCode;
+        $this->repoPartner = $repoPartner;
     }
 
     public function showList()
@@ -76,6 +80,9 @@ class InviteCodeController extends Controller
 
             $codesCount = $request->codes_count;
 
+            $gamesCompanyId = null;
+            $reviewerId = null;
+
             for ($i=1; $i<=$codesCount; $i++) {
 
                 $timesUsed = 0;
@@ -86,7 +93,7 @@ class InviteCodeController extends Controller
 
                 $validator = Validator::make($request->all(), $this->validationRulesGenerator);
                 try {
-                    $this->repoInviteCode->create($inviteCode, $timesUsed, $timesLeft, $isActive);
+                    $this->repoInviteCode->create($inviteCode, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
                 } catch (\Exception $e) {
                     $validator->errors()->add('codes_count', 'Failed - duplicate code!');
                     return redirect(route('owner.invite-code.generate-codes'))
@@ -148,7 +155,9 @@ class InviteCodeController extends Controller
                 $timesLeft = 0;
             }
             $isActive = $request->is_active == 'on' ? 1 : 0;
-            $this->repoInviteCode->create($request->invite_code, $timesUsed, $timesLeft, $isActive);
+            $gamesCompanyId = $request->games_company_id;
+            $reviewerId = $request->reviewer_id;
+            $this->repoInviteCode->create($request->invite_code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
 
             return redirect(route('owner.invite-code.list'));
 
@@ -159,6 +168,9 @@ class InviteCodeController extends Controller
         }
 
         $bindings['FormMode'] = 'add';
+
+        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         return view('owner.invite-code.add', $bindings);
     }
@@ -189,7 +201,9 @@ class InviteCodeController extends Controller
                 $timesLeft = 0;
             }
             $isActive = $request->is_active == 'on' ? 1 : 0;
-            $this->repoInviteCode->edit($inviteCodeData, $request->invite_code, $timesUsed, $timesLeft, $isActive);
+            $gamesCompanyId = $request->games_company_id;
+            $reviewerId = $request->reviewer_id;
+            $this->repoInviteCode->edit($inviteCodeData, $request->invite_code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
 
             return redirect(route('owner.invite-code.list'));
 
@@ -201,6 +215,9 @@ class InviteCodeController extends Controller
 
         $bindings['InviteCodeData'] = $inviteCodeData;
         $bindings['InviteCodeId'] = $inviteCodeId;
+
+        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         return view('owner.invite-code.edit', $bindings);
     }

@@ -46,6 +46,10 @@ class IndexController extends Controller
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
+        if (request()->action == 'newsignup') {
+            $bindings['ShowNewSignup'] = true;
+        }
+
         return view('games-companies.index', $bindings);
     }
 }

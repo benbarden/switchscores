@@ -15,6 +15,17 @@ class InviteCode extends Model
      * @var array
      */
     protected $fillable = [
-        'invite_code', 'times_used', 'times_left', 'is_active'
+        'invite_code', 'times_used', 'times_left', 'is_active',
+        'games_company_id', 'reviewer_id'
     ];
+
+    public function gamesCompany()
+    {
+        return $this->hasOne('App\Partner', 'id', 'games_company_id');
+    }
+
+    public function reviewer()
+    {
+        return $this->hasOne('App\Partner', 'id', 'reviewer_id');
+    }
 }

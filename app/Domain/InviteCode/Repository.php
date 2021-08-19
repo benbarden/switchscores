@@ -7,23 +7,27 @@ use App\InviteCode;
 
 class Repository
 {
-    public function create($code, $timesUsed, $timesLeft, $isActive)
+    public function create($code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId)
     {
         InviteCode::create([
             'invite_code' => $code,
             'times_used' => $timesUsed,
             'times_left' => $timesLeft,
             'is_active' => $isActive,
+            'games_company_id' => $gamesCompanyId,
+            'reviewer_id' => $reviewerId,
         ]);
     }
 
-    public function edit(InviteCode $inviteCode, $code, $timesUsed, $timesLeft, $isActive)
+    public function edit(InviteCode $inviteCode, $code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId)
     {
         $values = [
             'invite_code' => $code,
             'times_used' => $timesUsed,
             'times_left' => $timesLeft,
             'is_active' => $isActive,
+            'games_company_id' => $gamesCompanyId,
+            'reviewer_id' => $reviewerId,
         ];
 
         $inviteCode->fill($values);

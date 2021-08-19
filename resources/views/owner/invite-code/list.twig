@@ -14,6 +14,8 @@
                 <th class="text-left">Code</th>
                 <th class="text-center">Times used</th>
                 <th class="text-center">Times left</th>
+                <th class="text-center">Games company</th>
+                <th class="text-center">Reviewer</th>
                 <th class="text-center">Is active?</th>
                 <th class="text-center">Created</th>
                 <th class="text-center">Options</th>
@@ -35,6 +37,20 @@
                     </td>
                     <td class="text-center">
                         {{ item.times_left }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.games_company_id %}
+                            {{ item.gamesCompany.name }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.reviewer_id %}
+                            {{ item.reviewer.name }}
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.is_active == 1 %}

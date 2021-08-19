@@ -80,6 +80,10 @@ class IndexController extends Controller
         }
         $bindings['IsYoutubeChannel'] = $isYoutubeChannel;
 
+        if (request()->action == 'newsignup') {
+            $bindings['ShowNewSignup'] = true;
+        }
+
         return view('reviewers.index', $bindings);
     }
 }

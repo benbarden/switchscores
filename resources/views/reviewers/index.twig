@@ -7,12 +7,24 @@
 
         <div class="col-xs-12 col-sm-8 col-md-8">
             <h1>{{ PageTitle }}</h1>
-            <p>
-                Welcome, {{ auth_user().display_name }} - thanks for checking out the Reviewers dashboard.
-                Please send questions or feedback to Ben via
-                <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-                <a href="mailto:ben@switchscores.com">email</a>.
-            </p>
+
+            {% if ShowNewSignup %}
+                <div class="alert alert-success">
+                    <strong>Thanks for signing up at Switch Scores!</strong> As you used a special invite code,
+                    we've been able to take you right to the reviewers dashboard.
+                    Please send questions or feedback to Ben via
+                    <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                    <a href="mailto:ben@switchscores.com">email</a>.
+                </div>
+            {% else %}
+                <p>
+                    Thanks for checking out the Reviewers dashboard!
+                    Please send questions or feedback to Ben via
+                    <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                    <a href="mailto:ben@switchscores.com">email</a>.
+                </p>
+            {% endif %}
+
             <h2>Your details</h2>
             <p>
                 We encourage you to fill out these details so your profile page is up to date, and to allow

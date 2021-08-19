@@ -10,6 +10,8 @@
         formVals['times_used'] = "{{ InviteCodeData.times_used }}";
         formVals['times_left'] = "{{ InviteCodeData.times_left }}";
         formVals['is_active'] = "{{ InviteCodeData.is_active }}";
+        formVals['games_company_id'] = "{{ InviteCodeData.games_company_id }}";
+        formVals['reviewer_id'] = "{{ InviteCodeData.reviewer_id }}";
 
     } else {
 
@@ -19,6 +21,8 @@
         formVals['times_used'] = "{{ old('times_used') }}";
         formVals['times_left'] = "{{ old('times_left') }}";
         formVals['is_active'] = "{{ old('is_active') }}";
+        formVals['games_company_id'] = "{{ old('games_company_id') }}";
+        formVals['reviewer_id'] = "{{ old('reviewer_id') }}";
 
     }
 
@@ -30,6 +34,8 @@
     } else {
         $('#is_active').attr('checked', false);
     }
+    $('#games_company_id').val(formVals['games_company_id']);
+    $('#reviewer_id').val(formVals['reviewer_id']);
 
     $('#invite_code').focus();
 

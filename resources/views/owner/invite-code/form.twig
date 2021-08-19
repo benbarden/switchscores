@@ -39,6 +39,32 @@
     </div>
 
     <div class="form-group">
+        <label for="games_company_id" class="col-md-4 control-label">Auto set games company access</label>
+        <div class="col-md-6">
+            <select id="games_company_id" class="form-control" name="games_company_id">
+                <option value="">&nbsp;</option>
+                {% for item in GamesCompanyList %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+            <small>Automatically grant access to the games company dashboard on signing up.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="reviewer_id" class="col-md-4 control-label">Auto set reviewer access</label>
+        <div class="col-md-6">
+            <select id="reviewer_id" class="form-control" name="reviewer_id">
+                <option value="">&nbsp;</option>
+                {% for item in PartnerList %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+            <small>Automatically grant access to the reviewer dashboard on signing up.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit

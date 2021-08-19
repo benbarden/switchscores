@@ -8,12 +8,6 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
 
             <h1>{{ PageTitle }}</h1>
-            <p>
-                Thanks for checking out the Games company dashboard!
-                Please send questions or feedback to Ben via
-                <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-                <a href="mailto:ben@switchscores.com">email</a>.
-            </p>
 
         </div>
 
@@ -22,6 +16,23 @@
     <div class="row member-dashboard">
 
         <div class="col-xs-12 col-sm-8 col-md-8">
+
+            {% if ShowNewSignup %}
+                <div class="alert alert-success">
+                    <strong>Thanks for signing up at Switch Scores!</strong> As you used a special invite code,
+                    we've been able to take you right to the games company dashboard.
+                    Please send questions or feedback to Ben via
+                    <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                    <a href="mailto:ben@switchscores.com">email</a>.
+                </div>
+            {% else %}
+                <p>
+                    Thanks for checking out the Games company dashboard!
+                    Please send questions or feedback to Ben via
+                    <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
+                    <a href="mailto:ben@switchscores.com">email</a>.
+                </p>
+            {% endif %}
 
             <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
             {% if ReleasedGames or UpcomingGames %}

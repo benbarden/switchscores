@@ -119,6 +119,13 @@ class RegisterController extends Controller
             $inviteCode = $this->repoInviteCode->getByCode($data['invite_code']);
             $values['invite_code_id'] = $inviteCode->id;
             $hasInviteCode = true;
+            if ($inviteCode->games_company_id) {
+                $values['games_company_id'] = $inviteCode->games_company_id;
+                $this->redirectTo = route('games-companies.index').'?action=newsignup';
+            } elseif ($inviteCode->reviewer_id) {
+                $values['partner_id'] = $inviteCode->reviewer_id;
+                $this->redirectTo = route('reviewers.index').'?action=newsignup';
+            }
         } else {
             $hasInviteCode = false;
         }
