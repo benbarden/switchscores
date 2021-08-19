@@ -68,173 +68,38 @@
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
 
                         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Games <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('staff.games.add') }}">+ Add game</a></li>
-                                <li><a href="{{ route('staff.games.search') }}">Search games</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
-                                <li><a href="{{ route('staff.games.list.recently-released') }}">Recently released</a></li>
-                                <li><a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a></li>
-                                <li><a href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a></li>
-                                <li><a href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a></li>
-                                <li><a href="{{ route('staff.games.featured-games.list') }}">Featured games</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a></li>
-                                <li><a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a></li>
-                                <li><a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a></li>
-                                <li><a href="{{ route('staff.games.list.no-eshop-price') }}">No price</a></li>
-                                <li><a href="{{ route('staff.games.list.no-video-type') }}">No video type</a></li>
-                                <li><a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('staff.games-title-hash.list') }}">All title hashes</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('staff.games.tools.updateGameCalendarStats') }}">UpdateGameCalendarStats</a></li>
-                            </ul>
-                        </li>
+                            {% include 'theme/wos/staff/nav-top/games.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Reviews <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.reviews.dashboard') }}">Reviews dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.reviews.feed-items.list') }}">Review feed items - pending</a></li>
-                                    <li><a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.reviews.link.list') }}">Review links</a></li>
-                                    <li><a href="{{ route('staff.reviews.feed-imports.list') }}">Feed imports</a></li>
-                                    <li><a href="{{ route('staff.reviews.highlights') }}">Review highlights</a></li>
-                                    <li><a href="{{ route('staff.reviews.campaigns') }}">Review campaigns</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.reviews.tools.runFeedImporter') }}">RunFeedImporter</a></li>
-                                    <li><a href="{{ route('staff.reviews.tools.runFeedParser') }}">RunFeedParser</a></li>
-                                    <li><a href="{{ route('staff.reviews.tools.runFeedReviewGenerator') }}">RunFeedReviewGenerator</a></li>
-                                    <li><a href="{{ route('staff.reviews.tools.updateGameRanks') }}">UpdateGameRanks</a></li>
-                                    <li><a href="{{ route('staff.reviews.tools.updateGameReviewStats') }}">UpdateGameReviewStats</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/reviews.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Categorisation <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.categorisation.dashboard') }}">Categorisation dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.categorisation.category.list') }}">Categories</a></li>
-                                    <li><a href="{{ route('staff.categorisation.tag.list') }}">Tags</a></li>
-                                    <li><a href="{{ route('staff.categorisation.game-series.list') }}">Series</a></li>
-                                    <li><a href="{{ route('staff.categorisation.game-collection.list') }}">Collections</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.categorisation.game-category-suggestions.index') }}">Game category suggestions</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/categorisation.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('News manager') or auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    News <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.news.dashboard') }}">News dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.news.list') }}">News list</a></li>
-                                    <li><a href="{{ route('staff.news.category.list') }}">News categories</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.news.add') }}">+ Add news</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/news.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('Partnerships manager') or auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Partners <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.partners.dashboard') }}">Partners dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.reviews.site.list') }}">Review sites</a></li>
-                                    <li><a href="{{ route('staff.partners.feed-links.list') }}">Feed links</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.partners.games-company.list') }}">Games companies</a></li>
-                                    <li><a href="{{ route('staff.partners.outreach.list') }}">Partner outreach - view all</a></li>
-                                    <li><a href="{{ route('staff.partners.outreach.add') }}">+ Add outreach</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.partners.tools.partnerUpdateFields') }}">PartnerUpdateFields</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/partners.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('eShop manager')
                            or auth_user().hasRole('Wikipedia manager')
                            or auth_user().hasRole('Data source manager')
                            or auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Data sources <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
-                                        <li><a href="{{ route('staff.data-sources.dashboard') }}">Data sources dashboard</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API - Unlinked items</a></li>
-                                        <li><a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Nintendo.co.uk API - Ignored items</a></li>
-                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">DSNintendoCoUkImportParseLink</a></li>
-                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">DSNintendoCoUkUpdateGames</a></li>
-                                        <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a></li>
-                                        <li role="separator" class="divider"></li>
-                                    {% endif %}
-                                    {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
-                                        <li><a href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Wikipedia - Unlinked items</a></li>
-                                        <li><a href="{{ route('staff.data-sources.wikipedia.ignored') }}">Wikipedia - Ignored items</a></li>
-                                        <li><a href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a></li>
-                                        <li><a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
-                                        <li role="separator" class="divider"></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/data-sources.twig' %}
                         {% endif %}
 
                         {% if auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Data quality <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('staff.data-quality.dashboard') }}">Data quality dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.data-quality.category.dashboard') }}">Category dashboard</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/data-quality.twig' %}
                         {% endif %}
 
                         {% if auth_user().isOwner() %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Owner <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('owner.audit.index') }}">Audit</a></li>
-                                    <li><a href="{{ route('owner.user.list') }}">Users</a></li>
-                                    <li><a href="{{ route('owner.invite-code.list') }}">Invite codes</a></li>
-                                    <li><a href="{{ route('staff.stats.dashboard') }}">Stats</a></li>
-                                </ul>
-                            </li>
+                            {% include 'theme/wos/staff/nav-top/owner-tools.twig' %}
                         {% endif %}
                     </ul>
                 </div>
