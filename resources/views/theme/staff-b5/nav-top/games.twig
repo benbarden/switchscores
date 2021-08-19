@@ -1,0 +1,25 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGames" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Games
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownGames">
+        <li><a class="dropdown-item" href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.add') }}">+ Add game</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.search') }}">Search games</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.games-to-release')}}">Games to release</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-eshop-price') }}">No price</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-video-type') }}">No video type</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.recently-released') }}">Recently released</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a></li>
+    </ul>
+</li>

@@ -1,0 +1,91 @@
+/* Typography */
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9em;
+}
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Merriweather', sans-serif;
+    font-weight: 400;
+}
+h1, .h1 {font-size: 36px;}
+h2, .h2 {font-size: 28px;}
+h3, .h3 {font-size: 24px;}
+h4, .h4 {font-size: 20px;}
+h5, .h5 {font-size: 16px;}
+h6, .h6 {font-size: 14px;}
+
+.hdr-block {
+    background: #256ae5;
+    color: #ffffff;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Top navbar */
+.navbar {
+    background: #256ae5;
+    color: #ffffff;
+}
+
+.navbar .nav-item.dropdown .dropdown-item {
+    font-size: 80%;
+}
+
+li.nav-item a.nav-link, li.nav-item a.nav-link {
+    color: #ffffff !important;
+}
+
+/* Breadcrumbs */
+nav ol.breadcrumb {
+    background: #f5f5f5;
+    padding: 10px;
+}
+
+.breadcrumb-item {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Slick headers */
+.slick-header-container {
+    background: #c9daf9;
+    border-left: 2px solid #000;
+    padding: 5px 0px 5px 10px;
+}
+
+.slick-header-spaced {
+    margin: 0 0 10px 0;
+}
+
+.slick-header-text {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* NOT YET MIGRATED */
+
+/* Ratings - new */
+.rating-title {
+    font-size: 20px;
+    margin: 6px 0;
+}
+.rating-v2 {
+    font-weight: bold;
+    font-family: 'Noto Sans KR', serif;
+    line-height: 1;
+}
+.rating-v2 .rank {
+    font-size: 24px;
+}
+.rating-v2 .separator {
+    margin: 0 5px;
+}
+.rating-v2 .suffix {
+    color: #999;
+    font-size: 16px;
+}

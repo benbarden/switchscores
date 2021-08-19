@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -15,7 +15,7 @@
                     <td>
                         <a href="{{ route('staff.reviews.feed-items.list') }}">Feeds: Reviews</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.reviews.feed-items.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
                     </td>
                 </tr>
@@ -25,7 +25,7 @@
                     <td>
                         <a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.reviews.quick-reviews.list') }}" class="h4">{{ PendingQuickReviewCount }}</a>
                     </td>
                 </tr>
@@ -35,7 +35,7 @@
                     <td>
                         <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}">Game category suggestions</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}" class="h4">{{ PendingGameCategorySuggestionCount }}</a>
                     </td>
                 </tr>
@@ -45,7 +45,7 @@
                     <td>
                         <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.games.featured-games.list') }}" class="h4">{{ PendingFeaturedGameCount }}</a>
                     </td>
                 </tr>
@@ -62,7 +62,7 @@
                 <td>
                     <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
                 </td>
             </tr>
@@ -72,7 +72,7 @@
                     <td>
                         <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API: Unlinked items</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
                     </td>
                 </tr>
@@ -90,7 +90,7 @@
                         No category - all games
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ NoCategoryAllGamesCount }}</span>
                 </td>
             </tr>
@@ -100,7 +100,7 @@
                         No tag
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ NoTagCount }}</span>
                 </td>
             </tr>
@@ -108,7 +108,7 @@
                 <td>
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
                 </td>
             </tr>
@@ -156,7 +156,7 @@
                     <td>
                         <a href="{{ route('owner.user.list') }}">Registered users</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
                     </td>
                 </tr>
@@ -191,7 +191,7 @@
                     <td>
                         <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
                     </td>
                 </tr>

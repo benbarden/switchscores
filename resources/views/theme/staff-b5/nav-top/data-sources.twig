@@ -1,0 +1,24 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDataSources" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Data sources
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownDataSources">
+        {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.dashboard') }}">Data sources dashboard</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API - Unlinked items</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Nintendo.co.uk API - Ignored items</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">DSNintendoCoUkImportParseLink</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">DSNintendoCoUkUpdateGames</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a></li>
+            <li><hr class="dropdown-divider"></li>
+        {% endif %}
+        {% if auth_user().hasRole('Wikipedia manager') or auth_user().isOwner() %}
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Wikipedia - Unlinked items</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.wikipedia.ignored') }}">Wikipedia - Ignored items</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
+            <li><hr class="dropdown-divider"></li>
+        {% endif %}
+    </ul>
+</li>

@@ -1,0 +1,19 @@
+{% if crumbNav is defined %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('staff.index') }}">Staff</a></li>
+            {% for item in crumbNav %}
+                {% if loop.last %}
+                    {% set crumbAttributes = 'class="breadcrumb-item"' %}
+                {% else %}
+                    {% set crumbAttributes = 'class="breadcrumb-item active"  aria-current="page"' %}
+                {% endif %}
+                {% if item.url %}
+                    <li {{ crumbAttributes|raw }}"><a href="{{ item.url }}">{{ item.text }}</a></li>
+                {% else %}
+                    <li {{ crumbAttributes|raw }}">{{ item.text }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% endif %}
