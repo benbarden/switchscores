@@ -1,70 +1,69 @@
 {% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="invite_code" class="col-md-4 control-label">Invite code</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="invite_code" class="col-sm-2 col-form-label">Invite code</label>
+        <div class="col-sm-4">
             <input id="invite_code" name="invite_code" type="text" class="form-control" required>
-            <small>Must be unique.</small>
+            <div class="form-text">Must be unique.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="times_used" class="col-md-4 control-label">Times used</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="times_used" class="col-md-2 col-form-label">Times used</label>
+        <div class="col-sm-4">
             <input id="times_used" name="times_used" type="text" class="form-control">
-            <small>Will be auto-populated as the code is used.</small>
+            <div class="form-text">Will be auto-populated as the code is used.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="times_left" class="col-md-4 control-label">Times left</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="times_left" class="col-md-2 col-form-label">Times left</label>
+        <div class="col-sm-4">
             <input id="times_left" name="times_left" type="text" class="form-control">
-            <small>Set to 1 for a single-use code, or more for multi-use.</small>
+            <div class="form-text">Set to 1 for a single-use code, or more for multi-use.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="is_active" class="col-md-4 control-label">Is active?</label>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <label>
-                    <input id="is_active" name="is_active" class="checkbox" type="checkbox">
-                </label>
-                <small><label for="is_active">Untick to disable access to the code.</label></small>
+    <div class="row mb-3">
+        <label for="is_active" class="col-md-2 col-form-label">Active</label>
+        <div class="col-sm-4">
+            <div class="form-check form-switch">
+                <input id="is_active" name="is_active" class="form-check-input mt-0" type="checkbox">
             </div>
+            <div class="form-text">Disable to prevent the code from being used. Invite codes will auto-disable
+            once the "times left" reaches zero.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="games_company_id" class="col-md-4 control-label">Auto set games company access</label>
-        <div class="col-md-6">
-            <select id="games_company_id" class="form-control" name="games_company_id">
+    <div class="row mb-3">
+        <label for="games_company_id" class="col-md-2 col-form-label">Auto set games company access</label>
+        <div class="col-sm-4">
+            <select id="games_company_id" class="form-select" name="games_company_id">
                 <option value="">&nbsp;</option>
                 {% for item in GamesCompanyList %}
                     <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
-            <small>Automatically grant access to the games company dashboard on signing up.</small>
+            <div class="form-text">Optional. Automatically grants access to the games company dashboard on signing up.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="reviewer_id" class="col-md-4 control-label">Auto set reviewer access</label>
-        <div class="col-md-6">
-            <select id="reviewer_id" class="form-control" name="reviewer_id">
+    <div class="row mb-3">
+        <label for="reviewer_id" class="col-md-2 col-form-label">Auto set reviewer access</label>
+        <div class="col-sm-4">
+            <select id="reviewer_id" class="form-select" name="reviewer_id">
                 <option value="">&nbsp;</option>
                 {% for item in PartnerList %}
                     <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
-            <small>Automatically grant access to the reviewer dashboard on signing up.</small>
+            <div class="form-text">Optional. Automatically grants access to the reviewer dashboard on signing up.</div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="row mb-3">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit

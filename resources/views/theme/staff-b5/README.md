@@ -10,6 +10,22 @@ A new Bootstrap v5 theme file should start with the following:
 
 `{% extends 'theme/staff-b5/layout-default.twig' %}`
 
+# DataTables
+
+To solve some styling issues, the Bootstrap 5 theme files should use a
+newer version of DataTables. To include it, replace this:
+
+`{% include 'common/table-sorting.twig' %}`
+
+with this:
+
+`{% include 'common/table-sorting-b5.twig' %}`
+
+# Forms
+
+Forms have changed a lot and will need quite a bit of work to get them 
+looking good. A good example is in `owner/invite-code/form.twig`.
+
 # Text alignment
 
 Replace instances of `class="text-right` with `class="text-end"`.
