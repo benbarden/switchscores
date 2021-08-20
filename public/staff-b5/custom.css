@@ -3,6 +3,11 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size: 0.9em;
 }
+
+a {
+    color: #337ab7;
+}
+
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: 'Merriweather', sans-serif;
@@ -40,6 +45,7 @@ li.nav-item a.nav-link, li.nav-item a.nav-link {
 /* Breadcrumbs */
 nav ol.breadcrumb {
     background: #f5f5f5;
+    margin-top: 10px;
     padding: 10px;
 }
 
@@ -47,6 +53,11 @@ nav ol.breadcrumb {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 12px;
     font-weight: 400;
+}
+
+/* Tables */
+.table a {
+    text-decoration: none;
 }
 
 /* Slick headers */
