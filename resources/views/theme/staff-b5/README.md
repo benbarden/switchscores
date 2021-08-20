@@ -14,3 +14,6 @@ A new Bootstrap v5 theme file should start with the following:
 
 Replace instances of `class="text-right` with `class="text-end"`.
 
+# Tables
+
+Replace `table-condensed` with `table-sm`.
