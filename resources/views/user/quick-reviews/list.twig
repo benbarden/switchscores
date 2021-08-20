@@ -54,7 +54,7 @@
                         {{ item.created_at }}
                     </td>
                     <td class="text-center">
-                        {{ item.review_score }}
+                        {% include 'modules/rating/badge.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
                     </td>
                     <td class="text-center">
                         {{ item.getStatusDesc() }}
