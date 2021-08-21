@@ -6,9 +6,9 @@
 {% endif %}
 
 {% if displayScore > 7.9 %}
-    <span class="{{ scoreSizeHeader }} label label-success">{{ displayScore }}</span>
+    <span class="{{ scoreSizeHeader }} label label-success switch-rating-badge">{{ displayScore }}</span>
 {% elseif displayScore > 5.9 %}
-    <span class="{{ scoreSizeHeader }} label label-warning">{{ displayScore }}</span>
+    <span class="{{ scoreSizeHeader }} label label-warning switch-rating-badge">{{ displayScore }}</span>
 {% else %}
-    <span class="{{ scoreSizeHeader }} label label-danger">{{ displayScore }}</span>
+    <span class="{{ scoreSizeHeader }} label label-danger switch-rating-badge">{{ displayScore }}</span>
 {% endif %}

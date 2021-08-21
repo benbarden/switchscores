@@ -183,3 +183,10 @@ blockquote {
     padding: 0 20px 10px 0;
     width: 350px;
 }
+
+/* Rating badges */
+.switch-rating-badge {
+    border-radius: 8px;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 400;
+}
