@@ -21,32 +21,6 @@ class ReviewsController extends Controller
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
-    public function landing()
-    {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Reviews');
-
-        $bindings['TopTitle'] = 'Nintendo Switch reviews and ratings';
-        $bindings['PageTitle'] = 'Reviews';
-
-        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
-        $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(14);
-        $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked(14);
-
-        foreach ($highlightsRecentlyRanked as &$item) {
-            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
-        }
-        foreach ($highlightsStillUnranked as &$item) {
-            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
-        }
-
-        $bindings['HighlightsRecentlyRanked'] = $highlightsRecentlyRanked;
-        $bindings['HighlightsStillUnranked'] = $highlightsStillUnranked;
-
-        return view('reviews.landing', $bindings);
-    }
-
     public function landingByYear($year)
     {
         $bindings = [];

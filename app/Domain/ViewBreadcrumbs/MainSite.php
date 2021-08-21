@@ -11,6 +11,7 @@ class MainSite extends Base
     public function __construct()
     {
         $this->toastedCrumbs['gamesLanding'] = ['url' => route('games.landing'), 'text' => 'Games'];
+        $this->toastedCrumbs['listsLanding'] = ['url' => route('lists.landing'), 'text' => 'Lists'];
         $this->toastedCrumbs['topRatedLanding'] = ['url' => route('topRated.landing'), 'text' => 'Top Rated'];
         $this->toastedCrumbs['reviewsLanding'] = ['url' => route('reviews.landing'), 'text' => 'Reviews'];
         $this->toastedCrumbs['partnersLanding'] = ['url' => route('partners.landing'), 'text' => 'Partners'];
@@ -28,6 +29,13 @@ class MainSite extends Base
     public function topLevelPage($pageTitle)
     {
         return $this->addPageTitle($pageTitle)->getBreadcrumbs();
+    }
+
+    public function listsSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['listsLanding'])
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
     }
 
     public function gamesSubpage($pageTitle)

@@ -55,6 +55,12 @@
             <li>Twitter: <a href="https://twitter.com/benbarden">benbarden</a></li>
             <li>Email: <a href="mailto:ben@switchscores.com">ben@switchscores.com</a></li>
         </ul>
+        <h2>Database stats</h2>
+        <ul>
+            <li><a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a></li>
+            <li><a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a></li>
+            <li><a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a></li>
+        </ul>
         <img src="/img/about/switch-scores-grindstone.jpeg" alt="Switch Scores - Grindstone" class="img-responsive">
     </div>
 </div>

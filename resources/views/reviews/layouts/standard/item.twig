@@ -1,0 +1,31 @@
+{% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-4 col-lg-4">
+        <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">
+            {% if boxartUrl %}
+                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
+            {% else %}
+                <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" alt="{{ item.game.title }}">
+            {% endif %}
+        </a>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <p class="h4">
+            <a href="{{ route('game.show', {'id': item.game.id, 'linkTitle': item.game.link_title}) }}">{{ item.game.title }}</a>
+            <br>
+            <span class="small">
+                {{ item.review_date|date('jS M') }} : {{ item.site.name }}
+                <br><a href="{{ item.url }}" target="_blank">Read review</a>
+            </span>
+        </p>
+    </div>
+    <div class="col-sm-12 col-md-2 col-lg-2">
+        <br>
+        {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h5'} %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+    </div>
+</div>

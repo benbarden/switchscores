@@ -25,13 +25,10 @@
                 <li><a href="{{ route('welcome') }}">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        Games <span class="caret"></span>
+                        Browse games <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{{ route('games.landing') }}">Games home</a></li>
-                        <li><a href="{{ route('games.recentReleases') }}">Recent releases</a></li>
-                        <li><a href="{{ route('games.upcomingReleases') }}">Upcoming releases</a></li>
-                        <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ route('games.browse.byTitle.landing') }}">Browse by title (A-Z)</a></li>
                         <li><a href="{{ route('games.browse.byDate.landing') }}">Browse by date (calendar)</a></li>
@@ -58,10 +55,29 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        Reviews <span class="caret"></span>
+                        Lists <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{ route('reviews.landing') }}">Reviews home</a></li>
+                        <li><a href="{{ route('lists.landing') }}">Lists home</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('games.recentReleases') }}">Recent releases</a></li>
+                        <li><a href="{{ route('games.upcomingReleases') }}">Upcoming releases</a></li>
+                        <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+                        <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+                        <li><a href="{{ route('lists.recently-reviewed-still-unranked') }}">Recently reviewed, still unranked</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        About <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('about.landing') }}">About Switch Scores</a></li>
+                        <li><a href="{{ route('partners.landing') }}">Partners</a></li>
+                        <li><a href="{{ route('news.landing') }}">News</a></li>
+                        <li role="separator" class="divider"></li>
                         <li><a href="{{ route('reviews.landing.byYear', {'year': 2021}) }}">Review stats - 2021</a></li>
                         <li><a href="{{ route('reviews.landing.byYear', {'year': 2020}) }}">Review stats - 2020</a></li>
                         <li><a href="{{ route('reviews.landing.byYear', {'year': 2019}) }}">Review stats - 2019</a></li>
@@ -69,9 +85,6 @@
                         <li><a href="{{ route('reviews.landing.byYear', {'year': 2017}) }}">Review stats - 2017</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ route('partners.landing') }}">Partners</a></li>
-                <li><a href="{{ route('news.landing') }}">News</a></li>
-                <li><a href="{{ route('about.landing') }}">About</a></li>
             </ul>
 
             <!-- Search form -->

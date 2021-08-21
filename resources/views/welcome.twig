@@ -6,32 +6,15 @@
 
 <div class="row">
 
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="row">
-            <div class="col-md-6 text-left">
-                <h4 class="rating-title">
-                    <span class="rating-v2">
-                        Ranking the Nintendo Switch library.
-                        {% if auth_user() is null %}
-                            <a href="{{ route('login') }}">Join us!</a>
-                        {% endif %}
-                    </span>
-                </h4>
-            </div>
-            <div class="col-md-6 text-left">
-                <h5 class="rating-title-home">
-                    <span class="rating-v2">
-                        <a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a> -
-                    </span>
-                    <span class="rating-v2">
-                        <a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a> -
-                    </span>
-                    <span class="rating-v2">
-                        <a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a>
-                    </span>
-                </h5>
-            </div>
-        </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-left">
+        <h4 class="rating-title">
+            <span class="rating-v2">
+                Ranking the Nintendo Switch library.
+                {% if auth_user() is null %}
+                    <a href="{{ route('login') }}">Join us!</a>
+                {% endif %}
+            </span>
+        </h4>
     </div>
 
 </div>

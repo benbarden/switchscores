@@ -25,11 +25,17 @@ Route::get('/about', 'AboutController@landing')->name('about.landing');
 Route::get('/about/changelog', 'AboutController@changelog')->name('about.changelog');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
+// Lists
+Route::get('/lists', 'ListsController@landing')->name('lists.landing');
+Route::get('/games/recent', 'ListsController@recentReleases')->name('games.recentReleases');
+Route::get('/games/upcoming', 'ListsController@upcomingReleases')->name('games.upcomingReleases');
+Route::get('/games/on-sale', 'ListsController@gamesOnSale')->name('games.onSale');
+Route::get('/reviews', 'ListsController@recentReviews')->name('reviews.landing');
+Route::get('/lists/recently-ranked', 'ListsController@recentlyRanked')->name('lists.recently-ranked');
+Route::get('/lists/recently-reviewed-still-unranked', 'ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
+
 // Main game pages
 Route::match(['get', 'post'], '/games', 'GamesController@landing')->name('games.landing');
-Route::get('/games/recent', 'GamesController@recentReleases')->name('games.recentReleases');
-Route::get('/games/upcoming', 'GamesController@upcomingReleases')->name('games.upcomingReleases');
-Route::get('/games/on-sale', 'GamesController@gamesOnSale')->name('games.onSale');
 Route::match(['get', 'post'], '/games/search', 'Games\SearchController@show')->name('games.search');
 
 // Browse by...
@@ -66,9 +72,8 @@ Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topR
 Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */
-Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.landing.byYear');
-Route::get('/reviews', 'ReviewsController@landing')->name('reviews.landing');
 Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
+Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.landing.byYear');
 
 /* Partners */
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');

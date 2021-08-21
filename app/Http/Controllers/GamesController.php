@@ -56,50 +56,6 @@ class GamesController extends Controller
         return view('games.landing', $bindings);
     }
 
-    public function recentReleases()
-    {
-        $bindings = [];
-
-        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(50);
-        $bindings['CalendarThisMonth'] = date('Y-m');
-
-        $bindings['TopTitle'] = 'Nintendo Switch recent releases';
-        $bindings['PageTitle'] = 'Nintendo Switch recent releases';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('Recent');
-
-        return view('games.recentReleases', $bindings);
-    }
-
-    public function upcomingReleases()
-    {
-        $bindings = [];
-
-        $bindings['UpcomingGames'] = $this->repoGameLists->upcoming();
-
-        $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
-        $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('Upcoming');
-
-        return view('games.upcomingReleases', $bindings);
-    }
-
-    public function gamesOnSale()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('On sale');
-
-        $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
-        $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(50);
-        $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(50);
-
-        //$bindings['AllGamesOnSale'] = $gamesOnSale;
-
-        return view('games.gamesOnSale', $bindings);
-    }
-
     /**
      * @param $gameId
      * @param $linkTitle
