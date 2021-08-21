@@ -125,10 +125,10 @@
                 <div class="col-md-12">
                     {% for item in RecentlyAddedGames %}
                         <div class="row" style="margin-top: 6px;">
-                            <div class="col-md-3 col-sm-3">
+                            <div class="col-md-3 col-sm-3 col-xs-3">
                                 {% include 'modules/game/packshot/square.twig' with {'item': item} %}
                             </div>
-                            <div class="col-md-9 col-sm-9">
+                            <div class="col-md-9 col-sm-9 col-xs-9">
                                 {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
                                 <br>
                                 <small>
