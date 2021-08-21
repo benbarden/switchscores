@@ -20,6 +20,7 @@
                 <thead>
                     <tr>
                         <th>Title</th>
+                        <th class="text-center">Release date (EU)</th>
                         <th>{{ EditModeHeader1 }}</th>
                         <th>{{ EditModeHeader2 }}</th>
                     </tr>
@@ -28,6 +29,7 @@
                 {% for item in GameList %}
                     <tr>
                         <td>{{ item.title }}</td>
+                        <td class="text-center">{{ item.eu_release_date }}</td>
                         <td>
                             {% if TemplateEditCell %}
                                 {% include 'staff/games/bulk-edit/'~TemplateEditCell with {'GameId': item.id} %}
