@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -6,9 +6,7 @@
 
         <div class="col-md-4">
 
-            <h2>Action lists</h2>
-
-            <h3>Games with no category</h3>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Action lists'} %}
 
             <table class="table">
                 <tbody>
@@ -18,7 +16,7 @@
                             No category - all games
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <span class="h4">{{ NoCategoryAllGamesCount }}</span>
                     </td>
                 </tr>
@@ -28,7 +26,7 @@
                             No category - with eShop data
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <span class="h4">{{ NoCategoryEshopDataCount }}</span>
                     </td>
                 </tr>
@@ -38,7 +36,7 @@
                             No tag
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <span class="h4">{{ NoTagCount }}</span>
                     </td>
                 </tr>
@@ -49,7 +47,7 @@
 
         <div class="col-md-4">
 
-            <h2>Navigation</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Navigation'} %}
             <table class="table">
                 <tbody>
                 <tr>
@@ -84,20 +82,20 @@
 
         <div class="col-md-4">
 
-            <h2>Series matches</h2>
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Series matches'} %}
             {% if GameSeriesMatchList %}
                 <table class="table">
                     <thead>
                     <tr>
                         <th>Series</th>
-                        <th class="text-right">Potential matches</th>
+                        <th class="text-end">Potential matches</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for item in GameSeriesMatchList %}
                         <tr>
                             <td>{{ item.name }}</td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <span class="h4">
                                     <a href="{{ route('staff.categorisation.title-match.series', {'gameSeries': item.series}) }}">
                                         {{ item.gameCount }}
