@@ -1,7 +1,11 @@
 {% if LinkDesc is not defined %}
     {% set LinkDesc = item.title %}
 {% endif %}
-<a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ LinkDesc }}</a>
-<a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
-    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-</a>
+{% if item.id %}
+    <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}">{{ LinkDesc }}</a>
+    <a href="{{ LinkHelper.gameShow(item) }}" target="_blank" title="Open game page in a new tab">
+        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+    </a>
+{% else %}
+    Error - Deleted game!
+{% endif %}

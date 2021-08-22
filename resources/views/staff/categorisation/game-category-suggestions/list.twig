@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -31,7 +31,7 @@
     <table class="table data-sortable">
         <thead>
         <tr>
-            <th class="text-right">#</th>
+            <th class="text-end">#</th>
             <th class="text-left">Game</th>
             <th class="text-center">Date</th>
             <th class="text-center">Current data</th>
@@ -43,7 +43,7 @@
         <tbody>
         {% for item in DbEditList %}
             <tr>
-                <td class="text-right">
+                <td class="text-end">
                     {{ item.id }}
                 </td>
                 <td class="text-left">
@@ -79,7 +79,7 @@
     <p>No records found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $('#admin-nav-status-filter').on('change', function() {
         selectedStatusFilter = $(this).val();

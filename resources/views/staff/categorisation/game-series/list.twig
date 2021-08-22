@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -10,7 +10,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Game series</th>
                 <th class="text-center">Game count</th>
                 <th class="text-center">View</th>
@@ -20,7 +20,7 @@
         <tbody>
             {% for item in GameSeriesList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
@@ -46,7 +46,7 @@
     <p>No game series found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -10,7 +10,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Category</th>
                 <th>Parent</th>
                 <th class="text-center">Game count</th>
@@ -21,7 +21,7 @@
         <tbody>
             {% for item in CategoryList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
@@ -56,7 +56,7 @@
     <p>No categories found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({
@@ -72,35 +72,6 @@
             ]
         });
     });
-    /*
-    $('#btn-save-category').on('click', function() {
-
-        categoryName = $('#txt-new-category-name').val();
-        if (categoryName == '') {
-            $('#js-new-category-notify').text('No category name set.');
-            $('#js-new-category-notify').show();
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('staff.categorisation.category.add') }}', {categoryName: categoryName}, function(data) {
-            $('#js-new-category-notify').text('Category saved!');
-            $('#js-new-category-notify').show();
-            $('#txt-new-category-name').val('');
-            setTimeout("$('#js-new-category-notify').fadeOut(); window.location.reload(true);", 1000);
-        })
-        .fail(function(data) {
-            $('#js-new-category-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-new-category-notify').show();
-            $('#txt-new-category-name').val('');
-        });
-    });
-    */
 </script>
 
 {% endblock page_inner %}
