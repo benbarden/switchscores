@@ -110,8 +110,16 @@ class GamesBrowseController extends Controller
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
-        $bindings['PageTitle'] = 'Nintendo Switch '.$categoryName.' games';
-        $bindings['TopTitle'] = 'Nintendo Switch '.$categoryName.' games';
+        $pageTitle = 'Nintendo Switch '.$categoryName;
+        if (substr($categoryName, -4) == 'game') {
+            $pageTitle .= 's';
+        } else {
+            $pageTitle .= ' games';
+        }
+
+        $bindings['PageTitle'] = $pageTitle;
+        $bindings['TopTitle'] = $pageTitle;
+
         if ($category->parent_id) {
             $categoryParent = $this->getServiceCategory()->find($category->parent_id);
             if (!$categoryParent) abort(500);
