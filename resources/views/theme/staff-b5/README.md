@@ -21,6 +21,14 @@ with this:
 
 `{% include 'common/table-sorting-b5.twig' %}`
 
+# Labels
+
+These are now badges. See https://getbootstrap.com/docs/5.0/components/badge/
+
+They can mostly be swapped as follows:
+
+`label label-primary` becomes `badge bg-primary`
+
 # Forms
 
 Forms have changed a lot and will need quite a bit of work to get them 

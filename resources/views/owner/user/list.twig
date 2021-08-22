@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -17,7 +17,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Display name</th>
                 <th class="text-center">Twitter</th>
                 <th class="text-center">Points</th>
@@ -29,17 +29,17 @@
         <tbody>
             {% for item in UserList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
                         <a href="{{ route('owner.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
                         {% if item.isOwner() %}
-                            <span class="label label-primary">Staff</span>
+                            <span class="badge bg-primary">Staff</span>
                         {% elseif item.partner.isReviewSite() %}
-                            <span class="label label-success">Reviewer</span>
+                            <span class="badge bg-success">Reviewer</span>
                         {% elseif item.isGamesCompany() %}
-                            <span class="label label-info">Games company</span>
+                            <span class="badge bg-info">Games company</span>
                         {% endif %}
                         <br>
                         <small>{{ item.email }}</small>
@@ -52,31 +52,6 @@
                     <td class="text-center">
                         {{ item.points_balance }}
                     </td>
-                    {#
-                    <td class="text-left">
-                        {% if item.is_owner %}
-                            <small>Owner</small>
-                        {% elseif item.is_staff %}
-                            {% for userRole in item.user_roles %}
-                                <small>
-                                    {{ userRole }}
-                                    {% if not loop.last %}<br>{% endif %}
-                                </small>
-                            {% endfor %}
-                        {% else %}
-                            {% if item.signup_alpha != '' %}
-                                <small>
-                                    <strong>Alpha</strong>: {{ item.signup_alpha }}<br>
-                                </small>
-                            {% endif %}
-                            {% if item.signup_beta != '' %}
-                                <small>
-                                    <strong>Beta</strong>: {{ item.signup_beta }}<br>
-                                </small>
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    #}
                     <td class="text-center">
                         {{ item.created_at|date('Y-m-d') }}
                     </td>
@@ -95,7 +70,7 @@
     <p>No users found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({
