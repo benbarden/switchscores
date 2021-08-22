@@ -1,98 +1,97 @@
-<p>
-    NOTE: If you copy the Twitter id from one account to another, be sure to
-    remove it from one of the two accounts. Otherwise, when logging in, the first
-    record will always be selected when logging in with Twitter.
-</p>
-
 {% include 'common/form-errors.twig' %}
+
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="display_name" class="col-md-4 control-label">Display name</label>
-        <div class="col-md-6">
-            <input id="display_name" type="text" class="form-control" name="display_name" required>
+    <div class="row mb-3">
+        <label for="display_name" class="col-sm-2 col-form-label">Display name</label>
+        <div class="col-sm-4">
+            <input id="display_name" name="display_name" type="text" class="form-control" required>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="email" class="col-md-4 control-label">Email</label>
-        <div class="col-md-6">
-            <input id="email" type="text" class="form-control" name="email">
+    <div class="row mb-3">
+        <label for="email" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-4">
+            <input id="email" name="email" type="email" class="form-control" required>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="twitter_user_id" class="col-md-4 control-label">Twitter Id</label>
-        <div class="col-md-6">
-            <input id="twitter_user_id" type="text" class="form-control" name="twitter_user_id">
+    <div class="row mb-3">
+        <label for="twitter_user_id" class="col-sm-2 col-form-label">Twitter Id</label>
+        <div class="col-sm-4">
+            <input id="twitter_user_id" name="twitter_user_id" type="text" class="form-control">
+            <div class="form-text">
+                NOTE: If you copy the Twitter id from one account to another, be sure to
+                remove it from one of the two accounts. Otherwise, when logging in, the first
+                record will always be selected when logging in with Twitter.
+            </div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="partner_id" class="col-md-4 control-label">Reviewer access</label>
-        <div class="col-md-6">
-            <select id="partner_id" class="form-control" name="partner_id">
-                <option value="">&nbsp;</option>
-                {% for item in PartnerList %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="games_company_id" class="col-md-4 control-label">Games company access</label>
-        <div class="col-md-6">
-            <select id="games_company_id" class="form-control" name="games_company_id">
+    <div class="row mb-3">
+        <label for="games_company_id" class="col-md-2 col-form-label">Games company access</label>
+        <div class="col-sm-4">
+            <select id="games_company_id" name="games_company_id" class="form-select">
                 <option value="">&nbsp;</option>
                 {% for item in GamesCompanyList %}
                     <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
             </select>
+            <div class="form-text">Grants access to the games company dashboard.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="is_developer" class="col-md-4 control-label">Developer hub access</label>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <label>
-                    <input id="is_developer" class="checkbox" name="is_developer" type="checkbox">
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="is_staff" class="col-md-4 control-label">Is staff?</label>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <label>
-                    <input id="is_staff" class="checkbox" name="is_staff" type="checkbox">
-                </label>
-                <br><small>This must be ticked for the roles to work</small>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-md-4 control-label">Roles</label>
-        <div class="col-md-6">
-            {% if RoleList %}
-                {% for key,item in RoleList %}
-                    <div class="checkbox">
-                        <label>
-                            <input id="role_item_{{ key }}" class="role_item" name="role_item[{{ key }}]" type="checkbox">
-                            {{ item }}
-                        </label>
-                    </div>
+    <div class="row mb-3">
+        <label for="partner_id" class="col-md-2 col-form-label">Reviewer access</label>
+        <div class="col-sm-4">
+            <select id="partner_id" name="partner_id" class="form-select">
+                <option value="">&nbsp;</option>
+                {% for item in PartnerList %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
                 {% endfor %}
+            </select>
+            <div class="form-text">Grants access to the reviewer dashboard.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="is_developer" class="col-md-2 col-form-label">Developer Hub access</label>
+        <div class="col-sm-4">
+            <div class="form-check form-switch">
+                <input id="is_developer" name="is_developer" class="form-check-input mt-0" type="checkbox">
+            </div>
+            <div class="form-text">Grants access to the Developer Hub.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="is_staff" class="col-md-2 col-form-label">Is staff?</label>
+        <div class="col-sm-4">
+            <div class="form-check form-switch">
+                <input id="is_staff" name="is_staff" class="form-check-input mt-0" type="checkbox">
+            </div>
+            <div class="form-text">This must be ticked for the roles to work.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-md-2 col-form-label">Roles</label>
+        <div class="col-sm-4">
+            {% if RoleList %}
+            {% for key,item in RoleList %}
+                <div class="form-check">
+                    <input id="role_item_{{ key }}" name="role_item[{{ key }}]" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="role_item_{{ key }}">
+                        {{ item }}
+                    </label>
+                </div>
+            {% endfor %}
             {% endif %}
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="row mb-3">
         <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
