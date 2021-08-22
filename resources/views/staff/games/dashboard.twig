@@ -1,11 +1,12 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
 
 {% block page_inner %}
 
 <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
-<hr>
+<br>
+<br>
 
 <div class="row">
 
@@ -19,16 +20,8 @@
                 <td>
                     <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
             <tr>
@@ -48,9 +41,17 @@
             <tbody>
             <tr>
                 <td>
+                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
@@ -65,7 +66,7 @@
                 <td>
                     <a href="{{ route('staff.games.list.no-eshop-price') }}">No price</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.no-eshop-price') }}" class="h4">{{ NoPriceCount }}</a>
                 </td>
             </tr>
@@ -73,7 +74,7 @@
                 <td>
                     <a href="{{ route('staff.games.list.no-video-type') }}">No video type</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.no-video-type') }}" class="h4">{{ MissingVideoTypeCount }}</a>
                 </td>
             </tr>
@@ -81,7 +82,7 @@
                 <td>
                     <a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.games.list.no-amazon-uk-link') }}" class="h4">{{ MissingAmazonUkLink }}</a>
                 </td>
             </tr>
@@ -96,7 +97,7 @@
                 <td>
                     Total games
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ TotalGameCount }}</span>
                 </td>
             </tr>
@@ -104,7 +105,7 @@
                 <td>
                     Released games
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ ReleasedGameCount }}</span>
                 </td>
             </tr>
@@ -112,7 +113,7 @@
                 <td>
                     Upcoming games
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ UpcomingGameCount }}</span>
                 </td>
             </tr>
@@ -206,14 +207,14 @@
                             <td>
                                 <span class="h4">{{ row.format_type }}</span>
                             </td>
-                            <td class="text-right">
+                            <td class="text-end">
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 (Not set)
                             </td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <span class="h4">
                                     <a href="{{ route('staff.games.list.format-option', {'format': row.format_type}) }}">
                                         {{ row.count }}
@@ -226,7 +227,7 @@
                             <td>
                                 {{ row.format_desc }}
                             </td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <span class="h4">
                                     <a href="{{ route('staff.games.list.format-option', {'format': row.format_type, 'option': row.format_desc}) }}">
                                     {{ row.count }}
