@@ -1,22 +1,22 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
 
     <div class="col-md-12">
-        <div class="pull-left">
-            <a href="{{ route('owner.user.edit', {'userId': UserId}) }}" class="btn btn-primary">Edit user</a>
-        </div>
+        <a href="{{ route('owner.user.edit', {'userId': UserId}) }}" class="btn btn-primary">Edit user</a>
     </div>
 
 </div>
+
+<br>
 
 <div class="row">
 
     <div class="col-md-8">
 
-        <h2>Main details</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Main details'} %}
 
         <table class="table">
             <tbody>
@@ -33,11 +33,11 @@
                 <td>
                     {{ UserData.display_name }}
                     {% if UserData.isOwner() %}
-                        <span class="label label-primary">Staff</span>
+                        <span class="badge bg-primary">Staff</span>
                     {% elseif UserData.partner.isReviewSite() %}
-                        <span class="label label-success">Reviewer</span>
+                        <span class="badge bg-success">Reviewer</span>
                     {% elseif UserData.partner.isGamesCompany() %}
-                        <span class="label label-info">Games company</span>
+                        <span class="badge bg-info">Games company</span>
                     {% endif %}
                 </td>
             </tr>
@@ -122,24 +122,24 @@
 
     <div class="col-md-4">
 
-        <h2>Approved contributions</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Approved contributions'} %}
 
         <table class="table">
             <tr>
                 <td>Quick reviews</td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ StatsQuickReviews }}</span>
                 </td>
             </tr>
             <tr>
                 <td>Game category suggestions</td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ StatsGameCategorySuggestions }}</span>
                 </td>
             </tr>
             <tr>
                 <td>Games collection</td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ StatsCollection }}</span>
                 </td>
             </tr>
