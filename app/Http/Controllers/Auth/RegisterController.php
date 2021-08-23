@@ -104,7 +104,7 @@ class RegisterController extends Controller
             $values['display_name'] = $data['signup_name'];
         }
         if (array_key_exists('signup_email', $data)) {
-            $values['email'] = $data['signup_email'];
+            $values['email'] = strtolower($data['signup_email']);
         }
         if (array_key_exists('signup_pass', $data)) {
             $values['password'] = $data['signup_pass'];
