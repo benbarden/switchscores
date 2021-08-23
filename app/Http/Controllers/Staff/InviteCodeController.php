@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Owner;
+namespace App\Http\Controllers\Staff;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -61,7 +61,7 @@ class InviteCodeController extends Controller
 
         $bindings['InviteCodeList'] = $this->repoInviteCode->getAll();
 
-        return view('owner.invite-code.list', $bindings);
+        return view('staff.invite-code.list', $bindings);
     }
 
     public function generateCodes()
@@ -96,18 +96,18 @@ class InviteCodeController extends Controller
                     $this->repoInviteCode->create($inviteCode, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
                 } catch (\Exception $e) {
                     $validator->errors()->add('codes_count', 'Failed - duplicate code!');
-                    return redirect(route('owner.invite-code.generate-codes'))
+                    return redirect(route('staff.invite-code.generate-codes'))
                         ->withErrors($validator)
                         ->withInput();
                 }
 
             }
 
-            return redirect(route('owner.invite-code.list'));
+            return redirect(route('staff.invite-code.list'));
 
         }
 
-        return view('owner.invite-code.generate-codes', $bindings);
+        return view('staff.invite-code.generate-codes', $bindings);
     }
 
     public function addInviteCode()
@@ -125,7 +125,7 @@ class InviteCodeController extends Controller
             $validator = Validator::make($request->all(), $this->validationRules);
 
             if ($validator->fails()) {
-                return redirect(route('owner.invite-code.add'))
+                return redirect(route('staff.invite-code.add'))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -140,7 +140,7 @@ class InviteCodeController extends Controller
             });
 
             if ($validator->fails()) {
-                return redirect(route('owner.invite-code.add'))
+                return redirect(route('staff.invite-code.add'))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -159,7 +159,7 @@ class InviteCodeController extends Controller
             $reviewerId = $request->reviewer_id;
             $this->repoInviteCode->create($request->invite_code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
 
-            return redirect(route('owner.invite-code.list'));
+            return redirect(route('staff.invite-code.list'));
 
         } else {
 
@@ -172,7 +172,7 @@ class InviteCodeController extends Controller
         $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
         $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
-        return view('owner.invite-code.add', $bindings);
+        return view('staff.invite-code.add', $bindings);
     }
 
     public function editInviteCode($inviteCodeId)
@@ -205,7 +205,7 @@ class InviteCodeController extends Controller
             $reviewerId = $request->reviewer_id;
             $this->repoInviteCode->edit($inviteCodeData, $request->invite_code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId);
 
-            return redirect(route('owner.invite-code.list'));
+            return redirect(route('staff.invite-code.list'));
 
         } else {
 
@@ -219,7 +219,7 @@ class InviteCodeController extends Controller
         $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
         $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
-        return view('owner.invite-code.edit', $bindings);
+        return view('staff.invite-code.edit', $bindings);
     }
 
     public function deleteInviteCode($inviteCodeId)
@@ -241,7 +241,7 @@ class InviteCodeController extends Controller
 
             // Done
 
-            return redirect(route('owner.invite-code.list'));
+            return redirect(route('staff.invite-code.list'));
 
         } else {
 
@@ -252,6 +252,6 @@ class InviteCodeController extends Controller
         $bindings['InviteCodeData'] = $inviteCodeData;
         $bindings['InviteCodeId'] = $inviteCodeId;
 
-        return view('owner.invite-code.delete', $bindings);
+        return view('staff.invite-code.delete', $bindings);
     }
 }

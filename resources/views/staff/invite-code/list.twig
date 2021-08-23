@@ -2,8 +2,8 @@
 
 {% block page_inner %}
 
-<a href="{{ route('owner.invite-code.add') }}" class="btn outline btn-primary">Add code manually</a>
-<a href="{{ route('owner.invite-code.generate-codes') }}" class="btn outline btn-primary">Generate codes</a>
+<a href="{{ route('staff.invite-code.add') }}" class="btn outline btn-primary">Add code manually</a>
+<a href="{{ route('staff.invite-code.generate-codes') }}" class="btn outline btn-primary">Generate codes</a>
 <hr>
 
 {% if InviteCodeList.count > 0 %}
@@ -63,8 +63,8 @@
                         {{ item.created_at|date('Y-m-d') }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('owner.invite-code.edit', {'inviteCodeId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('owner.invite-code.delete', {'inviteCodeId': item.id}) }}">Delete</a>
+                        <a href="{{ route('staff.invite-code.edit', {'inviteCodeId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.invite-code.delete', {'inviteCodeId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

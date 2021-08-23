@@ -33,9 +33,10 @@ class Staff extends Base
         $this->toastedCrumbs['dataQuality.dashboard'] = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
         $this->toastedCrumbs['dataQuality.categories.dashboard'] = ['url' => route('staff.data-quality.category.dashboard'), 'text' => 'Categories'];
 
+        $this->toastedCrumbs['staff.inviteCodesList'] = ['url' => route('staff.invite-code.list'), 'text' => 'Invite codes'];
+
         $this->toastedCrumbs['owner.auditList'] = ['url' => route('owner.audit.index'), 'text' => 'Audit'];
         $this->toastedCrumbs['owner.usersList'] = ['url' => route('owner.user.list'), 'text' => 'Users'];
-        $this->toastedCrumbs['owner.inviteCodesList'] = ['url' => route('owner.invite-code.list'), 'text' => 'Invite codes'];
         $this->toastedCrumbs['owner.statsDashboard'] = ['url' => route('staff.stats.dashboard'), 'text' => 'Stats'];
     }
 
@@ -129,6 +130,13 @@ class Staff extends Base
                     ->addTitleAndReturn($pageTitle);
     }
 
+    // *** Invite codes *** //
+
+    public function inviteCodesSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['staff.inviteCodesList'])->addTitleAndReturn($pageTitle);
+    }
+
     // *** Owner pages *** //
 
     public function auditSubpage($pageTitle)
@@ -139,11 +147,6 @@ class Staff extends Base
     public function usersSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['owner.usersList'])->addTitleAndReturn($pageTitle);
-    }
-
-    public function inviteCodesSubpage($pageTitle)
-    {
-        return $this->addCrumb($this->toastedCrumbs['owner.inviteCodesList'])->addTitleAndReturn($pageTitle);
     }
 
     public function statsSubpage($pageTitle)

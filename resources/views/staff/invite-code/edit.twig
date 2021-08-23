@@ -1,0 +1,10 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.invite-code.edit', {'inviteCodeId': InviteCodeId}) %}
+{% include 'staff/invite-code/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/invite-code/scripts.twig' %}
+
+{% endblock page_inner %}

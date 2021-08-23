@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-{% set formSubmitAction = route('owner.invite-code.generate-codes') %}
+{% set formSubmitAction = route('staff.invite-code.generate-codes') %}
 {% include 'common/form-errors.twig' %}
     <form role="form" method="post" action="{{ formSubmitAction }}">
         {{ csrf_field() }}

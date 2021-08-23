@@ -148,6 +148,18 @@
 
     <div class="col-md-4">
 
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Invite codes'} %}
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.invite-code.list') }}">Invite codes</a>
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
         {% if auth_user().isOwner() %}
             {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Owner links'} %}
             <table class="table">
@@ -159,12 +171,6 @@
                     <td class="text-end">
                         <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.invite-code.list') }}">Invite codes</a>
-                    </td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td>
