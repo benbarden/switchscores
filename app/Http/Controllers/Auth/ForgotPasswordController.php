@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Support\Facades\View;
 
 class ForgotPasswordController extends Controller
 {
@@ -27,6 +28,8 @@ class ForgotPasswordController extends Controller
      */
     public function __construct()
     {
+        View::share('PageTitle', 'Forgot password');
+        View::share('TopTitle', 'Forgot password');
         //$this->redirectTo('/');
         //$this->middleware('guest');
     }

@@ -1,58 +1,61 @@
-{% extends 'theme/wos/auth.twig' %}
+{% extends 'theme/wos/base.twig' %}
 
 {% block page_body %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
+<div class="row">
 
-                <div class="panel-body">
-                    {% if errors.any %}
-                        {% for error in errors.all %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
+    <div class="col-md-12">
 
-                    <form class="form-horizontal" role="form" method="POST" action="/password/reset">
-                        {{ csrf_field() }}
+        <p>
+            Here, you can set a new password for your account. Once you've done that,
+            you'll be logged in and taken back to the homepage.
+        </p>
 
-                        <input type="hidden" name="token" value="{{ token }}">
+        {% if errors.any %}
+            {% for error in errors.all %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
 
-                        <div class="form-group">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+        <form class="form-horizontal" role="form" method="POST" action="/password/reset">
+            {{ csrf_field() }}
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" required autofocus>
-                            </div>
-                        </div>
+            <input type="hidden" name="token" value="{{ token }}">
 
-                        <div class="form-group">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+            <div class="form-group">
+                <label for="email" class="col-md-2 control-label">Email address</label>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Reset Password
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="col-md-4">
+                    <input id="email" type="email" class="form-control" name="email" required autofocus>
                 </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="password" class="col-md-2 control-label">Password</label>
+
+                <div class="col-md-4">
+                    <input id="password" type="password" class="form-control" name="password" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password-confirm" class="col-md-2 control-label">Confirm Password</label>
+                <div class="col-md-4">
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary pull-left">
+                        Reset password
+                    </button>
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>
 

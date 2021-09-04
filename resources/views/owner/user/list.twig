@@ -2,17 +2,6 @@
 
 {% block page_inner %}
 
-<p>
-    To reset a user's password:
-</p>
-<ul>
-    <li>Go to /password/reset. Enter the user's email address</li>
-    <li>Check the password_resets table in the DB and grab the token field.
-    (NB if it has a / in it, request another token or the page won't load)</li>
-    <li>Go to /password/reset/TOKEN. Re-enter the email address and enter the new password twice</li>
-</ul>
-
-
 {% if UserList.count > 0 %}
     <table class="table data-sortable">
         <thead>

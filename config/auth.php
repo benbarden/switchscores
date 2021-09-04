@@ -105,7 +105,7 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
-            'expire' => 1440, // 24 hours
+            'expire' => 120, // 2 hours
         ],
     ],
 
