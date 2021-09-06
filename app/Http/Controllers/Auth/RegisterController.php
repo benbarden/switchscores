@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
 use App\Events\UserCreated;
@@ -107,7 +108,8 @@ class RegisterController extends Controller
             $values['email'] = strtolower($data['signup_email']);
         }
         if (array_key_exists('signup_pass', $data)) {
-            $values['password'] = $data['signup_pass'];
+            $signupPass = $data['signup_pass'];
+            $values['password'] = Hash::make($signupPass);
         }
         if (array_key_exists('signup_alpha', $data)) {
             $values['signup_alpha'] = $data['signup_alpha'];
