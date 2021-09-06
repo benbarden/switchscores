@@ -12,7 +12,7 @@ class Repository
     {
         $items = UserGamesCollection::
             where('user_id', $userId)
-            ->orderBy('owned_from', 'desc')
+            ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc');
 
         if ($limit) {

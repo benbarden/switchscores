@@ -82,7 +82,7 @@ class CollectionController extends Controller
         $bindings['UserPlayStatusList'] = $userPlayStatusList;
 
         // New layout
-        $bindings['ListRecentlyAdded'] = $this->getServiceUserGamesCollection()->getByUser($userId, 6);
+        $bindings['ListRecentlyAdded'] = $this->repoUserGamesCollection->byUser($userId, 6);
         $bindings['ListNotStarted'] = $this->getServiceUserGamesCollection()->getNotStartedByUser($userId, 5);
         $bindings['ListPaused'] = $this->getServiceUserGamesCollection()->getPausedByUser($userId, 5);
         $bindings['ListNowPlaying'] = $this->getServiceUserGamesCollection()->getNowPlayingByUser($userId, 5);
