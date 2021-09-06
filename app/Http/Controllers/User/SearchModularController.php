@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 
 use App\Traits\MemberView;
@@ -29,10 +30,15 @@ class SearchModularController extends Controller
         'search_keywords' => 'required|min:3',
     ];
 
+    protected $repoUserGamesCollection;
     protected $repoFeaturedGame;
 
-    public function __construct(FeaturedGameRepository $featuredGame)
+    public function __construct(
+        UserGamesCollectionRepository $repoUserGamesCollection,
+        FeaturedGameRepository $featuredGame
+    )
     {
+        $this->repoUserGamesCollection = $repoUserGamesCollection;
         $this->repoFeaturedGame = $featuredGame;
     }
 
@@ -41,6 +47,7 @@ class SearchModularController extends Controller
         $allowedSearchModes = [
             'add-quick-review',
             'add-featured-game',
+            'add-collection-item'
         ];
 
         if (!in_array($searchMode, $allowedSearchModes)) abort(404);
@@ -64,12 +71,17 @@ class SearchModularController extends Controller
 
         $bindings['SearchMode'] = $searchMode;
 
+        $userId = $this->getAuthId();
+
         switch ($searchMode) {
             case 'add-quick-review':
-                $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
+                $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
                 break;
             case 'add-featured-game':
                 $bindings['FeaturedGameIdList'] = $this->repoFeaturedGame->getAllGameIds();
+                break;
+            case 'add-collection-item':
+                $bindings['CollectionGameIdList'] = $this->repoUserGamesCollection->byUserGameIds($userId);
                 break;
         }
 

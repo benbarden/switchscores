@@ -17,24 +17,11 @@
 
         // This is used for new games.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
-        gameId = "{{ old('game_id') }}";
-        if (gameId == '') {
-            if (urlGameId != '') {
-                gameId = urlGameId;
-            }
-        }
-
-        formVals['game_id'] = gameId;
         formVals['owned_from'] = "{{ old('owned_from') }}";
         formVals['owned_type'] = "{{ old('owned_type') }}";
         formVals['play_status'] = "{{ old('play_status') }}";
         formVals['hours_played'] = "{{ old('hours_played') }}";
 
-    }
-
-    if (formMode == 'add') {
-        $('#game_id').val(formVals['game_id']);
-        $('#game_id').select2();
     }
 
     $('#owned_from').val(formVals['owned_from']);

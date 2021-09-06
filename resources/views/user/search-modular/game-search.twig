@@ -60,6 +60,12 @@
                                 {% else %}
                                     <a href="{{ route('user.featured-games.add', {'gameId': item.id}) }}">Add featured game</a>
                                 {% endif %}
+                            {% elseif SearchMode == 'add-collection-item' %}
+                                {% if item.id in CollectionGameIdList %}
+                                    <em>Already added</em>
+                                {% else %}
+                                    <a href="{{ route('user.collection.add', {'gameId': item.id}) }}">Add to collection</a>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

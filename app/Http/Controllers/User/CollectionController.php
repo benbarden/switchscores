@@ -9,8 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
-use App\Category;
-
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
 
@@ -36,16 +35,19 @@ class CollectionController extends Controller
         'game_id' => 'required',
     ];
 
+    protected $repoGame;
     protected $serviceUserGamesCollection;
     protected $repoUserGamesCollection;
     protected $dbUserGamesCollection;
 
     public function __construct(
+        GameRepository $repoGame,
         UserGamesCollectionService $serviceUserGamesCollection,
         UserGamesCollectionRepository $repoUserGamesCollection,
         UserGamesCollectionDbQueries $dbUserGamesCollection
     )
     {
+        $this->repoGame = $repoGame;
         $this->serviceUserGamesCollection = $serviceUserGamesCollection;
         $this->repoUserGamesCollection = $repoUserGamesCollection;
         $this->dbUserGamesCollection = $dbUserGamesCollection;
@@ -219,13 +221,18 @@ class CollectionController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $serviceGame->getAll();
+        //$bindings['GamesList'] = $serviceGame->getAll();
         $bindings['PlayStatusList'] = $serviceCollectionPlayStatus->generateAll();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
             $bindings['UrlGameId'] = $urlGameId;
+        } else {
+            abort(404);
         }
+
+        $gameData = $this->repoGame->find($urlGameId);
+        $bindings['SelectedGameTitle'] = $gameData->title;
 
         return view('user.collection.add', $bindings);
     }

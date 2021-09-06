@@ -1,9 +1,6 @@
 {% include 'common/form-errors.twig' %}
 {% if FormMode != 'add' %}
 <p>
-    For performance reasons, it's not possible to edit which game this is.
-</p>
-<p>
     If you don't own this game anymore, or you added it in error, you can delete it.
     You can easily add a new game to your collection instead.
 </p>
@@ -11,18 +8,16 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
+    {% if FormMode == 'add' %}
+        <input type="hidden" id="game_id" name="game_id" value="{{ UrlGameId }}">
+    {% endif %}
     <fieldset>
         <legend>Basic details</legend>
         <div class="form-group">
             <label for="game_id" class="col-md-4 control-label">Game</label>
             <div class="col-md-6">
                 {% if FormMode == 'add' %}
-                    <select id="game_id" class="form-control" name="game_id" required autofocus>
-                        <option value="">&nbsp;</option>
-                        {% for item in GamesList %}
-                            <option value="{{ item.id }}">{{ item.title }}</option>
-                        {% endfor %}
-                    </select>
+                    {{ SelectedGameTitle }}
                 {% else %}
                     {{ CollectionData.game.title }}
                 {% endif %}
