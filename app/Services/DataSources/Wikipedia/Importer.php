@@ -71,6 +71,7 @@ class Importer
         $this->domCrawler->addHtmlContent($html);
     }
 
+    // Used for testing only
     public function loadSingleRow($row)
     {
         $html = '<html><head><body><table id="softwarelist">'.$row.'</table></body></head></html>';
