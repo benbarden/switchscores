@@ -16,6 +16,7 @@ class PartnerFeedLinkService
         PartnerFeedLink $partnerFeedLink, $values
     )
     {
+        $values['last_run_status'] = null;
         $partnerFeedLink->fill($values);
         $partnerFeedLink->save();
     }
