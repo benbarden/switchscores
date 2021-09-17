@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -43,12 +43,14 @@
                             </td>
                             <td class="text-center">{{ item.total_count }}</td>
                             <td class="text-center">
-                                {% if item.pc_done >= 75 %}
-                                    <span class="h5 label label-success">{{ item.pc_done }}%</span>
+                                {% if item.pc_done == 100 %}
+                                    <span class="h5 badge bg-success">{{ item.pc_done }}%</span>
+                                {% elseif item.pc_done >= 75 %}
+                                    <span class="h5 badge bg-primary">{{ item.pc_done }}%</span>
                                 {% elseif item.pc_done >= 40 %}
-                                    <span class="h5 label label-warning">{{ item.pc_done }}%</span>
+                                    <span class="h5 badge bg-warning">{{ item.pc_done }}%</span>
                                 {% else %}
-                                    <span class="h5 label label-danger">{{ item.pc_done }}%</span>
+                                    <span class="h5 badge bg-danger">{{ item.pc_done }}%</span>
                                 {% endif %}
                             </td>
                         </tr>

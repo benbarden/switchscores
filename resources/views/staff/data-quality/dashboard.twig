@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -6,7 +6,7 @@
 
     <div class="col-md-12">
 
-        <h2>Integrity checks</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Integrity checks'} %}
 
         {% if IntegrityChecks %}
             <table class="table">
@@ -27,13 +27,13 @@
                         <td>{{ item.entity_name }}</td>
                         <td class="text-center">
                             {% if item.is_passing is null %}
-                                <span class="label label-default h6">Never run!</span>
+                                <span class="badge bg-primary h6">Never run!</span>
                             {% elseif item.is_passing == 1 %}
-                                <span class="label label-success h6">Passing</span>
+                                <span class="badge bg-success h6">Passing</span>
                             {% elseif item.is_passing == 0 %}
-                                <span class="label label-warning h6">Failing</span>
+                                <span class="badge bg-warning h6">Failing</span>
                             {% else %}
-                                <span class="label label-danger h6">Error</span>
+                                <span class="badge bg-danger h6">Error</span>
                             {% endif %}
                         </td>
                         <td class="text-center">
@@ -47,7 +47,7 @@
             <p>No integrity checks found.</p>
         {% endif %}
 
-        <h2>Data integrity</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Data integrity'} %}
 
         <table class="table">
             <tbody>
@@ -70,7 +70,7 @@
 
     <div class="col-md-12">
 
-        <h2>Categories</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Categories'} %}
 
         <table class="table">
             <tbody>

@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -6,9 +6,8 @@
 
     <div class="col-md-4">
 
-        <h2>Differences - To review</h2>
-
-        <h3>Nintendo.co.uk API</h3>
+        <h2>Nintendo.co.uk API</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Differences'} %}
 
         <table class="table">
             <tbody>
@@ -18,7 +17,7 @@
                         EU release date
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}" class="h4">
                         {{ ReleaseDateEUNintendoCoUkDifferenceCount }}
                     </a>
@@ -30,7 +29,7 @@
                         Price
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}" class="h4">
                         {{ PriceNintendoCoUkDifferenceCount }}
                     </a>
@@ -42,7 +41,7 @@
                         Players
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}" class="h4">
                         {{ PlayersNintendoCoUkDifferenceCount }}
                     </a>
@@ -54,7 +53,7 @@
                         Publishers
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.publishers') }}" class="h4">
                         {{ PublishersNintendoCoUkDifferenceCount }}
                     </a>
@@ -66,7 +65,7 @@
                         Genres
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.genres') }}" class="h4">
                         {{ GenresNintendoCoUkDifferenceCount }}
                     </a>
@@ -75,92 +74,8 @@
             </tbody>
         </table>
 
-        <h3>Wikipedia</h3>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
 
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}">
-                        EU release date
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}" class="h4">
-                        {{ ReleaseDateEUWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}">
-                        US release date
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}" class="h4">
-                        {{ ReleaseDateUSWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}">
-                        JP release date
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}" class="h4">
-                        {{ ReleaseDateJPWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}">
-                        Developers
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}" class="h4">
-                        {{ DevelopersWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}">
-                        Publishers
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}" class="h4">
-                        {{ PublishersWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}">
-                        Genres
-                    </a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}" class="h4">
-                        {{ GenresWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <h2>Tools</h2>
-
-        <h3>Nintendo.co.uk API</h3>
         <table class="table">
             <tbody>
             <tr>
@@ -187,7 +102,115 @@
             </tbody>
         </table>
 
-        <h3>Wikipedia</h3>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Stats'} %}
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Unlinked items</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Ignored items</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}" class="h4">{{ NintendoCoUkIgnoredCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Wikipedia</h2>
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Differences'} %}
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}">
+                        EU release date
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}" class="h4">
+                        {{ ReleaseDateEUWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}">
+                        US release date
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}" class="h4">
+                        {{ ReleaseDateUSWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}">
+                        JP release date
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}" class="h4">
+                        {{ ReleaseDateJPWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}">
+                        Developers
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}" class="h4">
+                        {{ DevelopersWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}">
+                        Publishers
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}" class="h4">
+                        {{ PublishersWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}">
+                        Genres
+                    </a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}" class="h4">
+                        {{ GenresWikipediaDifferenceCount }}
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
         <table class="table">
             <tbody>
             <tr>
@@ -207,42 +230,14 @@
             </tbody>
         </table>
 
-    </div>
-
-    <div class="col-md-4">
-
-        <h2>Stats</h2>
-
-        <h3>Nintendo.co.uk API</h3>
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Unlinked items</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Ignored items</a>
-                </td>
-                <td class="text-right">
-                    <a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}" class="h4">{{ NintendoCoUkIgnoredCount }}</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <h3>Wikipedia</h3>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Stats'} %}
         <table class="table">
             <tbody>
             <tr>
                 <td>
                     <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Unlinked items</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}" class="h4">{{ WikipediaUnlinkedCount }}</a>
                 </td>
             </tr>
@@ -250,12 +245,16 @@
                 <td>
                     <a href="{{ route('staff.data-sources.wikipedia.ignored') }}">Ignored items</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.data-sources.wikipedia.ignored') }}" class="h4">{{ WikipediaIgnoredCount }}</a>
                 </td>
             </tr>
             </tbody>
         </table>
+
+    </div>
+
+    <div class="col-md-4">
 
         <h2>Import totals</h2>
 

@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -6,7 +6,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th class="text-center">Release date (EU)</th>
@@ -16,7 +16,7 @@
         <tbody>
             {% for item in GameList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
@@ -39,7 +39,7 @@
     <p>No games found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({
