@@ -1,26 +1,22 @@
 {% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="name" class="col-md-4 control-label">Collection name</label>
-        <div class="col-md-6">
-            <input id="name" type="text" class="form-control" name="name" required>
+    <div class="row mb-3">
+        <label for="name" class="col-sm-2 col-form-label">Collection name</label>
+        <div class="col-sm-4">
+            <input id="name" name="name" type="text" class="form-control" required>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="link_title" class="col-md-4 control-label">Link title</label>
-        <div class="col-md-6">
-            <input id="link_title" type="text" class="form-control" name="link_title" required>
+    <div class="row mb-3">
+        <label for="link_title" class="col-sm-2 col-form-label">Link title</label>
+        <div class="col-sm-4">
+            <input id="link_title" name="link_title" type="text" class="form-control" required>
+            <div class="form-text">Automatically generated from the name. Can be changed if you wish</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-primary">
-                Submit
-            </button>
-        </div>
-    </div>
+    {% include 'common/forms/submit.twig' %}
+
 </form>

@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -7,16 +7,10 @@
     <br>There is no option to undo the deletion if you proceed!
 </div>
 
-<form class="form-horizontal" role="form" method="post" action="{{ route('staff.categorisation.game-series.delete', {'seriesId': SeriesId}) }}">
+<form role="form" method="post" action="{{ route('staff.categorisation.game-series.delete', {'seriesId': SeriesId}) }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-danger">
-                Confirm deletion
-            </button>
-        </div>
-    </div>
+    {% include 'common/forms/submit-delete.twig' %}
 </form>
 
 {% endblock page_inner %}
