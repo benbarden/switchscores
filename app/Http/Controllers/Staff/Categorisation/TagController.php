@@ -57,24 +57,6 @@ class TagController extends Controller
         return view('staff.categorisation.tag.list', $bindings);
     }
 
-    public function showGameTagList($gameId)
-    {
-        $game = $this->getServiceGame()->find($gameId);
-        if (!$game) abort(404);
-
-        $gameTitle = $game->title;
-
-        $bindings = $this->getBindings('Tags for game: '.$gameTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Tags for game: '.$gameTitle);
-
-        $bindings['GameId'] = $gameId;
-        $bindings['GameData'] = $game;
-        $bindings['GameTagList'] = $this->getServiceGameTag()->getByGame($gameId);
-        $bindings['UnusedTagList'] = $this->getServiceGameTag()->getTagsNotOnGame($gameId);
-
-        return view('staff.categorisation.tag.gameTags', $bindings);
-    }
-
     public function addTag()
     {
         $bindings = $this->getBindings('Add tag');
@@ -143,75 +125,6 @@ class TagController extends Controller
         $bindings['CategoryList'] = $this->repoTagCategory->getAll();
 
         return view('staff.categorisation.tag.edit', $bindings);
-    }
-
-    public function addGameTag()
-    {
-        $userId = $this->getAuthId();
-
-        $user = $this->getServiceUser()->find($userId);
-        if (!$user) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
-
-        $request = request();
-
-        $gameId = $request->gameId;
-        $tagId = $request->tagId;
-        if (!$tagId) {
-            return response()->json(['error' => 'Missing data: tagId'], 400);
-        }
-
-        $tagData = $this->getServiceTag()->find($tagId);
-        if (!$tagData) {
-            return response()->json(['error' => 'Tag not found!'], 400);
-        }
-
-        $existingGameTag = $this->getServiceGameTag()->gameHasTag($gameId, $tagId);
-        if ($existingGameTag) {
-            return response()->json(['error' => 'Game already has this tag!'], 400);
-        }
-
-        $this->getServiceGameTag()->createGameTag($gameId, $tagId);
-
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
-    }
-
-    public function removeGameTag()
-    {
-        $userId = $this->getAuthId();
-
-        $user = $this->getServiceUser()->find($userId);
-        if (!$user) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
-
-        $request = request();
-
-        $gameId = $request->gameId;
-        $gameTagId = $request->gameTagId;
-        if (!$gameTagId) {
-            return response()->json(['error' => 'Missing data: gameTagId'], 400);
-        }
-
-        $gameTagData = $this->getServiceGameTag()->find($gameTagId);
-        if (!$gameTagData) {
-            return response()->json(['error' => 'Game tag not found!'], 400);
-        }
-
-        if ($gameTagData->game_id != $gameId) {
-            return response()->json(['error' => 'Game id mismatch on game tag record!'], 400);
-        }
-
-        $this->getServiceGameTag()->delete($gameTagId);
-
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
     }
 
     public function deleteTag()
