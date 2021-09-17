@@ -27,13 +27,7 @@
     <form role="form" method="post" action="{{ route('owner.user.delete', {'userId': UserId}) }}">
         {{ csrf_field() }}
 
-        <div class="row mb-3">
-            <div class="col-sm-4">
-                <button type="submit" class="btn outline btn-danger">
-                    Confirm deletion
-                </button>
-            </div>
-        </div>
+        {% include 'common/forms/submit-delete.twig' %}
     </form>
 {% endif %}
 
