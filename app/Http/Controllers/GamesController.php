@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Collection;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -48,6 +49,20 @@ class GamesController extends Controller
         $bindings['TopRatedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
+
+        // Get featured game
+        $todaysDate = new \DateTime('now');
+        $todaysDateYmd = $todaysDate->format('Y-m-d');
+        $featuredGame = $this->repoFeaturedGames->getActiveByDateOrRandom($todaysDateYmd);
+        // Make it into a usable collection
+        if ($featuredGame) {
+            $fGameList = new Collection();
+            $fGameModel = $this->getServiceGame()->find($featuredGame->game_id);
+            $fGameModel->featured_game = $featuredGame;
+            $fGameList->push($fGameModel);
+            $bindings['FeaturedGameList'] = $fGameList;
+            $bindings['FeaturedGameData'] = $featuredGame;
+        }
 
         $bindings['TopTitle'] = 'Nintendo Switch games database';
         $bindings['PageTitle'] = 'Nintendo Switch games database';

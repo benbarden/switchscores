@@ -43,11 +43,29 @@
 
     </div>
 
-    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="border-left: 1px solid #c9c9c9;">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="border-left: 2px solid #c9c9c9;">
 
-        <h2>
+        {% if FeaturedGameList %}
+            <h2 class="standout-header">
+                Featured game
+            </h2>
+            <p>
+                <small>
+                    Featured games are titles that look interesting or unusual. You might like to
+                    check them out. They are selected by members and staff.
+                </small>
+            </p>
+            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+            {#
+            <div class="label label-success">
+                {{ FeaturedGameData.getTypeDesc() }}
+            </div>
+            #}
+        {% endif %}
+
+        <h2 class="standout-header">
             Upcoming
-            <span class="h5">(<a href="{{ route('games.upcomingReleases') }}">view all</a>)</span>
+            <span class="h5">(<a href="{{ route('games.upcomingReleases') }}" style="color: #fff;">view all</a>)</span>
         </h2>
         {% include 'modules/game/list/upcoming.twig' with {'GameList': UpcomingReleases} %}
 

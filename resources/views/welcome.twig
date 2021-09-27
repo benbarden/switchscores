@@ -60,42 +60,18 @@
         #}
 
         <h2 class="standout-header">
-            Recently ranked
+            Recent top rated
         </h2>
+        <p>
+            Top rated Nintendo Switch games released in the last {{ RecentTopRatedLimit }} days.
+        </p>
+        {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': RecentWithGoodRanks} %}
+        {#
         {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': HighlightsRecentlyRanked} %}
+        #}
 
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
-        </h3>
-
-        {% if FeaturedGameList %}
-            <h2 class="standout-header">
-                Featured game
-            </h2>
-            <p>
-                <small>
-                    Featured games are titles that look interesting or unusual. You might like to
-                    check them out. They are selected by members and staff.
-                </small>
-            </p>
-            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
-            {#
-            <div class="label label-success">
-                {{ FeaturedGameData.getTypeDesc() }}
-            </div>
-            #}
-        {% endif %}
-
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
-
-        <h2 class="standout-header">
-            Recent top rated
-        </h2>
-        {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': RecentWithGoodRanks} %}
-        <h3 class="text-center">
-            <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
         </h3>
 
         <h2 class="standout-header">
@@ -105,6 +81,15 @@
         <h3 class="text-center">
             <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
         </h3>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
+
+        <h2 class="standout-header">
+            Recent reviews
+        </h2>
+        {% include 'reviews/layouts/standard/layout.twig' with {'ReviewList': ReviewList, 'batchOverride': '1'} %}
 
     </div>
 
