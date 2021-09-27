@@ -140,9 +140,11 @@
             </p>
         {% endif %}
 
+        {#
         {% if GameReviews.count > 2 %}
             {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
         {% endif %}
+        #}
 
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
 
