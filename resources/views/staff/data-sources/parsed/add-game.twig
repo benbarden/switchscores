@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -23,16 +23,10 @@
         </ul>
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': ItemId}) }}">
+    <form role="form" method="post" action="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': ItemId}) }}">
         {{ csrf_field() }}
 
-        <div class="form-group">
-            <div class="col-md-8 col-md-offset-4">
-                <button type="submit" class="btn outline btn-primary">
-                    Proceed
-                </button>
-            </div>
-        </div>
+        {% include 'common/forms/submit.twig' with {'buttonText': 'Proceed'} %}
     </form>
 {% endif %}
 
