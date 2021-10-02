@@ -8,7 +8,18 @@
             <p>
                 This will show upcoming games for the next 7 days.
             </p>
+            {% if UpcomingGames %}
+                <div class="alert alert-info">
+                    <strong>There are {{ UpcomingGames|length }} games due to be released in the next 7 days.</strong>
+                    <br>NB This total might be wrong if there are any games included in the list
+                    that have already been released, but have not been marked as released on the site.
+                </div>
+            {% endif %}
         </div>
+
+    </div>
+
+    <div class="row">
 
         {% if UpcomingGames %}
 
@@ -61,6 +72,8 @@
                 {{ upcomingGamesHtml|raw }}
 
             </div>
+
+        {% endif %}
 
     </div>
 
@@ -140,12 +153,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-
-        {% else %}
-            <p>
-                Hmm, looks like there aren't any games to display here.
-            </p>
-        {% endif %}
 
         </div>
 
