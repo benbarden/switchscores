@@ -26,8 +26,6 @@ class ReviewFeedItemService
         'Page not found',
         'Review for another platform',
         'Review pre-dates Switch version',
-        'Skipping - posted elsewhere',
-        'Wrong link',
     ];
 
     public function add($siteId, $gameId, $itemUrl, $itemTitle, $itemDate, $itemRating)
