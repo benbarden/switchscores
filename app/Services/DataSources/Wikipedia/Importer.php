@@ -16,8 +16,8 @@ class Importer
 
     protected $wikiPageList = [
         'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(A%E2%80%93C)',
-        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(D%E2%80%93F)',
-        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(G%E2%80%93P)',
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(D%E2%80%93G)',
+        'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(H%E2%80%93P)',
         'https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(Q%E2%80%93Z)'
     ];
 
