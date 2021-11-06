@@ -129,9 +129,19 @@ class GamesController extends Controller
 
         // Top %
         if ($gameData->game_rank && $rankMaximum) {
-            $topPercent = ($gameData->game_rank / $rankMaximum) * 100;
-            if ($topPercent <= 50) {
-                $bindings['TopPercent'] = round($topPercent, 0);
+            if ($gameData->game_rank <= 100) {
+                $bindings['TopRatedItem'] = 'Top 100';
+            } else {
+                $topPercent = ($gameData->game_rank / $rankMaximum) * 100;
+                if ($topPercent <= 50) {
+                    $topPercent = round($topPercent, 2);
+                    if ($topPercent > 1) {
+                        $topPercent = number_format($topPercent, 0);
+                    } else {
+                        $topPercent = number_format($topPercent, 2);
+                    }
+                    $bindings['TopPercent'] = $topPercent;
+                }
             }
         }
 

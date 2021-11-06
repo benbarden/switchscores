@@ -12,10 +12,9 @@
 
             <div class="col-sm-12 col-md-12 col-lg-12">
 
-                <div class="pull-right" style="margin: 10px 0;">
-                    {% if exception is null %}
-                        <a class="twitter-share-button" data-size="large"
-                           href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores">Tweet</a>
+                <div class="pull-right" style="margin: 15px 0;">
+                    {% if GameData.rating_avg %}
+                        {% include 'modules/rating/badge.twig' with {'score': GameData.rating_avg, 'scoreSize': 'h4'} %}
                     {% endif %}
                 </div>
                 <h1 style="margin: 10px 0;">
@@ -108,11 +107,6 @@
         {% include 'modules/game/rank/year.twig' %}
         {% include 'modules/game/rank/year-month.twig' %}
 
-        <h2 class="standout-header">Scores</h2>
-
-        {% include 'modules/game/rank/review-count.twig' %}
-        {% include 'modules/game/rank/rating-avg.twig' %}
-
         <h2 class="standout-header">Buy this game</h2>
         {% include 'games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
 
@@ -162,6 +156,11 @@
                 <div class="col-md-2">
                 </div>
             </div>
+        {% endif %}
+
+        {% if exception is null %}
+            <a class="twitter-share-button" data-size="large"
+               href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores">Tweet</a>
         {% endif %}
 
     </div>

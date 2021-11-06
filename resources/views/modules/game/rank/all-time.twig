@@ -21,7 +21,7 @@
 
     </div>
 
-    {% if TopPercent %}
+    {% if TopPercent or TopRatedItem %}
     <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-6">
         </div>
@@ -29,7 +29,11 @@
             <h4 style="margin: 5px 0;">
                 <span class="rating-v2">
                     <span class="suffix">
-                        Top {{ TopPercent }} %
+                        {% if TopPercent %}
+                            <span class="label label-info">Top {{ TopPercent }} %</span>
+                        {% elseif TopRatedItem %}
+                            <span class="label label-success">{{ TopRatedItem }}</span>
+                        {% endif %}
                     </span>
                 </span>
             </h4>
