@@ -40,9 +40,9 @@
             </div>
 
             <div class="form-group">
-                <label for="contact_method" class="col-md-4 control-label">Contact method</label> *
+                <label for="contact_method" class="col-md-4 control-label">Contact method</label>
                 <div class="col-md-6">
-                    <select id="contact_method" class="form-control" name="contact_method" required>
+                    <select id="contact_method" class="form-control" name="contact_method">
                         <option value="">&nbsp;</option>
                         {% for item in MethodList %}
                             <option value="{{ item.title }}">{{ item.title }}</option>

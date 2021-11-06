@@ -103,6 +103,8 @@ class GamesCompanyController extends Controller
         $bindings['PartnerData'] = $partner;
         $bindings['PartnerId'] = $partnerId;
 
+        $bindings['OutreachList'] = $this->getServicePartnerOutreach()->getByPartnerId($partnerId);
+
         $bindings['MergedGameList'] = $mergedGameList;
 
         return view('staff.partners.games-company.show', $bindings);

@@ -55,11 +55,6 @@
                     {% endif %}
                 </td>
             </tr>
-        </table>
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-6">
-        <h2>Outreach</h2>
-        <table class="table table-condensed table-responsive">
             <tr>
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Last outreach</span>
@@ -76,18 +71,52 @@
                     {{ PartnerData.lastOutreach.created_at }}
                 </td>
             </tr>
-            <tr>
-                <td style="max-width: 150px;">
-                    <span style="font-weight: bold;">View all outreach</span>
-                </td>
-                <td>
-                    <a href="{{ route('staff.partners.outreach.list', {'partner': PartnerData}) }}">View</a>
-                </td>
-            </tr>
         </table>
-        <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ PartnerData.id }}" class="btn btn-primary">Add outreach</a>
     </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <h2>Outreach</h2>
+        <p>
+            <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ PartnerData.id }}" class="btn btn-primary">Add outreach</a>
+            {% if OutreachList %}
+                <a href="{{ route('staff.partners.outreach.list', {'partner': PartnerData}) }}" class="btn btn-primary">View all</a>
+            {% endif %}
+        </p>
+        {% if OutreachList %}
+            <p>
+                View all outreach to see messages and notes.
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="text-center">New status</th>
+                    <th class="text-center">Contact method</th>
+                    <th class="text-center">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in OutreachList %}
+                    <tr>
+                        <td class="text-center">
+                            {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}
+                        </td>
+                        <td class="text-center">
+                            {{ item.contact_method }}
+                        </td>
+                        <td>
+                            {{ item.created_at }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No outreach for this partner.</p>
+        {% endif %}
+    </div>
+
 </div>
+
 {% if MergedGameList %}
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
