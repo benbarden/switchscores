@@ -82,7 +82,7 @@
                 <a href="{{ route('staff.partners.outreach.list', {'partner': PartnerData}) }}" class="btn btn-primary">View all</a>
             {% endif %}
         </p>
-        {% if OutreachList %}
+        {% if OutreachList.count %}
             <p>
                 View all outreach to see messages and notes.
             </p>
