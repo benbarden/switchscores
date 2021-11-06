@@ -101,7 +101,7 @@
                 </td>
                 <td>
                     {% if UserData.gamesCompany.id %}
-                        {{ UserData.gamesCompany.name }}
+                        <a href="{{ route('staff.partners.games-company.show', {'partner': UserData.gamesCompany}) }}">{{ UserData.gamesCompany.name }}</a>
                     {% else %}
                         -
                     {% endif %}
