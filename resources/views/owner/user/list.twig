@@ -49,7 +49,11 @@
                     </td>
                     <td class="text-center">
                         <a href="{{ route('owner.user.edit', {'userId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('owner.user.delete', {'userId': item.id}) }}">Delete</a>
+                        {% if item.isOwner() %}
+                            Delete
+                        {% else %}
+                            <a href="{{ route('owner.user.delete', {'userId': item.id}) }}">Delete</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
