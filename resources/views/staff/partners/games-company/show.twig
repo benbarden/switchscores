@@ -56,6 +56,18 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    <span style="font-weight: bold;">switchscores login</span>
+                </td>
+                <td>
+                    {% if PartnerData.gamesCompanyUser.id is not null %}
+                        {% include 'modules/icons/green-tick.twig' %}
+                    {% else %}
+                        {% include 'modules/icons/red-cross.twig' %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Last outreach</span>
                 </td>

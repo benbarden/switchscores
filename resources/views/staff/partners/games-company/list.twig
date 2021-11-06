@@ -22,6 +22,7 @@
                 <th>Name</th>
                 <th class="text-center">Website</th>
                 <th class="text-center">Twitter</th>
+                <th class="text-center">SS login</th>
                 <th class="text-center">Assigned games<br>(developer)</th>
                 <th class="text-center">Assigned games<br>(publisher)</th>
                 <th class="text-center">Options</th>
@@ -54,6 +55,13 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
+                        {% if item.gamesCompanyUser.id %}
+                            {% include 'modules/icons/green-tick.twig' %}
+                        {% else %}
+                            {% include 'modules/icons/red-cross.twig' %}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
                         {{ item.developerGames().count }}
                     </td>
                     <td class="text-center">
@@ -80,6 +88,7 @@
             "columns": [
                 null,
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 null,
