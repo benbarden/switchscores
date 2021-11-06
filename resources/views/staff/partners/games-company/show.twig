@@ -56,18 +56,6 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <span style="font-weight: bold;">switchscores login</span>
-                </td>
-                <td>
-                    {% if PartnerData.gamesCompanyUser.id is not null %}
-                        {% include 'modules/icons/green-tick.twig' %}
-                    {% else %}
-                        {% include 'modules/icons/red-cross.twig' %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Last outreach</span>
                 </td>
@@ -83,6 +71,31 @@
                     {{ PartnerData.lastOutreach.created_at }}
                 </td>
             </tr>
+            <tr>
+                <th colspan="2" style="background: #dedede;">Switch Scores access</th>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Signed up?</span>
+                </td>
+                <td>
+                    {% if PartnerData.gamesCompanyUser.id is not null %}
+                        {% include 'modules/icons/green-tick.twig' %}
+                    {% else %}
+                        {% include 'modules/icons/red-cross.twig' %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% if PartnerData.gamesCompanyUser.id is not null %}
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Last access</span>
+                    </td>
+                    <td>
+                        {{ PartnerData.gamesCompanyUser.last_access_date }}
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </div>
 
