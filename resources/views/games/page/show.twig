@@ -13,8 +13,10 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
 
                 <div class="pull-right" style="margin: 15px 0;">
-                    {% if GameData.rating_avg %}
+                    {% if GameData.game_rank %}
                         {% include 'modules/rating/badge.twig' with {'score': GameData.rating_avg, 'scoreSize': 'h4'} %}
+                    {% elseif GameData.rating_avg %}
+                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
                     {% endif %}
                 </div>
                 <h1 style="margin: 10px 0;">

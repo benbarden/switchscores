@@ -14,7 +14,7 @@
     {% set labelColour = 'label-default' %}
 {% endif %}
 
-<span class="{{ scoreSizeHeader }} label {{ labelColour }}">
+<span class="{{ scoreSizeHeader }} label {{ labelColour }} switch-rating-badge">
     {{ badgeText }}
 </span>
 {% if reviewCount is defined %}
