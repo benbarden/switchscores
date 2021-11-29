@@ -1,13 +1,13 @@
 # Cron jobs for Switch Scores
 
-10 3 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
-20 3 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
-22 3 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImages >/dev/null 2>&1
+0 2 * * * www-data cd /var/www/switchscores.com && php artisan IGSeriesImage >/dev/null 2>&1
 
-30 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
-35 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
+0 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
+10 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
 
-0 4 * * * www-data cd /var/www/switchscores.com && php artisan IGSeriesImage >/dev/null 2>&1
+0 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
+10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
+20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImages >/dev/null 2>&1
 
 0 5 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
 #0 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedImporter >/dev/null 2>&1
