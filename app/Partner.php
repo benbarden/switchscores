@@ -54,9 +54,7 @@ class Partner extends Model implements Auditable
      */
     protected $fillable = [
         'type_id', 'status', 'name', 'link_title', 'website_url', 'twitter_id',
-        'feed_url', 'feed_url_prefix', 'rating_scale', 'allow_historic_content',
-        'title_match_rule_pattern', 'title_match_index',
-        'review_count', 'last_review_date', 'last_outreach_id',
+        'rating_scale', 'review_count', 'last_review_date', 'last_outreach_id',
         'contact_name', 'contact_email', 'contact_form_link', 'review_code_regions',
     ];
 
@@ -68,11 +66,6 @@ class Partner extends Model implements Auditable
     public function isGamesCompany()
     {
         return $this->type_id == self::TYPE_GAMES_COMPANY;
-    }
-
-    public function allowHistoric()
-    {
-        return $this->allow_historic_content == 1;
     }
 
     public function links()

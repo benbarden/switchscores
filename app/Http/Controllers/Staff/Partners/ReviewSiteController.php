@@ -25,7 +25,6 @@ class ReviewSiteController extends Controller
     private $validationRules = [
         'name' => 'required|max:50',
         'website_url' => 'required',
-        'feed_url' => 'max:255',
         'link_title' => 'required|max:100',
     ];
 
@@ -49,8 +48,6 @@ class ReviewSiteController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
-
             if (isset($request->rating_scale)) {
                 $ratingScale = $request->rating_scale;
             } else {
@@ -59,11 +56,7 @@ class ReviewSiteController extends Controller
 
             $this->getServicePartner()->createReviewSite(
                 Partner::STATUS_ACTIVE,
-                $request->name, $request->link_title, $request->website_url, $request->twitter_id,
-                $request->feed_url, $request->feed_url_prefix,
-                $ratingScale, $allowHistoricContent,
-                $request->title_match_rule_pattern,
-                $request->title_match_index,
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id, $ratingScale,
                 $request->contact_name, $request->contact_email, $request->contact_form_link,
                 $request->review_code_regions
             );
@@ -92,8 +85,6 @@ class ReviewSiteController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
-
             if (isset($request->rating_scale)) {
                 $ratingScale = $request->rating_scale;
             } else {
@@ -103,11 +94,7 @@ class ReviewSiteController extends Controller
             $this->getServicePartner()->editReviewSite(
                 $partnerData,
                 $request->status,
-                $request->name, $request->link_title, $request->website_url, $request->twitter_id,
-                $request->feed_url, $request->feed_url_prefix,
-                $ratingScale, $allowHistoricContent,
-                $request->title_match_rule_pattern,
-                $request->title_match_index,
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id, $ratingScale,
                 $request->contact_name, $request->contact_email, $request->contact_form_link,
                 $request->review_code_regions
             );

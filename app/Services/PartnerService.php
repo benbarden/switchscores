@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 class PartnerService
 {
     public function createReviewSite(
-        $status, $name, $linkTitle, $websiteUrl, $twitterId,
-        $feedUrl, $feedUrlPrefix, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
         $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
     )
     {
@@ -25,12 +23,7 @@ class PartnerService
             'link_title' => $linkTitle,
             'website_url' => $websiteUrl,
             'twitter_id' => $twitterId,
-            'feed_url' => $feedUrl,
-            'feed_url_prefix' => $feedUrlPrefix,
             'rating_scale' => $ratingScale,
-            'allow_historic_content' => $allowHistoricContent,
-            'title_match_rule_pattern' => $titleMatchRulePattern,
-            'title_match_index' => $titleMatchIndex,
             'contact_name' => $contactName,
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
@@ -39,9 +32,7 @@ class PartnerService
     }
 
     public function editReviewSite(
-        Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId,
-        $feedUrl, $feedUrlPrefix, $ratingScale,
-        $allowHistoricContent, $titleMatchRulePattern, $titleMatchIndex,
+        Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
         $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
     )
     {
@@ -51,12 +42,7 @@ class PartnerService
             'link_title' => $linkTitle,
             'website_url' => $websiteUrl,
             'twitter_id' => $twitterId,
-            'feed_url' => $feedUrl,
-            'feed_url_prefix' => $feedUrlPrefix,
             'rating_scale' => $ratingScale,
-            'allow_historic_content' => $allowHistoricContent,
-            'title_match_rule_pattern' => $titleMatchRulePattern,
-            'title_match_index' => $titleMatchIndex,
             'contact_name' => $contactName,
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
@@ -171,28 +157,6 @@ class PartnerService
             ->get();
     }
 
-    public function getActiveReviewSitesWithFeeds()
-    {
-        $reviewSites = Partner::
-            where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_ACTIVE)
-            ->whereNotNull('feed_url')
-            ->orderBy('name', 'asc')
-            ->get();
-        return $reviewSites;
-    }
-
-    public function getActiveReviewSitesNoFeeds()
-    {
-        $reviewSites = Partner::
-        where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_ACTIVE)
-            ->whereNull('feed_url')
-            ->orderBy('name', 'asc')
-            ->get();
-        return $reviewSites;
-    }
-
     public function getActiveReviewSitesWithContactDetails()
     {
         $reviewSites = Partner::
@@ -209,7 +173,6 @@ class PartnerService
         return Partner::
             where('type_id', Partner::TYPE_REVIEW_SITE)
             ->where('status', Partner::STATUS_ACTIVE)
-//            ->whereNotNull('feed_url')
             ->whereRaw('last_review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
             ->orderBy('name', 'asc')
             ->get();

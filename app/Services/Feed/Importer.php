@@ -320,6 +320,12 @@ class Importer
         $itemUrl = $this->serviceUrl->cleanReviewFeedUrl($itemUrl);
         $reviewFeedItem->item_url = $itemUrl;
 
+        // Check we have the right data available.
+        // Feed fields no longer exist on the Partner/ReviewSite record.
+        if (!$this->partnerFeedLink) {
+            throw new \Exception('Fatal error - Cannot load partnerFeedLink for item: '.$itemUrl.' - Date: '.$itemDate);
+        }
+
         // Check if it's already been imported
         if (!$this->isTestMode) {
             $dbExistingItem = $this->serviceReviewFeedItem->getByItemUrl($itemUrl);
@@ -329,23 +335,12 @@ class Importer
         }
 
         // Silently bypass historic reviews - removes some log noise
-        if ($this->partnerFeedLink) {
-            if ($reviewFeedItem->isHistoric() && !$this->partnerFeedLink->allowHistoric()) {
-                throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
-            }
-        } elseif ($this->reviewSite) {
-            if ($reviewFeedItem->isHistoric() && !$this->reviewSite->allowHistoric()) {
-                throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
-            }
+        if ($reviewFeedItem->isHistoric() && !$this->partnerFeedLink->allowHistoric()) {
+            throw new HistoricEntry('Skipping historic review: ' . $itemUrl . ' - Date: ' . $itemDate);
         }
 
         // Check if a feed URL prefix is set, and if so, compare it
-        $feedUrlPrefix = '';
-        if ($this->partnerFeedLink) {
-            $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
-        } elseif ($this->reviewSite) {
-            $feedUrlPrefix = $this->reviewSite->feed_url_prefix;
-        }
+        $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
         if ($feedUrlPrefix) {
             $fullPrefix = $this->reviewSite->website_url.$feedUrlPrefix;
             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
@@ -385,6 +380,12 @@ class Importer
         $itemDate = $itemDateModel->format('Y-m-d H:i:s');
         $reviewFeedItem->item_date = $itemDate;
 
+        // Check we have the right data available.
+        // Feed fields no longer exist on the Partner/ReviewSite record.
+        if (!$this->partnerFeedLink) {
+            throw new \Exception('Fatal error - Cannot load partnerFeedLink for item: '.$itemUrl.' - Date: '.$itemDate);
+        }
+
         // Check if it's already been imported
         if (!$this->isTestMode) {
             $dbExistingItem = $this->serviceReviewFeedItem->getByItemUrl($itemUrl);
@@ -398,8 +399,9 @@ class Importer
 
             $serviceTitleMatch = new ServiceTitleMatch();
 
-            $titleMatchRulePattern = $this->reviewSite->title_match_rule_pattern;
-            $titleMatchIndex = $this->reviewSite->title_match_index;
+            $titleMatchRulePattern = $this->partnerFeedLink->title_match_rule_pattern;
+            $titleMatchIndex = $this->partnerFeedLink->title_match_rule_index;
+
             if ($titleMatchRulePattern && ($titleMatchIndex != null)) {
 
                 // New method
@@ -418,16 +420,16 @@ class Importer
         }
 
         // Check if a feed URL prefix is set, and if so, compare it
-        $feedUrlPrefix = $this->reviewSite->feed_url_prefix;
+        $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
         if ($feedUrlPrefix) {
-            $fullPrefix = $this->reviewSite->url.$feedUrlPrefix;
+            $fullPrefix = $this->reviewSite->website_url.$feedUrlPrefix;
             if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
                 throw new FeedUrlPrefixNotMatched('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
             }
         }
 
         // Check that it's not a historic review
-        if ($reviewFeedItem->isHistoric() && !$this->reviewSite->allowHistoric()) {
+        if ($reviewFeedItem->isHistoric() && !$this->partnerFeedLink->allowHistoric()) {
             throw new HistoricEntry('Skipping historic review: '.$itemUrl.' - Date: '.$itemDate);
         }
 

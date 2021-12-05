@@ -15,11 +15,6 @@
         formVals['contact_form_link'] = "{{ ReviewSiteData.contact_form_link }}";
         formVals['review_code_regions'] = "{{ ReviewSiteData.review_code_regions }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
-        formVals['feed_url'] = "{{ ReviewSiteData.feed_url|e('js') }}";
-        formVals['feed_url_prefix'] = "{{ ReviewSiteData.feed_url_prefix }}";
-        formVals['title_match_rule_pattern'] = "{{ ReviewSiteData.title_match_rule_pattern|e('js') }}";
-        formVals['title_match_index'] = "{{ ReviewSiteData.title_match_index }}";
-        formVals['allow_historic_content'] = "{{ ReviewSiteData.allow_historic_content }}";
         formVals['status'] = "{{ ReviewSiteData.status }}";
 
     } else {
@@ -35,11 +30,6 @@
         formVals['contact_form_link'] = "{{ old('contact_form_link') }}";
         formVals['review_code_regions'] = "{{ old('review_code_regions') }}";
         formVals['rating_scale'] = "{{ old('rating_scale') }}";
-        formVals['feed_url'] = "{{ old('feed_url')|e('js') }}";
-        formVals['feed_url_prefix'] = "{{ old('feed_url_prefix') }}";
-        formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
-        formVals['title_match_index'] = "{{ old('title_match_index') }}";
-        formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
         if (formMode != 'add') {
             formVals['status'] = "{{ old('status') }}";
         }
@@ -58,15 +48,6 @@
     $('#contact_form_link').val(formVals['contact_form_link']);
     $('#review_code_regions').val(formVals['review_code_regions']);
     $('#rating_scale').val(formVals['rating_scale']);
-    $('#feed_url').val(formVals['feed_url']);
-    $('#feed_url_prefix').val(formVals['feed_url_prefix']);
-    $('#title_match_rule_pattern').val(formVals['title_match_rule_pattern']);
-    $('#title_match_index').val(formVals['title_match_index']);
-    if (formVals['allow_historic_content'] == '1') {
-        $('#allow_historic_content').attr('checked', true);
-    } else {
-        $('#allow_historic_content').attr('checked', false);
-    }
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');
