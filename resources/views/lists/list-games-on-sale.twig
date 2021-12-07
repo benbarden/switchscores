@@ -18,9 +18,9 @@
         <div id="tabs">
 
             <ul>
-                <li><a href="#tabs-top-rated">Top Rated discounts</a></li>
-                <li><a href="#tabs-highest">Highest discounts</a></li>
-                <li><a href="#tabs-unranked">Unranked discounts</a></li>
+                <li><a href="#tabs-top-rated">Top Rated discounts ({{ GoodRanks|length }})</a></li>
+                <li><a href="#tabs-highest">Highest discounts ({{ HighestDiscounts|length }})</a></li>
+                <li><a href="#tabs-unranked">Unranked discounts ({{ UnrankedDiscounts|length }})</a></li>
             </ul>
 
             <div id="tabs-top-rated">
@@ -30,6 +30,9 @@
                     These games have an average rating of 8 or above,
                     and are discounted by 25% or more.
                     Highest discount percentages are shown first.
+                </p>
+                <p>
+                    A maximum of 200 games are displayed in the list.
                 </p>
 
                 {% if GoodRanks|length %}
@@ -48,6 +51,9 @@
                 <p>
                     These games are discounted by 50% or more.
                     Highest ranked games are shown first.
+                </p>
+                <p>
+                    A maximum of 200 games are displayed in the list.
                 </p>
 
                 {% if HighestDiscounts|length %}
@@ -72,6 +78,9 @@
                     and look out for big discounts.
                     If you try a game listed here,
                     we'd love to get a review from you!
+                </p>
+                <p>
+                    A maximum of 200 games are displayed in the list.
                 </p>
 
                 {% if UnrankedDiscounts|length %}
