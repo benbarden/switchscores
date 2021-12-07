@@ -59,8 +59,8 @@
     </table>
     <script>
         $(document).ready(function() {
-            $('#table-index-ranked').DataTable({
-                "order": [{{ RankedListSort|raw }}],
+            $('#{{ TableId }}').DataTable({
+                "order": [{{ TableSort|raw }}],
                 "pageLength": 25,
                 "columnDefs": [{ "targets": [ 0 ], "orderable": false }]
             });

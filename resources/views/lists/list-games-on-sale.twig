@@ -2,69 +2,98 @@
 
 {% block page_body %}
 
-<div class="row">
+<!-- jQuery UI -->
+<script src="/js/jquery-ui-1.12.1.min.js"></script>
+<link href="/css/jquery-ui-1.12.1.min.css" rel="stylesheet" />
 
-    <div class="col-xs-12 col-sm-12">
-        <p>
-            This page lists Nintendo Switch games that are currently on sale in Europe.
-            Prices are updated nightly.
-        </p>
-        <p>
-            Not every discount is shown below - we've limited it to 50 items per list
-            so it's not too long.
-        </p>
-    </div>
-
+<div class="alert alert-info">
+    This is a new version of the Games on sale page. You can still view the previous page:
+    <a href="{{ route('lists.gamesOnSaleArchive') }}" style="color: #fff; font-weight: bold;">Games on sale (archive)</a>.
 </div>
 
 <div class="row">
 
-    <div class="col-md-4">
+    <div class="col-md-12">
 
-        <h2>Top Rated discounts</h2>
-        <p>
-            These games have an average rating of 8 or above, and are discounted by 25% or more.
-        </p>
-        {% if GoodRanks|length %}
-            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': GoodRanks, 'batchOverride': 1} %}
-        {% else %}
-            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
-        {% endif %}
+        <div id="tabs">
 
-    </div>
+            <ul>
+                <li><a href="#tabs-top-rated">Top Rated discounts</a></li>
+                <li><a href="#tabs-highest">Highest discounts</a></li>
+                <li><a href="#tabs-unranked">Unranked discounts</a></li>
+            </ul>
 
-    <div class="col-md-4">
+            <div id="tabs-top-rated">
 
-        <h2>Highest discounts</h2>
-        <p>
-            These games are discounted by 50% or more. Highest ranked games are shown first.
-        </p>
-        {% if HighestDiscounts|length %}
-            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': HighestDiscounts, 'batchOverride': 1} %}
-        {% else %}
-            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
-        {% endif %}
+                <h2>Top Rated discounts</h2>
+                <p>
+                    These games have an average rating of 8 or above,
+                    and are discounted by 25% or more.
+                    Highest discount percentages are shown first.
+                </p>
 
-    </div>
+                {% if GoodRanks|length %}
+                    {% include 'games/browse/byCategoryPageTableRanked.twig' with {'GameList': GoodRanks, 'TableId': 'table-top-rated', 'TableSort': TopRatedSort} %}
+                {% else %}
+                    <p>
+                        No discounts to display.
+                    </p>
+                {% endif %}
 
-    <div class="col-md-4">
+            </div>
 
-        <h2>Unranked discounts</h2>
-        <p>
-            These games are on sale, but we haven't ranked them yet. Highest discounts shown first.
-        </p>
-        <p>
-            Look out for the games that have 1 or 2 reviews (we need 3 to rank the game), and look out for
-            big discounts. If you try a game listed here, we'd love to get a review from you!
-        </p>
-        {% if UnrankedDiscounts|length %}
-            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': UnrankedDiscounts, 'batchOverride': 1} %}
-        {% else %}
-            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
-        {% endif %}
+            <div id="tabs-highest">
+
+                <h2>Highest discounts</h2>
+                <p>
+                    These games are discounted by 50% or more.
+                    Highest ranked games are shown first.
+                </p>
+
+                {% if HighestDiscounts|length %}
+                    {% include 'games/browse/byCategoryPageTableRanked.twig' with {'GameList': HighestDiscounts, 'TableId': 'table-highest', 'TableSort': HighestDiscountsSort} %}
+                {% else %}
+                    <p>
+                        No discounts to display.
+                    </p>
+                {% endif %}
+
+            </div>
+
+            <div id="tabs-unranked">
+
+                <h2>Unranked discounts</h2>
+                <p>
+                    These games are on sale, but we haven't ranked them yet.
+                    Highest discounts shown first.
+                </p>
+                <p>
+                    Look out for the games that have 1 or 2 reviews (we need 3 to rank the game),
+                    and look out for big discounts.
+                    If you try a game listed here,
+                    we'd love to get a review from you!
+                </p>
+
+                {% if UnrankedDiscounts|length %}
+                    {% include 'games/browse/byCategoryPageTableUnranked.twig' with {'GameList': UnrankedDiscounts, 'TableId': 'table-unranked', 'TableSort': UnrankedDiscountsSort} %}
+                {% else %}
+                    <p>
+                        No discounts to display.
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<script>
+    $('#tabs').tabs();
+</script>
+
+{% include 'common/table-sorting.twig' %}
 
 {% endblock page_body %}

@@ -1,0 +1,70 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12">
+        <p>
+            This page lists Nintendo Switch games that are currently on sale in Europe.
+            Prices are updated nightly.
+        </p>
+        <p>
+            Not every discount is shown below - we've limited it to 50 items per list
+            so it's not too long.
+        </p>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Top Rated discounts</h2>
+        <p>
+            These games have an average rating of 8 or above, and are discounted by 25% or more.
+        </p>
+        {% if GoodRanks|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': GoodRanks, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Highest discounts</h2>
+        <p>
+            These games are discounted by 50% or more. Highest ranked games are shown first.
+        </p>
+        {% if HighestDiscounts|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': HighestDiscounts, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Unranked discounts</h2>
+        <p>
+            These games are on sale, but we haven't ranked them yet. Highest discounts shown first.
+        </p>
+        <p>
+            Look out for the games that have 1 or 2 reviews (we need 3 to rank the game), and look out for
+            big discounts. If you try a game listed here, we'd love to get a review from you!
+        </p>
+        {% if UnrankedDiscounts|length %}
+            {% include 'games/layouts/tiledGrid/layoutOnSale.twig' with {'GameList': UnrankedDiscounts, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games to display here! Something probably went wrong. Sorry about that.</p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

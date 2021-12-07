@@ -49,8 +49,8 @@
     </table>
     <script>
         $(document).ready(function() {
-            $('#table-index-unranked').DataTable({
-                "order": [{{ UnrankedListSort|raw }}],
+            $('#{{ TableId }}').DataTable({
+                "order": [{{ TableSort|raw }}],
                 "pageLength": 25,
                 "columnDefs": [{ "targets": [ 0 ], "orderable": false }]
             });

@@ -72,13 +72,32 @@ class ListsController extends Controller
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Games on sale');
 
+        $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(200);
+        $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(200);
+        $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(200);
+
+        $bindings['TopRatedSort'] = "[8, 'desc'], [4, 'desc']";
+        $bindings['HighestDiscountsSort'] = "[4, 'desc'], [8, 'desc']";
+        $bindings['UnrankedDiscountsSort'] = "[6, 'desc'], [3, 'desc']";
+
+        return view('lists.list-games-on-sale', $bindings);
+    }
+
+    public function gamesOnSaleArchive()
+    {
+        $bindings = [];
+
+        $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
+        $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Games on sale');
+
         $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
         $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(50);
         $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(50);
 
         //$bindings['AllGamesOnSale'] = $gamesOnSale;
 
-        return view('lists.list-games-on-sale', $bindings);
+        return view('lists.list-games-on-sale-archive', $bindings);
     }
 
     public function recentReviews()

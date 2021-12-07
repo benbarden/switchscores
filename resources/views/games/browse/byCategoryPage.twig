@@ -71,7 +71,7 @@
                 <h2>All ranked</h2>
 
                 {% if RankedGameList|length %}
-                    {% include 'games/browse/byCategoryPageTableRanked.twig' with {'GameList': RankedGameList, 'TableId': 'table-index-ranked'} %}
+                    {% include 'games/browse/byCategoryPageTableRanked.twig' with {'GameList': RankedGameList, 'TableId': 'table-index-ranked', 'TableSort': RankedListSort} %}
                 {% else %}
                     <p>
                         There are no ranked games in this category.
@@ -85,7 +85,7 @@
                 <h2>All unranked</h2>
 
                 {% if UnrankedGameList|length %}
-                    {% include 'games/browse/byCategoryPageTableUnranked.twig' with {'GameList': UnrankedGameList, 'TableId': 'table-index-unranked'} %}
+                    {% include 'games/browse/byCategoryPageTableUnranked.twig' with {'GameList': UnrankedGameList, 'TableId': 'table-index-unranked', 'TableSort': UnrankedListSort} %}
                 {% else %}
                     <p>
                         There are no unranked games in this category.
