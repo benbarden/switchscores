@@ -273,19 +273,13 @@ class DataSourceParsedService
     public function getGamesOnSaleHighestDiscounts($limit = 50)
     {
         $games = DB::table('games')
-            ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
             ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
-            ->select('games.*',
-                'data_source_parsed.price_standard',
-                'data_source_parsed.price_discounted',
-                'data_source_parsed.price_discount_pc',
-                'categories.name AS category_name')
-            ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
+            ->select('games.*', 'categories.name AS category_name')
             ->whereNotNull('games.game_rank')
-            ->whereNotNull('data_source_parsed.price_discounted')
-            ->where('data_source_parsed.price_discount_pc', '>=', '50')
+            ->whereNotNull('games.price_eshop_discounted')
+            ->where('games.price_eshop_discount_pc', '>=', '50')
             ->orderBy('games.game_rank', 'asc')
-            ->orderBy('data_source_parsed.price_discount_pc', 'desc');
+            ->orderBy('games.price_eshop_discount_pc', 'desc');
         if ($limit) {
             $games = $games->limit($limit);
         }
@@ -302,18 +296,12 @@ class DataSourceParsedService
     public function getGamesOnSaleGoodRanks($limit = 50)
     {
         $games = DB::table('games')
-            ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
             ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
-            ->select('games.*',
-                'data_source_parsed.price_standard',
-                'data_source_parsed.price_discounted',
-                'data_source_parsed.price_discount_pc',
-                'categories.name AS category_name')
-            ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
+            ->select('games.*', 'categories.name AS category_name')
             ->whereNotNull('games.game_rank')
             ->where('games.rating_avg', '>', '7.9')
-            ->whereNotNull('data_source_parsed.price_discounted')
-            ->where('data_source_parsed.price_discount_pc', '>=', '25.0')
+            ->whereNotNull('games.price_eshop_discounted')
+            ->where('games.price_eshop_discount_pc', '>=', '25.0')
             ->orderBy('games.rating_avg', 'desc');
         if ($limit) {
             $games = $games->limit($limit);
@@ -331,17 +319,11 @@ class DataSourceParsedService
     public function getGamesOnSaleUnranked($limit = 50)
     {
         $games = DB::table('games')
-            ->join('data_source_parsed', 'data_source_parsed.game_id', '=', 'games.id')
             ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
-            ->select('games.*',
-                'data_source_parsed.price_standard',
-                'data_source_parsed.price_discounted',
-                'data_source_parsed.price_discount_pc',
-                'categories.name AS category_name')
-            ->where('data_source_parsed.source_id', '=', DataSource::DSID_NINTENDO_CO_UK)
+            ->select('games.*', 'categories.name AS category_name')
             ->whereNull('games.game_rank')
-            ->whereNotNull('data_source_parsed.price_discounted')
-            ->orderBy('data_source_parsed.price_discount_pc', 'desc');
+            ->whereNotNull('games.price_eshop_discounted')
+            ->orderBy('games.price_eshop_discount_pc', 'desc');
         if ($limit) {
             $games = $games->limit($limit);
         }
