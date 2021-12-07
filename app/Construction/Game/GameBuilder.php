@@ -79,6 +79,18 @@ class GameBuilder
         return $this;
     }
 
+    public function setPriceEshopDiscounted($priceEshopDiscounted): GameBuilder
+    {
+        $this->game->price_eshop_discounted = $priceEshopDiscounted;
+        return $this;
+    }
+
+    public function setPriceEshopDiscountPc($priceEshopDiscountPc): GameBuilder
+    {
+        $this->game->price_eshop_discount_pc = $priceEshopDiscountPc;
+        return $this;
+    }
+
     public function setPlayers($players): GameBuilder
     {
         $this->game->players = $players;

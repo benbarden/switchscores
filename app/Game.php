@@ -37,7 +37,7 @@ class Game extends Model implements Auditable
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
         'format_digital', 'format_physical', 'format_dlc', 'format_demo',
-        'eshop_europe_order', 'video_type'
+        'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc'
     ];
 
     public function gameQualityScore()

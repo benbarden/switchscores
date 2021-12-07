@@ -70,18 +70,14 @@
         </td>
         <td>
             {% if GameData.price_eshop %}
-                {% if DataSourceNintendoCoUk %}
-                    {% if DataSourceNintendoCoUk.price_discounted %}
-                        <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
-                        &nbsp;&nbsp;&nbsp;
-                        <span class="h4" style="font-weight: bold;">&pound;{{ DataSourceNintendoCoUk.price_discounted }}</span>
-                        &nbsp;&nbsp;&nbsp;
-                        <span style="color: #f00;">{{ DataSourceNintendoCoUk.price_discount_pc }}% off</span>
-                    {% else %}
-                        <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
-                    {% endif %}
-                {% else %}
+                {% if GameData.price_eshop_discount_pc == null %}
                     <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% else %}
+                    <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop_discounted }}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span style="color: #f00;">{{ GameData.price_eshop_discount_pc }}% off</span>
                 {% endif %}
             {% endif %}
         </td>

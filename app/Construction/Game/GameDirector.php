@@ -58,6 +58,12 @@ class GameDirector
         if (array_key_exists('price_eshop', $params)) {
             $this->builder->setPriceEshop($params['price_eshop']);
         }
+        if (array_key_exists('price_eshop_discounted', $params)) {
+            $this->builder->setPriceEshopDiscounted($params['price_eshop_discounted']);
+        }
+        if (array_key_exists('price_eshop_discount_pc', $params)) {
+            $this->builder->setPriceEshopDiscountPc($params['price_eshop_discount_pc']);
+        }
         if (array_key_exists('players', $params)) {
             $this->builder->setPlayers($params['players']);
         }

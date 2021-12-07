@@ -44,12 +44,20 @@ class UpdateGame
         }
 
         $priceStandard = $this->dsParsedItem->price_standard;
+        $priceDiscounted = $this->dsParsedItem->price_discounted;
+        $priceDiscountPc = $this->dsParsedItem->price_discount_pc;
 
         if (is_null($priceStandard)) return false;
         if ($priceStandard < 0) return false;
 
         if ($this->game->price_eshop != $priceStandard) {
             $this->game->price_eshop = $priceStandard;
+        }
+        if ($this->game->price_eshop_discounted != $priceDiscounted) {
+            $this->game->price_eshop_discounted = $priceDiscounted;
+        }
+        if ($this->game->price_eshop_discount_pc != $priceDiscountPc) {
+            $this->game->price_eshop_discount_pc = $priceDiscountPc;
         }
     }
 

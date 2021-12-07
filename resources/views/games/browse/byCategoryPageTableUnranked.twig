@@ -6,7 +6,9 @@
             <th>Title</th>
             <th class="text-center">Release date (EU)</th>
             <th class="text-center">Reviews</th>
-            <th class="text-center">Price</th>
+            <th class="text-center">Standard<br>price</th>
+            <th class="text-center">Discount<br>price</th>
+            <th class="text-center">Discount %</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +31,17 @@
                     {{ item.review_count }}
                 </td>
                 <td class="text-center">
-                    {% include 'modules/game/price/table-clean.twig' %}
+                    <span class="h5">&pound;{{ item.price_eshop }}</span>
+                </td>
+                <td class="text-center">
+                    {% if item.price_eshop_discounted and item.price_eshop_discount_pc %}
+                        <span class="h5">&pound;{{ item.price_eshop_discounted }}</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.price_eshop_discounted and item.price_eshop_discount_pc %}
+                        <span style="color: #f00;">{{ item.price_eshop_discount_pc }}%</span>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

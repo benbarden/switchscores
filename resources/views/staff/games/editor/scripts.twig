@@ -14,6 +14,8 @@
         formVals['series_id'] = "{{ GameData.series_id }}";
         formVals['collection_id'] = "{{ GameData.collection_id }}";
         formVals['price_eshop'] = "{{ GameData.price_eshop }}";
+        formVals['price_eshop_discounted'] = "{{ GameData.price_eshop_discounted }}";
+        formVals['price_eshop_discount_pc'] = "{{ GameData.price_eshop_discount_pc }}";
         formVals['players'] = "{{ GameData.players }}";
         // *** Dates *** //
         formVals['eu_release_date'] = "{{ GameData.eu_release_date }}";
@@ -48,6 +50,8 @@
         formVals['series_id'] = "{{ old('series_id') }}";
         formVals['collection_id'] = "{{ old('collection_id') }}";
         formVals['price_eshop'] = "{{ old('price_eshop') }}";
+        formVals['price_eshop_discounted'] = "{{ old('price_eshop_discounted') }}";
+        formVals['price_eshop_discount_pc'] = "{{ old('price_eshop_discount_pc') }}";
         formVals['players'] = "{{ old('players') }}";
         // *** Dates *** //
         formVals['eu_release_date'] = "{{ old('eu_release_date') }}";
@@ -83,6 +87,8 @@
     $('#series_id').val(formVals['series_id']);
     $('#collection_id').val(formVals['collection_id']);
     $('#price_eshop').val(formVals['price_eshop']);
+    $('#price_eshop_discounted').val(formVals['price_eshop_discounted']);
+    $('#price_eshop_discount_pc').val(formVals['price_eshop_discount_pc']);
     $('#players').val(formVals['players']);
     // *** Dates *** //
     $('#eu_release_date').val(formVals['eu_release_date']);

@@ -1,13 +1,9 @@
-{% if item.dspNintendoCoUk|length %}
-    {% set PriceDiscounted = item.dspNintendoCoUk[0]['price_discounted'] %}
-    {% set PriceDiscountPC = item.dspNintendoCoUk[0]['price_discount_pc'] %}
-{% endif %}
 <br>
 <span class="h5">
-    {% if PriceDiscounted and PriceDiscountPC %}
+    {% if item.price_eshop_discounted and item.price_eshop_discount_pc %}
         <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
-        <span class="h4" style="font-weight: bold;">&pound;{{ PriceDiscounted }}</span>
-        <span style="color: #f00;">{{ PriceDiscountPC }}% off</span>
+        <span class="h4" style="font-weight: bold;">&pound;{{ item.price_eshop_discounted }}</span>
+        <span style="color: #f00;">{{ item.price_eshop_discount_pc }}% off</span>
     {% else %}
         <span class="h4">&pound;{{ item.price_eshop }}</span>
     {% endif %}
