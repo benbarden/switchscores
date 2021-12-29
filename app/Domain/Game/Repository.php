@@ -29,9 +29,9 @@ class Repository
 
     /**
      * @param $title
-     * @return Game
+     * @return Game|null
      */
-    public function getByTitle($title): Game
+    public function getByTitle($title)
     {
         return Game::where('title', $title)->first();
     }

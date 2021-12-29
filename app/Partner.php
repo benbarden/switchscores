@@ -16,6 +16,9 @@ class Partner extends Model implements Auditable
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 9;
 
+    const REVIEW_IMPORT_BY_FEED = 'Feed';
+    const REVIEW_IMPORT_BY_SCRAPER = 'Scraper';
+
     const SITE_WOS = 1;
     const SITE_SWITCH_PLAYER = 2;
     const SITE_NINTENDO_LIFE = 4;
@@ -56,6 +59,7 @@ class Partner extends Model implements Auditable
         'type_id', 'status', 'name', 'link_title', 'website_url', 'twitter_id',
         'rating_scale', 'review_count', 'last_review_date', 'last_outreach_id',
         'contact_name', 'contact_email', 'contact_form_link', 'review_code_regions',
+        'review_import_method'
     ];
 
     public function isReviewSite()

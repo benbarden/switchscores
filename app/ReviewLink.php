@@ -14,6 +14,8 @@ class ReviewLink extends Model implements Auditable
     const TYPE_IMPORTED = 'Imported';
     const TYPE_PARTNER = 'Partner';
 
+    const STANDARD_RATING_SCALE = 10;
+
     /**
      * @var string
      */

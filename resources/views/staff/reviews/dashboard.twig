@@ -20,6 +20,14 @@
             </tr>
             <tr>
                 <td>
+                    <a href="{{ route('staff.reviews.review-drafts.showPending') }}">Review drafts</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.reviews.review-drafts.showPending') }}" class="h4">{{ ReviewDraftUnprocessedCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a>
                 </td>
                 <td class="text-end">

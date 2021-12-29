@@ -29,10 +29,12 @@ They can mostly be swapped as follows:
 
 `label label-primary` becomes `badge bg-primary`
 
+A new version of `modules/rating/badge.twig` can be found under `modules/rating/badge-b5.twig`.
+
 # Forms
 
 Forms have changed a lot and will need quite a bit of work to get them 
-looking good. A good example is in `owner/invite-code/form.twig`.
+looking good. A good example is in `staff/invite-code/form.twig`.
 
 # Text alignment
 

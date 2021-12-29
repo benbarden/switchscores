@@ -7,6 +7,15 @@ use App\Partner;
 
 class Repository
 {
+    /**
+     * @param $id
+     * @return Partner
+     */
+    public function find($id)
+    {
+        return Partner::find($id);
+    }
+
     public function searchGamesCompany($name)
     {
         return Partner::where('name', 'LIKE', '%'.$name.'%')
@@ -19,6 +28,15 @@ class Repository
     {
         return Partner::where('type_id', Partner::TYPE_REVIEW_SITE)
             ->where('status', Partner::STATUS_ACTIVE)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
+    public function reviewSitesActiveForScraper()
+    {
+        return Partner::where('type_id', Partner::TYPE_REVIEW_SITE)
+            ->where('status', Partner::STATUS_ACTIVE)
+            ->where('review_import_method', Partner::REVIEW_IMPORT_BY_SCRAPER)
             ->orderBy('name', 'asc')
             ->get();
     }

@@ -1,0 +1,10 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.reviews.review-drafts.edit', {'itemId': ItemId}) %}
+{% include 'staff/reviews/review-drafts/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/reviews/review-drafts/scripts.twig' %}
+
+{% endblock page_inner %}

@@ -1,0 +1,103 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <a href="{{ route('staff.reviews.tools.runFeedReviewGenerator') }}" class="btn btn-primary">Go to the Feed Review Generator</a>
+    </div>
+</div>
+
+<br>
+
+{% if ReviewDraftItems.count > 0 %}
+
+<table class="table data-sortable table-sm table-responsive">
+    <thead>
+        <tr>
+            <th class="text-center">Date</th>
+            <th class="text-left">Source</th>
+            <th class="text-left">Title</th>
+            <th class="text-left">Site</th>
+            <th class="text-center">Game</th>
+            <th class="text-center">Score</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ReviewDraftItems %}
+            <tr>
+                <td class="text-center">
+                    <small>
+                        {{ item.item_date|date('Y-m-d') }}
+                    </small>
+                </td>
+                <td class="text-left">
+                    {{ item.source }}
+                </td>
+                <td class="text-left" style="max-width: 300px;">
+                    <a href="{{ item.item_url }}" target="_blank">{{ item.item_title }}</a>
+                </td>
+                <td class="text-left">
+                    <small>
+                        {{ item.site.name }}
+                    </small>
+                </td>
+                <td class="text-center">
+                    {% if item.game.title is null %}
+                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    {% else %}
+                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% set origRating = null %}
+                    {% if item.site.id %}
+                        {% if item.item_rating is null %}
+                            -
+                        {% else %}
+                            {% if item.site.rating_scale == 5 %}
+                                {% set badgeRating = (item.item_rating * 2)|number_format(1) %}
+                                {% set origRating = item.item_rating %}
+                            {% else %}
+                                {% set badgeRating = item.item_rating %}
+                            {% endif %}
+                            {% include 'modules/rating/badge-b5.twig' with {'score': badgeRating, 'scoreSize': 'h5'} %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.reviews.review-drafts.edit', {'itemId': item.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No items found!</p>
+{% endif %}
+
+{% include 'common/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 50,
+            "columns": [
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

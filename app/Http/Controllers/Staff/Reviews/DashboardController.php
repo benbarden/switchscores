@@ -13,6 +13,7 @@ use App\QuickReview;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 class DashboardController extends Controller
 {
@@ -26,12 +27,14 @@ class DashboardController extends Controller
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        ReviewDraftRepository $repoReviewDraft
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->repoReviewDraft = $repoReviewDraft;
     }
 
     public function show()
@@ -48,6 +51,7 @@ class DashboardController extends Controller
         $serviceTopRated = $this->getServiceTopRated();
 
         // Action lists
+        $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);

@@ -19,6 +19,14 @@
                         <a href="{{ route('staff.reviews.feed-items.list') }}" class="h4">{{ UnprocessedFeedReviewItemsCount }}</a>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.reviews.review-drafts.showPending') }}">Review drafts</a>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ route('staff.reviews.review-drafts.showPending') }}" class="h4">{{ ReviewDraftUnprocessedCount }}</a>
+                    </td>
+                </tr>
             {% endif %}
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
                 <tr>

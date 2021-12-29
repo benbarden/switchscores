@@ -13,6 +13,7 @@ class Staff extends Base
         $this->toastedCrumbs['games.dashboard'] = ['url' => route('staff.games.dashboard'), 'text' => 'Games'];
 
         $this->toastedCrumbs['reviews.dashboard'] = ['url' => route('staff.reviews.dashboard'), 'text' => 'Reviews'];
+        $this->toastedCrumbs['reviews.reviewDrafts'] = ['url' => route('staff.reviews.review-drafts.showPending'), 'text' => 'Review drafts'];
 
         $this->toastedCrumbs['categorisation.dashboard'] = ['url' => route('staff.categorisation.dashboard'), 'text' => 'Categorisation'];
         $this->toastedCrumbs['categorisation.category.list'] = ['url' => route('staff.categorisation.category.list'), 'text' => 'Categories'];
@@ -46,6 +47,18 @@ class Staff extends Base
     }
 
     // *** Staff pages *** //
+
+    public function reviewsSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsReviewDraftsSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+                    ->addCrumb($this->toastedCrumbs['reviews.reviewDrafts'])
+                    ->addTitleAndReturn($pageTitle);
+    }
 
     public function categorisationSubpage($pageTitle)
     {

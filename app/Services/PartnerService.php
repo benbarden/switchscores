@@ -11,7 +11,8 @@ class PartnerService
 {
     public function createReviewSite(
         $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
-        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
+        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions,
+        $reviewImportMethod
     )
     {
         $typeId = Partner::TYPE_REVIEW_SITE;
@@ -28,12 +29,13 @@ class PartnerService
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
             'review_code_regions' => $reviewCodeRegions,
+            'review_import_method' => $reviewImportMethod,
         ]);
     }
 
     public function editReviewSite(
         Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
-        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions
+        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions, $reviewImportMethod
     )
     {
         $values = [
@@ -47,6 +49,7 @@ class PartnerService
             'contact_email' => $contactEmail,
             'contact_form_link' => $contactFormLink,
             'review_code_regions' => $reviewCodeRegions,
+            'review_import_method' => $reviewImportMethod,
         ];
 
         $partnerData->fill($values);

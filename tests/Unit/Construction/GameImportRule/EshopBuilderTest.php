@@ -4,7 +4,7 @@ namespace Tests\Unit\Construction\GameImportRule;
 
 use Tests\TestCase;
 
-use App\Construction\GameImportRule\EshopBuilder;
+use App\Construction\GameImportRule\Builder;
 
 class EshopBuilderTest extends TestCase
 {
@@ -12,14 +12,14 @@ class EshopBuilderTest extends TestCase
     {
         $gameId = 1001;
 
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
         $importRuleBuilder->setGameId($gameId);
         $this->assertEquals($gameId, $importRuleBuilder->getGameId());
     }
 
     public function testSetIgnorePublishers()
     {
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
 
         $importRuleBuilder->setIgnorePublishers(0);
         $this->assertEquals(0, $importRuleBuilder->getGameImportRule()->ignore_publishers);
@@ -33,7 +33,7 @@ class EshopBuilderTest extends TestCase
 
     public function testSetIgnoreEuropeDates()
     {
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
 
         $importRuleBuilder->setIgnoreEuropeDates(0);
         $this->assertEquals(0, $importRuleBuilder->getGameImportRule()->ignore_europe_dates);
@@ -47,7 +47,7 @@ class EshopBuilderTest extends TestCase
 
     public function testSetIgnorePrice()
     {
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
 
         $importRuleBuilder->setIgnorePrice(0);
         $this->assertEquals(0, $importRuleBuilder->getGameImportRule()->ignore_price);
@@ -61,7 +61,7 @@ class EshopBuilderTest extends TestCase
 
     public function testSetIgnorePlayers()
     {
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
 
         $importRuleBuilder->setIgnorePlayers(0);
         $this->assertEquals(0, $importRuleBuilder->getGameImportRule()->ignore_players);
@@ -75,7 +75,7 @@ class EshopBuilderTest extends TestCase
 
     public function testSetIgnoreGenres()
     {
-        $importRuleBuilder = new EshopBuilder();
+        $importRuleBuilder = new Builder();
 
         $importRuleBuilder->setIgnoreGenres(0);
         $this->assertEquals(0, $importRuleBuilder->getGameImportRule()->ignore_genres);

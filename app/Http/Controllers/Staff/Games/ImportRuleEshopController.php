@@ -8,8 +8,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Construction\GameImportRule\EshopDirector;
-use App\Construction\GameImportRule\EshopBuilder;
+use App\Construction\GameImportRule\Director;
+use App\Construction\GameImportRule\Builder;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -42,8 +42,8 @@ class ImportRuleEshopController extends Controller
             $this->validate($request, $this->validationRules);
 
             // Update the DB
-            $importRuleDirector = new EshopDirector();
-            $importRuleBuilder = new EshopBuilder();
+            $importRuleDirector = new Director();
+            $importRuleBuilder = new Builder();
             $importRuleDirector->setBuilder($importRuleBuilder);
             if ($gameImportRuleEshop) {
                 $importRuleDirector->buildExisting($gameImportRuleEshop, $request->post());

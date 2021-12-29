@@ -4,6 +4,7 @@
 namespace App\Services\Feed;
 
 
+use App\Game;
 use App\Partner;
 use App\PartnerFeedLink;
 use App\ReviewFeedItem;
@@ -11,6 +12,9 @@ use App\ReviewFeedItemTest;
 use App\Services\ReviewFeedItemService;
 use App\Services\UrlService;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
+
+use App\Domain\Game\Repository as RepoGame;
+use App\Domain\ReviewFeedItem\Repository as RepoReviewFeedItem;
 
 use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
@@ -65,6 +69,8 @@ class Importer
 
     public function __construct()
     {
+        $this->repoGame = new RepoGame();
+        $this->repoReviewFeedItem = new RepoReviewFeedItem();
         $this->isTestMode = false;
         $this->parseAsObjects = false;
     }
@@ -437,4 +443,5 @@ class Importer
         $reviewFeedItem->load_status = 'Loaded OK';
         return $reviewFeedItem;
     }
+
 }

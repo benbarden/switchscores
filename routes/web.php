@@ -312,6 +312,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::R
     Route::match(['get', 'post'], '/staff/reviews/quick-reviews/delete/{reviewId}', 'Staff\Reviews\QuickReviewController@delete')->name('staff.reviews.quick-reviews.delete');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
+    // Review drafts
+    Route::get('/staff/reviews/review-drafts/pending', 'Staff\Reviews\ReviewDraftsController@showPending')->name('staff.reviews.review-drafts.showPending');
+    Route::match(['get', 'post'], '/staff/reviews/review-drafts/edit/{itemId}', 'Staff\Reviews\ReviewDraftsController@edit')->name('staff.reviews.review-drafts.edit');
+
     // Review feed items
     Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
     Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');

@@ -16,6 +16,7 @@
         formVals['review_code_regions'] = "{{ ReviewSiteData.review_code_regions }}";
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
         formVals['status'] = "{{ ReviewSiteData.status }}";
+        formVals['review_import_method'] = "{{ ReviewSiteData.review_import_method }}";
 
     } else {
 
@@ -33,6 +34,7 @@
         if (formMode != 'add') {
             formVals['status'] = "{{ old('status') }}";
         }
+        formVals['review_import_method'] = "{{ old('review_import_method') }}";
 
     }
 
@@ -48,6 +50,7 @@
     $('#contact_form_link').val(formVals['contact_form_link']);
     $('#review_code_regions').val(formVals['review_code_regions']);
     $('#rating_scale').val(formVals['rating_scale']);
+    $('#review_import_method').val(formVals['review_import_method']);
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

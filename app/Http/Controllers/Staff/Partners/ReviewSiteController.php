@@ -58,7 +58,7 @@ class ReviewSiteController extends Controller
                 Partner::STATUS_ACTIVE,
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id, $ratingScale,
                 $request->contact_name, $request->contact_email, $request->contact_form_link,
-                $request->review_code_regions
+                $request->review_code_regions, $request->review_import_method
             );
 
             return redirect(route('staff.reviews.site.list'));
@@ -66,6 +66,8 @@ class ReviewSiteController extends Controller
         }
 
         $bindings['FormMode'] = 'add';
+
+        $bindings['ReviewImportMethodList'] = [Partner::REVIEW_IMPORT_BY_FEED, Partner::REVIEW_IMPORT_BY_SCRAPER];
 
         return view('staff.partners.review-site.add', $bindings);
     }
@@ -96,7 +98,7 @@ class ReviewSiteController extends Controller
                 $request->status,
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id, $ratingScale,
                 $request->contact_name, $request->contact_email, $request->contact_form_link,
-                $request->review_code_regions
+                $request->review_code_regions, $request->review_import_method
             );
 
             return redirect(route('staff.reviews.site.list'));
@@ -111,9 +113,11 @@ class ReviewSiteController extends Controller
         $statusList[] = ['id' => 1, 'title' => 'Active'];
         $statusList[] = ['id' => 9, 'title' => 'Inactive'];
 
+        $bindings['FormMode'] = 'edit';
+
         $bindings['StatusList'] = $statusList;
 
-        $bindings['FormMode'] = 'edit';
+        $bindings['ReviewImportMethodList'] = [Partner::REVIEW_IMPORT_BY_FEED, Partner::REVIEW_IMPORT_BY_SCRAPER];
 
         return view('staff.partners.review-site.edit', $bindings);
     }

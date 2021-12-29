@@ -3,6 +3,9 @@ SHELL:=/bin/bash
 test:
 	./vendor/bin/phpunit
 
+test-domain-partner:
+	./vendor/bin/phpunit --testsuite DomainPartner
+
 test-feature:
 	./vendor/bin/phpunit --testsuite Feature
 

@@ -6,8 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\DataSource;
 use App\Services\DataSources\Queries\Differences;
-use App\Construction\GameImportRule\EshopBuilder;
-use App\Construction\GameImportRule\EshopDirector;
+use App\Construction\GameImportRule\Builder;
+use App\Construction\GameImportRule\Director;
 use App\Construction\GameImportRule\WikipediaBuilder;
 use App\Construction\GameImportRule\WikipediaDirector;
 
@@ -206,8 +206,8 @@ class DifferencesController extends Controller
                 }
 
                 // Update the DB
-                $importRuleDirector = new EshopDirector();
-                $importRuleBuilder = new EshopBuilder();
+                $importRuleDirector = new Director();
+                $importRuleBuilder = new Builder();
                 $importRuleDirector->setBuilder($importRuleBuilder);
                 if ($gameImportRuleEshop) {
                     $importRuleDirector->buildExisting($gameImportRuleEshop, $importRuleParams);

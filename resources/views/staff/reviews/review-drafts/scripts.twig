@@ -1,0 +1,29 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing games.
+        formVals['game_id'] = "{{ ReviewDraftData.game_id }}";
+        formVals['item_rating'] = "{{ ReviewDraftData.item_rating }}";
+        formVals['process_status'] = "{{ ReviewDraftData.process_status }}";
+
+    } else {
+
+        // This is used for new games.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['game_id'] = "{{ old('game_id') }}";
+        formVals['item_rating'] = "{{ old('item_rating') }}";
+        formVals['process_status'] = "{{ old('process_status') }}";
+
+    }
+
+    $('#game_id').val(formVals['game_id']);
+    $('#item_rating').val(formVals['item_rating']);
+    $('#process_status').val(formVals['process_status']);
+
+    $('#game_id').select2();
+
+</script>

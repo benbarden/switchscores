@@ -15,6 +15,7 @@ use App\Services\Migrations\Category as MigrationsCategory;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\QuickReview;
 
@@ -27,18 +28,21 @@ class IndexController extends Controller
     protected $repoFeaturedGames;
     protected $repoGameStats;
     protected $repoGameLists;
+    protected $repoReviewDraft;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
-        GameListsRepository $repoGameLists
+        GameListsRepository $repoGameLists,
+        ReviewDraftRepository $repoReviewDraft
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameLists = $repoGameLists;
+        $this->repoReviewDraft = $repoReviewDraft;
     }
 
     public function index()
@@ -55,6 +59,7 @@ class IndexController extends Controller
         $serviceQuickReview = $this->getServiceQuickReview();
 
         // Submissions
+        $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
         $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
