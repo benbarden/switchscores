@@ -14,7 +14,7 @@ class ImageHelper
         $game = $serviceGame->find($gameId);
 
         if (!$game) {
-            return '<img src="/img/logo-grey.png" style="border: 0; height: 75px;" alt="Nintendo Switch games">';
+            return '<img src="/img/placeholder/no-image-found-square.png" style="border: 0; height: 75px;" alt="Nintendo Switch games">';
         }
 
         return self::packshotHtml($game, $page);
@@ -74,7 +74,7 @@ class ImageHelper
 
         } elseif ($showEmptyCell) {
 
-            $htmlOutput = '<img src="/img/logo-grey.png" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
+            $htmlOutput = '<img src="/img/placeholder/no-image-found-square.png" style="border: 0; height: '.$sizeInPixels.'px;" alt="'.$game->title.'">';
 
         } else {
             // do nothing
