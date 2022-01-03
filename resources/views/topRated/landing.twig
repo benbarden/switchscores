@@ -35,11 +35,11 @@
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border-left: 1px solid #cecece;">
         <h2>
-            Top Switch games 2020
-            <span class="h4">(<a href="{{ route('topRated.byYear', {'year': 2020}) }}">view all</a>)</span>
+            Top Switch games 2021
+            <span class="h4">(<a href="{{ route('topRated.byYear', {'year': 2021}) }}">view all</a>)</span>
         </h2>
-        {% if TopRated2020|length %}
-            {% include 'games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRated2020, 'batchOverride': 1} %}
+        {% if TopRated2021|length %}
+            {% include 'games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRated2021, 'batchOverride': 1} %}
         {% else %}
             <p>No games found!</p>
         {% endif %}
