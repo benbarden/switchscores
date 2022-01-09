@@ -3,8 +3,7 @@
 
 namespace App\Services;
 
-use App\GameTitleHash;
-use Illuminate\Support\Facades\DB;
+use App\Models\GameTitleHash;
 
 
 class GameTitleHashService

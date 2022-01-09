@@ -1,10 +1,9 @@
 <?php
 
+use App\Models\IntegrityCheck;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
-use App\Models\IntegrityCheck;
 
 class IntegrityChecks extends Migration
 {
@@ -66,7 +65,7 @@ class IntegrityChecks extends Migration
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::TITLE_HASH_NO_GAME_MATCH, IntegrityCheck::DESC_TITLE_HASH_NO_GAME_MATCH, 'App\GameTitleHash']);
+        ", [IntegrityCheck::TITLE_HASH_NO_GAME_MATCH, IntegrityCheck::DESC_TITLE_HASH_NO_GAME_MATCH, 'App\Models\GameTitleHash']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)

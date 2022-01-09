@@ -71,7 +71,7 @@ class Game extends Model implements Auditable
 
     public function titleHashes()
     {
-        return $this->hasMany('App\GameTitleHash', 'game_id', 'id');
+        return $this->hasMany('App\Models\GameTitleHash', 'game_id', 'id');
     }
 
     public function reviews()

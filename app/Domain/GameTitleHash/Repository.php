@@ -4,7 +4,7 @@
 namespace App\Domain\GameTitleHash;
 
 
-use App\GameTitleHash;
+use App\Models\GameTitleHash;
 
 class Repository
 {
