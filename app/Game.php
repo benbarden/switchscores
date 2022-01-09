@@ -92,12 +92,12 @@ class Game extends Model implements Auditable
 
     public function gameDevelopers()
     {
-        return $this->hasMany('App\GameDeveloper', 'game_id', 'id');
+        return $this->hasMany('App\Models\GameDeveloper', 'game_id', 'id');
     }
 
     public function gamePublishers()
     {
-        return $this->hasMany('App\GamePublisher', 'game_id', 'id');
+        return $this->hasMany('App\Models\GamePublisher', 'game_id', 'id');
     }
 
     public function eshopUSGame()

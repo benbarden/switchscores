@@ -4,8 +4,8 @@
 namespace App\Services;
 
 use App\Game;
-use App\GamePublisher;
 use App\Models\DataSource;
+use App\Models\GamePublisher;
 use App\Models\Partner;
 use Illuminate\Support\Facades\DB;
 

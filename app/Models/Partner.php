@@ -84,12 +84,12 @@ class Partner extends Model implements Auditable
 
     public function developerGames()
     {
-        return $this->hasMany('App\GameDeveloper', 'developer_id', 'id');
+        return $this->hasMany('App\Models\GameDeveloper', 'developer_id', 'id');
     }
 
     public function publisherGames()
     {
-        return $this->hasMany('App\GamePublisher', 'publisher_id', 'id');
+        return $this->hasMany('App\Models\GamePublisher', 'publisher_id', 'id');
     }
 
     public function user()
