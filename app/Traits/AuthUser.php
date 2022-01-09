@@ -2,10 +2,9 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 use App\Services\UserService;
-use App\User;
+use Illuminate\Support\Facades\Auth;
 
 trait AuthUser
 {
@@ -16,7 +15,7 @@ trait AuthUser
 
     /**
      * @param UserService $serviceUser
-     * @return User
+     * @return \App\Models\User
      */
     public function getValidUser(UserService $serviceUser)
     {

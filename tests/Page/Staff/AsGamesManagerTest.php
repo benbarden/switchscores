@@ -2,14 +2,14 @@
 
 namespace Tests\Page\Staff;
 
+use App\Models\User;
 use App\Models\UserRole;
-use App\User;
 use Tests\TestCase;
 
 class AsGamesManagerTest extends TestCase
 {
     /**
-     * @var User
+     * @var \App\Models\User
      */
     private $activeUser;
 

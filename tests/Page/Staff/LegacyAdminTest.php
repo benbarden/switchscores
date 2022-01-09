@@ -3,13 +3,13 @@
 namespace Tests\Page\Staff;
 
 //use Illuminate\Support\Facades\Auth;
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 
 class LegacyAdminTest extends TestCase
 {
     /**
-     * @var User
+     * @var \App\Models\User
      */
     private $userStandard;
 

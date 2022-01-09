@@ -94,12 +94,12 @@ class Partner extends Model implements Auditable
 
     public function user()
     {
-        return $this->hasOne('App\User', 'partner_id', 'id');
+        return $this->hasOne('App\Models\User', 'partner_id', 'id');
     }
 
     public function gamesCompanyUser()
     {
-        return $this->hasOne('App\User', 'games_company_id', 'id');
+        return $this->hasOne('App\Models\User', 'games_company_id', 'id');
     }
 
     public function lastOutreach()

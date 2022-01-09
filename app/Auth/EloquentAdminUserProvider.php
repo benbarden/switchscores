@@ -2,8 +2,8 @@
 
 namespace App\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;
-use App\User;
 
 class EloquentAdminUserProvider extends EloquentUserProvider
 {

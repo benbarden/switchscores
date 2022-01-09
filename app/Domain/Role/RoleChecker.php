@@ -2,7 +2,7 @@
 
 namespace App\Domain\Role;
 
-use App\User;
+use App\Models\User;
 
 /**
  * Class RoleChecker
@@ -11,7 +11,7 @@ use App\User;
 class RoleChecker
 {
     /**
-     * @param User $user
+     * @param \App\Models\User $user
      * @param string $role
      * @return bool
      */

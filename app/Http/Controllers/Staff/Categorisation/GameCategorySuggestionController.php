@@ -7,10 +7,10 @@ use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 use App\Game;
 use App\Models\DbEditGame;
+use App\Models\User;
 use App\Traits\AuthUser;
 use App\Traits\StaffView;
 use App\Traits\SwitchServices;
-use App\User;
 use Illuminate\Routing\Controller as Controller;
 
 class GameCategorySuggestionController extends Controller

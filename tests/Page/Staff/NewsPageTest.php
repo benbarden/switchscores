@@ -2,19 +2,19 @@
 
 namespace Tests\Page\Staff;
 
+use App\Models\User;
 use App\Models\UserRole;
-use App\User;
 use Tests\TestCase;
 
 class NewsPageTest extends TestCase
 {
     /**
-     * @var User
+     * @var \App\Models\User
      */
     private $userOwner;
 
     /**
-     * @var User
+     * @var \App\Models\User
      */
     private $newsManager;
 

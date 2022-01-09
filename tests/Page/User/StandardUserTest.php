@@ -2,7 +2,7 @@
 
 namespace Tests\Page\User;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 
 class StandardUserTest extends TestCase

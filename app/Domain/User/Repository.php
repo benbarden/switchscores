@@ -3,7 +3,7 @@
 
 namespace App\Domain\User;
 
-use App\User;
+use App\Models\User;
 
 class Repository
 {

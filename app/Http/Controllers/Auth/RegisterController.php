@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Routing\Controller as Controller;
+use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
+use App\Domain\InviteCode\Repository as InviteCodeRepository;
+use App\Events\UserCreated;
+use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-
-use App\Events\UserCreated;
-use App\User;
-
-use App\Domain\InviteCode\Repository as InviteCodeRepository;
-use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 
 class RegisterController extends Controller
 {

@@ -2,20 +2,15 @@
 
 namespace Tests\Feature\Api\Admin;
 
-use Illuminate\Support\Facades\Auth;
-use App\User;
-
+use App\Models\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AuthTest extends TestCase
 {
     const API_URL_BASE = '/api/admin/auth-test';
 
     /**
-     * @var User
+     * @var \App\Models\User
      */
     private $userStandard;
 
