@@ -25,6 +25,6 @@ class Tag extends Model
 
     public function category()
     {
-        return $this->hasOne('App\TagCategory', 'id', 'tag_category_id');
+        return $this->hasOne('App\Models\TagCategory', 'id', 'tag_category_id');
     }
 }
