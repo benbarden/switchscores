@@ -3,7 +3,7 @@
 
 namespace App\Domain\GameTag;
 
-use App\GameTag;
+use App\Models\GameTag;
 
 class Repository
 {

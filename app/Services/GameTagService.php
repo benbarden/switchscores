@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\GameTag;
 use Illuminate\Support\Facades\DB;
-use App\GameTag;
 
 
 class GameTagService

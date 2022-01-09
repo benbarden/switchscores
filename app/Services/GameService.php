@@ -4,9 +4,9 @@
 namespace App\Services;
 
 use App\Game;
-use App\GameTag;
 use App\Models\Category;
 use App\Models\GameSeries;
+use App\Models\GameTag;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
