@@ -2,12 +2,12 @@
 
 namespace App\Construction\DbEdit;
 
-use App\DbEditGame;
+use App\Models\DbEditGame;
 
 class GameBuilder
 {
     /**
-     * @var DbEditGame
+     * @var \App\Models\DbEditGame
      */
     private $dbEditGame;
 

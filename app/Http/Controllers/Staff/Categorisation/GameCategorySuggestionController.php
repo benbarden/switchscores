@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use Illuminate\Routing\Controller as Controller;
-
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
-use App\Traits\StaffView;
-
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
-
-use App\DbEditGame;
 use App\Game;
+use App\Models\DbEditGame;
+use App\Traits\AuthUser;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
 use App\User;
+use Illuminate\Routing\Controller as Controller;
 
 class GameCategorySuggestionController extends Controller
 {

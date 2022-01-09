@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\DbEditGame;
+use App\Models\DbEditGame;
 
 class DbEditGameService
 {
@@ -18,7 +18,7 @@ class DbEditGameService
 
     /**
      * @param $id
-     * @return DbEditGame
+     * @return \App\Models\DbEditGame
      */
     public function find($id)
     {

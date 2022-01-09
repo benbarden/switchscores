@@ -2,8 +2,7 @@
 
 namespace App\Construction\DbEdit;
 
-use App\DbEditGame;
-use Illuminate\Http\Request;
+use App\Models\DbEditGame;
 
 class GameDirector
 {

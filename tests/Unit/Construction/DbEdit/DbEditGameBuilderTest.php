@@ -2,10 +2,9 @@
 
 namespace Tests\Unit\Construction\DbEdit;
 
-use Tests\TestCase;
-
 use App\Construction\DbEdit\GameBuilder;
-use App\DbEditGame;
+use App\Models\DbEditGame;
+use Tests\TestCase;
 
 class DbEditGameBuilderTest extends TestCase
 {

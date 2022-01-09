@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Validator;
-
-use App\DbEditGame;
 use App\Construction\DbEdit\GameBuilder;
 use App\Construction\DbEdit\GameDirector;
+use App\Models\DbEditGame;
 use App\Services\Migrations\Category as MigrationsCategory;
-
 use App\Traits\AuthUser;
-use App\Traits\SwitchServices;
 use App\Traits\MemberView;
+use App\Traits\SwitchServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\Validator;
 
 class DatabaseHelpController extends Controller
 {
