@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\DataSourceRaw;
+use App\Models\DataSourceRaw;
 
 class DataSourceRawService
 {

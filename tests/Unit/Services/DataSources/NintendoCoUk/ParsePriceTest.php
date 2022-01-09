@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Services\DataSources\NintendoCoUk;
 
-use App\DataSourceRaw;
+use App\Models\DataSourceRaw;
 use App\Services\DataSources\NintendoCoUk\Parser;
-
 use Tests\TestCase;
 
 class ParsePriceTest extends TestCase

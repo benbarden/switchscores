@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Services\DataSources\Wikipedia;
 
-use App\DataSourceRaw;
+use App\Models\DataSourceRaw;
 use App\Services\DataSources\Wikipedia\Parser;
-
 use Tests\TestCase;
 
 class ParseDevelopersTest extends TestCase

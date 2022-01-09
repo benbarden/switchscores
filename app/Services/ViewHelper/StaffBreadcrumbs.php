@@ -3,7 +3,7 @@
 
 namespace App\Services\ViewHelper;
 
-use App\DataSource;
+use App\Models\DataSource;
 
 class StaffBreadcrumbs
 {

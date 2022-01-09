@@ -2,14 +2,14 @@
 
 namespace App\Services\DataSources\Wikipedia;
 
-use App\DataSourceRaw;
-use App\DataSourceParsed;
+use App\Models\DataSourceParsed;
+use App\Models\DataSourceRaw;
 use App\Services\GameTitleHashService;
 
 class Parser
 {
     /**
-     * @var DataSourceParsed
+     * @var \App\Models\DataSourceParsed
      */
     private $dataSourceParsed;
 
@@ -48,7 +48,7 @@ class Parser
     }
 
     /**
-     * @return DataSourceParsed
+     * @return \App\Models\DataSourceParsed
      */
     public function parseItem()
     {

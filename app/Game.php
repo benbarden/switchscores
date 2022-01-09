@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\DataSource;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -116,13 +117,13 @@ class Game extends Model implements Auditable
 
     public function dspNintendoCoUk()
     {
-        return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
+        return $this->hasMany('App\Models\DataSourceParsed', 'game_id', 'id')
             ->where('source_id', DataSource::DSID_NINTENDO_CO_UK);
     }
 
     public function dspWikipedia()
     {
-        return $this->hasMany('App\DataSourceParsed', 'game_id', 'id')
+        return $this->hasMany('App\Models\DataSourceParsed', 'game_id', 'id')
             ->where('source_id', DataSource::DSID_WIKIPEDIA);
     }
 

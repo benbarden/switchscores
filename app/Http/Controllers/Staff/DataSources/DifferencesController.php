@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\DataSource;
-use App\Services\DataSources\Queries\Differences;
 use App\Construction\GameImportRule\Builder;
 use App\Construction\GameImportRule\Director;
 use App\Construction\GameImportRule\WikipediaBuilder;
 use App\Construction\GameImportRule\WikipediaDirector;
-
-use App\Traits\SwitchServices;
+use App\Models\DataSource;
+use App\Services\DataSources\Queries\Differences;
 use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class DifferencesController extends Controller
 {

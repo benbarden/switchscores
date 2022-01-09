@@ -1,21 +1,20 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DataSourceIgnore extends Model
+class DataSourceRaw extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'data_source_ignore';
+    protected $table = 'data_source_raw';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'source_id', 'link_id', 'title'
+        'source_id', 'game_id', 'title', 'source_data_json'
     ];
-
 }

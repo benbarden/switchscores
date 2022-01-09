@@ -3,11 +3,9 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use Illuminate\Routing\Controller as Controller;
-
+use App\Models\DataSource;
 use App\Traits\SwitchServices;
-
-use App\DataSource;
+use Illuminate\Routing\Controller as Controller;
 
 class DataSourceIgnoreController extends Controller
 {

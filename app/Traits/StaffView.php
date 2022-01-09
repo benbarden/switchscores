@@ -3,7 +3,7 @@
 
 namespace App\Traits;
 
-use App\DataSource;
+use App\Models\DataSource;
 
 trait StaffView
 {

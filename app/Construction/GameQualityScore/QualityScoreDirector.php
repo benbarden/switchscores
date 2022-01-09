@@ -2,8 +2,8 @@
 
 namespace App\Construction\GameQualityScore;
 
-use App\DataSourceParsed;
 use App\Game;
+use App\Models\DataSourceParsed;
 use App\Models\GameImportRuleEshop;
 use App\Models\GameImportRuleWikipedia;
 use App\Models\GameQualityScore;

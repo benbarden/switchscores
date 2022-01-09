@@ -3,10 +3,9 @@
 
 namespace App\Services;
 
-use App\DataSourceParsed;
-use App\DataSource;
 use App\Game;
-
+use App\Models\DataSource;
+use App\Models\DataSourceParsed;
 use Illuminate\Support\Facades\DB;
 
 class DataSourceParsedService

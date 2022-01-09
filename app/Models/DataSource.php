@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,12 +49,12 @@ class DataSource extends Model
 
     public function itemsRaw()
     {
-        return $this->hasMany('App\DataSourceRaw', 'source_id', 'id');
+        return $this->hasMany('App\Models\DataSourceRaw', 'source_id', 'id');
     }
 
     public function itemsParsed()
     {
-        return $this->hasMany('App\DataSourceParsed', 'source_id', 'id');
+        return $this->hasMany('App\Models\DataSourceParsed', 'source_id', 'id');
     }
 
     public function isNintendoCoUk()

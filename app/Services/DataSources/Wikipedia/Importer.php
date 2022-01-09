@@ -2,11 +2,9 @@
 
 namespace App\Services\DataSources\Wikipedia;
 
+use App\Models\DataSourceRaw;
 use Goutte\Client as GoutteClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-
-use App\DataSourceRaw;
-use App\Services\DataSources\Wikipedia\DateHandler;
 
 class Importer
 {

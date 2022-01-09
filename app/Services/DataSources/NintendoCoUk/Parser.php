@@ -3,14 +3,14 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
-use App\DataSourceRaw;
-use App\DataSourceParsed;
+use App\Models\DataSourceParsed;
+use App\Models\DataSourceRaw;
 use Illuminate\Log\Logger;
 
 class Parser
 {
     /**
-     * @var DataSourceParsed
+     * @var \App\Models\DataSourceParsed
      */
     private $dataSourceParsed;
 

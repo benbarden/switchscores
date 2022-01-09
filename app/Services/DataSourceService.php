@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\DataSource;
+use App\Models\DataSource;
 
 class DataSourceService
 {

@@ -3,9 +3,7 @@
 
 namespace App\Services\DataSources\Queries;
 
-use App\DataSourceParsed;
-use App\DataSource;
-
+use App\Models\DataSource;
 use Illuminate\Support\Facades\DB;
 
 class Differences

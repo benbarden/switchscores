@@ -2,8 +2,8 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
-use App\DataSourceParsed;
 use App\Game;
+use App\Models\DataSourceParsed;
 use App\Models\GameImportRuleEshop;
 
 class UpdateGame
@@ -14,7 +14,7 @@ class UpdateGame
     private $game;
 
     /**
-     * @var DataSourceParsed
+     * @var \App\Models\DataSourceParsed
      */
     private $dsParsedItem;
 

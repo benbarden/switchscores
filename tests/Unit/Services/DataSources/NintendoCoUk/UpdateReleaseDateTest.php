@@ -3,9 +3,8 @@
 namespace Tests\Unit\Services\DataSources\NintendoCoUk;
 
 use App\Game;
-use App\DataSourceParsed;
+use App\Models\DataSourceParsed;
 use App\Services\DataSources\NintendoCoUk\UpdateGame;
-
 use Tests\TestCase;
 
 class UpdateReleaseDateTest extends TestCase

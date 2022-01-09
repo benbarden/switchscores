@@ -2,7 +2,7 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
-use App\DataSourceRaw;
+use App\Models\DataSourceRaw;
 use GuzzleHttp\Client as GuzzleClient;
 
 class Importer

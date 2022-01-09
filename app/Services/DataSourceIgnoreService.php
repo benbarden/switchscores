@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
-use App\DataSourceIgnore;
-use App\DataSource;
+use App\Models\DataSource;
+use App\Models\DataSourceIgnore;
 
 class DataSourceIgnoreService
 {

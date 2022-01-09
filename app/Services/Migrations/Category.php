@@ -2,10 +2,9 @@
 
 namespace App\Services\Migrations;
 
-use Illuminate\Support\Facades\DB;
-
 use App\Game;
-use App\DataSource;
+use App\Models\DataSource;
+use Illuminate\Support\Facades\DB;
 
 class Category
 {

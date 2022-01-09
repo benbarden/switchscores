@@ -4,10 +4,10 @@ namespace Tests\Unit\Construction\GameQualityScore;
 
 use App\Construction\GameQualityScore\QualityScoreBuilder;
 use App\Construction\GameQualityScore\QualityScoreDirector;
-use App\DataSourceParsed;
 use App\Game;
 use App\GameDeveloper;
 use App\GamePublisher;
+use App\Models\DataSourceParsed;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 
