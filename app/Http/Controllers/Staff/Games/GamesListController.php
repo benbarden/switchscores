@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
 use App\Domain\GameLists\Repository as GameListsRepository;
-
-use App\Services\Migrations\Category as MigrationsCategory;
-
-use App\Category;
 use App\GameSeries;
+use App\Models\Category;
+use App\Services\Migrations\Category as MigrationsCategory;
 use App\Tag;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class GamesListController extends Controller
 {

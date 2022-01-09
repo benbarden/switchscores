@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
-use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
-use App\Services\Migrations\Category as MigrationsCategory;
-
-use App\Category;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\GameSeries;
+use App\Models\Category;
+use App\Services\Migrations\Category as MigrationsCategory;
 use App\Tag;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
 {

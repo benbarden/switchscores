@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\Category;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
 class CategoryService

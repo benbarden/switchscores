@@ -50,12 +50,12 @@ class DbEditGame extends Model
 
     public function currentDataAsCategory()
     {
-        return $this->hasOne('App\Category', 'id', 'current_data');
+        return $this->hasOne('App\Models\Category', 'id', 'current_data');
     }
 
     public function newDataAsCategory()
     {
-        return $this->hasOne('App\Category', 'id', 'new_data');
+        return $this->hasOne('App\Models\Category', 'id', 'new_data');
     }
 
     public function isPending()

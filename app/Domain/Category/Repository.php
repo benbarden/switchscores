@@ -3,7 +3,7 @@
 
 namespace App\Domain\Category;
 
-use App\Category;
+use App\Models\Category;
 
 
 class Repository

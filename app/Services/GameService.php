@@ -3,13 +3,12 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
-
-use App\Category;
 use App\Game;
 use App\GameSeries;
-use App\Tag;
 use App\GameTag;
+use App\Models\Category;
+use App\Tag;
+use Illuminate\Support\Facades\DB;
 
 
 class GameService
