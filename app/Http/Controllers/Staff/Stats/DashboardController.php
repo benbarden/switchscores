@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Stats dashboard');
 
-        $bindings['TotalGameCount'] = $this->getServiceGame()->getCount();
+        $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
         $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
         $bindings['UpcomingGameCount'] = $this->getServiceGameReleaseDate()->countUpcoming();
 

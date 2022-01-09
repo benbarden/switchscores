@@ -12,6 +12,14 @@ class Repository
     /**
      * @return integer
      */
+    public function grandTotal()
+    {
+        return Game::orderBy('title', 'asc')->count();
+    }
+
+    /**
+     * @return integer
+     */
     public function totalReleased()
     {
         return Game::where('eu_is_released', 1)->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
@@ -25,6 +33,9 @@ class Repository
         return Game::whereNotNull('game_rank')->count();
     }
 
+    /**
+     * @return integer
+     */
     public function totalUntagged()
     {
         return Game::whereDoesntHave('gameTags')->count();

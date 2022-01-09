@@ -51,7 +51,7 @@ class DashboardController extends Controller
         $bindings['MissingAmazonUkLink'] = $this->getServiceGame()->countWithNoAmazonUkLink();
 
         // Release date stats
-        $bindings['TotalGameCount'] = $this->getServiceGame()->getCount();
+        $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
         $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
         $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
 

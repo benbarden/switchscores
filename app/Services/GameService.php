@@ -17,70 +17,6 @@ class GameService
     const ORDER_NEWEST = 1;
     const ORDER_OLDEST = 2;
 
-    /**
-     * @param $title
-     * @param $linkTitle
-     * @param $priceEshop
-     * @param $players
-     * @param $developer
-     * @param $publisher
-     * @param null $amazonUkLink
-     * @param null $mediaFolder
-     * @param null $videoUrl
-     * @param null $boxartSquareUrl
-     * @param null $eshopEuropeFsId
-     * @param null $boxartHeaderImage
-     * @return \App\Models\Game
-     */
-    public function create(
-        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $videoUrl = null,
-        $boxartSquareUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null
-    )
-    {
-        return Game::create([
-            'title' => $title,
-            'link_title' => $linkTitle,
-            'price_eshop' => $priceEshop,
-            'players' => $players,
-            'developer' => $developer,
-            'publisher' => $publisher,
-            'review_count' => 0,
-            'amazon_uk_link' => $amazonUkLink,
-            'video_url' => $videoUrl,
-            'boxart_square_url' => $boxartSquareUrl,
-            'eshop_europe_fs_id' => $eshopEuropeFsId,
-            'boxart_header_image' => $boxartHeaderImage,
-        ]);
-    }
-
-    public function edit(
-        Game $game,
-        $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
-        $amazonUkLink = null, $videoUrl = null,
-        $boxartSquareUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null
-    )
-    {
-        $values = [
-            'title' => $title,
-            'link_title' => $linkTitle,
-            'price_eshop' => $priceEshop,
-            'players' => $players,
-            'developer' => $developer,
-            'publisher' => $publisher,
-            'amazon_uk_link' => $amazonUkLink,
-            'video_url' => $videoUrl,
-            'boxart_square_url' => $boxartSquareUrl,
-            'eshop_europe_fs_id' => $eshopEuropeFsId,
-            'boxart_header_image' => $boxartHeaderImage,
-        ];
-
-        $game->fill($values);
-        $game->save();
-    }
-
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -176,11 +112,6 @@ class GameService
         return Game::where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->orderBy('eu_released_on', 'desc')->limit($limit)->get();
     }
 
-    public function getWithNoVideoUrl($limit = 200)
-    {
-        return Game::whereNull('video_url')->orderBy('id', 'asc')->limit($limit)->get();
-    }
-
     public function getWithNoAmazonUkLink($limit = 200)
     {
         return Game::where('format_physical', Game::FORMAT_AVAILABLE)
@@ -188,11 +119,6 @@ class GameService
             ->orderBy('id', 'asc')
             ->limit($limit)
             ->get();
-    }
-
-    public function countWithNoVideoUrl()
-    {
-        return Game::whereNull('video_url')->orderBy('id', 'asc')->count();
     }
 
     public function countWithNoAmazonUkLink()
@@ -258,11 +184,6 @@ class GameService
     public function getAllAsObjects()
     {
         return Game::orderBy('id', 'asc')->get();
-    }
-
-    public function getCount()
-    {
-        return Game::orderBy('title', 'asc')->count();
     }
 
     public function getByCategory(Category $category)
