@@ -110,7 +110,7 @@ class User extends Authenticatable
 
     public function inviteCode()
     {
-        return $this->hasOne('App\InviteCode', 'id', 'invite_code_id');
+        return $this->hasOne('App\Models\InviteCode', 'id', 'invite_code_id');
     }
 
     // Roles

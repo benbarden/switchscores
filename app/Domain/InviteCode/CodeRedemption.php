@@ -3,7 +3,7 @@
 
 namespace App\Domain\InviteCode;
 
-use App\InviteCode;
+use App\Models\InviteCode;
 
 class CodeRedemption
 {
