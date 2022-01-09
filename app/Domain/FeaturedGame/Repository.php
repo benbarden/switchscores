@@ -4,7 +4,7 @@
 namespace App\Domain\FeaturedGame;
 
 
-use App\FeaturedGame;
+use App\Models\FeaturedGame;
 
 class Repository
 {
