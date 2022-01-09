@@ -2,12 +2,9 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+use App\Models\UserRole;
 use App\User;
-use App\UserRole;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {

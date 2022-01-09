@@ -2,8 +2,8 @@
 
 namespace Tests\Page\Staff;
 
+use App\Models\UserRole;
 use App\User;
-use App\UserRole;
 use Tests\TestCase;
 
 class RoleNameTest extends TestCase

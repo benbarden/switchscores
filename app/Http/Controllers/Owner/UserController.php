@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers\Owner;
 
-use Illuminate\Routing\Controller as Controller;
+use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\User\Repository as UserRepository;
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Models\UserRole;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-use App\Domain\User\Repository as UserRepository;
-use App\Domain\Partner\Repository as PartnerRepository;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
-use App\UserRole;
+use Illuminate\Routing\Controller as Controller;
 
 class UserController extends Controller
 {

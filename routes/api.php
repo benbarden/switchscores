@@ -52,7 +52,7 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
 /* Staff-restricted */
 // WIKIPEDIA
 /*
-Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\UserRole::ROLE_WIKIPEDIA_MANAGER]], function() {
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.\App\Models\UserRole::ROLE_WIKIPEDIA_MANAGER]], function() {
 
     Route::get('/staff/wikipedia/wiki-updates/update-status', 'Api\Staff\WikiUpdate@updateStatus');
 

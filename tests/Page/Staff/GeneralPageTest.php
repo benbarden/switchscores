@@ -2,9 +2,8 @@
 
 namespace Tests\Page\Staff;
 
+use App\Models\UserRole;
 use App\User;
-use App\UserRole;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GeneralPageTest extends TestCase
