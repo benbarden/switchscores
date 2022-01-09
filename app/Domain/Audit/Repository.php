@@ -1,13 +1,11 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\Audit;
 
 use Illuminate\Support\Collection;
 use OwenIt\Auditing\Models\Audit;
 
-
-class AuditService
+class Repository
 {
     public function getAll($limit = 250)
     {
@@ -21,7 +19,7 @@ class AuditService
     public function getGame($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\Models\Game')
+        where('auditable_type', 'App\Models\Game')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
@@ -32,7 +30,7 @@ class AuditService
     public function getReviewLink($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\Models\ReviewLink')
+        where('auditable_type', 'App\Models\ReviewLink')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
@@ -43,7 +41,7 @@ class AuditService
     public function getPartner($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\Models\Partner')
+        where('auditable_type', 'App\Models\Partner')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);

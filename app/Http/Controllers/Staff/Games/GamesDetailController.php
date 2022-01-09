@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
@@ -17,14 +18,17 @@ class GamesDetailController extends Controller
     use SwitchServices;
     use StaffView;
 
+    protected $repoAudit;
     protected $repoFeaturedGames;
     protected $repoGameStats;
 
     public function __construct(
+        AuditRepository $repoAudit,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats
     )
     {
+        $this->repoAudit = $repoAudit;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
     }
@@ -86,7 +90,7 @@ class GamesDetailController extends Controller
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();
-        $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 10);
+        $gameAudits = $this->repoAudit->getAggregatedGameAudits($gameId, 10);
         $bindings['GameAuditsCore'] = $gameAudits;
 
         // Import rules
@@ -101,7 +105,7 @@ class GamesDetailController extends Controller
         $gameId = $game->id;
         $bindings = $this->getBindingsGamesDetailSubpage($game->title, $gameId);
 
-        $gameAudits = $this->getServiceAudit()->getAggregatedGameAudits($gameId, 25);
+        $gameAudits = $this->repoAudit->getAggregatedGameAudits($gameId, 25);
         $bindings['GameAuditsCore'] = $gameAudits;
         $bindings['GameId'] = $gameId;
 
