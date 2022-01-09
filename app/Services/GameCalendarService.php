@@ -3,10 +3,9 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
-
-use App\GameCalendarStat;
 use App\Game;
+use App\Models\GameCalendarStat;
+use Illuminate\Support\Facades\DB;
 
 class GameCalendarService
 {
