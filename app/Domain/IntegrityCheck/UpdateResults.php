@@ -3,10 +3,9 @@
 
 namespace App\Domain\IntegrityCheck;
 
-use App\IntegrityCheck;
-use App\IntegrityCheckResult;
-
 use App\Domain\IntegrityCheck\Repository as IntegrityCheckRepository;
+use App\Models\IntegrityCheck;
+use App\Models\IntegrityCheckResult;
 
 class UpdateResults
 {

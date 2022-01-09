@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\IntegrityCheck;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-
 use App\Domain\IntegrityCheck\Repository as IntegrityCheckRepository;
 use App\Domain\IntegrityCheck\UpdateResults as IntegrityCheckUpdateResults;
+use App\Models\IntegrityCheck;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class IntegrityCheckChecker extends Command
 {

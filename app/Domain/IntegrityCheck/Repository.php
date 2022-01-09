@@ -3,9 +3,8 @@
 
 namespace App\Domain\IntegrityCheck;
 
-use App\IntegrityCheck;
-
 use App\Game;
+use App\Models\IntegrityCheck;
 
 class Repository
 {

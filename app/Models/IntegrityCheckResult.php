@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +20,6 @@ class IntegrityCheckResult extends Model
 
     public function integrityCheck()
     {
-        return $this->hasOne('App\IntegrityCheck', 'id', 'check_id');
+        return $this->hasOne('App\Models\IntegrityCheck', 'id', 'check_id');
     }
 }

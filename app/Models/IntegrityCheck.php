@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,6 +36,6 @@ class IntegrityCheck extends Model
 
     public function results()
     {
-        return $this->hasMany('App\IntegrityCheckResult', 'check_id', 'id');
+        return $this->hasMany('App\Models\IntegrityCheckResult', 'check_id', 'id');
     }
 }
