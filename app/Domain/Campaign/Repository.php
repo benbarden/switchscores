@@ -4,7 +4,7 @@
 namespace App\Domain\Campaign;
 
 
-use App\Campaign;
+use App\Models\Campaign;
 
 class Repository
 {

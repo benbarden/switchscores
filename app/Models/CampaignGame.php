@@ -25,6 +25,6 @@ class CampaignGame extends Model
 
     public function campaign()
     {
-        return $this->hasOne('App\Campaign', 'id', 'campaign_id');
+        return $this->hasOne('App\Models\Campaign', 'id', 'campaign_id');
     }
 }
