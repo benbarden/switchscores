@@ -3,7 +3,7 @@
 
 namespace App\Factories\Tests;
 
-use App\Game;
+use App\Models\Game;
 
 class GameFactory
 {

@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Game;
-
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-
-use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
+use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
+use App\Models\Game;
 use App\Services\DataSources\Queries\Differences;
-
-use App\Traits\SwitchServices;
 use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class GamesDetailController extends Controller
 {

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Models\Game;
 use App\Traits\SwitchServices;
-
-use App\Game;
 
 class GameController
 {

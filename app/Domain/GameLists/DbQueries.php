@@ -4,8 +4,8 @@
 namespace App\Domain\GameLists;
 
 
+use App\Models\Game;
 use Illuminate\Support\Facades\DB;
-use App\Game;
 
 class DbQueries
 {

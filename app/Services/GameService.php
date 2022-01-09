@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
-use App\Game;
 use App\Models\Category;
+use App\Models\Game;
 use App\Models\GameSeries;
 use App\Models\GameTag;
 use App\Models\Tag;
@@ -30,7 +30,7 @@ class GameService
      * @param null $boxartSquareUrl
      * @param null $eshopEuropeFsId
      * @param null $boxartHeaderImage
-     * @return Game
+     * @return \App\Models\Game
      */
     public function create(
         $title, $linkTitle, $priceEshop, $players, $developer, $publisher,
@@ -108,7 +108,7 @@ class GameService
 
     /**
      * @param $title
-     * @return Game
+     * @return \App\Models\Game
      */
     public function getByTitle($title)
     {

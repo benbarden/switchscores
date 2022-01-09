@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\Game;
+use App\Models\Game;
 use App\Models\GameCalendarStat;
 use Illuminate\Support\Facades\DB;
 

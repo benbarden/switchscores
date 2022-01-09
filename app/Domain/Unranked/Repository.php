@@ -3,7 +3,7 @@
 
 namespace App\Domain\Unranked;
 
-use App\Game;
+use App\Models\Game;
 
 class Repository
 {

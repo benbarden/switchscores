@@ -3,11 +3,10 @@
 
 namespace App\Services\Game;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Log\Logger;
+use App\Models\Game;
 use Carbon\Carbon;
-
-use App\Game;
+use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\DB;
 
 class RankAllTime
 {

@@ -2,8 +2,8 @@
 
 namespace App\Factories\DataSource\NintendoCoUk;
 
-use App\Game;
 use App\Models\DataSourceParsed;
+use App\Models\Game;
 use App\Services\DataSources\NintendoCoUk\Images;
 
 class DownloadImageFactory

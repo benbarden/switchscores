@@ -3,9 +3,8 @@
 
 namespace App\Domain\GameSearch;
 
-use App\Game;
-
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Models\Game;
 
 class Builder
 {

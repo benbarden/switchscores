@@ -4,8 +4,7 @@
 namespace App\Domain\GameStats;
 
 
-use App\Game;
-
+use App\Models\Game;
 use Illuminate\Support\Facades\DB;
 
 class Repository

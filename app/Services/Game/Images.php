@@ -3,7 +3,7 @@
 
 namespace App\Services\Game;
 
-use App\Game;
+use App\Models\Game;
 
 
 class Images

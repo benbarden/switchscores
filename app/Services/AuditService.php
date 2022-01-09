@@ -21,7 +21,7 @@ class AuditService
     public function getGame($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\Game')
+            where('auditable_type', 'App\Models\Game')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
@@ -60,8 +60,8 @@ class AuditService
 
         $aggAudits = new Collection();
 
-        // App\Game
-        $audits = Audit::where('auditable_type', 'App\Game')->where('auditable_id', $gameId)->orderBy('id', 'desc')->get();
+        // App\Models\Game
+        $audits = Audit::where('auditable_type', 'App\Models\Game')->where('auditable_id', $gameId)->orderBy('id', 'desc')->get();
         foreach ($audits as $audit) {
             $aggAudits->push($audit);
         }

@@ -2,8 +2,8 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
-use App\Game;
 use App\Models\DataSourceParsed;
+use App\Models\Game;
 use App\Services\Game\Images as GameImages;
 
 class Images

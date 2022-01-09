@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Game;
+use App\Models\Game;
 use Illuminate\Support\Collection;
 
 class ReviewStatsService

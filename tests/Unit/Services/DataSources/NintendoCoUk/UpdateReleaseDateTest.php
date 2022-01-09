@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Services\DataSources\NintendoCoUk;
 
-use App\Game;
 use App\Models\DataSourceParsed;
+use App\Models\Game;
 use App\Services\DataSources\NintendoCoUk\UpdateGame;
 use Tests\TestCase;
 

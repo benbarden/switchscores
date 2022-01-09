@@ -3,8 +3,7 @@
 namespace App\Construction\Game;
 
 
-use App\Game;
-use Illuminate\Http\Request;
+use App\Models\Game;
 
 class GameDirector
 {

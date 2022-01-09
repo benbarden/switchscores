@@ -2,7 +2,7 @@
 
 namespace App\Services\DataQuality;
 
-use App\Game;
+use App\Models\Game;
 use Illuminate\Support\Facades\DB;
 
 class QualityStats

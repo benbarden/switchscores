@@ -2,7 +2,7 @@
 
 namespace App\Construction\Game;
 
-use App\Game;
+use App\Models\Game;
 
 class GameBuilder
 {

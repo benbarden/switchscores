@@ -2,11 +2,10 @@
 
 namespace Tests\Unit\Construction\Game;
 
-use App\Game;
-use Tests\TestCase;
-
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
+use App\Models\Game;
+use Tests\TestCase;
 
 class GameDirectorTest extends TestCase
 {

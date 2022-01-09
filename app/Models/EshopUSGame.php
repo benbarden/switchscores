@@ -39,7 +39,7 @@ class EshopUSGame extends Model
 
     public function game()
     {
-        return $this->hasOne('App\Game', 'eshop_us_fs_id', 'fs_id');
+        return $this->hasOne('App\Models\Game', 'eshop_us_fs_id', 'fs_id');
     }
 
 }

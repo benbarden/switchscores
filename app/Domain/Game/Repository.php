@@ -3,7 +3,7 @@
 
 namespace App\Domain\Game;
 
-use App\Game;
+use App\Models\Game;
 
 class Repository
 {
@@ -29,7 +29,7 @@ class Repository
 
     /**
      * @param $title
-     * @return Game|null
+     * @return \App\Models\Game|null
      */
     public function getByTitle($title)
     {

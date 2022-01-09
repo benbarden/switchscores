@@ -7,14 +7,14 @@ use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\ReviewDraft\Repository as RepoReviewDraft;
 use App\Exceptions\Review\AlreadyImported;
-use App\Game;
+use App\Models\Game;
 use App\Models\Partner;
 use App\Models\ReviewDraft;
 
 class ImportScraper
 {
     /**
-     * @var Game
+     * @var \App\Models\Game
      */
     private $repoGame;
 

@@ -2,13 +2,8 @@
 
 namespace Tests\Unit\Services\Game;
 
-use Tests\TestCase;
-use Illuminate\Support\Collection;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use App\Services\Game\QualityScore;
-use App\Game;
+use Tests\TestCase;
 
 class QualityScoreTest extends TestCase
 {

@@ -3,7 +3,7 @@
 
 namespace App\Domain\IntegrityCheck;
 
-use App\Game;
+use App\Models\Game;
 use App\Models\IntegrityCheck;
 
 class Repository

@@ -2,8 +2,8 @@
 
 namespace App\Construction\GameQualityScore;
 
-use App\Game;
 use App\Models\DataSourceParsed;
+use App\Models\Game;
 use App\Models\GameImportRuleEshop;
 use App\Models\GameImportRuleWikipedia;
 use App\Models\GameQualityScore;
@@ -22,7 +22,7 @@ class QualityScoreDirector
     private $builder;
 
     /**
-     * @var Game
+     * @var \App\Models\Game
      */
     private $game;
 

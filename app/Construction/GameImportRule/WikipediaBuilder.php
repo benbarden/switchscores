@@ -2,7 +2,7 @@
 
 namespace App\Construction\GameImportRule;
 
-use App\Game;
+use App\Models\Game;
 use App\Models\GameImportRuleWikipedia;
 
 class WikipediaBuilder

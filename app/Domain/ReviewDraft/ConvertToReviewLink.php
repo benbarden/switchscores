@@ -2,18 +2,16 @@
 
 namespace App\Domain\ReviewDraft;
 
-use App\Models\ReviewDraft;
-use App\Game;
-
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Builder as ReviewLinkBuilder;
 use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
 use App\Domain\ReviewLink\Director as ReviewLinkDirector;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\Partner\Repository as PartnerRepository;
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Models\Game;
+use App\Models\ReviewDraft;
 
 class ConvertToReviewLink
 {

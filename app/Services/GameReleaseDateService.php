@@ -3,9 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\Game;
 use Illuminate\Support\Facades\DB;
-
-use App\Game;
 
 class GameReleaseDateService
 {

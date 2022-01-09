@@ -40,27 +40,27 @@ class IntegrityChecks extends Migration
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::GAME_WRONG_RELEASE_YEAR, IntegrityCheck::DESC_GAME_WRONG_RELEASE_YEAR, 'App\Game']);
+        ", [IntegrityCheck::GAME_WRONG_RELEASE_YEAR, IntegrityCheck::DESC_GAME_WRONG_RELEASE_YEAR, 'App\Models\Game']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::GAME_NO_RELEASE_YEAR, IntegrityCheck::DESC_GAME_NO_RELEASE_YEAR, 'App\Game']);
+        ", [IntegrityCheck::GAME_NO_RELEASE_YEAR, IntegrityCheck::DESC_GAME_NO_RELEASE_YEAR, 'App\Models\Game']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::GAME_MISSING_RANK, IntegrityCheck::DESC_GAME_MISSING_RANK, 'App\Game']);
+        ", [IntegrityCheck::GAME_MISSING_RANK, IntegrityCheck::DESC_GAME_MISSING_RANK, 'App\Models\Game']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::GAME_NO_TITLE_HASHES, IntegrityCheck::DESC_GAME_NO_TITLE_HASHES, 'App\Game']);
+        ", [IntegrityCheck::GAME_NO_TITLE_HASHES, IntegrityCheck::DESC_GAME_NO_TITLE_HASHES, 'App\Models\Game']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::GAME_TITLE_HASH_MISMATCH, IntegrityCheck::DESC_GAME_TITLE_HASH_MISMATCH, 'App\Game']);
+        ", [IntegrityCheck::GAME_TITLE_HASH_MISMATCH, IntegrityCheck::DESC_GAME_TITLE_HASH_MISMATCH, 'App\Models\Game']);
 
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)

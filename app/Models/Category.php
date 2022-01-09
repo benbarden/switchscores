@@ -20,7 +20,7 @@ class Category extends Model
 
     public function games()
     {
-        return $this->hasMany('App\Game', 'category_id', 'id');
+        return $this->hasMany('App\Models\Game', 'category_id', 'id');
     }
 
     public function children()

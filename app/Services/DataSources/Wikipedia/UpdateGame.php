@@ -2,8 +2,8 @@
 
 namespace App\Services\DataSources\Wikipedia;
 
-use App\Game;
 use App\Models\DataSourceParsed;
+use App\Models\Game;
 use App\Models\GameImportRuleWikipedia;
 
 class UpdateGame

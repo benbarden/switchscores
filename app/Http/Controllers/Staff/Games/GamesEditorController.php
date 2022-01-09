@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
-use Illuminate\Support\Facades\Validator;
-
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
-use App\Traits\StaffView;
-
-use App\Events\GameCreated;
-
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
-
-use App\Factories\GameDirectorFactory;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
+use App\Factories\GameDirectorFactory;
+use App\Models\Game;
 use App\Services\Game\Images as GameImages;
-
-use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
-use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
-use App\Domain\GameSeries\Repository as GameSeriesRepository;
-use App\Domain\GameCollection\Repository as GameCollectionRepository;
-
-use App\Game;
+use App\Traits\AuthUser;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\Validator;
 
 class GamesEditorController extends Controller
 {

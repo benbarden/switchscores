@@ -20,6 +20,6 @@ class GameSeries extends Model
 
     public function games()
     {
-        return $this->hasMany('App\Game', 'series_id', 'id');
+        return $this->hasMany('App\Models\Game', 'series_id', 'id');
     }
 }

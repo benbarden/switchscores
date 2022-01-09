@@ -2,11 +2,10 @@
 
 namespace Tests\Unit\Services\Shortcode;
 
-use Tests\TestCase;
-use Illuminate\Support\Collection;
-
-use App\Game;
+use App\Models\Game;
 use App\Services\Shortcode\DynamicShortcode;
+use Illuminate\Support\Collection;
+use Tests\TestCase;
 
 class GameTableTest extends TestCase
 {
