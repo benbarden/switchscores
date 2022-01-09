@@ -2,15 +2,14 @@
 
 namespace App\Domain\ReviewDraft;
 
-use App\Game;
-use App\Models\ReviewDraft;
-use App\Partner;
+use App\Domain\Game\Repository as RepoGame;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\ReviewDraft\Repository as RepoReviewDraft;
-
-use App\Domain\Game\Repository as RepoGame;
 use App\Exceptions\Review\AlreadyImported;
+use App\Game;
+use App\Models\Partner;
+use App\Models\ReviewDraft;
 
 class ImportScraper
 {

@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
-use App\Partner;
-use App\PartnerOutreach;
+use App\Models\Partner;
+use App\Models\PartnerOutreach;
 use Illuminate\Support\Facades\DB;
 
 class PartnerService
@@ -125,7 +125,7 @@ class PartnerService
 
     /**
      * @param $domainUrl
-     * @return Partner
+     * @return \App\Models\Partner
      */
     public function getByDomain($domainUrl)
     {

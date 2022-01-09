@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,7 +33,7 @@ class PartnerOutreach extends Model
 
     public function partner()
     {
-        return $this->hasOne('App\Partner', 'id', 'partner_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'partner_id');
     }
 
     public function getStatusDesc()

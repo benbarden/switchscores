@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
 use OwenIt\Auditing\Contracts\Auditable;
 
 class ReviewLink extends Model implements Auditable
@@ -35,7 +34,7 @@ class ReviewLink extends Model implements Auditable
 
     public function site()
     {
-        return $this->hasOne('App\Partner', 'id', 'site_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'site_id');
     }
 
     public function game()

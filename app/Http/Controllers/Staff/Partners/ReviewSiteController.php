@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
+use App\Models\Partner;
 use App\Traits\StaffView;
-use Illuminate\Routing\Controller as Controller;
+use App\Traits\SwitchServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use App\Partner;
-
-use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class ReviewSiteController extends Controller
 {

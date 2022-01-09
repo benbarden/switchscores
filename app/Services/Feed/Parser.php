@@ -2,8 +2,7 @@
 
 namespace App\Services\Feed;
 
-use App\Partner;
-use App\Services\Feed\TitleParser;
+use App\Models\Partner;
 
 
 /**

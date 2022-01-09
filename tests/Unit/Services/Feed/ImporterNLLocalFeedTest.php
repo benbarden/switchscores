@@ -2,13 +2,10 @@
 
 namespace Tests\Unit\Services\Feed;
 
-use Tests\TestCase;
-
-use App\ReviewFeedItem;
+use App\Models\Partner;
 use App\ReviewFeedItemTest;
-use App\Partner;
-
 use App\Services\Feed\Importer;
+use Tests\TestCase;
 
 class ImporterNLLocalFeedTest extends TestCase
 {

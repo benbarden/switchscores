@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\PartnerFeedLink;
+use App\Models\PartnerFeedLink;
 
 class PartnerFeedLinkService
 {
@@ -38,7 +38,7 @@ class PartnerFeedLinkService
 
     /**
      * @param $id
-     * @return PartnerFeedLink
+     * @return \App\Models\PartnerFeedLink
      */
     public function find($id)
     {

@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Partner;
-
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
+use App\Models\Partner;
 use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class PartnersController extends Controller
 {

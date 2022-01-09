@@ -3,9 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\Partner;
 use App\ReviewLink;
-use App\Partner;
-
 use Illuminate\Support\Facades\DB;
 
 class ReviewLinkService

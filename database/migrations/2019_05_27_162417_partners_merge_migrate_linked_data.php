@@ -1,15 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-use App\Partner;
-
-use App\Services\ReviewSiteService;
 use App\Services\DeveloperService;
 use App\Services\PublisherService;
-use App\Services\PartnerService;
+use App\Services\ReviewSiteService;
+use Illuminate\Database\Migrations\Migration;
 
 class PartnersMergeMigrateLinkedData extends Migration
 {

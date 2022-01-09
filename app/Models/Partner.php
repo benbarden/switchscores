@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -79,7 +79,7 @@ class Partner extends Model implements Auditable
 
     public function feedLinks()
     {
-        return $this->hasMany('App\PartnerFeedLink', 'site_id', 'id');
+        return $this->hasMany('App\Models\PartnerFeedLink', 'site_id', 'id');
     }
 
     public function developerGames()
@@ -104,12 +104,12 @@ class Partner extends Model implements Auditable
 
     public function lastOutreach()
     {
-        return $this->hasOne('App\PartnerOutreach', 'id', 'last_outreach_id');
+        return $this->hasOne('App\Models\PartnerOutreach', 'id', 'last_outreach_id');
     }
 
     public function outreach()
     {
-        return $this->hasMany('App\PartnerOutreach', 'partner_id', 'id');
+        return $this->hasMany('App\Models\PartnerOutreach', 'partner_id', 'id');
     }
 
     public function isLastReviewHistoric()

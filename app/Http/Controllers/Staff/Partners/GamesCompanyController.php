@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
-use Illuminate\Routing\Controller as Controller;
+use App\Factories\GamesCompanyFactory;
+use App\Models\Partner;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
-use App\Factories\GamesCompanyFactory;
-use App\Partner;
+use Illuminate\Routing\Controller as Controller;
 
 class GamesCompanyController extends Controller
 {

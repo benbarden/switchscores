@@ -24,7 +24,7 @@ class ReviewFeedItemTest extends Model
 
     public function site()
     {
-        return $this->hasOne('App\Partner', 'id', 'site_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'site_id');
     }
 
     public function game()

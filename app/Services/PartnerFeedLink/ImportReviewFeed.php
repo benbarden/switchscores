@@ -7,7 +7,7 @@ use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\TitleRuleNotMatched;
-use App\PartnerFeedLink;
+use App\Models\PartnerFeedLink;
 use App\ReviewFeedImport;
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
@@ -20,7 +20,7 @@ class ImportReviewFeed
     private $logger;
 
     /**
-     * @var PartnerFeedLink
+     * @var \App\Models\PartnerFeedLink
      */
     private $partnerFeedLink;
 

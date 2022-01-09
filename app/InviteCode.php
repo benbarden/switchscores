@@ -21,11 +21,11 @@ class InviteCode extends Model
 
     public function gamesCompany()
     {
-        return $this->hasOne('App\Partner', 'id', 'games_company_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'games_company_id');
     }
 
     public function reviewer()
     {
-        return $this->hasOne('App\Partner', 'id', 'reviewer_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'reviewer_id');
     }
 }

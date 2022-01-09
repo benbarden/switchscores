@@ -2,7 +2,7 @@
 
 namespace App\Factories;
 
-use App\Partner;
+use App\Models\Partner;
 use App\Services\UrlService;
 
 class GamesCompanyFactory

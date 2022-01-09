@@ -2,12 +2,8 @@
 
 namespace Tests\Feature\Api;
 
-use App\Partner;
-
+use App\Models\Partner;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PartnerTest extends TestCase
 {

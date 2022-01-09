@@ -3,12 +3,11 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
-
-use App\GamePublisher;
-use App\Partner;
 use App\DataSource;
 use App\Game;
+use App\GamePublisher;
+use App\Models\Partner;
+use Illuminate\Support\Facades\DB;
 
 
 class GamePublisherService

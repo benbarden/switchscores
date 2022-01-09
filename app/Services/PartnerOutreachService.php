@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\PartnerOutreach;
+use App\Models\PartnerOutreach;
 use Illuminate\Support\Collection;
 
 class PartnerOutreachService
@@ -44,7 +44,7 @@ class PartnerOutreachService
 
     /**
      * @param $id
-     * @return PartnerOutreach
+     * @return \App\Models\PartnerOutreach
      */
     public function find($id)
     {

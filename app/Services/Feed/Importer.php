@@ -4,23 +4,19 @@
 namespace App\Services\Feed;
 
 
-use App\Game;
-use App\Partner;
-use App\PartnerFeedLink;
-use App\ReviewFeedItem;
-use App\ReviewFeedItemTest;
-use App\Services\ReviewFeedItemService;
-use App\Services\UrlService;
-use App\Services\Game\TitleMatch as ServiceTitleMatch;
-
 use App\Domain\Game\Repository as RepoGame;
 use App\Domain\ReviewFeedItem\Repository as RepoReviewFeedItem;
-
 use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\TitleRuleNotMatched;
-
+use App\Models\Partner;
+use App\Models\PartnerFeedLink;
+use App\ReviewFeedItem;
+use App\ReviewFeedItemTest;
+use App\Services\Game\TitleMatch as ServiceTitleMatch;
+use App\Services\ReviewFeedItemService;
+use App\Services\UrlService;
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -53,7 +49,7 @@ class Importer
     private $reviewSite;
 
     /**
-     * @var PartnerFeedLink
+     * @var \App\Models\PartnerFeedLink
      */
     private $partnerFeedLink;
 

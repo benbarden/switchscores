@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -95,12 +95,12 @@ class User extends Authenticatable
 
     public function partner()
     {
-        return $this->hasOne('App\Partner', 'id', 'partner_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'partner_id');
     }
 
     public function gamesCompany()
     {
-        return $this->hasOne('App\Partner', 'id', 'games_company_id');
+        return $this->hasOne('App\Models\Partner', 'id', 'games_company_id');
     }
 
     public function pointsTransactions()

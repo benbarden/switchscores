@@ -2,11 +2,10 @@
 
 namespace Tests\Unit\Services\Review;
 
-use Tests\TestCase;
-
+use App\Models\Partner;
 use App\ReviewFeedItem;
-use App\Partner;
 use Carbon\Carbon;
+use Tests\TestCase;
 
 class ReviewFeedItemTest extends TestCase
 {

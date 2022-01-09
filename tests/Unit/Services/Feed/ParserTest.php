@@ -2,10 +2,9 @@
 
 namespace Tests\Unit\Services\Feed;
 
+use App\Models\Partner;
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
-use App\Partner;
-
 use Tests\TestCase;
 
 class ParserTest extends TestCase

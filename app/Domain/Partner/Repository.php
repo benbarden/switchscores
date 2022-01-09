@@ -3,13 +3,13 @@
 
 namespace App\Domain\Partner;
 
-use App\Partner;
+use App\Models\Partner;
 
 class Repository
 {
     /**
      * @param $id
-     * @return Partner
+     * @return \App\Models\Partner
      */
     public function find($id)
     {

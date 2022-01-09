@@ -43,7 +43,7 @@ class AuditService
     public function getPartner($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\Partner')
+            where('auditable_type', 'App\Models\Partner')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
