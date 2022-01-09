@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\EshopUSGame;
 use Illuminate\Support\Facades\DB;
-use App\EshopUSGame;
 
 
 class EshopUSGameService

@@ -2,9 +2,8 @@
 
 namespace App\Services\Eshop\US;
 
+use App\Models\EshopUSGame;
 use GuzzleHttp\Client as GuzzleClient;
-
-use App\EshopUSGame;
 
 class Loader
 {

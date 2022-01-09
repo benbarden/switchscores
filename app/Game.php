@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Game extends Model implements Auditable
@@ -102,7 +101,7 @@ class Game extends Model implements Auditable
 
     public function eshopUSGame()
     {
-        return $this->hasOne('App\EshopUSGame', 'nsuid', 'eshop_europe_nsuid');
+        return $this->hasOne('App\Models\EshopUSGame', 'nsuid', 'eshop_europe_nsuid');
     }
 
     public function importRuleEshop()
