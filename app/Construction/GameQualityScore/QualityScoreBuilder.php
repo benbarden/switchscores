@@ -2,7 +2,7 @@
 
 namespace App\Construction\GameQualityScore;
 
-use App\GameQualityScore;
+use App\Models\GameQualityScore;
 
 class QualityScoreBuilder
 {

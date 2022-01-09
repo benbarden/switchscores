@@ -8,7 +8,7 @@ use App\DataSourceParsed;
 use App\Game;
 use App\GameImportRuleEshop;
 use App\GameImportRuleWikipedia;
-use App\GameQualityScore;
+use App\Models\GameQualityScore;
 
 class QualityScoreDirector
 {

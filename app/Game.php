@@ -42,7 +42,7 @@ class Game extends Model implements Auditable
 
     public function gameQualityScore()
     {
-        return $this->hasOne('App\GameQualityScore', 'game_id', 'id');
+        return $this->hasOne('App\Models\GameQualityScore', 'game_id', 'id');
     }
 
     public function gameRankYear()
