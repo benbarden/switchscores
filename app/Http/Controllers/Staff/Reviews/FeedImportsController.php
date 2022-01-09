@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Traits\SwitchServices;
+use App\Models\ReviewFeedImport;
 use App\Traits\StaffView;
-
-use App\ReviewFeedImport;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class FeedImportsController extends Controller
 {

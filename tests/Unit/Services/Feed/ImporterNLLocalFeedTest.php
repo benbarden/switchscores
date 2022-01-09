@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Feed;
 
 use App\Models\Partner;
-use App\ReviewFeedItemTest;
+use App\Models\ReviewFeedItemTest;
 use App\Services\Feed\Importer;
 use Tests\TestCase;
 

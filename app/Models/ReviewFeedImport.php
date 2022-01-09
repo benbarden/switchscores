@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,12 +39,12 @@ class ReviewFeedImport extends Model
 
     public function feedItems()
     {
-        return $this->hasMany('App\ReviewFeedItem', 'import_id', 'id');
+        return $this->hasMany('App\Models\ReviewFeedItem', 'import_id', 'id');
     }
 
     public function feedItemsTest()
     {
-        return $this->hasMany('App\ReviewFeedItemTest', 'import_id', 'id');
+        return $this->hasMany('App\Models\ReviewFeedItemTest', 'import_id', 'id');
     }
 
     public function isTest()

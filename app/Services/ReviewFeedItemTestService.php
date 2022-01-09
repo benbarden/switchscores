@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\ReviewFeedItemTest;
+use App\Models\ReviewFeedItemTest;
 
 class ReviewFeedItemTestService
 {

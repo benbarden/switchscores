@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReviewFeedItemTest extends Model
+class ReviewFeedItem extends Model
 {
     const PARSE_STATUS_AUTO_MATCHED = 'Automatically matched title';
     const PARSE_STATUS_COULD_NOT_LOCATE = 'Could not locate game';
@@ -12,7 +12,7 @@ class ReviewFeedItemTest extends Model
     /**
      * @var string
      */
-    protected $table = 'review_feed_items_test';
+    protected $table = 'review_feed_items';
 
     /**
      * @var array
@@ -34,7 +34,7 @@ class ReviewFeedItemTest extends Model
 
     public function feedImport()
     {
-        return $this->hasOne('App\ReviewFeedImport', 'id', 'import_id');
+        return $this->hasOne('App\Models\ReviewFeedImport', 'id', 'import_id');
     }
 
     public function isHistoric()

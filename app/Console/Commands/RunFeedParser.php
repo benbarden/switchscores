@@ -2,17 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-
+use App\Models\ReviewFeedItem;
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
-
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
-
-use App\ReviewFeedItem;
-
 use App\Traits\SwitchServices;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class RunFeedParser extends Command
 {

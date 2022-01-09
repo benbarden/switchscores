@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Review;
 
 use App\Models\Partner;
-use App\ReviewFeedItem;
+use App\Models\ReviewFeedItem;
 use Carbon\Carbon;
 use Tests\TestCase;
 

@@ -8,7 +8,7 @@ use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\TitleRuleNotMatched;
 use App\Models\PartnerFeedLink;
-use App\ReviewFeedImport;
+use App\Models\ReviewFeedImport;
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
 use App\Traits\SwitchServices;

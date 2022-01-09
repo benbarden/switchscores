@@ -2,13 +2,13 @@
 
 namespace App\Domain\ReviewFeedItem;
 
-use App\ReviewFeedItem;
+use App\Models\ReviewFeedItem;
 
 class Repository
 {
     /**
      * @param $id
-     * @return ReviewFeedItem
+     * @return \App\Models\ReviewFeedItem
      */
     public function find($id)
     {
@@ -17,7 +17,7 @@ class Repository
 
     /**
      * @param $itemUrl
-     * @return ReviewFeedItem
+     * @return \App\Models\ReviewFeedItem
      */
     public function getByItemUrl($itemUrl)
     {

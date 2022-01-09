@@ -3,8 +3,7 @@
 
 namespace App\Services;
 
-use App\ReviewFeedItem;
-
+use App\Models\ReviewFeedItem;
 use Illuminate\Support\Facades\DB;
 
 class ReviewFeedItemService
