@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryService
 {
+    const BLURB_NONE = 0;
+    const BLURB_A_XX_GAME = 1;
+    const BLURB_AN_XX_GAME = 2;
+    const BLURB_A_XX = 3;
+    const BLURB_AN_XX = 4;
+    const BLURB_INVOLVES_XX = 5;
+
     public function create($name, $linkTitle, $blurbOption, $parentId = null)
     {
         Category::create([
@@ -45,12 +52,12 @@ class CategoryService
     public function getBlurbOptions()
     {
         $options = [
-            0 => 'None',
-            1 => 'a (category) game',
-            2 => 'an (category) game',
-            3 => 'a (category)',
-            4 => 'an (category)',
-            5 => 'involves (category)',
+            self::BLURB_NONE => 'None',
+            self::BLURB_A_XX_GAME => 'a (category) game',
+            self::BLURB_AN_XX_GAME => 'an (category) game',
+            self::BLURB_A_XX => 'a (category)',
+            self::BLURB_AN_XX => 'an (category)',
+            self::BLURB_INVOLVES_XX => 'involves (category)',
         ];
 
         return $options;
@@ -66,22 +73,22 @@ class CategoryService
         }
 
         switch ($category->blurb_option) {
-            case 0:
+            case self::BLURB_NONE:
                 $blurbText = '';
                 break;
-            case 1:
+            case self::BLURB_A_XX_GAME:
                 $blurbText = sprintf('a %s game for the Nintendo Switch', $categoryName);
                 break;
-            case 2:
+            case self::BLURB_AN_XX_GAME:
                 $blurbText = sprintf('an %s game for the Nintendo Switch', $categoryName);
                 break;
-            case 3:
+            case self::BLURB_A_XX:
                 $blurbText = sprintf('a %s for the Nintendo Switch', $categoryName);
                 break;
-            case 4:
+            case self::BLURB_AN_XX:
                 $blurbText = sprintf('an %s for the Nintendo Switch', $categoryName);
                 break;
-            case 5:
+            case self::BLURB_INVOLVES_XX:
                 $blurbText = sprintf('involves %s for the Nintendo Switch', $categoryName);
                 break;
             default:
