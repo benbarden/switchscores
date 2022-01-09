@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\UserGamesCollection;
+use App\Models\UserGamesCollection;
 use App\Services\GamesCollection\PlayStatus;
 
 

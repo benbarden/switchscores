@@ -4,7 +4,7 @@
 namespace App\Domain\UserGamesCollection;
 
 
-use App\UserGamesCollection;
+use App\Models\UserGamesCollection;
 
 class Repository
 {

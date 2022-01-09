@@ -2,10 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-
 use App\Construction\User\PointTransactionBuilder;
-use App\UserPointTransaction;
+use App\Models\UserPointTransaction;
+use Tests\TestCase;
 
 class UserPointTransactionBuilderTest extends TestCase
 {

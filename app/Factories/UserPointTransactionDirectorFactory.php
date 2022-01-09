@@ -4,8 +4,7 @@ namespace App\Factories;
 
 use App\Construction\User\PointTransactionBuilder;
 use App\Construction\User\PointTransactionDirector;
-
-use App\UserPointTransaction;
+use App\Models\UserPointTransaction;
 
 class UserPointTransactionDirectorFactory
 {

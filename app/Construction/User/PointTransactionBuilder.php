@@ -2,7 +2,7 @@
 
 namespace App\Construction\User;
 
-use App\UserPointTransaction;
+use App\Models\UserPointTransaction;
 
 class PointTransactionBuilder
 {

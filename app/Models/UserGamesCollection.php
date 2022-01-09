@@ -1,10 +1,9 @@
 <?php
 
-namespace App;
-
-use Illuminate\Database\Eloquent\Model;
+namespace App\Models;
 
 use App\Services\GamesCollection\PlayStatus;
+use Illuminate\Database\Eloquent\Model;
 
 class UserGamesCollection extends Model
 {

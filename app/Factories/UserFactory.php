@@ -2,8 +2,8 @@
 
 namespace App\Factories;
 
+use App\Models\UserPointTransaction;
 use App\User;
-use App\UserPointTransaction;
 
 class UserFactory
 {

@@ -105,7 +105,7 @@ class User extends Authenticatable
 
     public function pointsTransactions()
     {
-        return $this->hasMany('App\UserPointTransaction', 'user_id', 'id');
+        return $this->hasMany('App\Models\UserPointTransaction', 'user_id', 'id');
     }
 
     public function inviteCode()
