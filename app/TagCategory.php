@@ -34,7 +34,7 @@ class TagCategory extends Model
 
     public function tags()
     {
-        return $this->hasMany('App\Tag', 'tag_category_id', 'id')
+        return $this->hasMany('App\Models\Tag', 'tag_category_id', 'id')
             ->orderBy('tag_name');
     }
 }

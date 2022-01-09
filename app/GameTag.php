@@ -25,6 +25,6 @@ class GameTag extends Model
 
     public function tag()
     {
-        return $this->hasOne('App\Tag', 'id', 'tag_id');
+        return $this->hasOne('App\Models\Tag', 'id', 'tag_id');
     }
 }

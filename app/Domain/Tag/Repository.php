@@ -3,7 +3,7 @@
 
 namespace App\Domain\Tag;
 
-use App\Tag;
+use App\Models\Tag;
 
 class Repository
 {

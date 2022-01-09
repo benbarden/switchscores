@@ -7,7 +7,7 @@ use App\Game;
 use App\GameSeries;
 use App\GameTag;
 use App\Models\Category;
-use App\Tag;
+use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
 
