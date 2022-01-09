@@ -3,8 +3,7 @@
 
 namespace App\Services;
 
-use App\News;
-use Carbon\Carbon;
+use App\Models\News;
 
 
 class NewsService

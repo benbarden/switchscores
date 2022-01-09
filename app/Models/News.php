@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,7 +20,7 @@ class News extends Model
 
     public function category()
     {
-        return $this->hasOne('App\NewsCategory', 'id', 'category_id');
+        return $this->hasOne('App\Models\NewsCategory', 'id', 'category_id');
     }
 
     public function game()

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +26,6 @@ class NewsCategory extends Model
 
     public function news()
     {
-        return $this->hasMany('App\News', 'id', 'category_id');
+        return $this->hasMany('App\Models\News', 'id', 'category_id');
     }
 }
