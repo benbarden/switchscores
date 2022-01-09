@@ -4,7 +4,7 @@ namespace App\Factories\DataSource\NintendoCoUk;
 
 use App\DataSourceParsed;
 use App\Game;
-use App\GameImportRuleEshop;
+use App\Models\GameImportRuleEshop;
 use App\Services\DataSources\NintendoCoUk\UpdateGame;
 
 class UpdateGameFactory

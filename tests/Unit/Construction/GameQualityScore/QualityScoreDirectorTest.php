@@ -2,18 +2,14 @@
 
 namespace Tests\Unit\Construction\GameQualityScore;
 
-use Illuminate\Database\Eloquent\Collection;
-use Tests\TestCase;
-
 use App\Construction\GameQualityScore\QualityScoreBuilder;
 use App\Construction\GameQualityScore\QualityScoreDirector;
-
-use App\Game;
 use App\DataSourceParsed;
+use App\Game;
 use App\GameDeveloper;
-use App\GameImportRuleEshop;
 use App\GamePublisher;
-use App\Partner;
+use Illuminate\Database\Eloquent\Collection;
+use Tests\TestCase;
 
 class QualityScoreDirectorTest extends TestCase
 {

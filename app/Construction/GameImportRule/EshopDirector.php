@@ -2,7 +2,7 @@
 
 namespace App\Construction\GameImportRule;
 
-use App\GameImportRuleEshop;
+use App\Models\GameImportRuleEshop;
 
 class EshopDirector
 {

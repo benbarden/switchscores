@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleWikipedia;
 
 class GameImportRuleWikipediaService
 {

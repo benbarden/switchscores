@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\GameImportRuleEshop;
+use App\Models\GameImportRuleEshop;
 
 class GameImportRuleEshopService
 {

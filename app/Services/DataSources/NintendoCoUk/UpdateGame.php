@@ -2,9 +2,9 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
-use App\Game;
-use App\GameImportRuleEshop;
 use App\DataSourceParsed;
+use App\Game;
+use App\Models\GameImportRuleEshop;
 
 class UpdateGame
 {

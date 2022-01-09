@@ -4,7 +4,7 @@ namespace App\Factories\DataSource\Wikipedia;
 
 use App\DataSourceParsed;
 use App\Game;
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleWikipedia;
 use App\Services\DataSources\Wikipedia\UpdateGame;
 
 class UpdateGameFactory

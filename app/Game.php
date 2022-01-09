@@ -106,12 +106,12 @@ class Game extends Model implements Auditable
 
     public function importRuleEshop()
     {
-        return $this->hasOne('App\GameImportRuleEshop', 'game_id', 'id');
+        return $this->hasOne('App\Models\GameImportRuleEshop', 'game_id', 'id');
     }
 
     public function importRuleWikipedia()
     {
-        return $this->hasOne('App\GameImportRuleWikipedia', 'game_id', 'id');
+        return $this->hasOne('App\Models\GameImportRuleWikipedia', 'game_id', 'id');
     }
 
     public function dspNintendoCoUk()

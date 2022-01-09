@@ -3,7 +3,7 @@
 namespace App\Construction\GameImportRule;
 
 use App\Game;
-use App\GameImportRuleEshop;
+use App\Models\GameImportRuleEshop;
 
 class EshopBuilder
 {
@@ -13,7 +13,7 @@ class EshopBuilder
     private $game;
 
     /**
-     * @var GameImportRuleEshop
+     * @var \App\Models\GameImportRuleEshop
      */
     private $gameImportRule;
 

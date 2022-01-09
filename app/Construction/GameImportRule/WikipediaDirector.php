@@ -2,7 +2,7 @@
 
 namespace App\Construction\GameImportRule;
 
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleWikipedia;
 
 class WikipediaDirector
 {

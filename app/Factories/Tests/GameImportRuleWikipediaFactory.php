@@ -3,7 +3,7 @@
 
 namespace App\Factories\Tests;
 
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleWikipedia;
 
 class GameImportRuleWikipediaFactory
 {

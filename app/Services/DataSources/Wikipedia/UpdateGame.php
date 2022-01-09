@@ -2,9 +2,9 @@
 
 namespace App\Services\DataSources\Wikipedia;
 
-use App\Game;
-use App\GameImportRuleWikipedia;
 use App\DataSourceParsed;
+use App\Game;
+use App\Models\GameImportRuleWikipedia;
 
 class UpdateGame
 {
@@ -19,7 +19,7 @@ class UpdateGame
     private $dsParsedItem;
 
     /**
-     * @var GameImportRuleWikipedia
+     * @var \App\Models\GameImportRuleWikipedia
      */
     private $gameImportRule;
 

@@ -3,7 +3,7 @@
 namespace App\Construction\GameImportRule;
 
 use App\Game;
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleWikipedia;
 
 class WikipediaBuilder
 {
@@ -13,7 +13,7 @@ class WikipediaBuilder
     private $game;
 
     /**
-     * @var GameImportRuleWikipedia
+     * @var \App\Models\GameImportRuleWikipedia
      */
     private $gameImportRule;
 

@@ -2,13 +2,12 @@
 
 namespace App\Construction\GameQualityScore;
 
-use Illuminate\Log\Logger;
-
 use App\DataSourceParsed;
 use App\Game;
-use App\GameImportRuleEshop;
-use App\GameImportRuleWikipedia;
+use App\Models\GameImportRuleEshop;
+use App\Models\GameImportRuleWikipedia;
 use App\Models\GameQualityScore;
+use Illuminate\Log\Logger;
 
 class QualityScoreDirector
 {
@@ -38,7 +37,7 @@ class QualityScoreDirector
     private $gameImportRuleEshop;
 
     /**
-     * @var GameImportRuleWikipedia
+     * @var \App\Models\GameImportRuleWikipedia
      */
     private $gameImportRuleWikipedia;
 
