@@ -46,12 +46,12 @@ class Game extends Model implements Auditable
 
     public function gameRankYear()
     {
-        return $this->hasOne('App\GameRankYear', 'game_id', 'id');
+        return $this->hasOne('App\Models\GameRankYear', 'game_id', 'id');
     }
 
     public function gameRankYearMonth()
     {
-        return $this->hasOne('App\GameRankYearMonth', 'game_id', 'id');
+        return $this->hasOne('App\Models\GameRankYearMonth', 'game_id', 'id');
     }
 
     public function category()

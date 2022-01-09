@@ -1,21 +1,21 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GameRankYear extends Model
+class GameRankAllTime extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'game_rank_year';
+    protected $table = 'game_rank_alltime';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'release_year', 'game_rank', 'game_id',
+        'game_rank', 'game_id',
     ];
 
     public function game()

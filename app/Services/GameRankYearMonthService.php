@@ -3,9 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\GameRankYearMonth;
 use Illuminate\Support\Facades\DB;
-
-use App\GameRankYearMonth;
 
 
 class GameRankYearMonthService
