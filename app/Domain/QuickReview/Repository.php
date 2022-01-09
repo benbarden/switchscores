@@ -3,7 +3,7 @@
 
 namespace App\Domain\QuickReview;
 
-use App\QuickReview;
+use App\Models\QuickReview;
 
 class Repository
 {

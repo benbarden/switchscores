@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
-use App\QuickReview;
-
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Models\QuickReview;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
 {

@@ -74,7 +74,7 @@ class Partner extends Model implements Auditable
 
     public function links()
     {
-        return $this->hasMany('App\ReviewLink', 'site_id', 'id');
+        return $this->hasMany('App\Models\ReviewLink', 'site_id', 'id');
     }
 
     public function feedLinks()

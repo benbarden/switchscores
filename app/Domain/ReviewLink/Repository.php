@@ -3,7 +3,7 @@
 
 namespace App\Domain\ReviewLink;
 
-use App\ReviewLink;
+use App\Models\ReviewLink;
 
 class Repository
 {

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
-use App\QuickReview;
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
+use App\Models\QuickReview;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class QuickReviewController extends Controller
 {

@@ -4,7 +4,7 @@
 namespace App\Services;
 
 use App\Models\Partner;
-use App\ReviewLink;
+use App\Models\ReviewLink;
 use Illuminate\Support\Facades\DB;
 
 class ReviewLinkService
@@ -19,7 +19,7 @@ class ReviewLinkService
      * @param $reviewType
      * @param $desc
      * @param null $userId
-     * @return ReviewLink
+     * @return \App\Models\ReviewLink
      */
     public function create(
         $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $desc = null, $userId = null

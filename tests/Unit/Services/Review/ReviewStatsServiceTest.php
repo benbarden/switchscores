@@ -2,13 +2,10 @@
 
 namespace Tests\Unit\Services\Review;
 
+use App\Models\ReviewLink;
+use App\Services\ReviewStatsService;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use App\Services\ReviewStatsService;
-use App\ReviewLink;
 
 class ReviewStatsServiceTest extends TestCase
 {

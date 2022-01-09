@@ -70,7 +70,7 @@ class IntegrityChecks extends Migration
         DB::insert("
             INSERT INTO integrity_checks(check_name, description, entity_name)
             VALUES(?, ?, ?)
-        ", [IntegrityCheck::REVIEW_LINK_DUPLICATE, IntegrityCheck::DESC_REVIEW_LINK_DUPLICATE, 'App\ReviewLink']);
+        ", [IntegrityCheck::REVIEW_LINK_DUPLICATE, IntegrityCheck::DESC_REVIEW_LINK_DUPLICATE, 'App\Models\ReviewLink']);
 
     }
 

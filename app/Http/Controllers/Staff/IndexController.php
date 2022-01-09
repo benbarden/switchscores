@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers\Staff;
 
-use Illuminate\Routing\Controller as Controller;
-
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
+use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
 use App\Services\Migrations\Category as MigrationsCategory;
-
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
-use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\GameLists\Repository as GameListsRepository;
-use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
-
-use App\QuickReview;
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {

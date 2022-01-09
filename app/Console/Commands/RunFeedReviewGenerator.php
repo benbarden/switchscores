@@ -2,13 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Events\ReviewLinkCreated;
+use App\Models\ReviewLink;
+use App\Traits\SwitchServices;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-
-use App\ReviewLink;
-use App\Events\ReviewLinkCreated;
-
-use App\Traits\SwitchServices;
 
 class RunFeedReviewGenerator extends Command
 {

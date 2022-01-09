@@ -32,7 +32,7 @@ class AuditService
     public function getReviewLink($limit = 250)
     {
         $auditList = Audit::
-            where('auditable_type', 'App\ReviewLink')
+            where('auditable_type', 'App\Models\ReviewLink')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);

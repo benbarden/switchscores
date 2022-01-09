@@ -43,6 +43,6 @@ class ReviewDraft extends Model
 
     public function reviewLink()
     {
-        return $this->hasOne('App\ReviewLink', 'id', 'review_link_id');
+        return $this->hasOne('App\Models\ReviewLink', 'id', 'review_link_id');
     }
 }

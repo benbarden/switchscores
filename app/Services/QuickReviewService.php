@@ -3,7 +3,7 @@
 
 namespace App\Services;
 
-use App\QuickReview;
+use App\Models\QuickReview;
 
 class QuickReviewService
 {
