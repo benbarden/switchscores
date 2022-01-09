@@ -4,7 +4,7 @@
 namespace App\Domain\GameLists;
 
 use App\Game;
-use App\GameSeries;
+use App\Models\GameSeries;
 
 class Repository
 {

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Staff\Games;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
-use App\GameSeries;
 use App\Models\Category;
+use App\Models\GameSeries;
 use App\Models\Tag;
 use App\Services\Migrations\Category as MigrationsCategory;
 use App\Traits\StaffView;

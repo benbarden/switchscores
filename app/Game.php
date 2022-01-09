@@ -61,7 +61,7 @@ class Game extends Model implements Auditable
 
     public function series()
     {
-        return $this->hasOne('App\GameSeries', 'id', 'series_id');
+        return $this->hasOne('App\Models\GameSeries', 'id', 'series_id');
     }
 
     public function gameCollection()

@@ -3,7 +3,7 @@
 
 namespace App\Domain\GameSeries;
 
-use App\GameSeries;
+use App\Models\GameSeries;
 
 class Repository
 {
