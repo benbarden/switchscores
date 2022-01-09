@@ -20,6 +20,6 @@ class Campaign extends Model
 
     public function games()
     {
-        return $this->hasMany('App\CampaignGame', 'campaign_id', 'id');
+        return $this->hasMany('App\Models\CampaignGame', 'campaign_id', 'id');
     }
 }

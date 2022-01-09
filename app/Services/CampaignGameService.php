@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
+use App\Models\CampaignGame;
 use Illuminate\Support\Facades\DB;
-use App\CampaignGame;
 
 class CampaignGameService
 {
