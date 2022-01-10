@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\ReviewFeedItem;
+use App\Models\Partner;
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
@@ -78,8 +79,17 @@ class RunFeedParser extends Command
                 continue;
             }
 
-            $feedId = $feedItem->feedImport->feed_id;
-            $partnerFeed = $this->getServicePartnerFeedLink()->find($feedId);
+            if ($reviewSite->review_import_method == Partner::REVIEW_IMPORT_BY_SCRAPER) {
+                //$logger->info('Ignoring scraper items');
+                continue;
+            }
+
+            if ($feedItem->feedImport) {
+                $feedId = $feedItem->feedImport->feed_id;
+                $partnerFeed = $this->getServicePartnerFeedLink()->find($feedId);
+            } else {
+                $partnerFeed = $this->getServicePartnerFeedLink()->getBySite($siteId);
+            }
             if (!$partnerFeed) {
                 $logger->error('Cannot find partner feed: '.$feedId);
                 continue;
