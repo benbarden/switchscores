@@ -29,9 +29,6 @@ class WelcomeController extends Controller
     {
         $bindings = [];
 
-        $thisYear = date('Y');
-        $bindings['Year'] = $thisYear;
-
         $recentTopRatedLimit = 30;
         $recentWithGoodRanks = $this->repoGameLists->recentWithGoodRanks(7, $recentTopRatedLimit, 15);
         if (count($recentWithGoodRanks) < 4) {
@@ -43,7 +40,15 @@ class WelcomeController extends Controller
         $bindings['RecentWithGoodRanks'] = $recentWithGoodRanks;
 
         $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(30);
-        $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 10);
+
+        $thisYear = date('Y');
+        $topRatedThisYear = $this->getServiceGameRankYear()->getList($thisYear, 10);
+        if (count($topRatedThisYear) < 4) {
+            $thisYear--;
+            $topRatedThisYear = $this->getServiceGameRankYear()->getList($thisYear, 10);
+        }
+        $bindings['TopRatedThisYear'] = $topRatedThisYear;
+        $bindings['Year'] = $thisYear;
 
         // Get latest News post
         $bindings['LatestNewsPost'] = $this->getServiceNews()->getNewest();
