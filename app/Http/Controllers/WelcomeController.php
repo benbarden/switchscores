@@ -33,8 +33,14 @@ class WelcomeController extends Controller
         $bindings['Year'] = $thisYear;
 
         $recentTopRatedLimit = 30;
+        $recentWithGoodRanks = $this->repoGameLists->recentWithGoodRanks(7, $recentTopRatedLimit, 15);
+        if (count($recentWithGoodRanks) < 4) {
+            $recentTopRatedLimit = 45;
+            $recentWithGoodRanks = $this->repoGameLists->recentWithGoodRanks(7, $recentTopRatedLimit, 15);
+        }
+
         $bindings['RecentTopRatedLimit'] = $recentTopRatedLimit;
-        $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, $recentTopRatedLimit, 15);
+        $bindings['RecentWithGoodRanks'] = $recentWithGoodRanks;
 
         $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(30);
         $bindings['TopRatedThisYear'] = $this->getServiceGameRankYear()->getList($thisYear, 10);
