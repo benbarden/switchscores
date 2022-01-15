@@ -36,35 +36,31 @@ Route::get('/lists/recently-ranked', 'ListsController@recentlyRanked')->name('li
 Route::get('/lists/recently-reviewed-still-unranked', 'ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
 
 // Main game pages
-Route::match(['get', 'post'], '/games', 'GamesController@landing')->name('games.landing');
+Route::match(['get', 'post'], '/games', 'Games\LandingController@landing')->name('games.landing');
 Route::match(['get', 'post'], '/games/search', 'Games\SearchController@show')->name('games.search');
 
 // Browse by...
-Route::get('/games/by-title', 'GamesBrowseController@byTitleLanding')->name('games.browse.byTitle.landing');
-Route::get('/games/by-title/{letter}', 'GamesBrowseController@byTitlePage')->name('games.browse.byTitle.page');
+Route::get('/games/by-title', 'Games\BrowseByTitleController@landing')->name('games.browse.byTitle.landing');
+Route::get('/games/by-title/{letter}', 'Games\BrowseByTitleController@page')->name('games.browse.byTitle.page');
 
-Route::get('/games/by-category', 'GamesBrowseController@byCategoryLanding')->name('games.browse.byCategory.landing');
-Route::get('/games/by-category/{category}', 'GamesBrowseController@byCategoryPage')->name('games.browse.byCategory.page');
+Route::get('/games/by-category', 'Games\BrowseByCategoryController@landing')->name('games.browse.byCategory.landing');
+Route::get('/games/by-category/{category}', 'Games\BrowseByCategoryController@page')->name('games.browse.byCategory.page');
 
-Route::get('/games/by-series', 'GamesBrowseController@bySeriesLanding')->name('games.browse.bySeries.landing');
-Route::get('/games/by-series/{series}', 'GamesBrowseController@bySeriesPage')->name('games.browse.bySeries.page');
+Route::get('/games/by-series', 'Games\BrowseBySeriesController@landing')->name('games.browse.bySeries.landing');
+Route::get('/games/by-series/{series}', 'Games\BrowseBySeriesController@page')->name('games.browse.bySeries.page');
 
-Route::get('/games/by-collection', 'GamesBrowseController@byCollectionLanding')->name('games.browse.byCollection.landing');
-Route::get('/games/by-collection/{collection}', 'GamesBrowseController@byCollectionPage')->name('games.browse.byCollection.page');
+Route::get('/games/by-collection', 'Games\BrowseByCollectionController@landing')->name('games.browse.byCollection.landing');
+Route::get('/games/by-collection/{collection}', 'Games\BrowseByCollectionController@page')->name('games.browse.byCollection.page');
 
-Route::get('/games/by-tag', 'GamesBrowseController@byTagLanding')->name('games.browse.byTag.landing');
-Route::get('/games/by-tag/{tag}', 'GamesBrowseController@byTagPage')->name('games.browse.byTag.page');
+Route::get('/games/by-tag', 'Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
+Route::get('/games/by-tag/{tag}', 'Games\BrowseByTagController@page')->name('games.browse.byTag.page');
 
-Route::get('/games/by-date', 'GamesBrowseController@byDateLanding')->name('games.browse.byDate.landing');
-Route::get('/games/by-date/{date}', 'GamesBrowseController@byDatePage')->name('games.browse.byDate.page');
-
-// Primary type redirects
-Route::get('/games/by-type', 'GamesBrowseController@byPrimaryTypeLanding')->name('games.browse.byPrimaryType.landing');
-Route::get('/games/by-type/{primaryType}', 'GamesBrowseController@byPrimaryTypePage')->name('games.browse.byPrimaryType.page');
+Route::get('/games/by-date', 'Games\BrowseByDateController@landing')->name('games.browse.byDate.landing');
+Route::get('/games/by-date/{date}', 'Games\BrowseByDateController@page')->name('games.browse.byDate.page');
 
 // These must be after the game redirects
-Route::get('/games/{id}', 'GamesController@showId')->name('game.showId');
-Route::get('/games/{id}/{linkTitle}', 'GamesController@show')->name('game.show');
+Route::get('/games/{id}', 'Games\GameShowController@showId')->name('game.showId');
+Route::get('/games/{id}/{linkTitle}', 'Games\GameShowController@show')->name('game.show');
 
 /* Top Rated */
 Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');

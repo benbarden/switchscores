@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers\Games;
+
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameLists\DbQueries as GameListsDbQueries;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
+use App\Traits\SwitchServices;
+
+class BrowseBySeriesController extends Controller
+{
+    use SwitchServices;
+
+    protected $repoGameLists;
+    protected $dbGameLists;
+    protected $repoGameSeries;
+    protected $viewBreadcrumbs;
+
+    public function __construct(
+        GameListsRepository $repoGameLists,
+        GameListsDbQueries $dbGameLists,
+        GameSeriesRepository $repoGameSeries,
+        Breadcrumbs $viewBreadcrumbs
+    )
+    {
+        $this->repoGameLists = $repoGameLists;
+        $this->dbGameLists = $dbGameLists;
+        $this->repoGameSeries = $repoGameSeries;
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+    }
+
+    public function landing()
+    {
+        $bindings = [];
+
+        $bindings['SeriesList'] = $this->repoGameSeries->getAll();
+
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series';
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By series');
+
+        return view('games.browse.bySeriesLanding', $bindings);
+    }
+
+    public function page($series)
+    {
+        $bindings = [];
+
+        $gameSeries = $this->repoGameSeries->getByLinkTitle($series);
+        if (!$gameSeries) abort(404);
+
+        $seriesId = $gameSeries->id;
+        $seriesName = $gameSeries->series;
+
+        $gameList = $this->getServiceGameReleaseDate()->getBySeries($seriesId);
+
+        $bindings['GameList'] = $gameList;
+
+        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
+        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySeriesSubpage($seriesName);
+
+        return view('games.browse.bySeriesPage', $bindings);
+    }
+}
