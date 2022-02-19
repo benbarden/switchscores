@@ -1,6 +1,4 @@
-{% if item.eu_is_released == 1 %}
-    {{ item.eu_release_date|date('jS M Y') }}
-{% elseif item.eu_release_date is not null %}
+{% if item.eu_release_date is not null %}
     {{ item.eu_release_date|date('jS M Y') }}
 {% else %}
     -

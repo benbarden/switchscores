@@ -31,6 +31,7 @@ class Repository
         $games = Game::where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
             ->orderBy('title', 'asc');
 
         if ($limit != null) {
