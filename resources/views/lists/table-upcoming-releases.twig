@@ -1,0 +1,44 @@
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th></th>
+        <th class="text-center">Date (Europe)</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Publisher(s)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in GameList %}
+        <tr>
+            <td style="width: 150px; vertical-align: middle;">
+                {% include 'modules/game/packshot/header.twig' with {'item': item} %}
+            </td>
+            <td class="text-center" style="vertical-align: middle;">
+                <span class="h4">
+                    {% include 'modules/game/release-date-no-year.twig' with {'item': item} %}
+                </span>
+            </td>
+            <td style="width: 300px; vertical-align: middle;">
+                <span class="h5">
+                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+                </span>
+            </td>
+            <td style="vertical-align: middle;">
+                {% if item.category_id %}
+                    {% if item.category.parent.id %}
+                        <a href="{{ route('games.browse.byCategory.page', {'category': item.category.parent.link_title}) }}">{{ item.category.parent.name }}</a> &raquo;
+                    {% endif %}
+                    <a href="{{ route('games.browse.byCategory.page', {'category': item.category.link_title}) }}">{{ item.category.name }}</a>
+                {% endif %}
+            </td>
+            <td style="vertical-align: middle;">
+                {% for pubItem in item.gamePublishers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': pubItem.publisher.link_title}) }}">{{ pubItem.publisher.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

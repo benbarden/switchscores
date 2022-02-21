@@ -42,6 +42,58 @@ class Repository
         return $games;
     }
 
+    public function upcomingNextDays($days, $limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function upcomingBetweenDays($startDays, $endDays, $limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $startDays)
+            ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $endDays)
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function upcomingBeyondDays($days, $limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
     public function byCategory($categoryId, $limit = null)
     {
         $games = Game::where('category_id', $categoryId)

@@ -3,60 +3,33 @@
 {% block page_body %}
 
 <p>
-    This page lists Nintendo Switch games that haven't been released yet.
-    As games are released, they’ll move to the
+    This page lists Nintendo Switch games that haven't been marked as released in our database.
+    We do most database updates every Saturday morning (UK time).
+    As games are marked as released, they'll move to the
     <a href="{{ route('games.recentReleases') }}">recent releases</a> page.
+</p>
+<p>
+    The data from this page is used to populate the <strong>Upcoming releases</strong> section
+    of the <a href="https://switchweekly.com/" target="_blank">Switch Weekly</a> newsletter.
 </p>
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        {% if UpcomingGames|length %}
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th class="text-center">Date (Europe)</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Publisher(s)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in UpcomingGames %}
-                        <tr>
-                            <td style="width: 150px; vertical-align: middle;">
-                                {% include 'modules/game/packshot/header.twig' with {'item': item} %}
-                            </td>
-                            <td class="text-center" style="vertical-align: middle;">
-                                <span class="h4">
-                                    {% include 'modules/game/release-date-no-year.twig' with {'item': item} %}
-                                </span>
-                            </td>
-                            <td style="width: 300px; vertical-align: middle;">
-                                <span class="h5">
-                                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
-                                </span>
-                            </td>
-                            <td style="vertical-align: middle;">
-                                {% if item.category_id %}
-                                    {% if item.category.parent.id %}
-                                        <a href="{{ route('games.browse.byCategory.page', {'category': item.category.parent.link_title}) }}">{{ item.category.parent.name }}</a> &raquo;
-                                    {% endif %}
-                                    <a href="{{ route('games.browse.byCategory.page', {'category': item.category.link_title}) }}">{{ item.category.name }}</a>
-                                {% endif %}
-                            </td>
-                            <td style="vertical-align: middle;">
-                                {% for pubItem in item.gamePublishers %}
-                                    <a href="{{ route('partners.detail.games-company', {'linkTitle': pubItem.publisher.link_title}) }}">{{ pubItem.publisher.name }}</a>
-                                    <br>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No games found!</p>
+        {% if UpcomingNext7Days|length %}
+            <h2>Upcoming: next 7 days</h2>
+            {% include 'lists/table-upcoming-releases.twig' with {'GameList': UpcomingNext7Days} %}
+        {% endif %}
+        {% if UpcomingNext14Days|length %}
+            <h2>Upcoming: next 14 days</h2>
+            {% include 'lists/table-upcoming-releases.twig' with {'GameList': UpcomingNext14Days} %}
+        {% endif %}
+        {% if UpcomingNext28Days|length %}
+            <h2>Upcoming: next 28 days</h2>
+            {% include 'lists/table-upcoming-releases.twig' with {'GameList': UpcomingNext28Days} %}
+        {% endif %}
+        {% if UpcomingBeyond28Days|length %}
+            <h2>Upcoming: beyond 28 days</h2>
+            {% include 'lists/table-upcoming-releases.twig' with {'GameList': UpcomingBeyond28Days} %}
         {% endif %}
     </div>
 </div>
