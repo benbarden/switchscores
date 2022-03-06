@@ -72,6 +72,8 @@ class ImportScraper
 
         if ($itemRating == "-") {
             throw new \Exception('No rating; skipping: '.$itemUrl);
+        } elseif ($itemRating == "") {
+            throw new \Exception('No rating; skipping: '.$itemUrl);
         }
 
         $dbExistingItem = $this->repoReviewDraft->getByItemUrl($itemUrl);
