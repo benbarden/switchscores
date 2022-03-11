@@ -21,6 +21,7 @@
                 <th>Category</th>
                 <th>{{ CustomHeader }}</th>
                 <th class="text-center">eShop: EU</th>
+                <th class="text-center">Override<br>URL</th>
                 <th>Release date (EU)</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -66,6 +67,13 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
+                        {% if item.nintendo_store_url_override %}
+                            <i class="fas fa-globe"></i>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
                         {{ item.eu_release_date }}
                     </td>
                     <td class="text-center">
@@ -89,6 +97,7 @@
                 null,
                 null,
                 null,
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 null,

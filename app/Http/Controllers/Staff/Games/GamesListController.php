@@ -27,7 +27,7 @@ class GamesListController extends Controller
 
     public function gamesToRelease()
     {
-        $bindings = $this->getBindingsGamesSubpage('Games to release', "[ 5, 'asc'], [ 1, 'asc']");
+        $bindings = $this->getBindingsGamesSubpage('Games to release', "[ 6, 'asc'], [ 1, 'asc']");
 
         $bindings['GameList'] = $this->repoGameLists->gamesForRelease();
 
@@ -48,7 +48,7 @@ class GamesListController extends Controller
 
     public function recentlyReleased()
     {
-        $bindings = $this->getBindingsGamesSubpage('Recently released', "[ 5, 'desc']");
+        $bindings = $this->getBindingsGamesSubpage('Recently released', "[ 6, 'desc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getRecentlyReleased(100);
 
@@ -57,7 +57,7 @@ class GamesListController extends Controller
 
     public function upcomingGames()
     {
-        $bindings = $this->getBindingsGamesSubpage('Upcoming and unreleased', "[ 5, 'asc']");
+        $bindings = $this->getBindingsGamesSubpage('Upcoming and unreleased', "[ 6, 'asc']");
 
         $bindings['GameList'] = $this->getServiceGameReleaseDate()->getAllUnreleased();
 
@@ -66,7 +66,7 @@ class GamesListController extends Controller
 
     public function upcomingEshopCrosscheck()
     {
-        $bindings = $this->getBindingsGamesSubpage('Upcoming (eShop crosscheck)', "[ 5, 'asc']");
+        $bindings = $this->getBindingsGamesSubpage('Upcoming (eShop crosscheck)', "[ 6, 'asc']");
 
         $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
         $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
@@ -105,7 +105,7 @@ class GamesListController extends Controller
 
     public function noEshopPrice()
     {
-        $bindings = $this->getBindingsGamesSubpage('No eShop price', "[ 5, 'desc']");
+        $bindings = $this->getBindingsGamesSubpage('No eShop price', "[ 6, 'desc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getWithoutPrices();
 
@@ -134,7 +134,7 @@ class GamesListController extends Controller
 
     public function noNintendoCoUkLink()
     {
-        $bindings = $this->getBindingsGamesSubpage('No Nintendo.co.uk link', "[ 5, 'desc']");
+        $bindings = $this->getBindingsGamesSubpage('No Nintendo.co.uk link', "[ 6, 'desc']");
 
         $bindings['GameList'] = $this->getServiceGame()->getWithNoNintendoCoUkLink();
 
