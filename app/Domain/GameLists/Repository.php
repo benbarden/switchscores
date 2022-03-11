@@ -322,4 +322,13 @@ class Repository
             ->limit($limit)
             ->get();
     }
+
+    public function noNintendoCoUkIdWithStoreOverride($limit = 5)
+    {
+        return Game::whereNull('eshop_europe_fs_id')
+            ->whereNotNull('nintendo_store_url_override')
+            ->orderBy('id')
+            ->limit($limit)
+            ->get();
+    }
 }

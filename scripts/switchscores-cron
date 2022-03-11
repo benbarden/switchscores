@@ -8,6 +8,7 @@
 0 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
 10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
 20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImages >/dev/null 2>&1
+25 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImagesByScraper >/dev/null 2>&1
 
 0 5 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
 5 5 * * * www-data cd /var/www/switchscores.com && php artisan ReviewImportByScraper >/dev/null 2>&1

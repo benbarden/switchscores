@@ -40,15 +40,19 @@ class Images
      */
     private $headerFilename;
 
-    public function __construct(Game $game, DataSourceParsed $dsParsedItem)
+    public function __construct(Game $game)
     {
         $this->game = $game;
-        $this->dsParsedItem = $dsParsedItem;
 
         $this->squareDownloaded = false;
         $this->headerDownloaded = false;
         $this->squareFilename = null;
         $this->headerFilename = null;
+    }
+
+    public function setDSParsedItem(DataSourceParsed $dsParsedItem)
+    {
+        $this->dsParsedItem = $dsParsedItem;
     }
 
     public function squareDownloaded()
@@ -109,11 +113,49 @@ class Images
         }
     }
 
-    public function generateDestFilename($remoteFile, $prefix = '')
+    public function downloadRemoteHeader($imageUrl, $gameId)
     {
-        $linkId = $this->dsParsedItem->link_id;
-        if ($linkId) {
-            $prefix .= $linkId.'-';
+        $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
+        $prefix = 'hdr-';
+
+        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $gameId);
+        return $this->downloadRemote($imageUrl, $destPath, $destFilename);
+    }
+
+    public function downloadRemoteSquare($imageUrl, $gameId)
+    {
+        $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
+        $prefix = 'sq-';
+
+        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $gameId);
+        return $this->downloadRemote($imageUrl, $destPath, $destFilename);
+    }
+
+    public function downloadRemote($imageUrl, $destPath, $destFilename)
+    {
+        if (!file_exists($destPath.$destFilename)) {
+            $isDownloaded = $this->downloadFile($imageUrl, $destPath, $destFilename);
+        } else {
+            // Already downloaded
+            $isDownloaded = true;
+        }
+
+        if (!$isDownloaded) {
+            throw new \Exception('Could not download file: ' . $imageUrl);
+        }
+
+        return $destFilename;
+    }
+
+    public function generateDestFilename($remoteFile, $prefix = '', $gameId = '')
+    {
+        if ($gameId) {
+            $prefix .= $gameId.'-';
+        } else {
+            $linkId = $this->dsParsedItem->link_id;
+            if ($linkId) {
+                $prefix .= $linkId.'-';
+            }
         }
         $fileExt = pathinfo($remoteFile, PATHINFO_EXTENSION);
         $destFilename = $prefix.$this->game->link_title.'.'.$fileExt;

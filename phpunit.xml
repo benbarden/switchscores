@@ -9,7 +9,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="DomainPartner">
+        <testsuite name="DomainAll">
             <directory suffix="Test.php">./tests/Unit/Domain</directory>
         </testsuite>
         <testsuite name="Feature">
