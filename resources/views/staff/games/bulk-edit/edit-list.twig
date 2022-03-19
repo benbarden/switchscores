@@ -14,15 +14,17 @@
 
     <div class="row">
 
-        <div class="col-md-10">
+        <div class="col-md-12">
 
             <table class="table table-condensed table-responsive">
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th class="text-center">Release date (EU)</th>
+                        <th class="text-center">Price eShop</th>
                         <th>{{ EditModeHeader1 }}</th>
                         <th>{{ EditModeHeader2 }}</th>
+                        <th class="text-center">Options</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,12 +32,16 @@
                     <tr>
                         <td>{{ item.title }}</td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
+                        <td class="text-center">{{ item.price_eshop }}</td>
                         <td>
                             {% if TemplateEditCell %}
                                 {% include 'staff/games/bulk-edit/'~TemplateEditCell with {'GameId': item.id} %}
                             {% endif %}
                         </td>
                         <td>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit</a>
                         </td>
                     </tr>
                 {% endfor %}
