@@ -102,7 +102,7 @@ class ImportByScraper extends Command
 
             } elseif ($partner->name == 'Pocket Tactics') {
 
-                $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2021');
+                $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2022');
                 $scraper->extractRows('review-data');
                 $tableData = $scraper->getTableData();
 

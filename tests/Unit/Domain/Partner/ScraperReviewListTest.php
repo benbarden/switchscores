@@ -28,7 +28,7 @@ class ScraperReviewListTest extends TestCase
 
     public function testLoadUrlPocketTactics()
     {
-        $this->scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2021');
+        $this->scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2022');
         $this->scraper->extractRows('review-data');
         $tableData = $this->scraper->getTableData();
 
