@@ -24,8 +24,8 @@
         <testsuite name="DataSources">
             <directory suffix="Test.php">./tests/Unit/Services/DataSources</directory>
         </testsuite>
-        <testsuite name="Eshop">
-            <directory suffix="Test.php">./tests/Unit/Services/Eshop</directory>
+        <testsuite name="Shortcode">
+            <directory suffix="Test.php">./tests/Unit/Services/Shortcode</directory>
         </testsuite>
     </testsuites>
     <filter>

@@ -23,7 +23,12 @@
             {% for item in GameList %}
                 <tr>
                     <td>
+                        ID: {{ item.id }}
+                        <br>Title: {{ item.title }}
+                        <br>Link title: {{ item.link_title }}
+                        {#
                         <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" class="h6">{{ item.title }}</a>
+                        #}
                     </td>
                     <td class="text-center">
                         <span class="h5">{{ item.game_rank }}</span>

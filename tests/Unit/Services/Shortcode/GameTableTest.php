@@ -27,13 +27,18 @@ class GameTableTest extends TestCase
 
     public function testSimpleTable()
     {
+        // We assign the id separately as it doesn't seem to assign in the array
         $seedGames = new Collection();
-        $seedGamesItem = new Game(['id' => 1, 'title' => 'Zelda BOTW', 'image_header' => 'test1.jpg']);
+        $seedGamesItem = new Game(['title' => 'Zelda BOTW', 'link_title' => 'zelda-botw', 'image_header' => 'test1.jpg']);
+        $seedGamesItem->id = 1;
         $seedGames->push($seedGamesItem);
-        $seedGamesItem = new Game(['id' => 2, 'title' => '1-2-Switch', 'image_header' => 'test2.jpg']);
+        $seedGamesItem = new Game(['title' => '1-2-Switch', 'link_title' => '1-2-switch', 'image_header' => 'test2.jpg']);
+        $seedGamesItem->id = 2;
         $seedGames->push($seedGamesItem);
-        $seedGamesItem = new Game(['id' => 3, 'title' => 'Super Bomberman R', 'image_header' => 'test3.jpg']);
+        $seedGamesItem = new Game(['title' => 'Super Bomberman R', 'link_title' => 'super-bomberman-r', 'image_header' => 'test3.jpg']);
+        $seedGamesItem->id = 3;
         $seedGames->push($seedGamesItem);
+        //dd($seedGamesItem->attributesToArray());
 
         $html = '<p>HELLO</p>[gametable ids="1,2,3"]<p>AND THIS IS A MIDDLE LINE</p>[gametable ids="4,5,6"]<p>BYE BYE</p>';
 

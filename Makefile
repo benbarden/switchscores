@@ -18,8 +18,8 @@ test-unit:
 test-data:
 	./vendor/bin/phpunit --testsuite DataSources
 
-test-eshop:
-	./vendor/bin/phpunit --testsuite Eshop
+test-shortcode:
+	./vendor/bin/phpunit --testsuite Shortcode
 
 test-game-import-rule:
 	./vendor/bin/phpunit --filter GameImportRule
