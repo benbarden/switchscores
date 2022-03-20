@@ -27,20 +27,17 @@ class GeneralPageTest extends TestCase
             'email' => 'bananaman@switchscores.com',
         ];
 
-        $staffUserArray = [
-            'display_name' => 'Jimminy Billybob',
-            'email' => 'jimminy.billybob@switchscores.com',
-        ];
+        $owner = new User([
+            'display_name' => 'Oscar the Owner',
+            'email' => 'oscar.owner@switchscores.com',
+            'is_owner' => 1
+        ]);
 
-        $owner = new User;
-        $owner->display_name = $ownerUserArray['display_name'];
-        $owner->email = $ownerUserArray['email'];
-        $owner->is_owner = 1;
-
-        $reviewsManager = new User;
-        $reviewsManager->display_name = $staffUserArray['display_name'];
-        $reviewsManager->email = $staffUserArray['email'];
-        $reviewsManager->is_staff = 1;
+        $reviewsManager = new User([
+            'display_name' => 'Roger the Review Manager',
+            'email' => 'roger.review.manager@switchscores.com',
+            'is_staff' => 1
+        ]);
         $reviewsManager->addRole(UserRole::ROLE_REVIEWS_MANAGER);
 
         //$reviewsManager = new User($staffUserArray);

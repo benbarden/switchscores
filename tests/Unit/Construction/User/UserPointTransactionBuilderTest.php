@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Construction\User;
 
 use App\Construction\User\PointTransactionBuilder;
 use App\Models\UserPointTransaction;

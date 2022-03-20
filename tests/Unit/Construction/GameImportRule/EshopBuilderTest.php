@@ -4,7 +4,7 @@ namespace Tests\Unit\Construction\GameImportRule;
 
 use Tests\TestCase;
 
-use App\Construction\GameImportRule\Builder;
+use App\Construction\GameImportRule\EshopBuilder as Builder;
 
 class EshopBuilderTest extends TestCase
 {

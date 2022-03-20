@@ -38,7 +38,7 @@ class PublicPageTest extends TestCase
         $this->doPageTest("/games/by-category/adventure");
         $this->doPageTest("/games/by-series/pokemon");
         $this->doPageTest("/games/by-tag");
-        $this->doPageTest("/games/by-tag/duck");
+        $this->doPageTest("/games/by-tag/board-game");
         $this->doPageTest("/games/by-date");
         $this->doPageTest("/games/by-date/2020-01");
 
@@ -87,7 +87,7 @@ class PublicPageTest extends TestCase
     {
         $this->doPageNotFoundTest("/top-rated/by-year");
         $this->doPageNotFoundTest("/top-rated/by-year/2016");
-        $this->doPageNotFoundTest("/top-rated/by-year/2022");
+        $this->doPageNotFoundTest("/top-rated/by-year/2026");
         $this->doPageNotFoundTest("/reviews/site/not-really-a-site");
         $this->doPageNotFoundTest("/news/20180317/fake-post");
     }

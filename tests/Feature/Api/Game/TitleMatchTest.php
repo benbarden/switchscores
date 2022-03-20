@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class TitleMatchTest extends TestCase
 {
-    const API_URL = '/api/game/title-match';
+    const API_URL = '/api/game/get-by-exact-title-match';
 
     public function testNoParams()
     {

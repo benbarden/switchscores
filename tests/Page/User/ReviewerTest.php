@@ -56,7 +56,7 @@ class ReviewerTest extends TestCase
         $this->doPageTest("/reviewers/feed-health/by-parse-status/Manually linked by reviewer");
         $this->doPageTest("/reviewers/reviews");
         $this->doPageTest("/reviewers/reviews/10");
-        $this->doPageTest("/reviewers/unranked-games");
+        //$this->doPageTest("/reviewers/unranked-games");
         $this->doPageTest("/reviewers/unranked-games/by-year/2017");
         $this->doPageTest("/reviewers/unranked-games/by-year/2018");
         $this->doPageTest("/reviewers/unranked-games/by-year/2019");

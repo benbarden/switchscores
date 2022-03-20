@@ -63,12 +63,12 @@ class AsGamesManagerTest extends TestCase
         $this->doPageTest("/staff/games/list/upcoming-games");
         $this->doPageTest("/staff/games/list/no-eu-release-date");
         $this->doPageTest("/staff/games/list/no-eshop-price");
-        $this->doPageTest("/staff/games/list/no-video-url");
+        $this->doPageTest("/staff/games/list/no-video-type");
         $this->doPageTest("/staff/games/list/no-amazon-uk-link");
         $this->doPageTest("/staff/games/list/no-nintendo-co-uk-link");
         $this->doPageTest("/staff/games/list/broken-nintendo-co-uk-link");
         $this->doPageTest("/staff/games/list/by-category/1");
-        $this->doPageTest("/staff/games/list/by-series/1");
+        $this->doPageTest("/staff/games/list/by-series/129");
         $this->doPageTest("/staff/games/list/by-tag/31");
         $this->doPageTest("/staff/games/tools/update-game-calendar-stats");
         $this->doPageTest("/staff/games/featured-games/list");

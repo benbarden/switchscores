@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services\Game;
+namespace Tests\Unit\Services\Url;
 
 use Tests\TestCase;
 use Illuminate\Support\Collection;

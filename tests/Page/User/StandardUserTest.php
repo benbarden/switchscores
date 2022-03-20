@@ -50,7 +50,7 @@ class StandardUserTest extends TestCase
         $this->doPageTest("/user/database-help/games-without-categories/2020");
         $this->doPageTest("/user/collection/index");
         $this->doPageTest("/user/collection/list/not-started");
-        $this->doPageTest("/user/collection/add");
+        $this->doPageTest("/user/collection/add?gameId=6657");
         //$this->doPageTest("/user/collection/edit/1");
         $this->doPageTest("/user/collection/category-breakdown");
         $this->doPageTest("/user/collection/top-rated-by-category/1");
