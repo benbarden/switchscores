@@ -60,7 +60,7 @@ class RunFeedParser extends Command
 
         if (!$feedItems) {
             $logger->info('No items to parse. Aborting.');
-            return true;
+            return 0;
         }
 
         // Set up parser

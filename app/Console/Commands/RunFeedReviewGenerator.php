@@ -57,7 +57,7 @@ class RunFeedReviewGenerator extends Command
 
         if (!$feedItems) {
             $logger->info('No items to process. Aborting.');
-            return true;
+            return 0;
         }
 
         foreach ($feedItems as $feedItem) {

@@ -51,13 +51,13 @@ class QuickCreateGamesCompanies extends Command
 
         if (!file_exists($partnerFile)) {
             $logger->error('Cannot find file: '.$partnerFile);
-            return;
+            return 0;
         }
 
         $partnerData = file_get_contents($partnerFile);
         if (!$partnerData) {
             $logger->error('Data file is empty');
-            return;
+            return 0;
         }
 
         $partners = explode("\n", $partnerData);

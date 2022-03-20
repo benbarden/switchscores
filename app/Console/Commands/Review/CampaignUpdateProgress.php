@@ -57,7 +57,7 @@ class CampaignUpdateProgress extends Command
 
         if (!$campaignsActive) {
             $logger->error('No active campaigns!');
-            return;
+            return 0;
         }
 
         foreach ($campaignsActive as $campaign) {

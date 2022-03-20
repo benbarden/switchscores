@@ -10,17 +10,18 @@
         "doctrine/dbal": "^2.6",
         "fabpot/goutte": "^3.2",
         "intervention/image": "^2.5",
-        "laravel/framework": "^6.0",
+        "laravel/framework": "^7.0",
         "laravel/socialite": "^4.1",
-        "laravel/tinker": "~1.0",
-        "owen-it/laravel-auditing": "^9.3",
+        "laravel/tinker": "^2.0",
+        "laravel/ui": "^2.0",
+        "owen-it/laravel-auditing": "^10.0.0",
         "rcrowe/twigbridge": "^0.11.0",
-        "sentry/sentry-laravel": "1.4.1"
+        "sentry/sentry-laravel": "1.7.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.8",
         "mockery/mockery": "1.2.*",
-        "phpunit/phpunit": "~7.0",
+        "phpunit/phpunit": "^8.5",
         "filp/whoops": "~2.0"
     },
     "autoload": {

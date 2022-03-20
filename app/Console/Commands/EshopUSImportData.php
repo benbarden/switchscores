@@ -53,20 +53,20 @@ class EshopUSImportData extends Command
             $responseArray = $eshopLoader->getResponseData();
         } catch (\Exception $e) {
             $logger->error('Got exception: '.$e->getMessage());
-            return false;
+            return 0;
         }
 
         if (!is_array($responseArray['games'])) {
             $logger->warning('No more game data to load');
-            return false;
+            return 0;
         } elseif (!array_key_exists('game', $responseArray['games'])) {
             $logger->warning('No more game data to load');
-            return false;
+            return 0;
         }
 
         if ($offset >= 5) {
             //$logger->warning('Triggering failsafe to avoid hitting API too much during testing');
-            //return false;
+            //return 0;
         }
 
         $firstItemTitle = $responseArray['games']['game'][0]['title'];

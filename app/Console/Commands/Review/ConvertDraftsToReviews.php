@@ -60,7 +60,7 @@ class ConvertDraftsToReviews extends Command
 
         if (!$draftsForProcessing) {
             $logger->info('No items to process');
-            return true;
+            return 0;
         }
 
         $logger->info('Found '.$draftsForProcessing->count().' item(s)');
@@ -74,7 +74,5 @@ class ConvertDraftsToReviews extends Command
             }
 
         }
-
-        return true;
     }
 }

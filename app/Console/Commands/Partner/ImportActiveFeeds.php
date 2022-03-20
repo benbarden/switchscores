@@ -58,7 +58,7 @@ class ImportActiveFeeds extends Command
         $partnerFeedLinks = $this->getServicePartnerFeedLink()->getActive();
         if (!$partnerFeedLinks) {
             $logger->error('No feeds to import!');
-            return false;
+            return 0;
         }
 
         $serviceImporter = new ImportReviewFeed($logger);
@@ -70,7 +70,5 @@ class ImportActiveFeeds extends Command
             //$serviceImporter->setFeedImport($reviewFeedImport);
             $serviceImporter->runImport();
         }
-
-        return true;
     }
 }

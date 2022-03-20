@@ -16,6 +16,7 @@
 /vendor
 .env
 .DS_Store
+.phpunit.result.cache
 db.sql
 Homestead.json
 Homestead.yaml

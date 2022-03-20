@@ -55,7 +55,7 @@ class PartnerUpdateFields extends Command
 
         if (!$reviewSites) {
             $logger->info('No review sites found. Aborting.');
-            return true;
+            return 0;
         }
 
         foreach ($reviewSites as $reviewSite) {

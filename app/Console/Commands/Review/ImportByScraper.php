@@ -60,7 +60,7 @@ class ImportByScraper extends Command
 
             if (!$partner) {
                 $logger->error('Cannot find partner with id: '.$argPartnerId);
-                return false;
+                return 0;
             }
 
             $partnerList = [$partner];
@@ -75,7 +75,7 @@ class ImportByScraper extends Command
 
             if (!$partner->isReviewSite()) {
                 $logger->error('This command only works with review sites');
-                return false;
+                return 0;
             }
 
             $scraper = new ScraperReviewTable;
@@ -88,7 +88,7 @@ class ImportByScraper extends Command
 
                 if (count($tableData) == 0) {
                     $logger->error('Error - no rows returned');
-                    return false;
+                    return 0;
                 }
 
                 foreach ($tableData as $item) {
@@ -108,7 +108,7 @@ class ImportByScraper extends Command
 
                 if (count($tableData) == 0) {
                     $logger->error('Error - no rows returned');
-                    return false;
+                    return 0;
                 }
 
                 foreach ($tableData as $item) {
@@ -123,12 +123,10 @@ class ImportByScraper extends Command
             } else {
 
                 $logger->error('Scraper support is not provided for this partner');
-                return false;
+                return 0;
 
             }
 
         }
-
-        return true;
     }
 }

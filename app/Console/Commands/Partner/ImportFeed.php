@@ -61,7 +61,7 @@ class ImportFeed extends Command
         $partnerFeedLink = $this->getServicePartnerFeedLink()->find($argFeedId);
         if (!$partnerFeedLink) {
             $logger->error('Cannot find feed with id: '.$argFeedId);
-            return false;
+            return 0;
         }
 
         $serviceImporter = new ImportReviewFeed($logger);
@@ -72,6 +72,5 @@ class ImportFeed extends Command
         }
         $serviceImporter->createFeedImport();
         $serviceImporter->runImport();
-        return true;
     }
 }
