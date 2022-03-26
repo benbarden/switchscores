@@ -37,7 +37,7 @@ class TitleMatch
             $existingGame = $this->repoGame->getByTitle($title);
             return response()->json(['gameId' => $existingGame->id], 200);
         } else {
-            return response()->json(['gameId' => null], 404);
+            return response()->json(['gameId' => null], 200);
         }
     }
 
@@ -68,7 +68,7 @@ class TitleMatch
         if ($game) {
             return response()->json(['id' => $game->id], 200);
         } else {
-            return response()->json(['message' => 'Not found'], 404);
+            return response()->json(['message' => 'Not found'], 200);
         }
     }
 }
