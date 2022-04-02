@@ -26,4 +26,20 @@ class DbQueries
         $games = $games->get();
         return $games;
     }
+
+    public function getUpcomingSwitchWeekly($daysLimit)
+    {
+        $games = DB::table('games')
+            ->select('games.*')
+            ->where('games.eu_is_released', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $daysLimit)
+            ->orderBy('games.eu_release_date', 'asc')
+            ->orderBy('games.eshop_europe_order', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        $games = $games->get();
+
+        return $games;
+    }
 }

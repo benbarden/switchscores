@@ -4,13 +4,18 @@ namespace App\Http\Controllers\DeveloperHub;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
+use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 
 class CustomToolsController extends Controller
 {
-    use SwitchServices;
-    use AuthUser;
+    protected $dbGameLists;
+
+    public function __construct(
+        GameListsDbQueries $dbGameLists
+    )
+    {
+        $this->dbGameLists = $dbGameLists;
+    }
 
     public function upcomingGamesSwitchWeekly()
     {
@@ -18,7 +23,7 @@ class CustomToolsController extends Controller
 
         $pageTitle = 'Upcoming games (Switch Weekly)';
 
-        $upcomingGames = $this->getServiceGameReleaseDate()->getUpcomingSwitchWeekly(7);
+        $upcomingGames = $this->dbGameLists->getUpcomingSwitchWeekly(7);
 
         $bindings['UpcomingGames'] = $upcomingGames;
 
