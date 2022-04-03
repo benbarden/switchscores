@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers\Staff;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Domain\ViewBindings\Staff as Bindings;
+
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
 use App\Services\Migrations\Category as MigrationsCategory;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     protected $viewBreadcrumbs;
+    protected $viewBindings;
     protected $repoFeaturedGames;
     protected $repoGameStats;
     protected $repoGameLists;
@@ -27,6 +30,7 @@ class IndexController extends Controller
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
+        Bindings $viewBindings,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         GameListsRepository $repoGameLists,
@@ -34,6 +38,7 @@ class IndexController extends Controller
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->viewBindings = $viewBindings;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameLists = $repoGameLists;
@@ -42,9 +47,9 @@ class IndexController extends Controller
 
     public function index()
     {
-        $bindings = $this->getBindings('Staff index');
+        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Dashboard');
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Dashboard');
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Staff index');
 
         $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();

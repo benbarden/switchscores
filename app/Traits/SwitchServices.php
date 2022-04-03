@@ -97,6 +97,7 @@ trait SwitchServices
     // ** Classes with hierarchy ** //
 
     /**
+     * @deprecated
      * @return Bindings
      */
     public function getServiceViewHelperBindings()
@@ -105,6 +106,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return MemberBreadcrumbs
      */
     public function getServiceViewHelperMemberBreadcrumbs()
@@ -113,6 +115,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return StaffBreadcrumbs
      */
     public function getServiceViewHelperStaffBreadcrumbs()

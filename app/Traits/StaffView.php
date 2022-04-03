@@ -27,6 +27,9 @@ trait StaffView
      */
     private $tableSort;
 
+    /**
+     * @deprecated
+     */
     public function getBindings($pageTitle, $topTitle = 'Staff')
     {
         $this->bindings = $this->getServiceViewHelperBindings()
@@ -46,6 +49,9 @@ trait StaffView
         return $this->bindings->getBindings();
     }
 
+    /**
+     * @deprecated
+     */
     public function setTableSort($tableSort)
     {
         $this->tableSort = $tableSort;
