@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Owner;
 
-use App\Domain\Partner\Repository as PartnerRepository;
-use App\Domain\User\Repository as UserRepository;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-use App\Models\UserRole;
-use App\Traits\StaffView;
-use App\Traits\SwitchServices;
+use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\User\Repository as UserRepository;
+use App\Domain\ViewBindings\Staff as Bindings;
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Models\UserRole;
+
+use App\Traits\SwitchServices;
 
 class UserController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -28,16 +29,19 @@ class UserController extends Controller
         //'email' => 'required',
     ];
 
+    protected $viewBindings;
     protected $viewBreadcrumbs;
     protected $repoUser;
     protected $repoPartner;
 
     public function __construct(
+        Bindings $viewBindings,
         Breadcrumbs $viewBreadcrumbs,
         UserRepository $repoUser,
         PartnerRepository $repoPartner
     )
     {
+        $this->viewBindings = $viewBindings;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoUser = $repoUser;
         $this->repoPartner = $repoPartner;
@@ -45,9 +49,9 @@ class UserController extends Controller
 
     public function showList()
     {
-        $bindings = $this->getBindings('Users');
+        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Users');
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Users');
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Users');
 
         $bindings['UserList'] = $this->repoUser->getAll();
 
@@ -61,8 +65,9 @@ class UserController extends Controller
 
         $displayName = $userData->display_name;
 
-        $bindings = $this->getBindings('View user: '.$displayName);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('View user: '.$displayName);
+        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('View user: '.$displayName);
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('View user: '.$displayName);
 
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
@@ -79,8 +84,9 @@ class UserController extends Controller
 
     public function editUser($userId)
     {
-        $bindings = $this->getBindings('Edit user');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('Edit user');
+        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('Edit user');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit user');
 
         $userData = $this->getServiceUser()->find($userId);
         if (!$userData) abort(404);
@@ -150,8 +156,9 @@ class UserController extends Controller
 
     public function deleteUser($userId)
     {
-        $bindings = $this->getBindings('Delete user');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->usersSubpage('Delete user');
+        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('Delete user');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Delete user');
 
         $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);

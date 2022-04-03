@@ -9,17 +9,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\ViewBindings\Staff as Bindings;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
 use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class CategoryController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -31,19 +30,23 @@ class CategoryController extends Controller
         'link_title' => 'required',
     ];
 
+    protected $viewBindings;
     protected $viewBreadcrumbs;
 
     public function __construct(
+        Bindings $viewBindings,
         Breadcrumbs $viewBreadcrumbs
     )
     {
+        $this->viewBindings = $viewBindings;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindings('Categories');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Categories');
+        $breadcrumbs = $this->viewBreadcrumbs->categorisationSubpage('Categories');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Categories');
 
         $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
 
@@ -52,8 +55,9 @@ class CategoryController extends Controller
 
     public function addCategory()
     {
-        $bindings = $this->getBindings('Add category');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Add category');
+        $breadcrumbs = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Add category');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Add category');
 
         $request = request();
 
@@ -105,8 +109,9 @@ class CategoryController extends Controller
 
     public function editCategory($categoryId)
     {
-        $bindings = $this->getBindings('Edit category');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Edit category');
+        $breadcrumbs = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Edit category');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit category');
 
         $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);
@@ -140,8 +145,9 @@ class CategoryController extends Controller
 
     public function deleteCategory($categoryId)
     {
-        $bindings = $this->getBindings('Delete category');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Delete category');
+        $breadcrumbs = $this->viewBreadcrumbs->categorisationCategoriesSubpage('Delete category');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Delete category');
 
         $categoryData = $this->getServiceCategory()->find($categoryId);
         if (!$categoryData) abort(404);

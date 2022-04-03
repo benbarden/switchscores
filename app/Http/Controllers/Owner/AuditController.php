@@ -7,32 +7,34 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\Audit\Repository as AuditRepository;
 
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Domain\ViewBindings\Staff as Bindings;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class AuditController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     protected $repoAudit;
     protected $viewBreadcrumbs;
+    protected $viewBindings;
 
     public function __construct(
         AuditRepository $repoAudit,
+        Bindings $viewBindings,
         Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoAudit = $repoAudit;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->viewBindings = $viewBindings;
     }
 
     public function index()
     {
-        $bindings = $this->getBindings('Audit');
+        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Audit');
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Audit');
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Audit');
 
         return view('owner.audit.index', $bindings);
     }
@@ -60,8 +62,10 @@ class AuditController extends Controller
                 abort(404);
         }
 
-        $bindings = $this->getBindings($pageTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->auditSubpage($pageTitle);
+        $breadcrumbs = $this->viewBreadcrumbs->auditSubpage($pageTitle);
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
         $bindings['ItemList'] = $itemList;
 
         return view('owner.audit.report', $bindings);
