@@ -15,8 +15,12 @@
                 {% include 'modules/game/packshot/header.twig' with {'item': item} %}
             </td>
             <td class="text-center" style="vertical-align: middle;">
-                <span class="h4">
-                    {% include 'modules/game/release-date-no-year.twig' with {'item': item} %}
+                <span class="h5">
+                    {% if item.eu_release_date is not null %}
+                        {{ item.eu_release_date|date('D jS M') }}
+                    {% else %}
+                        -
+                    {% endif %}
                 </span>
             </td>
             <td style="width: 300px; vertical-align: middle;">
