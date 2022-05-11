@@ -38,10 +38,14 @@ class CampaignsController extends Controller
         $gameList = [];
         foreach ($campaign->games as $gameItem) {
 
-            $gameId = $gameItem->game->id;
-            $game = $this->getServiceGame()->find($gameId);
-            if ($game) {
-                $gameList[] = $game;
+            if ($gameItem->game) {
+                $gameId = $gameItem->game->id;
+                if ($gameId) {
+                    $game = $this->getServiceGame()->find($gameId);
+                    if ($game) {
+                        $gameList[] = $game;
+                    }
+                }
             }
 
         }
