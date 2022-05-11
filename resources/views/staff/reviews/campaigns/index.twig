@@ -15,6 +15,7 @@
         <tr>
             <th class="text-right">#</th>
             <th class="text-left">Name</th>
+            <th class="text-center">Games</th>
             <th class="text-center">Progress</th>
             <th class="text-center">Active?</th>
             <th class="text-center">Created</th>
@@ -29,6 +30,9 @@
                 </td>
                 <td class="text-left">
                     {{ item.name }}
+                </td>
+                <td class="text-center">
+                    {{ item.games.count }}
                 </td>
                 <td class="text-center">
                     {{ item.progress }}
