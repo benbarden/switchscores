@@ -321,6 +321,7 @@ class DataSourceParsedService
             ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
             ->select('games.*', 'categories.name AS category_name')
             ->whereNull('games.game_rank')
+            ->where('format_digital', Game::FORMAT_AVAILABLE)
             ->whereNotNull('games.price_eshop_discounted')
             ->orderBy('games.price_eshop_discount_pc', 'desc');
         if ($limit) {
