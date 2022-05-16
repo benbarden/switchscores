@@ -13,6 +13,8 @@ class Staff extends Base
         $this->toastedCrumbs['games.dashboard'] = ['url' => route('staff.games.dashboard'), 'text' => 'Games'];
 
         $this->toastedCrumbs['reviews.dashboard'] = ['url' => route('staff.reviews.dashboard'), 'text' => 'Reviews'];
+        $this->toastedCrumbs['reviews.reviewSites'] = ['url' => route('staff.reviews.reviewSites.index'), 'text' => 'Review sites'];
+        $this->toastedCrumbs['reviews.feedLinks'] = ['url' => route('staff.reviews.feedLinks.index'), 'text' => 'Feed links'];
         $this->toastedCrumbs['reviews.reviewDrafts'] = ['url' => route('staff.reviews.review-drafts.showPending'), 'text' => 'Review drafts'];
 
         $this->toastedCrumbs['categorisation.dashboard'] = ['url' => route('staff.categorisation.dashboard'), 'text' => 'Categorisation'];
@@ -51,6 +53,20 @@ class Staff extends Base
     public function reviewsSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsReviewSitesSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+            ->addCrumb($this->toastedCrumbs['reviews.reviewSites'])
+            ->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsFeedLinksSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+            ->addCrumb($this->toastedCrumbs['reviews.feedLinks'])
+            ->addTitleAndReturn($pageTitle);
     }
 
     public function reviewsReviewDraftsSubpage($pageTitle)

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -12,9 +14,17 @@ class StatsController extends Controller
     use SwitchServices;
     use AuthUser;
 
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
+
     public function landing()
     {
-        $servicePartner = $this->getServicePartner();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
@@ -23,13 +33,12 @@ class StatsController extends Controller
 
         $partnerId = $authUser->partner_id;
 
-        $partnerData = $servicePartner->find($partnerId);
+        $reviewSite = $this->repoReviewSite->find($partnerId);
 
         // These shouldn't be possible but it saves problems later on
-        if (!$partnerData) abort(400);
-        if (!$partnerData->isReviewSite()) abort(500);
+        if (!$reviewSite) abort(400);
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
 
         $pageTitle = 'Stats';
 

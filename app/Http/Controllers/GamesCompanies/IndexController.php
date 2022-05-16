@@ -4,6 +4,8 @@ namespace App\Http\Controllers\GamesCompanies;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -12,11 +14,20 @@ class IndexController extends Controller
     use SwitchServices;
     use AuthUser;
 
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
+
     public function show()
     {
         $bindings = [];
 
-        $bindings['ReviewSitesWithContactDetails'] = $this->getServicePartner()->getActiveReviewSitesWithContactDetails();
+        $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
 
         $authUser = $this->getValidUser($this->getServiceUser());
         $partnerId = $authUser->games_company_id;

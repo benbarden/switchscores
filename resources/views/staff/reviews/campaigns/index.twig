@@ -13,7 +13,7 @@
     <table class="table data-sortable">
         <thead>
         <tr>
-            <th class="text-right">#</th>
+            <th class="text-center">#</th>
             <th class="text-left">Name</th>
             <th class="text-center">Games</th>
             <th class="text-center">Progress</th>
@@ -25,25 +25,29 @@
         <tbody>
         {% for item in CampaignsList %}
             <tr>
-                <td class="text-right">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.id }}
                 </td>
-                <td class="text-left">
+                <td class="text-left" style="vertical-align: middle;">
                     {{ item.name }}
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.games.count }}
                 </td>
-                <td class="text-center">
-                    {{ item.progress }}
+                <td class="text-center" style="vertical-align: middle;">
+                    <div style="background: #666; padding: 0px;">
+                        <div style="background: #0c0; color: #fff; font-weight: bold; padding: 6px; width: {{ item.progress }}%">
+                            {{ item.progress }}%
+                        </div>
+                    </div>
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.is_active }}
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.created_at }}
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     <a href="{{ route('staff.reviews.campaigns.edit', {'campaignId': item.id}) }}">Edit</a> :
                     <a href="{{ route('staff.reviews.campaigns.editGames', {'campaignId': item.id}) }}">Edit games</a>
                 </td>

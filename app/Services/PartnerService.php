@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class PartnerService
 {
+    /**
+     * @deprecated
+     */
     public function createReviewSite(
         $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
         $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions,
@@ -33,6 +36,9 @@ class PartnerService
         ]);
     }
 
+    /**
+     * @deprecated
+     */
     public function editReviewSite(
         Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
         $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions, $reviewImportMethod
@@ -137,29 +143,9 @@ class PartnerService
 
     // ********************************************************** //
 
-    public function getAllReviewSites()
-    {
-        return Partner::where('type_id', Partner::TYPE_REVIEW_SITE)->orderBy('name', 'asc')->get();
-    }
-
-    public function getActiveReviewSites()
-    {
-        return Partner::
-            where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_ACTIVE)
-            ->orderBy('name', 'asc')
-            ->get();
-    }
-
-    public function getInactiveReviewSites()
-    {
-        return Partner::
-            where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_INACTIVE)
-            ->orderBy('name', 'asc')
-            ->get();
-    }
-
+    /**
+     * @deprecated
+     */
     public function getActiveReviewSitesWithContactDetails()
     {
         $reviewSites = Partner::
@@ -171,6 +157,9 @@ class PartnerService
         return $reviewSites;
     }
 
+    /**
+     * @deprecated
+     */
     public function getReviewSitesWithRecentReviews($days = 30)
     {
         return Partner::

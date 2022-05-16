@@ -26,6 +26,6 @@ class InviteCode extends Model
 
     public function reviewer()
     {
-        return $this->hasOne('App\Models\Partner', 'id', 'reviewer_id');
+        return $this->hasOne('App\Models\ReviewSite', 'id', 'reviewer_id');
     }
 }

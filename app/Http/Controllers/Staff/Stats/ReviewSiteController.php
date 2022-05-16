@@ -8,6 +8,7 @@ use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -20,16 +21,19 @@ class ReviewSiteController extends Controller
     protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $repoReviewSite;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function show()
@@ -38,7 +42,6 @@ class ReviewSiteController extends Controller
         $bindings['crumbNav'] = $this->viewBreadcrumbs->statsSubpage('Review site stats');
 
         $serviceReviewLinks = $this->getServiceReviewLink();
-        $servicePartner = $this->getServicePartner();
         $serviceTopRated = $this->getServiceTopRated();
         $serviceReviewStats = $this->getServiceReviewStats();
 
@@ -51,7 +54,7 @@ class ReviewSiteController extends Controller
         $bindings['ReleasedGameCount'] = $releasedGameCount;
         $bindings['ReviewLinkCount'] = $reviewLinkCount;
 
-        $reviewSitesActive = $servicePartner->getActiveReviewSites();
+        $reviewSitesActive = $this->repoReviewSite->getAll();
         $reviewSitesRender = [];
 
         foreach ($reviewSitesActive as $reviewSite) {

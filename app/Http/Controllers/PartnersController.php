@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Models\Partner;
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class PartnersController extends Controller
 {
     use SwitchServices;
 
     protected $viewBreadcrumbs;
+    protected $repoReviewSite;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        Breadcrumbs $viewBreadcrumbs,
+        ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function landing()
@@ -26,9 +32,7 @@ class PartnersController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Partners');
 
-        $servicePartner = $this->getServicePartner();
-        $reviewPartnerList = $servicePartner->getReviewSitesWithRecentReviews();
-        $bindings['ReviewPartnerList'] = $reviewPartnerList;
+        $bindings['ReviewPartnerList'] = $this->repoReviewSite->getActive();
 
         $bindings['TopTitle'] = 'Partners';
         $bindings['PageTitle'] = 'Partners';
@@ -81,6 +85,47 @@ class PartnersController extends Controller
         $bindings['PageTitle'] = 'Developers and Publishers';
 
         return view('partners.developersPublishers', $bindings);
+    }
+
+    public function showReviewSite($linkTitle)
+    {
+        $bindings = [];
+
+        $serviceReviewLink = $this->getServiceReviewLink();
+
+        $reviewSite = $this->repoReviewSite->getByLinkTitle($linkTitle);
+
+        if (!$reviewSite) {
+            abort(404);
+        }
+
+        $siteId = $reviewSite->id;
+
+        $bindings['TopTitle'] = $reviewSite->name.' - Site profile';
+        $bindings['PageTitle'] = $reviewSite->name.' - Site profile';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage($reviewSite->name.' - Site profile');
+
+        $bindings['PartnerData'] = $reviewSite;
+
+        $siteReviewsLatest = $serviceReviewLink->getLatestBySite($siteId);
+        $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
+        $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+
+        $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
+        if ($reviewScoreDistribution) {
+            foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
+                if ($scoreVal > $mostUsedScore['topScoreCount']) {
+                    $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
+                }
+            }
+        }
+
+        $bindings['SiteReviewsLatest'] = $siteReviewsLatest;
+        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
+        $bindings['ReviewScoreDistribution'] = $reviewScoreDistribution;
+        $bindings['MostUsedScore'] = $mostUsedScore;
+
+        return view('partners.detail.reviewSite', $bindings);
     }
 
     public function showGamesCompany($linkTitle)

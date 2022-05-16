@@ -25,7 +25,7 @@
                         <a href="{{ route('owner.user.view', {'userId': item.id}) }}">{{ item.display_name }}</a>
                         {% if item.isOwner() %}
                             <span class="badge bg-primary">Staff</span>
-                        {% elseif item.partner.isReviewSite() %}
+                        {% elseif item.isReviewer() %}
                             <span class="badge bg-success">Reviewer</span>
                         {% elseif item.isGamesCompany() %}
                             <span class="badge bg-info">Games company</span>

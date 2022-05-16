@@ -8,6 +8,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -29,6 +31,15 @@ class ReviewFeedItemController extends Controller
      */
     private $validationRulesFeedItem = [
     ];
+
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
 
     public function findGame()
     {
@@ -69,7 +80,7 @@ class ReviewFeedItemController extends Controller
         $siteId = $this->getCurrentUserReviewSiteId();
         if (!$siteId) abort(403);
 
-        $partnerData = $this->getServicePartner()->find($siteId);
+        $partnerData = $this->repoReviewSite->find($siteId);
         $partnerUrl = $partnerData->website_url;
 
         $gameData = $this->getServiceGame()->find($gameId);
@@ -78,7 +89,7 @@ class ReviewFeedItemController extends Controller
         $reviewLinkIdList = $this->getServiceReviewLink()->getGameIdsReviewedBySite($siteId);
         /* @var $reviewLinkIdList \Illuminate\Support\Collection */
         if ($reviewLinkIdList->contains($gameId)) {
-            abort(500);
+            //abort(500);
             return redirect(route('reviewers.index'));
         }
 

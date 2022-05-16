@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -23,6 +25,15 @@ class FeedItemsController extends Controller
     private $validationRules = [
         'site_id' => 'required',
     ];
+
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
 
     public function showList($report = null)
     {
@@ -99,7 +110,7 @@ class FeedItemsController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->repoReviewSite->getAll();
 
         $bindings['ProcessStatusSuccess'] = $this->getServiceReviewFeedItem()->getProcessOptionsSuccess();
         $bindings['ProcessStatusFailure'] = $this->getServiceReviewFeedItem()->getProcessOptionsFailure();

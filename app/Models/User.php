@@ -71,18 +71,12 @@ class User extends Authenticatable
         return $this->is_developer == 1;
     }
 
+    /**
+     * @return bool
+     */
     public function isReviewer()
     {
-        $isReviewer = false;
-
-        $partner = $this->partner;
-        if ($partner) {
-            if ($partner->isReviewSite()) {
-                $isReviewer = true;
-            }
-        }
-
-        return $isReviewer;
+        return isset($this->partner_id);
     }
 
     /**
@@ -95,7 +89,7 @@ class User extends Authenticatable
 
     public function partner()
     {
-        return $this->hasOne('App\Models\Partner', 'id', 'partner_id');
+        return $this->hasOne('App\Models\ReviewSite', 'id', 'partner_id');
     }
 
     public function gamesCompany()

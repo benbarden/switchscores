@@ -78,46 +78,4 @@ class ReviewsController extends Controller
         return view('reviews.landingByYear', $bindings);
     }
 
-    public function reviewSite($linkTitle)
-    {
-        $bindings = [];
-
-        $servicePartner = $this->getServicePartner();
-        $serviceReviewLink = $this->getServiceReviewLink();
-
-        $reviewSite = $servicePartner->getByLinkTitle($linkTitle);
-
-        if (!$reviewSite) {
-            abort(404);
-        }
-
-        $siteId = $reviewSite->id;
-
-        $bindings['TopTitle'] = $reviewSite->name.' - Site profile';
-        $bindings['PageTitle'] = $reviewSite->name.' - Site profile';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage($reviewSite->name.' - Site profile');
-
-        $bindings['PartnerData'] = $reviewSite;
-
-        $siteReviewsLatest = $serviceReviewLink->getLatestBySite($siteId);
-        $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
-        $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
-
-        $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
-        if ($reviewScoreDistribution) {
-            foreach ($reviewScoreDistribution as $scoreKey => $scoreVal) {
-                if ($scoreVal > $mostUsedScore['topScoreCount']) {
-                    $mostUsedScore = ['topScore' => $scoreKey, 'topScoreCount' => $scoreVal];
-                }
-            }
-        }
-
-        $bindings['SiteReviewsLatest'] = $siteReviewsLatest;
-        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
-        $bindings['ReviewScoreDistribution'] = $reviewScoreDistribution;
-        $bindings['MostUsedScore'] = $mostUsedScore;
-
-        return view('reviews.site', $bindings);
-    }
-
 }

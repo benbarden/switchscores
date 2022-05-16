@@ -4,21 +4,22 @@
 namespace App\Services\Feed;
 
 
+use Carbon\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
+
+use App\Models\ReviewSite;
+use App\Models\PartnerFeedLink;
+use App\Models\ReviewFeedItem;
+use App\Models\ReviewFeedItemTest;
 use App\Domain\Game\Repository as RepoGame;
 use App\Domain\ReviewFeedItem\Repository as RepoReviewFeedItem;
 use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\TitleRuleNotMatched;
-use App\Models\Partner;
-use App\Models\PartnerFeedLink;
-use App\Models\ReviewFeedItem;
-use App\Models\ReviewFeedItemTest;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
 use App\Services\ReviewFeedItemService;
 use App\Services\UrlService;
-use Carbon\Carbon;
-use GuzzleHttp\Client as GuzzleClient;
 
 
 class Importer
@@ -44,7 +45,7 @@ class Importer
     private $siteId;
 
     /**
-     * @var Partner
+     * @var ReviewSite
      */
     private $reviewSite;
 
@@ -80,7 +81,7 @@ class Importer
         $this->siteId = $siteId;
     }
 
-    public function setReviewSite(Partner $reviewSite)
+    public function setReviewSite(ReviewSite $reviewSite)
     {
         $this->reviewSite = $reviewSite;
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -12,9 +14,17 @@ class ReviewLinkController extends Controller
     use SwitchServices;
     use AuthUser;
 
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
+
     public function landing($report = '')
     {
-        $servicePartner = $this->getServicePartner();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
@@ -25,13 +35,11 @@ class ReviewLinkController extends Controller
 
         if (!$partnerId) abort(403);
 
-        $partner = $servicePartner->find($partnerId);
+        $reviewSite = $this->repoReviewSite->find($partnerId);
 
-        if (!$partner) abort(403);
+        if (!$reviewSite) abort(403);
 
-        if (!$partner->isReviewSite()) abort(403);
-
-        $bindings['ReviewSite'] = $partner;
+        $bindings['ReviewSite'] = $reviewSite;
 
         switch ($report) {
             case 'score-1':

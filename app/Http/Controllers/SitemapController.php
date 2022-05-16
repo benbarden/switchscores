@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 
 class SitemapController extends Controller
@@ -181,7 +183,7 @@ class SitemapController extends Controller
 
     public function reviews()
     {
-        $servicePartner = $this->getServicePartner();
+        $repoReviewSite = new ReviewSiteRepository();
 
         $bindings = [];
         $timestamp = $this->getTimestampNow();
@@ -195,7 +197,7 @@ class SitemapController extends Controller
             'priority' => '0.8'
         );
 
-        $reviewSiteList = $servicePartner->getActiveReviewSites();
+        $reviewSiteList = $repoReviewSite->getAll();
         foreach ($reviewSiteList as $reviewSite) {
             $sitemapPages[] = array(
                 'url' => route('reviews.site', ['linkTitle' => $reviewSite->link_title]),

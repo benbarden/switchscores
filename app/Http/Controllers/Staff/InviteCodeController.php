@@ -18,6 +18,7 @@ use App\Traits\SwitchServices;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\InviteCode\CodeGenerator;
 use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 class InviteCodeController extends Controller
 {
@@ -41,18 +42,21 @@ class InviteCodeController extends Controller
     protected $viewBindings;
     protected $repoInviteCode;
     protected $repoPartner;
+    protected $repoReviewSite;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
         Bindings $viewBindings,
         InviteCodeRepository $repoInviteCode,
-        PartnerRepository $repoPartner
+        PartnerRepository $repoPartner,
+        ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->viewBindings = $viewBindings;
         $this->repoInviteCode = $repoInviteCode;
         $this->repoPartner = $repoPartner;
+        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function showList()
@@ -171,7 +175,7 @@ class InviteCodeController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['PartnerList'] = $this->repoReviewSite->getAll();
         $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         return view('staff.invite-code.add', $bindings);
@@ -218,7 +222,7 @@ class InviteCodeController extends Controller
         $bindings['InviteCodeData'] = $inviteCodeData;
         $bindings['InviteCodeId'] = $inviteCodeId;
 
-        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['PartnerList'] = $this->repoReviewSite->getAll();
         $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         return view('staff.invite-code.edit', $bindings);

@@ -68,7 +68,7 @@ class UnrankedGamesController extends Controller
                 break;
 
             case 'by-year':
-                if (!in_array($filter, ['2017', '2018', '2019', '2020', '2021'])) abort(404);
+                if (!in_array($filter, ['2017', '2018', '2019', '2020', '2021', '2022'])) abort(404);
                 //$gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
                 $gamesList = $this->repoUnranked->getByYear($filter, $gameIdsReviewedBySite);
                 $tableSort = "[3, 'asc']";

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
-use App\Events\ReviewLinkCreated;
-use App\Models\ReviewLink;
-use App\Traits\StaffView;
-use App\Traits\SwitchServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Events\ReviewLinkCreated;
+use App\Models\ReviewLink;
+
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
 
 class ReviewLinkController extends Controller
 {
@@ -23,10 +26,19 @@ class ReviewLinkController extends Controller
      */
     private $validationRules = [
         'game_id' => 'required|exists:games,id',
-        'site_id' => 'required|exists:partners,id',
+        'site_id' => 'required|exists:review_sites,id',
         'url' => 'required',
         'rating_original' => 'required'
     ];
+
+    protected $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
 
     public function showList()
     {
@@ -34,7 +46,7 @@ class ReviewLinkController extends Controller
 
         $siteId = request()->siteId;
 
-        $reviewSites = $this->getServicePartner()->getAllReviewSites();
+        $reviewSites = $this->repoReviewSite->getAll();
 
         if (!$siteId) {
             $bindings['ActiveSiteId'] = '';
@@ -65,7 +77,7 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $this->getServicePartner()->find($siteId);
+            $reviewSite = $this->repoReviewSite->find($siteId);
             $gameId = $request->game_id;
 
             $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
@@ -93,7 +105,7 @@ class ReviewLinkController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->repoReviewSite->getAll();
 
         return view('staff.reviews.link.add', $bindings);
     }
@@ -116,7 +128,7 @@ class ReviewLinkController extends Controller
             $siteId = $request->site_id;
             $ratingOriginal = $request->rating_original;
 
-            $reviewSite = $this->getServicePartner()->find($siteId);
+            $reviewSite = $this->repoReviewSite->find($siteId);
             $gameId = $request->game_id;
 
             $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
@@ -150,7 +162,7 @@ class ReviewLinkController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['ReviewSites'] = $this->getServicePartner()->getAllReviewSites();
+        $bindings['ReviewSites'] = $this->repoReviewSite->getAll();
 
         return view('staff.reviews.link.edit', $bindings);
     }

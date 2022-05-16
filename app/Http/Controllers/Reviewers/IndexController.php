@@ -4,28 +4,35 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+use App\Domain\Campaign\Repository as CampaignRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-
-use App\Domain\Campaign\Repository as CampaignRepository;
 
 class IndexController extends Controller
 {
     use SwitchServices;
     use AuthUser;
 
+    protected $repoReviewSite;
+    protected $repoPartnerFeedLink;
     protected $repoCampaign;
 
     public function __construct(
+        ReviewSiteRepository $repoReviewSite,
+        PartnerFeedLinkRepository $repoPartnerFeedLink,
         CampaignRepository $repoCampaign
     )
     {
+        $this->repoReviewSite = $repoReviewSite;
+        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
         $this->repoCampaign = $repoCampaign;
     }
 
     public function show()
     {
-        $servicePartner = $this->getServicePartner();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
@@ -36,16 +43,15 @@ class IndexController extends Controller
 
         $partnerId = $authUser->partner_id;
 
-        $partnerData = $servicePartner->find($partnerId);
-        $partnerUrl = $partnerData->website_url;
+        $reviewSite = $this->repoReviewSite->find($partnerId);
+        $partnerUrl = $reviewSite->website_url;
 
         // These shouldn't be possible but it saves problems later on
-        if (!$partnerData) abort(400);
-        if (!$partnerData->isReviewSite()) abort(500);
+        if (!$reviewSite) abort(400);
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
 
-        $pageTitle = 'Reviewers dashboard: '.$partnerData->name;
+        $pageTitle = 'Reviewers dashboard: '.$reviewSite->name;
 
         // Review stats (for infobox)
         $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
@@ -55,7 +61,7 @@ class IndexController extends Controller
         $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 10);
 
         // Feed items
-        $bindings['PartnerFeed'] = $this->getServicePartnerFeedLink()->getBySite($partnerId);
+        $bindings['PartnerFeed'] = $this->repoPartnerFeedLink->firstBySite($partnerId);
         $bindings['FeedItemsLatest'] = $this->getServiceReviewFeedItem()->getAllBySite($partnerId, 5);
         $bindings['FeedItemsPending'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId);
         $bindings['FeedItemsSuccess'] = $this->getServiceReviewFeedItem()->getSuccessBySite($partnerId, 5);

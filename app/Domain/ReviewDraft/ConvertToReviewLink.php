@@ -3,7 +3,7 @@
 namespace App\Domain\ReviewDraft;
 
 use App\Domain\Game\Repository as GameRepository;
-use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Builder as ReviewLinkBuilder;
 use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
@@ -27,7 +27,7 @@ class ConvertToReviewLink
         $repoReviewLink = new ReviewLinkRepository();
         $calcReviewLink = new ReviewLinkCalculations();
         $repoGame = new GameRepository();
-        $repoPartner = new PartnerRepository();
+        $repoReviewSite = new ReviewSiteRepository();
 
         $itemId = $draftItem->id;
 
@@ -52,7 +52,7 @@ class ConvertToReviewLink
         $reviewLinkBuilder = new ReviewLinkBuilder();
         $reviewLinkDirector = new ReviewLinkDirector($reviewLinkBuilder);
 
-        $partner = $repoPartner->find($siteId);
+        $partner = $repoReviewSite->find($siteId);
         $ratingNormalised = $calcReviewLink->normaliseRating($itemRating, $partner->rating_scale);
 
         $params = [

@@ -7,8 +7,7 @@ use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\ReviewDraft\Repository as RepoReviewDraft;
 use App\Exceptions\Review\AlreadyImported;
-use App\Models\Game;
-use App\Models\Partner;
+use App\Models\ReviewSite;
 use App\Models\ReviewDraft;
 
 class ImportScraper
@@ -41,7 +40,7 @@ class ImportScraper
         $this->repoReviewDraft = new RepoReviewDraft();
     }
 
-    private function processItem($item, Partner $partner, $mappings)
+    private function processItem($item, ReviewSite $reviewSite, $mappings)
     {
         if (!array_key_exists('item_title', $mappings)) {
             throw new \Exception('Fatal error: Required mapping item_title not found.');
@@ -63,8 +62,8 @@ class ImportScraper
             throw new \Exception('Fatal error - Missing item title and/or URL ['.var_export($item, true).']');
         }
 
-        if ($partner->name == 'Nintendo World Report') {
-            $itemUrl = $partner->website_url.substr($itemUrl, 1);
+        if ($reviewSite->name == 'Nintendo World Report') {
+            $itemUrl = $reviewSite->website_url.substr($itemUrl, 1);
         }
 
         $itemDate = date('Y-m-d', strtotime($item[$idxItemDate]));
@@ -82,7 +81,7 @@ class ImportScraper
         }
 
         $reviewDraft = [
-            'site_id' => $partner->id,
+            'site_id' => $reviewSite->id,
             'item_title' => $itemTitle,
             'item_url' => $itemUrl,
             'item_date' => $itemDate,
@@ -101,7 +100,7 @@ class ImportScraper
         return $this->reviewDraftDirector->getReviewDraft();
     }
 
-    public function processItemNWR($item, Partner $partner)
+    public function processItemNWR($item, ReviewSite $reviewSite)
     {
         // Skip header row
         if ($item[0]['text'] == 'Name') {
@@ -117,10 +116,10 @@ class ImportScraper
             'item_rating' => 5,
         ];
 
-        return $this->processItem($item, $partner, $mappings);
+        return $this->processItem($item, $reviewSite, $mappings);
     }
 
-    public function processItemPocketTactics($item, Partner $partner)
+    public function processItemPocketTactics($item, ReviewSite $reviewSite)
     {
         // Skip header row
         if ($item[0] == 'Title') {
@@ -133,6 +132,6 @@ class ImportScraper
             'item_rating' => 2,
         ];
 
-        return $this->processItem($item, $partner, $mappings);
+        return $this->processItem($item, $reviewSite, $mappings);
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands\Review;
 
-use App\Domain\Partner\Repository as PartnerRepository;
-use App\Domain\Scraper\ReviewTable as ScraperReviewTable;
-use App\Domain\ReviewDraft\ImportScraper;
-use App\Traits\SwitchServices;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\Scraper\ReviewTable as ScraperReviewTable;
+use App\Domain\ReviewDraft\ImportScraper;
+
+use App\Traits\SwitchServices;
 
 class ImportByScraper extends Command
 {
@@ -18,7 +20,7 @@ class ImportByScraper extends Command
      *
      * @var string
      */
-    protected $signature = 'ReviewImportByScraper {partnerId?}';
+    protected $signature = 'ReviewImportByScraper {siteId?}';
 
     /**
      * The console command description.
@@ -27,7 +29,7 @@ class ImportByScraper extends Command
      */
     protected $description = 'Custom scraper to import reviews from an HTML list.';
 
-    private $repoPartner;
+    private $repoReviewSite;
 
     /**
      * Create a new command instance.
@@ -46,41 +48,36 @@ class ImportByScraper extends Command
      */
     public function handle()
     {
-        $this->repoPartner = new PartnerRepository;
+        $this->repoReviewSite = new ReviewSiteRepository();
 
-        $argPartnerId = $this->argument('partnerId');
+        $argSiteId = $this->argument('siteId');
 
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        if ($argPartnerId) {
+        if ($argSiteId) {
 
-            $partner = $this->repoPartner->find($argPartnerId);
+            $reviewSite = $this->repoReviewSite->find($argSiteId);
 
-            if (!$partner) {
-                $logger->error('Cannot find partner with id: '.$argPartnerId);
+            if (!$reviewSite) {
+                $logger->error('Cannot find review site with id: '.$argSiteId);
                 return 0;
             }
 
-            $partnerList = [$partner];
+            $reviewSiteList = [$reviewSite];
 
         } else {
 
-            $partnerList = $this->repoPartner->reviewSitesActiveForScraper();
+            $reviewSiteList = $this->repoReviewSite->getActiveScraper();
 
         }
 
-        foreach ($partnerList as $partner) {
-
-            if (!$partner->isReviewSite()) {
-                $logger->error('This command only works with review sites');
-                return 0;
-            }
+        foreach ($reviewSiteList as $reviewSite) {
 
             $scraper = new ScraperReviewTable;
 
-            if ($partner->name == 'Nintendo World Report') {
+            if ($reviewSite->name == 'Nintendo World Report') {
 
                 $scraper->crawlPage('https://www.nintendoworldreport.com/review/');
                 $scraper->extractRows('results');
@@ -94,13 +91,13 @@ class ImportByScraper extends Command
                 foreach ($tableData as $item) {
                     try {
                         $importScraper = new ImportScraper;
-                        $importScraper->processItemNWR($item, $partner);
+                        $importScraper->processItemNWR($item, $reviewSite);
                     } catch (\Exception $e) {
                         $logger->error($e->getMessage());
                     }
                 }
 
-            } elseif ($partner->name == 'Pocket Tactics') {
+            } elseif ($reviewSite->name == 'Pocket Tactics') {
 
                 $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2022');
                 $scraper->extractRows('review-data');
@@ -114,7 +111,7 @@ class ImportByScraper extends Command
                 foreach ($tableData as $item) {
                     try {
                         $importScraper = new ImportScraper;
-                        $importScraper->processItemPocketTactics($item, $partner);
+                        $importScraper->processItemPocketTactics($item, $reviewSite);
                     } catch (\Exception $e) {
                         $logger->error($e->getMessage());
                     }
@@ -122,7 +119,7 @@ class ImportByScraper extends Command
 
             } else {
 
-                $logger->error('Scraper support is not provided for this partner');
+                $logger->error('Scraper support is not provided for this review site');
                 return 0;
 
             }

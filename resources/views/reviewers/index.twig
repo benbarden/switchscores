@@ -25,11 +25,34 @@
                 </p>
             {% endif %}
 
-            <h2>Your details</h2>
+            <h2>What to review next</h2>
+            <h3>Campaigns</h3>
             <p>
-                We encourage you to fill out these details so your profile page is up to date, and to allow
-                publishers and developers to contact you with review codes. Only publishers and developers
-                will be able to view this information.
+                These are games we'd love to see reviews of next.
+                Help to get more of our database ranked - pick a campaign and jump right in!
+            </p>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
+                </div>
+            </div>
+            <h3 style="margin-top: 0;">Unranked games</h3>
+            <p>
+                You can find all of our unranked games below. Quickly find the games that only need 1 or 2
+                reviews to get ranked.
+            </p>
+            <p>
+                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
+            </p>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Your details'} %}
+            <p>
+                Fill out your details so publishers and developers can contact you with review codes.
+                Only publishers and developers will be able to view your contact details.
             </p>
             <table class="table table-condensed table-responsive">
                 <tr>
@@ -81,21 +104,10 @@
             </table>
             <a class="btn btn-primary" href="{{ route('reviewers.profile.edit') }}">Edit details</a>
             <a class="btn btn-primary" href="{{ route('reviews.site', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
+            <br>
+            <br>
 
-        </div>
-
-        <div class="col-xs-12 col-sm-4 col-md-4">
-
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Unranked games'} %}
-            <p>
-                We've recently updated the unranked games page to make it easier to use.
-                You can use this list to help get more of our database ranked.
-            </p>
-            <p>
-                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
-            </p>
-
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Quick stats'} %}
+            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Your stats'} %}
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-4 text-center">
                     <h2>
@@ -260,17 +272,6 @@
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
-
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Review campaigns'} %}
-            <p>
-                This is where we highlight games that we'd love to see reviews of next.
-                This gets more of our database ranked. Pick a campaign and jump right in!
-            </p>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
-                </div>
-            </div>
 
         </div>
 

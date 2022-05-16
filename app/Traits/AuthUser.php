@@ -2,9 +2,12 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Models\User;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Auth;
 
 trait AuthUser
 {
@@ -26,13 +29,13 @@ trait AuthUser
 
     public function getCurrentUserReviewSiteId()
     {
+        $repoReviewSite = new ReviewSiteRepository();
+
         $authUser = $this->getValidUser($this->getServiceUser());
         $partnerId = $authUser->partner_id;
-        $partnerData = $this->getServicePartner()->find($partnerId);
+        $reviewSite = $repoReviewSite->find($partnerId);
 
-        if (!$partnerData) {
-            return null;
-        } elseif (!$partnerData->isReviewSite()) {
+        if (!$reviewSite) {
             return null;
         } else {
             return $partnerId;

@@ -1,0 +1,102 @@
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    {% if FormMode != 'add' %}
+        <div class="row mb-3">
+            <label for="status" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-4">
+                <select id="status" class="form-control" name="status">
+                    <option value="">&nbsp;</option>
+                    {% for item in StatusList %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row mb-3">
+        <label for="name" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-4">
+            <input id="name" name="name" type="text" class="form-control" maxlength="100" required autofocus>
+            <div class="form-text">The name of the site being added.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="link_title" class="col-sm-2 col-form-label">Link title</label>
+        <div class="col-sm-4">
+            <input id="link_title" name="link_title" type="text" class="form-control" maxlength="100" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="website_url" class="col-sm-2 col-form-label">Site URL (include http://)</label>
+        <div class="col-sm-4">
+            <input id="website_url" name="website_url" type="text" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-auto">
+            <label for="twitter_id" class="col-form-label">Twitter ID</label>
+        </div>
+        <div class="col-auto">
+            <div class="form-text">http://twitter.com/</div>
+        </div>
+        <div class="col-sm-4">
+            <input id="twitter_id" name="twitter_id" type="text" class="form-control" maxlength="20">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="contact_name" class="col-sm-2 col-form-label">Contact name</label>
+        <div class="col-sm-4">
+            <input id="contact_name" name="contact_name" type="text" class="form-control" maxlength="100">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="contact_email" class="col-sm-2 col-form-label">Contact email</label>
+        <div class="col-sm-4">
+            <input id="contact_email" name="contact_email" type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="contact_form_link" class="col-sm-2 col-form-label">Contact form link</label>
+        <div class="col-sm-4">
+            <input id="contact_form_link" name="contact_form_link" type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="review_code_regions" class="col-sm-2 col-form-label">Review code regions</label>
+        <div class="col-sm-4">
+            <input id="review_code_regions" name="review_code_regions" type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="rating_scale" class="col-sm-2 col-form-label">Rating scale</label>
+        <div class="col-sm-4">
+            <input id="rating_scale" name="rating_scale" type="text" class="form-control" size="5" maxlength="2" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="review_import_method" class="col-sm-2 col-form-label">Review import method</label>
+        <div class="col-sm-4">
+            <select id="review_import_method" class="form-control" name="review_import_method">
+                <option value="">&nbsp;</option>
+                {% for item in ReviewImportMethodList %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {% include 'common/forms/submit.twig' %}
+
+</form>

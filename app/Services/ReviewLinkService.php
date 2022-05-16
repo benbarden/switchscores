@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\Partner;
 use App\Models\ReviewLink;
+use App\Models\ReviewSite;
 use Illuminate\Support\Facades\DB;
 
 class ReviewLinkService
@@ -141,18 +142,13 @@ class ReviewLinkService
 
     public function countActive()
     {
-        $reviewCount = ReviewLink::select('review_links.*', 'review_sites.name')
-            ->join('partners', 'review_links.site_id', '=', 'partners.id')
-            ->where('partners.status', '=', Partner::STATUS_ACTIVE)
-            ->count();
-        return $reviewCount;
+        return ReviewLink::count();
     }
 
     public function countActiveByYearMonth($year, $month)
     {
         $reviewCount = ReviewLink::select('review_links.*', 'review_sites.name')
-            ->join('partners', 'review_links.site_id', '=', 'partners.id')
-            ->where('partners.status', '=', Partner::STATUS_ACTIVE)
+            ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
             ->whereYear('review_links.review_date', $year)
             ->whereMonth('review_links.review_date', $month)
             ->count();
@@ -165,7 +161,7 @@ class ReviewLinkService
             SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
-            JOIN partners p ON rl.site_id = p.id
+            JOIN review_sites rs ON rl.site_id = rs.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             GROUP BY rl.game_id
             ORDER BY g.eu_release_date DESC, g.id ASC
@@ -187,7 +183,7 @@ class ReviewLinkService
             SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
-            JOIN partners p ON rl.site_id = p.id
+            JOIN review_sites rs ON rl.site_id = rs.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             AND g.review_count > 2
             AND g.format_digital != "De-listed"
@@ -205,7 +201,7 @@ class ReviewLinkService
             SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
-            JOIN partners p ON rl.site_id = p.id
+            JOIN review_sites rs ON rl.site_id = rs.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             AND g.review_count < 3
             GROUP BY rl.game_id
@@ -221,7 +217,7 @@ class ReviewLinkService
             SELECT g.*, count(rl.id) AS recent_review_count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
-            JOIN partners p ON rl.site_id = p.id
+            JOIN review_sites rs ON rl.site_id = rs.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             AND g.review_count > 2
             GROUP BY rl.game_id
@@ -234,61 +230,44 @@ class ReviewLinkService
 
     public function getLatestNaturalOrder($limit = 10)
     {
-        $reviewLinks = ReviewLink::orderBy('review_date', 'desc')
-            ->limit($limit)
-            ->get();
-        return $reviewLinks;
+        return ReviewLink::orderBy('review_date', 'desc')->limit($limit)->get();
     }
 
     public function getLatestBySite($siteId, $limit = 20)
     {
-        $reviewLinks = ReviewLink::where('site_id', $siteId)
+        return ReviewLink::where('site_id', $siteId)
             ->orderBy('review_date', 'desc')
             ->orderBy('id', 'desc')
             ->limit($limit)
             ->get();
-        return $reviewLinks;
-    }
-
-    public function getAllWithoutDate()
-    {
-        $reviewLinks = ReviewLink::whereNull('review_date')
-            ->orderBy('id', 'desc')
-            ->get();
-        return $reviewLinks;
     }
 
     public function getByGame($gameId)
     {
-        $gameReviews = ReviewLink::select('review_links.*', 'partners.name')
-            ->join('partners', 'review_links.site_id', '=', 'partners.id')
+        $gameReviews = ReviewLink::select('review_links.*', 'review_sites.name')
+            ->join('review_sites', 'review_links.site_id', '=', 'review_sites.id')
             ->where('game_id', $gameId)
-            ->where('partners.status', '=', Partner::STATUS_ACTIVE)
             ->orderBy('review_links.rating_normalised', 'desc')
             ->orderBy('review_links.review_date', 'asc')
-            ->orderBy('partners.last_review_date', 'desc')
+            ->orderBy('review_sites.last_review_date', 'desc')
             ->get();
         return $gameReviews;
     }
 
     public function getByGameAndSite($gameId, $siteId)
     {
-        $gameReview = ReviewLink::where('game_id', $gameId)
-            ->where('site_id', $siteId)
-            ->first();
-        return $gameReview;
+        return ReviewLink::where('game_id', $gameId)->where('site_id', $siteId)->first();
     }
 
     public function getByUser($userId)
     {
-        $reviewLinks = ReviewLink::where('user_id', $userId)
+        return ReviewLink::where('user_id', $userId)
             ->orderBy('review_date', 'desc')
             ->orderBy('id', 'desc')
             ->get();
-        return $reviewLinks;
     }
 
-    public function getNormalisedRating($ratingOriginal, Partner $reviewSite)
+    public function getNormalisedRating($ratingOriginal, ReviewSite $reviewSite)
     {
         $normalisedScaleLimit = 10;
 
@@ -310,8 +289,8 @@ class ReviewLinkService
             sum(rl.rating_normalised) AS ReviewSum,
             avg(rl.rating_normalised) AS ReviewAvg
             FROM review_links rl
-            LEFT JOIN partners p ON rl.site_id = p.id
-            WHERE p.id = ?
+            LEFT JOIN review_sites rs ON rl.site_id = rs.id
+            WHERE rs.id = ?
         ", array($siteId));
 
         return $reviewAverage;
@@ -400,11 +379,9 @@ class ReviewLinkService
 
     public function getBySiteScore($siteId, $rating)
     {
-        $reviewScores = ReviewLink::where('site_id', $siteId)
+        return ReviewLink::where('site_id', $siteId)
             ->where(DB::raw('round(rating_normalised, 0)'), $rating)
             ->get();
-
-        return $reviewScores;
     }
 
     public function getMonthlyReviewsBySite($siteId)

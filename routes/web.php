@@ -69,7 +69,6 @@ Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topR
 Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */
-Route::get('/reviews/site/{linkTitle}', 'ReviewsController@reviewSite')->name('reviews.site');
 Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.landing.byYear');
 
 /* Partners */
@@ -79,6 +78,7 @@ Route::get('/partners/developers-publishers', 'PartnersController@developersPubl
 Route::get('/partners/guides/{guideTitle}', 'PartnersController@guidesShow')->name('partners.guides.show');
 
 Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesCompany')->name('partners.detail.games-company');
+Route::get('/reviews/site/{linkTitle}', 'PartnersController@showReviewSite')->name('reviews.site');
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
@@ -297,6 +297,16 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     Route::get('/staff/reviews/dashboard', 'Staff\Reviews\DashboardController@show')->name('staff.reviews.dashboard');
 
+    // Review sites
+    Route::get('/staff/reviews/review-sites', 'Staff\Reviews\ReviewSiteController@index')->name('staff.reviews.reviewSites.index');
+    Route::match(['get', 'post'], '/staff/reviews/review-sites/add', 'Staff\Reviews\ReviewSiteController@add')->name('staff.reviews.reviewSites.add');
+    Route::match(['get', 'post'], '/staff/reviews/review-sites/edit/{reviewSite}', 'Staff\Reviews\ReviewSiteController@edit')->name('staff.reviews.reviewSites.edit');
+
+    // Feed links
+    Route::get('/staff/reviews/feed-links', 'Staff\Reviews\FeedLinksController@index')->name('staff.reviews.feedLinks.index');
+    Route::match(['get', 'post'], '/staff/reviews/feed-links/add', 'Staff\Reviews\FeedLinksController@add')->name('staff.reviews.feedLinks.add');
+    Route::match(['get', 'post'], '/staff/reviews/feed-links/edit/{feedLink}', 'Staff\Reviews\FeedLinksController@edit')->name('staff.reviews.feedLinks.edit');
+
     // Review links
     Route::match(['get', 'post'], '/staff/reviews/link/add', 'Staff\Reviews\ReviewLinkController@add')->name('staff.reviews.link.add');
     Route::match(['get', 'post'], '/staff/reviews/link/edit/{linkId}', 'Staff\Reviews\ReviewLinkController@edit')->name('staff.reviews.link.edit');
@@ -416,6 +426,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     Route::get('/staff/partners/dashboard', 'Staff\Partners\DashboardController@show')->name('staff.partners.dashboard');
 
+/*
     // Partners: Review sites
     Route::get('/staff/partners/review-sites', 'Staff\Partners\ReviewSiteController@showList')->name('staff.reviews.site.list');
     Route::match(['get', 'post'], '/staff/partners/review-sites/add', 'Staff\Partners\ReviewSiteController@add')->name('staff.reviews.site.add');
@@ -425,6 +436,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/partners/feed-links', 'Staff\Partners\FeedLinksController@showList')->name('staff.partners.feed-links.list');
     Route::match(['get', 'post'], '/staff/partners/feed-links/add', 'Staff\Partners\FeedLinksController@add')->name('staff.partners.feed-links.add');
     Route::match(['get', 'post'], '/staff/partners/feed-links/edit/{linkId}', 'Staff\Partners\FeedLinksController@edit')->name('staff.partners.feed-links.edit');
+*/
 
     // Partners: Games companies
     Route::get('/staff/partners/games-company/list', 'Staff\Partners\GamesCompanyController@showList')->name('staff.partners.games-company.list');

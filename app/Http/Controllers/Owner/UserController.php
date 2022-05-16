@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\ViewBindings\Staff as Bindings;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
@@ -33,18 +34,21 @@ class UserController extends Controller
     protected $viewBreadcrumbs;
     protected $repoUser;
     protected $repoPartner;
+    protected $repoReviewSite;
 
     public function __construct(
         Bindings $viewBindings,
         Breadcrumbs $viewBreadcrumbs,
         UserRepository $repoUser,
-        PartnerRepository $repoPartner
+        PartnerRepository $repoPartner,
+        ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBindings = $viewBindings;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoUser = $repoUser;
         $this->repoPartner = $repoPartner;
+        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function showList()
@@ -136,7 +140,7 @@ class UserController extends Controller
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 
-        $bindings['PartnerList'] = $this->repoPartner->reviewSitesActive();
+        $bindings['PartnerList'] = $this->repoReviewSite->getActive();
         $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
 
         $bindings['RoleList'] = UserRole::getRoleList();

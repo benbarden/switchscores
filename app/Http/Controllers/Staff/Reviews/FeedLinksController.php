@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Staff\Partners;
+namespace App\Http\Controllers\Staff\Reviews;
 
-use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
+use App\Models\PartnerFeedLink;
+use App\Domain\ViewBindings\Staff as Bindings;
+use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\StaffView;
+use App\Traits\SwitchServices;
 
 class FeedLinksController extends Controller
 {
@@ -28,9 +33,26 @@ class FeedLinksController extends Controller
         'item_node' => 'required',
     ];
 
-    public function showList()
+    protected $viewBreadcrumbs;
+    protected $viewBindings;
+    protected $repoReviewSite;
+
+    public function __construct(
+        Breadcrumbs $viewBreadcrumbs,
+        Bindings $viewBindings,
+        ReviewSiteRepository $repoReviewSite
+    )
     {
-        $bindings = $this->getBindingsPartnersSubpage('Partner feed links');
+        $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->viewBindings = $viewBindings;
+        $this->repoReviewSite = $repoReviewSite;
+    }
+
+    public function index()
+    {
+        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Feed links');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Feed links');
 
         $feedLinks = $this->getServicePartnerFeedLink()->getAll();
 
@@ -46,7 +68,7 @@ class FeedLinksController extends Controller
 
         $bindings['FeedLinks'] = $feedLinks;
 
-        return view('staff.partners.feed-links.list', $bindings);
+        return view('staff.reviews.feed-links.index', $bindings);
     }
 
     public function buildValuesArray($request)
@@ -70,7 +92,9 @@ class FeedLinksController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsFeedLinksSubpage('Add feed link');
+        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Add feed link');
+
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Add feed link');
 
         $request = request();
 
@@ -82,7 +106,7 @@ class FeedLinksController extends Controller
 
             $this->getServicePartnerFeedLink()->create($values);
 
-            return redirect(route('staff.partners.feed-links.list'));
+            return redirect(route('staff.reviews.feedLinks.index'));
 
         }
 
@@ -92,17 +116,18 @@ class FeedLinksController extends Controller
         $bindings['DataTypeList'] = $this->getServicePartnerFeedLink()->getDataTypeDropdown();
         $bindings['ItemNodeList'] = $this->getServicePartnerFeedLink()->getItemNodeDropdown();
 
-        $bindings['ReviewSiteList'] = $this->getServicePartner()->getAllReviewSites();
+        $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
 
-        return view('staff.partners.feed-links.add', $bindings);
+        return view('staff.reviews.feed-links.add', $bindings);
     }
 
-    public function edit($linkId)
+    public function edit(PartnerFeedLink $feedLink)
     {
-        $bindings = $this->getBindingsFeedLinksSubpage('Edit feed link');
+        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Edit feed link');
 
-        $feedLinkData = $this->getServicePartnerFeedLink()->find($linkId);
-        if (!$feedLinkData) abort(404);
+        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit feed link');
+
+        $linkId = $feedLink->id;
 
         $request = request();
 
@@ -114,23 +139,23 @@ class FeedLinksController extends Controller
 
             $values = $this->buildValuesArray($request);
 
-            $this->getServicePartnerFeedLink()->edit($feedLinkData, $values);
+            $this->getServicePartnerFeedLink()->edit($feedLink, $values);
 
-            return redirect(route('staff.partners.feed-links.list'));
+            return redirect(route('staff.reviews.feedLinks.index'));
 
         }
 
-        $bindings['FeedLinkData'] = $feedLinkData;
+        $bindings['FeedLinkData'] = $feedLink;
         $bindings['LinkId'] = $linkId;
 
         $bindings['FeedStatusList'] = $this->getServicePartnerFeedLink()->getFeedStatusDropdown();
         $bindings['DataTypeList'] = $this->getServicePartnerFeedLink()->getDataTypeDropdown();
         $bindings['ItemNodeList'] = $this->getServicePartnerFeedLink()->getItemNodeDropdown();
 
-        $bindings['ReviewSiteList'] = $this->getServicePartner()->getAllReviewSites();
+        $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
 
         $bindings['FormMode'] = 'edit';
 
-        return view('staff.partners.feed-links.edit', $bindings);
+        return view('staff.reviews.feed-links.edit', $bindings);
     }
 }

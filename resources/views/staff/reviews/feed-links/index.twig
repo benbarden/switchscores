@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-<a href="{{ route('staff.partners.feed-links.add') }}" class="btn outline btn-primary">+ Add a feed link</a>
+<a href="{{ route('staff.reviews.feedLinks.add') }}" class="btn outline btn-primary">+ Add a feed link</a>
 
 <hr>
 
@@ -60,7 +60,7 @@
                     #}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('staff.partners.feed-links.edit', {'linkId': item.id}) }}">Edit</a> :
+                    <a href="{{ route('staff.reviews.feedLinks.edit', {'feedLink': item}) }}">Edit</a> :
                     Delete
                 </td>
             </tr>

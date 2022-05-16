@@ -5,12 +5,13 @@
             <th>Name</th>
             <th class="text-center">Ranked</th>
             <th class="text-center">To go</th>
+            <th class="text-center">Progress</th>
         </tr>
         </thead>
         <tbody>
         {% for item in ActiveCampaigns %}
             <tr>
-                <td>
+                <td style="vertical-align: middle;">
                     {% if SiteRole == 'reviewer' %}
                         <a href="{{ route('reviewers.campaigns.show', {'campaignId': item.id}) }}">
                             {{ item.name }}
@@ -21,11 +22,18 @@
                         </a>
                     {% endif %}
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.ranked_count }}
                 </td>
-                <td class="text-center">
+                <td class="text-center" style="vertical-align: middle;">
                     {{ item.games().count - item.ranked_count }}
+                </td>
+                <td class="text-center" style="vertical-align: middle;">
+                    <div style="background: #666; padding: 0px;">
+                        <div style="background: #0c0; color: #fff; font-weight: bold; padding: 6px; width: {{ item.progress }}%">
+                            {{ item.progress }}%
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% endfor %}

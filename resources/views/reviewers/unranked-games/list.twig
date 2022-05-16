@@ -37,6 +37,7 @@
                 <option value="by-count-0">0 reviews</option>
             </optgroup>
             <optgroup label="By year released">
+                <option value="by-year-2022">2022</option>
                 <option value="by-year-2021">2021</option>
                 <option value="by-year-2020">2020</option>
                 <option value="by-year-2019">2019</option>
@@ -74,6 +75,9 @@
                 break;
             case 'by-count-0':
                 destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '0'}) }}';
+                break;
+            case 'by-year-2022':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2022'}) }}';
                 break;
             case 'by-year-2021':
                 destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': '2021'}) }}';

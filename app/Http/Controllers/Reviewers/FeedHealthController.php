@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -12,23 +15,35 @@ class FeedHealthController extends Controller
     use SwitchServices;
     use AuthUser;
 
+    protected $repoReviewSite;
+    protected $repoPartnerFeedLink;
+
+    public function __construct(
+        ReviewSiteRepository $repoReviewSite,
+        PartnerFeedLinkRepository $repoPartnerFeedLink
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
+    }
+
     public function landing()
     {
-        $servicePartner = $this->getServicePartner();
-
         $bindings = [];
 
         $authUser = $this->getValidUser($this->getServiceUser());
 
         $partnerId = $authUser->partner_id;
 
-        $partnerData = $servicePartner->find($partnerId);
+        $reviewSite = $this->repoReviewSite->find($partnerId);
 
         // These shouldn't be possible but it saves problems later on
-        if (!$partnerData) abort(400);
-        if (!$partnerData->isReviewSite()) abort(500);
+        if (!$reviewSite) abort(400);
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
+
+        $partnerFeedLink = $this->repoPartnerFeedLink->firstBySite($partnerId);
+        $bindings['PartnerFeedLink'] = $partnerFeedLink;
 
         $pageTitle = 'Feed health';
 
@@ -46,21 +61,18 @@ class FeedHealthController extends Controller
 
     public function byProcessStatus($status)
     {
-        $servicePartner = $this->getServicePartner();
-
         $bindings = [];
 
         $authUser = $this->getValidUser($this->getServiceUser());
 
         $partnerId = $authUser->partner_id;
 
-        $partnerData = $servicePartner->find($partnerId);
+        $reviewSite = $this->repoReviewSite->find($partnerId);
 
         // These shouldn't be possible but it saves problems later on
-        if (!$partnerData) abort(400);
-        if (!$partnerData->isReviewSite()) abort(500);
+        if (!$reviewSite) abort(400);
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
 
         $pageTitle = 'Feed health - view by process status';
 
@@ -77,21 +89,18 @@ class FeedHealthController extends Controller
     {
         $tableLimit = 50;
 
-        $servicePartner = $this->getServicePartner();
-
         $bindings = [];
 
         $authUser = $this->getValidUser($this->getServiceUser());
 
         $partnerId = $authUser->partner_id;
 
-        $partnerData = $servicePartner->find($partnerId);
+        $reviewSite = $this->repoReviewSite->find($partnerId);
 
         // These shouldn't be possible but it saves problems later on
-        if (!$partnerData) abort(400);
-        if (!$partnerData->isReviewSite()) abort(500);
+        if (!$reviewSite) abort(400);
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
 
         $pageTitle = 'Feed health - view by parse status';
 

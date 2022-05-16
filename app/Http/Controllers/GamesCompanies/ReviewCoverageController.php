@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
-use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -18,17 +18,17 @@ class ReviewCoverageController extends Controller
 
     protected $repoGame;
     protected $repoReviewLink;
-    protected $repoPartner;
+    protected $repoReviewSite;
 
     public function __construct(
         GameRepository $repoGame,
         ReviewLinkRepository $repoReviewLink,
-        PartnerRepository $repoPartner
+        ReviewSiteRepository $repoReviewSite
     )
     {
         $this->repoGame = $repoGame;
         $this->repoReviewLink = $repoReviewLink;
-        $this->repoPartner = $repoPartner;
+        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function show($gameId)
@@ -43,11 +43,11 @@ class ReviewCoverageController extends Controller
         $bindings['ReviewLinkList'] = $reviewLinkList;
 
         $reviewedPartnerIdList = $reviewLinkList->pluck('site_id');
-        $activeReviewSites = $this->repoPartner->reviewSitesActiveRecent();
+        $activeReviewSites = $this->repoReviewSite->getActive();
         $notReviewedList = $activeReviewSites->whereNotIn('id', $reviewedPartnerIdList)->sortByDesc('last_review_date');
         $bindings['NotReviewedPartnerList'] = $notReviewedList;
 
-        $bindings['ReviewSitesWithContactDetails'] = $this->getServicePartner()->getActiveReviewSitesWithContactDetails();
+        $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
 
         $pageTitle = 'Review coverage';
         $bindings['TopTitle'] = $pageTitle;

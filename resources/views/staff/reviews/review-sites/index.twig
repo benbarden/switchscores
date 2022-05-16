@@ -1,0 +1,52 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<a href="{{ route('staff.reviews.reviewSites.add') }}" class="btn outline btn-primary">+ Add review site</a>
+
+<br>
+<br>
+
+Sites with no reviews for 30 days will move to "No recent reviews". They will also be hidden from the list of
+review sites on <a href="{{ route('partners.landing') }}">Partners</a>, and from the Games companies dashboard.
+As soon as a new review is added, they'll reappear on the Active list.
+
+<br>
+<br>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-active-sites">Active ({{ ReviewSitesActive.count }})</a></li>
+                <li><a href="#tabs-no-recent-reviews">No recent reviews ({{ ReviewSitesNoRecentReviews.count }})</a></li>
+            </ul>
+
+            <div id="tabs-active-sites">
+
+                <h2>Active sites</h2>
+                {% include 'staff/reviews/review-sites/list-table.twig' with {'ReviewSites': ReviewSitesActive} %}
+
+            </div>
+
+            <div id="tabs-no-recent-reviews">
+
+                <h2>No recent reviews</h2>
+                {% include 'staff/reviews/review-sites/list-table.twig' with {'ReviewSites': ReviewSitesNoRecentReviews} %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $('#tabs').tabs();
+</script>
+
+{% endblock page_inner %}

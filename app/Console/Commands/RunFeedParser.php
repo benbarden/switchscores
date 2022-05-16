@@ -2,14 +2,18 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\ReviewFeedItem;
 use App\Models\Partner;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Services\Feed\Parser;
 use App\Services\Feed\TitleParser;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
+
 use App\Traits\SwitchServices;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class RunFeedParser extends Command
 {
@@ -52,7 +56,8 @@ class RunFeedParser extends Command
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
-        $servicePartner = $this->getServicePartner();
+
+        $repoReviewSite = new ReviewSiteRepository();
 
         $serviceTitleMatch = new ServiceTitleMatch();
 
@@ -73,7 +78,7 @@ class RunFeedParser extends Command
             $itemUrl = $feedItem->item_url;
             $itemTitle = $feedItem->item_title;
 
-            $reviewSite = $servicePartner->find($siteId);
+            $reviewSite = $repoReviewSite->find($siteId);
             if (!$reviewSite) {
                 $logger->error('Cannot find review site! ['.$siteId.']');
                 continue;

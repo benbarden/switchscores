@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Events\ReviewLinkCreated;
-use App\Models\ReviewLink;
-use App\Traits\SwitchServices;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+
+use App\Events\ReviewLinkCreated;
+use App\Models\ReviewLink;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
+use App\Traits\SwitchServices;
 
 class RunFeedReviewGenerator extends Command
 {
@@ -51,7 +54,8 @@ class RunFeedReviewGenerator extends Command
         $serviceGame = $this->getServiceGame();
         $serviceReviewLink = $this->getServiceReviewLink();
         $serviceReviewStats = $this->getServiceReviewStats();
-        $servicePartner = $this->getServicePartner();
+
+        $repoReviewSite = new ReviewSiteRepository();
 
         $feedItems = $serviceReviewFeedItem->getUnprocessed();
 
@@ -118,7 +122,7 @@ class RunFeedReviewGenerator extends Command
                 //$logger->info('Reformatting date: '.$itemDate.' as short date: '.$itemDateShort);
 
                 // We're good to go - let's create the review
-                $reviewSite = $servicePartner->find($siteId);
+                $reviewSite = $repoReviewSite->find($siteId);
                 $ratingNormalised = $serviceReviewLink->getNormalisedRating($itemRating, $reviewSite);
 
                 $reviewLink = $serviceReviewLink->create(

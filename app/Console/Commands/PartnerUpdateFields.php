@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\ReviewSite;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 use App\Traits\SwitchServices;
 
 class PartnerUpdateFields extends Command
@@ -48,10 +51,11 @@ class PartnerUpdateFields extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $servicePartner = $this->getServicePartner();
         $serviceReviewLink = $this->getServiceReviewLink();
 
-        $reviewSites = $servicePartner->getAllReviewSites();
+        $repoReviewSite = new ReviewSiteRepository();
+
+        $reviewSites = $repoReviewSite->getAll();
 
         if (!$reviewSites) {
             $logger->info('No review sites found. Aborting.');
@@ -73,6 +77,14 @@ class PartnerUpdateFields extends Command
                 $latestReviewDate = null;
             }
 
+            if (is_null($latestReviewDate)) {
+                $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
+            } elseif (date('Y-m-d', strtotime('-30 days')) > $latestReviewDate) {
+                $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
+            } else {
+                $siteStatus = ReviewSite::STATUS_ACTIVE;
+            }
+
             $padSiteName = str_pad($siteName, 30);
             $padReviewCount = str_pad($reviewCount, 8);
 
@@ -80,6 +92,7 @@ class PartnerUpdateFields extends Command
                 $padSiteName, $padReviewCount, $latestReviewDate));
 
             // Update fields
+            $reviewSite->status = $siteStatus;
             $reviewSite->review_count = $reviewCount;
             $reviewSite->last_review_date = $latestReviewDate;
             $reviewSite->save();

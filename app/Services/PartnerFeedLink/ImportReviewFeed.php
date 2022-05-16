@@ -13,6 +13,8 @@ use App\Services\Feed\Importer;
 use App\Services\UrlService;
 use App\Traits\SwitchServices;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
 class ImportReviewFeed
 {
     use SwitchServices;
@@ -86,9 +88,11 @@ class ImportReviewFeed
 
     public function runImport()
     {
+        $repoReviewSite = new ReviewSiteRepository();
+
         $siteId = $this->partnerFeedLink->site_id;
         $partnerFeedUrl = $this->partnerFeedLink->feed_url;
-        $reviewSite = $this->getServicePartner()->find($siteId);
+        $reviewSite = $repoReviewSite->find($siteId);
         $partnerName = $reviewSite->name;
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();

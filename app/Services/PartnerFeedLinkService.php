@@ -31,6 +31,9 @@ class PartnerFeedLinkService
         return PartnerFeedLink::where('feed_status', PartnerFeedLink::FEED_STATUS_LIVE)->orderBy('id', 'asc')->get();
     }
 
+    /**
+     * @deprecated
+     */
     public function getBySite($siteId)
     {
         return PartnerFeedLink::where('site_id', $siteId)->get();
