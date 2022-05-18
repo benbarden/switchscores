@@ -8,8 +8,6 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-use App\Domain\ViewBindings\Staff as Bindings;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -21,24 +19,18 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    protected $viewBreadcrumbs;
-    protected $viewBindings;
     protected $repoFeaturedGames;
     protected $repoGameStats;
     protected $repoGameLists;
     protected $repoReviewDraft;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        Bindings $viewBindings,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         GameListsRepository $repoGameLists,
         ReviewDraftRepository $repoReviewDraft
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->viewBindings = $viewBindings;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameLists = $repoGameLists;
@@ -47,9 +39,8 @@ class IndexController extends Controller
 
     public function index()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Dashboard');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Staff index');
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage('Dashboard');
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff('Staff index');
 
         $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();

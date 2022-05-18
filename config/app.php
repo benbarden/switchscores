@@ -161,6 +161,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Domain providers
+        App\Providers\Domain\ViewServiceProvider::class,
+
         // App providers
         // NB. These are now auto-loaded
 
