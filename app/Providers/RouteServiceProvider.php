@@ -39,7 +39,9 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapPublicRoutes();
+        $this->mapUserRoutes();
+        $this->mapStaffRoutes();
     }
 
     /**
@@ -54,6 +56,65 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
+    }
+
+    /**
+     * @return void
+     */
+    protected function mapPublicRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/public.php'));
+    }
+
+    /**
+     * @return void
+     */
+    protected function mapUserRoutes()
+    {
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/user/member.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/user/reviewer.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/user/games-company.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/user/developer-hub.php'));
+    }
+
+    /**
+     * @return void
+     */
+    protected function mapStaffRoutes()
+    {
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/general.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/categorisation.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/data-sources.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/games.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/news.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/partners.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/reviews.php'));
+
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/owner.php'));
+
     }
 
     /**
