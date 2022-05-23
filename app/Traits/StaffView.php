@@ -198,24 +198,6 @@ trait StaffView
     /**
      * @deprecated
      */
-    public function getBindingsReviewSitesSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewSitesSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsFeedLinksSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeFeedLinksSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
     public function getBindingsGamesCompaniesSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesCompaniesSubPage($pageTitle);

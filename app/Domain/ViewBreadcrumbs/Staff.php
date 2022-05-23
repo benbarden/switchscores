@@ -50,6 +50,11 @@ class Staff extends Base
 
     // *** Staff pages *** //
 
+    public function gamesSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['games.dashboard'])->addTitleAndReturn($pageTitle);
+    }
+
     public function reviewsSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])->addTitleAndReturn($pageTitle);

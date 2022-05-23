@@ -26,7 +26,10 @@ class GamesListController extends Controller
 
     public function gamesToRelease()
     {
-        $bindings = $this->getBindingsGamesSubpage('Games to release', "[ 6, 'asc'], [ 1, 'asc']");
+        $pageTitle = 'Games to release';
+        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->gamesForRelease();
 
@@ -38,7 +41,9 @@ class GamesListController extends Controller
 
     public function recentlyAdded()
     {
-        $bindings = $this->getBindingsGamesSubpage('Recently added');
+        $pageTitle = 'Recently added';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->recentlyAdded(100);
 
@@ -47,7 +52,10 @@ class GamesListController extends Controller
 
     public function recentlyReleased()
     {
-        $bindings = $this->getBindingsGamesSubpage('Recently released', "[ 6, 'desc']");
+        $pageTitle = 'Recently released';
+        $tableSort = "[ 6, 'desc'], [ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getRecentlyReleased(100);
 
@@ -56,7 +64,10 @@ class GamesListController extends Controller
 
     public function upcomingGames()
     {
-        $bindings = $this->getBindingsGamesSubpage('Upcoming and unreleased', "[ 6, 'asc']");
+        $pageTitle = 'Upcoming and unreleased';
+        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGameReleaseDate()->getAllUnreleased();
 
@@ -65,7 +76,10 @@ class GamesListController extends Controller
 
     public function upcomingEshopCrosscheck()
     {
-        $bindings = $this->getBindingsGamesSubpage('Upcoming (eShop crosscheck)', "[ 6, 'asc']");
+        $pageTitle = 'Upcoming (eShop crosscheck)';
+        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
         $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
@@ -75,7 +89,10 @@ class GamesListController extends Controller
 
     public function noCategory()
     {
-        $bindings = $this->getBindingsGamesSubpage('No category', "[ 0, 'desc']");
+        $pageTitle = 'No category';
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->noCategory();
 
@@ -84,7 +101,10 @@ class GamesListController extends Controller
 
     public function noTag()
     {
-        $bindings = $this->getBindingsGamesSubpage('No tag', "[ 0, 'desc']");
+        $pageTitle = 'No tag';
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->noTag();
 
@@ -93,7 +113,10 @@ class GamesListController extends Controller
 
     public function noEuReleaseDate()
     {
-        $bindings = $this->getBindingsGamesSubpage('No EU release date', "[ 0, 'desc']");
+        $pageTitle = 'No EU release date';
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGameReleaseDate()->getAllWithNoEuReleaseDate();
 
@@ -102,7 +125,10 @@ class GamesListController extends Controller
 
     public function noEshopPrice()
     {
-        $bindings = $this->getBindingsGamesSubpage('No eShop price', "[ 6, 'desc']");
+        $pageTitle = 'No eShop price';
+        $tableSort = "[ 6, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getWithoutPrices();
 
@@ -111,7 +137,10 @@ class GamesListController extends Controller
 
     public function noVideoType()
     {
-        $bindings = $this->getBindingsGamesSubpage('No video type', "[ 0, 'asc']");
+        $pageTitle = 'No video type';
+        $tableSort = "[ 0, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->noVideoType();
         $bindings['ListLimit'] = "200";
@@ -121,7 +150,10 @@ class GamesListController extends Controller
 
     public function noAmazonUkLink()
     {
-        $bindings = $this->getBindingsGamesSubpage('No Amazon UK link', "[ 0, 'asc']");
+        $pageTitle = 'No Amazon UK link';
+        $tableSort = "[ 0, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getWithNoAmazonUkLink();
         $bindings['ListLimit'] = "200";
@@ -131,7 +163,10 @@ class GamesListController extends Controller
 
     public function noNintendoCoUkLink()
     {
-        $bindings = $this->getBindingsGamesSubpage('No Nintendo.co.uk link', "[ 6, 'desc']");
+        $pageTitle = 'No Nintendo.co.uk link';
+        $tableSort = "[ 6, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getWithNoNintendoCoUkLink();
 
@@ -140,7 +175,9 @@ class GamesListController extends Controller
 
     public function brokenNintendoCoUkLink()
     {
-        $bindings = $this->getBindingsGamesSubpage('Broken Nintendo.co.uk link');
+        $pageTitle = 'Broken Nintendo.co.uk link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink();
 
@@ -154,7 +191,9 @@ class GamesListController extends Controller
         } else {
             $valueDesc = $value;
         }
-        $bindings = $this->getBindingsGamesSubpage('By format option: '.$format.' - '.$valueDesc);
+        $pageTitle = 'By format option: '.$format.' - '.$valueDesc;
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->repoGameLists->formatOption($format, $value);
 
@@ -163,7 +202,10 @@ class GamesListController extends Controller
 
     public function byCategory(Category $category)
     {
-        $bindings = $this->getBindingsGamesSubpage('By category: '.$category->name, "[ 1, 'asc']");
+        $pageTitle = 'By category: '.$category->name;
+        $tableSort = "[ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getByCategory($category);
 
@@ -172,7 +214,10 @@ class GamesListController extends Controller
 
     public function bySeries(GameSeries $gameSeries)
     {
-        $bindings = $this->getBindingsGamesSubpage('By series: '.$gameSeries->series, "[ 1, 'asc']");
+        $pageTitle = 'By series: '.$gameSeries->series;
+        $tableSort = "[ 1, 'asc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getBySeries($gameSeries);
 
@@ -184,7 +229,10 @@ class GamesListController extends Controller
 
     public function byTag(Tag $tag)
     {
-        $bindings = $this->getBindingsGamesSubpage('By tag: '.$tag->tag_name, "[ 0, 'desc']");
+        $pageTitle = 'By tag: '.$tag->tag_name;
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setDatatablesSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getByTag($tag->id);
 
