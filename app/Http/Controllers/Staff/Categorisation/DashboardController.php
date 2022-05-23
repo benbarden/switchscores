@@ -6,8 +6,6 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\ViewBindings\Staff as Bindings;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
@@ -19,20 +17,14 @@ class DashboardController extends Controller
 {
     use SwitchServices;
 
-    protected $viewBindings;
-    protected $viewBreadcrumbs;
     protected $repoGameStats;
     protected $repoGameSeries;
 
     public function __construct(
-        Bindings $viewBindings,
-        Breadcrumbs $viewBreadcrumbs,
         GameStatsRepository $repoGameStats,
         GameSeriesRepository $repoGameSeries
     )
     {
-        $this->viewBindings = $viewBindings;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameSeries = $repoGameSeries;
     }
@@ -129,9 +121,9 @@ class DashboardController extends Controller
 
     public function show()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Categorisation dashboard');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Categorisation dashboard');
+        $pageTitle = 'Categorisation dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceMigrationsCategory = new MigrationsCategory();
 
@@ -151,10 +143,8 @@ class DashboardController extends Controller
     public function categoryTitleMatch(Category $category)
     {
         $pageTitle = 'Category matches: '.$category->name;
-
-        $breadcrumbs = $this->viewBreadcrumbs->categorisationSubpage($pageTitle);
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getCategoryTitleMatch($category->name);
 
@@ -164,10 +154,8 @@ class DashboardController extends Controller
     public function seriesTitleMatch(GameSeries $gameSeries)
     {
         $pageTitle = 'Series matches: '.$gameSeries->series;
-
-        $breadcrumbs = $this->viewBreadcrumbs->categorisationSubpage($pageTitle);
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getSeriesTitleMatch($gameSeries->series);
 
@@ -177,10 +165,8 @@ class DashboardController extends Controller
     public function tagTitleMatch(Tag $tag)
     {
         $pageTitle = 'Tag matches: '.$tag->tag_name;
-
-        $breadcrumbs = $this->viewBreadcrumbs->categorisationSubpage($pageTitle);
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameList'] = $this->getServiceGame()->getTagTitleMatch($tag);
 
