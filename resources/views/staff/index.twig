@@ -38,16 +38,6 @@
                     </td>
                 </tr>
             {% endif %}
-            {% if auth_user().hasRole('Category manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}">Game category suggestions</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.categorisation.game-category-suggestions.index') }}" class="h4">{{ PendingGameCategorySuggestionCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
             {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
                 <tr>
                     <td>
@@ -95,11 +85,11 @@
             <tr>
                 <td>
                     <a href="{{ route('staff.games.list.no-category') }}">
-                        No category - all games
+                        No category
                     </a>
                 </td>
                 <td class="text-end">
-                    <span class="h4">{{ NoCategoryAllGamesCount }}</span>
+                    <span class="h4">{{ NoCategoryCount }}</span>
                 </td>
             </tr>
             <tr>

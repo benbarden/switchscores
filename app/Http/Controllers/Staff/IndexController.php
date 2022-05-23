@@ -11,7 +11,6 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
-use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Traits\SwitchServices;
 
@@ -44,7 +43,6 @@ class IndexController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
-        $serviceMigrationsCategory = new MigrationsCategory();
         $serviceUser = $this->getServiceUser();
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
@@ -56,8 +54,6 @@ class IndexController extends Controller
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
-        $pendingCategoryEdits = $this->getServiceDbEditGame()->getPendingCategoryEdits();
-        $bindings['PendingGameCategorySuggestionCount'] = count($pendingCategoryEdits);
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
 
         // Games to add
@@ -67,7 +63,7 @@ class IndexController extends Controller
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Missing data
-        $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
+        $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
         $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
         $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 

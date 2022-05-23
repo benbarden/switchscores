@@ -36,6 +36,14 @@ class Repository
     /**
      * @return integer
      */
+    public function totalNoCategory()
+    {
+        return Game::whereNull('category_id')->count();
+    }
+
+    /**
+     * @return integer
+     */
     public function totalUntagged()
     {
         return Game::whereDoesntHave('gameTags')->count();

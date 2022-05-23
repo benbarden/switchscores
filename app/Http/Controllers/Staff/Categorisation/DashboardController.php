@@ -9,7 +9,6 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
-use App\Services\Migrations\Category as MigrationsCategory;
 
 use App\Traits\SwitchServices;
 
@@ -125,13 +124,8 @@ class DashboardController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceMigrationsCategory = new MigrationsCategory();
-
         // Migrations: Category
-        $bindings['NoCategoryOneGenreCount'] = $serviceMigrationsCategory->countGamesWithOneGenre();
-        $bindings['NoCategoryPuzzleAndOneOtherGenre'] = $serviceMigrationsCategory->countGamesWithNamedGenreAndOneOther('Puzzle');
-        $bindings['NoCategoryAllGamesCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
-        $bindings['NoCategoryEshopDataCount'] = count($serviceMigrationsCategory->getGamesWithEshopDataAndNoCategory());
+        $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
         $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // Title matches

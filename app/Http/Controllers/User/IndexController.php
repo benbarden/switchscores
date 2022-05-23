@@ -8,8 +8,6 @@ use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 use App\Traits\MemberView;
 
-use App\Services\Migrations\Category as MigrationsCategory;
-
 use App\Domain\Campaign\Repository as CampaignRepository;
 
 class IndexController extends Controller
@@ -73,10 +71,6 @@ class IndexController extends Controller
         $bindings['UserData'] = $authUser;
         $bindings['TotalGames'] = $this->getServiceUserGamesCollection()->getUserTotalGames($userId);
         $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
-
-        // Database help
-        $serviceMigrationsCategory = new MigrationsCategory();
-        $bindings['NoCategoryCount'] = $serviceMigrationsCategory->countGamesWithNoCategory();
 
         // Campaigns
         $activeCampaigns = $this->repoCampaign->getActive();

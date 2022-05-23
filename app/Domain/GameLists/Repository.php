@@ -107,6 +107,11 @@ class Repository
         return $games->get();
     }
 
+    public function noCategory()
+    {
+        return Game::whereNull('category_id')->get();
+    }
+
     public function byCollection($collectionId, $limit = null)
     {
         $games = Game::where('collection_id', $collectionId)

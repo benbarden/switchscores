@@ -10,12 +10,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/categorisation/title-match/series/{gameSeries}', 'Staff\Categorisation\DashboardController@seriesTitleMatch')->name('staff.categorisation.title-match.series');
     Route::get('/staff/categorisation/title-match/tag/{tag}', 'Staff\Categorisation\DashboardController@tagTitleMatch')->name('staff.categorisation.title-match.tag');
 
-    // Member suggestions
-    Route::get('/staff/categorisation/game-category-suggestions', 'Staff\Categorisation\GameCategorySuggestionController@show')->name('staff.categorisation.game-category-suggestions.index');
-    Route::get('/staff/categorisation/game-category-suggestions/approve', 'Staff\Categorisation\GameCategorySuggestionController@approve')->name('staff.categorisation.game-category-suggestions.approve');
-    Route::get('/staff/categorisation/game-category-suggestions/approve-all', 'Staff\Categorisation\GameCategorySuggestionController@approveAll')->name('staff.categorisation.game-category-suggestions.approve-all');
-    Route::get('/staff/categorisation/game-category-suggestions/deny', 'Staff\Categorisation\GameCategorySuggestionController@deny')->name('staff.categorisation.game-category-suggestions.deny');
-
     // Categories
     Route::get('/staff/categorisation/category/list', 'Staff\Categorisation\CategoryController@showList')->name('staff.categorisation.category.list');
     Route::match(['get', 'post'], '/staff/categorisation/category/add', 'Staff\Categorisation\CategoryController@addCategory')->name('staff.categorisation.category.add');
@@ -39,8 +33,5 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/categorisation/tag/add', 'Staff\Categorisation\TagController@addTag')->name('staff.categorisation.tag.add');
     Route::match(['get', 'post'], '/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
     Route::get('/staff/categorisation/tag/delete/{tagId}', 'Staff\Categorisation\TagController@deleteTag')->name('staff.categorisation.tag.delete');
-
-    // Migrations
-    Route::get('/staff/categorisation/migrations/category/all-games-with-no-category', 'Staff\Categorisation\MigrationsCategoryController@allGamesWithNoCategory')->name('staff.categorisation.migrations.category.all-games-with-no-category');
 
 });

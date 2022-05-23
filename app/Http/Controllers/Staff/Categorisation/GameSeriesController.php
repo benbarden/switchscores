@@ -10,11 +10,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Illuminate\Support\Facades\Validator;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\StaffView;
 
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
@@ -22,7 +19,6 @@ class GameSeriesController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -34,22 +30,20 @@ class GameSeriesController extends Controller
         'link_title' => 'required',
     ];
 
-    protected $viewBreadcrumbs;
     protected $repoGameSeries;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         GameSeriesRepository $repoGameSeries
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoGameSeries = $repoGameSeries;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindings('Game series');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Game series');
+        $pageTitle = 'Game series';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
 
@@ -58,8 +52,9 @@ class GameSeriesController extends Controller
 
     public function addSeries()
     {
-        $bindings = $this->getBindings('Add series');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Add series');
+        $pageTitle = 'Add series';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSeriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -108,8 +103,9 @@ class GameSeriesController extends Controller
 
     public function editSeries($seriesId)
     {
-        $bindings = $this->getBindings('Edit series');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Edit series');
+        $pageTitle = 'Edit series';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSeriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $seriesData = $this->repoGameSeries->find($seriesId);
         if (!$seriesData) abort(404);
@@ -140,8 +136,9 @@ class GameSeriesController extends Controller
 
     public function deleteSeries($seriesId)
     {
-        $bindings = $this->getBindings('Delete series');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSeriesSubpage('Delete series');
+        $pageTitle = 'Delete series';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSeriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $seriesData = $this->repoGameSeries->find($seriesId);
         if (!$seriesData) abort(404);

@@ -7,11 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\StaffView;
 
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
@@ -20,7 +17,6 @@ class TagController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -32,25 +28,23 @@ class TagController extends Controller
         'link_title' => 'required',
     ];
 
-    protected $viewBreadcrumbs;
     private $repoTag;
     private $repoTagCategory;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         TagRepository $repoTag,
         TagCategoryRepository $repoTagCategory
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoTag = $repoTag;
         $this->repoTagCategory = $repoTagCategory;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindings('Tags');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationSubpage('Tags');
+        $pageTitle = 'Tags';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['TagList'] = $this->repoTag->getAll();
 
@@ -59,8 +53,9 @@ class TagController extends Controller
 
     public function addTag()
     {
-        $bindings = $this->getBindings('Add tag');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Add tag');
+        $pageTitle = 'Add tag';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -91,8 +86,9 @@ class TagController extends Controller
 
     public function editTag($tagId)
     {
-        $bindings = $this->getBindings('Edit tag');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->categorisationTagsSubpage('Edit tag');
+        $pageTitle = 'Edit tag';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $tagData = $this->repoTag->find($tagId);
         if (!$tagData) abort(404);

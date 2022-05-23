@@ -11,13 +11,6 @@ Route::group(['middleware' => ['auth']], function() {
     // Search (modular)
     Route::match(['get', 'post'], '/user/search-modular/{searchMode}', 'User\SearchModularController@findGame')->name('user.search-modular.find-game');
 
-    // Database help
-    Route::get('/user/database-help/index', 'User\DatabaseHelpController@landing')->name('user.database-help.index');
-    Route::get('/user/database-help/games-without-categories', 'User\DatabaseHelpController@gamesWithoutCategories')->name('user.database-help.games-without-categories');
-    Route::get('/user/database-help/games-without-categories/{year}', 'User\DatabaseHelpController@gamesWithoutCategoriesByYear')->name('user.database-help.games-without-categories.byYear');
-    Route::match(['get', 'post'], '/user/database-help/games-without-categories/submit-game-category-suggestion/{gameId}',
-        'User\DatabaseHelpController@submitGameCategorySuggestion')->name('user.database-help.games-without-categories.submit-game-category-suggestion');
-
     // Collection
     Route::get('/user/collection/index', 'User\CollectionController@landing')->name('user.collection.landing');
     Route::get('/user/collection/list/{listOption}', 'User\CollectionController@showList')->name('user.collection.list');
