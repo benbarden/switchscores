@@ -216,34 +216,6 @@ class StaffBreadcrumbs
             ->getBreadcrumbs();
     }
 
-    private function addReviewSitesList()
-    {
-        $crumbItem = ['url' => route('staff.reviews.site.list'), 'text' => 'Review sites'];
-        return $this->addCrumb($crumbItem);
-    }
-
-    public function makeReviewSitesSubPage($pageTitle)
-    {
-        return $this->addPartnersDashboard()
-            ->addReviewSitesList()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
-    private function addFeedLinksList()
-    {
-        $crumbItem = ['url' => route('staff.partners.feed-links.list'), 'text' => 'Feed links'];
-        return $this->addCrumb($crumbItem);
-    }
-
-    public function makeFeedLinksSubPage($pageTitle)
-    {
-        return $this->addPartnersDashboard()
-            ->addFeedLinksList()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
     private function addGamesCompaniesList()
     {
         $crumbItem = ['url' => route('staff.partners.games-company.list'), 'text' => 'Games companies'];

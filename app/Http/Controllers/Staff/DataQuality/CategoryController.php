@@ -4,31 +4,19 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 use App\Services\DataQuality\QualityStats;
 
 class CategoryController extends Controller
 {
     use SwitchServices;
-    use StaffView;
-
-    protected $viewBreadcrumbs;
-
-    public function __construct(
-        Breadcrumbs $viewBreadcrumbs
-    )
-    {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-    }
 
     public function dashboard()
     {
-        $bindings = $this->getBindings('Category dashboard');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataQualitySubpage('Category dashboard');
+        $pageTitle = 'Category dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualitySubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
         $bindings['StatsCategories'] = $serviceQualityStats->getCategoryStats();
@@ -38,8 +26,9 @@ class CategoryController extends Controller
 
     public function gamesWithCategories($year, $month)
     {
-        $bindings = $this->getBindings('Games with categories');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataQualityCategoriesSubpage('Games with categories');
+        $pageTitle = 'Games with categories';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualityCategoriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
         $bindings['GameList'] = $serviceQualityStats->getGamesWithCategory($year, $month);
@@ -49,8 +38,9 @@ class CategoryController extends Controller
 
     public function gamesWithoutCategories($year, $month)
     {
-        $bindings = $this->getBindings('Games without categories');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataQualityCategoriesSubpage('Games without categories');
+        $pageTitle = 'Games without categories';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualityCategoriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
         $bindings['GameList'] = $serviceQualityStats->getGamesWithoutCategory($year, $month);
