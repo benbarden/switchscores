@@ -25,9 +25,10 @@ class DbEditGameService
         return DbEditGame::find($id);
     }
 
-    public function getCategoryEditsByStatus($status)
+    public function getCategoryEditsByStatus($status, $limit = 250)
     {
-        return DbEditGame::where('data_to_update', DbEditGame::DATA_CATEGORY)->where('status', $status)->get();
+        return DbEditGame::where('data_to_update', DbEditGame::DATA_CATEGORY)
+            ->where('status', $status)->orderBy('created_at', 'desc')->limit($limit)->get();
     }
 
     public function getAllCategoryEdits()
