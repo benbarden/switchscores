@@ -39,8 +39,9 @@ class IndexController extends Controller
 
     public function index()
     {
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage('Dashboard');
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff('Staff index');
+        $pageTitle = 'Dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
         $serviceMigrationsCategory = new MigrationsCategory();
