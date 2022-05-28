@@ -56,16 +56,6 @@ class FeedLinksController extends Controller
 
         $feedLinks = $this->getServicePartnerFeedLink()->getAll();
 
-        foreach ($feedLinks as &$feedLink) {
-
-            $feedId = $feedLink->id;
-            $feedImport = $this->getServiceReviewFeedImport()->getLatestByFeedId($feedId);
-            if ($feedImport) {
-                $feedLink->lastFeedImport = $feedImport;
-            }
-
-        }
-
         $bindings['FeedLinks'] = $feedLinks;
 
         return view('staff.reviews.feed-links.index', $bindings);

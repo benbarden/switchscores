@@ -32,11 +32,6 @@ class ReviewFeedItemTest extends Model
         return $this->hasOne('App\Models\Game', 'id', 'game_id');
     }
 
-    public function feedImport()
-    {
-        return $this->hasOne('App\Models\ReviewFeedImport', 'id', 'import_id');
-    }
-
     public function isHistoric()
     {
         // If the review date is older than 30 days from today, it's history!

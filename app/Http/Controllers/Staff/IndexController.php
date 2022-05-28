@@ -76,9 +76,6 @@ class IndexController extends Controller
         // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
-        // Recent imports
-        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getLive(5);
-
         return view('staff.index', $bindings);
     }
 }

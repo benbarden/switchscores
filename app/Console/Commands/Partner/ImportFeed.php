@@ -70,7 +70,6 @@ class ImportFeed extends Command
             $serviceImporter->setIsTest(true);
             $serviceImporter->clearPreviousTests();
         }
-        $serviceImporter->createFeedImport();
         $serviceImporter->runImport();
     }
 }

@@ -8,7 +8,6 @@ use App\Exceptions\Review\FeedUrlPrefixNotMatched;
 use App\Exceptions\Review\HistoricEntry;
 use App\Exceptions\Review\TitleRuleNotMatched;
 use App\Models\PartnerFeedLink;
-use App\Models\ReviewFeedImport;
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
 use App\Traits\SwitchServices;
@@ -25,11 +24,6 @@ class ImportReviewFeed
      * @var \App\Models\PartnerFeedLink
      */
     private $partnerFeedLink;
-
-    /**
-     * @var ReviewFeedImport
-     */
-    private $reviewFeedImport;
 
     /**
      * @var boolean
@@ -63,27 +57,6 @@ class ImportReviewFeed
             $this->logger->info('***** TEST MODE *****');
             $this->getServiceReviewFeedItemTest()->deleteTestItemsBySite($this->partnerFeedLink->site_id);
         }
-    }
-
-    public function createBatchFeedImport()
-    {
-        $reviewFeedImport = $this->getServiceReviewFeedImport()->createCron(null, null, $this->isTest);
-        $this->reviewFeedImport = $reviewFeedImport;
-        return $reviewFeedImport;
-    }
-
-    public function createFeedImport()
-    {
-        $feedId = $this->partnerFeedLink->id;
-        $siteId = $this->partnerFeedLink->site_id;
-        $reviewFeedImport = $this->getServiceReviewFeedImport()->createSiteCron($feedId, $siteId, $this->isTest);
-        $this->reviewFeedImport = $reviewFeedImport;
-        return $reviewFeedImport;
-    }
-
-    public function setFeedImport(ReviewFeedImport $reviewFeedImport)
-    {
-        $this->reviewFeedImport = $reviewFeedImport;
     }
 
     public function runImport()
@@ -134,7 +107,6 @@ class ImportReviewFeed
                         $reviewFeedItem = $feedImporter->processItemRss($feedItem);
                     }
                     $this->logger->info('Importing item with date: '.$reviewFeedItem->item_date.'; URL: '.$reviewFeedItem->item_url);
-                    $reviewFeedItem->import_id = $this->reviewFeedImport->id;
                     $reviewFeedItem->save();
                     $successCount++;
                 } catch (AlreadyImported $e) {

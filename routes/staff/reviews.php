@@ -37,10 +37,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');
     Route::match(['get', 'post'], '/staff/reviews/feed-items/edit/{itemId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
 
-    // Review feed imports
-    Route::get('/staff/reviews/feed-imports', 'Staff\Reviews\FeedImportsController@show')->name('staff.reviews.feed-imports.list');
-    Route::get('/staff/reviews/feed-imports/{feedImport}/items', 'Staff\Reviews\FeedImportsController@showItemList')->name('staff.reviews.feed-imports.item-list');
-
     // Review highlights
     Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');
 

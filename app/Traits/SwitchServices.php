@@ -31,7 +31,6 @@ use App\Services\PartnerFeedLinkService;
 use App\Services\PartnerService;
 use App\Services\PartnerOutreachService;
 use App\Services\QuickReviewService;
-use App\Services\ReviewFeedImportService;
 use App\Services\ReviewFeedItemService;
 use App\Services\ReviewFeedItemTestService;
 use App\Services\ReviewLinkService;
@@ -323,14 +322,6 @@ trait SwitchServices
     public function getServiceQuickReview()
     {
         return $this->loadService('QuickReviewService');
-    }
-
-    /**
-     * @return ReviewFeedImportService
-     */
-    public function getServiceReviewFeedImport()
-    {
-        return $this->loadService('ReviewFeedImportService');
     }
 
     /**

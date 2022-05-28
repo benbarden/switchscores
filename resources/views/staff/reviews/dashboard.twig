@@ -142,39 +142,6 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Recent imports'} %}
-        {% if ReviewFeedImportList.count > 0 %}
-            <table class="table data-sortable table-responsive">
-                <thead>
-                <tr>
-                    <th class="text-center">Day of week</th>
-                    <th class="text-center">Items</th>
-                    <th class="text-center">Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in ReviewFeedImportList %}
-                    <tr>
-                        <td class="text-center">
-                            {{ item.created_at|date('l') }}
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ route('staff.reviews.feed-imports.item-list', {'feedImport': item}) }}">
-                                {{ item.feedItems.count() }}
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            {{ item.created_at|date('Y-m-d') }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No items found!</p>
-        {% endif %}
-        <p><a href="{{ route('staff.reviews.feed-imports.list') }}">View all imports</a>.</p>
-
     </div>
 
     <div class="col-md-4">
@@ -185,11 +152,6 @@
             <tr>
                 <td>
                     <a href="{{ route('staff.reviews.link.list') }}">Review links</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.feed-imports.list') }}">Feed imports</a>
                 </td>
             </tr>
             <tr>

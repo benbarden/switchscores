@@ -53,9 +53,6 @@ class DashboardController extends Controller
         $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
-        // Feed imports
-        $bindings['ReviewFeedImportList'] = $this->getServiceReviewFeedImport()->getAll(10);
-
         // Stats
         $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
