@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\News\Repository as NewsRepository;
+
 use App\Traits\SwitchServices;
 
 class UrlController extends Controller
@@ -45,7 +47,8 @@ class UrlController extends Controller
         }
 
         if ($newsId) {
-            $newsItem = $this->getServiceNews()->find($newsId);
+            $repoNews = new NewsRepository();
+            $newsItem = $repoNews->find($newsId);
             if (!$newsItem) {
                 return response()->json(['error' => 'Cannot find news item: '.$newsId], 404);
             }
