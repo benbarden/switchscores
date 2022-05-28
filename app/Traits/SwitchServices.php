@@ -125,6 +125,7 @@ trait SwitchServices
     // ** Standard service classes ** //
 
     /**
+     * @deprecated
      * @return CampaignGameService
      */
     public function getServiceCampaignGame()
@@ -133,6 +134,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return CategoryService
      */
     public function getServiceCategory()
@@ -141,6 +143,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return DataSourceService
      */
     public function getServiceDataSource()
@@ -149,6 +152,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return DataSourceIgnoreService
      */
     public function getServiceDataSourceIgnore()
@@ -157,6 +161,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return DataSourceParsedService
      */
     public function getServiceDataSourceParsed()
@@ -165,6 +170,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return DataSourceRawService
      */
     public function getServiceDataSourceRaw()
@@ -173,6 +179,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return DbEditGameService
      */
     public function getServiceDbEditGame()
@@ -181,6 +188,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameCalendarService
      */
     public function getServiceGameCalendar()
@@ -189,6 +197,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameDeveloperService
      */
     public function getServiceGameDeveloper()
@@ -197,6 +206,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameImportRuleEshopService
      */
     public function getServiceGameImportRuleEshop()
@@ -205,6 +215,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameImportRuleWikipediaService
      */
     public function getServiceGameImportRuleWikipedia()
@@ -213,6 +224,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GamePublisherService
      */
     public function getServiceGamePublisher()
@@ -221,6 +233,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameRankAllTimeService
      */
     public function getServiceGameRankAllTime()
@@ -229,6 +242,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameRankYearService
      */
     public function getServiceGameRankYear()
@@ -237,6 +251,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameRankYearMonthService
      */
     public function getServiceGameRankYearMonth()
@@ -245,6 +260,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameReleaseDateService
      */
     public function getServiceGameReleaseDate()
@@ -253,6 +269,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameService
      */
     public function getServiceGame()
@@ -261,6 +278,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameTagService
      */
     public function getServiceGameTag()
@@ -269,6 +287,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return GameTitleHashService
      */
     public function getServiceGameTitleHash()
@@ -277,6 +296,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return NewsCategoryService
      */
     public function getServiceNewsCategory()
@@ -285,6 +305,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return NewsService
      */
     public function getServiceNews()
@@ -293,6 +314,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return PartnerService
      */
     public function getServicePartner()
@@ -301,6 +323,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return PartnerFeedLinkService
      */
     public function getServicePartnerFeedLink()
@@ -309,6 +332,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return PartnerOutreachService
      */
     public function getServicePartnerOutreach()
@@ -317,6 +341,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return QuickReviewService
      */
     public function getServiceQuickReview()
@@ -325,6 +350,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return ReviewFeedItemService
      */
     public function getServiceReviewFeedItem()
@@ -333,6 +359,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return ReviewFeedItemTestService
      */
     public function getServiceReviewFeedItemTest()
@@ -341,6 +368,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return ReviewLinkService
      */
     public function getServiceReviewLink()
@@ -349,6 +377,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return ReviewStatsService
      */
     public function getServiceReviewStats()
@@ -357,6 +386,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return TagService
      */
     public function getServiceTag()
@@ -365,6 +395,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return TopRatedService
      */
     public function getServiceTopRated()
@@ -373,6 +404,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return UrlService
      */
     public function getServiceUrl()
@@ -381,6 +413,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return UserGamesCollectionService
      */
     public function getServiceUserGamesCollection()
@@ -389,6 +422,7 @@ trait SwitchServices
     }
 
     /**
+     * @deprecated
      * @return UserService
      */
     public function getServiceUser()
