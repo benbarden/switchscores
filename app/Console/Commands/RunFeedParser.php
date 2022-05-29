@@ -89,18 +89,14 @@ class RunFeedParser extends Command
                 continue;
             }
 
-            if ($feedItem->feedImport) {
-                $feedId = $feedItem->feedImport->feed_id;
-                $partnerFeed = $this->getServicePartnerFeedLink()->find($feedId);
-            } else {
-                $partnerFeed = $this->getServicePartnerFeedLink()->getBySite($siteId);
-            }
+            $siteName = $reviewSite->name;
+
+            $partnerFeed = $this->getServicePartnerFeedLink()->getBySite($siteId);
             if (!$partnerFeed) {
-                $logger->error('Cannot find partner feed: '.$feedId);
+                $logger->error('Cannot find partner feed for site: '.$siteName);
                 continue;
             }
 
-            $siteName = $reviewSite->name;
             $titleMatchRulePattern = $partnerFeed->title_match_rule_pattern;
             $titleMatchRuleIndex = $partnerFeed->title_match_rule_index;
 

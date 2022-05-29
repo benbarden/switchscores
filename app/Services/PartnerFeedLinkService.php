@@ -36,7 +36,7 @@ class PartnerFeedLinkService
      */
     public function getBySite($siteId)
     {
-        return PartnerFeedLink::where('site_id', $siteId)->get();
+        return PartnerFeedLink::where('site_id', $siteId)->first();
     }
 
     /**
