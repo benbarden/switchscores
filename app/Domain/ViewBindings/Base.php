@@ -51,7 +51,7 @@ abstract class Base
         return $this;
     }
 
-    public function setDatatablesSort($sort)
+    public function setTableSort($sort)
     {
         $this->tableSort = $sort;
         return $this;

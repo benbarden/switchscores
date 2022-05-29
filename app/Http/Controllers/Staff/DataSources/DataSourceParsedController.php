@@ -2,31 +2,21 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Models\Game;
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\DataSource\Wikipedia\UpdateGameFactory as WikiUpdateGameFactory;
 use App\Factories\GameDirectorFactory;
-use App\Models\Game;
 use App\Services\UrlService;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class DataSourceParsedController extends Controller
 {
     use SwitchServices;
-    use StaffView;
-
-    protected $viewBreadcrumbs;
-
-    public function __construct(
-        Breadcrumbs $viewBreadcrumbs
-    )
-    {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-    }
 
     public function nintendoCoUkUnlinkedItems()
     {
@@ -34,10 +24,11 @@ class DataSourceParsedController extends Controller
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Unlinked items';
+        $tableSort = "[ 2, 'asc' ]";
 
-        $this->setTableSort("[ 2, 'asc' ]");
-        $bindings = $this->getBindings($pageTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -57,10 +48,11 @@ class DataSourceParsedController extends Controller
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Ignored items';
+        $tableSort = "[ 2, 'asc' ]";
 
-        $this->setTableSort("[ 2, 'asc' ]");
-        $bindings = $this->getBindings($pageTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -78,8 +70,9 @@ class DataSourceParsedController extends Controller
         $dsParsedItem = $this->getServiceDataSourceParsed()->find($itemId);
         if (!$dsParsedItem) abort(404);
 
-        $bindings = $this->getBindings('Add game from Nintendo.co.uk API');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesNintendoCoUkUnlinkedSubpage('Add game from Nintendo.co.uk API');
+        $pageTitle = 'Add game from Nintendo.co.uk API';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesNintendoCoUkUnlinkedSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['DSParsedItem'] = $dsParsedItem;
         $customErrors = [];
@@ -162,10 +155,11 @@ class DataSourceParsedController extends Controller
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Unlinked items';
+        $tableSort = "[ 1, 'asc' ]";
 
-        $this->setTableSort("[ 1, 'asc' ]");
-        $bindings = $this->getBindings($pageTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -185,10 +179,11 @@ class DataSourceParsedController extends Controller
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Ignored items';
+        $tableSort = "[ 1, 'asc' ]";
 
-        $this->setTableSort("[ 1, 'asc' ]");
-        $bindings = $this->getBindings($pageTitle);
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -210,8 +205,9 @@ class DataSourceParsedController extends Controller
 
         if ($dsParsedItem->game_id != null) redirect(route('staff.data-sources.dashboard'));
 
-        $bindings = $this->getBindings('Add game from Wikipedia');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->dataSourcesWikipediaUnlinkedSubpage('Add game from Wikipedia');
+        $pageTitle = 'Add game from Wikipedia';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesWikipediaUnlinkedSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $customErrors = [];
 

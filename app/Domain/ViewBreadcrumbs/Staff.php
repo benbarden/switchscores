@@ -4,6 +4,8 @@
 namespace App\Domain\ViewBreadcrumbs;
 
 
+use App\Models\DataSource;
+
 class Staff extends Base
 {
     private $toastedCrumbs = [];
@@ -150,6 +152,17 @@ class Staff extends Base
         return $this->addCrumb($this->toastedCrumbs['dataSources.dashboard'])
                     ->addCrumb($this->toastedCrumbs['dataSources.wikipedia.unlinked'])
                     ->addTitleAndReturn($pageTitle);
+    }
+
+    public function dataSourcesListRawSubpage($pageTitle, DataSource $dataSource)
+    {
+        $dsRawCrumb = [
+            'url' => route('staff.data-sources.list-raw', ['sourceId' => $dataSource->id]),
+            'text' => $dataSource->name
+        ];
+        return $this->addCrumb($this->toastedCrumbs['dataSources.dashboard'])
+            ->addCrumb($dsRawCrumb)
+            ->addTitleAndReturn($pageTitle);
     }
 
     public function dataQualitySubpage($pageTitle)

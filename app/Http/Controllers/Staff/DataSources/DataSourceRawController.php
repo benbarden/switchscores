@@ -5,19 +5,19 @@ namespace App\Http\Controllers\Staff\DataSources;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class DataSourceRawController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     public function show($sourceId)
     {
         $dataSource = $this->getServiceDataSource()->find($sourceId);
         if (!$dataSource) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesSubpage($dataSource->name.' - Raw items');
+        $pageTitle = $dataSource->name.' - Raw items';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ItemList'] = $this->getServiceDataSourceRaw()->getBySourceId($sourceId);
 
@@ -32,7 +32,9 @@ class DataSourceRawController extends Controller
         if (!$dataSource) abort(404);
         if (!$dsRawItem) abort(404);
 
-        $bindings = $this->getBindingsDataSourcesListRawSubpage($dsRawItem->title, $dataSource);
+        $pageTitle = $dsRawItem->title;
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesListRawSubpage($pageTitle, $dataSource);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['DSRawItem'] = $dsRawItem;
 
