@@ -7,6 +7,22 @@ use App\Models\User;
 
 class Repository
 {
+    public function createFromTwitterLogin(
+        $twitterUserId, $twitterNickname
+    )
+    {
+        $randomEmail = $twitterNickname.mt_rand(1000, 9999).'@switchscores.com';
+
+        $values = [
+            'display_name' => $twitterNickname,
+            'email' => $randomEmail,
+            'twitter_user_id' => $twitterUserId,
+            'twitter_name' => $twitterNickname,
+        ];
+        $user = User::create($values);
+        return $user;
+    }
+
     public function edit(
         User $userData, $displayName, $email, $partnerId, $twitterUserId,
         $isStaff, $isDeveloper, $gamesCompanyId
@@ -34,6 +50,12 @@ class Repository
         User::where('id', $userId)->delete();
     }
 
+    public function setLastAccessDate(User $user, $todaysDate)
+    {
+        $user->last_access_date = $todaysDate;
+        $user->save();
+    }
+
     /**
      * @param $id
      * @return User
@@ -46,5 +68,15 @@ class Repository
     public function getAll()
     {
         return User::orderBy('created_at', 'desc')->get();
+    }
+
+    public function getByTwitterId($twitterId)
+    {
+        return User::where('twitter_user_id', $twitterId)->first();
+    }
+
+    public function getCount()
+    {
+        return User::orderBy('created_at', 'desc')->count();
     }
 }

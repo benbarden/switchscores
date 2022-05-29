@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-use App\Services\UserService;
+use App\Domain\User\Repository as UserRepository;
 
 class UserLastAccessDate
 {
@@ -16,8 +16,8 @@ class UserLastAccessDate
             $dtNow = new \DateTime('now');
             $todaysDate = $dtNow->format('Y-m-d');
             if ($user->last_access_date != $todaysDate) {
-                $serviceUser = new UserService();
-                $serviceUser->setLastAccessDate($user, $todaysDate);
+                $repoUser = new UserRepository();
+                $repoUser->setLastAccessDate($user, $todaysDate);
             }
         }
 

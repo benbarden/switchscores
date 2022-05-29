@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Laravel\Socialite\Facades\Socialite;
 
+use App\Domain\User\Repository as UserRepository;
+
 use App\Events\UserCreated;
 
 use App\Traits\SwitchServices;
@@ -65,23 +67,23 @@ class LoginController extends Controller
      */
     public function handleProviderCallbackTwitter()
     {
-        $serviceUser = $this->getServiceUser();
+        $repoUser = new UserRepository();
 
         $user = Socialite::driver('twitter')->user();
         $twitterUserId = $user->id;
         $twitterName = $user->nickname;
 
-        $wosUser = $serviceUser->getByTwitterId($twitterUserId);
+        $siteUser = $repoUser->getByTwitterId($twitterUserId);
 
-        if (!$wosUser) {
-            $wosUser = $serviceUser->createFromTwitterLogin($twitterUserId, $twitterName);
-            event(new UserCreated($wosUser));
+        if (!$siteUser) {
+            $siteUser = $repoUser->createFromTwitterLogin($twitterUserId, $twitterName);
+            event(new UserCreated($siteUser));
         }
 
         // we should have a user by now
-        if (!$wosUser) abort(400);
+        if (!$siteUser) abort(400);
 
-        auth()->login($wosUser);
+        auth()->login($siteUser);
         return redirect(route('user.index'));
     }
 }

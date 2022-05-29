@@ -8,6 +8,7 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
+use App\Domain\User\Repository as UserRepository;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -22,18 +23,21 @@ class IndexController extends Controller
     protected $repoGameStats;
     protected $repoGameLists;
     protected $repoReviewDraft;
+    protected $repoUser;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         GameListsRepository $repoGameLists,
-        ReviewDraftRepository $repoReviewDraft
+        ReviewDraftRepository $repoReviewDraft,
+        UserRepository $repoUser
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoGameLists = $repoGameLists;
         $this->repoReviewDraft = $repoReviewDraft;
+        $this->repoUser = $repoUser;
     }
 
     public function index()
@@ -43,7 +47,6 @@ class IndexController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceQualityStats = new QualityStats();
-        $serviceUser = $this->getServiceUser();
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
@@ -71,7 +74,7 @@ class IndexController extends Controller
         $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(10);
 
         // Owner links
-        $bindings['RegisteredUserCount'] = $serviceUser->getCount();
+        $bindings['RegisteredUserCount'] = $this->repoUser->getCount();
 
         // Data integrity
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());

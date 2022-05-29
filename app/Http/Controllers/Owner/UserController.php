@@ -92,7 +92,7 @@ class UserController extends Controller
 
         $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit user');
 
-        $userData = $this->getServiceUser()->find($userId);
+        $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);
 
         $request = request();
