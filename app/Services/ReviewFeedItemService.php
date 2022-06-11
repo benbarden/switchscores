@@ -125,7 +125,7 @@ class ReviewFeedItemService
         return ReviewFeedItem::
             where('process_status', 'Review created')
             ->where('site_id', $siteId)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->limit($limit)
             ->get();
     }
@@ -136,7 +136,7 @@ class ReviewFeedItemService
             whereNotNull('process_status')
             ->where('process_status', '!=', 'Review created')
             ->where('site_id', $siteId)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->limit($limit)
             ->get();
     }

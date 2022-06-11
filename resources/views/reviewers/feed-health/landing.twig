@@ -4,9 +4,9 @@
 
 {% block page_inner %}
 
-    {% if PartnerFeedLinks %}
+    {% if PartnerFeedLink %}
         <div class="alert alert-info">
-            Your current feed URL is: <a href="{{ PartnerFeedLinks.feed_url }}" target="_blank"><strong>{{ PartnerFeedLinks.feed_url }}</strong></a>
+            Your current feed URL is: <a href="{{ PartnerFeedLink.feed_url }}" target="_blank"><strong>{{ PartnerFeedLink.feed_url }}</strong></a>
             <br>Let us know if you need to change this.
         </div>
     {% else %}

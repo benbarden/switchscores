@@ -62,10 +62,9 @@ class IndexController extends Controller
 
         // Feed items
         $bindings['PartnerFeed'] = $this->repoPartnerFeedLink->firstBySite($partnerId);
-        $bindings['FeedItemsLatest'] = $this->getServiceReviewFeedItem()->getAllBySite($partnerId, 5);
         $bindings['FeedItemsPending'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId);
-        $bindings['FeedItemsSuccess'] = $this->getServiceReviewFeedItem()->getSuccessBySite($partnerId, 5);
-        $bindings['FeedItemsFailed'] = $this->getServiceReviewFeedItem()->getFailedBySite($partnerId, 5);
+        $bindings['FeedItemsSuccess'] = $this->getServiceReviewFeedItem()->getSuccessBySite($partnerId, 10);
+        $bindings['FeedItemsFailed'] = $this->getServiceReviewFeedItem()->getFailedBySite($partnerId, 10);
 
         // Campaigns
         $activeCampaigns = $this->repoCampaign->getActive();
