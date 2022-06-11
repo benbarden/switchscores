@@ -165,7 +165,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% if FeedItemsPending %}
+            {% if FeedItemsPending.count > 0 %}
                 <h3>Awaiting import</h3>
                 {% include 'reviewers/reviews/feed-item/table-pending.twig' with {'FeedItems': FeedItemsPending} %}
             {% endif %}
