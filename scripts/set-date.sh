@@ -1,2 +1,4 @@
 #!/bin/bash
-sudo date --set "1 Nov 2020 09:42:00"
+sudo timedatectl set-timezone Europe/London
+sudo timedatectl set-ntp no
+sudo timedatectl set-ntp on
