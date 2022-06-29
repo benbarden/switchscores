@@ -45,13 +45,9 @@
                 </td>
                 <td class="text-center">
                     {% if item.game.title is null %}
-                        <div style="color: #cc0000; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-times"></i>
-                        </div>
+                        {% include 'modules/icons/red-cross.twig' %}
                     {% else %}
-                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
-                            <i class="fas fa-check"></i>
-                        </div>
+                        {% include 'modules/icons/green-tick.twig' %}
                     {% endif %}
                 </td>
                 <td class="text-center">

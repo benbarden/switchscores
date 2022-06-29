@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands\Partner;
 
-use App\Services\PartnerFeedLink\ImportReviewFeed;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+
+use App\Services\PartnerFeedLink\ImportReviewFeed;
+use App\Domain\ReviewDraft\ImportByFeed;
 
 use App\Services\Feed\Importer;
 use App\Services\UrlService;
@@ -64,12 +66,7 @@ class ImportFeed extends Command
             return 0;
         }
 
-        $serviceImporter = new ImportReviewFeed($logger);
-        $serviceImporter->setPartnerFeedLink($partnerFeedLink);
-        if ($argRunMode == 'test') {
-            $serviceImporter->setIsTest(true);
-            $serviceImporter->clearPreviousTests();
-        }
-        $serviceImporter->runImport();
+        $importer = new ImportByFeed($partnerFeedLink, $logger);
+        $importer->runImport();
     }
 }

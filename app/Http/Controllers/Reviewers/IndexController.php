@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\Campaign\Repository as CampaignRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -19,16 +20,19 @@ class IndexController extends Controller
     protected $repoReviewSite;
     protected $repoPartnerFeedLink;
     protected $repoCampaign;
+    protected $repoReviewDraft;
 
     public function __construct(
         ReviewSiteRepository $repoReviewSite,
         PartnerFeedLinkRepository $repoPartnerFeedLink,
-        CampaignRepository $repoCampaign
+        CampaignRepository $repoCampaign,
+        ReviewDraftRepository $repoReviewDraft
     )
     {
         $this->repoReviewSite = $repoReviewSite;
         $this->repoPartnerFeedLink = $repoPartnerFeedLink;
         $this->repoCampaign = $repoCampaign;
+        $this->repoReviewDraft = $repoReviewDraft;
     }
 
     public function show()
@@ -62,9 +66,9 @@ class IndexController extends Controller
 
         // Feed items
         $bindings['PartnerFeed'] = $this->repoPartnerFeedLink->firstBySite($partnerId);
-        $bindings['FeedItemsPending'] = $this->getServiceReviewFeedItem()->getUnprocessedBySite($partnerId);
-        $bindings['FeedItemsSuccess'] = $this->getServiceReviewFeedItem()->getSuccessBySite($partnerId, 10);
-        $bindings['FeedItemsFailed'] = $this->getServiceReviewFeedItem()->getFailedBySite($partnerId, 10);
+        $bindings['ReviewDraftsPending'] = $this->repoReviewDraft->getUnprocessedBySite($partnerId);
+        $bindings['ReviewDraftsSuccess'] = $this->repoReviewDraft->getSuccessBySite($partnerId, 10);
+        $bindings['ReviewDraftsFailed'] = $this->repoReviewDraft->getFailedBySite($partnerId, 10);
 
         // Campaigns
         $activeCampaigns = $this->repoCampaign->getActive();

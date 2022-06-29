@@ -1,13 +1,15 @@
-{% if FeedItems %}
+{% if ReviewDrafts %}
     <table class="table table-condensed table-responsive">
         <thead>
         <tr>
             <th>Game</th>
-            <th class="text-center">Score</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Status</th>
         </tr>
         </thead>
         <tbody>
-        {% for item in FeedItems %}
+        {% for item in ReviewDrafts %}
             <tr>
                 <td class="text-left">
                     {% if item.game.id %}
@@ -15,10 +17,9 @@
                     {% else %}
                         {{ item.item_title }}
                     {% endif %}
-                    <br>
-                    <small>
-                        Published: {{ item.item_date|date('Y-m-d') }}
-                    </small>
+                </td>
+                <td class="text-center">
+                    {{ item.item_date|date('Y-m-d') }}
                 </td>
                 <td class="text-center">
                     {% if item.item_rating %}
@@ -30,6 +31,13 @@
                         {% include 'modules/rating/badge.twig' with {'score': ItemRating, 'scoreSize': 'h6'} %}
                     {% else %}
                         {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.processed == 1 %}
+                        {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
+                    {% else %}
+                        -
                     {% endif %}
                 </td>
             </tr>

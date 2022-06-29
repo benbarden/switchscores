@@ -56,4 +56,14 @@ class ReviewSite extends Model implements Auditable
             return false;
         }
     }
+
+    public function isYoutubeChannel()
+    {
+        $youtubeBaseLink = 'https://youtube.com/';
+        if (substr($this->website_url, 0, strlen('https://youtube.com/')) == $youtubeBaseLink) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

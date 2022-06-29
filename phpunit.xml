@@ -9,9 +9,6 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="DomainAll">
-            <directory suffix="Test.php">./tests/Unit/Domain</directory>
-        </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
@@ -20,6 +17,12 @@
         </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="GameTitleMatch">
+            <directory suffix="Test.php">./tests/Unit/Domain/GameTitleMatch</directory>
+        </testsuite>
+        <testsuite name="DomainAll">
+            <directory suffix="Test.php">./tests/Unit/Domain</directory>
         </testsuite>
         <testsuite name="DataSources">
             <directory suffix="Test.php">./tests/Unit/Services/DataSources</directory>

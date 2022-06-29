@@ -6,9 +6,9 @@
     if (formMode == 'edit') {
 
         // This is used when editing existing records.
-        formVals['item_url'] = "{{ FeedItemData.item_url }}";
-        formVals['item_date'] = "{{ FeedItemData.item_date }}";
-        formVals['item_rating'] = "{{ FeedItemData.item_rating }}";
+        formVals['item_url'] = "{{ ReviewDraft.item_url }}";
+        formVals['item_date'] = "{{ ReviewDraft.item_date|date('Y-m-d') }}";
+        formVals['item_rating'] = "{{ ReviewDraft.item_rating }}";
 
     } else {
 

@@ -17,11 +17,16 @@ class Repository
 
     /**
      * @param $itemUrl
-     * @return ReviewDraft
+     * @param $excludeId
+     * @return mixed
      */
-    public function getByItemUrl($itemUrl)
+    public function getByItemUrl($itemUrl, $excludeId = null)
     {
-        return ReviewDraft::where('item_url', $itemUrl)->first();
+        if ($excludeId) {
+            return ReviewDraft::where('item_url', $itemUrl)->where('id', '<>', $excludeId)->first();
+        } else {
+            return ReviewDraft::where('item_url', $itemUrl)->first();
+        }
     }
 
     public function countUnprocessed()
@@ -32,6 +37,11 @@ class Repository
     public function getUnprocessed()
     {
         return ReviewDraft::whereNull('process_status')->orderBy('id', 'asc')->get();
+    }
+
+    public function getUnparsed()
+    {
+        return ReviewDraft::whereNull('process_status')->whereNull('parse_status')->orderBy('id', 'asc')->get();
     }
 
     public function getReadyForProcessing()
@@ -45,4 +55,23 @@ class Repository
             ->get();
     }
 
+    // Reviewers dashboard
+
+    public function getUnprocessedBySite($siteId)
+    {
+        return ReviewDraft::whereNull('process_status')->where('site_id', $siteId)->orderBy('id', 'asc')->get();
+    }
+
+    public function getSuccessBySite($siteId, $limit = 5)
+    {
+        return ReviewDraft::where('process_status', ReviewDraft::PROCESS_SUCCESS_REVIEW_CREATED)
+            ->where('site_id', $siteId)->orderBy('id', 'desc')->limit($limit)->get();
+    }
+
+    public function getFailedBySite($siteId, $limit = 5)
+    {
+        return ReviewDraft::whereNotNull('process_status')
+            ->where('process_status', '<>', ReviewDraft::PROCESS_SUCCESS_REVIEW_CREATED)
+            ->where('site_id', $siteId)->orderBy('id', 'desc')->limit($limit)->get();
+    }
 }

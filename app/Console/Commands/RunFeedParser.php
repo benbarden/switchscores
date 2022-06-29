@@ -5,13 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\ReviewFeedItem;
+use App\Models\ReviewDraft;
 use App\Models\Partner;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
-use App\Services\Feed\Parser;
-use App\Services\Feed\TitleParser;
-use App\Services\Game\TitleMatch as ServiceTitleMatch;
+use App\Domain\GameTitleMatch\MatchRule;
 
 use App\Traits\SwitchServices;
 
@@ -55,28 +54,22 @@ class RunFeedParser extends Command
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
 
         $repoReviewSite = new ReviewSiteRepository();
+        $repoReviewDraft = new ReviewDraftRepository();
 
-        $serviceTitleMatch = new ServiceTitleMatch();
+        $reviewDrafts = $repoReviewDraft->getUnparsed();
 
-        $feedItems = $serviceReviewFeedItem->getItemsToParse();
-
-        if (!$feedItems) {
+        if (!$reviewDrafts) {
             $logger->info('No items to parse. Aborting.');
             return 0;
         }
 
-        // Set up parser
-        $titleParser = new TitleParser();
-        $parser = new Parser($titleParser);
+        foreach ($reviewDrafts as $reviewDraft) {
 
-        foreach ($feedItems as $feedItem) {
-
-            $siteId = $feedItem->site_id;
-            $itemUrl = $feedItem->item_url;
-            $itemTitle = $feedItem->item_title;
+            $siteId = $reviewDraft->site_id;
+            $itemUrl = $reviewDraft->item_url;
+            $itemTitle = $reviewDraft->item_title;
 
             $reviewSite = $repoReviewSite->find($siteId);
             if (!$reviewSite) {
@@ -97,8 +90,8 @@ class RunFeedParser extends Command
                 continue;
             }
 
-            $titleMatchRulePattern = $partnerFeed->title_match_rule_pattern;
-            $titleMatchRuleIndex = $partnerFeed->title_match_rule_index;
+            $matchRulePattern = $partnerFeed->title_match_rule_pattern;
+            $matchRuleIndex = $partnerFeed->title_match_rule_index;
 
             try {
 
@@ -106,34 +99,25 @@ class RunFeedParser extends Command
                 $logger->info("Site: $siteName ($siteId)");
                 $logger->info('Processing item: '.$itemTitle);
 
-                if ($titleMatchRulePattern && ($titleMatchRuleIndex != null)) {
-
-                    // New method
-                    $serviceTitleMatch->setMatchRule($titleMatchRulePattern);
-                    $serviceTitleMatch->prepareMatchRule();
-                    $serviceTitleMatch->setMatchIndex($titleMatchRuleIndex);
-                    $parsedTitle = $serviceTitleMatch->generate($itemTitle);
-                    $logger->info('Using new parser');
-
-                } else {
-
-                    // Old method
-                    $parser->setSiteId($siteId);
-                    $parser->getTitleParser()->setTitle($itemTitle);
-                    $parser->parseBySiteRules();
-                    $parsedTitle = $parser->getTitleParser()->getTitle();
-                    $logger->warning('Using old parser');
-
+                if (!$matchRulePattern) {
+                    $logger->error('No match rule pattern for site: '.$siteName);
+                    continue;
+                } elseif (is_null($matchRuleIndex)) {
+                    $logger->error('No match rule index for site: '.$siteName);
+                    continue;
                 }
 
-                $feedItem->parsed_title = $parsedTitle;
+                $matchRule = new MatchRule($matchRulePattern, $matchRuleIndex);
+                $titleMatches = $matchRule->generateMatch($itemTitle);
+
+                $parsedTitle = $matchRule->getParsedTitle();
+
+                $reviewDraft->parsed_title = $parsedTitle;
                 $logger->info("Parsed title: $parsedTitle");
 
-                // Check for curly quotes
-                $titleMatches = [];
-                $titleMatches[] = $parsedTitle;
-                if (strpos($parsedTitle, "’") !== false) {
-                    $titleMatches[] = str_replace("’", "'", $parsedTitle);
+                if ($titleMatches == null) {
+                    $logger->warning('No matches found; continuing');
+                    continue;
                 }
 
                 $logger->info('Checking for matches: '.var_export($titleMatches, true));
@@ -141,19 +125,16 @@ class RunFeedParser extends Command
                 // Can we find a game from this title?
                 $gameTitleHash = $serviceGameTitleHash->getByTitleGroup($titleMatches);
                 if ($gameTitleHash) {
-                    $feedItem->game_id = $gameTitleHash->game_id;
-                    $parseStatus = ReviewFeedItem::PARSE_STATUS_AUTO_MATCHED;
+                    $reviewDraft->game_id = $gameTitleHash->game_id;
+                    $parseStatus = ReviewDraft::PARSE_STATUS_AUTO_MATCHED;
                     $logger->info($parseStatus);
-                    // Only mark as parsed if it matched - otherwise, we can check again tomorrow
-                    $feedItem->parsed = 1;
+                    $reviewDraft->parse_status = $parseStatus;
                 } else {
-                    $parseStatus = ReviewFeedItem::PARSE_STATUS_COULD_NOT_LOCATE;
+                    $parseStatus = ReviewDraft::PARSE_STATUS_COULD_NOT_LOCATE;
                     $logger->warning($parseStatus);
                 }
 
-                $feedItem->parse_status = $parseStatus;
-
-                $feedItem->save();
+                $reviewDraft->save();
 
             } catch (\Exception $e) {
                 $logger->error('Got error: '.$e->getMessage().'; skipping');

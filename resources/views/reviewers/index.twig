@@ -152,22 +152,33 @@
             #}
             <p>
                 This is where you can add any reviews we may have missed. If you have a lot to add,
-                get in touch as we can help you with a bulk import.
-            </p>
-            <p>
-                Soon we'll also give you the option to fill in missing information - such as the score -
-                from reviews we import via an RSS feed.
+                get in touch as we may be able to help with a bulk import.
             </p>
 
-            <a href="{{ route('reviewers.review-feed-item.find-game') }}" class="btn btn-primary btn-sm">Add a review</a>
+            <a href="{{ route('reviewers.review-draft.find-game') }}" class="btn btn-primary btn-sm">Add a review</a>
+
+            {% if ReviewDraftsPending.count > 0 %}
+                <h3>Awaiting import</h3>
+                <p>
+                    These reviews can't be added to the site until some missing information is filled in.
+                    We'll add this when we can, but you can get your reviews up faster if you add it yourself.
+                </p>
+                <p>
+                    You can only edit entries that are linked to a game. If the Edit link is missing,
+                    please try again tomorrow.
+                </p>
+                {% include 'reviewers/reviews/review-draft/table-pending.twig' with {'ReviewDrafts': ReviewDraftsPending} %}
+            {% endif %}
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% if FeedItemsPending.count > 0 %}
-                <h3>Awaiting import</h3>
-                {% include 'reviewers/reviews/feed-item/table-pending.twig' with {'FeedItems': FeedItemsPending} %}
+            <h3>Failed imports</h3>
+            {% if ReviewDraftsFailed.count > 0 %}
+                {% include 'reviewers/reviews/review-draft/table-with-status.twig' with {'ReviewDrafts': ReviewDraftsFailed} %}
+            {% else %}
+                <p>Nothing to see here.</p>
             {% endif %}
 
         </div>
@@ -179,41 +190,30 @@
         <div class="col-xs-12 col-sm-8 col-md-8">
 
             <h2>
-                Recent imports
+                Successful imports
             </h2>
-            {% if PartnerData.rating_scale != 10 %}
-                <p>
-                    <small>
-                        As your site does not rank games out of 10, we have converted all ratings to
-                        the equivalent score out of 10.
-                    </small>
-                </p>
-            {% endif %}
-            <div class="row">
+            {% if ReviewDraftsSuccess.count == 0 %}
+                <p>Nothing to see here.</p>
+            {% else %}
+                {% if PartnerData.rating_scale != 10 %}
+                    <p>
+                        <small>
+                            As your site does not rank games out of 10, we have converted all ratings to
+                            the equivalent score out of 10.
+                        </small>
+                    </p>
+                {% endif %}
+                <div class="row">
 
-                <div class="col-md-12">
+                    <div class="col-md-12">
 
-                    <div id="tabs">
-
-                        <ul>
-                            <li><a href="#tabs-feed-items-success">Success ({{ FeedItemsSuccess.count }})</a></li>
-                            <li><a href="#tabs-feed-items-failed">Failed ({{ FeedItemsFailed.count }})</a></li>
-                        </ul>
-
-                        <div id="tabs-feed-items-success">
-                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsSuccess} %}
-                            <a href="{{ route('reviewers.reviews.landing') }}">View all &gt;</a>
-                        </div>
-
-                        <div id="tabs-feed-items-failed">
-                            {% include 'reviewers/reviews/feed-item/table.twig' with {'FeedItems': FeedItemsFailed} %}
-                        </div>
+                        {% include 'reviewers/reviews/review-draft/table.twig' with {'ReviewDrafts': ReviewDraftsSuccess} %}
+                        <a href="{{ route('reviewers.reviews.landing') }}">View all &gt;</a>
 
                     </div>
 
                 </div>
-
-            </div>
+            {% endif %}
 
         </div>
 

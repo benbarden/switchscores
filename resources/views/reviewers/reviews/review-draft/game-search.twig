@@ -7,7 +7,7 @@
 </p>
 
 {% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ route('reviewers.review-feed-item.find-game') }}">
+<form class="form-horizontal" role="form" method="post" action="{{ route('reviewers.review-draft.find-game') }}">
     {{ csrf_field() }}
 
     <div class="form-group">
@@ -55,7 +55,7 @@
                             {% if item.id in ReviewLinkIdList %}
                                 <em>Already reviewed</em>
                             {% else %}
-                                <a href="{{ route('reviewers.review-feed-item.add', {'gameId': item.id}) }}">Add review</a>
+                                <a href="{{ route('reviewers.review-draft.add', {'gameId': item.id}) }}">Add review</a>
                             {% endif %}
                         </td>
                     </tr>

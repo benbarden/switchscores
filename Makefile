@@ -15,6 +15,9 @@ test-page:
 test-unit:
 	./vendor/bin/phpunit --testsuite Unit
 
+test-gametitlematch:
+	./vendor/bin/phpunit --testsuite GameTitleMatch
+
 test-data:
 	./vendor/bin/phpunit --testsuite DataSources
 

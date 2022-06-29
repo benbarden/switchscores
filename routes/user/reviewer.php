@@ -12,9 +12,9 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
     Route::match(['get', 'post'], '/reviewers/edit-details', 'Reviewers\ProfileController@edit')->name('reviewers.profile.edit');
 
     // *************** Reviewers: Manually add reviews *************** //
-    Route::match(['get', 'post'], '/reviewers/reviews/feed-item/find-game', 'Reviewers\ReviewFeedItemController@findGame')->name('reviewers.review-feed-item.find-game');
-    Route::match(['get', 'post'], '/reviewers/reviews/feed-item/add/{gameId}', 'Reviewers\ReviewFeedItemController@add')->name('reviewers.review-feed-item.add');
-    Route::match(['get', 'post'], '/reviewers/reviews/feed-item/edit/{itemId}', 'Reviewers\ReviewFeedItemController@edit')->name('reviewers.review-feed-item.edit');
+    Route::match(['get', 'post'], '/reviewers/reviews/review-draft/find-game', 'Reviewers\ReviewDraftController@findGame')->name('reviewers.review-draft.find-game');
+    Route::match(['get', 'post'], '/reviewers/reviews/review-draft/add/{gameId}', 'Reviewers\ReviewDraftController@add')->name('reviewers.review-draft.add');
+    Route::match(['get', 'post'], '/reviewers/reviews/review-draft/edit/{reviewDraft}', 'Reviewers\ReviewDraftController@edit')->name('reviewers.review-draft.edit');
 
     // *************** Reviewers: Campaigns *************** //
     Route::get('/reviewers/campaigns/{campaignId}', 'Reviewers\CampaignsController@show')->name('reviewers.campaigns.show');
