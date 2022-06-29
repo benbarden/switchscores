@@ -273,6 +273,6 @@ class ReviewDraftController extends Controller
 
         $bindings['IsYoutubeChannel'] = $isYoutubeChannel;
 
-        return view('reviewers.reviews.review-draft.add', $bindings);
+        return view('reviewers.reviews.review-draft.edit', $bindings);
     }
 }
