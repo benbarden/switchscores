@@ -56,7 +56,11 @@ class ImportActiveFeeds extends Command
 
         foreach ($partnerFeedLinks as $partnerFeedLink) {
             $importer = new ImportByFeed($partnerFeedLink, $logger);
-            $importer->runImport();
+            try {
+                $importer->runImport();
+            } catch (\Exception $e) {
+                $logger->error($e->getMessage());
+            }
         }
     }
 }
