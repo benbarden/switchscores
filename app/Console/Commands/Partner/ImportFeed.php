@@ -5,16 +5,7 @@ namespace App\Console\Commands\Partner;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\PartnerFeedLink\ImportReviewFeed;
 use App\Domain\ReviewDraft\ImportByFeed;
-
-use App\Services\Feed\Importer;
-use App\Services\UrlService;
-
-use App\Exceptions\Review\AlreadyImported;
-use App\Exceptions\Review\HistoricEntry;
-use App\Exceptions\Review\FeedUrlPrefixNotMatched;
-use App\Exceptions\Review\TitleRuleNotMatched;
 
 use App\Traits\SwitchServices;
 

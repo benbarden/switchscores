@@ -2,17 +2,10 @@
 
 namespace App\Console\Commands\Partner;
 
-use App\Services\PartnerFeedLink\ImportReviewFeed;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\Feed\Importer;
-use App\Services\UrlService;
-
-use App\Exceptions\Review\AlreadyImported;
-use App\Exceptions\Review\HistoricEntry;
-use App\Exceptions\Review\FeedUrlPrefixNotMatched;
-use App\Exceptions\Review\TitleRuleNotMatched;
+use App\Domain\ReviewDraft\ImportByFeed;
 
 use App\Traits\SwitchServices;
 
@@ -61,11 +54,9 @@ class ImportActiveFeeds extends Command
             return 0;
         }
 
-        $serviceImporter = new ImportReviewFeed($logger);
-
         foreach ($partnerFeedLinks as $partnerFeedLink) {
-            $serviceImporter->setPartnerFeedLink($partnerFeedLink);
-            $serviceImporter->runImport();
+            $importer = new ImportByFeed($partnerFeedLink, $logger);
+            $importer->runImport();
         }
     }
 }
