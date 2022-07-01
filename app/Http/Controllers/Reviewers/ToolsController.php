@@ -48,6 +48,8 @@ class ToolsController extends Controller
 
         $partnerData = $this->repoReviewSite->find($siteId);
 
+        $bindings['DraftsForProcessing'] = $this->repoReviewDraft->getReadyForProcessingBySite($siteId);
+
         if (request()->post()) {
             \Artisan::call('ReviewConvertDraftsToReviews '.$siteId, []);
             \Artisan::call('PartnerUpdateFields', []);
