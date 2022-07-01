@@ -12,6 +12,22 @@ class ToolsController extends Controller
     use SwitchServices;
     use StaffView;
 
+    public function importDraftReviews()
+    {
+        $bindings = $this->getBindingsReviewsSubpage('Import draft reviews');
+
+        if (request()->post()) {
+            \Artisan::call('ReviewConvertDraftsToReviews', []);
+            \Artisan::call('PartnerUpdateFields', []);
+            \Artisan::call('UpdateGameRanks', []);
+            \Artisan::call('ReviewCampaignUpdateProgress', []);
+            \Artisan::call('UpdateGameReviewStats', []);
+            return view('staff.reviews.tools.importDraftReviews.process', $bindings);
+        } else {
+            return view('staff.reviews.tools.importDraftReviews.landing', $bindings);
+        }
+    }
+
     public function runFeedImporter()
     {
         $bindings = $this->getBindingsReviewsSubpage('Run Feed Importer');

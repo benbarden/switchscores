@@ -167,6 +167,11 @@
                     You can only edit entries that are linked to a game. If the Edit link is missing,
                     please try again tomorrow.
                 </p>
+                <p>
+                    When you have filled in the missing details for some reviews, click "Import
+                    completed reviews" to get them added to the site.
+                </p>
+                <a href="{{ route('reviewers.tools.import-reviews') }}" class="btn btn-primary btn-sm">Import completed reviews</a>
                 {% include 'reviewers/reviews/review-draft/table-pending.twig' with {'ReviewDrafts': ReviewDraftsPending} %}
             {% endif %}
 

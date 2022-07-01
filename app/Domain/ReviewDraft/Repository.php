@@ -57,6 +57,17 @@ class Repository
 
     // Reviewers dashboard
 
+    public function getReadyForProcessingBySite($siteId)
+    {
+        return ReviewDraft::whereNotNull('game_id')
+            ->whereNotNull('item_url')
+            ->where('site_id', $siteId)
+            ->whereNotNull('item_date')
+            ->whereNotNull('item_rating')
+            ->whereNull('process_status')
+            ->get();
+    }
+
     public function getUnprocessedBySite($siteId)
     {
         return ReviewDraft::whereNull('process_status')->where('site_id', $siteId)->orderBy('id', 'asc')->get();

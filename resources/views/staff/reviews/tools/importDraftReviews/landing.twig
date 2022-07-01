@@ -1,0 +1,22 @@
+{% extends 'theme/wos/staff/clean-narrow.twig' %}
+
+{% block page_inner %}
+
+<p>
+    This tool converts draft reviews to live reviews on the Switch Scores website.
+</p>
+<p>
+    Reviews will only be created if all details are filled in, including the score.
+</p>
+<p>
+    <strong>Please note:</strong>
+    This tool runs several processes to update a number of different stats, so
+    might take some time to complete. Please don't hit refresh while it's still processing.
+</p>
+
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.reviews.tools.importDraftReviews') }}">
+    {{ csrf_field() }}
+    <input type="submit" value="Start process" class="btn btn-primary">
+</form>
+
+{% endblock page_inner %}

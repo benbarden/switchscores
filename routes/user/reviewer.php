@@ -16,6 +16,9 @@ Route::group(['middleware' => ['auth.reviewer']], function() {
     Route::match(['get', 'post'], '/reviewers/reviews/review-draft/add/{gameId}', 'Reviewers\ReviewDraftController@add')->name('reviewers.review-draft.add');
     Route::match(['get', 'post'], '/reviewers/reviews/review-draft/edit/{reviewDraft}', 'Reviewers\ReviewDraftController@edit')->name('reviewers.review-draft.edit');
 
+    // *************** Reviewers: Import reviews *************** //
+    Route::match(['get', 'post'], '/reviewers/tools/import-reviews', 'Reviewers\ToolsController@importReviews')->name('reviewers.tools.import-reviews');
+
     // *************** Reviewers: Campaigns *************** //
     Route::get('/reviewers/campaigns/{campaignId}', 'Reviewers\CampaignsController@show')->name('reviewers.campaigns.show');
 

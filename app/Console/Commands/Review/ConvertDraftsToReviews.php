@@ -23,7 +23,7 @@ class ConvertDraftsToReviews extends Command
      *
      * @var string
      */
-    protected $signature = 'ReviewConvertDraftsToReviews';
+    protected $signature = 'ReviewConvertDraftsToReviews {siteId?}';
 
     /**
      * The console command description.
@@ -49,6 +49,8 @@ class ConvertDraftsToReviews extends Command
      */
     public function handle()
     {
+        $argSiteId = $this->argument('siteId');
+
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
@@ -56,7 +58,13 @@ class ConvertDraftsToReviews extends Command
         $repoReviewDraft = new ReviewDraftRepository();
         $convertToReviewLink = new ConvertToReviewLink($logger);
 
-        $draftsForProcessing = $repoReviewDraft->getReadyForProcessing();
+        if ($argSiteId) {
+            $draftsForProcessing = $repoReviewDraft->getReadyForProcessingBySite($argSiteId);
+            $logger->info('Processing for site: '.$argSiteId);
+        } else {
+            $draftsForProcessing = $repoReviewDraft->getReadyForProcessing();
+            $logger->info('Processing for all sites');
+        }
 
         if (!$draftsForProcessing) {
             $logger->info('No items to process');
