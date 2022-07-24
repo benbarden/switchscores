@@ -27,39 +27,51 @@
 
                 <h2>Code</h2>
 
+                {#
+                    Expected output:
+<block name="upcoming">
+    <component locals='{"date":"2022-XX-XX"}' src="upcoming.html">
+        <component src="upcoming-item.html">
+        <a href="URL">TITLE</a> — DESCRIPTION.
+        </component>
+        <component src="upcoming-item.html">
+        <a href="URL">TITLE</a> — DESCRIPTION.
+        </component>
+    </component>
+    <component locals='{"date":"2022-XX-XX"}' src="upcoming.html">
+        <component src="upcoming-item.html">
+        <a href="URL">TITLE</a> — DESCRIPTION.
+        </component>
+        <component src="upcoming-item.html">
+        <a href="URL">TITLE</a> — DESCRIPTION.
+        </component>
+    </component>
+</block>
+                #}
+
                 {% set lastDate = '' %}
-                {% set upcomingGamesHtml = '' %}
+                {% set upcomingGamesHtml = '<block name="upcoming">' ~ "\n" %}
                 {% for item in UpcomingGames %}
-                    {% set usDateHtml = '' %}
                     {% if lastDate != item.eu_release_date %}
                         {% if not loop.first %}
-                            {% set upcomingGamesHtml = upcomingGamesHtml ~ '</ul>' ~ "\n\n" %}
+                            {% set upcomingGamesHtml = upcomingGamesHtml ~ '  </component>' ~ "\n" %}
                         {% endif %}
                         {% set upcomingGamesHtml = upcomingGamesHtml ~
-                        '<p style="color: rgb(85, 85, 85); font-size: 14px; line-height: 16px;">' ~
-                            '<strong>' ~ item.eu_release_date|date('l, F j') ~ '</strong></p>' ~
-                            "\n\n" ~
-                            '<ul style="color: rgb(85, 85, 85); list-style-type: square;">' ~
-                            "\n\n"
+                        '  <component locals=\'{"date":"' ~
+                            item.eu_release_date|date('Y-m-d') ~
+                        '"}\' src="upcoming.html">' ~
+                        "\n"
                         %}
                     {% endif %}
                     {% set lastDate = item.eu_release_date %}
 
-                    {% if item.us_release_date %}
-                    {% if item.eu_release_date != item.us_release_date %}
-                        {% set usDateHtml = '(<em>' ~ item.us_release_date|date('j M') ~ ' in U.S.</em>)' %}
-                    {% endif %}
-                    {% endif %}
-
                     {% set upcomingGamesHtml = upcomingGamesHtml ~
-    '<li style="color: rgb(85, 85, 85); font-size: 13px; line-height: 16px; border-bottom: 1px solid #eee; padding-bottom: 7px; margin: 0 0 7px -10px;">
-        <a href="### INSERT URL ###" style="text-decoration: underline; color: #d20014;">' ~ item.title ~ '</a>&nbsp;&mdash; MY DESCRIPTION. ' ~ usDateHtml ~
-    '</li>' ~ "\n\n"
+    '    <component src="upcoming-item.html">' ~ "\n" ~
+    '        <a href="URL">' ~ item.title ~ '</a> — DESCRIPTION.' ~ "\n" ~
+    '    </component>' ~ "\n"
                     %}
-                {% if loop.last %}
-                    {% set upcomingGamesHtml = upcomingGamesHtml ~ '</ul>' ~ "\n\n" %}
-                {% endif %}
                 {% endfor %}
+                {% set upcomingGamesHtml = upcomingGamesHtml ~ '</block>' ~ "\n" %}
                 <textarea rows="40" readonly="true" style="background: #dedede; color: #000; font-family: 'Courier New', 'Courier', monospace; font-size: 14px; font-weight: normal; width: 100%;">
 {{ upcomingGamesHtml }}
                 </textarea>
