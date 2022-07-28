@@ -45,9 +45,9 @@ class ReviewerTest extends TestCase
     {
         $this->be($this->activeUser);
         $this->doPageTest("/reviewers");
-        $this->doPageTest("/reviewers/reviews/feed-item/find-game");
-        $this->doPageTest("/reviewers/reviews/feed-item/add/1");
-        $this->doPageTest("/reviewers/reviews/feed-item/edit/1");
+        $this->doPageTest("/reviewers/reviews/review-draft/find-game");
+        $this->doPageTest("/reviewers/reviews/review-draft/add/1");
+        $this->doPageTest("/reviewers/reviews/review-draft/edit/1");
         $this->doPageTest("/reviewers/campaigns/1");
         $this->doPageTest("/reviewers/games/1");
         $this->doPageTest("/reviewers/stats");

@@ -25,6 +25,6 @@ class TitleMatchTest extends TestCase
     public function testBasicMatchFail()
     {
         $response = $this->json('GET', self::API_URL, ['title' => 'The Match in the Frying Pan']);
-        $response->assertStatus(404);
+        $response->assertJsonFragment(['gameId' => null]);
     }
 }

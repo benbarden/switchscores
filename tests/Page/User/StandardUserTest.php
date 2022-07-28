@@ -45,9 +45,6 @@ class StandardUserTest extends TestCase
         $this->be($this->activeUser);
         $this->doPageTest("/user");
         $this->doPageTest("/user/search-modular/add-quick-review");
-        $this->doPageTest("/user/database-help/index");
-        $this->doPageTest("/user/database-help/games-without-categories");
-        $this->doPageTest("/user/database-help/games-without-categories/2020");
         $this->doPageTest("/user/collection/index");
         $this->doPageTest("/user/collection/list/not-started");
         $this->doPageTest("/user/collection/add?gameId=6657");

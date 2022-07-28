@@ -51,4 +51,12 @@ class Repository
             ->orderBy('name', 'asc')
             ->get();
     }
+
+    public function getByDomain($domainUrl)
+    {
+        return ReviewSite::where('website_url', 'http://'.$domainUrl)
+            ->orWhere('website_url', 'https://'.$domainUrl)
+            ->first();
+    }
+
 }

@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepo;
 
 class ReviewSiteController extends Controller
 {
-    use SwitchServices;
+    private $repoReviewSite;
+
+    public function __construct(
+        ReviewSiteRepo $repoReviewSite
+    )
+    {
+        $this->repoReviewSite = $repoReviewSite;
+    }
 
     public function getByDomain()
     {
@@ -20,8 +27,6 @@ class ReviewSiteController extends Controller
             return response()->json(['error' => 'Missing data: reviewUrl'], 404);
         }
 
-        $servicePartner = $this->getServicePartner();
-
         // Convert to domain URL
         $domainUrl = $reviewUrl;
         $domainUrl = str_replace('http://', '', $domainUrl);
@@ -29,7 +34,7 @@ class ReviewSiteController extends Controller
         $domainUrlArray = explode('/', $domainUrl);
         $domainUrl = $domainUrlArray[0].'/';
 
-        $reviewSite = $servicePartner->getByDomain($domainUrl);
+        $reviewSite = $this->repoReviewSite->getByDomain($domainUrl);
 
         if ($reviewSite) {
             $data = array(

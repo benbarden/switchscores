@@ -33,6 +33,7 @@ class TitleMatch
         }
 
         $titleExists = $this->repoGame->titleExists($title, $gameId);
+
         if ($titleExists) {
             $existingGame = $this->repoGame->getByTitle($title);
             return response()->json(['gameId' => $existingGame->id], 200);
