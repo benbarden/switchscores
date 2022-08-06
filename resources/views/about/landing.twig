@@ -3,17 +3,57 @@
 {% block page_body %}
 
 <div class="row wos-content-page">
-    <div class="col-xs-12 col-sm-8 col-md-8">
+    <div class="col-xs-12 col-sm-9 col-md-9">
 
-        <img src="/img/about/switch-scores-fez.jpeg" alt="Switch Scores - FEZ" class="img-responsive">
+        <img src="/img/about/switch-scores-pokemon-legends-arceus.jpeg" alt="Switch Scores - Pokemon Legends Arceus" class="img-responsive">
         <p>
             Thanks for visiting Switch Scores! We're a site dedicated to ranking as much of the
             Nintendo Switch library as possible.
         </p>
         <p>
-            With over 5000 games on the Switch
+            With over 7000 games on the Switch
             <a href="{{ route('games.browse.byDate.landing') }}">and over 100 more coming out every month</a>,
-            this is an ongoing challenge - so <strong>we need your help</strong>!
+            this is an ongoing challenge!
+        </p>
+        <h2>
+            How many games are there?
+        </h2>
+        <p>
+            Depending where you go, you'll see a different figure.
+        </p>
+        <ul>
+            <li>
+                <a href="https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games" target="_blank">Wikipedia</a>
+                has a list of Switch games, but at most only 60% of the number of games on the system.
+                They don't include Arcade Archives, ACA NeoGeo, Sega Ages,
+                G-Mode Archives, plus hundreds of "non-notable" titles.
+            </li>
+            <li>
+                <a href="https://www.nintendo.co.uk/Search/Search-299117.html?f=147394-5-10-71" target="_blank">Nintendo.co.uk</a>
+                has a similar number of games to Switch Scores, but they include Switch Online games,
+                and also bundles and "special edition" games as separate entries.
+            </li>
+        </ul>
+        <h2>
+            Our inclusion criteria and how we keep the database clean
+        </h2>
+        <p>
+            To our knowledge, no other site has put in the same amount of manual curation as we have, to
+            have a clean and complete database of Nintendo Switch titles.
+        </p>
+        <p>
+            Our policy is to ignore bundles, special editions where there is already a standard version available,
+            and Switch Online games. But we include everything else.
+        </p>
+        <p>
+            There are some nuances. Some games get delisted; we keep those on the site. Occasionally a game is delisted
+            and then a brand new version added. We've even seen a few games where the original release date is changed
+            so the game appears to be new again. In these cases we keep the original release date intact.
+        </p>
+        <p>
+            Additionally, we'll edit some of the titles of games for length or clarity. We'll clean up titles all
+            in capital letters, or where the first letter of every word is capitalised. Some games have a
+            subtitle that we remove, leaving only the game title and not additional descriptive text.
         </p>
         <h2>How you can help</h2>
         <p>
@@ -24,12 +64,22 @@
             You can also <a href="{{ route('register') }}">register</a> and start adding your own
             quick reviews.
         </p>
+        <h2>
+            History
+        </h2>
         <ul>
             <li><a href="{{ route('about.changelog') }}">See our changelog</a> - notable changes since the site launched.</li>
         </ul>
 
     </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="ss-sidebar col-xs-12 col-sm-3 col-md-3">
+        <img src="/img/switch-scores-logo-bg.jpg" alt="Switch Scores" class="img-responsive">
+        <h2>Database stats</h2>
+        <ul>
+            <li><a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a></li>
+            <li><a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a></li>
+            <li><a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a></li>
+        </ul>
         <h2>Support the site</h2>
         <p>
             If you enjoy Switch Scores, consider becoming a Patron to show your support.
@@ -41,26 +91,15 @@
         <h2>Get in touch</h2>
         <ul>
             <li>Twitter: <a href="https://twitter.com/switchscores">switchscores</a></li>
-            <li>Email: <a href="mailto:hello@switchscores.com">hello@switchscores.com</a></li>
+            <li>Email: <a href="mailto:ben@switchscores.com">ben@switchscores.com</a></li>
         </ul>
         <p>
             Follow us on Twitter for news and updates. You can send questions, feedback and comments
             on Twitter or via email.
         </p>
-        <h2>Contact the owner</h2>
-        <p>
-            Switch Scores is run by Ben Barden.
-        </p>
-        <ul>
-            <li>Twitter: <a href="https://twitter.com/benbarden">benbarden</a></li>
-            <li>Email: <a href="mailto:ben@switchscores.com">ben@switchscores.com</a></li>
-        </ul>
-        <h2>Database stats</h2>
-        <ul>
-            <li><a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a></li>
-            <li><a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a></li>
-            <li><a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a></li>
-        </ul>
+        <img src="/img/about/switch-scores-kirby-and-the-forgotten-land.jpeg" alt="Switch Scores - FEZ" class="img-responsive">
+        <img src="/img/about/switch-scores-undermine.jpeg" alt="Switch Scores - UnderMine" class="img-responsive">
+        <img src="/img/about/switch-scores-fez.jpeg" alt="Switch Scores - FEZ" class="img-responsive">
         <img src="/img/about/switch-scores-grindstone.jpeg" alt="Switch Scores - Grindstone" class="img-responsive">
     </div>
 </div>
