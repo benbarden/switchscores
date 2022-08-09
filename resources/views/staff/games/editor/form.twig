@@ -219,6 +219,11 @@
                             Only use for games missing from the API
                         </small>
                     </div>
+                    <div class="col-md-2">
+                        {% if GameData %}
+                            <a class="btn btn-default btn-sm" href="https://www.google.com/search?q=site%3Anintendo.co.uk+{{ GameData.title|url_encode }}" target="_blank">Search Nintendo</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="eshop_europe_order" class="col-md-3 control-label">eShop order</label>
