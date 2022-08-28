@@ -2,8 +2,8 @@
 
 0 2 * * * www-data cd /var/www/switchscores.com && php artisan IGSeriesImage >/dev/null 2>&1
 
-0 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
-10 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
+#0 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
+#10 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
 
 0 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
 10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
