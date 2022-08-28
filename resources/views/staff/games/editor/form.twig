@@ -210,6 +210,11 @@
                     <div class="col-md-6">
                         <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
                     </div>
+                    <div class="col-md-2">
+                        {% if GameData %}
+                            <a class="btn btn-default btn-sm" href="https://www.amazon.co.uk/s?k={{ GameData.title|url_encode }}+switch+game" target="_blank">Search Amazon</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="nintendo_store_url_override" class="col-md-3 control-label">Nintendo store URL override</label>
@@ -218,6 +223,11 @@
                         <small>
                             Only use for games missing from the API
                         </small>
+                    </div>
+                    <div class="col-md-2">
+                        {% if GameData %}
+                            <a class="btn btn-default btn-sm" href="https://www.google.com/search?q=site%3Anintendo.co.uk+{{ GameData.title|url_encode }}" target="_blank">Search Nintendo</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="form-group">
