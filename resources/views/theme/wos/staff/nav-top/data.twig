@@ -1,6 +1,6 @@
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        Data sources <span class="caret"></span>
+        Data <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
         {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
@@ -19,6 +19,13 @@
             <li><a href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a></li>
             <li><a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
             <li role="separator" class="divider"></li>
+        {% endif %}
+        {% if auth_user().isOwner() %}
+            <li><a href="{{ route('staff.data-quality.dashboard') }}">Data quality dashboard</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{ route('staff.data-quality.category.dashboard') }}">Category dashboard</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a></li>
         {% endif %}
     </ul>
 </li>

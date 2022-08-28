@@ -84,11 +84,7 @@
                             or auth_user().hasRole('Wikipedia manager')
                             or auth_user().hasRole('Data source manager')
                             or auth_user().isOwner() %}
-                            {% include 'theme/staff-b5/nav-top/data-sources.twig' %}
-                        {% endif %}
-
-                        {% if auth_user().isOwner() %}
-                            {% include 'theme/staff-b5/nav-top/data-quality.twig' %}
+                            {% include 'theme/staff-b5/nav-top/data.twig' %}
                         {% endif %}
 
                         {% if auth_user().isOwner() %}

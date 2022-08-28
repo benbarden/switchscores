@@ -1,8 +1,8 @@
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDataSources" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Data sources
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownData" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Data
     </a>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdownDataSources">
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownData">
         {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
             <li><a class="dropdown-item" href="{{ route('staff.data-sources.dashboard') }}">Data sources dashboard</a></li>
             <li><hr class="dropdown-divider"></li>
@@ -19,6 +19,13 @@
             <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a></li>
             <li><a class="dropdown-item" href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a></li>
             <li><hr class="dropdown-divider"></li>
+        {% endif %}
+        {% if auth_user().isOwner() %}
+            <li><a class="dropdown-item" href="{{ route('staff.data-quality.dashboard') }}">Data quality dashboard</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-quality.category.dashboard') }}">Category dashboard</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a></li>
         {% endif %}
     </ul>
 </li>
