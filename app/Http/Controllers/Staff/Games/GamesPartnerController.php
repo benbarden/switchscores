@@ -39,7 +39,6 @@ class GamesPartnerController extends Controller
         //$bindings['UnusedDeveloperList'] = $serviceGameDeveloper->getDevelopersNotOnGame($gameId);
 
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-        $bindings['DataSourceWikipedia'] = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
 
         return view('staff.games.partner.gamePartners', $bindings);
     }

@@ -51,24 +51,6 @@ class DataSourceIgnoreController extends Controller
 
                 break;
 
-            case DataSource::DSID_WIKIPEDIA:
-
-                $title = $dsParsedItem->title;
-
-                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndTitle($sourceId, $title);
-                if ($dsIgnoredItem->count() > 0) {
-                    return response()->json(['error' => 'Item is already marked as ignored [Source: '.$sourceId.'; Title: '.$title.']'], 400);
-                }
-
-                $this->getServiceDataSourceIgnore()->addTitle($sourceId, $title);
-
-                $data = array(
-                    'status' => 'OK'
-                );
-                return response()->json($data, 200);
-
-                break;
-
             default:
                 return response()->json(['error' => 'NOT YET SUPPORTED'], 400);
                 break;
@@ -108,24 +90,6 @@ class DataSourceIgnoreController extends Controller
                 }
 
                 $this->getServiceDataSourceIgnore()->deleteByLinkId($sourceId, $linkId);
-
-                $data = array(
-                    'status' => 'OK'
-                );
-                return response()->json($data, 200);
-
-                break;
-
-            case DataSource::DSID_WIKIPEDIA:
-
-                $title = $dsParsedItem->title;
-
-                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndTitle($sourceId, $title);
-                if (!$dsIgnoredItem) {
-                    return response()->json(['error' => 'Item is not marked as ignored'], 400);
-                }
-
-                $this->getServiceDataSourceIgnore()->deleteByTitle($sourceId, $title);
 
                 $data = array(
                     'status' => 'OK'

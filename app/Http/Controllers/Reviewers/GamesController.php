@@ -45,7 +45,6 @@ class GamesController extends Controller
 
         // Nintendo.co.uk API data
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-        $bindings['DataSourceWikipedia'] = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;

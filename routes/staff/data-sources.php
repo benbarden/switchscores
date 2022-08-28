@@ -21,12 +21,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/data-sources/differences/nintendo-co-uk/players', 'Staff\DataSources\DifferencesController@nintendoCoUkPlayers')->name('staff.data-sources.differences.nintendo-co-uk.players');
     Route::get('/staff/data-sources/differences/nintendo-co-uk/publishers', 'Staff\DataSources\DifferencesController@nintendoCoUkPublishers')->name('staff.data-sources.differences.nintendo-co-uk.publishers');
     Route::get('/staff/data-sources/differences/nintendo-co-uk/genres', 'Staff\DataSources\DifferencesController@nintendoCoUkGenres')->name('staff.data-sources.differences.nintendo-co-uk.genres');
-    Route::get('/staff/data-sources/differences/wikipedia/eu-release-date', 'Staff\DataSources\DifferencesController@wikipediaEuReleaseDate')->name('staff.data-sources.differences.wikipedia.eu-release-date');
-    Route::get('/staff/data-sources/differences/wikipedia/us-release-date', 'Staff\DataSources\DifferencesController@wikipediaUsReleaseDate')->name('staff.data-sources.differences.wikipedia.us-release-date');
-    Route::get('/staff/data-sources/differences/wikipedia/jp-release-date', 'Staff\DataSources\DifferencesController@wikipediaJpReleaseDate')->name('staff.data-sources.differences.wikipedia.jp-release-date');
-    Route::get('/staff/data-sources/differences/wikipedia/developers', 'Staff\DataSources\DifferencesController@wikipediaDevelopers')->name('staff.data-sources.differences.wikipedia.developers');
-    Route::get('/staff/data-sources/differences/wikipedia/publishers', 'Staff\DataSources\DifferencesController@wikipediaPublishers')->name('staff.data-sources.differences.wikipedia.publishers');
-    Route::get('/staff/data-sources/differences/wikipedia/genres', 'Staff\DataSources\DifferencesController@wikipediaGenres')->name('staff.data-sources.differences.wikipedia.genres');
     Route::get('/staff/data-sources/differences/apply-change', 'Staff\DataSources\DifferencesController@applyChange')->name('staff.data-sources.differences.apply-change');
     Route::get('/staff/data-sources/differences/ignore-change', 'Staff\DataSources\DifferencesController@ignoreChange')->name('staff.data-sources.differences.ignore-change');
 
@@ -39,14 +33,5 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/import-parse-link', 'Staff\DataSources\ToolsController@nintendoCoUkImportParseLink')->name('staff.data-sources.tools.nintendo-co-uk.importParseLink');
     Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/update-games', 'Staff\DataSources\ToolsController@nintendoCoUkUpdateGames')->name('staff.data-sources.tools.nintendo-co-uk.updateGames');
     Route::match(['get', 'post'], '/staff/data-sources/tools/nintendo-co-uk/download-images', 'Staff\DataSources\ToolsController@nintendoCoUkDownloadImages')->name('staff.data-sources.tools.nintendo-co-uk.downloadImages');
-
-    // Data sources: Wikipedia
-    Route::get('/staff/data-sources/wikipedia/unlinked', 'Staff\DataSources\DataSourceParsedController@wikipediaUnlinkedItems')->name('staff.data-sources.wikipedia.unlinked');
-    Route::get('/staff/data-sources/wikipedia/ignored', 'Staff\DataSources\DataSourceParsedController@wikipediaIgnoredItems')->name('staff.data-sources.wikipedia.ignored');
-    Route::match(['get', 'post'], '/staff/data-sources/wikipedia/unlinked/add-link/{itemId}', 'Staff\DataSources\DataSourceParsedController@wikipediaAddLink')->name('staff.data-sources.wikipedia.add-link');
-
-    // Tools: Wikipedia
-    Route::match(['get', 'post'], '/staff/data-sources/tools/wikipedia/import-parse-link', 'Staff\DataSources\ToolsController@wikipediaImportParseLink')->name('staff.data-sources.tools.wikipedia.importParseLink');
-    Route::match(['get', 'post'], '/staff/data-sources/tools/wikipedia/update-games', 'Staff\DataSources\ToolsController@wikipediaUpdateGames')->name('staff.data-sources.tools.wikipedia.updateGames');
 
 });

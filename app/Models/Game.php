@@ -109,21 +109,10 @@ class Game extends Model implements Auditable
         return $this->hasOne('App\Models\GameImportRuleEshop', 'game_id', 'id');
     }
 
-    public function importRuleWikipedia()
-    {
-        return $this->hasOne('App\Models\GameImportRuleWikipedia', 'game_id', 'id');
-    }
-
     public function dspNintendoCoUk()
     {
         return $this->hasMany('App\Models\DataSourceParsed', 'game_id', 'id')
             ->where('source_id', DataSource::DSID_NINTENDO_CO_UK);
-    }
-
-    public function dspWikipedia()
-    {
-        return $this->hasMany('App\Models\DataSourceParsed', 'game_id', 'id')
-            ->where('source_id', DataSource::DSID_WIKIPEDIA);
     }
 
     public function isDigitalDelisted()

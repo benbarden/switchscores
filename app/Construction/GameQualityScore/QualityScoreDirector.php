@@ -5,7 +5,6 @@ namespace App\Construction\GameQualityScore;
 use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Models\GameImportRuleEshop;
-use App\Models\GameImportRuleWikipedia;
 use App\Models\GameQualityScore;
 use Illuminate\Log\Logger;
 
@@ -37,19 +36,9 @@ class QualityScoreDirector
     private $gameImportRuleEshop;
 
     /**
-     * @var \App\Models\GameImportRuleWikipedia
-     */
-    private $gameImportRuleWikipedia;
-
-    /**
      * @var DataSourceParsed
      */
     private $dsParsedNintendoCoUk;
-
-    /**
-     * @var DataSourceParsed
-     */
-    private $dsParsedWikipedia;
 
     public function __construct($logger = null)
     {
@@ -79,19 +68,9 @@ class QualityScoreDirector
         $this->gameImportRuleEshop = $importRuleEshop;
     }
 
-    public function setImportRuleWikipedia(GameImportRuleWikipedia $importRuleWikipedia): void
-    {
-        $this->gameImportRuleWikipedia = $importRuleWikipedia;
-    }
-
     public function setDataSourceParsedNintendoCoUk(DataSourceParsed $dataSourceParsed): void
     {
         $this->dsParsedNintendoCoUk = $dataSourceParsed;
-    }
-
-    public function setDataSourceParsedWikipedia(DataSourceParsed $dataSourceParsed): void
-    {
-        $this->dsParsedWikipedia = $dataSourceParsed;
     }
 
     public function incrementScore($byHowMuch = 1)
@@ -167,10 +146,6 @@ class QualityScoreDirector
 
         // Nintendo.co.uk
         $this->buildNintendoCoUkRules();
-
-        // Wikipedia
-        $this->buildWikipediaRules();
-
 
         // Set quality score
         $qualityScore = $this->calculateQualityScore();
@@ -317,195 +292,6 @@ class QualityScoreDirector
 
         // @todo
         $this->builder->setNoConflictNintendoGenre(1);
-        $this->incrementScore();
-    }
-
-    public function buildWikipediaRules(): void
-    {
-        if (!$this->dsParsedWikipedia) {
-
-            // No import rule or data source record to compare against, so set all to pass
-            $this->builder->setNoConflictWikipediaEUReleaseDate(1);
-            $this->builder->setNoConflictWikipediaUSReleaseDate(1);
-            $this->builder->setNoConflictWikipediaJPReleaseDate(1);
-            $this->builder->setNoConflictWikipediaDevelopers(1);
-            $this->builder->setNoConflictWikipediaPublishers(1);
-            $this->builder->setNoConflictWikipediaGenre(1);
-            $this->incrementScore(6);
-
-        } else {
-
-            $this->buildWikipediaRuleEUReleaseDate();
-            $this->buildWikipediaRuleUSReleaseDate();
-            $this->buildWikipediaRuleJPReleaseDate();
-            $this->buildWikipediaRuleDevelopers();
-            $this->buildWikipediaRulePublishers();
-            $this->buildWikipediaRuleGenre();
-
-        }
-    }
-
-    public function buildWikipediaRuleEUReleaseDate(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreEuropeDates();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        if ($importRuleIgnore) {
-            $this->builder->setNoConflictWikipediaEUReleaseDate(1);
-            $this->incrementScore();
-        } else {
-            if ($this->game->eu_release_date == $this->dsParsedWikipedia->release_date_eu) {
-                $this->builder->setNoConflictWikipediaEUReleaseDate(1);
-                $this->incrementScore();
-            } else {
-                $this->builder->setNoConflictWikipediaEUReleaseDate(0);
-            }
-        }
-    }
-
-    public function buildWikipediaRuleUSReleaseDate(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreUSDates();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        if ($importRuleIgnore) {
-            $this->builder->setNoConflictWikipediaUSReleaseDate(1);
-            $this->incrementScore();
-        } else {
-            if ($this->game->us_release_date == $this->dsParsedWikipedia->release_date_us) {
-                $this->builder->setNoConflictWikipediaUSReleaseDate(1);
-                $this->incrementScore();
-            } else {
-                $this->builder->setNoConflictWikipediaUSReleaseDate(0);
-            }
-        }
-    }
-
-    public function buildWikipediaRuleJPReleaseDate(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreJPDates();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        if ($importRuleIgnore) {
-            $this->builder->setNoConflictWikipediaJPReleaseDate(1);
-            $this->incrementScore();
-        } else {
-            if ($this->game->jp_release_date == $this->dsParsedWikipedia->release_date_jp) {
-                $this->builder->setNoConflictWikipediaJPReleaseDate(1);
-                $this->incrementScore();
-            } else {
-                $this->builder->setNoConflictWikipediaJPReleaseDate(0);
-            }
-        }
-    }
-
-    public function buildWikipediaRuleDevelopers(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreDevelopers();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        if ($importRuleIgnore) {
-            $this->builder->setNoConflictWikipediaDevelopers(1);
-            $this->incrementScore();
-        } else {
-
-            if ($this->game->gameDevelopers->count() > 0) {
-
-                $gameDeveloperArray = [];
-                foreach ($this->game->gameDevelopers as $gameDeveloper) {
-                    $gameDeveloperArray[] = $gameDeveloper->developer->name;
-                }
-                sort($gameDeveloperArray);
-                $gameDeveloperNames = implode(',', $gameDeveloperArray);
-
-                $dsDevelopers = $this->dsParsedWikipedia->developers;
-                $dsDeveloperArray = explode(",", $dsDevelopers);
-                sort($dsDeveloperArray);
-                $dsDeveloperNames = implode(",", $dsDeveloperArray);
-
-                if ($gameDeveloperNames == $dsDeveloperNames) {
-                    $this->builder->setNoConflictWikipediaDevelopers(1);
-                    $this->incrementScore();
-                } else {
-                    $this->builder->setNoConflictWikipediaDevelopers(0);
-                }
-
-            } else {
-
-                // Fail if none set
-                $this->builder->setNoConflictWikipediaDevelopers(0);
-
-            }
-
-        }
-    }
-
-    public function buildWikipediaRulePublishers(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnorePublishers();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        if ($importRuleIgnore) {
-            $this->builder->setNoConflictWikipediaPublishers(1);
-            $this->incrementScore();
-        } else {
-
-            if ($this->game->gamePublishers->count() > 0) {
-
-                $gamePublisherArray = [];
-                foreach ($this->game->gamePublishers as $gamePublisher) {
-                    $gamePublisherArray[] = $gamePublisher->publisher->name;
-                }
-                sort($gamePublisherArray);
-                $gamePublisherNames = implode(',', $gamePublisherArray);
-
-                $dsPublishers = $this->dsParsedWikipedia->publishers;
-                $dsPublisherArray = explode(",", $dsPublishers);
-                sort($dsPublisherArray);
-                $dsPublisherNames = implode(",", $dsPublisherArray);
-
-                if ($gamePublisherNames == $dsPublisherNames) {
-                    $this->builder->setNoConflictWikipediaPublishers(1);
-                    $this->incrementScore();
-                } else {
-                    $this->builder->setNoConflictWikipediaPublishers(0);
-                }
-
-            } else {
-
-                // Fail if none set
-                $this->builder->setNoConflictWikipediaPublishers(0);
-
-            }
-
-        }
-    }
-
-    public function buildWikipediaRuleGenre(): void
-    {
-        if ($this->gameImportRuleWikipedia) {
-            $importRuleIgnore = $this->gameImportRuleWikipedia->shouldIgnoreGenres();
-        } else {
-            $importRuleIgnore = false;
-        }
-
-        // @todo
-        $this->builder->setNoConflictWikipediaGenre(1);
         $this->incrementScore();
     }
 

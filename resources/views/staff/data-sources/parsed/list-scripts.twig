@@ -12,10 +12,6 @@
                 null, // link_id
                 null, // title
                 null, // release_date_eu
-                {% if DataSource.isWikipedia() %}
-                null, // release_date_us
-                null, // release_date_jp
-                {% endif %}
                 {% if DataSource.isNintendoCoUk() %}
                 null, // price_standard
                 { "orderable": false }, // Nintendo URL

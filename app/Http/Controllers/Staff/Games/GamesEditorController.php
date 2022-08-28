@@ -329,7 +329,6 @@ class GamesEditorController extends Controller
             $serviceGamePublisher->deleteByGameId($gameId);
             // Game import rule cleanup
             $this->getServiceGameImportRuleEshop()->deleteByGameId($gameId);
-            $this->getServiceGameImportRuleWikipedia()->deleteByGameId($gameId);
             // Image cleanup
             $serviceGameImages = new GameImages($gameData);
             $serviceGameImages->deleteSquare();

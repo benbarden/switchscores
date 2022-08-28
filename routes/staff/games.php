@@ -29,7 +29,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     // Game import rules
     Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
-    Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-wikipedia/edit', 'Staff\Games\ImportRuleWikipediaController@edit')->name('staff.games.import-rule-wikipedia.edit');
 
     // Game lists
     Route::get('/staff/games/list/games-to-release', 'Staff\Games\GamesListController@gamesToRelease')->name('staff.games.list.games-to-release');

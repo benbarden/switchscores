@@ -51,30 +51,4 @@ class ToolsController extends Controller
         }
     }
 
-    public function wikipediaImportParseLink()
-    {
-        $pageTitle = 'Wikipedia - Import/Parse/Link';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        if (request()->post()) {
-            \Artisan::call('DSWikipediaImportParseLink', []);
-            return view('staff.data-sources.tools.process-generic', $bindings);
-        } else {
-            return view('staff.data-sources.tools.wikipedia.importParseLink-landing', $bindings);
-        }
-    }
-
-    public function wikipediaUpdateGames()
-    {
-        $pageTitle = 'Wikipedia - Update games';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        if (request()->post()) {
-            \Artisan::call('DSWikipediaUpdateGames', []);
-            return view('staff.data-sources.tools.process-generic', $bindings);
-        } else {
-            return view('staff.data-sources.tools.wikipedia.updateGames-landing', $bindings);
-        }
-    }
-
 }

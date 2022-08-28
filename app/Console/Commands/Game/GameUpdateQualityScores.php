@@ -80,19 +80,9 @@ class GameUpdateQualityScores extends Command
                 $qsDirector->setImportRuleEshop($importRuleEshop);
             }
 
-            $importRuleWikipedia = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
-            if ($importRuleWikipedia) {
-                $qsDirector->setImportRuleWikipedia($importRuleWikipedia);
-            }
-
             $dsParsedNintendoCoUk = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
             if ($dsParsedNintendoCoUk) {
                 $qsDirector->setDataSourceParsedNintendoCoUk($dsParsedNintendoCoUk);
-            }
-
-            $dsParsedWikipedia = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
-            if ($dsParsedWikipedia) {
-                $qsDirector->setDataSourceParsedWikipedia($dsParsedWikipedia);
             }
 
             $gameQualityScore = $game->gameQualityScore;

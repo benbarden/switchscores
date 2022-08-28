@@ -33,25 +33,6 @@
     </div>
 {% endif %}
 
-{% if ReleaseDateEUWikipediaDifferenceCount > 0 %}
-    <div class="alert alert-danger" role="alert">
-        EU release date is different to Wikipedia.
-        <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}?gameid={{ GameId }}">Review here</a>.
-    </div>
-{% endif %}
-{% if ReleaseDateUSWikipediaDifferenceCount > 0 %}
-    <div class="alert alert-danger" role="alert">
-        US release date is different to Wikipedia.
-        <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}?gameid={{ GameId }}">Review here</a>.
-    </div>
-{% endif %}
-{% if ReleaseDateJPWikipediaDifferenceCount > 0 %}
-    <div class="alert alert-danger" role="alert">
-        JP release date is different to Wikipedia.
-        <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}?gameid={{ GameId }}">Review here</a>.
-    </div>
-{% endif %}
-
 <div class="row">
 
     <div class="col-md-4">
@@ -165,9 +146,6 @@
                     </div>
 
                     <div class="col-md-6">
-
-                        <h2>Import rules: Wikipedia</h2>
-                        {% include 'staff/games/detail/tab-import-rules-wikipedia.twig' %}
 
                     </div>
 

@@ -50,48 +50,6 @@ class Differences
         return $this->getGenres($sourceId, $importRulesTable, $gameId);
     }
 
-    public function getReleaseDateEUWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'eu', $gameId);
-    }
-
-    public function getReleaseDateUSWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'us', $gameId);
-    }
-
-    public function getReleaseDateJPWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getReleaseDate($sourceId, $importRulesTable, 'jp', $gameId);
-    }
-
-    public function getDevelopersWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getDevelopers($sourceId, $importRulesTable, $gameId);
-    }
-
-    public function getPublishersWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getPublishers($sourceId, $importRulesTable, $gameId);
-    }
-
-    public function getGenresWikipedia($gameId = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        $importRulesTable = 'game_import_rules_wikipedia';
-        return $this->getGenres($sourceId, $importRulesTable, $gameId);
-    }
-
     public function getReleaseDate($sourceId, $importRulesTable, $region, $gameId = null)
     {
         if ($region == 'eu') {

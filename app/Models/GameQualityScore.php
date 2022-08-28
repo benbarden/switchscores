@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameQualityScore extends Model
 {
-    const MAX_SCORE = 16;
+    const MAX_SCORE = 10;
 
     protected $primaryKey = 'game_id';
 
@@ -26,12 +26,6 @@ class GameQualityScore extends Model
         'no_conflict_nintendo_players',
         'no_conflict_nintendo_publishers',
         'no_conflict_nintendo_genre',
-        'no_conflict_wikipedia_eu_release_date',
-        'no_conflict_wikipedia_us_release_date',
-        'no_conflict_wikipedia_jp_release_date',
-        'no_conflict_wikipedia_developers',
-        'no_conflict_wikipedia_publishers',
-        'no_conflict_wikipedia_genre',
     ];
 
     public function game()

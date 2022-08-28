@@ -56,7 +56,6 @@ class AsGamesManagerTest extends TestCase
         $this->doPageTest("/staff/games/edit-nintendo-co-uk/1");
         $this->doPageTest("/staff/games/delete/1");
         $this->doPageTest("/staff/games/1/import-rule-eshop/edit");
-        $this->doPageTest("/staff/games/1/import-rule-wikipedia/edit");
         $this->doPageTest("/staff/games/list/games-to-release");
         $this->doPageTest("/staff/games/list/recently-added");
         $this->doPageTest("/staff/games/list/recently-released");

@@ -73,20 +73,13 @@ class GamesDetailController extends Controller
         $releaseDateEUNintendoCoUkDifferenceCount = $dsDifferences->getReleaseDateEUNintendoCoUk($gameId);
         $priceNintendoCoUkDifferenceCount = $dsDifferences->getPriceNintendoCoUk($gameId);
         $playersEUNintendoCoUkDifferenceCount = $dsDifferences->getPlayersNintendoCoUk($gameId);
-        $releaseDateEUWikipediaDifferenceCount = $dsDifferences->getReleaseDateEUWikipedia($gameId);
-        $releaseDateUSWikipediaDifferenceCount = $dsDifferences->getReleaseDateUSWikipedia($gameId);
-        $releaseDateJPWikipediaDifferenceCount = $dsDifferences->getReleaseDateJPWikipedia($gameId);
 
         $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
         $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
         $bindings['PlayersNintendoCoUkDifferenceCount'] = $playersEUNintendoCoUkDifferenceCount[0]->count;
-        $bindings['ReleaseDateEUWikipediaDifferenceCount'] = $releaseDateEUWikipediaDifferenceCount[0]->count;
-        $bindings['ReleaseDateUSWikipediaDifferenceCount'] = $releaseDateUSWikipediaDifferenceCount[0]->count;
-        $bindings['ReleaseDateJPWikipediaDifferenceCount'] = $releaseDateJPWikipediaDifferenceCount[0]->count;
 
         // Nintendo.co.uk API data
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-        $bindings['DataSourceWikipedia'] = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();
@@ -95,7 +88,6 @@ class GamesDetailController extends Controller
 
         // Import rules
         $bindings['ImportRulesEshop'] = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
-        $bindings['ImportRulesWikipedia'] = $this->getServiceGameImportRuleWikipedia()->getByGameId($gameId);
 
         return view('staff.games.detail.show', $bindings);
     }

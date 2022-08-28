@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Construction\GameImportRule\Builder;
-use App\Construction\GameImportRule\Director;
-use App\Construction\GameImportRule\WikipediaBuilder;
-use App\Construction\GameImportRule\WikipediaDirector;
+use App\Construction\GameImportRule\EshopBuilder;
+use App\Construction\GameImportRule\EshopDirector;
 use App\Models\DataSource;
 use App\Services\DataSources\Queries\Differences;
 use App\Traits\StaffView;
@@ -111,36 +109,6 @@ class DifferencesController extends Controller
 
                 break;
 
-            case DataSource::DSID_WIKIPEDIA:
-
-                $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
-                if (!$dsParsedItem) {
-                    return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
-                }
-
-                if ($sourceField == 'release_date_eu') {
-                    $game->eu_release_date = $dsParsedItem->release_date_eu;
-                } elseif ($sourceField == 'release_date_us') {
-                    $game->us_release_date = $dsParsedItem->release_date_us;
-                } elseif ($sourceField == 'release_date_jp') {
-                    $game->jp_release_date = $dsParsedItem->release_date_jp;
-                } elseif ($sourceField == 'dsp_genres') {
-                    try {
-                        $categoryId = $this->getCategoryId($dsParsedItem->genres_json);
-                    } catch (\Exception $e) {
-                        return response()->json(['error' => $e->getMessage()], 400);
-                    }
-                    $game->category_id = $categoryId;
-                } else {
-                    return response()->json(['error' => 'NOT SUPPORTED'], 400);
-                }
-
-                $game->save();
-
-                return response()->json(['status' => 'OK'], 200);
-
-                break;
-
             default:
                 return response()->json(['error' => 'NOT SUPPORTED'], 400);
                 break;
@@ -204,66 +172,11 @@ class DifferencesController extends Controller
                 }
 
                 // Update the DB
-                $importRuleDirector = new Director();
-                $importRuleBuilder = new Builder();
+                $importRuleDirector = new EshopDirector();
+                $importRuleBuilder = new EshopBuilder();
                 $importRuleDirector->setBuilder($importRuleBuilder);
                 if ($gameImportRuleEshop) {
                     $importRuleDirector->buildExisting($gameImportRuleEshop, $importRuleParams);
-                } else {
-                    $importRuleBuilder->setGameId($gameId);
-                    $importRuleDirector->buildNew($importRuleParams);
-                }
-                $importRule = $importRuleBuilder->getGameImportRule();
-                $importRule->save();
-
-                return response()->json(['status' => 'OK'], 200);
-
-                break;
-
-            case DataSource::DSID_WIKIPEDIA:
-
-                $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceWikipediaForGame($gameId);
-                if (!$dsParsedItem) {
-                    return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
-                }
-
-                $serviceImportRuleWikipedia = $this->getServiceGameImportRuleWikipedia();
-                $gameImportRuleWikipedia = $serviceImportRuleWikipedia->getByGameId($gameId);
-                if ($gameImportRuleWikipedia) {
-                    $importRuleParams = [
-                        'ignore_europe_dates' => $gameImportRuleWikipedia->ignore_europe_date,
-                        'ignore_us_dates' => $gameImportRuleWikipedia->ignore_us_dates,
-                        'ignore_jp_dates' => $gameImportRuleWikipedia->ignore_jp_dates,
-                        'ignore_developers' => $gameImportRuleWikipedia->ignore_developers,
-                        'ignore_publishers' => $gameImportRuleWikipedia->ignore_publishers,
-                        'ignore_genres' => $gameImportRuleWikipedia->ignore_genres,
-                    ];
-                } else {
-                    $importRuleParams = [];
-                }
-
-                if ($sourceField == 'release_date_eu') {
-                    $importRuleParams['ignore_europe_dates'] = 'on';
-                } elseif ($sourceField == 'release_date_us') {
-                    $importRuleParams['ignore_us_dates'] = 'on';
-                } elseif ($sourceField == 'release_date_jp') {
-                    $importRuleParams['ignore_jp_dates'] = 'on';
-                } elseif ($sourceField == 'dsp_developers') {
-                    $importRuleParams['ignore_developers'] = 'on';
-                } elseif ($sourceField == 'dsp_publishers') {
-                    $importRuleParams['ignore_publishers'] = 'on';
-                } elseif ($sourceField == 'dsp_genres') {
-                    $importRuleParams['ignore_genres'] = 'on';
-                } else {
-                    return response()->json(['error' => 'NOT SUPPORTED'], 400);
-                }
-
-                // Update the DB
-                $importRuleDirector = new WikipediaDirector();
-                $importRuleBuilder = new WikipediaBuilder();
-                $importRuleDirector->setBuilder($importRuleBuilder);
-                if ($gameImportRuleWikipedia) {
-                    $importRuleDirector->buildExisting($gameImportRuleWikipedia, $importRuleParams);
                 } else {
                     $importRuleBuilder->setGameId($gameId);
                     $importRuleDirector->buildNew($importRuleParams);
@@ -367,116 +280,6 @@ class DifferencesController extends Controller
         $bindings['GameField'] = 'category_name';
         $bindings['SourceField'] = 'dsp_genres';
         $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaEuReleaseDate()
-    {
-        $pageTitle = 'Differences: EU release date - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getReleaseDateEUWikipedia();
-
-        $bindings['GameField'] = 'eu_release_date';
-        $bindings['SourceField'] = 'release_date_eu';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaUsReleaseDate()
-    {
-        $pageTitle = 'Differences: US release date - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getReleaseDateUSWikipedia();
-
-        $bindings['GameField'] = 'us_release_date';
-        $bindings['SourceField'] = 'release_date_us';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaJpReleaseDate()
-    {
-        $pageTitle = 'Differences: JP release date - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getReleaseDateJPWikipedia();
-
-        $bindings['GameField'] = 'jp_release_date';
-        $bindings['SourceField'] = 'release_date_jp';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaDevelopers()
-    {
-        $pageTitle = 'Differences: Developers - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getDevelopersWikipedia();
-
-        $bindings['GameField'] = 'game_developers';
-        $bindings['SourceField'] = 'dsp_developers';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
-        $bindings['HideApplyChange'] = 'Y';
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaPublishers()
-    {
-        $pageTitle = 'Differences: Publishers - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getPublishersWikipedia();
-
-        $bindings['GameField'] = 'game_publishers';
-        $bindings['SourceField'] = 'dsp_publishers';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
-        $bindings['HideApplyChange'] = 'Y';
-
-        $highlightGameId = \Request::get('gameid');
-        $bindings['HighlightGameId'] = $highlightGameId;
-
-        return view('staff.data-sources.differences.view-differences', $bindings);
-    }
-
-    public function wikipediaGenres()
-    {
-        $pageTitle = 'Differences: Genres - Wikipedia';
-        $bindings = $this->getBindingsDataSourcesSubpage($pageTitle);
-
-        $dsDifferences = new Differences();
-        $bindings['DifferenceList'] = $dsDifferences->getGenresWikipedia();
-
-        $bindings['GameField'] = 'category_name';
-        $bindings['SourceField'] = 'dsp_genres';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceWikipedia()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;

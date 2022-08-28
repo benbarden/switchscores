@@ -130,133 +130,6 @@
 
     <div class="col-md-4">
 
-        <h2>Wikipedia</h2>
-
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Stats'} %}
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}">Unlinked items</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.wikipedia.unlinked') }}" class="h4">{{ WikipediaUnlinkedCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.wikipedia.ignored') }}">Ignored items</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.wikipedia.ignored') }}" class="h4">{{ WikipediaIgnoredCount }}</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Differences'} %}
-
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}">
-                        EU release date
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.eu-release-date') }}" class="h4">
-                        {{ ReleaseDateEUWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}">
-                        US release date
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.us-release-date') }}" class="h4">
-                        {{ ReleaseDateUSWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}">
-                        JP release date
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.jp-release-date') }}" class="h4">
-                        {{ ReleaseDateJPWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}">
-                        Developers
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.developers') }}" class="h4">
-                        {{ DevelopersWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}">
-                        Publishers
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.publishers') }}" class="h4">
-                        {{ PublishersWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}">
-                        Genres
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.wikipedia.genres') }}" class="h4">
-                        {{ GenresWikipediaDifferenceCount }}
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.tools.wikipedia.importParseLink') }}">DSWikipediaImportParseLink</a>
-                    <br>
-                    <small>Imports and parses data, and links it to games</small>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-sources.tools.wikipedia.updateGames') }}">DSWikipediaUpdateGames</a>
-                    <br>
-                    <small>Updates games with data</small>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-md-4">
-
         <h2>Import totals</h2>
 
         <table class="table">
@@ -290,6 +163,10 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <div class="col-md-4">
+
     </div>
 
 </div>

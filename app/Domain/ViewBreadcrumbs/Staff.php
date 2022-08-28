@@ -33,7 +33,6 @@ class Staff extends Base
 
         $this->toastedCrumbs['dataSources.dashboard'] = ['url' => route('staff.data-sources.dashboard'), 'text' => 'Data sources'];
         $this->toastedCrumbs['dataSources.nintendoCoUk.unlinked'] = ['url' => route('staff.data-sources.nintendo-co-uk.unlinked'), 'text' => 'Nintendo.co.uk API - Unlinked items'];
-        $this->toastedCrumbs['dataSources.wikipedia.unlinked'] = ['url' => route('staff.data-sources.wikipedia.unlinked'), 'text' => 'Wikipedia - Unlinked items'];
 
         $this->toastedCrumbs['dataQuality.dashboard'] = ['url' => route('staff.data-quality.dashboard'), 'text' => 'Data quality'];
         $this->toastedCrumbs['dataQuality.categories.dashboard'] = ['url' => route('staff.data-quality.category.dashboard'), 'text' => 'Categories'];
@@ -144,13 +143,6 @@ class Staff extends Base
     {
         return $this->addCrumb($this->toastedCrumbs['dataSources.dashboard'])
                     ->addCrumb($this->toastedCrumbs['dataSources.nintendoCoUk.unlinked'])
-                    ->addTitleAndReturn($pageTitle);
-    }
-
-    public function dataSourcesWikipediaUnlinkedSubpage($pageTitle)
-    {
-        return $this->addCrumb($this->toastedCrumbs['dataSources.dashboard'])
-                    ->addCrumb($this->toastedCrumbs['dataSources.wikipedia.unlinked'])
                     ->addTitleAndReturn($pageTitle);
     }
 
