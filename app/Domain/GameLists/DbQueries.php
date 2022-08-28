@@ -20,8 +20,9 @@ class DbQueries
             ->where('game_tags.tag_id', $tagId)
             //->where('games.eu_is_released', '1')
             ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('games.eu_release_date', 'desc');
+            ->orderBy('games.title', 'asc');
+            //->orderBy('games.rating_avg', 'desc')
+            //->orderBy('games.eu_release_date', 'desc');
 
         $games = $games->get();
         return $games;
