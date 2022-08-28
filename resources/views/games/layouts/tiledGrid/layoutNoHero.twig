@@ -7,6 +7,8 @@
     {% set colBreak = '3' %}
 {% elseif batchItemCount == 3 %}
     {% set colBreak = '4' %}
+{% elseif batchItemCount == 1 %}
+    {% set colBreak = '12' %}
 {% else %}
     {% set colBreak = '6' %}
 {% endif %}
@@ -16,7 +18,7 @@
         <div class="row">
             {% for batchItem in item %}
                 <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                    {% include 'games/layouts/tiledGrid/tileMedium.twig' with {'item': batchItem} %}
+                    {% include 'modules/game/item/standard-with-date.twig' with {'item': batchItem} %}
                 </div>
             {% endfor %}
         </div>

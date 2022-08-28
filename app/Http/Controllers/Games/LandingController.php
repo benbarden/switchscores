@@ -9,8 +9,10 @@ use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 class LandingController extends Controller
@@ -19,20 +21,26 @@ class LandingController extends Controller
     use AuthUser;
 
     protected $repoFeaturedGames;
+    protected $repoGame;
     protected $repoGameLists;
     protected $repoGameStats;
+    protected $dbTopRated;
     protected $viewBreadcrumbs;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
+        GameRepository $repoGame,
         GameListsRepository $repoGameLists,
         GameStatsRepository $repoGameStats,
+        TopRatedDbQueries $dbTopRated,
         Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoFeaturedGames = $featuredGames;
+        $this->repoGame = $repoGame;
         $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
+        $this->dbTopRated = $dbTopRated;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
@@ -41,7 +49,7 @@ class LandingController extends Controller
         $bindings = [];
 
         $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(20);
-        $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming(30);
+        $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming(20);
 
         $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, 35, 15);
         $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
@@ -50,7 +58,19 @@ class LandingController extends Controller
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
+        // Get random game from Top 100
+        $randomTop100Game = $this->dbTopRated->getRandomFromTop100();
+        // Make it into a usable collection
+        if ($randomTop100Game) {
+            $topGameList = new Collection();
+            $topGameModel = $this->repoGame->find($randomTop100Game->game_id);
+            $topGameModel->GameList = $randomTop100Game;
+            $topGameList->push($topGameModel);
+            $bindings['RandomTop100Game'] = $topGameList;
+        }
+
         // Get featured game
+        /*
         $todaysDate = new \DateTime('now');
         $todaysDateYmd = $todaysDate->format('Y-m-d');
         $featuredGame = $this->repoFeaturedGames->getActiveByDateOrRandom($todaysDateYmd);
@@ -63,6 +83,7 @@ class LandingController extends Controller
             $bindings['FeaturedGameList'] = $fGameList;
             $bindings['FeaturedGameData'] = $featuredGame;
         }
+        */
 
         $bindings['TopTitle'] = 'Nintendo Switch games database';
         $bindings['PageTitle'] = 'Nintendo Switch games database';

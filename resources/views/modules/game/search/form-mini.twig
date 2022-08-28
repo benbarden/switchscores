@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-12">
+        <form class="form-horizontal" role="form" method="get" action="{{ route('games.search') }}">
+            {#
+            {{ csrf_field() }}
+            #}
+
+            <div class="form-group">
+                <div class="col-md-8">
+                    <input id="search_keywords" name="search_keywords" type="text" class="form-control theme-rounded">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn outline theme-colour-5 theme-rounded">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

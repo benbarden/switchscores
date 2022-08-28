@@ -1,0 +1,74 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+
+        <h2>
+            Latest releases
+            <span class="h5">
+                (<a href="{{ route('games.recentReleases') }}">view more</a>)
+                (<a href="{{ route('games.browse.byDate.page', {'date': CalendarThisMonth}) }}">all this month</a>)
+            </span>
+        </h2>
+
+        {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'new-releases'} %}
+        <div id="wrap-new-releases" class="scrolling-wrapper">
+            {% include 'modules/game/scrollbox/item.twig' with {'GameList': NewReleases} %}
+        </div>
+
+        <h2>Recent Top Rated</h2>
+        {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'top-rated'} %}
+        <div id="wrap-recent-top-rated" class="scrolling-wrapper">
+            {% include 'modules/game/scrollbox/item.twig' with {'GameList': RecentWithGoodRanks} %}
+        </div>
+
+        <h2>Recently reviewed, still unranked</h2>
+        {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'recently-reviewed'} %}
+        <div id="wrap-recently-reviewed" class="scrolling-wrapper">
+            {% include 'modules/game/scrollbox/item.twig' with {'GameList': HighlightsStillUnranked} %}
+        </div>
+
+        <h2>Top Rated discounts</h2>
+        {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'top-rated-discounts'} %}
+        <div id="wrap-top-rated-discounts" class="scrolling-wrapper">
+            {% include 'modules/game/scrollbox/item.twig' with {'GameList': TopRatedDiscounts, 'ShowOnSale': 'Y'} %}
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="border-left: 2px solid #c9c9c9;">
+
+        {% if FeaturedGameList %}
+            <h2 class="standout-header">
+                Featured game
+            </h2>
+            <p>
+                <small>
+                    Featured games are titles that look interesting or unusual. You might like to
+                    check them out. They are selected by members and staff.
+                </small>
+            </p>
+            {% include 'games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': FeaturedGameList} %}
+            {#
+            <div class="label label-success">
+                {{ FeaturedGameData.getTypeDesc() }}
+            </div>
+            #}
+        {% endif %}
+
+        <h2 class="standout-header">
+            Upcoming
+            <span class="h5">(<a href="{{ route('games.upcomingReleases') }}" style="color: #fff;">view all</a>)</span>
+        </h2>
+        {% include 'modules/game/list/upcoming.twig' with {'GameList': UpcomingReleases} %}
+
+    </div>
+
+</div>
+
+{% include 'modules/game/scrollbox/scripts.twig' %}
+
+{% endblock page_body %}
