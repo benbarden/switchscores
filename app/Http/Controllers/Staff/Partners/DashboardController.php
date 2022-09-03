@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
 
@@ -15,12 +17,15 @@ class DashboardController extends Controller
     use StaffView;
 
     protected $viewBreadcrumbs;
+    private $repoGamesCompany;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        Breadcrumbs $viewBreadcrumbs,
+        GamesCompanyRepository $repoGamesCompany
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function show()
@@ -46,6 +51,10 @@ class DashboardController extends Controller
         $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
         $pubsWithUnrankedGames = $this->getServicePartner()->getPublishersWithUnrankedGames();
         $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGames);
+
+        // Low quality filter
+        $bindings['GamesCompaniesNormalQualityCount'] = $this->repoGamesCompany->normalQualityCount();
+        $bindings['GamesCompaniesLowQualityCount'] = $this->repoGamesCompany->lowQualityCount();
 
         return view('staff.partners.dashboard', $bindings);
     }

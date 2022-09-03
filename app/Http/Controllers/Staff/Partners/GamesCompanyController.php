@@ -11,6 +11,7 @@ use App\Models\Partner;
 use App\Factories\GamesCompanyFactory;
 
 use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Traits\StaffView;
 use App\Traits\SwitchServices;
@@ -22,10 +23,8 @@ class GamesCompanyController extends Controller
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /**
-     * @var GameQualityFilter
-     */
     private $gameQualityFilter;
+    private $repoGamesCompany;
 
     /**
      * @var array
@@ -36,17 +35,37 @@ class GamesCompanyController extends Controller
     ];
 
     public function __construct(
-        GameQualityFilter $gameQualityFilter
+        GameQualityFilter $gameQualityFilter,
+        GamesCompanyRepository $repoGamesCompany
     )
     {
         $this->gameQualityFilter = $gameQualityFilter;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function showList()
     {
         $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
 
-        $bindings['GamesCompanyList'] = $this->getServicePartner()->getAllGamesCompanies();
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function normalQuality()
+    {
+        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
+
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->normalQuality();
+
+        return view('staff.partners.games-company.list', $bindings);
+    }
+
+    public function lowQuality()
+    {
+        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
+
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->lowQuality();
 
         return view('staff.partners.games-company.list', $bindings);
     }
