@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
 
@@ -8,7 +8,7 @@
 
     <div class="col-md-4">
 
-        <h2>Action lists</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Action lists'} %}
 
         <table class="table">
             <tbody>
@@ -16,7 +16,7 @@
                 <td>
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}">Games with missing developer</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-developer') }}" class="h4">{{ DeveloperMissingCount }}</a>
                 </td>
             </tr>
@@ -24,7 +24,7 @@
                 <td>
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
                 </td>
             </tr>
@@ -34,7 +34,7 @@
                         Games companies without Twitter IDs
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIdsCount }}</a>
                 </td>
             </tr>
@@ -44,7 +44,7 @@
                         Games companies without URLs
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrlsCount }}</a>
                 </td>
             </tr>
@@ -54,7 +54,7 @@
                         Twitter IDs on multiple games companies
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.duplicate-twitter-ids') }}" class="h4">{{ GamesCompanyDuplicateTwitterIdsCount }}</a>
                 </td>
             </tr>
@@ -64,7 +64,7 @@
                         Website URLs on multiple games companies
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.duplicate-website-urls') }}" class="h4">{{ GamesCompanyDuplicateWebsiteUrlsCount }}</a>
                 </td>
             </tr>
@@ -75,19 +75,10 @@
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Navigation'} %}
+
         <table class="table">
             <tbody>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.reviewSites.index') }}">Review sites</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.feedLinks.index') }}">Feed links</a>
-                </td>
-            </tr>
             <tr>
                 <td>
                     <a href="{{ route('staff.partners.games-company.list') }}">Games companies</a>
@@ -106,14 +97,15 @@
             </tbody>
         </table>
 
-        <h2>Outreach</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Outreach'} %}
+
         <table class="table">
             <tbody>
             <tr>
                 <td>
                     <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}">Developers with unranked games</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}" class="h4">{{ DevsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
@@ -121,7 +113,7 @@
                 <td>
                     <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}">Publishers with unranked games</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}" class="h4">{{ PubsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
@@ -139,7 +131,8 @@
 
     <div class="col-md-4">
 
-        <h2>Tools</h2>
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
+
         <table class="table">
             <tbody>
             <tr>
