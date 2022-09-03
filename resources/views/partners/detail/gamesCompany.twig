@@ -27,6 +27,16 @@
                     <td><a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a></td>
                 </tr>
             {% endif %}
+            {% if PartnerData.is_low_quality == 1 %}
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Quality filter</span>
+                    </td>
+                    <td>
+                        <label class="label label-danger">Low quality</label>
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </div>
 </div>
