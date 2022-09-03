@@ -6,7 +6,7 @@
                 <th>Title</th>
                 <th>Category</th>
                 <th class="text-center">Release date</th>
-                <th class="text-right">eShop price</th>
+                <th class="text-right">Quality filter</th>
                 <th class="text-center">Avg rating</th>
                 <th class="text-center">Total reviews</th>
             </tr>
@@ -34,11 +34,11 @@
                     <td class="text-center">
                         {{ item.eu_release_date }}
                     </td>
-                    <td class="text-right">
-                        {% if item.price_eshop %}
-                            &pound;{{ item.price_eshop }}
+                    <td class="text-center">
+                        {% if item.is_low_quality == 1 %}
+                            <label class="label label-danger">Low quality</label>
                         {% else %}
-                            &nbsp;
+                            -
                         {% endif %}
                     </td>
                     <td class="text-center">
