@@ -11,6 +11,7 @@ class Repository
     public function recentlyReleased($limit = 100)
     {
         $games = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', 0)
             ->orderBy('eu_release_date', 'desc')
             ->orderBy('eu_released_on', 'desc')
             ->orderBy('updated_at', 'desc')
@@ -29,6 +30,7 @@ class Repository
     public function upcoming($limit = null)
     {
         $games = Game::where('eu_is_released', 0)
+            ->where('is_low_quality', 0)
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('eshop_europe_order', 'asc')

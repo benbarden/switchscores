@@ -49,7 +49,6 @@
             {% endif %}
         </td>
     </tr>
-
     <tr>
         <td>
             <strong>Video URL</strong>
@@ -59,6 +58,18 @@
                 <em>OK</em>
             {% else %}
                 <em>None set.</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Quality filter</span>
+        </td>
+        <td>
+            {% if GameData.is_low_quality == 1 %}
+                <label class="label label-danger">Low quality</label>
+            {% else %}
+                -
             {% endif %}
         </td>
     </tr>

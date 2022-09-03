@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller as Controller;
 use App\Factories\GameDirectorFactory;
 use App\Factories\GamesCompanyFactory;
 
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
 
@@ -14,6 +17,18 @@ class GamesPartnerController extends Controller
 {
     use SwitchServices;
     use AuthUser;
+
+    private $repoGame;
+    private $gameQualityFilter;
+
+    public function __construct(
+        GameRepository $repoGame,
+        GameQualityFilter $gameQualityFilter
+    )
+    {
+        $this->repoGame = $repoGame;
+        $this->gameQualityFilter = $gameQualityFilter;
+    }
 
     public function showGamePartners($gameId)
     {
@@ -59,6 +74,15 @@ class GamesPartnerController extends Controller
         $request = request();
 
         $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $this->repoGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Game not found!'], 400);
+        }
+
         $developerId = $request->developerId;
         if (!$developerId) {
             return response()->json(['error' => 'Missing data: developerId'], 400);
@@ -75,6 +99,8 @@ class GamesPartnerController extends Controller
         }
 
         $serviceGameDeveloper->createGameDeveloper($gameId, $developerId);
+
+        $this->gameQualityFilter->updateGame($game, $developerData);
 
         $data = array(
             'status' => 'OK'
@@ -135,6 +161,15 @@ class GamesPartnerController extends Controller
         $request = request();
 
         $gameId = $request->gameId;
+        if (!$gameId) {
+            return response()->json(['error' => 'Missing data: gameId'], 400);
+        }
+
+        $game = $this->repoGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Game not found!'], 400);
+        }
+
         $publisherId = $request->publisherId;
         if (!$publisherId) {
             return response()->json(['error' => 'Missing data: publisherId'], 400);
@@ -151,6 +186,8 @@ class GamesPartnerController extends Controller
         }
 
         $serviceGamePublisher->createGamePublisher($gameId, $publisherId);
+
+        $this->gameQualityFilter->updateGame($game, $publisherData);
 
         $data = array(
             'status' => 'OK'

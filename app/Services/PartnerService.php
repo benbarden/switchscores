@@ -65,7 +65,7 @@ class PartnerService
     // ********************************************************** //
 
     public function editGamesCompany(
-        Partner $partnerData, $name, $linkTitle, $websiteUrl, $twitterId
+        Partner $partnerData, $name, $linkTitle, $websiteUrl, $twitterId, $isLowQuality
     )
     {
         $values = [
@@ -73,6 +73,7 @@ class PartnerService
             'link_title' => $linkTitle,
             'website_url' => $websiteUrl,
             'twitter_id' => $twitterId,
+            'is_low_quality' => $isLowQuality,
         ];
 
         $partnerData->fill($values);

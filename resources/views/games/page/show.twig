@@ -33,6 +33,14 @@
                     {% include 'games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
                 {% endif %}
 
+                {% if GameData.is_low_quality == 1 %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        This game has been flagged with our low quality filter.
+                        <a href="{{ route('help.low-quality-filter') }}" style="color: #fff; font-weight: bold;">Learn more</a>.
+                    </div>
+                {% endif %}
+
                 {% if GameBlurb %}
                     <p style="margin-top: 15px;">
                         {{ GameBlurb|raw }}

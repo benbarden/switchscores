@@ -25,6 +25,7 @@
                 <th class="text-center">SS login</th>
                 <th class="text-center">Assigned games<br>(developer)</th>
                 <th class="text-center">Assigned games<br>(publisher)</th>
+                <th class="text-center">Quality filter</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -68,6 +69,13 @@
                         {{ item.publisherGames().count }}
                     </td>
                     <td class="text-center">
+                        {% if item.is_low_quality == 1 %}
+                            <label class="label label-danger">Low quality</label>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
                         <a href="{{ route('staff.partners.games-company.edit', {'partnerId': item.id}) }}">Edit</a> :
                         <a href="{{ route('staff.partners.games-company.delete', {'partnerId': item.id}) }}">Delete</a>
                     </td>
@@ -91,6 +99,7 @@
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
+                null,
                 null,
                 null,
                 { "orderable": false }

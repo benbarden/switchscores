@@ -1,0 +1,19 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+    <div class="col-xs-12 col-sm-9 col-md-9">
+        <p>
+            This is a new section of the site. We'll be adding more content soon.
+        </p>
+    </div>
+    <div class="ss-sidebar col-xs-12 col-sm-3 col-md-3">
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Help links</h4>
+        <ul>
+            <li><a href="{{ route('help.low-quality-filter') }}">Low quality filter</a></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock page_body %}

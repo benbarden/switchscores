@@ -56,6 +56,18 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    <span style="font-weight: bold;">Quality filter</span>
+                </td>
+                <td>
+                    {% if PartnerData.is_low_quality == 1 %}
+                        <label class="label label-danger">Low quality</label>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Last outreach</span>
                 </td>
@@ -152,6 +164,7 @@
                     <th class="text-center">Involvement</th>
                     <th class="text-center">Release date</th>
                     <th class="text-center">Released?</th>
+                    <th class="text-center">Quality filter</th>
                     <th class="text-center">Options</th>
                 </tr>
                 {% for item in MergedGameList %}
@@ -175,6 +188,13 @@
                                 Yes
                             {% else %}
                                 No
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.is_low_quality == 1 %}
+                                <label class="label label-danger">Low quality</label>
+                            {% else %}
+                                -
                             {% endif %}
                         </td>
                         <td class="text-center">

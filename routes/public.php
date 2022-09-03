@@ -16,6 +16,10 @@ Route::get('/about', 'AboutController@landing')->name('about.landing');
 Route::get('/about/changelog', 'AboutController@changelog')->name('about.changelog');
 Route::get('/privacy', 'PrivacyController@show')->name('privacy');
 
+// Help
+Route::get('/help', 'HelpController@landing')->name('help.landing');
+Route::get('/help/low-quality-filter', 'HelpController@lowQualityFilter')->name('help.low-quality-filter');
+
 // Lists
 Route::get('/lists', 'ListsController@landing')->name('lists.landing');
 Route::get('/games/recent', 'ListsController@recentReleases')->name('games.recentReleases');

@@ -1,0 +1,92 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+    <div class="row wos-content-page">
+        <div class="col-xs-12 col-sm-9 col-md-9">
+            <p>
+                Due to the runaway success of the Nintendo Switch, the games library is huge, and has attracted
+                a wide range of developers and publishers. This is great news for Switch owners! There are
+                many excellent games to check out, and Switch Scores has many different ways for you to
+                dive into the library.
+            </p>
+            <p>
+                Unfortunately, amongst the wide range of fun and enjoyable titles, there is also a steady flow of
+                titles that some might describe as "shovelware". The bar for getting content onto the Switch eShop
+                appears to be quite low - hence how these titles have appeared.
+            </p>
+            <p>
+                We're still keen to maintain as complete a database as we can, so we won't be dropping
+                shovelware from the site. However, we will be starting to treat it a bit differently across the
+                site with our <strong>low quality filter</strong>.
+            </p>
+
+            <h2>Criteria</h2>
+            <p>
+                What constitutes shovelware is a controversial topic, particularly for publishers of these
+                titles.
+            </p>
+            <p>
+                The critical thing here is we are aiming to flag titles that are blatant attempts to dupe
+                customers into paying for trash. This does not include games that didn't review very well.
+                Even those titles have merit, especially when compared to true shovelware.
+            </p>
+            <p>
+                We have a few criteria for which entries should be flagged with low quality filter:
+            </p>
+
+            <ol>
+                <li>
+                    <strong>Asset flips</strong>: These are usually game "demos" provided with software development kits, which
+                    have been changed very slightly - or sometimes not at all - and uploaded as full games. The
+                    "asset flip" refers to images that may have been changed, but the core game is
+                    largely unchanged. For a deeper dive, check out the YouTube video
+                    "<a href="https://www.youtube.com/watch?v=RC9htWCNXsE" target="_blank">Switch Asset Flips: How Big is the Problem?</a>"
+                    published by Star or Shovelware.
+                </li>
+                <li>
+                    <strong>Clones/Rip-offs</strong>: These are almost an exact replica of other popular
+                    titles but under a slightly different name. They will probably run into copyright issues anyway.
+                    One of the most common clones is the ball-shooting game "Zuma".
+                    <a href="{{ route('game.show', {'id': 5906, 'linkTitle': 'zumatch'}) }}">Zumatch</a> is a good
+                    example.
+                </li>
+                <li>
+                    <strong>Bare bones or extremely low quality titles</strong>: These are titles that barely have any
+                    content and exist purely to take your money, not give you any enjoyment.
+                    <a href="{{ route('game.show', {'id': 3986, 'linkTitle': 'piano'}) }}">Piano</a> is a good
+                    example.
+                </li>
+                <li>
+                    <strong>Repeat offenders</strong>: In pretty much every case we've seen, publishers who put up
+                    titles that are genuine shovelware tend to do so fairly consistently. We may base our decision
+                    to mark a title as shovelware based on others from the same company.
+                </li>
+            </ol>
+
+            <h2>How we flag titles</h2>
+            <p>
+                In short, we flag at the publisher level. Most games in our database are now linked to a publisher.
+                If we deem the publisher to be putting out shovelware, all of their games will be flagged with our
+                low quality filter on the site.
+            </p>
+
+            <h2>What happens with flagged titles?</h2>
+            <p>
+                A warning will be shown on the detail page for that game. Titles may also be hidden from certain parts
+                of the website, although they will remain in our database and in our stats.
+            </p>
+
+            <h2>Appeals</h2>
+            <p>
+                While we are careful not to flag titles incorrectly, errors may occur. If a game you've developed
+                or published has been flagged, you have the option to submit an appeal. Please see the contact
+                details on our <a href="{{ route('about.landing') }}">About page</a> for how to get in touch.
+            </p>
+
+        </div>
+        <div class="ss-sidebar col-xs-12 col-sm-3 col-md-3">
+        </div>
+    </div>
+
+{% endblock page_body %}

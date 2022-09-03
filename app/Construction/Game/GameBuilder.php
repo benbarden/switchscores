@@ -222,4 +222,10 @@ class GameBuilder
         $this->game->eshop_europe_order = $eshopOrder;
         return $this;
     }
+
+    public function setIsLowQuality($isLowQuality): GameBuilder
+    {
+        $this->game->is_low_quality = $isLowQuality;
+        return $this;
+    }
 }

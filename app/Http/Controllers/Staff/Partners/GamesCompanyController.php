@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
-use App\Factories\GamesCompanyFactory;
-use App\Models\Partner;
-use App\Traits\StaffView;
-use App\Traits\SwitchServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Models\Partner;
+use App\Factories\GamesCompanyFactory;
+
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
 
 class GamesCompanyController extends Controller
 {
@@ -19,12 +23,24 @@ class GamesCompanyController extends Controller
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
+     * @var GameQualityFilter
+     */
+    private $gameQualityFilter;
+
+    /**
      * @var array
      */
     private $validationRules = [
         'name' => 'required',
         'link_title' => 'required',
     ];
+
+    public function __construct(
+        GameQualityFilter $gameQualityFilter
+    )
+    {
+        $this->gameQualityFilter = $gameQualityFilter;
+    }
 
     public function showList()
     {
@@ -139,8 +155,15 @@ class GamesCompanyController extends Controller
 
             $this->validate($request, $this->validationRules);
 
+            if ($request->is_low_quality == 'on') {
+                $isLowQuality = 1;
+            } else {
+                $isLowQuality = 0;
+            }
+
             $partner = GamesCompanyFactory::createActive(
-                $request->name, $request->link_title, $request->website_url, $request->twitter_id
+                $request->name, $request->link_title, $request->website_url, $request->twitter_id,
+                $isLowQuality
             );
             $partner->save();
 
@@ -168,9 +191,17 @@ class GamesCompanyController extends Controller
 
             $this->validate($request, $this->validationRules);
 
+            if ($request->is_low_quality == 'on') {
+                $isLowQuality = 1;
+            } else {
+                $isLowQuality = 0;
+            }
             $this->getServicePartner()->editGamesCompany(
-                $partnerData, $request->name, $request->link_title, $request->website_url, $request->twitter_id
+                $partnerData, $request->name, $request->link_title, $request->website_url, $request->twitter_id,
+                $isLowQuality
             );
+
+            $this->gameQualityFilter->updateGamesByPartner($partnerData, $isLowQuality);
 
             return redirect(route('staff.partners.games-company.show', ['partner' => $partnerData]));
 

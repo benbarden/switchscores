@@ -9,6 +9,7 @@
         formVals['link_title'] = "{{ PartnerData.link_title }}";
         formVals['website_url'] = "{{ PartnerData.website_url }}";
         formVals['twitter_id'] = "{{ PartnerData.twitter_id }}";
+        formVals['is_low_quality'] = "{{ PartnerData.is_low_quality }}";
         formVals['status'] = "{{ PartnerData.status }}";
 
     } else {
@@ -19,6 +20,7 @@
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['website_url'] = "{{ old('website_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
+        formVals['is_low_quality'] = "{{ old('is_low_quality') }}";
         if (formMode != 'add') {
             formVals['status'] = "{{ old('status') }}";
         }
@@ -32,6 +34,9 @@
     $('#link_title').val(formVals['link_title']);
     $('#website_url').val(formVals['website_url']);
     $('#twitter_id').val(formVals['twitter_id']);
+    if (formVals['is_low_quality'] == 1) {
+        $('#is_low_quality').attr('checked', true);
+    }
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

@@ -120,6 +120,12 @@ class GameDirector
         if (array_key_exists('eshop_europe_order', $params)) {
             $this->builder->setEshopEuropeOrder($params['eshop_europe_order']);
         }
+        if (array_key_exists('is_low_quality', $params)) {
+            $isLowQuality = $params['is_low_quality'] == 'on' ? 1 : 0;
+            $this->builder->setIsLowQuality($isLowQuality);
+        } else {
+            $this->builder->setIsLowQuality(0);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

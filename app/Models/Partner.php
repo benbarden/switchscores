@@ -59,7 +59,7 @@ class Partner extends Model implements Auditable
         'type_id', 'status', 'name', 'link_title', 'website_url', 'twitter_id',
         'rating_scale', 'review_count', 'last_review_date', 'last_outreach_id',
         'contact_name', 'contact_email', 'contact_form_link', 'review_code_regions',
-        'review_import_method'
+        'review_import_method', 'is_low_quality'
     ];
 
     public function isReviewSite()

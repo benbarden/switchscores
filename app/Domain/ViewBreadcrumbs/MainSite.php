@@ -17,6 +17,7 @@ class MainSite extends Base
         $this->toastedCrumbs['partnersLanding'] = ['url' => route('partners.landing'), 'text' => 'Partners'];
         $this->toastedCrumbs['newsLanding'] = ['url' => route('news.landing'), 'text' => 'News'];
         $this->toastedCrumbs['aboutLanding'] = ['url' => route('about.landing'), 'text' => 'About'];
+        $this->toastedCrumbs['helpLanding'] = ['url' => route('help.landing'), 'text' => 'Help'];
 
         $this->toastedCrumbs['gamesByTitleLanding'] = ['url' => route('games.browse.byTitle.landing'), 'text' => 'By title'];
         $this->toastedCrumbs['gamesByDateLanding'] = ['url' => route('games.browse.byDate.landing'), 'text' => 'By date'];
@@ -130,6 +131,13 @@ class MainSite extends Base
     public function newsSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['newsLanding'])
+            ->addPageTitle($pageTitle)
+            ->getBreadcrumbs();
+    }
+
+    public function helpSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['helpLanding'])
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }
