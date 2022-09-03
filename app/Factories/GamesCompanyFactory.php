@@ -15,7 +15,7 @@ class GamesCompanyFactory
      * $param null $isLowQuality
      * @return Partner
      */
-    public static function createActive($name, $linkTitle, $websiteUrl = null, $twitterId = null, $isLowQuality = null)
+    public static function createActive($name, $linkTitle, $websiteUrl = null, $twitterId = null, $isLowQuality = 0)
     {
         $typeId = Partner::TYPE_GAMES_COMPANY;
         $status = Partner::STATUS_ACTIVE;
