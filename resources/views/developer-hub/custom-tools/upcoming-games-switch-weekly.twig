@@ -98,7 +98,6 @@
             <table class="table table-condensed table-responsive">
                 <thead>
                 <tr>
-                    <th class="text-center">#</th>
                     <th>Title</th>
                     <th class="text-center">eShop link</th>
                     <th class="text-center">Digital</th>
@@ -106,15 +105,18 @@
                     <th class="text-center">DLC</th>
                     <th class="text-center">Demo</th>
                     <th class="text-center">EU release date</th>
-                    <th class="text-center">US release date</th>
+                    <th class="text-center">Low quality filter</th>
                     <th class="text-center">Price</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for item in UpcomingGames %}
                     <tr>
-                        <td class="text-center">{{ item.id }}</td>
-                        <td>{{ item.title }}</td>
+                        <td>
+                            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank">
+                                {{ item.title }}
+                            </a>
+                        </td>
                         <td class="text-center">
                             {% if item.eshop_europe_fs_id %}
                                 {% include 'modules/icons/green-tick.twig' %}
@@ -159,7 +161,13 @@
                             {% endif %}
                         </td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
-                        <td class="text-center">{{ item.us_release_date }}</td>
+                        <td class="text-center">
+                            {% if item.is_low_quality == 1 %}
+                                <label class="label label-danger">Low quality</label>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                         <td class="text-center">{{ item.price_eshop }}</td>
                     </tr>
                 {% endfor %}
