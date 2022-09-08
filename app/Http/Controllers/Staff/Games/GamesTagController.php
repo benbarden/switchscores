@@ -11,7 +11,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\StaffView;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
@@ -22,7 +21,6 @@ class GamesTagController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -57,7 +55,10 @@ class GamesTagController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
-        $bindings = $this->getBindingsGamesDetailSubpage('Editing tags for game: '.$gameData->title, $gameId);
+        $pageTitle = 'Game title hashes';
+
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage('Editing tags for game: '.$gameData->title, $gameData);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if ($request->isMethod('post')) {
 

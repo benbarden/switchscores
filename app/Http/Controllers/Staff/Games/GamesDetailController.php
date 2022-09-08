@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
@@ -9,25 +12,26 @@ use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Models\Game;
 use App\Services\DataSources\Queries\Differences;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class GamesDetailController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
+    protected $repoGame;
     protected $repoAudit;
     protected $repoFeaturedGames;
     protected $repoGameStats;
 
     public function __construct(
+        GameRepository $repoGame,
         AuditRepository $repoAudit,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats
     )
     {
+        $this->repoGame = $repoGame;
         $this->repoAudit = $repoAudit;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
@@ -35,12 +39,12 @@ class GamesDetailController extends Controller
 
     public function show($gameId)
     {
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
-        $gameTitle = $game->title;
-
-        $bindings = $this->getBindingsGamesSubpage($gameTitle);
+        $pageTitle = $game->title;
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Total rank count
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
@@ -49,7 +53,7 @@ class GamesDetailController extends Controller
 
         $lastGameId = \Request::get('lastgameid');
         if ($lastGameId) {
-            $lastGame = $this->getServiceGame()->find($lastGameId);
+            $lastGame = $this->repoGame->find($lastGameId);
             if ($lastGame) {
                 $bindings['LastGame'] = $lastGame;
             }
@@ -106,8 +110,6 @@ class GamesDetailController extends Controller
 
     public function updateEshopData($gameId)
     {
-        $serviceGame = $this->getServiceGame();
-
         $request = request();
 
         $gameId = $request->gameId;
@@ -115,7 +117,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Missing data: gameId'], 400);
         }
 
-        $game = $serviceGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
@@ -137,8 +139,6 @@ class GamesDetailController extends Controller
 
     public function redownloadPackshots($gameId)
     {
-        $serviceGame = $this->getServiceGame();
-
         $request = request();
 
         $gameId = $request->gameId;
@@ -146,7 +146,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Missing data: gameId'], 400);
         }
 
-        $game = $serviceGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['error' => 'Cannot find game!'], 400);
         }

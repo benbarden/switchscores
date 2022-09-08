@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Validator;
+
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
@@ -14,20 +20,14 @@ use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
 use App\Models\Game;
 use App\Services\Game\Images as GameImages;
+
 use App\Traits\AuthUser;
-use App\Traits\StaffView;
 use App\Traits\SwitchServices;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Validator;
 
 class GamesEditorController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -61,7 +61,9 @@ class GamesEditorController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsGamesSubpage('Add game');
+        $pageTitle = 'Add game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -138,7 +140,9 @@ class GamesEditorController extends Controller
 
     public function edit($gameId)
     {
-        $bindings = $this->getBindingsGamesSubpage('Edit game');
+        $pageTitle = 'Edit game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -179,7 +183,9 @@ class GamesEditorController extends Controller
 
     public function editNintendoCoUk($gameId)
     {
-        $bindings = $this->getBindingsGamesSubpage('Edit Nintendo.co.uk link');
+        $pageTitle = 'Edit Nintendo.co.uk link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -284,7 +290,9 @@ class GamesEditorController extends Controller
 
     public function delete($gameId)
     {
-        $bindings = $this->getBindingsGamesSubpage('Delete game');
+        $pageTitle = 'Delete game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Core
         $serviceGame = $this->getServiceGame();

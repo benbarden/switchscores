@@ -9,12 +9,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
 
 class FeaturedGameController extends Controller
 {
-    use StaffView;
     use SwitchServices;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -35,7 +34,9 @@ class FeaturedGameController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsGamesFeaturedGamesSubpage('Add featured game');
+        $pageTitle = 'Add featured game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesFeaturedGamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -64,7 +65,9 @@ class FeaturedGameController extends Controller
 
     public function edit($featuredGameId)
     {
-        $bindings = $this->getBindingsGamesFeaturedGamesSubpage('Edit featured game');
+        $pageTitle = 'Edit featured game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesFeaturedGamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $featuredGame = $this->repoFeaturedGames->find($featuredGameId);
         if (!$featuredGame) abort(404);
@@ -103,7 +106,9 @@ class FeaturedGameController extends Controller
 
     public function showList()
     {
-        $bindings = $this->getBindingsGamesSubpage('Featured games');
+        $pageTitle = 'Featured games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['FeaturedGamesList'] = $this->repoFeaturedGames->getAll();
 

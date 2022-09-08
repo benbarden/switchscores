@@ -2,32 +2,28 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\Models\QuickReview;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
-    protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         ReviewDraftRepository $repoReviewDraft
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoReviewDraft = $repoReviewDraft;
@@ -35,9 +31,9 @@ class DashboardController extends Controller
 
     public function show()
     {
-        $bindings = $this->getBindings('Reviews dashboard');
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Reviews dashboard');
+        $pageTitle = 'Reviews dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
@@ -62,6 +58,7 @@ class DashboardController extends Controller
         $bindings['UnrankedReviews2'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(2);
         $bindings['UnrankedReviews1'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(1);
         $bindings['UnrankedReviews0'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(0);
+        $bindings['UnrankedYear2022'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2022);
         $bindings['UnrankedYear2021'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2021);
         $bindings['UnrankedYear2020'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2020);
         $bindings['UnrankedYear2019'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2019);

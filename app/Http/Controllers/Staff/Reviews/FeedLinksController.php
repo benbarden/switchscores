@@ -8,17 +8,13 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Models\PartnerFeedLink;
-use App\Domain\ViewBindings\Staff as Bindings;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
-use App\Traits\StaffView;
 use App\Traits\SwitchServices;
 
 class FeedLinksController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -38,21 +34,17 @@ class FeedLinksController extends Controller
     protected $repoReviewSite;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        Bindings $viewBindings,
         ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->viewBindings = $viewBindings;
         $this->repoReviewSite = $repoReviewSite;
     }
 
     public function index()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Feed links');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Feed links');
+        $pageTitle = 'Feed links';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $feedLinks = $this->getServicePartnerFeedLink()->getAll();
 
@@ -82,9 +74,9 @@ class FeedLinksController extends Controller
 
     public function add()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Add feed link');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Add feed link');
+        $pageTitle = 'Add feed link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsFeedLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -113,9 +105,9 @@ class FeedLinksController extends Controller
 
     public function edit(PartnerFeedLink $feedLink)
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Edit feed link');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit feed link');
+        $pageTitle = 'Edit feed link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsFeedLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $linkId = $feedLink->id;
 

@@ -8,14 +8,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
 
 class CampaignsController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -37,7 +35,9 @@ class CampaignsController extends Controller
 
     public function show()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Review campaigns');
+        $pageTitle = 'Review campaigns';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['CampaignsList'] = $this->repoCampaign->getAll();
 
@@ -46,7 +46,9 @@ class CampaignsController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsReviewsCampaignsSubpage('Add campaign');
+        $pageTitle = 'Add campaign';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -76,7 +78,9 @@ class CampaignsController extends Controller
 
     public function edit($campaignId)
     {
-        $bindings = $this->getBindingsReviewsCampaignsSubpage('Edit campaign');
+        $pageTitle = 'Edit campaign';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -112,7 +116,9 @@ class CampaignsController extends Controller
 
     public function editGames($campaignId)
     {
-        $bindings = $this->getBindingsReviewsCampaignsSubpage('Edit campaign games');
+        $pageTitle = 'Edit campaign games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 

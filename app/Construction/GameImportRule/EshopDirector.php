@@ -7,11 +7,11 @@ use App\Models\GameImportRuleEshop;
 class EshopDirector
 {
     /**
-     * @var Builder
+     * @var EshopBuilder
      */
     private $builder;
 
-    public function setBuilder(Builder $builder): void
+    public function setBuilder(EshopBuilder $builder): void
     {
         $this->builder = $builder;
     }

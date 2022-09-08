@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class ToolsController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     public function updateGameCalendarStats()
     {
-        $bindings = $this->getBindingsGamesSubpage('Update Game Calendar Stats');
+        $pageTitle = 'Update Game Calendar Stats';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('UpdateGameCalendarStats', []);

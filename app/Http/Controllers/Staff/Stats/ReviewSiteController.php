@@ -4,33 +4,26 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class ReviewSiteController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
-    protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
     protected $repoReviewSite;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoReviewSite = $repoReviewSite;
@@ -38,8 +31,9 @@ class ReviewSiteController extends Controller
 
     public function show()
     {
-        $bindings = $this->getBindings('Review site stats');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->statsSubpage('Review site stats');
+        $pageTitle = 'Review site stats';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->statsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceReviewLinks = $this->getServiceReviewLink();
         $serviceTopRated = $this->getServiceTopRated();

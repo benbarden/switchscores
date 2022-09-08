@@ -52,6 +52,14 @@ class Repository
     /**
      * @return integer
      */
+    public function totalUpcoming()
+    {
+        return Game::where('eu_is_released', 0)->count();
+    }
+
+    /**
+     * @return integer
+     */
     public function totalToBeReleased()
     {
         $games = Game::where('eu_is_released', 0)

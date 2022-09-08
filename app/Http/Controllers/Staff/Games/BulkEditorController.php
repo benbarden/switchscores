@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\StaffView;
 
 use App\Factories\GameDirectorFactory;
 
@@ -20,7 +19,6 @@ class BulkEditorController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -89,7 +87,9 @@ class BulkEditorController extends Controller
 
     public function editList()
     {
-        $bindings = $this->getBindingsGamesSubpage('Bulk edit games');
+        $pageTitle = 'Bulk edit games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
         $editMode = $request->editMode;

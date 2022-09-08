@@ -4,41 +4,32 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class DashboardController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
-    protected $viewBreadcrumbs;
     protected $repoFeaturedGames;
     protected $repoGameStats;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
     }
 
     public function show()
     {
-        $bindings = $this->getBindings('Games dashboard');
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Games dashboard');
-
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
+        $pageTitle = 'Games dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Games to release
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
@@ -53,7 +44,7 @@ class DashboardController extends Controller
         // Release date stats
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
         $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
-        $bindings['UpcomingGameCount'] = $serviceGameReleaseDate->countUpcoming();
+        $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
 
         // Format stats
         $bindings['FormatOptionTable'] = $this->repoGameStats->tableFormatOptions();

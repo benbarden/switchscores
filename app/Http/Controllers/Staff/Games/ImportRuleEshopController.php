@@ -8,16 +8,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Construction\GameImportRule\Director;
-use App\Construction\GameImportRule\Builder;
+use App\Construction\GameImportRule\EshopDirector;
+use App\Construction\GameImportRule\EshopBuilder;
+
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class ImportRuleEshopController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -27,9 +27,23 @@ class ImportRuleEshopController extends Controller
     private $validationRules = [
     ];
 
+    private $repoGame;
+
+    public function __construct(
+        GameRepository $repoGame
+    )
+    {
+        $this->repoGame = $repoGame;
+    }
+
     public function edit($gameId)
     {
-        $bindings = $this->getBindingsGamesDetailSubpage('Import rules: eShop - Edit', $gameId);
+        $game = $this->repoGame->find($gameId);
+        if (!$game) abort(404);
+
+        $pageTitle = 'Import rules: eShop - Edit';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $gameImportRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
 
@@ -42,8 +56,8 @@ class ImportRuleEshopController extends Controller
             $this->validate($request, $this->validationRules);
 
             // Update the DB
-            $importRuleDirector = new Director();
-            $importRuleBuilder = new Builder();
+            $importRuleDirector = new EshopDirector();
+            $importRuleBuilder = new EshopBuilder();
             $importRuleDirector->setBuilder($importRuleBuilder);
             if ($gameImportRuleEshop) {
                 $importRuleDirector->buildExisting($gameImportRuleEshop, $request->post());

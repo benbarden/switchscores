@@ -8,12 +8,10 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class SearchController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -26,7 +24,9 @@ class SearchController extends Controller
 
     public function show()
     {
-        $bindings = $this->getBindingsGamesSubpage('Search');
+        $pageTitle = 'Search';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
