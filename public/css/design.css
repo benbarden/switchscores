@@ -231,3 +231,50 @@ blockquote {
     font-family: 'Fira Sans', sans-serif;
     font-weight: 400;
 }
+
+.switch-rating-circle {
+    align-items: center;
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    justify-content: center;
+    min-width: 1em;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.switch-rating-circle:before {
+    content:'';
+    float: left;
+    width: auto;
+    padding-bottom: 100%;
+}
+
+/* jQuery UI tabs */
+/* http://keith-wood.name/uiTabs.html */
+#tabs {
+    background: transparent;
+    border: none;
+}
+#tabs .ui-widget-header {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #c0c0c0;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+#tabs .ui-tabs-nav .ui-state-default {
+    background: transparent;
+    border: none;
+}
+#tabs .ui-tabs-nav .ui-state-active {
+    background: transparent url('/img/uiTabsArrow.png') no-repeat bottom center;
+    border: none;
+}
+#tabs .ui-tabs-nav .ui-state-default a {
+    color: #c0c0c0;
+}
+#tabs .ui-tabs-nav .ui-state-active a {
+    color: #C92C75;
+}

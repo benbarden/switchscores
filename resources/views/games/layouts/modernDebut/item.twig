@@ -1,0 +1,52 @@
+<div class="row" style="margin-top: 8px;">
+
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        {% include 'modules/game/packshot/square.twig' with {'item': item} %}
+    </div>
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        <div class="row">
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <span class="h5">
+                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+                        {{ item.title }}
+                    </a>
+                </span>
+                <br>
+                <small>
+                    Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
+                </small>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                {% if item.rating_avg %}
+                    {% if item.game_rank %}
+                        {% include 'modules/rating/badge-circle.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                    {% elseif item.format_digital == 'De-listed' %}
+                        <!-- Do nothing -->
+                    {% elseif item.eu_is_released == 1 %}
+                        <!-- Do nothing -->
+                    {% endif %}
+                {% elseif item.eu_is_released == 1 %}
+                    <!-- Do nothing -->
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                {% if item.rating_avg %}
+                    {% if item.game_rank %}
+                        <!-- Do nothing -->
+                    {% elseif item.format_digital == 'De-listed' %}
+                        <small>De-listed</small>
+                    {% elseif item.eu_is_released == 1 %}
+                        <small>{{ item.review_count }}/3 reviews</small>
+                    {% endif %}
+                {% elseif item.eu_is_released == 1 %}
+                    <small>{{ item.review_count }}/3 reviews</small>
+                {% endif %}
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            </div>
+        </div>
+    </div>
+
+</div>

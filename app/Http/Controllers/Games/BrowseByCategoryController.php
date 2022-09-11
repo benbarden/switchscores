@@ -52,14 +52,20 @@ class BrowseByCategoryController extends Controller
 
         $bindings['Category'] = $category;
 
-        // Snapshot
-        $bindings['SnapshotTopRated'] = $this->repoGameLists->rankedByCategory($categoryId, 10);
-        $bindings['SnapshotNewReleases'] = $this->repoGameLists->recentlyReleasedByCategory($categoryId, 10);
-        $bindings['SnapshotUnranked'] = $this->repoGameLists->unrankedByCategory($categoryId, 10);
+        // All games in category
+        //$bindings['CategoryGameList'] = $this->repoGameLists->byCategory($categoryId);
 
-        // Tables
+        // Lists
         $bindings['RankedGameList'] = $this->repoGameLists->rankedByCategory($categoryId);
         $bindings['UnrankedGameList'] = $this->repoGameLists->unrankedByCategory($categoryId);
+        $bindings['DelistedGameList'] = $this->repoGameLists->delistedByCategory($categoryId);
+
+        // Snapshot
+        //$bindings['SnapshotTopRated'] = $this->repoGameLists->rankedByCategory($categoryId, 10);
+        //$bindings['SnapshotNewReleases'] = $this->repoGameLists->recentlyReleasedByCategory($categoryId, 10);
+        //$bindings['SnapshotUnranked'] = $this->repoGameLists->unrankedByCategory($categoryId, 10);
+
+        // Tables
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
@@ -81,6 +87,6 @@ class BrowseByCategoryController extends Controller
             $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCategorySubpage($categoryName);
         }
 
-        return view('games.browse.byCategoryPage', $bindings);
+        return view('games.browse.category.page-landing', $bindings);
     }
 }

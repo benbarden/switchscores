@@ -1,0 +1,14 @@
+{% set displayScore = score %}
+{% if scoreSize is defined %}
+    {% set scoreSizeHeader = scoreSize %}
+{% else %}
+    {% set scoreSizeHeader = 'h4' %}
+{% endif %}
+
+{% if displayScore > 7.9 %}
+    <span class="{{ scoreSizeHeader }} label-success switch-rating-circle">{{ displayScore }}</span>
+{% elseif displayScore > 5.9 %}
+    <span class="{{ scoreSizeHeader }} label-warning switch-rating-circle">{{ displayScore }}</span>
+{% else %}
+    <span class="{{ scoreSizeHeader }} label-danger switch-rating-circle">{{ displayScore }}</span>
+{% endif %}
