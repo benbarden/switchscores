@@ -15,9 +15,16 @@
                 <small>
                     Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
                 </small>
+                {% if item.format_digital != 'De-listed' %}
+                    {% if item.price_eshop %}
+                        {% include 'modules/game/price/small.twig' %}
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding: 0;">
-                {% if item.rating_avg %}
+                {% if item.format_digital == 'De-listed' %}
+                    <!-- Do nothing -->
+                {% elseif item.rating_avg %}
                     {% if item.game_rank %}
                         {% include 'modules/rating/badge-circle.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
                     {% elseif item.format_digital == 'De-listed' %}
@@ -32,11 +39,11 @@
         </div>
         <div class="row">
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                {% if item.rating_avg %}
+                {% if item.format_digital == 'De-listed' %}
+                    <small>De-listed</small>
+                {% elseif item.rating_avg %}
                     {% if item.game_rank %}
                         <!-- Do nothing -->
-                    {% elseif item.format_digital == 'De-listed' %}
-                        <small>De-listed</small>
                     {% elseif item.eu_is_released == 1 %}
                         <small>{{ item.review_count }}/3 reviews</small>
                     {% endif %}
