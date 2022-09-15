@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\User\Repository as UserRepository;
+
 use App\Traits\SwitchServices;
 
 class CommunityController extends Controller
 {
     use SwitchServices;
 
+    private $repoUser;
+
     public function __construct(
+        UserRepository $repoUser
     )
     {
+        $this->repoUser = $repoUser;
     }
 
     public function landing()
@@ -20,10 +26,10 @@ class CommunityController extends Controller
         $bindings = [];
 
         $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
-        $bindings['HallOfFame'] = $this->getServiceUser()->getMostPoints(5);
+        $bindings['HallOfFame'] = $this->repoUser->getMostPoints(5);
 
         // Stats
-        $bindings['NewestUser'] = $this->getServiceUser()->getNewest();
+        $bindings['NewestUser'] = $this->repoUser->getNewest();
         $bindings['CollectionCount'] = $this->getServiceUserGamesCollection()->countAllCollections();
 
 
