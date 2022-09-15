@@ -10,7 +10,7 @@ class PartnerTest extends TestCase
     const API_URL_REVIEW_SITE = '/api/review/site';
 
     private $siteSwitchPlayer = [
-        'siteId' => Partner::SITE_SWITCH_PLAYER,
+        'siteId' => 2,
         'siteName' => 'Switch Player'
     ];
 

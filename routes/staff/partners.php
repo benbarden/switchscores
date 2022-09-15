@@ -21,10 +21,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     // Partners: Games companies
     Route::match(['get', 'post'], '/staff/partners/games-company/add', 'Staff\Partners\GamesCompanyController@add')->name('staff.partners.games-company.add');
-    Route::match(['get', 'post'], '/staff/partners/games-company/edit/{partnerId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
-    Route::match(['get', 'post'], '/staff/partners/games-company/delete/{partnerId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
+    Route::match(['get', 'post'], '/staff/partners/games-company/edit/{gamesCompanyId}', 'Staff\Partners\GamesCompanyController@edit')->name('staff.partners.games-company.edit');
+    Route::match(['get', 'post'], '/staff/partners/games-company/delete/{gamesCompanyId}', 'Staff\Partners\GamesCompanyController@delete')->name('staff.partners.games-company.delete');
 
-    Route::get('/staff/partners/games-company/show/{partner}', 'Staff\Partners\GamesCompanyController@show')->name('staff.partners.games-company.show');
+    Route::get('/staff/partners/games-company/show/{gamesCompany}', 'Staff\Partners\GamesCompanyController@show')->name('staff.partners.games-company.show');
 
     Route::get('/staff/partners/games-company/list', 'Staff\Partners\GamesCompanyController@showList')->name('staff.partners.games-company.list');
 

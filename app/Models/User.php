@@ -94,7 +94,7 @@ class User extends Authenticatable
 
     public function gamesCompany()
     {
-        return $this->hasOne('App\Models\Partner', 'id', 'games_company_id');
+        return $this->hasOne('App\Models\GamesCompany', 'id', 'games_company_id');
     }
 
     public function pointsTransactions()

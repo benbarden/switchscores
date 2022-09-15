@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Models\Partner;
@@ -15,14 +16,17 @@ class PartnersController extends Controller
     use SwitchServices;
 
     protected $viewBreadcrumbs;
+    protected $repoGamesCompany;
     protected $repoReviewSite;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
+        GamesCompanyRepository $repoGamesCompany,
         ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoGamesCompany = $repoGamesCompany;
         $this->repoReviewSite = $repoReviewSite;
     }
 
@@ -130,32 +134,29 @@ class PartnersController extends Controller
 
     public function showGamesCompany($linkTitle)
     {
-        $servicePartner = $this->getServicePartner();
-
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $partnerData = $servicePartner->getByLinkTitle($linkTitle);
-        if (!$partnerData) abort(404);
-        if ($partnerData->type_id != Partner::TYPE_GAMES_COMPANY) abort(404);
+        $gamesCompany = $this->repoGamesCompany->getByLinkTitle($linkTitle);
+        if (!$gamesCompany) abort(404);
 
-        $partnerId = $partnerData->id;
+        $gamesCompanyId = $gamesCompany->id;
 
-        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($partnerId, false);
-        $gamePubList = $serviceGamePublisher->getGamesByPublisher($partnerId, false);
+        $gameDevList = $serviceGameDeveloper->getGamesByDeveloper($gamesCompanyId, false);
+        $gamePubList = $serviceGamePublisher->getGamesByPublisher($gamesCompanyId, false);
 
-        $mergedGameList = $servicePartner->getMergedGameList($gameDevList, $gamePubList);
+        $mergedGameList = $this->repoGamesCompany->getMergedGameList($gameDevList, $gamePubList);
         $mergedGameList = collect($mergedGameList)->sortBy('eu_release_date')->reverse()->toArray();
 
         $bindings = [];
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($partnerData->name);
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($gamesCompany->name);
 
-        $bindings['TopTitle'] = $partnerData->name;
-        $bindings['PageTitle'] = $partnerData->name;
+        $bindings['TopTitle'] = $gamesCompany->name;
+        $bindings['PageTitle'] = $gamesCompany->name;
 
-        $bindings['PartnerData'] = $partnerData;
-        $bindings['PartnerId'] = $partnerId;
+        $bindings['PartnerData'] = $gamesCompany;
+        $bindings['PartnerId'] = $gamesCompanyId;
 
         //$bindings['GameDevList'] = $gameDevList;
         //$bindings['GamePubList'] = $gamePubList;

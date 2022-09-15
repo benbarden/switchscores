@@ -4,6 +4,7 @@ namespace App\Http\Controllers\GamesCompanies;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
@@ -14,12 +15,15 @@ class IndexController extends Controller
     use SwitchServices;
     use AuthUser;
 
+    protected $repoGamesCompany;
     protected $repoReviewSite;
 
     public function __construct(
+        GamesCompanyRepository $repoGamesCompany,
         ReviewSiteRepository $repoReviewSite
     )
     {
+        $this->repoGamesCompany = $repoGamesCompany;
         $this->repoReviewSite = $repoReviewSite;
     }
 
@@ -36,7 +40,7 @@ class IndexController extends Controller
         $gameDevList = $this->getServiceGameDeveloper()->getGamesByDeveloper($partnerId, false);
         $gamePubList = $this->getServiceGamePublisher()->getGamesByPublisher($partnerId, false);
 
-        $mergedGameList = $this->getServicePartner()->getMergedGameList($gameDevList, $gamePubList);
+        $mergedGameList = $this->repoGamesCompany->getMergedGameList($gameDevList, $gamePubList);
 
         $mergedGameList = collect($mergedGameList)->sortBy('eu_release_date')->reverse()->toArray();
 

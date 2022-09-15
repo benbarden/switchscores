@@ -99,7 +99,10 @@ class GamesDetailController extends Controller
     public function showFullAudit(Game $game)
     {
         $gameId = $game->id;
-        $bindings = $this->getBindingsGamesDetailSubpage($game->title, $gameId);
+
+        $pageTitle = 'Full audit';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $gameAudits = $this->repoAudit->getAggregatedGameAudits($gameId, 25);
         $bindings['GameAuditsCore'] = $gameAudits;

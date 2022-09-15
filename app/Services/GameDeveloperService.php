@@ -5,7 +5,7 @@ namespace App\Services;
 
 use App\Models\DataSource;
 use App\Models\GameDeveloper;
-use App\Models\Partner;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -72,11 +72,10 @@ class GameDeveloperService
     public function getDevelopersNotOnGame($gameId)
     {
         $games = DB::select('
-            select * from partners
-            where type_id = ?
-            and id not in (select developer_id from game_developers where game_id = ?)
+            select * from games_companies
+            where id not in (select developer_id from game_developers where game_id = ?)
             ORDER BY name
-        ', [Partner::TYPE_GAMES_COMPANY, $gameId]);
+        ', [$gameId]);
 
         return $games;
     }
@@ -91,10 +90,10 @@ class GameDeveloperService
     {
         $games = DB::table('games')
             ->join('game_developers', 'games.id', '=', 'game_developers.game_id')
-            ->join('partners', 'game_developers.developer_id', '=', 'partners.id')
+            ->join('games_companies', 'game_developers.developer_id', '=', 'games_companies.id')
             ->select('games.*',
                 'game_developers.developer_id',
-                'partners.name',
+                'games_companies.name',
                 'games.eu_release_date')
             ->where('game_developers.developer_id', $developerId);
 
@@ -118,15 +117,15 @@ class GameDeveloperService
     {
         $games = DB::table('games')
             ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
-            ->leftJoin('partners', 'game_developers.developer_id', '=', 'partners.id')
+            ->leftJoin('games_companies', 'game_developers.developer_id', '=', 'games_companies.id')
             ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
                 $join->on('games.id', '=', 'dsp_wikipedia.game_id')
                     ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
             })
             ->select('games.*',
                 'dsp_wikipedia.developers AS wikipedia_developers',
-                'partners.name')
-            ->whereNull('partners.id')
+                'games_companies.name')
+            ->whereNull('games_companies.id')
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -139,8 +138,8 @@ class GameDeveloperService
             select count(*) AS count
             from games g
             left join game_developers gd on g.id = gd.game_id
-            left join partners d on d.id = gd.developer_id
-            where d.id is null
+            left join games_companies gc on gc.id = gd.developer_id
+            where gc.id is null
         ');
 
         return $games[0]->count;

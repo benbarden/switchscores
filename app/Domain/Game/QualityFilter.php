@@ -4,23 +4,23 @@
 namespace App\Domain\Game;
 
 use App\Models\Game;
-use App\Models\Partner;
+use App\Models\GamesCompany;
 
 class QualityFilter
 {
-    public function updateGamesByPartner(Partner $partner, $isLowQuality)
+    public function updateGamesByPartner(GamesCompany $gamesCompany, $isLowQuality)
     {
-        $devGameCount = $partner->developerGames->count();
-        $pubGameCount = $partner->publisherGames->count();
+        $devGameCount = $gamesCompany->developerGames->count();
+        $pubGameCount = $gamesCompany->publisherGames->count();
 
         $gameIdList = [];
         if ($devGameCount > 0) {
-            foreach ($partner->developerGames as $developerGame) {
+            foreach ($gamesCompany->developerGames as $developerGame) {
                 $gameIdList[] = $developerGame->game_id;
             }
         }
         if ($pubGameCount > 0) {
-            foreach ($partner->publisherGames as $publisherGame) {
+            foreach ($gamesCompany->publisherGames as $publisherGame) {
                 $gameIdList[] = $publisherGame->game_id;
             }
         }
@@ -30,9 +30,9 @@ class QualityFilter
         }
     }
 
-    public function updateGame(Game $game, Partner $partner)
+    public function updateGame(Game $game, GamesCompany $gamesCompany)
     {
-        $game->is_low_quality = $partner->is_low_quality;
+        $game->is_low_quality = $gamesCompany->is_low_quality;
         $game->save();
     }
 }

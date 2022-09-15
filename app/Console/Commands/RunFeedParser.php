@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ReviewSite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\ReviewDraft;
-use App\Models\Partner;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
@@ -77,7 +77,7 @@ class RunFeedParser extends Command
                 continue;
             }
 
-            if ($reviewSite->review_import_method == Partner::REVIEW_IMPORT_BY_SCRAPER) {
+            if ($reviewSite->review_import_method == ReviewSite::REVIEW_IMPORT_BY_SCRAPER) {
                 //$logger->info('Ignoring scraper items');
                 continue;
             }

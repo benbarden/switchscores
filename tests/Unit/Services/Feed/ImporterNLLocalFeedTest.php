@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\Feed;
 
-use App\Models\Partner;
+use App\Models\ReviewSite;
 use App\Models\ReviewFeedItemTest;
 use App\Services\Feed\Importer;
 use Tests\TestCase;
@@ -19,7 +19,7 @@ class ImporterNLLocalFeedTest extends TestCase
         $this->feedImporter = new Importer();
 
         $this->feedImporter->loadLocalFeedData('nintendo-life.xml');
-        $this->feedImporter->setSiteId(Partner::SITE_NINTENDO_LIFE);
+        $this->feedImporter->setSiteId(ReviewSite::SITE_NINTENDO_LIFE);
 
         parent::setUp();
     }

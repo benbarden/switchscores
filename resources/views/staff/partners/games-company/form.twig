@@ -6,19 +6,6 @@
 
         <div class="col-md-12">
 
-            {% if FormMode != 'add' %}
-                <div class="form-group">
-                    <label for="status" class="col-md-4 control-label">Status</label>
-                    <div class="col-md-6">
-                        <select id="status" class="form-control" name="status">
-                            <option value="">&nbsp;</option>
-                            {% for item in StatusList %}
-                                <option value="{{ item.id }}">{{ item.title }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-            {% endif %}
             <div class="form-group">
                 <label for="name" class="col-md-4 control-label">Name</label>
                 <div class="col-md-6">

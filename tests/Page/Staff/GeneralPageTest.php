@@ -67,13 +67,5 @@ class GeneralPageTest extends TestCase
         $this->be($this->userReviewsManager);
         $response = $this->get('/staff/reviews/feed-items');
         $response->assertStatus(200);
-
-        $this->be($this->userReviewsManager);
-        $response = $this->get('/staff/reviews/feed-imports');
-        $response->assertStatus(200);
-
-        $this->be($this->userReviewsManager);
-        $response = $this->get('/staff/reviews/feed-imports/1/items');
-        $response->assertStatus(200);
     }
 }

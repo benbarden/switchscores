@@ -47,7 +47,7 @@
                 {% for item in GameDeveloperList %}
                     <tr>
                         <td>
-                            <a href="{{ route('staff.partners.games-company.show', {'partner': item.developer}) }}">
+                            <a href="{{ route('staff.partners.games-company.show', {'gamesCompany': item.developer}) }}">
                                 {{ item.developer.name }}
                             </a>
                         </td>
@@ -136,7 +136,7 @@
                 {% for item in GamePublisherList %}
                     <tr>
                         <td>
-                            <a href="{{ route('staff.partners.games-company.show', {'partner': item.publisher}) }}">
+                            <a href="{{ route('staff.partners.games-company.show', {'gamesCompany': item.publisher}) }}">
                                 {{ item.publisher.name }}
                             </a>
                         </td>

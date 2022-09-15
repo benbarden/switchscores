@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\ViewBindings\Staff as Bindings;
@@ -33,21 +33,21 @@ class UserController extends Controller
     protected $viewBindings;
     protected $viewBreadcrumbs;
     protected $repoUser;
-    protected $repoPartner;
+    protected $repoGamesCompany;
     protected $repoReviewSite;
 
     public function __construct(
         Bindings $viewBindings,
         Breadcrumbs $viewBreadcrumbs,
         UserRepository $repoUser,
-        PartnerRepository $repoPartner,
+        GamesCompanyRepository $repoGamesCompany,
         ReviewSiteRepository $repoReviewSite
     )
     {
         $this->viewBindings = $viewBindings;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoUser = $repoUser;
-        $this->repoPartner = $repoPartner;
+        $this->repoGamesCompany = $repoGamesCompany;
         $this->repoReviewSite = $repoReviewSite;
     }
 
@@ -141,7 +141,7 @@ class UserController extends Controller
         $bindings['UserId'] = $userId;
 
         $bindings['PartnerList'] = $this->repoReviewSite->getActive();
-        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
 
         $bindings['RoleList'] = UserRole::getRoleList();
 

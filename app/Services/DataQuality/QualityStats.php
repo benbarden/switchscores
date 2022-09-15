@@ -14,7 +14,7 @@ class QualityStats
             SELECT rl.game_id, g.title AS game_title, rl.site_id, p.name AS partner_name, count(*) AS count
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
-            JOIN partners p ON rl.site_id = p.id
+            JOIN games_companies p ON rl.site_id = p.id
             GROUP BY rl.game_id, rl.site_id
             HAVING count(*) > 1
         ');

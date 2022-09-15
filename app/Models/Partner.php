@@ -16,37 +16,6 @@ class Partner extends Model implements Auditable
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 9;
 
-    const REVIEW_IMPORT_BY_FEED = 'Feed';
-    const REVIEW_IMPORT_BY_SCRAPER = 'Scraper';
-
-    const SITE_WOS = 1;
-    const SITE_SWITCH_PLAYER = 2;
-    const SITE_NINTENDO_LIFE = 4;
-    const SITE_GAMESPEW = 5;
-    const SITE_NINTENDO_WORLD_REPORT = 8;
-    const SITE_CUBED3 = 9;
-    const SITE_VIDEO_CHUMS = 11;
-    const SITE_GOD_IS_A_GEEK = 12;
-    const SITE_PURE_NINTENDO = 13;
-    const SITE_DIGITALLY_DOWNLOADED = 14;
-    const SITE_DESTRUCTOID = 15;
-    const SITE_NINTENDO_INSIDER = 17;
-    const SITE_MIKETENDO64 = 18;
-    const SITE_NINDIE_SPOTLIGHT = 19;
-    const SITE_THE_SWITCH_EFFECT = 20;
-    const SITE_100_HOUR_REVIEWS = 21;
-    const SITE_THE_NEW_ODYSSEY = 22;
-    const SITE_SWITCHWATCH = 23;
-    const SITE_THE_NINTENDO_NOMAD = 24;
-    const SITE_TWO_BEARD_GAMING = 25;
-    const SITE_SWITCH_INDIE_FIX = 26;
-    const SITE_SIDEQUEST_VGM = 27;
-    const SITE_NINTENDAD = 28;
-    const SITE_RAPID_REVIEWS_UK = 29;
-    const SITE_JPS_SWITCHMANIA = 30;
-    const SITE_GERT_LUSH_GAMING = 31;
-    const SITE_SWITCH_ATLANTIC = 32;
-
     /**
      * @var string
      */
@@ -61,26 +30,6 @@ class Partner extends Model implements Auditable
         'contact_name', 'contact_email', 'contact_form_link', 'review_code_regions',
         'review_import_method', 'is_low_quality'
     ];
-
-    public function isReviewSite()
-    {
-        return $this->type_id == self::TYPE_REVIEW_SITE;
-    }
-
-    public function isGamesCompany()
-    {
-        return $this->type_id == self::TYPE_GAMES_COMPANY;
-    }
-
-    public function links()
-    {
-        return $this->hasMany('App\Models\ReviewLink', 'site_id', 'id');
-    }
-
-    public function feedLinks()
-    {
-        return $this->hasMany('App\Models\PartnerFeedLink', 'site_id', 'id');
-    }
 
     public function developerGames()
     {

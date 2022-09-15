@@ -15,6 +15,10 @@ class ReviewSite extends Model implements Auditable
     const REVIEW_IMPORT_BY_FEED = 'Feed';
     const REVIEW_IMPORT_BY_SCRAPER = 'Scraper';
 
+    const SITE_SWITCH_SCORES = 1;
+    const SITE_SWITCH_PLAYER = 2;
+    const SITE_NINTENDO_LIFE = 4;
+
     /**
      * @var string
      */

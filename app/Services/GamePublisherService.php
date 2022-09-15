@@ -6,7 +6,7 @@ namespace App\Services;
 use App\Models\DataSource;
 use App\Models\Game;
 use App\Models\GamePublisher;
-use App\Models\Partner;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -73,11 +73,10 @@ class GamePublisherService
     public function getPublishersNotOnGame($gameId)
     {
         $games = DB::select('
-            select * from partners
-            where type_id = ?
-            and id not in (select publisher_id from game_publishers where game_id = ?)
+            select * from games_companies
+            where id not in (select publisher_id from game_publishers where game_id = ?)
             ORDER BY name
-        ', [Partner::TYPE_GAMES_COMPANY, $gameId]);
+        ', [$gameId]);
 
         return $games;
     }
@@ -92,10 +91,10 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->join('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->join('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
             ->select('games.*',
                 'game_publishers.publisher_id',
-                'partners.name',
+                'games_companies.name',
                 'games.eu_release_date')
             ->where('game_publishers.publisher_id', $publisherId);
 
@@ -119,7 +118,7 @@ class GamePublisherService
     {
         $games = DB::table('games')
             ->leftJoin('game_publishers', 'games.id', '=', 'game_publishers.game_id')
-            ->leftJoin('partners', 'game_publishers.publisher_id', '=', 'partners.id')
+            ->leftJoin('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
             ->leftJoin('data_source_parsed AS dsp_nintendo_co_uk', function ($join) {
                 $join->on('games.id', '=', 'dsp_nintendo_co_uk.game_id')
                     ->where('dsp_nintendo_co_uk.source_id', '=', DataSource::DSID_NINTENDO_CO_UK);
@@ -131,8 +130,8 @@ class GamePublisherService
             ->select('games.*',
                 'dsp_nintendo_co_uk.publishers AS nintendo_co_uk_publishers',
                 'dsp_wikipedia.publishers AS wikipedia_publishers',
-                'partners.name')
-            ->whereNull('partners.id')
+                'games_companies.name')
+            ->whereNull('games_companies.id')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
             ->orWhereNull('games.format_digital')
             ->orderBy('games.id', 'desc');
@@ -147,8 +146,8 @@ class GamePublisherService
             select count(*) AS count
             from games g
             left join game_publishers gp on g.id = gp.game_id
-            left join partners p on p.id = gp.publisher_id
-            where p.id is null
+            left join games_companies gc on gc.id = gp.publisher_id
+            where gc.id is null
             and (format_digital <> ? OR format_digital IS NULL)
         ', [Game::FORMAT_DELISTED]);
 

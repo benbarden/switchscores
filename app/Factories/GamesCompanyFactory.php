@@ -2,7 +2,7 @@
 
 namespace App\Factories;
 
-use App\Models\Partner;
+use App\Models\GamesCompany;
 use App\Services\UrlService;
 
 class GamesCompanyFactory
@@ -13,17 +13,12 @@ class GamesCompanyFactory
      * @param null $websiteUrl
      * @param null $twitterId
      * $param null $isLowQuality
-     * @return Partner
+     * @return GamesCompany
      */
     public static function createActive($name, $linkTitle, $websiteUrl = null, $twitterId = null, $isLowQuality = 0)
     {
-        $typeId = Partner::TYPE_GAMES_COMPANY;
-        $status = Partner::STATUS_ACTIVE;
-
-        return new Partner(
+        return new GamesCompany(
             [
-                'type_id' => $typeId,
-                'status' => $status,
                 'name' => $name,
                 'link_title' => $linkTitle,
                 'website_url' => $websiteUrl,

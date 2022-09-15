@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 
 use App\Traits\SwitchServices;
 use App\Traits\StaffView;
@@ -16,16 +17,19 @@ class DashboardController extends Controller
     use SwitchServices;
     use StaffView;
 
-    protected $viewBreadcrumbs;
+    private $viewBreadcrumbs;
     private $repoGamesCompany;
+    private $statsGamesCompany;
 
     public function __construct(
         Breadcrumbs $viewBreadcrumbs,
-        GamesCompanyRepository $repoGamesCompany
+        GamesCompanyRepository $repoGamesCompany,
+        GamesCompanyStats $statsGamesCompany
     )
     {
         $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoGamesCompany = $repoGamesCompany;
+        $this->statsGamesCompany = $statsGamesCompany;
     }
 
     public function show()
@@ -38,18 +42,18 @@ class DashboardController extends Controller
         $bindings['DeveloperMissingCount'] = $this->getServiceGameDeveloper()->countGamesWithNoDeveloper();
         $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
 
-        $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $this->getServicePartner()->countGamesCompaniesWithoutWebsiteUrls();
-        $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $this->getServicePartner()->countGamesCompaniesWithoutTwitterIds();
+        $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $this->statsGamesCompany->countWithoutWebsiteUrls();
+        $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $this->statsGamesCompany->countWithoutTwitterIds();
 
-        $duplicateTwitterIdsList = $this->getServicePartner()->getGamesCompanyDuplicateTwitterIds();
-        $duplicateWebsiteUrlsList = $this->getServicePartner()->getGamesCompanyDuplicateWebsiteUrls();
+        $duplicateTwitterIdsList = $this->statsGamesCompany->getDuplicateTwitterIds();
+        $duplicateWebsiteUrlsList = $this->statsGamesCompany->getDuplicateWebsiteUrls();
         $bindings['GamesCompanyDuplicateTwitterIdsCount'] = count($duplicateTwitterIdsList);
         $bindings['GamesCompanyDuplicateWebsiteUrlsCount'] = count($duplicateWebsiteUrlsList);
 
         // Outreach
-        $devsWithUnrankedGames = $this->getServicePartner()->getDevelopersWithUnrankedGames();
+        $devsWithUnrankedGames = $this->repoGamesCompany->getDevelopersWithUnrankedGames();
         $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
-        $pubsWithUnrankedGames = $this->getServicePartner()->getPublishersWithUnrankedGames();
+        $pubsWithUnrankedGames = $this->repoGamesCompany->getPublishersWithUnrankedGames();
         $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGames);
 
         // Low quality filter

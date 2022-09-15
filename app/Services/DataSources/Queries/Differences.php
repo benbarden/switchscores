@@ -177,7 +177,7 @@ class Differences
             SELECT g.id, g.title, g.link_title, 
             (
                 SELECT GROUP_CONCAT(p.name ORDER BY p.name ASC SEPARATOR \',\')
-                FROM partners p
+                FROM games_companies p
                 JOIN game_developers gdev ON p.id = gdev.developer_id
                 WHERE gdev.game_id = g.id
             ) AS game_developers,
@@ -207,7 +207,7 @@ class Differences
             SELECT g.id, g.title, g.link_title, 
             (
                 SELECT GROUP_CONCAT(p.name ORDER BY p.name ASC SEPARATOR \',\')
-                FROM partners p
+                FROM games_companies p
                 JOIN game_publishers gpub ON p.id = gpub.publisher_id
                 WHERE gpub.game_id = g.id
             ) AS game_publishers,

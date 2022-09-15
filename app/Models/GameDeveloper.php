@@ -25,6 +25,6 @@ class GameDeveloper extends Model
 
     public function developer()
     {
-        return $this->hasOne('App\Models\Partner', 'id', 'developer_id');
+        return $this->hasOne('App\Models\GamesCompany', 'id', 'developer_id');
     }
 }

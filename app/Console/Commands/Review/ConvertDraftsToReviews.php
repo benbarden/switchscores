@@ -11,7 +11,6 @@ use App\Domain\ReviewLink\Builder as ReviewLinkBuilder;
 use App\Domain\ReviewLink\Director as ReviewLinkDirector;
 use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-use App\Domain\Partner\Repository as PartnerRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewDraft\ConvertToReviewLink;

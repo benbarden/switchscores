@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+
 use App\Traits\SwitchServices;
 
 class Developer
 {
     use SwitchServices;
+
+    protected $repoGamesCompany;
+
+    public function __construct(
+        GamesCompanyRepository $repoGamesCompany
+    )
+    {
+        $this->repoGamesCompany = $repoGamesCompany;
+    }
 
     public function addGameDeveloper()
     {
@@ -23,7 +34,6 @@ class Developer
         }
 
         $serviceGame = $this->getServiceGame();
-        $servicePartner = $this->getServicePartner();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
 
         // Validation
@@ -32,8 +42,8 @@ class Developer
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
 
-        $partner = $servicePartner->find($developerId);
-        if (!$partner) {
+        $gamesCompany = $this->repoGamesCompany->find($developerId);
+        if (!$gamesCompany) {
             return response()->json(['error' => 'Developer not found: '.$developerId], 400);
         }
 

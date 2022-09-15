@@ -2,21 +2,34 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
-use App\Models\Partner;
-use App\Models\PartnerOutreach;
-use App\Traits\StaffView;
-use App\Traits\SwitchServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Models\Partner;
+use App\Models\PartnerOutreach;
+
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+
+use App\Traits\StaffView;
+use App\Traits\SwitchServices;
 
 class OutreachController extends Controller
 {
     use SwitchServices;
     use StaffView;
 
+    private $repoGamesCompany;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function __construct(
+        GamesCompanyRepository $repoGamesCompany
+    )
+    {
+        $this->repoGamesCompany = $repoGamesCompany;
+    }
 
     /**
      * @var array
@@ -66,16 +79,17 @@ class OutreachController extends Controller
             $partnerOutreach->save();
 
             // Update last outreach for partner
-            $partner = $this->getServicePartner()->find($partnerId);
-            $this->getServicePartner()->editOutreach($partner, $partnerOutreach);
+            $gamesCompany = $this->repoGamesCompany->find($partnerId);
+            $gamesCompany->last_outreach_id = $partnerOutreach->id;
+            $gamesCompany->save();
 
-            return redirect(route('staff.partners.games-company.show', ['partner' => $partner]));
+            return redirect(route('staff.partners.games-company.show', ['gamesCompany' => $gamesCompany]));
 
         }
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['PartnerList'] = $this->getServicePartner()->getAllGamesCompanies();
+        $bindings['PartnerList'] = $this->repoGamesCompany->getAll();
         $bindings['StatusList'] = $this->getServicePartnerOutreach()->getStatusList();
         $bindings['MethodList'] = $this->getServicePartnerOutreach()->getContactMethodList();
 

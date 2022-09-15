@@ -13,7 +13,7 @@
         <br>Please ensure this is what you want to do before proceeding. There is no option to undo the deletion if you proceed!
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.partners.games-company.delete', {'partnerId': PartnerId}) }}">
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.partners.games-company.delete', {'gamesCompanyId': PartnerId}) }}">
         {{ csrf_field() }}
 
         <div class="form-group">

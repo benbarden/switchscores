@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\Partner;
 
-use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 class GamesCompanyController
 {
-    private $repoPartner;
+    private $repoGamesCompany;
 
     public function __construct(
-        PartnerRepository $repoPartner
+        GamesCompanyRepository $repoGamesCompany
     )
     {
-        $this->repoPartner = $repoPartner;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function findByName()
@@ -24,7 +24,7 @@ class GamesCompanyController
             return response()->json(['message' => 'Missing parameter: name'], 400);
         }
 
-        $partners = $this->repoPartner->searchGamesCompany($name);
+        $partners = $this->repoGamesCompany->searchGamesCompany($name);
 
         return response()->json(['partners' => $partners], 200);
     }

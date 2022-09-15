@@ -5,8 +5,8 @@
 <div class="row">
 
     <div class="col-md-4">
-        <a href="{{ route('staff.partners.games-company.edit', {'partnerId': PartnerData.id}) }}" class="btn btn-primary btn-md">Edit partner</a>
-        <a href="{{ route('partners.detail.games-company', {'linkTitle': PartnerData.link_title}) }}" class="btn btn-primary btn-md" target="_blank">View public profile</a>
+        <a href="{{ route('staff.partners.games-company.edit', {'gamesCompanyId': GamesCompany.id}) }}" class="btn btn-primary btn-md">Edit partner</a>
+        <a href="{{ route('partners.detail.games-company', {'linkTitle': GamesCompany.link_title}) }}" class="btn btn-primary btn-md" target="_blank">View public profile</a>
     </div>
 
     <div class="col-md-4">
@@ -15,7 +15,7 @@
     <div class="col-md-4">
 
     <span class="pull-right">
-        <a href="{{ route('staff.partners.games-company.delete', {'partnerId': PartnerData.id}) }}" class="btn btn-danger btn-md">Delete partner</a>
+        <a href="{{ route('staff.partners.games-company.delete', {'gamesCompanyId': GamesCompany.id}) }}" class="btn btn-danger btn-md">Delete partner</a>
     </span>
 
     </div>
@@ -29,15 +29,15 @@
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Name</span>
                 </td>
-                <td>{{ PartnerData.name }}</td>
+                <td>{{ GamesCompany.name }}</td>
             </tr>
             <tr>
                 <td>
                     <span style="font-weight: bold;">Official site</span>
                 </td>
                 <td>
-                    {% if PartnerData.website_url %}
-                        <a href="{{ PartnerData.website_url }}" target="_blank">Visit official site</a>
+                    {% if GamesCompany.website_url %}
+                        <a href="{{ GamesCompany.website_url }}" target="_blank">Visit official site</a>
                     {% else %}
                         -
                     {% endif %}
@@ -48,8 +48,8 @@
                     <span style="font-weight: bold;">Twitter account</span>
                 </td>
                 <td>
-                    {% if PartnerData.twitter_id %}
-                        <a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a>
+                    {% if GamesCompany.twitter_id %}
+                        <a href="https://twitter.com/{{ GamesCompany.twitter_id }}" target="_blank">{{ GamesCompany.twitter_id }}</a>
                     {% else %}
                         -
                     {% endif %}
@@ -60,7 +60,7 @@
                     <span style="font-weight: bold;">Quality filter</span>
                 </td>
                 <td>
-                    {% if PartnerData.is_low_quality == 1 %}
+                    {% if GamesCompany.is_low_quality == 1 %}
                         <label class="label label-danger">Low quality</label>
                     {% else %}
                         -
@@ -72,7 +72,7 @@
                     <span style="font-weight: bold;">Last outreach</span>
                 </td>
                 <td>
-                    {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': PartnerData.lastOutreach} %}
+                    {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': GamesCompany.lastOutreach} %}
                 </td>
             </tr>
             <tr>
@@ -80,7 +80,7 @@
                     <span style="font-weight: bold;">Last outreach date</span>
                 </td>
                 <td>
-                    {{ PartnerData.lastOutreach.created_at }}
+                    {{ GamesCompany.lastOutreach.created_at }}
                 </td>
             </tr>
             <tr>
@@ -91,20 +91,20 @@
                     <span style="font-weight: bold;">Signed up?</span>
                 </td>
                 <td>
-                    {% if PartnerData.gamesCompanyUser.id is not null %}
+                    {% if GamesCompany.gamesCompanyUser.id is not null %}
                         {% include 'modules/icons/green-tick.twig' %}
                     {% else %}
                         {% include 'modules/icons/red-cross.twig' %}
                     {% endif %}
                 </td>
             </tr>
-            {% if PartnerData.gamesCompanyUser.id is not null %}
+            {% if GamesCompany.gamesCompanyUser.id is not null %}
                 <tr>
                     <td>
                         <span style="font-weight: bold;">Last access</span>
                     </td>
                     <td>
-                        {{ PartnerData.gamesCompanyUser.last_access_date }}
+                        {{ GamesCompany.gamesCompanyUser.last_access_date }}
                     </td>
                 </tr>
             {% endif %}
@@ -114,9 +114,9 @@
     <div class="col-sm-12 col-md-6 col-lg-6">
         <h2>Outreach</h2>
         <p>
-            <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ PartnerData.id }}" class="btn btn-primary">Add outreach</a>
+            <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ GamesCompany.id }}" class="btn btn-primary">Add outreach</a>
             {% if OutreachList %}
-                <a href="{{ route('staff.partners.outreach.list', {'partner': PartnerData}) }}" class="btn btn-primary">View all</a>
+                <a href="{{ route('staff.partners.outreach.list', {'partner': GamesCompany}) }}" class="btn btn-primary">View all</a>
             {% endif %}
         </p>
         {% if OutreachList.count %}
@@ -157,7 +157,7 @@
 {% if MergedGameList %}
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
+            <h2>Nintendo Switch games by {{ GamesCompany.name }}</h2>
             <table class="table table-responsive">
                 <tr>
                     <th>Game</th>

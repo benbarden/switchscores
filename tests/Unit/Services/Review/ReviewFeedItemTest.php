@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\Review;
 
-use App\Models\Partner;
+use App\Models\ReviewSite;
 use App\Models\ReviewFeedItem;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -14,7 +14,7 @@ class ReviewFeedItemTest extends TestCase
         $reviewFeedItem = new ReviewFeedItem();
 
         // Basic fields
-        $reviewFeedItem->site_id = Partner::SITE_WOS;
+        $reviewFeedItem->site_id = ReviewSite::SITE_SWITCH_SCORES;
         $reviewFeedItem->item_url = '/abc';
         $reviewFeedItem->item_title = 'Test Abc';
 

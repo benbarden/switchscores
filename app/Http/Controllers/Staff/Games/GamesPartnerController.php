@@ -9,6 +9,7 @@ use App\Factories\GamesCompanyFactory;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -20,23 +21,25 @@ class GamesPartnerController extends Controller
 
     private $repoGame;
     private $gameQualityFilter;
+    private $repoGamesCompany;
 
     public function __construct(
         GameRepository $repoGame,
-        GameQualityFilter $gameQualityFilter
+        GameQualityFilter $gameQualityFilter,
+        GamesCompanyRepository $repoGamesCompany
     )
     {
         $this->repoGame = $repoGame;
         $this->gameQualityFilter = $gameQualityFilter;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function showGamePartners($gameId)
     {
-        $serviceGame = $this->getServiceGame();
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $game = $serviceGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
         $gameTitle = $game->title;
@@ -61,7 +64,6 @@ class GamesPartnerController extends Controller
     public function addGameDeveloper()
     {
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $servicePartner = $this->getServicePartner();
         $serviceUser = $this->getServiceUser();
 
         $userId = $this->getAuthId();
@@ -88,8 +90,8 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Missing data: developerId'], 400);
         }
 
-        $developerData = $servicePartner->find($developerId);
-        if (!$developerData) {
+        $gamesCompany = $this->repoGamesCompany->find($developerId);
+        if (!$gamesCompany) {
             return response()->json(['error' => 'Developer not found!'], 400);
         }
 
@@ -100,7 +102,7 @@ class GamesPartnerController extends Controller
 
         $serviceGameDeveloper->createGameDeveloper($gameId, $developerId);
 
-        $this->gameQualityFilter->updateGame($game, $developerData);
+        $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
         $data = array(
             'status' => 'OK'
@@ -148,7 +150,6 @@ class GamesPartnerController extends Controller
     public function addGamePublisher()
     {
         $serviceGamePublisher = $this->getServiceGamePublisher();
-        $servicePartner = $this->getServicePartner();
         $serviceUser = $this->getServiceUser();
 
         $userId = $this->getAuthId();
@@ -175,8 +176,8 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Missing data: publisherId'], 400);
         }
 
-        $publisherData = $servicePartner->find($publisherId);
-        if (!$publisherData) {
+        $gamesCompany = $this->repoGamesCompany->find($publisherId);
+        if (!$gamesCompany) {
             return response()->json(['error' => 'Publisher not found!'], 400);
         }
 
@@ -187,7 +188,7 @@ class GamesPartnerController extends Controller
 
         $serviceGamePublisher->createGamePublisher($gameId, $publisherId);
 
-        $this->gameQualityFilter->updateGame($game, $publisherData);
+        $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
         $data = array(
             'status' => 'OK'
@@ -234,7 +235,6 @@ class GamesPartnerController extends Controller
 
     public function createNewCompany()
     {
-        $servicePartner = $this->getServicePartner();
         $serviceUser = $this->getServiceUser();
 
         $userId = $this->getAuthId();
@@ -256,12 +256,12 @@ class GamesPartnerController extends Controller
         }
 
         // De-dupe
-        $partner = $servicePartner->getByName($name);
-        if ($partner) {
+        $gamesCompany = $this->repoGamesCompany->getByName($name);
+        if ($gamesCompany) {
             return response()->json(['error' => 'Partner already exists with that name'], 400);
         }
-        $partner = $servicePartner->getByLinkTitle($linkTitle);
-        if ($partner) {
+        $gamesCompany = $this->repoGamesCompany->getByLinkTitle($linkTitle);
+        if ($gamesCompany) {
             return response()->json(['error' => 'Partner already exists with that linkTitle'], 400);
         }
 

@@ -14,7 +14,7 @@ use App\Traits\SwitchServices;
 
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\InviteCode\CodeGenerator;
-use App\Domain\Partner\Repository as PartnerRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 class InviteCodeController extends Controller
@@ -36,17 +36,17 @@ class InviteCodeController extends Controller
     ];
 
     protected $repoInviteCode;
-    protected $repoPartner;
+    protected $repoGamesCompany;
     protected $repoReviewSite;
 
     public function __construct(
         InviteCodeRepository $repoInviteCode,
-        PartnerRepository $repoPartner,
+        GamesCompanyRepository $repoGamesCompany,
         ReviewSiteRepository $repoReviewSite
     )
     {
         $this->repoInviteCode = $repoInviteCode;
-        $this->repoPartner = $repoPartner;
+        $this->repoGamesCompany = $repoGamesCompany;
         $this->repoReviewSite = $repoReviewSite;
     }
 
@@ -167,7 +167,7 @@ class InviteCodeController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['PartnerList'] = $this->repoReviewSite->getAll();
-        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
 
         return view('staff.invite-code.add', $bindings);
     }
@@ -214,7 +214,7 @@ class InviteCodeController extends Controller
         $bindings['InviteCodeId'] = $inviteCodeId;
 
         $bindings['PartnerList'] = $this->repoReviewSite->getAll();
-        $bindings['GamesCompanyList'] = $this->repoPartner->gamesCompanies();
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
 
         return view('staff.invite-code.edit', $bindings);
     }
