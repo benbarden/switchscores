@@ -9,61 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class PartnerService
 {
-    /**
-     * @deprecated
-     */
-    public function createReviewSite(
-        $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
-        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions,
-        $reviewImportMethod
-    )
-    {
-        $typeId = Partner::TYPE_REVIEW_SITE;
-
-        Partner::create([
-            'type_id' => $typeId,
-            'status' => $status,
-            'name' => $name,
-            'link_title' => $linkTitle,
-            'website_url' => $websiteUrl,
-            'twitter_id' => $twitterId,
-            'rating_scale' => $ratingScale,
-            'contact_name' => $contactName,
-            'contact_email' => $contactEmail,
-            'contact_form_link' => $contactFormLink,
-            'review_code_regions' => $reviewCodeRegions,
-            'review_import_method' => $reviewImportMethod,
-        ]);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function editReviewSite(
-        Partner $partnerData, $status, $name, $linkTitle, $websiteUrl, $twitterId, $ratingScale,
-        $contactName, $contactEmail, $contactFormLink, $reviewCodeRegions, $reviewImportMethod
-    )
-    {
-        $values = [
-            'status' => $status,
-            'name' => $name,
-            'link_title' => $linkTitle,
-            'website_url' => $websiteUrl,
-            'twitter_id' => $twitterId,
-            'rating_scale' => $ratingScale,
-            'contact_name' => $contactName,
-            'contact_email' => $contactEmail,
-            'contact_form_link' => $contactFormLink,
-            'review_code_regions' => $reviewCodeRegions,
-            'review_import_method' => $reviewImportMethod,
-        ];
-
-        $partnerData->fill($values);
-        $partnerData->save();
-    }
-
-    // ********************************************************** //
-
     public function editGamesCompany(
         Partner $partnerData, $name, $linkTitle, $websiteUrl, $twitterId, $isLowQuality
     )
@@ -129,49 +74,6 @@ class PartnerService
             ->where('status', Partner::STATUS_ACTIVE)
             ->first();
     }
-
-    /**
-     * @param $domainUrl
-     * @return \App\Models\Partner
-     */
-    public function getByDomain($domainUrl)
-    {
-        return Partner::
-            where('website_url', 'http://'.$domainUrl)
-            ->orWhere('website_url', 'https://'.$domainUrl)
-            ->first();
-    }
-
-    // ********************************************************** //
-
-    /**
-     * @deprecated
-     */
-    public function getActiveReviewSitesWithContactDetails()
-    {
-        $reviewSites = Partner::
-            where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_ACTIVE)
-            ->whereNotNull('contact_email')->orWhereNotNull('contact_form_link')
-            ->orderBy('name', 'asc')
-            ->get();
-        return $reviewSites;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getReviewSitesWithRecentReviews($days = 30)
-    {
-        return Partner::
-            where('type_id', Partner::TYPE_REVIEW_SITE)
-            ->where('status', Partner::STATUS_ACTIVE)
-            ->whereRaw('last_review_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $days)
-            ->orderBy('name', 'asc')
-            ->get();
-    }
-
-    // ********************************************************** //
 
     public function getAllGamesCompanies()
     {
