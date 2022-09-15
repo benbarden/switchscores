@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\DB;
 class GameReleaseDateService
 {
     /**
-     * Only used for Staff
-     * @return integer
-     */
-    public function countUpcoming()
-    {
-        return Game::where('games.eu_is_released', 0)->count();
-    }
-
-    /**
      * This is used for Staff - all unreleased games are shown.
      * There's no limit (aka 2 Unlimited) as we want the full list.
      * @return mixed
@@ -86,24 +77,6 @@ class GameReleaseDateService
         if ($limit != null) {
             $games = $games->limit($limit);
         }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @param $idList
-     * @return mixed
-     */
-    public function getByIdList($idList)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->whereIn('games.id', $idList)
-            ->whereNotNull('games.eu_release_date')
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
         $games = $games->get();
 
         return $games;
