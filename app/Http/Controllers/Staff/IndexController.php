@@ -48,13 +48,10 @@ class IndexController extends Controller
 
         $serviceQualityStats = new QualityStats();
 
-        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
 
         // Submissions
         $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
-        $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
-        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
