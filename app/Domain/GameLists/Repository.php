@@ -6,8 +6,15 @@ namespace App\Domain\GameLists;
 use App\Models\Game;
 use App\Models\GameSeries;
 
+use Illuminate\Support\Facades\DB;
+
 class Repository
 {
+    public function getAll()
+    {
+        return DB::table('games')->select('games.*')->orderBy('games.title', 'asc')->get();
+    }
+
     public function recentlyReleased($limit = 100)
     {
         $games = Game::where('eu_is_released', 1)

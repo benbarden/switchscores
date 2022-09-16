@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
+use App\Domain\ReviewDraft\Stats as ReviewDraftStats;
+
 use App\Models\QuickReview;
 
 use App\Traits\SwitchServices;
@@ -17,16 +19,20 @@ class DashboardController extends Controller
 
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $repoReviewDraft;
+    protected $statsReviewDraft;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
-        ReviewDraftRepository $repoReviewDraft
+        ReviewDraftRepository $repoReviewDraft,
+        ReviewDraftStats $statsReviewDraft
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoReviewDraft = $repoReviewDraft;
+        $this->statsReviewDraft = $statsReviewDraft;
     }
 
     public function show()
@@ -35,18 +41,13 @@ class DashboardController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceReviewFeedItem = $this->getServiceReviewFeedItem();
         $serviceQuickReview = $this->getServiceQuickReview();
-
         $serviceReviewLinks = $this->getServiceReviewLink();
-        $serviceGame = $this->getServiceGame();
         $serviceTopRated = $this->getServiceTopRated();
 
         // Action lists
         $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
-        $unprocessedFeedReviewItems = $serviceReviewFeedItem->getUnprocessed();
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
-        $bindings['UnprocessedFeedReviewItemsCount'] = count($unprocessedFeedReviewItems);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Stats
@@ -65,7 +66,7 @@ class DashboardController extends Controller
         $bindings['UnrankedYear2018'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2018);
         $bindings['UnrankedYear2017'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2017);
 
-        $bindings['ProcessStatusStats'] = $serviceReviewFeedItem->getProcessStatusStats();
+        $bindings['ProcessStatusStats'] = $this->statsReviewDraft->getProcessStatusStats();
 
         return view('staff.reviews.dashboard', $bindings);
     }

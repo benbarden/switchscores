@@ -142,24 +142,6 @@ trait StaffView
     /**
      * @deprecated
      */
-    public function getBindingsReviewsFeedItemsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedItemsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsReviewsFeedImportsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsFeedImportsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
     public function getBindingsReviewsUnrankedByReleaseYearSubpage($pageTitle, $tableSort = '')
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsUnrankedByReleaseYearSubPage($pageTitle);

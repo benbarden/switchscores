@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
@@ -17,14 +18,17 @@ class FeedHealthController extends Controller
 
     protected $repoReviewSite;
     protected $repoPartnerFeedLink;
+    protected $repoReviewDraft;
 
     public function __construct(
         ReviewSiteRepository $repoReviewSite,
-        PartnerFeedLinkRepository $repoPartnerFeedLink
+        PartnerFeedLinkRepository $repoPartnerFeedLink,
+        ReviewDraftRepository $repoReviewDraft
     )
     {
         $this->repoReviewSite = $repoReviewSite;
         $this->repoPartnerFeedLink = $repoPartnerFeedLink;
+        $this->repoReviewDraft = $repoReviewDraft;
     }
 
     public function landing()
@@ -47,11 +51,11 @@ class FeedHealthController extends Controller
 
         $pageTitle = 'Feed health';
 
-        $bindings['ImportStatsFailuresList'] = $this->getServiceReviewFeedItem()->getFailedImportStatsBySite($partnerId);
+        $bindings['ImportStatsFailuresList'] = $this->repoReviewDraft->getFailedImportStatsBySite($partnerId);
 
-        $bindings['SuccessFailStats'] = $this->getServiceReviewFeedItem()->getSuccessFailStatsBySite($partnerId);
+        $bindings['SuccessFailStats'] = $this->repoReviewDraft->getSuccessFailStatsBySite($partnerId);
 
-        $bindings['ParseStatusStats'] = $this->getServiceReviewFeedItem()->getParseStatusStatsBySite($partnerId);
+        $bindings['ParseStatusStats'] = $this->repoReviewDraft->getParseStatusStatsBySite($partnerId);
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
@@ -76,7 +80,7 @@ class FeedHealthController extends Controller
 
         $pageTitle = 'Feed health - view by process status';
 
-        $bindings['ReviewFeedItems'] = $this->getServiceReviewFeedItem()->getByProcessStatusAndSite($status, $partnerId);
+        $bindings['ReviewFeedItems'] = $this->repoReviewDraft->getByProcessStatusAndSite($status, $partnerId);
         $bindings['StatusDesc'] = $status;
 
         $bindings['TopTitle'] = $pageTitle;
@@ -104,7 +108,7 @@ class FeedHealthController extends Controller
 
         $pageTitle = 'Feed health - view by parse status';
 
-        $bindings['ReviewFeedItems'] = $this->getServiceReviewFeedItem()->getByParseStatusAndSite($status, $partnerId, $tableLimit);
+        $bindings['ReviewFeedItems'] = $this->repoReviewDraft->getByParseStatusAndSite($status, $partnerId, $tableLimit);
         $bindings['StatusDesc'] = $status;
 
         $bindings['TopTitle'] = $pageTitle;

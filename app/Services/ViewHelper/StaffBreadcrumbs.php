@@ -114,12 +114,6 @@ class StaffBreadcrumbs
         return $this->addCrumb($crumbItem);
     }
 
-    private function addReviewsFeedItemsIndex()
-    {
-        $crumbItem = ['url' => route('staff.reviews.feed-items.list'), 'text' => 'Feed items'];
-        return $this->addCrumb($crumbItem);
-    }
-
     private function addReviewsUnrankedByReviewCount()
     {
         $crumbItem = ['url' => route('staff.reviews.unranked.review-count-landing'), 'text' => 'Unranked: By review count'];
@@ -159,14 +153,6 @@ class StaffBreadcrumbs
     {
         return $this->addReviewsDashboard()
             ->addReviewsCampaignsIndex()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
-    public function makeReviewsFeedItemsSubPage($pageTitle)
-    {
-        return $this->addReviewsDashboard()
-            ->addReviewsFeedItemsIndex()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }

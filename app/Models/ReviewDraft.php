@@ -28,25 +28,6 @@ class ReviewDraft extends Model
     const PROCESS_FAILURE_REVIEW_FOR_ANOTHER_PLATFORM = 'Review for another platform';
     const PROCESS_FAILURE_REVIEW_PREDATES_SWITCH_VERSION = 'Review pre-dates Switch version';
 
-    private $processOptionsSuccess = [
-        self::PROCESS_SUCCESS_REVIEW_CREATED,
-    ];
-
-    private $processOptionsFailure = [
-        self::PROCESS_FAILURE_BUNDLE,
-        self::PROCESS_FAILURE_DLC_OR_SPECIAL_EDITION,
-        self::PROCESS_FAILURE_DUPLICATE,
-        self::PROCESS_FAILURE_HISTORIC,
-        self::PROCESS_FAILURE_MULTIPLE,
-        self::PROCESS_FAILURE_NO_SCORE,
-        self::PROCESS_FAILURE_NON_REVIEW_CONTENT,
-        self::PROCESS_FAILURE_NOT_GAME_REVIEW,
-        self::PROCESS_FAILURE_NOT_IN_DB,
-        self::PROCESS_FAILURE_PAGE_NOT_FOUND,
-        self::PROCESS_FAILURE_REVIEW_FOR_ANOTHER_PLATFORM,
-        self::PROCESS_FAILURE_REVIEW_PREDATES_SWITCH_VERSION,
-    ];
-
     /**
      * @var string
      */
@@ -80,14 +61,13 @@ class ReviewDraft extends Model
         return $this->hasOne('App\Models\ReviewLink', 'id', 'review_link_id');
     }
 
-    public function getProcessOptionsSuccess()
+    public function isHistoric()
     {
-        return $this->processOptionsSuccess;
+        // If the content is older than 30 days from today, it's history!
+        if (date('Y-m-d', strtotime('-30 days')) > $this->item_date) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
-    public function getProcessOptionsFailure()
-    {
-        return $this->processOptionsFailure;
-    }
-
 }

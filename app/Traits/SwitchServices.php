@@ -30,7 +30,6 @@ use App\Services\NewsService;
 use App\Services\PartnerFeedLinkService;
 use App\Services\PartnerOutreachService;
 use App\Services\QuickReviewService;
-use App\Services\ReviewFeedItemService;
 use App\Services\ReviewFeedItemTestService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
@@ -337,15 +336,6 @@ trait SwitchServices
     public function getServiceQuickReview()
     {
         return $this->loadService('QuickReviewService');
-    }
-
-    /**
-     * @deprecated
-     * @return ReviewFeedItemService
-     */
-    public function getServiceReviewFeedItem()
-    {
-        return $this->loadService('ReviewFeedItemService');
     }
 
     /**

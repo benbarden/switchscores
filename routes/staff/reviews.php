@@ -30,12 +30,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     // Review drafts
     Route::get('/staff/reviews/review-drafts/pending', 'Staff\Reviews\ReviewDraftsController@showPending')->name('staff.reviews.review-drafts.showPending');
+    Route::get('/staff/reviews/review-drafts/by-process-status/{status}', 'Staff\Reviews\ReviewDraftsController@byProcessStatus')->name('staff.reviews.review-drafts.by-process-status');
     Route::match(['get', 'post'], '/staff/reviews/review-drafts/edit/{itemId}', 'Staff\Reviews\ReviewDraftsController@edit')->name('staff.reviews.review-drafts.edit');
-
-    // Review feed items
-    Route::get('/staff/reviews/feed-items/{report?}', 'Staff\Reviews\FeedItemsController@showList')->name('staff.reviews.feed-items.list');
-    Route::get('/staff/reviews/feed-items/by-process-status/{status}', 'Staff\Reviews\FeedItemsController@byProcessStatus')->name('staff.reviews.feed-items.by-process-status');
-    Route::match(['get', 'post'], '/staff/reviews/feed-items/edit/{itemId}', 'Staff\Reviews\FeedItemsController@edit')->name('staff.reviews.feed-items.edit');
 
     // Review highlights
     Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');

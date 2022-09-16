@@ -7,19 +7,16 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
+use App\Domain\GameLists\Repository as GameListsRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class ReviewDraftsController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -30,22 +27,23 @@ class ReviewDraftsController extends Controller
         //'site_id' => 'required',
     ];
 
-    protected $viewBreadcrumbs;
     protected $repoReviewDraft;
+    protected $repoGameLists;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        ReviewDraftRepository $repoReviewDraft
+        ReviewDraftRepository $repoReviewDraft,
+        GameListsRepository $repoGameLists
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoReviewDraft = $repoReviewDraft;
+        $this->repoGameLists = $repoGameLists;
     }
 
     public function showPending()
     {
-        $bindings = $this->getBindings('Review drafts');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage('Review drafts');
+        $pageTitle = 'Review drafts';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['jsInitialSort'] = '[0, "asc"]';
 
@@ -54,10 +52,24 @@ class ReviewDraftsController extends Controller
         return view('staff.reviews.review-drafts.list', $bindings);
     }
 
+    public function byProcessStatus($status)
+    {
+        $pageTitle = 'Review drafts';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['ReviewDraftItems'] = $this->repoReviewDraft->getByProcessStatus($status);
+
+        $bindings['HideFilters'] = 'Y';
+
+        return view('staff.reviews.review-drafts.list', $bindings);
+    }
+
     public function edit($itemId)
     {
-        $bindings = $this->getBindings('Edit review draft');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsReviewDraftsSubpage('Edit review draft');
+        $pageTitle = 'Edit review draft';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewDraftsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $reviewDraft = $this->repoReviewDraft->find($itemId);
         if (!$reviewDraft) abort(404);
@@ -95,10 +107,10 @@ class ReviewDraftsController extends Controller
         $bindings['ReviewDraftData'] = $reviewDraft;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
+        $bindings['GamesList'] = $this->repoGameLists->getAll();
 
-        $bindings['ProcessStatusSuccess'] = $this->getServiceReviewFeedItem()->getProcessOptionsSuccess();
-        $bindings['ProcessStatusFailure'] = $this->getServiceReviewFeedItem()->getProcessOptionsFailure();
+        $bindings['ProcessStatusSuccess'] = $this->repoReviewDraft->getProcessOptionsSuccess();
+        $bindings['ProcessStatusFailure'] = $this->repoReviewDraft->getProcessOptionsFailure();
 
         return view('staff.reviews.review-drafts.edit', $bindings);
     }
