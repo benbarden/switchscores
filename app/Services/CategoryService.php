@@ -123,22 +123,6 @@ class CategoryService
 
     /**
      * @param $categoryId
-     * @return mixed
-     */
-    public function countReleasedByCategory($categoryId)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('games.category_id', $categoryId);
-
-        $games = $games->count();
-
-        return $games;
-    }
-
-    /**
-     * @param $categoryId
      * @param int $limit
      * @return mixed
      */
@@ -150,30 +134,6 @@ class CategoryService
             ->where('games.category_id', $categoryId)
             ->whereNotNull('games.game_rank')
             ->orderBy('games.rating_avg', 'desc')
-            ->orderBy('games.title', 'asc');
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-        $games = $games->get();
-
-        return $games;
-    }
-
-    /**
-     * @param $categoryId
-     * @param int $limit
-     * @return mixed
-     */
-    public function getUnrankedByCategory($categoryId, $limit = null)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->where('games.category_id', $categoryId)
-            ->whereNull('games.game_rank')
-            ->orderBy('games.review_count', 'desc')
-            ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc');
 
         if ($limit != null) {
