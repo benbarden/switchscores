@@ -4,43 +4,40 @@ namespace App\Http\Controllers\Staff\Partners;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
+use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
+use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-    use StaffView;
-
-    private $viewBreadcrumbs;
     private $repoGamesCompany;
     private $statsGamesCompany;
+    private $dbGameDeveloper;
+    private $dbGamePublisher;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
         GamesCompanyRepository $repoGamesCompany,
-        GamesCompanyStats $statsGamesCompany
+        GamesCompanyStats $statsGamesCompany,
+        GameDeveloperDbQueries $dbGameDeveloper,
+        GamePublisherDbQueries $dbGamePublisher
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
         $this->repoGamesCompany = $repoGamesCompany;
         $this->statsGamesCompany = $statsGamesCompany;
+        $this->dbGameDeveloper = $dbGameDeveloper;
+        $this->dbGamePublisher = $dbGamePublisher;
     }
 
     public function show()
     {
-        $bindings = $this->getBindings('Partners dashboard');
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Partners dashboard');
+        $pageTitle = 'Partners dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Action lists
-        $bindings['DeveloperMissingCount'] = $this->getServiceGameDeveloper()->countGamesWithNoDeveloper();
-        $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
+        $bindings['DeveloperMissingCount'] = $this->dbGameDeveloper->countGamesWithNoDeveloper();
+        $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
 
         $bindings['GamesCompaniesWithoutWebsiteUrlsCount'] = $this->statsGamesCompany->countWithoutWebsiteUrls();
         $bindings['GamesCompaniesWithoutTwitterIdsCount'] = $this->statsGamesCompany->countWithoutTwitterIds();

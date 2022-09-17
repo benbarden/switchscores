@@ -9,6 +9,7 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -19,18 +20,20 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameStats;
-    protected $repoGameLists;
-    protected $repoReviewDraft;
-    protected $repoUser;
+    private $repoFeaturedGames;
+    private $repoGameStats;
+    private $repoGameLists;
+    private $repoReviewDraft;
+    private $repoUser;
+    private $dbGamePublisher;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         GameListsRepository $repoGameLists,
         ReviewDraftRepository $repoReviewDraft,
-        UserRepository $repoUser
+        UserRepository $repoUser,
+        GamePublisherDbQueries $dbGamePublisher
     )
     {
         $this->repoFeaturedGames = $featuredGames;
@@ -38,6 +41,7 @@ class IndexController extends Controller
         $this->repoGameLists = $repoGameLists;
         $this->repoReviewDraft = $repoReviewDraft;
         $this->repoUser = $repoUser;
+        $this->dbGamePublisher = $dbGamePublisher;
     }
 
     public function index()
@@ -64,7 +68,7 @@ class IndexController extends Controller
 
         // Missing data
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
-        $bindings['PublisherMissingCount'] = $this->getServiceGamePublisher()->countGamesWithNoPublisher();
+        $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
         $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // New games

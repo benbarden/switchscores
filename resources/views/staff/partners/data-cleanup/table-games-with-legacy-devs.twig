@@ -6,7 +6,6 @@
             <th class="text-center">#</th>
             <th class="text-left">Title</th>
             <th class="text-left">Game developers</th>
-            <th class="text-left">Wikipedia</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -29,9 +28,6 @@
                         -
                     {% endif %}
                 </td>
-                <td class="text-left">
-                    {{ item.wikipedia_developers }}
-                </td>
                 <td class="text-center">
                     <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit game</a> :
                     <a href="{{ route('staff.game.partner.list', {'gameId': item.id}) }}">Partners</a>
@@ -50,7 +46,6 @@
             "order": [ {{ jsInitialSort|raw}} ],
             "pageLength": 25,
             "columns": [
-                null,
                 null,
                 null,
                 null,

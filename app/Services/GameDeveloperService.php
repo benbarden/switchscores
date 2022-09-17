@@ -65,22 +65,6 @@ class GameDeveloperService
     }
 
     /**
-     * Helper method to get all of the developers that haven't been applied to the current game yet.
-     * @param $gameId
-     * @return array
-     */
-    public function getDevelopersNotOnGame($gameId)
-    {
-        $games = DB::select('
-            select * from games_companies
-            where id not in (select developer_id from game_developers where game_id = ?)
-            ORDER BY name
-        ', [$gameId]);
-
-        return $games;
-    }
-
-    /**
      * @param $developerId
      * @param bool $releasedOnly
      * @param null $limit
@@ -109,39 +93,5 @@ class GameDeveloperService
 
         $games = $games->get();
         return $games;
-    }
-
-    // *** ACTION LISTS *** //
-
-    public function getGamesWithNoDeveloper()
-    {
-        $games = DB::table('games')
-            ->leftJoin('game_developers', 'games.id', '=', 'game_developers.game_id')
-            ->leftJoin('games_companies', 'game_developers.developer_id', '=', 'games_companies.id')
-            ->leftJoin('data_source_parsed AS dsp_wikipedia', function ($join) {
-                $join->on('games.id', '=', 'dsp_wikipedia.game_id')
-                    ->where('dsp_wikipedia.source_id', '=', DataSource::DSID_WIKIPEDIA);
-            })
-            ->select('games.*',
-                'dsp_wikipedia.developers AS wikipedia_developers',
-                'games_companies.name')
-            ->whereNull('games_companies.id')
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-    }
-
-    public function countGamesWithNoDeveloper()
-    {
-        $games = DB::select('
-            select count(*) AS count
-            from games g
-            left join game_developers gd on g.id = gd.game_id
-            left join games_companies gc on gc.id = gd.developer_id
-            where gc.id is null
-        ');
-
-        return $games[0]->count;
     }
 }
