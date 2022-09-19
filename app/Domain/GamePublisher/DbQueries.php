@@ -116,8 +116,8 @@ class DbQueries
                 'dsp_nintendo_co_uk.publishers AS nintendo_co_uk_publishers',
                 'games_companies.name')
             ->whereNull('games_companies.id')
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orWhereNull('games.format_digital')
+            //->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            //->orWhereNull('games.format_digital')
             ->orderBy('games.id', 'desc');
 
         $games = $games->get();
@@ -132,8 +132,7 @@ class DbQueries
             left join game_publishers gp on g.id = gp.game_id
             left join games_companies gc on gc.id = gp.publisher_id
             where gc.id is null
-            and (format_digital <> ? OR format_digital IS NULL)
-        ', [Game::FORMAT_DELISTED]);
+        ');
 
         return $games[0]->count;
     }
