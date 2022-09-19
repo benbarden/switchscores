@@ -111,6 +111,7 @@
 
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ route('game.random') }}">Random game</a></li>
                 <!-- Authentication Links -->
                 {% if auth_guest() %}
                     <li><a href="{{ route('login') }}">Login</a></li>

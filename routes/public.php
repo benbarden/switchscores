@@ -53,6 +53,9 @@ Route::get('/games/by-tag/{tag}', 'Games\BrowseByTagController@page')->name('gam
 Route::get('/games/by-date', 'Games\BrowseByDateController@landing')->name('games.browse.byDate.landing');
 Route::get('/games/by-date/{date}', 'Games\BrowseByDateController@page')->name('games.browse.byDate.page');
 
+// Random
+Route::get('/games/random', 'Games\RandomController@getRandom')->name('game.random');
+
 // These must be after the game redirects
 Route::get('/games/{id}', 'Games\GameShowController@showId')->name('game.showId');
 Route::get('/games/{id}/{linkTitle}', 'Games\GameShowController@show')->name('game.show');

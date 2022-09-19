@@ -12,6 +12,11 @@ class Repository
         return Game::find($id);
     }
 
+    public function randomGame()
+    {
+        return Game::where('eu_is_released', 1)->whereNotNull('game_rank')->inRandomOrder()->first();
+    }
+
     /**
      * @param $title
      * @param null $excludeGameId
