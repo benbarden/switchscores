@@ -38,18 +38,24 @@
             <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Ranked</h2>
             {% if RankedGameList %}
                 {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': RankedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
             {% endif %}
         </div>
         <div id="list-unranked" style="display: none;">
             <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Unranked</h2>
             {% if UnrankedGameList %}
                 {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': UnrankedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
             {% endif %}
         </div>
         <div id="list-delisted" style="display: none;">
             <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">De-listed</h2>
             {% if DelistedGameList %}
                 {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': DelistedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
             {% endif %}
         </div>
 
