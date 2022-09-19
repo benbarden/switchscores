@@ -59,9 +59,7 @@
         </div>
         #}
 
-        <h2 class="standout-header">
-            Recent top rated
-        </h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Recent top rated</h2>
         <p>
             Top rated Nintendo Switch games released in the last {{ RecentTopRatedLimit }} days.
         </p>
@@ -74,9 +72,7 @@
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
 
-        <h2 class="standout-header">
-            Best of {{ Year }}
-        </h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Best of {{ Year }}</h2>
         {% include 'games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYear} %}
         <h3 class="text-center">
             <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
@@ -86,9 +82,7 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
 
-        <h2 class="standout-header">
-            Recent reviews
-        </h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Recent reviews</h2>
         {% include 'reviews/layouts/standard/layout.twig' with {'ReviewList': ReviewList, 'batchOverride': '1'} %}
 
     </div>

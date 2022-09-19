@@ -72,23 +72,23 @@
 
         {% if RelatedByCategory %}
             <h2>More in this category: {{ CategoryName }}</h2>
-            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-category'} %}
-            <div id="wrap-related-by-category" class="scrolling-wrapper">
-                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedByCategory} %}
-            </div>
+            {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCategory, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">View all in this category</a>.
+            </p>
         {% endif %}
         {% if RelatedByCollection %}
             <h2>More in this collection: {{ CollectionName }}</h2>
-            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-collection'} %}
-            <div id="wrap-related-by-collection" class="scrolling-wrapper">
-                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedByCollection} %}
-            </div>
+            {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCollection, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
+            </p>
         {% elseif RelatedBySeries %}
             <h2>More in this series: {{ SeriesName }}</h2>
-            {% include 'modules/game/scrollbox/nav.twig' with {'ScrollboxNavId': 'related-by-series'} %}
-            <div id="wrap-related-by-series" class="scrolling-wrapper">
-                {% include 'modules/game/scrollbox/item.twig' with {'GameList': RelatedBySeries} %}
-            </div>
+            {% include 'games/layouts/modernDebut/layout.twig' with {'GameList': RelatedBySeries, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">View all in this series</a>.
+            </p>
         {% endif %}
 
     </div>
@@ -96,7 +96,7 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            <h2 class="standout-header">Staff links</h2>
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Staff links</h2>
             <table class="table">
                 <tr>
                     <td>
@@ -111,19 +111,19 @@
             </table>
         {% endif %}
 
-        <h2 class="standout-header">Rank</h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Rank</h2>
 
         {% include 'modules/game/rank/all-time.twig' %}
         {% include 'modules/game/rank/year.twig' %}
         {% include 'modules/game/rank/year-month.twig' %}
 
-        <h2 class="standout-header">Buy this game</h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Buy this game</h2>
         {% include 'games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
 
-        <h2 class="standout-header">Infobox</h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Infobox</h2>
         {% include 'games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
-        <h2 class="standout-header">Collection</h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Collection</h2>
         {% if auth_user() %}
             {% if UserCollectionItem %}
                 <p>
