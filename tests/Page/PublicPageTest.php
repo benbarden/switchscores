@@ -66,7 +66,7 @@ class PublicPageTest extends TestCase
 
         $this->doPageTest("/partners");
         $this->doPageTest("/partners/review-sites");
-        $this->doPageTest("/partners/developers-publishers");
+        $this->doPageTest("/partners/games-companies");
         $this->doPageTest("/partners/games-company/hamster-corporation");
 
         $this->doPageTest("/news");
@@ -87,7 +87,7 @@ class PublicPageTest extends TestCase
     {
         $this->doPageNotFoundTest("/top-rated/by-year");
         $this->doPageNotFoundTest("/top-rated/by-year/2016");
-        $this->doPageNotFoundTest("/top-rated/by-year/2026");
+        $this->doPageNotFoundTest("/top-rated/by-year/2036");
         $this->doPageNotFoundTest("/reviews/site/not-really-a-site");
         $this->doPageNotFoundTest("/news/20180317/fake-post");
     }

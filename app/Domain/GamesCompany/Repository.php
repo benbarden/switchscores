@@ -48,6 +48,16 @@ class Repository
         return GamesCompany::orderBy('name', 'asc')->get();
     }
 
+    public function newestNormalQuality($limit = 10)
+    {
+        return GamesCompany::where('is_low_quality', 0)->orderBy('id', 'desc')->limit($limit)->get();
+    }
+
+    public function mostPublishedGames($limit = 10)
+    {
+        return GamesCompany::where('is_low_quality', 0)->withCount('publisherGames')->orderBy('publisher_games_count', 'desc')->limit($limit)->get();
+    }
+
     public function normalQuality()
     {
         return GamesCompany::where('is_low_quality', 0)->orderBy('name', 'asc')->get();
@@ -91,7 +101,7 @@ class Repository
                 $gameId = $item->id;
                 if (in_array($gameId, $usedGameIds)) {
                     $mergedGameList[$gameId]->PartnerType = 'dev/pub';
-                    $mergedGameList[$gameId]->ExtraDetailLine = 'Developer/Publisher';
+                    $mergedGameList[$gameId]->ExtraDetailLine = 'Dev/Pub';
                 } else {
                     $item->PartnerType = 'publisher';
                     $item->ExtraDetailLine = 'Publisher';

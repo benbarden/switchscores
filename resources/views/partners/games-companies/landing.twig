@@ -4,8 +4,73 @@
 
 <div class="row wos-content-page">
 
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        {% if NewestAdditions %}
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Latest additions</h2>
+            <table class="table table-responsive table-condensed">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="text-center">Games published</th>
+                    <th class="text-center">Date added</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in NewestAdditions %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('partners.detail.games-company', item.link_title) }}">{{ item.name }}</a>
+                        </td>
+                        <td class="text-center">
+                            {{ item.publisherGames().count }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.created_at|date('Y-m-d') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        {% if MostPublishedGames %}
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Most published</h2>
+            <table class="table table-responsive table-condensed">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="text-center">Games developed</th>
+                    <th class="text-center">Games published</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in MostPublishedGames %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('partners.detail.games-company', item.link_title) }}">{{ item.name }}</a>
+                        </td>
+                        <td class="text-center">
+                            {{ item.developerGames().count }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.publisherGames().count }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="row wos-content-page">
+
     <div class="col-xs-12 col-sm-8 col-md-8">
 
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">How to join</h2>
         <p>
             If you're a Switch developer or publisher, join Switch Scores and get access to
             our <strong>games company dashboard</strong>.
@@ -13,7 +78,7 @@
 
         <img src="/img/static/partners/games-company-dashboard.png" alt="Switch Scores - Games company dashboard" class="img-responsive">
 
-        <h2>Benefits</h2>
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Benefits</h2>
         <ul>
             <li>
                 <strong>Get in touch with reviewers</strong>.
@@ -43,8 +108,7 @@
             </li>
         </ul>
 
-        <h2>How to join</h2>
-
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Getting access</h2>
         <p>
             There are two ways you can get access to the games company dashboard:
         </p>
@@ -67,14 +131,14 @@
 
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Working with developers'} %}
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Working with developers</h2>
         <p>
             We have focused more on publishers as the data is more readily available.
             We'll happily work with developers too,
             but we may need a bit more help with filling in any missing details.
         </p>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Need help?'} %}
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Need help?</h2>
         <p>
             If you run into any issues, or you'd like an invite code,
             <a href="{{ route('about.landing') }}">get in touch</a> and we'll be happy to help.

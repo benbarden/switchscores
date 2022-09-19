@@ -200,7 +200,7 @@ class SitemapController extends Controller
         $reviewSiteList = $repoReviewSite->getAll();
         foreach ($reviewSiteList as $reviewSite) {
             $sitemapPages[] = array(
-                'url' => route('reviews.site', ['linkTitle' => $reviewSite->link_title]),
+                'url' => route('partners.review-sites.siteProfile', ['linkTitle' => $reviewSite->link_title]),
                 'lastmod' => $timestamp,
                 'changefreq' => 'weekly',
                 'priority' => '0.8'

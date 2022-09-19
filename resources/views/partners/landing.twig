@@ -4,13 +4,21 @@
 
 <div class="row wos-content-page">
 
-    <div class="col-xs-12 col-sm-8 col-md-8">
+    <div class="col-xs-12">
 
         <p>
             Switch Scores works with review partners, games developers and publishers to provide
             a comprehensive database of Nintendo Switch reviews.
             Interested in joining? See below for further details.
         </p>
+
+    </div>
+
+</div>
+
+<div class="row wos-content-page">
+
+    <div class="col-xs-12 col-sm-12 col-md-6">
 
         <h2>Review sites</h2>
 
@@ -31,10 +39,14 @@
         </ul>
 
         <div class="text-center">
-            <a href="{{ route('partners.review-sites') }}" class="btn btn-lg btn-primary">Info for review partners &gt;</a>
+            <a href="{{ route('partners.review-sites.landing') }}" class="btn btn-lg btn-primary">Learn more</a>
         </div>
 
-        <h2>Developers and Publishers</h2>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6">
+
+        <h2>Games companies</h2>
 
         <p>
             Developers and publishers with one or more games on the Switch can join as a partner.
@@ -53,58 +65,13 @@
         </ul>
 
         <div class="text-center">
-            <a href="{{ route('partners.developers-publishers') }}" class="btn btn-lg btn-primary">Info for developers/publishers &gt;</a>
+            <a href="{{ route('partners.games-companies.landing') }}" class="btn btn-lg btn-primary">Learn more</a>
         </div>
+
     </div>
 
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        <h2>
-            Our review partners
-        </h2>
-        {% if ReviewPartnerList %}
-            <table class="table table-responsive">
-                <thead>
-                <tr>
-                    <th class="text-left">Name</th>
-                    <th class="text-center">View profile</th>
-                    <th class="text-center">Links</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in ReviewPartnerList %}
-                    <tr>
-                        <td class="text-left">
-                            {{ item.name }}
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ route('reviews.site', {'linkTitle': item.link_title}) }}">Profile</a>
-                        </td>
-                        <td class="text-center">
-                            {% if item.website_url %}
-                                <a href="{{ item.website_url }}" target="_blank">
-                                    <i class="fas fa-link"></i>
-                                </a>
-                            {% endif %}
-                            {% if item.twitter_id %}
-                                <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <p>
-                <small>
-                    The above is a list of our partners who have published a Switch review within
-                    the last 30 days.
-                </small>
-            </p>
-        {% else %}
-            <p>Could not display review partners.</p>
-        {% endif %}
-    </div>
 </div>
+
+<br>
 
 {% endblock page_body %}

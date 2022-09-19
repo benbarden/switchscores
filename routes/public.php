@@ -68,12 +68,13 @@ Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.
 
 /* Partners */
 Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
-Route::get('/partners/review-sites', 'PartnersController@reviewSites')->name('partners.review-sites');
-Route::get('/partners/developers-publishers', 'PartnersController@developersPublishers')->name('partners.developers-publishers');
 Route::get('/partners/guides/{guideTitle}', 'PartnersController@guidesShow')->name('partners.guides.show');
 
-Route::get('/partners/games-company/{linkTitle}', 'PartnersController@showGamesCompany')->name('partners.detail.games-company');
-Route::get('/reviews/site/{linkTitle}', 'PartnersController@showReviewSite')->name('reviews.site');
+Route::get('/partners/review-sites', 'ReviewSitesController@landing')->name('partners.review-sites.landing');
+Route::get('/reviews/site/{linkTitle}', 'ReviewSitesController@siteProfile')->name('partners.review-sites.siteProfile');
+
+Route::get('/partners/games-companies', 'GamesCompaniesController@landing')->name('partners.games-companies.landing');
+Route::get('/partners/games-company/{linkTitle}', 'GamesCompaniesController@companyProfile')->name('partners.detail.games-company');
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');

@@ -5,7 +5,7 @@
     {% if GameReviews.count > 0 %}
         <p>
             Got a site with Switch reviews?
-            <a href="{{ route('partners.review-sites') }}">Join as a partner</a> and see your reviews here.
+            <a href="{{ route('partners.review-sites.landing') }}">Join as a partner</a> and see your reviews here.
         </p>
         <table class="table table-condensed table-responsive game-page-review-table">
             <tbody>
@@ -47,7 +47,7 @@
                 <tr class="review-header">
                     <td class="text-left">
                         There are no reviews of {{ GameData.title }} yet.
-                        <a href="{{ route('partners.review-sites') }}">Help us out!</a>
+                        <a href="{{ route('partners.review-sites.landing') }}">Help us out!</a>
                     </td>
                     <td class="text-center">
                         {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}

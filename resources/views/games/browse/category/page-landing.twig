@@ -7,7 +7,6 @@
         $('a.js-toggle-list').on('click', function() {
             var elemId = $(this).attr('id');
             var listToShow = elemId.replace('js-toggle-', '');
-            console.log(listToShow);
             toggleList(listToShow);
         });
     });

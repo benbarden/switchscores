@@ -2,12 +2,107 @@
 
 namespace App\Domain\GamePublisher;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Models\DataSource;
 use App\Models\Game;
-use Illuminate\Support\Facades\DB;
 
 class DbQueries
 {
+    /**
+     * @param $publisherId
+     * @param bool $releasedOnly
+     * @param null $limit
+     * @return \Illuminate\Database\Query\Builder|\Illuminate\Support\Collection
+     */
+    public function getGamesByPublisher($publisherId, $releasedOnly = false, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->join('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
+            ->select('games.*',
+                'game_publishers.publisher_id',
+                'games_companies.name',
+                'games.eu_release_date')
+            ->where('game_publishers.publisher_id', $publisherId);
+
+        if ($releasedOnly) {
+            $games = $games->where('games.eu_is_released', '1');
+        }
+
+        $games = $games->orderBy('games.eu_release_date', 'desc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        $games = $games->get();
+        return $games;
+    }
+
+    public function byPublisherRanked($publisherId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->join('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
+            ->select('games.*',
+                'game_publishers.publisher_id',
+                'games_companies.name',
+                'games.eu_release_date')
+            ->where('game_publishers.publisher_id', $publisherId)
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->whereNotNull('games.game_rank')
+            ->orderBy('games.game_rank', 'desc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+    }
+
+    public function byPublisherUnranked($publisherId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->join('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
+            ->select('games.*',
+                'game_publishers.publisher_id',
+                'games_companies.name',
+                'games.eu_release_date')
+            ->where('game_publishers.publisher_id', $publisherId)
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->whereNull('games.game_rank')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+    }
+
+    public function byPublisherDelisted($publisherId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_publishers', 'games.id', '=', 'game_publishers.game_id')
+            ->join('games_companies', 'game_publishers.publisher_id', '=', 'games_companies.id')
+            ->select('games.*',
+                'game_publishers.publisher_id',
+                'games_companies.name',
+                'games.eu_release_date')
+            ->where('game_publishers.publisher_id', $publisherId)
+            ->where('games.format_digital', '=', Game::FORMAT_DELISTED)
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+    }
+
     public function getGamesWithNoPublisher()
     {
         $games = DB::table('games')
