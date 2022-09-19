@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
+
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Game\FormatOptions as GameFormatOptions;
+
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -41,22 +45,28 @@ class GamesEditorController extends Controller
         'players' => 'max:10',
     ];
 
-    protected $repoGameTitleHash;
-    protected $gameTitleHashGenerator;
-    protected $repoGameSeries;
-    protected $repoGameCollection;
+    private $repoGameTitleHash;
+    private $gameTitleHashGenerator;
+    private $repoGameSeries;
+    private $repoGameCollection;
+    private $repoCategory;
+    private $formatOptions;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
         HashGeneratorRepository $gameTitleHashGenerator,
         GameSeriesRepository $repoGameSeries,
-        GameCollectionRepository $repoGameCollection
+        GameCollectionRepository $repoGameCollection,
+        CategoryRepository $repoCategory,
+        GameFormatOptions $formatOptions
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
         $this->gameTitleHashGenerator = $gameTitleHashGenerator;
         $this->repoGameSeries = $repoGameSeries;
         $this->repoGameCollection = $repoGameCollection;
+        $this->repoCategory = $repoCategory;
+        $this->formatOptions = $formatOptions;
     }
 
     public function add()
@@ -126,14 +136,14 @@ class GamesEditorController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
-        $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
-        $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
-        $bindings['FormatDLCList'] = $this->getServiceGame()->getFormatOptionsDLC();
-        $bindings['FormatDemoList'] = $this->getServiceGame()->getFormatOptionsDemo();
+        $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
+        $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
+        $bindings['FormatDLCList'] = $this->formatOptions->getOptionsDLC();
+        $bindings['FormatDemoList'] = $this->formatOptions->getOptionsDemo();
 
         return view('staff.games.editor.add', $bindings);
     }
@@ -169,14 +179,14 @@ class GamesEditorController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
-        $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
-        $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
-        $bindings['FormatDLCList'] = $this->getServiceGame()->getFormatOptionsDLC();
-        $bindings['FormatDemoList'] = $this->getServiceGame()->getFormatOptionsDemo();
+        $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
+        $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
+        $bindings['FormatDLCList'] = $this->formatOptions->getOptionsDLC();
+        $bindings['FormatDemoList'] = $this->formatOptions->getOptionsDemo();
 
         return view('staff.games.editor.edit', $bindings);
     }

@@ -4,6 +4,7 @@
 namespace App\Domain\GameSeries;
 
 use App\Models\GameSeries;
+use App\Models\Game;
 
 class Repository
 {
@@ -50,4 +51,10 @@ class Repository
     {
         return GameSeries::where('link_title', $linkTitle)->first();
     }
+
+    public function gamesBySeries($seriesId)
+    {
+        return Game::where('series_id', $seriesId)->orderBy('title', 'asc')->get();
+    }
+
 }

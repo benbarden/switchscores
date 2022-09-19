@@ -54,21 +54,22 @@ class BrowseByTagController extends Controller
     {
         $bindings = [];
 
-        $tag = $this->getServiceTag()->getByLinkTitle($tag);
+        $tag = $this->repoTag->getByLinkTitle($tag);
 
         if (!$tag) abort(404);
 
         $tagId = $tag->id;
         $tagName = $tag->tag_name;
 
-        $gameList = $this->dbGameLists->getByTagWithDates($tagId);
+        // Lists
+        $bindings['RankedGameList'] = $this->repoTag->rankedByTag($tagId);
+        $bindings['UnrankedGameList'] = $this->repoTag->unrankedByTag($tagId);
+        $bindings['DelistedGameList'] = $this->repoTag->delistedByTag($tagId);
 
-        $bindings['GameList'] = $gameList;
-
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag: '.$tagName;
+        $bindings['PageTitle'] = 'Browse games by tag: '.$tagName;
+        $bindings['TopTitle'] = 'Browse games by tag: '.$tagName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTagSubpage($tagName);
 
-        return view('games.browse.byTagPage', $bindings);
+        return view('games.browse.tag.page-landing', $bindings);
     }
 }

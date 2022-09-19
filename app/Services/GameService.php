@@ -186,37 +186,6 @@ class GameService
         return Game::orderBy('id', 'asc')->get();
     }
 
-    public function getByCategory(Category $category)
-    {
-        return Game::where('category_id', $category->id)->orderBy('title', 'asc')->get();
-    }
-
-    public function getBySeries(GameSeries $gameSeries)
-    {
-        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
-    }
-
-    /**
-     * @param $tagId
-     * @return mixed
-     */
-    public function getByTag($tagId)
-    {
-        $games = DB::table('games')
-            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
-            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
-            ->select('games.*',
-                'game_tags.tag_id',
-                'games.id AS game_id',
-                'game_tags.id AS game_tag_id',
-                'tags.tag_name')
-            ->where('game_tags.tag_id', $tagId)
-            ->orderBy('games.id', 'desc');
-
-        $games = $games->get();
-        return $games;
-    }
-
     // ** ACTION LISTS (New) ** //
 
     public function countWithoutPrices()
@@ -260,44 +229,5 @@ class GameService
             ->whereNotIn('id', $gamesWithTag)
             ->orderBy('id', 'asc')
             ->get();
-    }
-
-    public function getFormatOptionsPhysical()
-    {
-        $options = [];
-        $options[] = Game::FORMAT_AVAILABLE;
-        $options[] = Game::FORMAT_INCLUDED_IN_BUNDLE;
-        $options[] = Game::FORMAT_LIMITED_EDITION;
-        $options[] = Game::FORMAT_NOT_AVAILABLE;
-
-        return $options;
-    }
-
-    public function getFormatOptionsDigital()
-    {
-        $options = [];
-        $options[] = Game::FORMAT_AVAILABLE;
-        $options[] = Game::FORMAT_DELISTED;
-        $options[] = Game::FORMAT_NOT_AVAILABLE;
-
-        return $options;
-    }
-
-    public function getFormatOptionsDLC()
-    {
-        $options = [];
-        $options[] = Game::FORMAT_AVAILABLE;
-        $options[] = Game::FORMAT_NOT_AVAILABLE;
-
-        return $options;
-    }
-
-    public function getFormatOptionsDemo()
-    {
-        $options = [];
-        $options[] = Game::FORMAT_AVAILABLE;
-        $options[] = Game::FORMAT_NOT_AVAILABLE;
-
-        return $options;
     }
 }

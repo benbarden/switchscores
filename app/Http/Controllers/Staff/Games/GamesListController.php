@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+use App\Domain\Tag\Repository as TagRepository;
+
 use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
@@ -15,13 +19,22 @@ class GamesListController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameLists;
+    private $repoGameLists;
+    private $repoCategory;
+    private $repoGameSeries;
+    private $repoTag;
 
     public function __construct(
-        GameListsRepository $repoGameLists
+        GameListsRepository $repoGameLists,
+        CategoryRepository $repoCategory,
+        GameSeriesRepository $repoGameSeries,
+        TagRepository $repoTag
     )
     {
         $this->repoGameLists = $repoGameLists;
+        $this->repoCategory = $repoCategory;
+        $this->repoGameSeries = $repoGameSeries;
+        $this->repoTag = $repoTag;
     }
 
     public function gamesToRelease()
@@ -207,7 +220,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getByCategory($category);
+        $bindings['GameList'] = $this->repoCategory->gamesByCategory($category->id);
 
         return view('staff.games.list.standard-view', $bindings);
     }
@@ -219,7 +232,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getBySeries($gameSeries);
+        $bindings['GameList'] = $this->repoGameSeries->gamesBySeries($gameSeries->id);
 
         $bindings['CustomHeader'] = 'Series';
         $bindings['ListMode'] = 'by-series';
@@ -234,7 +247,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getByTag($tag->id);
+        $bindings['GameList'] = $this->repoTag->gamesByTag($tag->id);
 
         return view('staff.games.list.standard-view', $bindings);
     }

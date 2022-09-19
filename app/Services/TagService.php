@@ -28,20 +28,4 @@ class TagService
             ->get();
         return $tagList;
     }
-
-    public function getByName($name)
-    {
-        $tag = Tag::
-            where('tag_name', $name)
-            ->first();
-        return $tag;
-    }
-
-    public function getByLinkTitle($linkTitle)
-    {
-        $tag = Tag::
-            where('link_title', $linkTitle)
-            ->first();
-        return $tag;
-    }
 }

@@ -103,19 +103,6 @@ class Repository
         return $games;
     }
 
-    public function byCategory($categoryId, $limit = null)
-    {
-        $games = Game::where('category_id', $categoryId)
-            ->where('eu_is_released', 1)
-            ->orderBy('title', 'asc');
-
-        if ($limit) {
-            $games = $games->limit($limit);
-        }
-
-        return $games->get();
-    }
-
     public function noCategory()
     {
         return Game::whereNull('category_id')->get();
@@ -185,58 +172,6 @@ class Repository
         return $games->get();
 
     }
-
-    public function rankedByCategory($categoryId, $limit = null)
-    {
-        $games = Game::where('category_id', $categoryId)
-            ->where('eu_is_released', 1)
-            ->whereNotNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('game_rank', 'asc')
-            ->orderBy('title', 'asc');
-
-        if ($limit) {
-            $games = $games->limit($limit);
-        }
-
-        return $games->get();
-
-    }
-
-    public function unrankedByCategory($categoryId, $limit = null)
-    {
-        $games = Game::where('category_id', $categoryId)
-            ->where('eu_is_released', 1)
-            ->whereNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('review_count', 'desc')
-            ->orderBy('title', 'asc');
-
-        if ($limit) {
-            $games = $games->limit($limit);
-        }
-
-        return $games->get();
-
-    }
-
-    public function delistedByCategory($categoryId, $limit = null)
-    {
-        $games = Game::where('category_id', $categoryId)
-            ->where('eu_is_released', 1)
-            ->whereNull('game_rank')
-            ->where('format_digital', '=', Game::FORMAT_DELISTED)
-            ->orderBy('title', 'asc')
-            ->orderBy('eu_release_date', 'asc');
-
-        if ($limit) {
-            $games = $games->limit($limit);
-        }
-
-        return $games->get();
-
-    }
-
     public function upcomingEshopCrosscheck($limit = null)
     {
         $games = Game::where('eu_is_released', 0)

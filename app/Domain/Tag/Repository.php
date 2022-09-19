@@ -3,7 +3,10 @@
 
 namespace App\Domain\Tag;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Tag;
+use App\Models\Game;
 
 class Repository
 {
@@ -33,8 +36,99 @@ class Repository
         return Tag::find($tagId);
     }
 
+    public function getByLinkTitle($linkTitle)
+    {
+        return Tag::where('link_title', $linkTitle)->first();
+    }
+
     public function getAll()
     {
         return Tag::orderBy('tag_name', 'asc')->get();
+    }
+
+    public function gamesByTag($tagId)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('game_tags.tag_id', $tagId)
+            ->orderBy('games.id', 'desc');
+
+        return $games->get();
+    }
+
+    public function rankedByTag($tagId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('game_tags.tag_id', $tagId)
+            ->whereNotNull('games.game_rank')
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->orderBy('games.game_rank', 'asc')
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
+    public function unrankedByTag($tagId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('game_tags.tag_id', $tagId)
+            ->whereNull('games.game_rank')
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+
+    public function delistedByTag($tagId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('game_tags.tag_id', $tagId)
+            ->whereNull('games.game_rank')
+            ->where('format_digital', '=', Game::FORMAT_DELISTED)
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
     }
 }

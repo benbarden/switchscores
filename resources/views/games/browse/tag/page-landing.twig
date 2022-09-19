@@ -66,17 +66,6 @@
         <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Search games</h4>
         {% include 'modules/game/search/form-mini.twig' %}
 
-        {% if Category.children.count() > 0 %}
-            <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Subcategories</h4>
-            <ul>
-                {% for item in Category.children %}
-                    <li>
-                        <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}">{{ item.name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
         <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Browse all games</h4>
         <ul>
             <li><a href="{{ route('games.browse.byTitle.landing') }}">A to Z</a></li>
