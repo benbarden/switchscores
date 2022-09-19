@@ -14,7 +14,12 @@ class Repository
 
     public function randomGame()
     {
-        return Game::where('eu_is_released', 1)->whereNotNull('game_rank')->where('is_low_quality', 0)->inRandomOrder()->first();
+        return Game::where('eu_is_released', 1)
+            ->whereNotNull('game_rank')
+            ->where('is_low_quality', 0)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->inRandomOrder()
+            ->first();
     }
 
     /**
