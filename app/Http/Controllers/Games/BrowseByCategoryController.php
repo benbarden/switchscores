@@ -5,25 +5,24 @@ namespace App\Http\Controllers\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\Category\Repository as CategoryRepository;
 
-use App\Traits\SwitchServices;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 class BrowseByCategoryController extends Controller
 {
-    use SwitchServices;
-
-    protected $repoGameLists;
-    protected $viewBreadcrumbs;
+    private $repoGameLists;
+    private $repoCategory;
+    private $viewBreadcrumbs;
 
     public function __construct(
         GameListsRepository $repoGameLists,
-        GameListsDbQueries $dbGameLists,
+        CategoryRepository $repoCategory,
         Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoGameLists = $repoGameLists;
+        $this->repoCategory = $repoCategory;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
@@ -31,7 +30,7 @@ class BrowseByCategoryController extends Controller
     {
         $bindings = [];
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
 
         $bindings['PageTitle'] = 'Browse Nintendo Switch games by category';
         $bindings['TopTitle'] = 'Browse Nintendo Switch games by category';
@@ -44,7 +43,7 @@ class BrowseByCategoryController extends Controller
     {
         $bindings = [];
 
-        $category = $this->getServiceCategory()->getByLinkTitle($category);
+        $category = $this->repoCategory->getByLinkTitle($category);
         if (!$category) abort(404);
 
         $categoryId = $category->id;
@@ -52,18 +51,10 @@ class BrowseByCategoryController extends Controller
 
         $bindings['Category'] = $category;
 
-        // All games in category
-        //$bindings['CategoryGameList'] = $this->repoGameLists->byCategory($categoryId);
-
         // Lists
         $bindings['RankedGameList'] = $this->repoGameLists->rankedByCategory($categoryId);
         $bindings['UnrankedGameList'] = $this->repoGameLists->unrankedByCategory($categoryId);
         $bindings['DelistedGameList'] = $this->repoGameLists->delistedByCategory($categoryId);
-
-        // Snapshot
-        //$bindings['SnapshotTopRated'] = $this->repoGameLists->rankedByCategory($categoryId, 10);
-        //$bindings['SnapshotNewReleases'] = $this->repoGameLists->recentlyReleasedByCategory($categoryId, 10);
-        //$bindings['SnapshotUnranked'] = $this->repoGameLists->unrankedByCategory($categoryId, 10);
 
         // Tables
         $bindings['RankedListSort'] = "[4, 'desc']";
@@ -80,7 +71,7 @@ class BrowseByCategoryController extends Controller
         $bindings['TopTitle'] = $pageTitle;
 
         if ($category->parent_id) {
-            $categoryParent = $this->getServiceCategory()->find($category->parent_id);
+            $categoryParent = $this->repoCategory->find($category->parent_id);
             if (!$categoryParent) abort(500);
             $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySubcategorySubpage($categoryParent, $categoryName);
         } else {
