@@ -36,7 +36,6 @@ class DbQueries
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $daysLimit)
             ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.eshop_europe_order', 'asc')
             ->orderBy('games.title', 'asc');
 
         $games = $games->get();
