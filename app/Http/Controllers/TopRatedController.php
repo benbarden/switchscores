@@ -32,7 +32,7 @@ class TopRatedController extends Controller
         $bindings['Year'] = $thisYear;
         $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
         $bindings['TopRated2021'] = $serviceGameRankYear->getList(2021, 15);
-        $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(15);
+        $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(1, 15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
@@ -47,7 +47,7 @@ class TopRatedController extends Controller
 
         $bindings = [];
 
-        $bindings['TopRatedMultiplayer'] = $serviceGameRankAllTime->getList(100, 'multiplayer');
+        $bindings['TopRatedMultiplayer'] = $serviceGameRankAllTime->getList(1, 100, 'multiplayer');
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch multiplayer games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch multiplayer games';
@@ -61,7 +61,31 @@ class TopRatedController extends Controller
         $bindings = [];
 
         $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
-        $gamesList = $serviceGameRankAllTime->getList(100);
+        $gamesList = $serviceGameRankAllTime->getList(1, 100);
+
+        $bindings['TopRatedAllTime'] = $gamesList;
+
+        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
+        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
+
+        return view('topRated.allTime', $bindings);
+    }
+
+    public function allTimePage($page)
+    {
+        $bindings = [];
+
+        if ($page) {
+            $maxRank = $page * 100;
+            $minRank = $maxRank - 99;
+        } else {
+            $minRank = 1;
+            $maxRank = 100;
+        }
+
+        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
+        $gamesList = $serviceGameRankAllTime->getList($minRank, $maxRank);
 
         $bindings['TopRatedAllTime'] = $gamesList;
 

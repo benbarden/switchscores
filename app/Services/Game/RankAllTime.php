@@ -87,7 +87,7 @@ class RankAllTime
 
             // Save to all-time rank table, if it's in the Top 100.
             // This is faster than storing all the ranks.
-            if ($actualRank <= 100) {
+            if ($actualRank <= 500) {
                 $rowsToInsert[] = [
                     'game_rank' => $actualRank,
                     'game_id' => $gameId,

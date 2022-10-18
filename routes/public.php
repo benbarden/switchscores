@@ -63,6 +63,7 @@ Route::get('/games/{id}/{linkTitle}', 'Games\GameShowController@show')->name('ga
 /* Top Rated */
 Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
 Route::get('/top-rated/all-time', 'TopRatedController@allTime')->name('topRated.allTime');
+Route::get('/top-rated/all-time/page/{page}', 'TopRatedController@allTimePage')->name('topRated.allTime.page');
 Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topRated.byYear');
 Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
 
