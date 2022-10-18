@@ -1,0 +1,32 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    <div class="alert alert-info">
+        Paste reviews from a spreadsheet and import them below.
+        <br><br>
+        Each line must have the following fields:
+        <ul>
+            <li>Site id: must be a review site id</li>
+            <li>Game id: must match a game in our database</li>
+            <li>URL: link to the review on the reviewer's site</li>
+            <li>Rating: A number out of 10. If the reviewer's rating scale is 5, put the score out of 5.</li>
+            <li>Review date: The date the review was published, in YYYY-MM-DD format.</li>
+        </ul>
+    </div>
+    {% include 'common/form-errors.twig' %}
+    <form role="form" method="post" action="{{ route('staff.reviews.link.import') }}">
+        {{ csrf_field() }}
+
+        <div class="row mb-3">
+            <label for="import_data" class="col-sm-2 col-form-label">Import data</label>
+            <div class="col-sm-4">
+                <textarea id="import_data" name="import_data" rows="20" cols="50" style="font-family: 'Courier New', monospace" required></textarea>
+                <div class="form-text"></div>
+            </div>
+        </div>
+
+        {% include 'common/forms/submit.twig' %}
+    </form>
+
+{% endblock page_inner %}

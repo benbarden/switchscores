@@ -7,7 +7,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\Game\Repository as GameRepository;
+
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
 
@@ -31,13 +34,19 @@ class ReviewLinkController extends Controller
         'rating_original' => 'required'
     ];
 
-    protected $repoReviewSite;
+    private $repoReviewLink;
+    private $repoReviewSite;
+    private $repoGame;
 
     public function __construct(
-        ReviewSiteRepository $repoReviewSite
+        ReviewLinkRepository $repoReviewLink,
+        ReviewSiteRepository $repoReviewSite,
+        GameRepository $repoGame
     )
     {
+        $this->repoReviewLink = $repoReviewLink;
         $this->repoReviewSite = $repoReviewSite;
+        $this->repoGame = $repoGame;
     }
 
     public function showList()
@@ -62,6 +71,63 @@ class ReviewLinkController extends Controller
         $bindings['ReviewSites'] = $reviewSites;
 
         return view('staff.reviews.link.list', $bindings);
+    }
+
+    public function import()
+    {
+        $pageTitle = 'Reviews dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $importData = $request->import_data;
+
+            $reviews = explode("\n", $importData);
+
+            if (count($reviews) == 0) {
+                return redirect(route('staff.reviews.link.import'));
+            }
+
+            foreach ($reviews as $reviewRow) {
+
+                $review = explode("\t", $reviewRow);
+
+                $siteId = $review[0];
+                $gameId = $review[1];
+                $url = $review[2];
+                $rating = $review[3];
+                $reviewDate = $review[4];
+
+                $reviewSite = $this->repoReviewSite->find($siteId);
+                if (!$reviewSite) abort(500);
+                $game = $this->repoGame->find($gameId);
+                if (!$game) abort(500);
+
+                $existingReview = $this->repoReviewLink->byGameAndSite($gameId, $siteId);
+                if ($existingReview) continue;
+
+                $ratingNormalised = $this->repoReviewLink->getNormalisedRating($rating, $reviewSite->rating_scale);
+
+                $reviewLink = $this->repoReviewLink->create(
+                    $gameId, $siteId, $url, $rating, $ratingNormalised, $reviewDate
+                );
+
+                // Update game review stats
+                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+
+            }
+
+            // All done; send us back
+            return redirect(route('staff.reviews.link.list'));
+
+        }
+
+        return view('staff.reviews.link.import', $bindings);
     }
 
     public function add()
