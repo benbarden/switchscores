@@ -54,7 +54,7 @@ class DownloadImagesByScraper extends Command
         $logger->info('Loading data...');
 
         $repoGameLists = new RepoGameLists();
-        $gameList = $repoGameLists->noNintendoCoUkIdWithStoreOverride(10);
+        $gameList = $repoGameLists->noNintendoCoUkIdWithStoreOverride(100);
 
         $logger->info('Found '.count($gameList).' item(s); processing');
 
