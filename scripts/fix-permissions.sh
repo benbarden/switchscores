@@ -1,4 +1,4 @@
 #!/bin/bash
 cd .
-sudo chown -R ben:_www .
+sudo chown -R vagrant:vagrant .
 sudo chmod -R g+rw .
