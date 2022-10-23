@@ -59,11 +59,14 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left side -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
                     </ul>
 
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
+
+                        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+                            <li><a href="{{ route('staff.games.add') }}">+ Add game</a></li>
+                        {% endif %}
 
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
 
