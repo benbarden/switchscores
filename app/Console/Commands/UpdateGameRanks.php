@@ -64,6 +64,13 @@ class UpdateGameRanks extends Command
             WHERE eu_release_date IS NOT NULL AND release_year != YEAR(eu_release_date);
         ");
 
+        // Fix missing digital availability
+        // Null values do not get included in the ranks
+        DB::statement("
+            UPDATE games SET format_digital = 'Available'
+            WHERE format_digital IS NULL AND nintendo_store_url_override IS NOT NULL
+        ");
+
         // *** 1. ALL-TIME RANK *** //
 
         DB::statement("TRUNCATE TABLE game_rank_alltime");
