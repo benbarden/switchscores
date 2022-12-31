@@ -32,9 +32,20 @@ class AboutController extends Controller
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('About');
 
         // Quick stats
-        $bindings['TotalReleasedGames'] = $this->repoGameStats->totalReleased();
-        $bindings['TotalRanked'] = $this->repoGameStats->totalRanked();
-        $bindings['TotalReviews'] = $this->getServiceReviewLink()->countActive();
+        $totalReleased = $this->repoGameStats->totalReleased();
+        $totalRanked = $this->repoGameStats->totalRanked();
+        $totalReviews = $this->getServiceReviewLink()->countActive();
+        $totalLowQuality = $this->repoGameStats->totalLowQuality();
+
+        $bindings['TotalReleasedGames'] = $totalReleased;
+        $bindings['TotalRanked'] = $totalRanked;
+        $bindings['TotalReviews'] = $totalReviews;
+        $bindings['TotalLowQualityGames'] = $totalLowQuality;
+
+        if ($totalReleased > 0) {
+            $lowQualityPercent = round(($totalLowQuality / $totalReleased) * 100, 2);
+            $bindings['LowQualityPercent'] = $lowQualityPercent.'%';
+        }
 
         $bindings['TopTitle'] = 'About';
         $bindings['PageTitle'] = 'About Switch Scores';

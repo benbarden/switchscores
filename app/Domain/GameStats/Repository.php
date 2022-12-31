@@ -28,6 +28,14 @@ class Repository
     /**
      * @return integer
      */
+    public function totalLowQuality()
+    {
+        return Game::where('eu_is_released', 1)->where('is_low_quality', '1')->count();
+    }
+
+    /**
+     * @return integer
+     */
     public function totalRanked()
     {
         return Game::whereNotNull('game_rank')->count();
