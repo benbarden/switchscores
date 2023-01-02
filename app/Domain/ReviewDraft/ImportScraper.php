@@ -40,7 +40,7 @@ class ImportScraper
         $this->repoReviewDraft = new RepoReviewDraft();
     }
 
-    private function processItem($item, ReviewSite $reviewSite, $mappings)
+    private function processItem($item, ReviewSite $reviewSite, $mappings, $reviewYear = null)
     {
         if (!array_key_exists('item_title', $mappings)) {
             throw new \Exception('Fatal error: Required mapping item_title not found.');
@@ -66,7 +66,13 @@ class ImportScraper
             $itemUrl = $reviewSite->website_url.substr($itemUrl, 1);
         }
 
-        $itemDate = date('Y-m-d', strtotime($item[$idxItemDate]));
+        if ($reviewYear == null) {
+            $itemDate = date('Y-m-d', strtotime($item[$idxItemDate]));
+        } else {
+            $reviewDate = $item[$idxItemDate].' '.$reviewYear;
+            $itemDate = date('Y-m-d', strtotime($reviewDate));
+        }
+
         $itemRating = $item[$idxItemRating];
 
         if ($itemRating == "-") {
@@ -119,7 +125,7 @@ class ImportScraper
         return $this->processItem($item, $reviewSite, $mappings);
     }
 
-    public function processItemPocketTactics($item, ReviewSite $reviewSite)
+    public function processItemPocketTactics($item, ReviewSite $reviewSite, $reviewYear)
     {
         // Skip header row
         if ($item[0] == 'Title') {
@@ -132,6 +138,6 @@ class ImportScraper
             'item_rating' => 2,
         ];
 
-        return $this->processItem($item, $reviewSite, $mappings);
+        return $this->processItem($item, $reviewSite, $mappings, $reviewYear);
     }
 }

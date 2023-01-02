@@ -99,7 +99,8 @@ class ImportByScraper extends Command
 
             } elseif ($reviewSite->name == 'Pocket Tactics') {
 
-                $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2022');
+                $reviewYear = '2020';
+                $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-'.$reviewYear);
                 $scraper->extractRows('review-data');
                 $tableData = $scraper->getTableData();
 
@@ -111,7 +112,7 @@ class ImportByScraper extends Command
                 foreach ($tableData as $item) {
                     try {
                         $importScraper = new ImportScraper;
-                        $importScraper->processItemPocketTactics($item, $reviewSite);
+                        $importScraper->processItemPocketTactics($item, $reviewSite, $reviewYear);
                     } catch (\Exception $e) {
                         $logger->error($e->getMessage());
                     }
