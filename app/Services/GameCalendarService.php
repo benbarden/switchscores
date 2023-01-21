@@ -14,7 +14,11 @@ class GameCalendarService
      */
     public function getAllowedYears()
     {
-        return [2017, 2018, 2019, 2020, 2021, 2022];
+        $releaseYears = [];
+        for ($year = 2017; $year <= date('Y'); $year++) {
+            $releaseYears[] = $year;
+        }
+        return $releaseYears;
     }
 
     /**

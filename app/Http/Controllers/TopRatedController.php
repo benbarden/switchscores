@@ -29,9 +29,11 @@ class TopRatedController extends Controller
         $bindings = [];
 
         $thisYear = date('Y');
+        $lastYear = $thisYear - 1;
         $bindings['Year'] = $thisYear;
+        $bindings['LastYear'] = $lastYear;
         $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
-        $bindings['TopRated2021'] = $serviceGameRankYear->getList(2021, 15);
+        $bindings['TopRatedLastYear'] = $serviceGameRankYear->getList($lastYear, 15);
         $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(1, 15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';

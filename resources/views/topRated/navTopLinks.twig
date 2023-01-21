@@ -4,12 +4,9 @@
 
         <a id="btn-nav-landing" class="btn btn-sm btn-default" href="{{ route('topRated.landing') }}">Top rated home</a>
         <a id="btn-nav-all-time" class="btn btn-sm btn-default" href="{{ route('topRated.allTime') }}">All-time</a>
-        <a id="btn-nav-2022" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2022}) }}">2022</a>
-        <a id="btn-nav-2021" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2021}) }}">2021</a>
-        <a id="btn-nav-2020" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2020}) }}">2020</a>
-        <a id="btn-nav-2019" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2019}) }}">2019</a>
-        <a id="btn-nav-2018" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2018}) }}">2018</a>
-        <a id="btn-nav-2017" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': 2017}) }}">2017</a>
+        {% for rYear in releaseYears %}
+            <a id="btn-nav-{{ rYear }}" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': rYear}) }}">{{ rYear }}</a>
+        {% endfor %}
         <a id="btn-nav-multiplayer" class="btn btn-sm btn-default" href="{{ route('topRated.multiplayer', {'year': 2017}) }}">Multiplayer</a>
 
     </div>

@@ -45,12 +45,9 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{{ route('topRated.landing') }}">Top Rated home</a></li>
                         <li><a href="{{ route('topRated.allTime') }}">Top 100 - all-time</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2022}) }}">Top 100 - 2022</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2021}) }}">Top 100 - 2021</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2020}) }}">Top 100 - 2020</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2019}) }}">Top 100 - 2019</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2018}) }}">Top 100 - 2018</a></li>
-                        <li><a href="{{ route('topRated.byYear', {'year': 2017}) }}">Top 100 - 2017</a></li>
+                        {% for rYear in releaseYears %}
+                            <li><a href="{{ route('topRated.byYear', {'year': rYear}) }}">Top 100 - {{ rYear }}</a></li>
+                        {% endfor %}
                         <li><a href="{{ route('topRated.multiplayer') }}">Top Rated - Multiplayer</a></li>
                     </ul>
                 </li>
