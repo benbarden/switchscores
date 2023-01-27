@@ -225,9 +225,7 @@
                         </small>
                     </div>
                     <div class="col-md-2">
-                        {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.google.com/search?q=site%3Anintendo.co.uk+{{ GameData.title|url_encode }}" target="_blank">Search Nintendo</a>
-                        {% endif %}
+                        <a id="js-btn-store-url-override" class="btn btn-default btn-sm" href="javascript:void(0);">Search Nintendo</a>
                     </div>
                 </div>
                 <div class="form-group">
