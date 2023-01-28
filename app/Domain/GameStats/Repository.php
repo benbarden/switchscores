@@ -106,4 +106,30 @@ class Repository
     {
         return Game::whereNull('video_type')->count();
     }
+
+    public function totalYearWeekStandardQuality($year, $week)
+    {
+        if ($week < 10) {
+            $week = str_pad($week, 2, '0', STR_PAD_LEFT);
+        }
+        return Game::where('eu_is_released', 1)
+            ->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week)
+            ->where('is_low_quality', 0)
+            ->orderBy('games.eu_release_date')
+            ->orderBy('games.title')
+            ->count();
+    }
+
+    public function totalYearWeekLowQuality($year, $week)
+    {
+        if ($week < 10) {
+            $week = str_pad($week, 2, '0', STR_PAD_LEFT);
+        }
+        return Game::where('eu_is_released', 1)
+            ->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week)
+            ->where('is_low_quality', 1)
+            ->orderBy('games.eu_release_date')
+            ->orderBy('games.title')
+            ->count();
+    }
 }

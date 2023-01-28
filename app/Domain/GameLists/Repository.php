@@ -302,4 +302,27 @@ class Repository
             ->limit($limit)
             ->get();
     }
+
+    public function byYearWeek($year, $week, $isLowQuality = null)
+    {
+        if ($week < 10) {
+            $week = str_pad($week, 2, '0', STR_PAD_LEFT);
+        }
+        $gameList = Game::where('eu_is_released', 1);
+        $gameList = $gameList->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week);
+
+        if ($isLowQuality == true) {
+            $gameList = $gameList->where('is_low_quality', 1);
+        } elseif ($isLowQuality == false) {
+            $gameList = $gameList->where('is_low_quality', 0);
+        }
+
+        $gameList = $gameList
+            ->orderBy('games.eu_release_date')
+            ->orderBy('games.title')
+            ->limit(100)
+            ->get();
+
+        return $gameList;
+    }
 }

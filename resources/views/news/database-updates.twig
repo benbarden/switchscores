@@ -1,0 +1,27 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <p>
+            Week commencing {{ DateHelper.firstDayOfWeek(NewsDbUpdate.news_db_year, NewsDbUpdate.news_db_week).format('jS F, Y') }}.
+        </p>
+
+        {% if GameListStandard|length %}
+            <h2>Games</h2>
+            {% include 'modules/game/table/news-db-update-list.twig' with {'GameList': GameListStandard} %}
+        {% endif %}
+
+        {% if GameListLowQuality|length %}
+            <h2>Low quality titles</h2>
+            {% include 'modules/game/table/news-db-update-list.twig' with {'GameList': GameListLowQuality} %}
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

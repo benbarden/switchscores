@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
+use App\Domain\GameCalendar\AllowedDates;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
+use App\Models\NewsDbUpdate;
 
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
@@ -19,17 +24,26 @@ class NewsController extends Controller
     use SwitchServices;
 
     protected $repoFeaturedGames;
+    protected $repoGameLists;
     protected $repoGameStats;
+    protected $repoNewsDbUpdate;
+    protected $allowedDates;
     protected $viewBreadcrumbs;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
+        GameListsRepository $repoGameLists,
         GameStatsRepository $repoGameStats,
+        NewsDbUpdateRepository $repoNewsDbUpdate,
+        AllowedDates $allowedDates,
         Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoFeaturedGames = $featuredGames;
+        $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
+        $this->repoNewsDbUpdate = $repoNewsDbUpdate;
+        $this->allowedDates = $allowedDates;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
@@ -37,7 +51,64 @@ class NewsController extends Controller
     {
         $bindings = [];
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('News');
+        $pageTitle = 'News';
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $allowedYears = $this->allowedDates->getAllowedYears();
+        $bindings['AllowedYears'] = array_reverse($allowedYears);
+        foreach ($allowedYears as $year) {
+            $newsDbUpdateList = $this->repoNewsDbUpdate->getAllByYear($year, true);
+            if ($newsDbUpdateList) {
+                $bindings['NewsDbUpdateList'.$year] = $newsDbUpdateList;
+            }
+        }
+
+        return view('news.landing', $bindings);
+    }
+
+    public function databaseUpdates($year, $week)
+    {
+        /*
+        if ($week < 1 || $week > 53) abort(404);
+
+        if (!in_array($year, $this->allowedDates->getAllowedYears())) abort(404);
+
+        if ($year == 2017) {
+            if ($week < NewsDbUpdate::SWITCH_LAUNCH_WEEK_2017) abort (404);
+        }
+        */
+
+        $bindings = [];
+
+        $pageTitle = 'Database updates: '.$year.', week '.$week;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($pageTitle);
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        $newsDbUpdate = $this->repoNewsDbUpdate->get($year, $week);
+        if (!$newsDbUpdate) abort(404);
+
+        $bindings['NewsDbUpdate'] = $newsDbUpdate;
+
+        $gameListStandard = $this->repoGameLists->byYearWeek($year, $week, false);
+        $gameListLowQuality = $this->repoGameLists->byYearWeek($year, $week, true);
+
+        if (count($gameListStandard) == 0 && count($gameListLowQuality) == 0) abort(404);
+
+        $bindings['GameListStandard'] = $gameListStandard;
+        $bindings['GameListLowQuality'] = $gameListLowQuality;
+
+        return view('news.database-updates', $bindings);
+    }
+
+    public function landingArchive()
+    {
+        $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('Archive');
 
         $newsList = $this->getServiceNews()->getPaginated(12);
 

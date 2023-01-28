@@ -82,6 +82,8 @@ Route::get('/partners/games-company/{linkTitle}', 'GamesCompaniesController@comp
 
 /* News */
 Route::get('/news', 'NewsController@landing')->name('news.landing');
+Route::get('/news/database-updates/{year}/{week}', 'NewsController@databaseUpdates')->name('news.databaseUpdates');
+Route::get('/news/archive', 'NewsController@landingArchive')->name('news.archive');
 Route::get('/news/category/{linkName}', 'NewsController@categoryLanding')->name('news.category.landing');
 Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
 

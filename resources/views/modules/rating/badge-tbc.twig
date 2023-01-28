@@ -17,7 +17,7 @@
 <span class="{{ scoreSizeHeader }} label {{ labelColour }} switch-rating-badge">
     {{ badgeText }}
 </span>
-{% if reviewCount is defined %}
+{% if reviewCount is defined and hideReviewText is not defined %}
 <br>
 <span class="text-center center-block"><small>reviews</small></span>
 {% endif %}

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class GameCalendarService
 {
     /**
+     * @deprecated
      * @return int[]
      */
     public function getAllowedYears()

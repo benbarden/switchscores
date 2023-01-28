@@ -1,0 +1,55 @@
+{% if GameList %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th class="text-center"></th>
+            <th class="text-center">Release date</th>
+            <th>Category</th>
+            <th>Publisher</th>
+            <th class="text-center">Reviews</th>
+            <th class="text-center">Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in GameList %}
+            <tr>
+                <td>
+                    <a href="{{ LinkHelper.gameShow(item) }}">
+                        {{ item.title }}
+                    </a>
+                </td>
+                <td class="text-center">
+                    {% if item.is_low_quality == 1 %}
+                        <label class="label label-danger">Low quality</label>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ item.eu_release_date|date('d M Y') }}</td>
+                <td>{{ item.category.name }}</td>
+                <td>
+                    {% if item.gamePublishers|length > 0 %}
+                        {% for item in item.gamePublishers %}
+                            <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">
+                                {{ item.publisher.name }}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.review_count > 0 and item.review_count < 3 %}
+                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h5', 'reviewCount': item.review_count, 'hideReviewText': 'Y'} %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.rating_avg %}
+                        {% if item.game_rank %}
+                            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

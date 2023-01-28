@@ -3,25 +3,60 @@
 {% block page_body %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-8">
-        {% if NewsList %}
-            {% for item in NewsList %}
-                <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                <p>
-                    <small>
-                    Published: {{ item.created_at|date('jS M Y H:i') }} |
-                    Category: {{ item.category.name }}
-                    </small>
-                </p>
-            {% endfor %}
-            {{ NewsList.links|raw }}
-        {% else %}
-        <p>No news items found!</p>
-        {% endif %}
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <p>
+            Older news articles can be found in the <a href="{{ route('news.archive') }}">News archive</a>.
+        </p>
+
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-6">
+
+                <h2>Database updates</h2>
+
+                {% for thisYear in AllowedYears %}
+                    {% set yearList = attribute(_context, 'NewsDbUpdateList'~thisYear) %}
+                    {% if yearList|length %}
+                        <h3>{{ thisYear }}</h3>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="text-left">Week</th>
+                                <th class="text-center">Standard games</th>
+                                <th class="text-center">Low quality games</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in yearList %}
+                            <tr>
+                                <td class="text-left">
+                                    <a href="{{ route('news.databaseUpdates', {'year': thisYear, 'week': item.news_db_week}) }}">
+                                        Week {{ item.news_db_week }}, starting {{ DateHelper.firstDayOfWeek(thisYear, item.news_db_week).format('j M') }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    {{ item.game_count_standard }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.game_count_low_quality }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <ul>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="col-xs-12 col-sm-4 col-md-4">
-        {% include 'news/sidebar/more-links.twig' %}
-    </div>
+
 </div>
 
 {% endblock page_body %}
