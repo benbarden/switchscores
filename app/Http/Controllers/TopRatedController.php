@@ -76,7 +76,7 @@ class TopRatedController extends Controller
 
     public function allTimePage($page)
     {
-        $bindings = [];
+        if ($page == 'favicon.ico') abort(404);
 
         if ($page) {
             $maxRank = $page * 100;
@@ -89,6 +89,7 @@ class TopRatedController extends Controller
         $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
         $gamesList = $serviceGameRankAllTime->getList($minRank, $maxRank);
 
+        $bindings = [];
         $bindings['TopRatedAllTime'] = $gamesList;
 
         $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
