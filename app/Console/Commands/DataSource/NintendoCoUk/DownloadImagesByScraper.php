@@ -77,8 +77,8 @@ class DownloadImagesByScraper extends Command
                     $scraper->crawlPage($storeUrl);
                     $squareUrl = $scraper->getSquareUrl();
                     $headerUrl = $scraper->getHeaderUrl();
-                    if ($squareUrl && $headerUrl) {
-                        DownloadImageFactory::downloadFromStoreUrl($game, $squareUrl, $headerUrl);
+                    if ($squareUrl || $headerUrl) {
+                        DownloadImageFactory::downloadFromStoreUrl($game, $squareUrl, $headerUrl, $logger);
                     }
                 } catch (\Exception $e) {
                     $logger->error($e->getMessage());

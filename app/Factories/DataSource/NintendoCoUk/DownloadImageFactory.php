@@ -23,11 +23,19 @@ class DownloadImageFactory
         $game->save();
     }
 
-    public static function downloadFromStoreUrl(Game $game, $squareUrl, $headerUrl)
+    public static function downloadFromStoreUrl(Game $game, $squareUrl = null, $headerUrl = null)
     {
         $serviceImages = new Images($game);
-        $imageSquare = $serviceImages->downloadRemoteSquare($squareUrl, $game->id);
-        $imageHeader = $serviceImages->downloadRemoteHeader($headerUrl, $game->id);
+        if ($squareUrl) {
+            $imageSquare = $serviceImages->downloadRemoteSquare($squareUrl, $game->id);
+        } else {
+            $imageSquare = null;
+        }
+        if ($headerUrl) {
+            $imageHeader = $serviceImages->downloadRemoteHeader($headerUrl, $game->id);
+        } else {
+            $imageHeader = null;
+        }
         if ($imageSquare) {
             $game->image_square = $imageSquare;
         }
