@@ -1,4 +1,11 @@
 {% include 'common/form-errors.twig' %}
+{% if FormMode == 'add' %}
+<div class="alert alert-warning">
+    To speed up adding new games, some fields are hidden. They can be
+    seen when editing the game.
+</div>
+{% endif %}
+
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
@@ -73,25 +80,25 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_price_eshop">
                     <label for="price_eshop" class="col-md-3 control-label">Price</label>
                     <div class="col-md-6">
                         <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_price_eshop_discounted">
                     <label for="price_eshop_discounted" class="col-md-3 control-label">Price discounted</label>
                     <div class="col-md-6">
                         <input id="price_eshop_discounted" type="text" class="form-control" name="price_eshop_discounted" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_price_eshop_discount_pc">
                     <label for="price_eshop_discount_pc" class="col-md-3 control-label">Price discount %</label>
                     <div class="col-md-6">
                         <input id="price_eshop_discount_pc" type="text" class="form-control" name="price_eshop_discount_pc" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_players">
                     <label for="players" class="col-md-3 control-label">No of players</label>
                     <div class="col-md-6">
                         <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
@@ -101,31 +108,31 @@
 
             <fieldset>
                 <legend>Dates</legend>
-                <div class="form-group">
+                <div class="form-group" id="grp_eu_release_date">
                     <label for="eu_release_date" class="col-md-3 control-label">EU release date</label>
                     <div class="col-md-6">
                         <input id="eu_release_date" type="date" class="form-control" name="eu_release_date">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_us_release_date">
                     <label for="us_release_date" class="col-md-3 control-label">US release date</label>
                     <div class="col-md-6">
                         <input id="us_release_date" type="date" class="form-control" name="us_release_date">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_jp_release_date">
                     <label for="jp_release_date" class="col-md-3 control-label">JP release date</label>
                     <div class="col-md-6">
                         <input id="jp_release_date" type="date" class="form-control" name="jp_release_date">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_eu_is_released">
                     <label for="eu_is_released" class="col-md-3 control-label">Released (in EU)?</label>
                     <div class="col-md-6">
                         <input id="eu_is_released" type="checkbox" name="eu_is_released">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_eu_released_on">
                     <label for="eu_released_on" class="col-md-3 control-label">EU released on</label>
                     <div class="col-md-6">
                         <input id="eu_released_on" type="text" class="form-control" name="eu_released_on" size="20" maxlength="24">
@@ -133,7 +140,7 @@
                 </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="fs_format_options">
                 <legend>Format options</legend>
                 <div class="form-group">
                     <label for="format_digital" class="col-md-3 control-label">Digital</label>
@@ -183,7 +190,7 @@
 
             <fieldset>
                 <legend>Additional</legend>
-                <div class="form-group">
+                <div class="form-group" id="grp_video_url">
                     <label for="video_url" class="col-md-3 control-label">Video URL</label>
                     <div class="col-md-6">
                         <input id="video_url" type="text" class="form-control" name="video_url">
@@ -194,7 +201,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_video_type">
                     <label for="video_type" class="col-md-3 control-label">Video type</label>
                     <div class="col-md-6">
                         <select id="video_type" name="video_type" class="form-control">
@@ -205,7 +212,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_amazon_uk_link">
                     <label for="amazon_uk_link" class="col-md-3 control-label">Amazon UK link</label>
                     <div class="col-md-6">
                         <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
@@ -216,7 +223,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_nintendo_store_url_override">
                     <label for="nintendo_store_url_override" class="col-md-3 control-label">Nintendo store URL override</label>
                     <div class="col-md-6">
                         <input id="nintendo_store_url_override" type="text" class="form-control" name="nintendo_store_url_override">
@@ -228,7 +235,7 @@
                         <a id="js-btn-store-url-override" class="btn btn-default btn-sm" href="javascript:void(0);">Search Nintendo</a>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_eshop_europe_order">
                     <label for="eshop_europe_order" class="col-md-3 control-label">eShop order</label>
                     <div class="col-md-6">
                         <input id="eshop_europe_order" type="text" class="form-control" name="eshop_europe_order">
@@ -237,7 +244,7 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="grp_is_low_quality">
                     <label for="is_low_quality" class="col-md-3 control-label">Is low quality?</label>
                     <div class="col-md-6">
                         <input id="is_low_quality" type="checkbox" name="is_low_quality">
@@ -248,7 +255,7 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
+            <fieldset id="fs_eshop_assets">
                 <legend>eShop assets</legend>
                 <div class="form-group">
                     <label for="image_square" class="col-md-3 control-label">Image square</label>

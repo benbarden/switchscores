@@ -139,6 +139,26 @@
 
     });
 
+    // Hide some fields
+    if (formMode == 'add') {
+        $('#grp_price_eshop_discounted').hide();
+        $('#grp_price_eshop_discount_pc').hide();
+        $('#grp_players').hide();
+        $('#grp_us_release_date').hide();
+        $('#grp_jp_release_date').hide();
+        $('#grp_eu_released_on').hide();
+        $('#grp_video_url').hide();
+        $('#grp_video_type').hide();
+        $('#grp_amazon_uk_link').hide();
+        $('#grp_is_low_quality').hide();
+
+        // hide all format options
+        $('#fs_format_options').hide();
+
+        // hide all eShop assets
+        $('#fs_eshop_assets').hide();
+    }
+
     function urlencode(str) {
         str = (str + '').toString();
 
