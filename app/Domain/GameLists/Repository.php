@@ -298,7 +298,7 @@ class Repository
         return Game::whereNull('eshop_europe_fs_id')
             ->whereNotNull('nintendo_store_url_override')
             ->whereNull('image_square')
-            ->whereNull('image_header')
+            //->whereNull('image_header')
             ->orderBy('id')
             ->limit($limit)
             ->get();
