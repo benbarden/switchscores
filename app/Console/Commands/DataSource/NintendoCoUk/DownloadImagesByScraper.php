@@ -90,7 +90,7 @@ class DownloadImagesByScraper extends Command
             $squareUrl = $game->image_square;
             $headerUrl = $game->image_header;
 
-            if (!$squareUrl && !$headerUrl) {
+            if (!$squareUrl || !$headerUrl) {
 
                 $logger->info('Processing item: '.$gameTitle.' [ID: '.$gameId.']');
 
