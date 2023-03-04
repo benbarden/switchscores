@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Domain\DataSource\NintendoCoUk;
+namespace Tests\Unit\Domain\Scraper;
 
 use App\Domain\Scraper\NintendoCoUkPackshot;
 use Tests\TestCase;

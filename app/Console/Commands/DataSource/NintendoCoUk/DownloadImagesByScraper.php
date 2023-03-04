@@ -6,9 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Domain\GameLists\Repository as RepoGameLists;
+use App\Domain\Game\Repository as RepoGame;
 
 use App\Domain\Scraper\NintendoCoUkPackshot;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
+use App\Domain\DataSource\NintendoCoUk\PackshotUrlBuilder;
 
 use App\Traits\SwitchServices;
 
@@ -21,7 +23,7 @@ class DownloadImagesByScraper extends Command
      *
      * @var string
      */
-    protected $signature = 'DSNintendoCoUkDownloadImagesByScraper';
+    protected $signature = 'DSNintendoCoUkDownloadImagesByScraper {gameId?}';
 
     /**
      * The console command description.
@@ -47,16 +49,37 @@ class DownloadImagesByScraper extends Command
      */
     public function handle()
     {
+        $argGameId = $this->argument('gameId');
+
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
+        if ($argGameId) {
+
+            $repoGame = new RepoGame();
+            $gameItem = $repoGame->find($argGameId);
+            if (!$gameItem) {
+                $logger->error('Cannot find game: '.$argGameId);
+                exit;
+            }
+
+            $gameList = [$gameItem];
+
+            $logger->info('Using override game id');
+
+        } else {
+
+            $repoGameLists = new RepoGameLists();
+            $gameList = $repoGameLists->noNintendoCoUkIdWithStoreOverride(100);
+
+            $logger->info('Found '.count($gameList).' item(s); processing');
+
+        }
+
         $logger->info('Loading data...');
 
-        $repoGameLists = new RepoGameLists();
-        $gameList = $repoGameLists->noNintendoCoUkIdWithStoreOverride(100);
-
-        $logger->info('Found '.count($gameList).' item(s); processing');
+        $packshotBuilder = new PackshotUrlBuilder();
 
         foreach ($gameList as $game) {
 
@@ -77,6 +100,10 @@ class DownloadImagesByScraper extends Command
                     $scraper->crawlPage($storeUrl);
                     $squareUrl = $scraper->getSquareUrl();
                     $headerUrl = $scraper->getHeaderUrl();
+                    if ($headerUrl && !$squareUrl) {
+                        // fallback for missing square images
+                        $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
+                    }
                     if ($squareUrl || $headerUrl) {
                         DownloadImageFactory::downloadFromStoreUrl($game, $squareUrl, $headerUrl, $logger);
                     }
