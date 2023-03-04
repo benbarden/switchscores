@@ -61,4 +61,15 @@ class PackshotUrlTest extends TestCase
 
         $this->assertEquals($expectedUrl, $squareUrl);
     }
+
+    public function testHoppingGirlKohane()
+    {
+        $headerUrl = 'https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_HoppingGirlKohaneEx_image1600w.jpg';
+        $expectedUrl = 'https://fs-prod-cdn.nintendo-europe.com/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_HoppingGirlKohaneEx_image500w.jpg';
+
+        $packshotBuilder = new PackshotUrlBuilder();
+        $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
+
+        $this->assertEquals($expectedUrl, $squareUrl);
+    }
 }
