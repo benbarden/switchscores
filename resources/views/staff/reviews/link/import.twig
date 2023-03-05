@@ -13,6 +13,8 @@
             <li>Rating: A number out of 10. If the reviewer's rating scale is 5, put the score out of 5.</li>
             <li>Review date: The date the review was published, in YYYY-MM-DD format.</li>
         </ul>
+        Duplicate reviews - that is, reviews of games that have already been reviewed by the specified site id -
+        will be silently ignored.
     </div>
     {% include 'common/form-errors.twig' %}
     <form role="form" method="post" action="{{ route('staff.reviews.link.import') }}">

@@ -75,7 +75,7 @@ class ReviewLinkController extends Controller
 
     public function import()
     {
-        $pageTitle = 'Reviews dashboard';
+        $pageTitle = 'Import review links';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
