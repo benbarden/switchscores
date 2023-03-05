@@ -17,7 +17,7 @@ class ToolsController extends Controller
         $bindings = $this->getBindingsPartnersSubpage('Partner Update Fields');
 
         if (request()->post()) {
-            \Artisan::call('PartnerUpdateFields', []);
+            \Artisan::call('ReviewSiteUpdateStats', []);
             return view('staff.partners.tools.partnerUpdateFields.process', $bindings);
         } else {
             return view('staff.partners.tools.partnerUpdateFields.landing', $bindings);

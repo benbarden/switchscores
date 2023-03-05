@@ -52,7 +52,7 @@ class ToolsController extends Controller
 
         if (request()->post()) {
             \Artisan::call('ReviewConvertDraftsToReviews '.$siteId, []);
-            \Artisan::call('PartnerUpdateFields', []);
+            \Artisan::call('ReviewSiteUpdateStats', []);
             \Artisan::call('UpdateGameRanks', []);
             \Artisan::call('ReviewCampaignUpdateProgress', []);
             \Artisan::call('UpdateGameReviewStats', []);
