@@ -2,29 +2,25 @@
 
 0 2 * * * www-data cd /var/www/switchscores.com && php artisan IGSeriesImage >/dev/null 2>&1
 
-#0 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaImportParseLink >/dev/null 2>&1
-#10 3 * * * www-data cd /var/www/switchscores.com && php artisan DSWikipediaUpdateGames >/dev/null 2>&1
-
 0 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
 10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
 20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImages >/dev/null 2>&1
 25 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImagesByScraper >/dev/null 2>&1
 
-0 5 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
-5 5 * * * www-data cd /var/www/switchscores.com && php artisan ReviewImportByScraper >/dev/null 2>&1
-10 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedParser >/dev/null 2>&1
+30 4 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
+35 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewImportByScraper >/dev/null 2>&1
+40 4 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedParser >/dev/null 2>&1
 
-#15 5 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedReviewGenerator >/dev/null 2>&1
-15 5 * * * www-data cd /var/www/switchscores.com && php artisan ReviewConvertDraftsToReviews >/dev/null 2>&1
-20 5 * * * www-data cd /var/www/switchscores.com && php artisan PartnerUpdateFields >/dev/null 2>&1
-25 5 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameRanks >/dev/null 2>&1
+45 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewConvertDraftsToReviews >/dev/null 2>&1
+50 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewSiteUpdateStats >/dev/null 2>&1
+51 4 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameReviewStats >/dev/null 2>&1
+52 4 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameCalendarStats >/dev/null 2>&1
+55 4 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameRanks >/dev/null 2>&1
 
-30 5 * * * www-data cd /var/www/switchscores.com && php artisan ReviewCampaignUpdateProgress >/dev/null 2>&1
-31 5 * * * www-data cd /var/www/switchscores.com && php artisan RefreshNewsDbUpdateStats >/dev/null 2>&1
-35 5 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameReviewStats >/dev/null 2>&1
-40 5 * * * www-data cd /var/www/switchscores.com && php artisan UpdateGameCalendarStats >/dev/null 2>&1
-45 5 * * * www-data cd /var/www/switchscores.com && php artisan GameUpdateQualityScores >/dev/null 2>&1
-55 5 * * * www-data cd /var/www/switchscores.com && php artisan IntegrityCheckChecker >/dev/null 2>&1
+35 5 * * * www-data cd /var/www/switchscores.com && php artisan ReviewCampaignUpdateProgress >/dev/null 2>&1
+36 5 * * * www-data cd /var/www/switchscores.com && php artisan RefreshNewsDbUpdateStats >/dev/null 2>&1
+37 5 * * * www-data cd /var/www/switchscores.com && php artisan GameUpdateQualityScores >/dev/null 2>&1
+38 5 * * * www-data cd /var/www/switchscores.com && php artisan IntegrityCheckChecker >/dev/null 2>&1
 
 0 6 * * * www-data cd /var/www/switchscores.com && php artisan SitemapGenerateGames >/dev/null 2>&1
 2 6 * * * www-data cd /var/www/switchscores.com && php artisan SitemapGenerateCalendar >/dev/null 2>&1

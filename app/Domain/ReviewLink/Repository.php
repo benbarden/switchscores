@@ -54,4 +54,11 @@ class Repository
         return $ratingNormalised;
     }
 
+    public function getLatestBySite($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)
+            ->orderBy('review_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+    }
 }

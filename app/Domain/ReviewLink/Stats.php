@@ -2,6 +2,8 @@
 
 namespace App\Domain\ReviewLink;
 
+use App\Models\ReviewLink;
+
 use Illuminate\Support\Collection;
 
 class Stats
@@ -63,5 +65,10 @@ class Stats
         $reviewAverage = $this->calculateReviewAverage($reviewLinks, $quickReviews);
 
         return [$reviewCount, $reviewAverage];
+    }
+
+    public function countBySite($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)->count();
     }
 }

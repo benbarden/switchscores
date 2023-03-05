@@ -135,10 +135,6 @@ class ReviewLinkService
         return $gameIds;
     }
 
-    public function countBySite($siteId)
-    {
-        return ReviewLink::where('site_id', $siteId)->count();
-    }
 
     public function countActive()
     {
@@ -233,6 +229,12 @@ class ReviewLinkService
         return ReviewLink::orderBy('review_date', 'desc')->limit($limit)->get();
     }
 
+    /**
+     * @param $siteId
+     * @param $limit
+     * @return mixed
+     * @deprecated
+     */
     public function getLatestBySite($siteId, $limit = 20)
     {
         return ReviewLink::where('site_id', $siteId)
