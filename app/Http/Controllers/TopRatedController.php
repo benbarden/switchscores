@@ -76,7 +76,10 @@ class TopRatedController extends Controller
 
     public function allTimePage($page)
     {
-        if ($page == 'favicon.ico') abort(404);
+        $page = (int) $page;
+        if (!$page) abort(404);
+        if ($page > 5) abort(404);
+        //if ($page == 'favicon.ico') abort(404);
 
         if ($page) {
             $maxRank = $page * 100;
