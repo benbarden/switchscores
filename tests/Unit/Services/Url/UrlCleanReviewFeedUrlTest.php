@@ -54,4 +54,13 @@ class UrlCleanReviewFeedUrlTest extends TestCase
         $cleanUrl = $this->serviceUrl->cleanReviewFeedUrl($url);
         $this->assertEquals($expected, $cleanUrl);
     }
+
+    public function testNindieSpotlight()
+    {
+        $url = 'https://www.nindiespotlight.com/game_profile.cfm?game=void-trrlm2-void-terrarium-2-switch';
+        $expected = 'https://www.nindiespotlight.com/game_profile.cfm?game=void-trrlm2-void-terrarium-2-switch';
+
+        $cleanUrl = $this->serviceUrl->cleanReviewFeedUrl($url);
+        $this->assertEquals($expected, $cleanUrl);
+    }
 }

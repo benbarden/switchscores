@@ -29,9 +29,6 @@ class UrlService
     {
         if (strpos($url, '?') === false) return $url;
 
-        // Workaround for Nindie Spotlight
-        if (strpos($url, 'game_profile.cfm\?game=') === false) return $url;
-
         $baseUrl = explode('?', $url);
 
         $parsed = parse_url($url);
@@ -44,7 +41,12 @@ class UrlService
         unset($params['utm_campaign']);
         $cleanQueryString = http_build_query($params);
 
+        if ($cleanQueryString) {
+            $cleanQueryString = '?'.$cleanQueryString;
+        }
+
         $fullUrl = $baseUrl[0].$cleanQueryString;
+
         return $fullUrl;
     }
 }
