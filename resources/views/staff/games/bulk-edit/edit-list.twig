@@ -20,8 +20,9 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th class="text-center">Release date (EU)</th>
-                        <th class="text-center">Price eShop</th>
+                        <th>Publishers</th>
+                        <th class="text-center">Release (EU)</th>
+                        <th class="text-center">Price</th>
                         <th>{{ EditModeHeader1 }}</th>
                         <th>{{ EditModeHeader2 }}</th>
                         <th class="text-center">Options</th>
@@ -32,6 +33,19 @@
                     <tr>
                         <td>
                             {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                            {% if item.is_low_quality == 1 %}
+                                <label class="label label-danger">Low quality</label>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.gamePublishers|length > 0 %}
+                                {% for item in item.gamePublishers %}
+                                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">
+                                        {{ item.publisher.name }}
+                                    </a>
+                                    <br>
+                                {% endfor %}
+                            {% endif %}
                         </td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
                         <td class="text-center">{{ item.price_eshop }}</td>
