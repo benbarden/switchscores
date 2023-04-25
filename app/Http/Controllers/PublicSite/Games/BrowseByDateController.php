@@ -57,7 +57,9 @@ class BrowseByDateController extends Controller
                     $dateCount = 0;
                 }
 
-                if ($dateCount == 0) continue;
+                if ($dateCount == 0) {
+                    continue;
+                }
 
                 $dateListArray[] = [
                     'DateRaw' => $date,
@@ -77,8 +79,11 @@ class BrowseByDateController extends Controller
 
         }
 
+        $allowedYearsReversed = array_reverse($allowedYears);
+        $bindings['AllowedYears'] = $allowedYearsReversed;
+
         $bindings['DateList'] = $dateListArray;
-        foreach ($allowedYears as $allowedYear) {
+        foreach ($allowedYearsReversed as $allowedYear) {
             $bindings['DateList'.$allowedYear] = $dateListArray{$allowedYear};
         }
 
