@@ -14,13 +14,11 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
 
-use App\Traits\StaffView;
 use App\Traits\SwitchServices;
 
 class ReviewLinkController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -51,7 +49,11 @@ class ReviewLinkController extends Controller
 
     public function showList()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Review links', "[ 3, 'desc']");
+        $pageTitle = 'Review links';
+        $tableSort = "[ 3, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $siteId = request()->siteId;
 
@@ -132,7 +134,9 @@ class ReviewLinkController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsReviewsLinkListSubpage('Add review link');
+        $pageTitle = 'Add review link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -178,7 +182,9 @@ class ReviewLinkController extends Controller
 
     public function edit($linkId)
     {
-        $bindings = $this->getBindingsReviewsLinkListSubpage('Edit review link');
+        $pageTitle = 'Edit review link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $reviewLinkData = $this->getServiceReviewLink()->find($linkId);
         if (!$reviewLinkData) abort(404);
@@ -235,7 +241,9 @@ class ReviewLinkController extends Controller
 
     public function delete($linkId)
     {
-        $bindings = $this->getBindingsReviewsLinkListSubpage('Delete review link');
+        $pageTitle = 'Delete review link';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $reviewLink = $this->getServiceReviewLink()->find($linkId);
         if (!$reviewLink) abort(404);

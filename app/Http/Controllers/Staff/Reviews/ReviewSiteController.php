@@ -9,8 +9,6 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Models\ReviewSite;
 
-use App\Domain\ViewBindings\Staff as Bindings;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Construction\ReviewSite\ReviewSiteBuilder;
 use App\Construction\ReviewSite\ReviewSiteDirector;
@@ -29,26 +27,20 @@ class ReviewSiteController extends Controller
         'rating_scale' => 'required',
     ];
 
-    protected $viewBreadcrumbs;
-    protected $viewBindings;
     protected $repoReviewSite;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        Bindings $viewBindings,
         ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->viewBindings = $viewBindings;
         $this->repoReviewSite = $repoReviewSite;
     }
 
     public function index()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsSubpage('Review sites');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Review sites');
+        $pageTitle = 'Review sites';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ReviewSitesActive'] = $this->repoReviewSite->getActive();
         $bindings['ReviewSitesNoRecentReviews'] = $this->repoReviewSite->getNoRecentReviews();
@@ -58,9 +50,9 @@ class ReviewSiteController extends Controller
 
     public function add()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsReviewSitesSubpage('Add review site');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Add review site');
+        $pageTitle = 'Add review site';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewSitesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -92,9 +84,9 @@ class ReviewSiteController extends Controller
 
     public function edit(ReviewSite $reviewSite)
     {
-        $breadcrumbs = $this->viewBreadcrumbs->reviewsReviewSitesSubpage('Edit review site');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit review site');
+        $pageTitle = 'Edit review site';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewSitesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 

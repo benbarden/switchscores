@@ -4,17 +4,13 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
 class ToolsController extends Controller
 {
-    use SwitchServices;
-    use StaffView;
-
     public function importDraftReviews()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Import draft reviews');
+        $pageTitle = 'Import draft reviews';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('ReviewConvertDraftsToReviews', []);
@@ -30,7 +26,9 @@ class ToolsController extends Controller
 
     public function runFeedImporter()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Run Feed Importer');
+        $pageTitle = 'Run Feed Importer';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('RunFeedImporter', []);
@@ -42,7 +40,9 @@ class ToolsController extends Controller
 
     public function runFeedParser()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Run Feed Parser');
+        $pageTitle = 'Run Feed Parser';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('RunFeedParser', []);
@@ -54,7 +54,9 @@ class ToolsController extends Controller
 
     public function runFeedReviewGenerator()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Run Feed Review Generator');
+        $pageTitle = 'Run Feed Review Generator';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('RunFeedReviewGenerator', []);
@@ -67,7 +69,9 @@ class ToolsController extends Controller
 
     public function updateGameRanks()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Update Game Ranks');
+        $pageTitle = 'Update Game Ranks';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('UpdateGameRanks', []);
@@ -79,7 +83,9 @@ class ToolsController extends Controller
 
     public function updateGameReviewStats()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Update Game Review Stats');
+        $pageTitle = 'Update Game Review Stats';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('UpdateGameReviewStats', []);

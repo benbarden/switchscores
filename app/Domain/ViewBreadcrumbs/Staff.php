@@ -21,6 +21,9 @@ class Staff extends Base
         $this->toastedCrumbs['reviews.feedLinks'] = ['url' => route('staff.reviews.feedLinks.index'), 'text' => 'Feed links'];
         $this->toastedCrumbs['reviews.reviewDrafts'] = ['url' => route('staff.reviews.review-drafts.showPending'), 'text' => 'Review drafts'];
         $this->toastedCrumbs['reviews.campaigns'] = ['url' => route('staff.reviews.campaigns'), 'text' => 'Review campaigns'];
+        $this->toastedCrumbs['reviews.quickReviews'] = ['url' => route('staff.reviews.quick-reviews.list'), 'text' => 'Quick reviews'];
+        $this->toastedCrumbs['reviews.unrankedByReviewCount'] = ['url' => route('staff.reviews.unranked.review-count-landing'), 'text' => 'Unranked: By review count'];
+        $this->toastedCrumbs['reviews.unrankedByReleaseYear'] = ['url' => route('staff.reviews.unranked.release-year-landing'), 'text' => 'Unranked: By release year'];
 
         $this->toastedCrumbs['categorisation.dashboard'] = ['url' => route('staff.categorisation.dashboard'), 'text' => 'Categorisation'];
         $this->toastedCrumbs['categorisation.category.list'] = ['url' => route('staff.categorisation.category.list'), 'text' => 'Categories'];
@@ -114,6 +117,27 @@ class Staff extends Base
     {
         return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
             ->addCrumb($this->toastedCrumbs['reviews.campaigns'])
+            ->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsQuickReviewsSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+            ->addCrumb($this->toastedCrumbs['reviews.quickReviews'])
+            ->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsUnrankedByReviewCountSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+            ->addCrumb($this->toastedCrumbs['reviews.unrankedByReviewCount'])
+            ->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewsUnrankedByReleaseYearSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['reviews.dashboard'])
+            ->addCrumb($this->toastedCrumbs['reviews.unrankedByReleaseYear'])
             ->addTitleAndReturn($pageTitle);
     }
 

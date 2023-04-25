@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Staff\Reviews;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 use App\Models\QuickReview;
-use App\Traits\StaffView;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class QuickReviewController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     public function showList()
     {
-        $bindings = $this->getBindingsReviewsSubpage('Quick reviews');
+        $pageTitle = 'Quick reviews';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
         $filterStatus = $request->filterStatus;
@@ -37,7 +39,9 @@ class QuickReviewController extends Controller
 
     public function edit($reviewId)
     {
-        $bindings = $this->getBindingsReviewsQuickReviewsSubpage('Edit quick review');
+        $pageTitle = 'Edit quick review';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsQuickReviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -102,7 +106,9 @@ class QuickReviewController extends Controller
 
     public function delete($reviewId)
     {
-        $bindings = $this->getBindingsReviewsQuickReviewsSubpage('Delete quick review');
+        $pageTitle = 'Delete quick review';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsQuickReviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $reviewData = $this->getServiceQuickReview()->find($reviewId);
         if (!$reviewData) abort(404);
