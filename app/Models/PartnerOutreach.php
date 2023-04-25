@@ -31,9 +31,9 @@ class PartnerOutreach extends Model
         'partner_id', 'new_status', 'contact_method', 'contact_message', 'internal_notes'
     ];
 
-    public function partner()
+    public function gamesCompany()
     {
-        return $this->hasOne('App\Models\Partner', 'id', 'partner_id');
+        return $this->hasOne('App\Models\GamesCompany', 'id', 'partner_id');
     }
 
     public function getStatusDesc()

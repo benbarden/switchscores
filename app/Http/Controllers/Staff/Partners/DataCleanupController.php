@@ -7,14 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
-
 class DataCleanupController extends Controller
 {
-    use SwitchServices;
-    use StaffView;
-
     private $dbGameDeveloper;
     private $dbGamePublisher;
 
@@ -29,7 +23,9 @@ class DataCleanupController extends Controller
 
     public function gamesWithMissingDeveloper()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games with missing developer');
+        $pageTitle = 'Games with missing developer';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ItemList'] = $this->dbGameDeveloper->getGamesWithNoDeveloper();
 
@@ -38,7 +34,9 @@ class DataCleanupController extends Controller
 
     public function gamesWithMissingPublisher()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games with missing publisher');
+        $pageTitle = 'Games with missing publisher';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ItemList'] = $this->dbGamePublisher->getGamesWithNoPublisher();
 

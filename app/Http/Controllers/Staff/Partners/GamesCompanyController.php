@@ -14,13 +14,11 @@ use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 
-use App\Traits\StaffView;
 use App\Traits\SwitchServices;
 
 class GamesCompanyController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -49,7 +47,9 @@ class GamesCompanyController extends Controller
 
     public function showList()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
+        $pageTitle = 'Games companies';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
 
@@ -58,7 +58,9 @@ class GamesCompanyController extends Controller
 
     public function normalQuality()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
+        $pageTitle = 'Games companies';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->normalQuality();
 
@@ -67,7 +69,9 @@ class GamesCompanyController extends Controller
 
     public function lowQuality()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies', "[ 0, 'desc']");
+        $pageTitle = 'Games companies';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->lowQuality();
 
@@ -76,7 +80,9 @@ class GamesCompanyController extends Controller
 
     public function withoutTwitterIds()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies without Twitter Ids', "[ 0, 'desc']");
+        $pageTitle = 'Games companies without Twitter IDs';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutTwitterIds();
 
@@ -85,7 +91,9 @@ class GamesCompanyController extends Controller
 
     public function withoutWebsiteUrls()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies without website URLs', "[ 0, 'desc']");
+        $pageTitle = 'Games companies without website URLs';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutWebsiteUrls();
 
@@ -94,7 +102,9 @@ class GamesCompanyController extends Controller
 
     public function duplicateTwitterIds()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies with duplicate Twitter Ids', "[ 0, 'desc']");
+        $pageTitle = 'Games companies with duplicate Twitter IDs';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $duplicateTwitterIdsList = $this->statsGamesCompany->getDuplicateTwitterIds();
         if ($duplicateTwitterIdsList) {
@@ -110,7 +120,9 @@ class GamesCompanyController extends Controller
 
     public function duplicateWebsiteUrls()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Games companies with duplicate website URLs', "[ 0, 'desc']");
+        $pageTitle = 'Games companies with duplicate website URLs';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $duplicateWebsiteUrlsList = $this->statsGamesCompany->getDuplicateWebsiteUrls();
         if ($duplicateWebsiteUrlsList) {
@@ -126,7 +138,9 @@ class GamesCompanyController extends Controller
 
     public function show(GamesCompany $gamesCompany)
     {
-        $bindings = $this->getBindingsPartnersSubpage($gamesCompany->name);
+        $pageTitle = $gamesCompany->name;
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $gamesCompanyId = $gamesCompany->id;
 
@@ -148,7 +162,10 @@ class GamesCompanyController extends Controller
     public function devsWithUnrankedGames()
     {
         $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
-        $bindings = $this->getBindingsPartnersSubpage('Outreach targets: Developers with unranked games', $tableSort);
+        $pageTitle = 'Outreach targets: Developers with unranked games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->getDevelopersWithUnrankedGames();
 
@@ -158,7 +175,10 @@ class GamesCompanyController extends Controller
     public function pubsWithUnrankedGames()
     {
         $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
-        $bindings = $this->getBindingsPartnersSubpage('Outreach targets: Publishers with unranked games', $tableSort);
+        $pageTitle = 'Outreach targets: Publishers with unranked games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->getPublishersWithUnrankedGames();
         $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
@@ -168,7 +188,9 @@ class GamesCompanyController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsGamesCompaniesSubpage('Add games company');
+        $pageTitle = 'Add games company';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersGamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -199,7 +221,9 @@ class GamesCompanyController extends Controller
 
     public function edit($gamesCompanyId)
     {
-        $bindings = $this->getBindingsGamesCompaniesSubpage('Edit games company');
+        $pageTitle = 'Edit games company';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersGamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
         if (!$gamesCompany) abort(404);
@@ -247,7 +271,9 @@ class GamesCompanyController extends Controller
 
     public function delete($gamesCompanyId)
     {
-        $bindings = $this->getBindingsGamesCompaniesSubpage('Delete games company');
+        $pageTitle = 'Delete games company';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersGamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
         if (!$gamesCompany) abort(404);

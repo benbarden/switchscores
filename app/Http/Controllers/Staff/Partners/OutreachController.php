@@ -12,13 +12,11 @@ use App\Models\PartnerOutreach;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
-use App\Traits\StaffView;
 use App\Traits\SwitchServices;
 
 class OutreachController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     private $repoGamesCompany;
 
@@ -48,7 +46,9 @@ class OutreachController extends Controller
 
     public function showList(Partner $partner = null)
     {
-        $bindings = $this->getBindingsPartnersSubpage('Partner outreach');
+        $pageTitle = 'Partner outreach';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if ($partner) {
             $outreachList = $this->getServicePartnerOutreach()->getByPartnerId($partner->id);
@@ -63,7 +63,9 @@ class OutreachController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsPartnersOutreachSubpage('Add partner outreach');
+        $pageTitle = 'Add partner outreach';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -103,7 +105,9 @@ class OutreachController extends Controller
 
     public function edit(PartnerOutreach $partnerOutreach)
     {
-        $bindings = $this->getBindingsPartnersOutreachSubpage('Edit partner outreach');
+        $pageTitle = 'Edit partner outreach';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 

@@ -33,6 +33,8 @@ class Staff extends Base
         $this->toastedCrumbs['news.categories'] = ['url' => route('staff.news.category.list'), 'text' => 'News categories'];
 
         $this->toastedCrumbs['partners.dashboard'] = ['url' => route('staff.partners.dashboard'), 'text' => 'Partners'];
+        $this->toastedCrumbs['partners.gamesCompanies.list'] = ['url' => route('staff.partners.games-company.list'), 'text' => 'Games companies'];
+        $this->toastedCrumbs['partners.outreach.list'] = ['url' => route('staff.partners.outreach.list'), 'text' => 'Outreach'];
 
         $this->toastedCrumbs['dataSources.dashboard'] = ['url' => route('staff.data-sources.dashboard'), 'text' => 'Data sources'];
         $this->toastedCrumbs['dataSources.nintendoCoUk.unlinked'] = ['url' => route('staff.data-sources.nintendo-co-uk.unlinked'), 'text' => 'Nintendo.co.uk API - Unlinked items'];
@@ -165,6 +167,24 @@ class Staff extends Base
         return $this->addCrumb($this->toastedCrumbs['news.dashboard'])
                     ->addCrumb($this->toastedCrumbs['news.categories'])
                     ->addTitleAndReturn($pageTitle);
+    }
+
+
+    public function partnersSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function partnersGamesCompaniesSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])
+                    ->addCrumb($this->toastedCrumbs['partners.gamesCompanies.list'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function partnersOutreachSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])
+            ->addCrumb($this->toastedCrumbs['partners.outreach.list'])->addTitleAndReturn($pageTitle);
     }
 
     public function dataSourcesSubpage($pageTitle)

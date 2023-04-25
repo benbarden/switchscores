@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Staff\Partners;
 
-use App\Traits\StaffView;
 use Illuminate\Routing\Controller as Controller;
-
-use App\Traits\SwitchServices;
 
 class ToolsController extends Controller
 {
-    use SwitchServices;
-    use StaffView;
-
     public function partnerUpdateFields()
     {
-        $bindings = $this->getBindingsPartnersSubpage('Partner Update Fields');
+        $pageTitle = 'Partner Update Fields';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {
             \Artisan::call('ReviewSiteUpdateStats', []);
