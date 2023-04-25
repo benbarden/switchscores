@@ -158,13 +158,4 @@ trait StaffView
         }
         return $this->getBindings($pageTitle);
     }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsDataSourcesListRawSubpage($pageTitle, DataSource $dataSource)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeDataSourcesListRawSubPage($pageTitle, $dataSource);
-        return $this->getBindings($pageTitle);
-    }
 }

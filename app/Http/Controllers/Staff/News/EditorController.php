@@ -7,15 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class EditorController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -33,16 +29,15 @@ class EditorController extends Controller
     protected $viewBreadcrumbs;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function add()
     {
-        $bindings = $this->getBindings('Add news');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsListSubpage('Add news');
+        $pageTitle = 'Add news';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
 
@@ -70,8 +65,9 @@ class EditorController extends Controller
 
     public function edit($newsId)
     {
-        $bindings = $this->getBindings('Edit news');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsListSubpage('Edit news');
+        $pageTitle = 'Edit news';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $newsData = $this->getServiceNews()->find($newsId);
         if (!$newsData) abort(404);

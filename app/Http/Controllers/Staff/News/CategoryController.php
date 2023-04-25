@@ -7,15 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
 use App\Traits\SwitchServices;
-use App\Traits\StaffView;
 
 class CategoryController extends Controller
 {
     use SwitchServices;
-    use StaffView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -30,16 +26,15 @@ class CategoryController extends Controller
     protected $viewBreadcrumbs;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function showList()
     {
-        $bindings = $this->getBindings('News categories');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('News categories');
+        $pageTitle = 'News categories';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
 
@@ -48,8 +43,9 @@ class CategoryController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindings('Add news category');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsCategoriesSubpage('Add news category');
+        $pageTitle = 'Add news category';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceNewsCategory = $this->getServiceNewsCategory();
 
@@ -72,8 +68,9 @@ class CategoryController extends Controller
 
     public function edit($newsCategoryId)
     {
-        $bindings = $this->getBindings('Edit news category');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsCategoriesSubpage('Edit news category');
+        $pageTitle = 'Edit news category';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $serviceNewsCategory = $this->getServiceNewsCategory();
 

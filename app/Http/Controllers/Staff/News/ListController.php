@@ -4,31 +4,26 @@ namespace App\Http\Controllers\Staff\News;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-
-use App\Traits\SwitchServices;
-use App\Traits\StaffView;
+use App\Domain\News\Repository as RepoNews;
 
 class ListController extends Controller
 {
-    use SwitchServices;
-    use StaffView;
-
-    protected $viewBreadcrumbs;
+    private $repoNews;
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        RepoNews $repoNews
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoNews = $repoNews;
     }
 
     public function show()
     {
-        $bindings = $this->getBindings('News list');
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('News list');
+        $pageTitle = 'News list';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['NewsList'] = $this->getServiceNews()->getAll();
+        $bindings['NewsList'] = $this->repoNews->getAll();
 
         return view('staff.news.list', $bindings);
     }

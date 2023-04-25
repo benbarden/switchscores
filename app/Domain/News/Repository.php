@@ -11,4 +11,9 @@ class Repository
     {
         return News::find($id);
     }
+
+    public function getAll()
+    {
+        return News::orderBy('created_at', 'desc')->get();
+    }
 }
