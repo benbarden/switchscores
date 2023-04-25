@@ -27,7 +27,7 @@
                         A maximum of 200 results are shown. Try narrowing your criteria a bit.
                     </p>
                 {% endif %}
-                {% include 'games/layouts/standardNoHero/layout.twig' with {'GameList': SearchResults, 'batchOverride': 3} %}
+                {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': SearchResults, 'batchOverride': 3} %}
             {% else %}
                 <p>No results. Try expanding your search criteria.</p>
             {% endif %}
