@@ -1,0 +1,56 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set crumbNav = [
+    {'url': route('games.landing'), 'text': 'Games'},
+    {'url': route('games.browse.byCategory.landing'), 'text': 'Browse by category'},
+    {'text': PageTitle}] %}
+
+{% block page_body %}
+
+{% if Category.children.count() > 0 %}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <h2>Subcategories</h2>
+        <ul>
+            {% for item in Category.children %}
+                <li><a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}">{{ item.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+
+    {% if RankedGameList|length %}
+        {% set UnrankedListCss = ' style="border-left: 1px solid #c9c9c9;"' %}
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h2>
+                {{ RankedGameList|length }} ranked
+                <span class="h5">(3 reviews or more)</span>
+            </h2>
+            {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': RankedGameList} %}
+        </div>
+    {% else %}
+        {% set NoRankedGames = 'Y' %}
+    {% endif %}
+
+    {% if UnrankedGameList|length %}
+        {% if NoRankedGames == 'Y' %}
+            {% set UnrankedListClasses = 'col-xs-12 col-sm-12 col-md-12 col-lg-12' %}
+            {% set batchOverride = 4 %}
+        {% else %}
+            {% set UnrankedListClasses = 'col-xs-12 col-sm-6 col-md-6 col-lg-6' %}
+            {% set batchOverride = 2 %}
+        {% endif %}
+    <div class="{{ UnrankedListClasses }}"{{ UnrankedListCss|raw }}>
+        <h2>
+            {{ UnrankedGameList|length }} unranked
+            <span class="h5">(2 reviews or fewer)</span>
+        </h2>
+        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': UnrankedGameList, 'batchOverride': batchOverride} %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock page_body %}

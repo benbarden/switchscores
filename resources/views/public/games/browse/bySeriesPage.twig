@@ -1,0 +1,17 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/games/navBrowse.twig' with {'currentNav': 'btn-nav-by-series'} %}
+
+{% if GameList|length %}
+<p><small>{{ GameList|length }} games with this series.</small></p>
+{% endif %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+    </div>
+</div>
+
+{% endblock page_body %}

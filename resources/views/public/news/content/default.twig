@@ -1,0 +1,45 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                {% include 'modules/news/news-image.twig' with {'item': NewsItem, 'showBlankImage': 'N'} %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="blog-post-body col-sm-12 col-md-12 col-lg-12">
+                {{ NewsContentParsed|raw }}
+            </div>
+        </div>
+        <p>
+            <small>Published: {{ NewsItem.created_at|date('jS M Y H:i') }}</small>
+        </p>
+        <div class="row">
+            {% if NewsNext %}
+                <div class="pull-right col-md-5">
+                    <small>
+                        <a href="{{ NewsNext.url }}">Next: {{ NewsNext.title }} &gt;&gt;&gt;</a>
+                    </small>
+                </div>
+            {% endif %}
+            {% if NewsPrev %}
+                <div class="pull-left col-md-5">
+                    <small>
+                        <a href="{{ NewsPrev.url }}">&lt;&lt;&lt; Previous: {{ NewsPrev.title }}</a>
+                    </small>
+                </div>
+            {% endif %}
+        </div>
+        {% include 'modules/twitter/widgets-embed.twig' %}
+        {% include 'modules/disqus/news-content.twig' %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        {% include 'public/news/sidebar/news-game-details.twig' %}
+        {% include 'public/news/sidebar/category-links.twig' %}
+    </div>
+</div>
+
+{% endblock page_body %}

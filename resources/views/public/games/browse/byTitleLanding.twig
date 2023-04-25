@@ -1,0 +1,22 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/games/navBrowse.twig' with {'currentNav': 'btn-nav-by-title'} %}
+
+<p>A list of Nintendo Switch games currently available to buy from the Nintendo eShop.</p>
+
+<p>All prices correct at time of publication. Any changes may not be reflected immediately.
+    Check prices prior to purchase.</p>
+
+<div class="row">
+    {% for item in LetterList %}
+        <div class="col-sm-4 col-md-3 col-lg-2 text-center" style="padding: 15px 0;">
+            <span class="h1" style="font-weight: bold;">
+                <a href="{{ route('games.browse.byTitle.page', {'letter': item}) }}">{{ item }}</a>
+            </span>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock page_body %}

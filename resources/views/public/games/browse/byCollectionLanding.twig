@@ -1,0 +1,19 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/games/navBrowse.twig' with {'currentNav': 'btn-nav-by-collection'} %}
+
+{% if CollectionList %}
+    <ul>
+        {% for item in CollectionList %}
+        <li>
+            <a href="{{ route('games.browse.byCollection.page', {'collection': item.link_title}) }}">{{ item.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No collections found!</p>
+{% endif %}
+
+{% endblock page_body %}

@@ -26,12 +26,52 @@ class PublicPageTest extends TestCase
         $this->doPageTest("/");
 
         $this->doPageTest("/about");
+        $this->doPageTest("/about/changelog");
+
         $this->doPageTest("/privacy");
 
-        $this->doPageTest("/games");
+        $this->doPageTest("/community");
+
+        $this->doPageTest("/partners");
+        $this->doPageTest("/partners/review-sites");
+        $this->doPageTest("/partners/games-companies");
+        $this->doPageTest("/partners/games-company/hamster-corporation");
+        $this->doPageTest("/reviews/site/nintendo-life");
+
+        $this->doPageTest("/help");
+        $this->doPageTest("/help/low-quality-filter");
+
+        $this->doPageTest("/lists");
         $this->doPageTest("/games/recent");
         $this->doPageTest("/games/upcoming");
         $this->doPageTest("/games/on-sale");
+        $this->doPageTest("/games/on-sale/archive");
+        $this->doPageTest("/lists/recently-ranked");
+        $this->doPageTest("/lists/recently-reviewed-still-unranked");
+
+        $this->doPageTest("/news");
+        $this->doPageTest("/news/category/editorial");
+        $this->doPageTest("/news/20180317/stats-milestones-500-games-and-3000-review-scores");
+
+        $this->doPageTest("/reviews");
+        $this->doPageTest("/reviews/2017");
+        $this->doPageTest("/reviews/2018");
+        $this->doPageTest("/reviews/2019");
+        $this->doPageTest("/reviews/2020");
+        $this->doPageTest("/reviews/2021");
+
+        $this->doPageTest("/top-rated");
+        $this->doPageTest("/top-rated/all-time");
+        $this->doPageTest("/top-rated/by-year/2017");
+        $this->doPageTest("/top-rated/by-year/2018");
+        $this->doPageTest("/top-rated/by-year/2019");
+        $this->doPageTest("/top-rated/by-year/2020");
+        $this->doPageTest("/top-rated/by-year/2021");
+        $this->doPageTest("/top-rated/multiplayer");
+
+        $this->doPageTest("/games");
+        $this->doPageTest("/games/search");
+
         $this->doPageTest("/games/by-title");
         $this->doPageTest("/games/by-title/A");
         $this->doPageTest("/games/by-category");
@@ -46,32 +86,6 @@ class PublicPageTest extends TestCase
         $response->assertStatus(301);
 
         $this->doPageTest('/games/1/the-legend-of-zelda-breath-of-the-wild');
-
-        $this->doPageTest("/top-rated");
-        $this->doPageTest("/top-rated/all-time");
-        $this->doPageTest("/top-rated/by-year/2017");
-        $this->doPageTest("/top-rated/by-year/2018");
-        $this->doPageTest("/top-rated/by-year/2019");
-        $this->doPageTest("/top-rated/by-year/2020");
-        $this->doPageTest("/top-rated/by-year/2021");
-        $this->doPageTest("/top-rated/multiplayer");
-
-        $this->doPageTest("/reviews");
-        $this->doPageTest("/reviews/2017");
-        $this->doPageTest("/reviews/2018");
-        $this->doPageTest("/reviews/2019");
-        $this->doPageTest("/reviews/2020");
-        $this->doPageTest("/reviews/2021");
-        $this->doPageTest("/reviews/site/nintendo-life");
-
-        $this->doPageTest("/partners");
-        $this->doPageTest("/partners/review-sites");
-        $this->doPageTest("/partners/games-companies");
-        $this->doPageTest("/partners/games-company/hamster-corporation");
-
-        $this->doPageTest("/news");
-        $this->doPageTest("/news/category/editorial");
-        $this->doPageTest("/news/20180317/stats-milestones-500-games-and-3000-review-scores");
 
         $this->doPageTest("/sitemap");
         $this->doPageTest("/sitemap/site");

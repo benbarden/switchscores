@@ -1,0 +1,83 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<script>
+    $(document).ready(function() {
+        $('a.js-toggle-list').on('click', function() {
+            var elemId = $(this).attr('id');
+            var listToShow = elemId.replace('js-toggle-', '');
+            toggleList(listToShow);
+        });
+    });
+    function toggleList(showWhich) {
+        $('#list-ranked').hide();
+        $('#list-unranked').hide();
+        $('#list-delisted').hide();
+        $('#' + showWhich).show();
+    }
+</script>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+
+        <h5 class="theme-header theme-rounded theme-padding-10 theme-colour-1">
+            <strong>Navigation</strong>:
+            <a id="js-toggle-list-ranked" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                Ranked ({{ RankedGameList|length }})</a>
+             |
+            <a id="js-toggle-list-unranked" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                Unranked ({{ UnrankedGameList|length }})</a>
+             |
+            <a id="js-toggle-list-delisted" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                De-listed ({{ DelistedGameList|length }})</a>
+        </h5>
+
+        <div id="list-ranked">
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Ranked</h2>
+            {% if RankedGameList %}
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RankedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
+            {% endif %}
+        </div>
+        <div id="list-unranked" style="display: none;">
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Unranked</h2>
+            {% if UnrankedGameList %}
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': UnrankedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
+            {% endif %}
+        </div>
+        <div id="list-delisted" style="display: none;">
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">De-listed</h2>
+            {% if DelistedGameList %}
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': DelistedGameList, 'batchOverride': 2} %}
+            {% else %}
+                <p>No games to display.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Search games</h4>
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Browse all games</h4>
+        <ul>
+            <li><a href="{{ route('games.browse.byTitle.landing') }}">A to Z</a></li>
+            <li><a href="{{ route('games.browse.byDate.landing') }}">By release date</a></li>
+            <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
+            <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
+            <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
+            <li><a href="{{ route('games.browse.byCollection.landing') }}">By collection</a></li>
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

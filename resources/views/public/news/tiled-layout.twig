@@ -1,0 +1,17 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% for newsItem in NewsList|batch(3, null) %}
+    <div class="row">
+        {% for item in newsItem %}
+            {% include 'public/news/tiled-item.twig' with {'item': item, 'batchOverride': 3} %}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<div class="row text-center">
+    {{ NewsList.links|raw }}
+</div>
+
+{% endblock page_body %}

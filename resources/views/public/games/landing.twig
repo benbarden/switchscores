@@ -1,0 +1,58 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Newest</h2>
+        <p>Updated weekly. <a href="{{ route('games.recentReleases') }}">View all new games</a>.</p>
+        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases, 'batchOverride': 1} %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Upcoming</h2>
+        <p>Updated weekly. <a href="{{ route('games.upcomingReleases') }}">View all upcoming games</a>.</p>
+        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': UpcomingReleases, 'batchOverride': 1} %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Search games</h4>
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Browse all games</h4>
+        <ul>
+            <li><a href="{{ route('games.browse.byTitle.landing') }}">A to Z</a></li>
+            <li><a href="{{ route('games.browse.byDate.landing') }}">By release date</a></li>
+            <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
+            <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
+            <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
+            <li><a href="{{ route('games.browse.byCollection.landing') }}">By collection</a></li>
+        </ul>
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">More lists</h4>
+        <ul>
+            <li><a href="{{ route('games.recentReleases') }}">Newest games</a></li>
+            <li><a href="{{ route('games.upcomingReleases') }}">Upcoming games</a></li>
+            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+            <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+            <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+            <li><a href="{{ route('lists.recently-reviewed-still-unranked') }}">Recently reviewed, still unranked</a></li>
+        </ul>
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">From the all-time Top 100</h4>
+        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': RandomTop100Game, 'batchOverride': 1} %}
+
+        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Recent Top Rated</h4>
+        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': RecentWithGoodRanks, 'batchOverride': 1} %}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

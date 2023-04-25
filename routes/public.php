@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Front page
-Route::get('/', 'WelcomeController@show')->name('welcome');
+Route::get('/', 'PublicSite\WelcomeController@show')->name('welcome');
 
 Auth::routes();
 
@@ -12,83 +12,83 @@ Route::get('/login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->
 Route::get('/login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
 
 // Static content
-Route::get('/about', 'AboutController@landing')->name('about.landing');
-Route::get('/about/changelog', 'AboutController@changelog')->name('about.changelog');
-Route::get('/privacy', 'PrivacyController@show')->name('privacy');
+Route::get('/about', 'PublicSite\AboutController@landing')->name('about.landing');
+Route::get('/about/changelog', 'PublicSite\AboutController@changelog')->name('about.changelog');
+Route::get('/privacy', 'PublicSite\PrivacyController@show')->name('privacy');
 
 // Help
-Route::get('/help', 'HelpController@landing')->name('help.landing');
-Route::get('/help/low-quality-filter', 'HelpController@lowQualityFilter')->name('help.low-quality-filter');
+Route::get('/help', 'PublicSite\HelpController@landing')->name('help.landing');
+Route::get('/help/low-quality-filter', 'PublicSite\HelpController@lowQualityFilter')->name('help.low-quality-filter');
 
 // Lists
-Route::get('/lists', 'ListsController@landing')->name('lists.landing');
-Route::get('/games/recent', 'ListsController@recentReleases')->name('games.recentReleases');
-Route::get('/games/upcoming', 'ListsController@upcomingReleases')->name('games.upcomingReleases');
-Route::get('/games/on-sale', 'ListsController@gamesOnSale')->name('games.onSale');
-Route::get('/games/on-sale/archive', 'ListsController@gamesOnSaleArchive')->name('lists.gamesOnSaleArchive');
-Route::get('/reviews', 'ListsController@recentReviews')->name('reviews.landing');
-Route::get('/lists/recently-ranked', 'ListsController@recentlyRanked')->name('lists.recently-ranked');
-Route::get('/lists/recently-reviewed-still-unranked', 'ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
+Route::get('/lists', 'PublicSite\ListsController@landing')->name('lists.landing');
+Route::get('/games/recent', 'PublicSite\ListsController@recentReleases')->name('games.recentReleases');
+Route::get('/games/upcoming', 'PublicSite\ListsController@upcomingReleases')->name('games.upcomingReleases');
+Route::get('/games/on-sale', 'PublicSite\ListsController@gamesOnSale')->name('games.onSale');
+Route::get('/games/on-sale/archive', 'PublicSite\ListsController@gamesOnSaleArchive')->name('lists.gamesOnSaleArchive');
+Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
+Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
+Route::get('/lists/recently-reviewed-still-unranked', 'PublicSite\ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
 
 // Main game pages
-Route::match(['get', 'post'], '/games', 'Games\LandingController@landing')->name('games.landing');
-Route::match(['get', 'post'], '/games/search', 'Games\SearchController@show')->name('games.search');
+Route::match(['get', 'post'], '/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');
+Route::match(['get', 'post'], '/games/search', 'PublicSite\Games\SearchController@show')->name('games.search');
 
 // Browse by...
-Route::get('/games/by-title', 'Games\BrowseByTitleController@landing')->name('games.browse.byTitle.landing');
-Route::get('/games/by-title/{letter}', 'Games\BrowseByTitleController@page')->name('games.browse.byTitle.page');
+Route::get('/games/by-title', 'PublicSite\Games\BrowseByTitleController@landing')->name('games.browse.byTitle.landing');
+Route::get('/games/by-title/{letter}', 'PublicSite\Games\BrowseByTitleController@page')->name('games.browse.byTitle.page');
 
-Route::get('/games/by-category', 'Games\BrowseByCategoryController@landing')->name('games.browse.byCategory.landing');
-Route::get('/games/by-category/{category}', 'Games\BrowseByCategoryController@page')->name('games.browse.byCategory.page');
+Route::get('/games/by-category', 'PublicSite\Games\BrowseByCategoryController@landing')->name('games.browse.byCategory.landing');
+Route::get('/games/by-category/{category}', 'PublicSite\Games\BrowseByCategoryController@page')->name('games.browse.byCategory.page');
 
-Route::get('/games/by-series', 'Games\BrowseBySeriesController@landing')->name('games.browse.bySeries.landing');
-Route::get('/games/by-series/{series}', 'Games\BrowseBySeriesController@page')->name('games.browse.bySeries.page');
+Route::get('/games/by-series', 'PublicSite\Games\BrowseBySeriesController@landing')->name('games.browse.bySeries.landing');
+Route::get('/games/by-series/{series}', 'PublicSite\Games\BrowseBySeriesController@page')->name('games.browse.bySeries.page');
 
-Route::get('/games/by-collection', 'Games\BrowseByCollectionController@landing')->name('games.browse.byCollection.landing');
-Route::get('/games/by-collection/{collection}', 'Games\BrowseByCollectionController@page')->name('games.browse.byCollection.page');
+Route::get('/games/by-collection', 'PublicSite\Games\BrowseByCollectionController@landing')->name('games.browse.byCollection.landing');
+Route::get('/games/by-collection/{collection}', 'PublicSite\Games\BrowseByCollectionController@page')->name('games.browse.byCollection.page');
 
-Route::get('/games/by-tag', 'Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
-Route::get('/games/by-tag/{tag}', 'Games\BrowseByTagController@page')->name('games.browse.byTag.page');
+Route::get('/games/by-tag', 'PublicSite\Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
+Route::get('/games/by-tag/{tag}', 'PublicSite\Games\BrowseByTagController@page')->name('games.browse.byTag.page');
 
-Route::get('/games/by-date', 'Games\BrowseByDateController@landing')->name('games.browse.byDate.landing');
-Route::get('/games/by-date/{date}', 'Games\BrowseByDateController@page')->name('games.browse.byDate.page');
+Route::get('/games/by-date', 'PublicSite\Games\BrowseByDateController@landing')->name('games.browse.byDate.landing');
+Route::get('/games/by-date/{date}', 'PublicSite\Games\BrowseByDateController@page')->name('games.browse.byDate.page');
 
 // Random
-Route::get('/games/random', 'Games\RandomController@getRandom')->name('game.random');
+Route::get('/games/random', 'PublicSite\Games\RandomController@getRandom')->name('game.random');
 
 // These must be after the game redirects
-Route::get('/games/{id}', 'Games\GameShowController@showId')->name('game.showId');
-Route::get('/games/{id}/{linkTitle}', 'Games\GameShowController@show')->name('game.show');
+Route::get('/games/{id}', 'PublicSite\Games\GameShowController@showId')->name('game.showId');
+Route::get('/games/{id}/{linkTitle}', 'PublicSite\Games\GameShowController@show')->name('game.show');
 
 /* Top Rated */
-Route::get('/top-rated', 'TopRatedController@landing')->name('topRated.landing');
-Route::get('/top-rated/all-time', 'TopRatedController@allTime')->name('topRated.allTime');
-Route::get('/top-rated/all-time/page/{page}', 'TopRatedController@allTimePage')->name('topRated.allTime.page');
-Route::get('/top-rated/by-year/{year}', 'TopRatedController@byYear')->name('topRated.byYear');
-Route::get('/top-rated/multiplayer', 'TopRatedController@multiplayer')->name('topRated.multiplayer');
+Route::get('/top-rated', 'PublicSite\TopRatedController@landing')->name('topRated.landing');
+Route::get('/top-rated/all-time', 'PublicSite\TopRatedController@allTime')->name('topRated.allTime');
+Route::get('/top-rated/all-time/page/{page}', 'PublicSite\TopRatedController@allTimePage')->name('topRated.allTime.page');
+Route::get('/top-rated/by-year/{year}', 'PublicSite\TopRatedController@byYear')->name('topRated.byYear');
+Route::get('/top-rated/multiplayer', 'PublicSite\TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */
-Route::get('/reviews/{year}', 'ReviewsController@landingByYear')->name('reviews.landing.byYear');
+Route::get('/reviews/{year}', 'PublicSite\ReviewsController@landingByYear')->name('reviews.landing.byYear');
 
 /* Partners */
-Route::get('/partners', 'PartnersController@landing')->name('partners.landing');
-Route::get('/partners/guides/{guideTitle}', 'PartnersController@guidesShow')->name('partners.guides.show');
+Route::get('/partners', 'PublicSite\PartnersController@landing')->name('partners.landing');
+Route::get('/partners/guides/{guideTitle}', 'PublicSite\PartnersController@guidesShow')->name('partners.guides.show');
 
-Route::get('/partners/review-sites', 'ReviewSitesController@landing')->name('partners.review-sites.landing');
-Route::get('/reviews/site/{linkTitle}', 'ReviewSitesController@siteProfile')->name('partners.review-sites.siteProfile');
+Route::get('/partners/review-sites', 'PublicSite\ReviewSitesController@landing')->name('partners.review-sites.landing');
+Route::get('/reviews/site/{linkTitle}', 'PublicSite\ReviewSitesController@siteProfile')->name('partners.review-sites.siteProfile');
 
-Route::get('/partners/games-companies', 'GamesCompaniesController@landing')->name('partners.games-companies.landing');
-Route::get('/partners/games-company/{linkTitle}', 'GamesCompaniesController@companyProfile')->name('partners.detail.games-company');
+Route::get('/partners/games-companies', 'PublicSite\GamesCompaniesController@landing')->name('partners.games-companies.landing');
+Route::get('/partners/games-company/{linkTitle}', 'PublicSite\GamesCompaniesController@companyProfile')->name('partners.detail.games-company');
 
 /* News */
-Route::get('/news', 'NewsController@landing')->name('news.landing');
-Route::get('/news/database-updates/{year}/{week}', 'NewsController@databaseUpdates')->name('news.databaseUpdates');
-Route::get('/news/archive', 'NewsController@landingArchive')->name('news.archive');
-Route::get('/news/category/{linkName}', 'NewsController@categoryLanding')->name('news.category.landing');
-Route::get('/news/{date}/{title}', 'NewsController@displayContent')->name('news.content');
+Route::get('/news', 'PublicSite\NewsController@landing')->name('news.landing');
+Route::get('/news/database-updates/{year}/{week}', 'PublicSite\NewsController@databaseUpdates')->name('news.databaseUpdates');
+Route::get('/news/archive', 'PublicSite\NewsController@landingArchive')->name('news.archive');
+Route::get('/news/category/{linkName}', 'PublicSite\NewsController@categoryLanding')->name('news.category.landing');
+Route::get('/news/{date}/{title}', 'PublicSite\NewsController@displayContent')->name('news.content');
 
 // Community
-Route::get('/community', 'CommunityController@landing')->name('community.landing');
+Route::get('/community', 'PublicSite\CommunityController@landing')->name('community.landing');
 
 // Sitemaps
 Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');

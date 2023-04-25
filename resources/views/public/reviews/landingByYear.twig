@@ -1,0 +1,74 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/reviews/navByYear.twig' %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>
+            Reviews by month
+        </h2>
+        <p>
+            The total number of reviews published each month in {{ ReviewYear }}.
+        </p>
+
+        {% if DateList|length %}
+            {% include 'public/reviews/reviewYearChart.twig' with {'ChartDataSet': DateList} %}
+        {% endif %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>
+            Score distribution
+        </h2>
+        <p>
+            The spread of scores for reviews published in {{ ReviewYear }}.
+        </p>
+        {% include 'public/reviews/charts/scoreDistribution.twig' with {'ChartDataSet': ScoreDistributionByYear} %}
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>
+            Ranked / Unranked
+        </h2>
+        <p>
+            The proportion of games released this year that are ranked or unranked.
+            To be ranked, a game must have 3 reviews on the site.
+        </p>
+
+        {% include 'public/reviews/charts/rankedUnranked.twig' with {'ChartDataSet': RankedCountByYear} %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        <h2>
+            Ranked games: Review count stats
+        </h2>
+        <p>
+            This shows how many games have received e.g. 3 reviews, or 4 reviews, or 5 reviews, etc.
+            A lot of games have a small number of reviews.
+        </p>
+
+        {% include 'public/reviews/charts/reviewCountStats.twig' with {'ChartDataSet': ReviewCountStatsByYear} %}
+
+    </div>
+
+</div>
+
+<script>
+    $('#btn-nav-page-{{ ReviewYear }}').addClass('btn-primary');
+</script>
+
+{% endblock page_body %}

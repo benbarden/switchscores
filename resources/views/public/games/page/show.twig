@@ -1,0 +1,182 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% set hideHeader = true %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+
+    <div class="col-xs-12 col-sm-8 col-md-8">
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-12 col-lg-12">
+
+                <div class="pull-right" style="margin: 15px 0;">
+                    {% if GameData.game_rank %}
+                        {% include 'modules/rating/badge.twig' with {'score': GameData.rating_avg, 'scoreSize': 'h4'} %}
+                    {% elseif GameData.rating_avg %}
+                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+                    {% endif %}
+                </div>
+                <h1 style="margin: 10px 0;">
+                    {{ GameData.title }}
+                </h1>
+
+                {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
+                {% if boxartUrl %}
+                    <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
+                {% endif %}
+
+                {% if GameData.video_url %}
+                    {% set VideoTypeDesc = GameData.getVideoTypeDesc() %}
+                    {% include 'public/games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
+                {% endif %}
+
+                {% if GameData.is_low_quality == 1 %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        This game has been flagged with our low quality filter.
+                        <a href="{{ route('help.low-quality-filter') }}" style="color: #fff; font-weight: bold;">Learn more</a>.
+                    </div>
+                {% endif %}
+
+                {% if GameBlurb %}
+                    <p style="margin-top: 15px;">
+                        {{ GameBlurb|raw }}
+                    </p>
+                {% endif %}
+
+                {% if GameTags|length > 0 %}
+
+                    <p>
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        <strong>Tags -</strong>
+                        {% for item in GameTags %}
+                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                                <nobr>{{ item.tag.tag_name }}</nobr>
+                            </a>
+                            {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </p>
+
+                {% endif %}
+
+                {% include 'public/games/page/reviews.twig' with {'GameReviews': GameReviews} %}
+                {% include 'public/games/page/quickReviews.twig' with {'ReviewList': GameQuickReviewList} %}
+                {% include 'public/games/page/news.twig' with {'NewsList': GameNews} %}
+
+            </div>
+
+        </div>
+
+        {% if RelatedByCategory %}
+            <h2>More in this category: {{ CategoryName }}</h2>
+            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCategory, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">View all in this category</a>.
+            </p>
+        {% endif %}
+        {% if RelatedByCollection %}
+            <h2>More in this collection: {{ CollectionName }}</h2>
+            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCollection, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
+            </p>
+        {% elseif RelatedBySeries %}
+            <h2>More in this series: {{ SeriesName }}</h2>
+            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedBySeries, 'batchOverride': 2} %}
+            <p>
+                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">View all in this series</a>.
+            </p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+
+        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Staff links</h2>
+            <table class="table">
+                <tr>
+                    <td>
+                        <strong>
+                            Detail
+                        </strong>
+                    </td>
+                    <td>
+                        <a href="{{ route('staff.games.detail', {'gameId': GameData.id}) }}">View detail</a>
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Rank</h2>
+
+        {% include 'modules/game/rank/all-time.twig' %}
+        {% include 'modules/game/rank/year.twig' %}
+        {% include 'modules/game/rank/year-month.twig' %}
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Buy this game</h2>
+        {% include 'public/games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Infobox</h2>
+        {% include 'public/games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Collection</h2>
+        {% if auth_user() %}
+            {% if UserCollectionItem %}
+                <p>
+                    This game is in your collection.
+                </p>
+                {% include 'modules/user/collection/grid-item.twig' with {'item': UserCollectionItem, 'game': UserCollectionGame, 'displayMode': 'hide-extra-links'} %}
+            {% else %}
+                <p>
+                    This game is not in your collection.
+                </p>
+                <p>
+                    <a class="btn btn-sm btn-primary" href="{{ route('user.collection.add', {'gameId': GameId}) }}">Add to your collection</a>
+                </p>
+            {% endif %}
+        {% else %}
+            <p>
+                <a href="{{ route('login') }}">Login</a> to add this game to your collection.
+            </p>
+        {% endif %}
+
+        {#
+        {% if GameReviews.count > 2 %}
+            {% include 'games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
+        {% endif %}
+        #}
+
+        {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
+
+        {% set boxartUrl = ImageHelper.imageSquareUrl(GameData) %}
+        {% if boxartUrl %}
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ GameData.title }}">
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if exception is null %}
+            <a class="twitter-share-button" data-size="large"
+               href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores">Tweet</a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% include 'modules/game/scrollbox/scripts.twig' %}
+
+{% endblock page_body %}

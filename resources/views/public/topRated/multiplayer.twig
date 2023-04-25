@@ -1,0 +1,26 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/topRated/navTopLinks.twig' with {'currentNav': 'btn-nav-multiplayer'} %}
+
+<p>
+    The Top Rated multiplayer games on the Nintendo Switch.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            Top 100 multiplayer Switch games
+        </h2>
+        {% if TopRatedMultiplayer|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedMultiplayer, 'batchOverride': 3} %}
+        {% else %}
+            <p>No Top Rated games here... yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock page_body %}
