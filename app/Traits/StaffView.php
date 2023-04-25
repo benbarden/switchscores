@@ -113,38 +113,6 @@ trait StaffView
         return $this->getBindings($pageTitle);
     }
 
-    // ***** Partners ***** //
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsPartnersSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersSubPage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsGamesCompaniesSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesCompaniesSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsPartnersOutreachSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makePartnersOutreachSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
     // ***** Data sources ***** //
 
     /**
