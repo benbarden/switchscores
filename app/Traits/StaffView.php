@@ -57,47 +57,6 @@ trait StaffView
         $this->tableSort = $tableSort;
     }
 
-    // ***** Games ***** //
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsGamesSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesSubPage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsGamesDetailSubpage($pageTitle, $gameId)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesDetailSubPage($pageTitle, $gameId);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsGamesTitleHashesSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesTitleHashesSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsGamesFeaturedGamesSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeGamesFeaturedGamesSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
     // ***** Reviews ***** //
 
     /**
@@ -127,15 +86,6 @@ trait StaffView
     public function getBindingsReviewsQuickReviewsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsQuickReviewsSubPage($pageTitle);
-        return $this->getBindings($pageTitle);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getBindingsReviewsCampaignsSubpage($pageTitle)
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperStaffBreadcrumbs()->makeReviewsCampaignsSubPage($pageTitle);
         return $this->getBindings($pageTitle);
     }
 
