@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     // Games: Bulk editing
     Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-predefined-list/{editMode}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editPredefinedList');
     Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editGameIdList');
+    Route::match(['get', 'post'], '/staff/games/bulk-edit/eshop-upcoming-crosscheck', 'Staff\Games\BulkEditorController@eshopUpcomingCrosscheck')->name('staff.games.bulk-edit.eshopUpcomingCrosscheck');
 
     // Game import rules
     Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');

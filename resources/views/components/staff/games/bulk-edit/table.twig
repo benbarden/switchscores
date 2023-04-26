@@ -1,0 +1,75 @@
+{{ csrf_field() }}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <table class="table table-condensed table-responsive">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Publishers</th>
+                <th class="text-center">Release (EU)</th>
+                <th class="text-center">Price</th>
+                <th>eShop Europe order</th>
+                <th></th>
+                <th class="text-center">Options</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in GameList %}
+                <tr>
+                    <td>
+                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                        {% if item.is_low_quality == 1 %}
+                            <label class="label label-danger">Low quality</label>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.gamePublishers|length > 0 %}
+                            {% for item in item.gamePublishers %}
+                                <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" tabindex="-1">
+                                    {{ item.publisher.name }}
+                                </a>
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{ item.eu_release_date }}</td>
+                    <td class="text-center">{{ item.price_eshop }}</td>
+                    <td>
+                        <input id="eshop_europe_order_{{ item.id }}" name="eshop_europe_order_{{ item.id }}" type="text" class="form-control">
+                    </td>
+                    <td>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}" tabindex="-1">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-2">
+
+    </div>
+
+</div>
+
+<hr>
+
+<div class="form-group">
+    <div class="col-md-8">
+        <button id="btn-submit" class="btn outline btn-primary pull-right">
+            Save changes
+        </button>
+    </div>
+</div>
+
+<script>
+    {% for item in GameList %}
+    $('#eshop_europe_order_{{ item.id }}').val({{ item.eshop_europe_order }});
+    {% endfor %}
+</script>

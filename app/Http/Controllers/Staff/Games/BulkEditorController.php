@@ -40,6 +40,19 @@ class BulkEditorController extends Controller
         $this->repoGameLists = $repoGameLists;
     }
 
+    public function eshopUpcomingCrosscheck()
+    {
+        $pageTitle = 'Bulk edit games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $gameList = $this->repoGameLists->upcomingEshopCrosscheck();
+        $bindings['GameList'] = $gameList;
+
+        return view('staff.games.bulk-edit.eshop-upcoming-crosscheck', $bindings);
+
+    }
+
     private function getEditModeBindings($editMode, $bindings)
     {
         $editModeHeader1 = '';

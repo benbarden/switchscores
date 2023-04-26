@@ -39,6 +39,12 @@ Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
 Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
 Route::get('/url/news-url', 'Api\UrlController@generateNewsUrl');
 
+// Games manager
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_GAMES_MANAGER]], function() {
+    Route::post('/game/bulk-update', 'Api\Game\BulkUpdate@eshopUpcomingCrosscheck')->name('api.game.bulk-update.eshop-upcoming-crosscheck');
+});
+
+
 /* Admin-restricted */
 Route::group(['middleware' => ['auth.admin:admin']], function() {
 

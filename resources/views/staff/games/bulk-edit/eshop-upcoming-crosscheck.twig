@@ -1,0 +1,10 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" hx-post="{{ route('api.game.bulk-update.eshop-upcoming-crosscheck') }}">
+{% include 'components/staff/games/bulk-edit/table.twig' %}
+</form>
+
+{% endblock page_inner %}
