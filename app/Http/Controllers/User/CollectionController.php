@@ -12,19 +12,18 @@ use Illuminate\Support\Collection;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
+use App\Domain\UserGamesCollection\CollectionStatsRepository;
 
 use App\Services\GamesCollection\PlayStatus;
 use App\Services\UserGamesCollectionService;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\MemberView;
 
 class CollectionController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -39,23 +38,28 @@ class CollectionController extends Controller
     protected $serviceUserGamesCollection;
     protected $repoUserGamesCollection;
     protected $dbUserGamesCollection;
+    protected $repoCollectionStats;
 
     public function __construct(
         GameRepository $repoGame,
         UserGamesCollectionService $serviceUserGamesCollection,
         UserGamesCollectionRepository $repoUserGamesCollection,
-        UserGamesCollectionDbQueries $dbUserGamesCollection
+        UserGamesCollectionDbQueries $dbUserGamesCollection,
+        CollectionStatsRepository $repoCollectionStats
     )
     {
         $this->repoGame = $repoGame;
         $this->serviceUserGamesCollection = $serviceUserGamesCollection;
         $this->repoUserGamesCollection = $repoUserGamesCollection;
         $this->dbUserGamesCollection = $dbUserGamesCollection;
+        $this->repoCollectionStats = $repoCollectionStats;
     }
 
     public function landing()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Games collection');
+        $pageTitle = 'Games collection';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $serviceCollectionPlayStatus = new PlayStatus();
 
@@ -65,7 +69,7 @@ class CollectionController extends Controller
         $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
-        $bindings['CollectionStats'] = $this->getServiceUserGamesCollection()->getStats($userId);
+        $bindings['CollectionStats'] = $this->repoCollectionStats->userStats($userId);
 
         $playStatusList = $serviceCollectionPlayStatus->generateAll();
 
@@ -74,7 +78,7 @@ class CollectionController extends Controller
         foreach ($playStatusList as $playStatus) {
 
             $statusId = $playStatus->getId();
-            $listItems = $this->getServiceUserGamesCollection()->getPlayStatusByUser($userId, $statusId);
+            $listItems = $this->repoUserGamesCollection->byUserAndPlayStatus($userId, $statusId);
             $userPlayStatusList[] = ['PlayStatus' => $playStatus, 'ListItems' => $listItems];
 
         }
@@ -83,31 +87,33 @@ class CollectionController extends Controller
 
         // New layout
         $bindings['ListRecentlyAdded'] = $this->repoUserGamesCollection->byUser($userId, 6);
-        $bindings['ListNotStarted'] = $this->getServiceUserGamesCollection()->getNotStartedByUser($userId, 5);
-        $bindings['ListPaused'] = $this->getServiceUserGamesCollection()->getPausedByUser($userId, 5);
-        $bindings['ListNowPlaying'] = $this->getServiceUserGamesCollection()->getNowPlayingByUser($userId, 5);
-        $bindings['ListReplaying'] = $this->getServiceUserGamesCollection()->getReplayingByUser($userId, 5);
-        $bindings['ListCompleted'] = $this->getServiceUserGamesCollection()->getCompletedByUser($userId, 5);
-        $bindings['ListAbandoned'] = $this->getServiceUserGamesCollection()->getAbandonedByUser($userId, 5);
-        $bindings['ListEndless'] = $this->getServiceUserGamesCollection()->getEndlessByUser($userId, 5);
+        $bindings['ListNotStarted'] = $this->repoUserGamesCollection->byUserNotStarted($userId, 5);
+        $bindings['ListPaused'] = $this->repoUserGamesCollection->byUserPaused($userId, 5);
+        $bindings['ListNowPlaying'] = $this->repoUserGamesCollection->byUserNowPlaying($userId, 5);
+        $bindings['ListReplaying'] = $this->repoUserGamesCollection->byUserReplaying($userId, 5);
+        $bindings['ListCompleted'] = $this->repoUserGamesCollection->byUserCompleted($userId, 5);
+        $bindings['ListAbandoned'] = $this->repoUserGamesCollection->byUserAbandoned($userId, 5);
+        $bindings['ListEndless'] = $this->repoUserGamesCollection->byUserEndless($userId, 5);
 
-        $bindings['TotalNotStarted'] = $this->getServiceUserGamesCollection()->getUserTotalNotStarted($userId);
-        $bindings['TotalPaused'] = $this->getServiceUserGamesCollection()->getUserTotalPaused($userId);
-        $bindings['TotalNowPlaying'] = $this->getServiceUserGamesCollection()->getUserTotalNowPlaying($userId);
-        $bindings['TotalReplaying'] = $this->getServiceUserGamesCollection()->getUserTotalReplaying($userId);
-        $bindings['TotalCompleted'] = $this->getServiceUserGamesCollection()->getUserTotalCompleted($userId);
-        $bindings['TotalAbandoned'] = $this->getServiceUserGamesCollection()->getUserTotalAbandoned($userId);
-        $bindings['TotalEndless'] = $this->getServiceUserGamesCollection()->getUserTotalEndless($userId);
+        $bindings['TotalNotStarted'] = $this->repoCollectionStats->userTotalNotStarted($userId);
+        $bindings['TotalPaused'] = $this->repoCollectionStats->userTotalPaused($userId);
+        $bindings['TotalNowPlaying'] = $this->repoCollectionStats->userTotalNowPlaying($userId);
+        $bindings['TotalReplaying'] = $this->repoCollectionStats->userTotalReplaying($userId);
+        $bindings['TotalCompleted'] = $this->repoCollectionStats->userTotalCompleted($userId);
+        $bindings['TotalAbandoned'] = $this->repoCollectionStats->userTotalAbandoned($userId);
+        $bindings['TotalEndless'] = $this->repoCollectionStats->userTotalEndless($userId);
 
-        $bindings['TotalGames'] = $this->getServiceUserGamesCollection()->getUserTotalGames($userId);
-        $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
+        $bindings['TotalGames'] = $this->repoCollectionStats->userTotalGames($userId);
+        $bindings['TotalHours'] = $this->repoCollectionStats->userTotalHours($userId);
 
         return view('user.collection.index', $bindings);
     }
 
     public function categoryBreakdown()
     {
-        $bindings = $this->getBindingsCollectionSubpage('Category breakdown');
+        $pageTitle = 'Category breakdown';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['CategoryBreakdown'] = $this->dbUserGamesCollection->getCategoryBreakdown($this->getAuthId());
 
@@ -119,7 +125,9 @@ class CollectionController extends Controller
         $category = $this->getServiceCategory()->find($categoryId);
         if (!$category) abort(404);
 
-        $bindings = $this->getBindingsCollectionSubpage('Category breakdown: '.$category->name);
+        $pageTitle = 'Category breakdown: '.$category->name;
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['Category'] = $category;
         $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($category->id);
@@ -136,39 +144,41 @@ class CollectionController extends Controller
         switch ($listOption) {
             case PlayStatus::PLAY_STATUS_NOT_STARTED:
                 $pageTitle = 'Not started';
-                $collectionList = $this->getServiceUserGamesCollection()->getNotStartedByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUserNotStarted($userId);
                 break;
             case PlayStatus::PLAY_STATUS_PAUSED:
                 $pageTitle = 'Paused';
-                $collectionList = $this->getServiceUserGamesCollection()->getPausedByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUserPaused($userId);
                 break;
             case 'active':
                 $pageTitle = 'Active';
-                $collectionNowPlaying = $this->getServiceUserGamesCollection()->getNowPlayingByUser($userId);
-                $collectionReplaying = $this->getServiceUserGamesCollection()->getReplayingByUser($userId);
+                $collectionNowPlaying = $this->repoUserGamesCollection->byUserNowPlaying($userId);
+                $collectionReplaying = $this->repoUserGamesCollection->byUserReplaying($userId);
                 $collectionList = $collectionNowPlaying->merge($collectionReplaying);
                 break;
             case PlayStatus::PLAY_STATUS_COMPLETED:
                 $pageTitle = 'Completed';
-                $collectionList = $this->getServiceUserGamesCollection()->getCompletedByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUserCompleted($userId);
                 break;
             case PlayStatus::PLAY_STATUS_ABANDONED:
                 $pageTitle = 'Abandoned';
-                $collectionList = $this->getServiceUserGamesCollection()->getAbandonedByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUserAbandoned($userId);
                 break;
             case PlayStatus::PLAY_STATUS_ENDLESS:
                 $pageTitle = 'Endless';
-                $collectionList = $this->getServiceUserGamesCollection()->getEndlessByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUserEndless($userId);
                 break;
             case 'recently-added':
                 $pageTitle = 'All games in your collection';
-                $collectionList = $this->getServiceUserGamesCollection()->getByUser($userId);
+                $collectionList = $this->repoUserGamesCollection->byUser($userId);
                 break;
             default:
                 abort(404);
         }
 
-        $bindings = $this->getBindingsCollectionSubpage($pageTitle, $tableSort);
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['CollectionList'] = $collectionList;
         $bindings['UserId'] = $userId;
@@ -181,7 +191,9 @@ class CollectionController extends Controller
 
     public function add()
     {
-        $bindings = $this->getBindingsCollectionSubpage('Add game to collection');
+        $pageTitle = 'Add game to collection';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
@@ -239,7 +251,9 @@ class CollectionController extends Controller
 
     public function edit($itemId)
     {
-        $bindings = $this->getBindingsCollectionSubpage('Edit games collection item');
+        $pageTitle = 'Edit games collection item';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $serviceCollection = $this->getServiceUserGamesCollection();
         $serviceCollectionPlayStatus = new PlayStatus();

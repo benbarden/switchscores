@@ -6,34 +6,36 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\UserGamesCollection\CollectionStatsRepository;
 
 use App\Traits\SwitchServices;
 use App\Traits\AuthUser;
-use App\Traits\MemberView;
 
 class IndexController extends Controller
 {
     use SwitchServices;
     use AuthUser;
-    use MemberView;
 
     protected $repoCampaign;
     protected $repoGamesCompany;
+    protected $repoCollectionStats;
 
     public function __construct(
         CampaignRepository $repoCampaign,
-        GamesCompanyRepository $repoGamesCompany
+        GamesCompanyRepository $repoGamesCompany,
+        CollectionStatsRepository $repoCollectionStats
     )
     {
         $this->repoCampaign = $repoCampaign;
         $this->repoGamesCompany = $repoGamesCompany;
+        $this->repoCollectionStats = $repoCollectionStats;
     }
 
     public function show()
     {
-        $onPageTitle = 'Members dashboard';
-
-        $bindings = $this->getBindingsDashboardGenericSubpage($onPageTitle);
+        $pageTitle = 'Members dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $siteRole = 'member'; // default
 
@@ -42,8 +44,8 @@ class IndexController extends Controller
 
         $bindings['SiteRole'] = $siteRole;
         $bindings['UserData'] = $authUser;
-        $bindings['TotalGames'] = $this->getServiceUserGamesCollection()->getUserTotalGames($userId);
-        $bindings['TotalHours'] = $this->getServiceUserGamesCollection()->getUserTotalHours($userId);
+        $bindings['TotalGames'] = $this->repoCollectionStats->userTotalGames($userId);
+        $bindings['TotalHours'] = $this->repoCollectionStats->userTotalHours($userId);
 
         // Campaigns
         $activeCampaigns = $this->repoCampaign->getActive();
