@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class ProfileController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $repoReviewSite;
@@ -38,10 +36,15 @@ class ProfileController extends Controller
 
     public function edit()
     {
-        $siteId = $this->getCurrentUserReviewSiteId();
-        if (!$siteId) abort(403);
+        $currentUser = resolve('User/Repository')->currentUser();
 
-        $partnerData = $this->repoReviewSite->find($siteId);
+        $reviewSite = $currentUser->partner;
+        // These shouldn't be possible but it saves problems later on
+        if (!$reviewSite) abort(403);
+
+        $siteId = $reviewSite->id;
+
+        //$partnerData = $this->repoReviewSite->find($siteId);
 
         $bindings = [];
         $request = request();
@@ -62,11 +65,11 @@ class ProfileController extends Controller
             $contactFormLink = $request->contact_form_link;
             $reviewCodeRegions = $request->review_code_regions;
 
-            $partnerData->contact_name = $contactName;
-            $partnerData->contact_email = $contactEmail;
-            $partnerData->contact_form_link = $contactFormLink;
-            $partnerData->review_code_regions = $reviewCodeRegions;
-            $partnerData->save();
+            $reviewSite->contact_name = $contactName;
+            $reviewSite->contact_email = $contactEmail;
+            $reviewSite->contact_form_link = $contactFormLink;
+            $reviewSite->review_code_regions = $reviewCodeRegions;
+            $reviewSite->save();
 
             return redirect(route('reviewers.index'));
         } else {
@@ -76,7 +79,7 @@ class ProfileController extends Controller
         $bindings['TopTitle'] = 'Edit profile';
         $bindings['PageTitle'] = 'Edit profile';
 
-        $bindings['PartnerData'] = $partnerData;
+        $bindings['PartnerData'] = $reviewSite;
 
         return view('reviewers.profile.edit', $bindings);
     }

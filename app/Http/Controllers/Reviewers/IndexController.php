@@ -10,12 +10,10 @@ use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class IndexController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoReviewSite;
     protected $repoPartnerFeedLink;
@@ -37,21 +35,18 @@ class IndexController extends Controller
 
     public function show()
     {
+        $currentUser = resolve('User/Repository')->currentUser();
+
+        $reviewSite = $currentUser->partner;
+        // These shouldn't be possible but it saves problems later on
+        if (!$reviewSite) abort(403);
+
+        $partnerId = $reviewSite->id;
+        $partnerUrl = $reviewSite->website_url;
+
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $bindings = [];
-
-        $userId = $this->getAuthId();
-
-        $authUser = $this->getValidUser($this->getServiceUser());
-
-        $partnerId = $authUser->partner_id;
-
-        $reviewSite = $this->repoReviewSite->find($partnerId);
-        $partnerUrl = $reviewSite->website_url;
-
-        // These shouldn't be possible but it saves problems later on
-        if (!$reviewSite) abort(400);
 
         $bindings['PartnerData'] = $reviewSite;
 

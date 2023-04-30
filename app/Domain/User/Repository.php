@@ -5,8 +5,28 @@ namespace App\Domain\User;
 
 use App\Models\User;
 
+use Illuminate\Support\Facades\Auth;
+
 class Repository
 {
+    /**
+     * @param $id
+     * @return User
+     */
+    public function find($id)
+    {
+        return User::find($id);
+    }
+
+    public function currentUser()
+    {
+        $userId = Auth::id();
+        if (!$userId) return null;
+
+        $user = $this->find($userId);
+        return $user;
+    }
+
     public function createFromTwitterLogin(
         $twitterUserId, $twitterNickname
     )
@@ -54,15 +74,6 @@ class Repository
     {
         $user->last_access_date = $todaysDate;
         $user->save();
-    }
-
-    /**
-     * @param $id
-     * @return User
-     */
-    public function find($id)
-    {
-        return User::find($id);
     }
 
     public function getAll()

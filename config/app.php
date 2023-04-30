@@ -162,6 +162,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // Domain providers
+        App\Providers\Domain\User\RepositoryProvider::class,
         App\Providers\Domain\ViewServiceProvider::class,
 
         // App providers

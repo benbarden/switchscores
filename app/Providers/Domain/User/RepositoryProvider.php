@@ -25,7 +25,7 @@ class RepositoryProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Domain\User\Repository', function($app) {
+        $this->app->bind('User/Repository', function($app) {
             return new UserRepository();
         });
     }
