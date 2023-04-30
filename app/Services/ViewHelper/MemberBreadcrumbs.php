@@ -36,21 +36,6 @@ class MemberBreadcrumbs
             ->getBreadcrumbs();
     }
 
-    // ***** Games collection ***** //
-
-    public function addCollectionDashboard()
-    {
-        $crumbItem = ['url' => route('user.collection.landing'), 'text' => 'Games collection'];
-        return $this->addCrumb($crumbItem);
-    }
-
-    public function makeCollectionSubpage($pageTitle)
-    {
-        return $this->addCollectionDashboard()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
     // ***** Quick reviews ***** //
 
     public function addQuickReviewsList()
@@ -78,35 +63,6 @@ class MemberBreadcrumbs
     public function makeFeaturedGamesSubpage($pageTitle)
     {
         return $this->addFeaturedGames()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
-    // ***** Database help ***** //
-
-    public function addDatabaseHelpDashboard()
-    {
-        $crumbItem = ['url' => route('user.database-help.index'), 'text' => 'Database help'];
-        return $this->addCrumb($crumbItem);
-    }
-
-    public function addDatabaseHelpGamesWithoutCategories()
-    {
-        $crumbItem = ['url' => route('user.database-help.games-without-categories'), 'text' => 'Games without categories'];
-        return $this->addCrumb($crumbItem);
-    }
-
-    public function makeDatabaseHelpSubpage($pageTitle)
-    {
-        return $this->addDatabaseHelpDashboard()
-            ->addPageTitle($pageTitle)
-            ->getBreadcrumbs();
-    }
-
-    public function makeDatabaseHelpGamesWithoutCategoriesSubpage($pageTitle)
-    {
-        return $this->addDatabaseHelpDashboard()
-            ->addDatabaseHelpGamesWithoutCategories()
             ->addPageTitle($pageTitle)
             ->getBreadcrumbs();
     }

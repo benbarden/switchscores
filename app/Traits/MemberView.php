@@ -57,15 +57,6 @@ trait MemberView
         return $this->getBindings($pageTitle);
     }
 
-    public function getBindingsCollectionSubpage($pageTitle, $tableSort = '')
-    {
-        $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeCollectionSubpage($pageTitle);
-        if ($tableSort) {
-            $this->tableSort = $tableSort;
-        }
-        return $this->getBindings($pageTitle);
-    }
-
     public function getBindingsQuickReviewsSubpage($pageTitle)
     {
         $this->breadcrumbs = $this->getServiceViewHelperMemberBreadcrumbs()->makeQuickReviewsSubpage($pageTitle);
