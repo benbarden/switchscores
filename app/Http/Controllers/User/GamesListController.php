@@ -7,12 +7,10 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class GamesListController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     private $repoGamesCompany;
 
@@ -30,11 +28,10 @@ class GamesListController extends Controller
 
         $bindings = [];
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
-        $authUser = $this->getValidUser($this->getServiceUser());
-
-        $gamesCompanyId = $authUser->partner_id;
+        $gamesCompanyId = $currentUser->partner_id;
         if (!$gamesCompanyId) abort(403);
 
         $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);

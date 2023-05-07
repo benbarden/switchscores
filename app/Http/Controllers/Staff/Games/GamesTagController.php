@@ -10,7 +10,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
@@ -20,7 +19,6 @@ use App\Domain\TagCategory\Repository as TagCategoryRepository;
 class GamesTagController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

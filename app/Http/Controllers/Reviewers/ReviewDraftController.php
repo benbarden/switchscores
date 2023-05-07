@@ -15,12 +15,10 @@ use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class ReviewDraftController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -51,8 +49,8 @@ class ReviewDraftController extends Controller
 
     public function findGame()
     {
-        $siteId = $this->getCurrentUserReviewSiteId();
-        if (!$siteId) abort(403);
+        $currentUser = resolve('User/Repository')->currentUser();
+        $siteId = $currentUser->partner_id;
 
         $bindings = [];
 
@@ -149,7 +147,9 @@ class ReviewDraftController extends Controller
 
     public function add($gameId)
     {
-        $siteId = $this->getCurrentUserReviewSiteId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $siteId = $currentUser->partner_id;
+
         if (!$siteId) abort(403);
 
         $partnerData = $this->repoReviewSite->find($siteId);
@@ -216,8 +216,8 @@ class ReviewDraftController extends Controller
 
     public function edit(ReviewDraft $reviewDraft)
     {
-        $siteId = $this->getCurrentUserReviewSiteId();
-        if (!$siteId) abort(403);
+        $currentUser = resolve('User/Repository')->currentUser();
+        $siteId = $currentUser->partner_id;
 
         $partnerData = $this->repoReviewSite->find($siteId);
         $partnerUrl = $partnerData->website_url;

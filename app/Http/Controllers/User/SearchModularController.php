@@ -12,13 +12,11 @@ use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 
 use App\Traits\MemberView;
-use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
 
 class SearchModularController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
     use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -71,7 +69,8 @@ class SearchModularController extends Controller
 
         $bindings['SearchMode'] = $searchMode;
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         switch ($searchMode) {
             case 'add-quick-review':

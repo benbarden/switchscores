@@ -9,12 +9,10 @@ use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class FeedHealthController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoReviewSite;
     protected $repoPartnerFeedLink;
@@ -35,9 +33,9 @@ class FeedHealthController extends Controller
     {
         $bindings = [];
 
-        $authUser = $this->getValidUser($this->getServiceUser());
+        $currentUser = resolve('User/Repository')->currentUser();
 
-        $partnerId = $authUser->partner_id;
+        $partnerId = $currentUser->partner_id;
 
         $reviewSite = $this->repoReviewSite->find($partnerId);
 
@@ -67,9 +65,9 @@ class FeedHealthController extends Controller
     {
         $bindings = [];
 
-        $authUser = $this->getValidUser($this->getServiceUser());
+        $currentUser = resolve('User/Repository')->currentUser();
 
-        $partnerId = $authUser->partner_id;
+        $partnerId = $currentUser->partner_id;
 
         $reviewSite = $this->repoReviewSite->find($partnerId);
 
@@ -95,9 +93,9 @@ class FeedHealthController extends Controller
 
         $bindings = [];
 
-        $authUser = $this->getValidUser($this->getServiceUser());
+        $currentUser = resolve('User/Repository')->currentUser();
 
-        $partnerId = $authUser->partner_id;
+        $partnerId = $currentUser->partner_id;
 
         $reviewSite = $this->repoReviewSite->find($partnerId);
 

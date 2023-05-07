@@ -17,6 +17,7 @@ use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\FormatOptions as GameFormatOptions;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
@@ -25,13 +26,11 @@ use App\Factories\GameDirectorFactory;
 use App\Models\Game;
 use App\Services\Game\Images as GameImages;
 
-use App\Traits\AuthUser;
 use App\Traits\SwitchServices;
 
 class GamesEditorController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -51,6 +50,7 @@ class GamesEditorController extends Controller
     private $repoGameCollection;
     private $repoCategory;
     private $formatOptions;
+    private $repoGame;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
@@ -58,7 +58,8 @@ class GamesEditorController extends Controller
         GameSeriesRepository $repoGameSeries,
         GameCollectionRepository $repoGameCollection,
         CategoryRepository $repoCategory,
-        GameFormatOptions $formatOptions
+        GameFormatOptions $formatOptions,
+        GameRepository $repoGame
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
@@ -67,6 +68,7 @@ class GamesEditorController extends Controller
         $this->repoGameCollection = $repoGameCollection;
         $this->repoCategory = $repoCategory;
         $this->formatOptions = $formatOptions;
+        $this->repoGame = $repoGame;
     }
 
     public function add()
@@ -156,7 +158,7 @@ class GamesEditorController extends Controller
 
         $request = request();
 
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
         if ($request->isMethod('post')) {
@@ -199,7 +201,7 @@ class GamesEditorController extends Controller
 
         $request = request();
 
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
         $dsCurrentParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
@@ -319,7 +321,7 @@ class GamesEditorController extends Controller
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
         $serviceGamePublisher = $this->getServiceGamePublisher();
 
-        $gameData = $serviceGame->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
         $customErrors = [];
@@ -376,13 +378,10 @@ class GamesEditorController extends Controller
 
     public function releaseGame()
     {
-        $serviceUser = $this->getServiceUser();
         $serviceGame = $this->getServiceGame();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 

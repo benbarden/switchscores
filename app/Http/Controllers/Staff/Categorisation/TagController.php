@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
@@ -16,7 +15,6 @@ use App\Domain\TagCategory\Repository as TagCategoryRepository;
 class TagController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -125,10 +123,8 @@ class TagController extends Controller
 
     public function deleteTag()
     {
-        $userId = $this->getAuthId();
-
-        $user = $this->getServiceUser()->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 

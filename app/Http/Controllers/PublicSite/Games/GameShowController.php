@@ -6,14 +6,14 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\AuthUser;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class GameShowController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoFeaturedGames;
     protected $repoGameLists;
@@ -108,8 +108,9 @@ class GameShowController extends Controller
         }
 
         // Logged in user data
-        $userId = $this->getAuthId();
-        if ($userId) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if ($currentUser) {
+            $userId = $currentUser->id;
             $bindings['UserCollectionItem'] = $this->getServiceUserGamesCollection()->getUserGameItem($userId, $gameId);
             $bindings['UserCollectionGame'] = $gameData;
         }

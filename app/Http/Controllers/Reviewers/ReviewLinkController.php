@@ -7,12 +7,10 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class ReviewLinkController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoReviewSite;
 
@@ -29,9 +27,9 @@ class ReviewLinkController extends Controller
 
         $bindings = [];
 
-        $authUser = $this->getValidUser($this->getServiceUser());
+        $currentUser = resolve('User/Repository')->currentUser();
 
-        $partnerId = $authUser->partner_id;
+        $partnerId = $currentUser->partner_id;
 
         if (!$partnerId) abort(403);
 

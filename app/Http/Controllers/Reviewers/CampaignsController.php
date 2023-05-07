@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Reviewers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
 
 class CampaignsController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoCampaign;
 
@@ -53,8 +51,8 @@ class CampaignsController extends Controller
         $bindings['GameList'] = $gameList;
         $bindings['jsInitialSort'] = "[3, 'asc'], [2, 'desc']";
 
-        $authUser = $this->getValidUser($this->getServiceUser());
-        $partnerId = $authUser->partner_id;
+        $currentUser = resolve('User/Repository')->currentUser();
+        $partnerId = $currentUser->partner_id;
         $bindings['ReviewedGameIdList'] = $this->getServiceReviewLink()->getGameIdsReviewedBySite($partnerId);
 
         $bindings['TopTitle'] = $pageTitle;

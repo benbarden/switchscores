@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Reviewers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 use App\Domain\Unranked\Repository as UnrankedRepository;
 
 class UnrankedGamesController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     private $repoUnranked;
 
@@ -25,7 +23,8 @@ class UnrankedGamesController extends Controller
 
     public function landing()
     {
-        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
+        $currentUser = resolve('User/Repository')->currentUser();
+        $partnerId = $currentUser->partner_id;
         if ($partnerId == 0) {
             abort(403);
         }
@@ -40,7 +39,8 @@ class UnrankedGamesController extends Controller
 
     public function showList($mode, $filter)
     {
-        $partnerId = $this->getValidUser($this->getServiceUser())->partner_id;
+        $currentUser = resolve('User/Repository')->currentUser();
+        $partnerId = $currentUser->partner_id;
         if ($partnerId == 0) {
             abort(403);
         }

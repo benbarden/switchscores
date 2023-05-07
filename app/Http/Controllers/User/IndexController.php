@@ -9,12 +9,10 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\UserGamesCollection\CollectionStatsRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class IndexController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoCampaign;
     protected $repoGamesCompany;
@@ -39,11 +37,11 @@ class IndexController extends Controller
 
         $siteRole = 'member'; // default
 
-        $userId = $this->getAuthId();
-        $authUser = $this->getValidUser($this->getServiceUser());
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         $bindings['SiteRole'] = $siteRole;
-        $bindings['UserData'] = $authUser;
+        $bindings['UserData'] = $currentUser;
         $bindings['TotalGames'] = $this->repoCollectionStats->userTotalGames($userId);
         $bindings['TotalHours'] = $this->repoCollectionStats->userTotalHours($userId);
 

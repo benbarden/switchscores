@@ -8,15 +8,14 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 use App\Traits\MemberView;
 
 class FeaturedGameController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
     use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -31,17 +30,22 @@ class FeaturedGameController extends Controller
     ];
 
     protected $repoFeaturedGame;
+    protected $repoGame;
 
-    public function __construct(FeaturedGameRepository $featuredGame)
+    public function __construct(
+        FeaturedGameRepository $featuredGame,
+        GameRepository $repoGame
+    )
     {
         $this->repoFeaturedGame = $featuredGame;
+        $this->repoGame = $repoGame;
     }
 
     public function add($gameId)
     {
         $bindings = $this->getBindingsFeaturedGamesSubpage('Add featured game');
 
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
         // Don't allow duplicates
@@ -56,7 +60,8 @@ class FeaturedGameController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $userId = $this->getAuthId();
+            $currentUser = resolve('User/Repository')->currentUser();
+            $userId = $currentUser->id;
             $featuredType = $request->featured_type;
             $this->repoFeaturedGame->createFromUserSubmission($userId, $gameId, $featuredType);
 

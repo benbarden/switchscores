@@ -4,14 +4,8 @@ namespace App\Http\Controllers\DeveloperHub;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
-
 class IndexController extends Controller
 {
-    use SwitchServices;
-    use AuthUser;
-
     public function show()
     {
         $bindings = [];

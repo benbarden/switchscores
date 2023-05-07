@@ -8,12 +8,10 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class GamesController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoFeaturedGames;
     protected $repoGameStats;
@@ -40,8 +38,8 @@ class GamesController extends Controller
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
 
-        $authUser = $this->getValidUser($this->getServiceUser());
-        $partnerId = $authUser->partner_id;
+        $currentUser = resolve('User/Repository')->currentUser();
+        $partnerId = $currentUser->partner_id;
 
         // Nintendo.co.uk API data
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);

@@ -18,12 +18,10 @@ use App\Services\GamesCollection\PlayStatus;
 use App\Services\UserGamesCollectionService;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class CollectionController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -63,7 +61,8 @@ class CollectionController extends Controller
 
         $serviceCollectionPlayStatus = new PlayStatus();
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
         $bindings['UserId'] = $userId;
 
         $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
@@ -115,7 +114,10 @@ class CollectionController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $bindings['CategoryBreakdown'] = $this->dbUserGamesCollection->getCategoryBreakdown($this->getAuthId());
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
+
+        $bindings['CategoryBreakdown'] = $this->dbUserGamesCollection->getCategoryBreakdown($userId);
 
         return view('user.collection.category-breakdown', $bindings);
     }
@@ -125,20 +127,24 @@ class CollectionController extends Controller
         $category = $this->getServiceCategory()->find($categoryId);
         if (!$category) abort(404);
 
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
+
         $pageTitle = 'Category breakdown: '.$category->name;
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['Category'] = $category;
         $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($category->id);
-        $bindings['OwnedGamedIdList'] = $this->getServiceUserGamesCollection()->getGameIdsByUser($this->getAuthId());
+        $bindings['OwnedGamedIdList'] = $this->getServiceUserGamesCollection()->getGameIdsByUser($userId);
 
         return view('user.collection.top-rated-by-category', $bindings);
     }
 
     public function showList($listOption)
     {
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
         $tableSort = '[4, "desc"]';
 
         switch ($listOption) {
@@ -201,7 +207,8 @@ class CollectionController extends Controller
 
         $request = request();
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         if ($request->isMethod('post')) {
 
@@ -260,7 +267,8 @@ class CollectionController extends Controller
 
         $request = request();
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         $collectionData = $serviceCollection->find($itemId);
         if (!$collectionData) abort(404);
@@ -312,7 +320,10 @@ class CollectionController extends Controller
             return response()->json(['error' => 'Not found: '.$collectionItemId], 404);
         }
 
-        if ($collectionItem->user_id != $this->getAuthId()) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
+
+        if ($collectionItem->user_id != $userId) {
             return response()->json(['error' => 'Collection item belongs to another user'], 400);
         }
 

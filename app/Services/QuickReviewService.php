@@ -93,6 +93,9 @@ class QuickReviewService
         return $reviewList;
     }
 
+    /**
+     * @deprecated
+     */
     public function getAllByUserGameIdList($userId)
     {
         $reviewList = QuickReview::where('user_id', $userId)

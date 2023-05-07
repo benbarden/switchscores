@@ -9,20 +9,22 @@ use App\Events\UserCreated;
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 
-use App\Traits\SwitchServices;
+use App\Domain\User\Repository as UserRepository;
 
 class PointsForUserRegistration
 {
-    use SwitchServices;
+    private $repoUser;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        UserRepository $repoUser
+    )
     {
-        //
+        $this->repoUser = $repoUser;
     }
 
     /**
@@ -36,7 +38,7 @@ class PointsForUserRegistration
         $userId = $event->user->id;
 
         // Credit points
-        $user = $this->getServiceUser()->find($userId);
+        $user = $this->repoUser->find($userId);
         UserFactory::addPointsForUserRegistration($user);
 
         // Store the transaction

@@ -8,11 +8,30 @@ use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 use App\Models\QuickReview;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\User\Repository as UserRepository;
+
 use App\Traits\SwitchServices;
 
 class QuickReviewController extends Controller
 {
     use SwitchServices;
+
+    private $repoQuickReview;
+    private $repoGame;
+    private $repoUser;
+
+    public function __construct(
+        QuickReviewRepository $repoQuickReview,
+        GameRepository $repoGame,
+        UserRepository $repoUser
+    )
+    {
+        $this->repoQuickReview = $repoQuickReview;
+        $this->repoGame = $repoGame;
+        $this->repoUser = $repoUser;
+    }
 
     public function showList()
     {
@@ -45,7 +64,7 @@ class QuickReviewController extends Controller
 
         $request = request();
 
-        $reviewData = $this->getServiceQuickReview()->find($reviewId);
+        $reviewData = $this->repoQuickReview->find($reviewId);
         if (!$reviewData) abort(404);
 
         $statusList = $this->getServiceQuickReview()->getStatusList();
@@ -73,13 +92,13 @@ class QuickReviewController extends Controller
                 $gameId = $reviewData->game_id;
 
                 // Update game review stats
-                $game = $this->getServiceGame()->find($gameId);
+                $game = $this->repoGame->find($gameId);
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
                 $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
                 // Credit points
-                $user = $this->getServiceUser()->find($userId);
+                $user = $this->repoUser->find($userId);
                 UserFactory::addPointsForQuickReview($user);
 
                 // Store the transaction
@@ -110,7 +129,7 @@ class QuickReviewController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsQuickReviewsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $reviewData = $this->getServiceQuickReview()->find($reviewId);
+        $reviewData = $this->repoQuickReview->find($reviewId);
         if (!$reviewData) abort(404);
 
         $request = request();
@@ -123,7 +142,7 @@ class QuickReviewController extends Controller
 
             $this->getServiceQuickReview()->delete($reviewId);
 
-            $game = $this->getServiceGame()->find($gameId);
+            $game = $this->repoGame->find($gameId);
             if ($game) {
                 // Update game review stats
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);

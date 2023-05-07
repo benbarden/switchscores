@@ -12,12 +12,10 @@ use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class GamesPartnerController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     private $repoGame;
     private $gameQualityFilter;
@@ -64,12 +62,9 @@ class GamesPartnerController extends Controller
     public function addGameDeveloper()
     {
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceUser = $this->getServiceUser();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 
@@ -113,12 +108,9 @@ class GamesPartnerController extends Controller
     public function removeGameDeveloper()
     {
         $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceUser = $this->getServiceUser();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 
@@ -150,12 +142,9 @@ class GamesPartnerController extends Controller
     public function addGamePublisher()
     {
         $serviceGamePublisher = $this->getServiceGamePublisher();
-        $serviceUser = $this->getServiceUser();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 
@@ -199,12 +188,9 @@ class GamesPartnerController extends Controller
     public function removeGamePublisher()
     {
         $serviceGamePublisher = $this->getServiceGamePublisher();
-        $serviceUser = $this->getServiceUser();
 
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 
@@ -235,12 +221,8 @@ class GamesPartnerController extends Controller
 
     public function createNewCompany()
     {
-        $serviceUser = $this->getServiceUser();
-
-        $userId = $this->getAuthId();
-
-        $user = $serviceUser->find($userId);
-        if (!$user) {
+        $currentUser = resolve('User/Repository')->currentUser();
+        if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
         }
 

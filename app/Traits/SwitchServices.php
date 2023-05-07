@@ -36,7 +36,6 @@ use App\Services\TagService;
 use App\Services\TopRatedService;
 use App\Services\UrlService;
 use App\Services\UserGamesCollectionService;
-use App\Services\UserService;
 
 trait SwitchServices
 {
@@ -390,14 +389,4 @@ trait SwitchServices
     {
         return $this->loadService('UserGamesCollectionService');
     }
-
-    /**
-     * @deprecated
-     * @return UserService
-     */
-    public function getServiceUser()
-    {
-        return $this->loadService('UserService');
-    }
-
 }

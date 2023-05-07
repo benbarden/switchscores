@@ -8,19 +8,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\ReviewDraft;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
-use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
-
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class ToolsController extends Controller
 {
-    use SwitchServices;
-    use AuthUser;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $repoReviewDraft;
@@ -40,7 +32,8 @@ class ToolsController extends Controller
     {
         $bindings = [];
 
-        $siteId = $this->getCurrentUserReviewSiteId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $siteId = $currentUser->partner_id;
         if (!$siteId) abort(403);
 
         $bindings['PageTitle'] = "Import reviews";

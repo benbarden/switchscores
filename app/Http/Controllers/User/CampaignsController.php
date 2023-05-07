@@ -4,25 +4,25 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
-use App\Traits\MemberView;
-
 use App\Domain\Campaign\Repository as CampaignRepository;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 class CampaignsController extends Controller
 {
-    use SwitchServices;
-    use AuthUser;
-    use MemberView;
-
     protected $repoCampaign;
+    protected $repoGame;
+    protected $repoQuickReview;
 
     public function __construct(
-        CampaignRepository $repoCampaign
+        CampaignRepository $repoCampaign,
+        GameRepository $repoGame,
+        QuickReviewRepository $repoQuickReview
     )
     {
         $this->repoCampaign = $repoCampaign;
+        $this->repoGame = $repoGame;
+        $this->repoQuickReview = $repoQuickReview;
     }
 
     public function show($campaignId)
@@ -31,7 +31,11 @@ class CampaignsController extends Controller
         if (!$campaign) abort(404);
 
         $tableSort = "[6, 'asc'], [5, 'asc'], [3, 'desc'], [4, 'desc']";
-        $bindings = $this->getBindingsDashboardGenericSubpage('View campaign: '.$campaign->name, $tableSort);
+
+        $pageTitle = 'View campaign: '.$campaign->name;
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')
+            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['CampaignData'] = $campaign;
 
@@ -41,7 +45,7 @@ class CampaignsController extends Controller
 
             if ($gameItem->game) {
                 $gameId = $gameItem->game->id;
-                $game = $this->getServiceGame()->find($gameId);
+                $game = $this->repoGame->find($gameId);
                 if ($game) {
                     $gameList[] = $game;
                 }
@@ -51,7 +55,9 @@ class CampaignsController extends Controller
 
         $bindings['GameList'] = $gameList;
 
-        $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
+        $currentUser = resolve('User/Repository')->currentUser();
+
+        $bindings['ReviewedGameIdList'] = $this->repoQuickReview->byUserGameIdList($currentUser->id);
 
         return view('user.campaigns.show', $bindings);
     }

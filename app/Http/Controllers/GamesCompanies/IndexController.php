@@ -8,12 +8,10 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 class IndexController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     protected $repoGamesCompany;
     protected $repoReviewSite;
@@ -33,9 +31,9 @@ class IndexController extends Controller
 
         $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
 
-        $authUser = $this->getValidUser($this->getServiceUser());
-        $partnerId = $authUser->games_company_id;
-        $partnerData = $authUser->gamesCompany;
+        $currentUser = resolve('User/Repository')->currentUser();
+        $partnerId = $currentUser->games_company_id;
+        $partnerData = $currentUser->gamesCompany;
 
         $gameDevList = $this->getServiceGameDeveloper()->getGamesByDeveloper($partnerId, false);
         $gamePubList = $this->getServiceGamePublisher()->getGamesByPublisher($partnerId, false);

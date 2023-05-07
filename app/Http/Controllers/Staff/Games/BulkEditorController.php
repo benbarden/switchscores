@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 
 use App\Factories\GameDirectorFactory;
 
@@ -18,7 +17,6 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 class BulkEditorController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

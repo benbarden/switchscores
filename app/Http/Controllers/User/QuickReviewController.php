@@ -8,13 +8,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Traits\SwitchServices;
-use App\Traits\AuthUser;
 use App\Traits\MemberView;
 
 class QuickReviewController extends Controller
 {
     use SwitchServices;
-    use AuthUser;
     use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -31,13 +29,14 @@ class QuickReviewController extends Controller
     {
         $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review');
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         $gameData = $this->getServiceGame()->find($gameId);
         if (!$gameData) abort(404);
 
         // Don't allow duplicate reviews
-        $reviewedGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($this->getAuthId());
+        $reviewedGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
         if ($reviewedGameIdList->contains($gameId)) {
             return redirect(route('user.quick-reviews.list'));
         }
@@ -73,7 +72,8 @@ class QuickReviewController extends Controller
 
         $urlMsg = \Request::get('msg');
 
-        $userId = $this->getAuthId();
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
 
         if ($urlMsg) {
             $bindings['MsgSuccess'] = true;
