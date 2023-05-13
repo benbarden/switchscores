@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-use App\Models\Partner;
 use App\Models\ReviewLink;
 use App\Models\ReviewSite;
 use Illuminate\Support\Facades\DB;

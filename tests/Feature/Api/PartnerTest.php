@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Partner;
 use Tests\TestCase;
 
 class PartnerTest extends TestCase

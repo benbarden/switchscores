@@ -40,7 +40,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/partners/games-company/duplicate-website-urls', 'Staff\Partners\GamesCompanyController@duplicateWebsiteUrls')->name('staff.partners.games-company.duplicate-website-urls');
 
     // Partners: Outreach
-    Route::get('/staff/partners/outreach/list/{partner?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
+    Route::get('/staff/partners/outreach/list/{gamesCompany?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
     Route::match(['get', 'post'], '/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
     Route::match(['get', 'post'], '/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 

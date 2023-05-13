@@ -54,9 +54,9 @@ class AuditController extends Controller
                 $pageTitle = 'Audit report: Review links';
                 $itemList = $this->repoAudit->getReviewLink(250);
                 break;
-            case 'partners':
-                $pageTitle = 'Audit report: Partners';
-                $itemList = $this->repoAudit->getPartner(250);
+            case 'games-companies':
+                $pageTitle = 'Audit report: Games companies';
+                $itemList = $this->repoAudit->getGamesCompany(250);
                 break;
             default:
                 abort(404);

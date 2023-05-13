@@ -7,7 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Models\Partner;
+use App\Models\GamesCompany;
 use App\Models\PartnerOutreach;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
@@ -44,14 +44,14 @@ class OutreachController extends Controller
         'new_status' => 'required',
     ];
 
-    public function showList(Partner $partner = null)
+    public function showList(GamesCompany $gamesCompany = null)
     {
         $pageTitle = 'Partner outreach';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        if ($partner) {
-            $outreachList = $this->getServicePartnerOutreach()->getByPartnerId($partner->id);
+        if ($gamesCompany) {
+            $outreachList = $this->getServicePartnerOutreach()->getByPartnerId($gamesCompany->id);
         } else {
             $outreachList = $this->getServicePartnerOutreach()->getAll();
         }

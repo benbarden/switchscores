@@ -38,10 +38,9 @@ class Repository
         return $auditList->get();
     }
 
-    public function getPartner($limit = 250)
+    public function getGamesCompany($limit = 250)
     {
-        $auditList = Audit::
-        where('auditable_type', 'App\Models\Partner')
+        $auditList = Audit::where('auditable_type', 'App\Models\GamesCompany')
             ->orderBy('id', 'desc');
         if ($limit) {
             $auditList = $auditList->limit($limit);
