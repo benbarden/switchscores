@@ -24,7 +24,7 @@ class Repository
 
     public function getActive()
     {
-        return ReviewSite::orderBy('name', 'asc')->get();
+        return ReviewSite::orderBy('name', 'asc')->where('status', ReviewSite::STATUS_ACTIVE)->get();
     }
 
     public function getActiveScraper()
