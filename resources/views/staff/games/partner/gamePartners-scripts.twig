@@ -122,6 +122,9 @@
     });
     $('#btn-add-publisher').on('click', function() {
 
+        publisherName = $('#publisher-list option:selected').text();
+        publisherId = $('#publisher-list option:selected').val();
+
         if (publisherId == '') {
             $('#js-publisher-notify').text('No publisher selected.');
             $('#js-publisher-notify').show();
@@ -187,8 +190,6 @@
         newName = $('#quick-create-games-company-name').val();
         newLinkTitle = $('#quick-create-games-company-link-title').val();
 
-        publisherName = $('#publisher-list option:selected').text();
-        publisherId = $('#publisher-list option:selected').val();
         addToGameAsPublisher = $('#quick-create-games-company-add-to-publisher').is(':checked');
         if (addToGameAsPublisher == true) {
             addToGameAsPublisherVal = 1;
