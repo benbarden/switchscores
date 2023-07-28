@@ -237,6 +237,9 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Missing data: linkTitle'], 400);
         }
 
+        // Also add as publisher
+        $addToGameAsPublisher = $request->addToGameAsPublisherVal;
+
         // De-dupe
         $gamesCompany = $this->repoGamesCompany->getByName($name);
         if ($gamesCompany) {
@@ -250,6 +253,23 @@ class GamesPartnerController extends Controller
         // OK to proceed
         $partner = GamesCompanyFactory::createActive($name, $linkTitle);
         $partner->save();
+        $gamesCompanyId = $partner->id;
+
+        // Also add as publisher
+        if ($addToGameAsPublisher == "1") {
+            $gameId = $request->gameId;
+            $game = $this->repoGame->find($gameId);
+            $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
+            if ($gamesCompany) {
+                $serviceGamePublisher = $this->getServiceGamePublisher();
+                $existingGamePublisher = $serviceGamePublisher->gameHasPublisher($gameId, $gamesCompanyId);
+                if (!$existingGamePublisher) {
+                    $serviceGamePublisher->createGamePublisher($gameId, $gamesCompanyId);
+                    $this->gameQualityFilter->updateGame($game, $gamesCompany);
+                }
+            }
+
+        }
 
         $data = array(
             'status' => 'OK'

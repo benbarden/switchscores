@@ -122,9 +122,6 @@
     });
     $('#btn-add-publisher').on('click', function() {
 
-        publisherName = $('#publisher-list option:selected').text();
-        publisherId = $('#publisher-list option:selected').val();
-
         if (publisherId == '') {
             $('#js-publisher-notify').text('No publisher selected.');
             $('#js-publisher-notify').show();
@@ -190,13 +187,25 @@
         newName = $('#quick-create-games-company-name').val();
         newLinkTitle = $('#quick-create-games-company-link-title').val();
 
+        publisherName = $('#publisher-list option:selected').text();
+        publisherId = $('#publisher-list option:selected').val();
+        addToGameAsPublisher = $('#quick-create-games-company-add-to-publisher').is(':checked');
+        if (addToGameAsPublisher == true) {
+            addToGameAsPublisherVal = 1;
+        } else {
+            addToGameAsPublisherVal = 0;
+        }
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        $.getJSON('{{ route('staff.game.partner.createNewCompany') }}', {name: newName, linkTitle: newLinkTitle}, function(data) {
+        $.getJSON('{{ route('staff.game.partner.createNewCompany') }}', {
+            name: newName, linkTitle: newLinkTitle, gameId: gameId,
+            addToGameAsPublisherVal: addToGameAsPublisherVal
+        }, function(data) {
             $('#js-quick-create-notify').text('Saved!');
             $('#js-quick-create-notify').show();
             $('#quick-create-games-company-name').val('');
