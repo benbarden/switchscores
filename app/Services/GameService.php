@@ -136,7 +136,10 @@ class GameService
 
     public function getWithNoNintendoCoUkLink($limit = null)
     {
-        $gameList = Game::whereNull('eshop_europe_fs_id')->whereNotNull('eu_release_date')->orderBy('id', 'desc');
+        $gameList = Game::whereNull('eshop_europe_fs_id')
+            ->whereNull('nintendo_store_url_override')
+            ->whereNotNull('eu_release_date')
+            ->orderBy('id', 'desc');
         if ($limit) {
             $gameList = $gameList->limit($limit);
         }

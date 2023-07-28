@@ -176,7 +176,7 @@ class GamesListController extends Controller
 
     public function noNintendoCoUkLink()
     {
-        $pageTitle = 'No Nintendo.co.uk link';
+        $pageTitle = 'No Nintendo.co.uk link, and no override URL';
         $tableSort = "[ 6, 'desc']";
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
