@@ -72,7 +72,8 @@ class IndexController extends Controller
         $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // New games
-        $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(10);
+        $bindings['RecentlyReleasedGames'] = $this->getServiceGame()->getRecentlyReleased(15);
+        $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(15);
 
         // Owner links
         $bindings['RegisteredUserCount'] = $this->repoUser->getCount();
