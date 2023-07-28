@@ -68,8 +68,10 @@ class IndexController extends Controller
 
         // Missing data
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
-        $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
         $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
+        $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
+        $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
+        $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         // New games
         $bindings['RecentlyReleasedGames'] = $this->getServiceGame()->getRecentlyReleased(15);
@@ -77,9 +79,6 @@ class IndexController extends Controller
 
         // Owner links
         $bindings['RegisteredUserCount'] = $this->repoUser->getCount();
-
-        // Data integrity
-        $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         return view('staff.index', $bindings);
     }
