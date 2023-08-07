@@ -41,7 +41,7 @@ class BrowseByDateController extends Controller
         $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
 
         foreach ($allowedYears as $allowedYear) {
-            $dateListArray{$allowedYear} = [];
+            $dateListArray[$allowedYear] = [];
         }
 
         if ($dateList) {
@@ -70,7 +70,7 @@ class BrowseByDateController extends Controller
                     throw new \Exception('Year '.$dateYear.' could not be found in allowedYears');
                 }
 
-                $dateListArray{$dateYear}[] = [
+                $dateListArray[$dateYear][] = [
                     'DateRaw' => $date,
                     'GameCount' => $dateCount,
                 ];
@@ -84,7 +84,7 @@ class BrowseByDateController extends Controller
 
         $bindings['DateList'] = $dateListArray;
         foreach ($allowedYearsReversed as $allowedYear) {
-            $bindings['DateList'.$allowedYear] = $dateListArray{$allowedYear};
+            $bindings['DateList'.$allowedYear] = $dateListArray[$allowedYear];
         }
 
         return view('public.games.browse.byDateLanding', $bindings);

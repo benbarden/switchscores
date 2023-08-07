@@ -2,15 +2,15 @@
 
 namespace App\Domain\Scraper;
 
-use Goutte\Client as GoutteClient;
+use Symfony\Component\BrowserKit\HttpBrowser as ScraperClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Base
 {
     /**
-     * @var GoutteClient
+     * @var ScraperClient
      */
-    protected $goutteClient;
+    protected $scraperClient;
 
     /**
      * @var DomCrawler
@@ -24,17 +24,17 @@ class Base
 
     public function __construct()
     {
-        $this->goutteClient = new GoutteClient();
+        $this->scraperClient = new ScraperClient();
     }
 
     public function __destruct()
     {
-        unset($this->goutteClient);
+        unset($this->scraperClient);
     }
 
     public function getClient()
     {
-        return $this->goutteClient;
+        return $this->scraperClient;
     }
 
     public function getDomCrawler()
@@ -49,7 +49,7 @@ class Base
 
     public function crawlPage($url)
     {
-        $this->domCrawler = $this->goutteClient->request('GET', $url);
+        $this->domCrawler = $this->scraperClient->request('GET', $url);
     }
 
     public function crawlHtml($html)

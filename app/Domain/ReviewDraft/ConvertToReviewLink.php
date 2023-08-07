@@ -37,12 +37,12 @@ class ConvertToReviewLink
         $itemDate = date('Y-m-d', strtotime($draftItem->item_date));
         $itemRating = $draftItem->item_rating;
 
-        $this->logger->info("Processing item {$itemId}");
+        $this->logger->info("Processing item $itemId");
 
         // Skip duplicates
         $existingReview = $repoReviewLink->byGameAndSite($gameId, $siteId);
         if ($existingReview) {
-            $this->logger->warning("Existing review found: Game {$gameId}; Site {$siteId}. Marking as a duplicate.");
+            $this->logger->warning("Existing review found: Game $gameId; Site $siteId. Marking as a duplicate.");
             $draftItem->process_status = 'Duplicate';
             $draftItem->save();
             return false;
@@ -73,11 +73,13 @@ class ConvertToReviewLink
         $draftItem->process_status = 'Review created';
         $draftItem->save();
 
+        $reviewLinkId = $reviewLink->id;
+
         // Update game review stats
         $game = $repoGame->find($gameId);
         $this->updateGameReviewStats($game);
 
-        $this->logger->info("Item {$itemId}: Successfully created review with id: {$reviewLink->id}; date: {$draftItem->item_date}");
+        $this->logger->info("Item $itemId: Successfully created review with id: $reviewLinkId; date: $itemDate");
 
         return true;
     }

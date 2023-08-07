@@ -25,26 +25,26 @@ sudo cp /vagrant/vagrant-deploy/apache2/envvars /etc/apache2/
 sudo cp /vagrant/vagrant-deploy/apache2/dir.conf /etc/apache2/mods-available/
 
 # PHP
-sudo apt-get install php7.2 -y
-sudo apt-get install php7.2-cli -y
-sudo apt-get install php7.2-common -y
-sudo apt-get install php7.2-curl -y
-sudo apt-get install php7.2-gd -y
-sudo apt-get install php7.2-json -y
-sudo apt-get install php7.2-opcache -y
-sudo apt-get install php7.2-mysql -y
-sudo apt-get install php7.2-mbstring -y
-sudo apt-get install php7.2-zip -y
-sudo apt-get install php7.2-fpm -y
-sudo apt-get install php7.2-xml -y
-sudo apt-get install libapache2-mod-php7.2 -y
+sudo apt-get install php8.1 -y
+sudo apt-get install php8.1-cli -y
+sudo apt-get install php8.1-common -y
+sudo apt-get install php8.1-curl -y
+sudo apt-get install php8.1-gd -y
+sudo apt-get install php8.1-json -y
+sudo apt-get install php8.1-opcache -y
+sudo apt-get install php8.1-mysql -y
+sudo apt-get install php8.1-mbstring -y
+sudo apt-get install php8.1-zip -y
+sudo apt-get install php8.1-fpm -y
+sudo apt-get install php8.1-xml -y
+sudo apt-get install libapache2-mod-php8.1 -y
 
 # Additional dependencies
 sudo phpenmod mbstring
 sudo phpenmod curl
 
 # PHP settings
-sudo sed -i 's,^;upload_tmp_dir =.*$,upload_tmp_dir = /vagrant/storage/tmp,' /etc/php/7.2/apache2/php.ini
+sudo sed -i 's,^;upload_tmp_dir =.*$,upload_tmp_dir = /vagrant/storage/tmp,' /etc/php/8.1/apache2/php.ini
 
 # Apache
 sudo a2dissite 000-default
