@@ -1,0 +1,27 @@
+{% if RowData %}
+    <tr>
+        <td>
+            <span class="h4">{{ Format }}</span>
+        </td>
+        <td class="text-end">
+        </td>
+    </tr>
+    {% for item in RowData %}
+        <tr>
+            <td>
+                {% if item.format_desc %}
+                    {{ item.format_desc }}
+                {% else %}
+                    (Not set)
+                {% endif %}
+            </td>
+            <td class="text-end">
+                <span class="h4">
+                    <a href="{{ route('staff.games.list.format-option', {'format': Format, 'option': item.format_desc}) }}">
+                    {{ item.count }}
+                    </a>
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}

@@ -77,28 +77,43 @@ class Repository
         return $games;
     }
 
-    public function tableFormatOptions()
+    public function getFormatDigital()
     {
         return DB::select("
-            SELECT 
-                   CASE WHEN format_digital IS NULL THEN 'HdrDigital' ELSE format_digital END AS format_desc, 
-                   'Digital' AS format_type,
-                   count(*) AS count FROM games GROUP BY format_digital
-            UNION
-            SELECT 
-                   CASE WHEN format_physical IS NULL THEN 'HdrPhysical' ELSE format_physical END AS format_desc, 
-                   'Physical' AS format_type,
-                   count(*) AS count FROM games GROUP BY format_physical
-            UNION
-            SELECT 
-                   CASE WHEN format_dlc IS NULL THEN 'HdrDLC' ELSE format_dlc END AS format_desc, 
-                   'DLC' AS format_type,
-                   count(*) AS count FROM games GROUP BY format_dlc
-            UNION
-            SELECT 
-                   CASE WHEN format_demo IS NULL THEN 'HdrDemo' ELSE format_demo END AS format_desc, 
-                   'Demo' AS format_type,
-                   count(*) AS count FROM games GROUP BY format_demo
+            SELECT format_digital AS format_desc, count(*) AS count
+            FROM games
+            GROUP BY format_digital
+            ORDER BY format_digital
+        ");
+    }
+
+    public function getFormatPhysical()
+    {
+        return DB::select("
+            SELECT format_physical AS format_desc, count(*) AS count
+            FROM games
+            GROUP BY format_physical
+            ORDER BY format_physical
+        ");
+    }
+
+    public function getFormatDLC()
+    {
+        return DB::select("
+            SELECT format_dlc AS format_desc, count(*) AS count
+            FROM games
+            GROUP BY format_dlc
+            ORDER BY format_dlc
+        ");
+    }
+
+    public function getFormatDemo()
+    {
+        return DB::select("
+            SELECT format_demo AS format_desc, count(*) AS count
+            FROM games
+            GROUP BY format_demo
+            ORDER BY format_demo
         ");
     }
 

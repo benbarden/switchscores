@@ -190,56 +190,14 @@
 
         {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Formats'} %}
 
-        {% if FormatOptionTable %}
         <table class="table">
             <tbody>
-                {% for row in FormatOptionTable %}
-                    {% if row.format_desc == 'HdrDigital'
-                        or row.format_desc == 'HdrPhysical'
-                        or row.format_desc == 'HdrDLC'
-                        or row.format_desc == 'HdrDemo' %}
-                        {% set isHeaderRow = 1 %}
-                    {% else %}
-                        {% set isHeaderRow = 0 %}
-                    {% endif %}
-                    {% if isHeaderRow == 1 %}
-                        <tr>
-                            <td>
-                                <span class="h4">{{ row.format_type }}</span>
-                            </td>
-                            <td class="text-end">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                (Not set)
-                            </td>
-                            <td class="text-end">
-                                <span class="h4">
-                                    <a href="{{ route('staff.games.list.format-option', {'format': row.format_type}) }}">
-                                        {{ row.count }}
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td>
-                                {{ row.format_desc }}
-                            </td>
-                            <td class="text-end">
-                                <span class="h4">
-                                    <a href="{{ route('staff.games.list.format-option', {'format': row.format_type, 'option': row.format_desc}) }}">
-                                    {{ row.count }}
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
+                {% include 'staff/games/table-format-row.twig' with {'Format': 'Digital', 'RowData': FormatDigital} %}
+                {% include 'staff/games/table-format-row.twig' with {'Format': 'Physical', 'RowData': FormatPhysical} %}
+                {% include 'staff/games/table-format-row.twig' with {'Format': 'DLC', 'RowData': FormatDLC} %}
+                {% include 'staff/games/table-format-row.twig' with {'Format': 'Demo', 'RowData': FormatDemo} %}
             </tbody>
         </table>
-        {% endif %}
 
     </div>
 
