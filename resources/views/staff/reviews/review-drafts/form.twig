@@ -23,13 +23,28 @@
 
     <div class="row mb-3">
         <label for="item_rating" class="col-md-2 col-form-label">Rating</label>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <input id="item_rating" name="item_rating" type="text" class="form-control">
-            <div class="form-text">Enter the actual score here.
-                If the reviewing site has a scale other than 1-10,
-                the score will be converted.</div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-text">
+                <span class="h4">/{{ ReviewDraftData.site.rating_scale }}</span>
+            </div>
         </div>
     </div>
+    {% if ReviewDraftData.site.rating_scale != 10 %}
+        <div class="row mb-3">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-sm-4">
+                <div class="form-text">
+                    This score will be converted to a rating out of 10 when the
+                    review is generated.
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <hr>
 
