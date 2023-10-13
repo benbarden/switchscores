@@ -36,8 +36,7 @@ var ssAdminTools = {
             } else {
                 //console.log('Found game: ' + existingGameId)
                 $('#js-game-title-pass').hide();
-                failDescHtml = 'Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>';
-                $('#js-game-title-fail-desc').html(failDescHtml);
+                $('#js-game-title-fail-desc').html('Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>');
                 $('#js-game-title-fail').show();
             }
         });
