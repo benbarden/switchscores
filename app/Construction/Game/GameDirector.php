@@ -126,6 +126,9 @@ class GameDirector
         } else {
             $this->builder->setIsLowQuality(0);
         }
+        if (array_key_exists('packshot_square_url_override', $params)) {
+            $this->builder->setPackshotSquareUrlOverride($params['packshot_square_url_override']);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

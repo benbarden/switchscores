@@ -228,4 +228,10 @@ class GameBuilder
         $this->game->is_low_quality = $isLowQuality;
         return $this;
     }
+
+    public function setPackshotSquareUrlOverride($squareUrlOverride): GameBuilder
+    {
+        $this->game->packshot_square_url_override = $squareUrlOverride;
+        return $this;
+    }
 }

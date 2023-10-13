@@ -86,6 +86,7 @@ class DownloadImagesByScraper extends Command
             $gameId = $game->id;
             $gameTitle = $game->title;
             $storeUrl = $game->nintendo_store_url_override;
+            $squareUrlOverride = $game->packshot_square_url_override;
 
             $squareUrl = $game->image_square;
             $headerUrl = $game->image_header;
@@ -104,6 +105,13 @@ class DownloadImagesByScraper extends Command
                         // fallback for missing square images
                         $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
                     }
+                    // If we have an override, the generated URL probably errored.
+                    // In which case, let's just use that straight away.
+                    if ($squareUrlOverride) {
+                        $logger->info('Found packshot_square_url_override');
+                        $squareUrl = $squareUrlOverride;
+                    }
+                    // Download away!
                     if ($squareUrl || $headerUrl) {
                         DownloadImageFactory::downloadFromStoreUrl($game, $squareUrl, $headerUrl, $logger);
                     }
