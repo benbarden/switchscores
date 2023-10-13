@@ -161,6 +161,9 @@
 
         // hide all eShop assets
         $('#fs_eshop_assets').hide();
+    } else {
+        // hide publisher on edit
+        $('#fs_publisher').hide();
     }
 
     function urlencode(str) {
@@ -177,5 +180,50 @@
             .replace('%20', '+');
     }
 
+    $("#publisher_id").select2({
+        placeholder: "Search for a partner",
+        minimumInputLength: 2,
+        templateResult: formatPartner,
+        templateSelection: formatPartnerSelection,
+        ajax: {
+            url: "/api/partner/games-company/search",
+            dataType: 'json',
+            data: function (params) {
+                var query = {
+                    name: params.term,
+                    type: 'public'
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.partners
+                };
+            }
+        }
+    });
+
+    function formatPartner(partner) {
+        if (partner.loading) {
+            return partner.text;
+        }
+
+        var $container = $(
+            "<div class='select2-result-partner clearfix'>" +
+            "<div class='select2-result-partner__name'></div>" +
+            "</div>"
+        );
+
+        $container.find(".select2-result-partner__name").text(partner.name);
+
+        return $container;
+    }
+
+    function formatPartnerSelection(partner) {
+        return partner.name;
+    }
 
 </script>

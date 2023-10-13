@@ -18,6 +18,8 @@ use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\FormatOptions as GameFormatOptions;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
@@ -51,6 +53,8 @@ class GamesEditorController extends Controller
     private $repoCategory;
     private $formatOptions;
     private $repoGame;
+    private $gameQualityFilter;
+    private $repoGamesCompany;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
@@ -59,7 +63,9 @@ class GamesEditorController extends Controller
         GameCollectionRepository $repoGameCollection,
         CategoryRepository $repoCategory,
         GameFormatOptions $formatOptions,
-        GameRepository $repoGame
+        GameRepository $repoGame,
+        GameQualityFilter $gameQualityFilter,
+        GamesCompanyRepository $repoGamesCompany
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
@@ -69,6 +75,8 @@ class GamesEditorController extends Controller
         $this->repoCategory = $repoCategory;
         $this->formatOptions = $formatOptions;
         $this->repoGame = $repoGame;
+        $this->gameQualityFilter = $gameQualityFilter;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function add()
@@ -119,6 +127,16 @@ class GamesEditorController extends Controller
 
             // Add title hash
             $this->repoGameTitleHash->create($request->title, $hashedTitle, $gameId);
+
+            // Add publisher, if selected
+            if ($request->publisher_id) {
+                $publisherId = $request->publisher_id;
+                $gamesCompany = $this->repoGamesCompany->find($publisherId);
+                if ($gamesCompany) {
+                    $this->getServiceGamePublisher()->createGamePublisher($gameId, $request->publisher_id);
+                    $this->gameQualityFilter->updateGame($game, $gamesCompany);
+                }
+            }
 
             // Check eu_released_on
             if ($request->eu_is_released == 1) {
