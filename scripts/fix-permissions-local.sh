@@ -1,4 +1,4 @@
 #!/bin/bash
 cd .
-sudo chown -R www-data:www-data .
+sudo chown -R vagrant:vagrant .
 sudo chmod -R g+rw .
