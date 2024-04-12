@@ -101,15 +101,16 @@ class DownloadImagesByScraper extends Command
                     $scraper->crawlPage($storeUrl);
                     $squareUrl = $scraper->getSquareUrl();
                     $headerUrl = $scraper->getHeaderUrl();
-                    if ($headerUrl && !$squareUrl) {
-                        // fallback for missing square images
-                        $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
-                    }
                     // If we have an override, the generated URL probably errored.
                     // In which case, let's just use that straight away.
                     if ($squareUrlOverride) {
                         $logger->info('Found packshot_square_url_override');
                         $squareUrl = $squareUrlOverride;
+                    }
+                    // Fallback for missing square images
+                    // We want to do this AFTER the square URL override, to avoid regex failures
+                    if ($headerUrl && !$squareUrl) {
+                        $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
                     }
                     // Download away!
                     if ($squareUrl || $headerUrl) {
