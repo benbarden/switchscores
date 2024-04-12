@@ -134,7 +134,8 @@
     $('#js-btn-store-url-override').on('click', function() {
 
         gameTitle = $('#title').val();
-        storeUrl = 'https://www.google.com/search?q=site%3Anintendo.co.uk+';
+        //storeUrl = 'https://www.google.com/search?q=site%3Anintendo.co.uk+';
+        storeUrl = 'https://www.nintendo.com/en-gb/Search/Search-299117.html?q=';
         if (gameTitle != '') {
             urlToOpen = storeUrl + urlencode(gameTitle);
             window.open(storeUrl + urlencode(gameTitle));
