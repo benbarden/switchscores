@@ -12,6 +12,7 @@ use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Models\Game;
 use App\Services\DataSources\Queries\Differences;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
+use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 
 use App\Traits\SwitchServices;
 
@@ -23,18 +24,21 @@ class GamesDetailController extends Controller
     protected $repoAudit;
     protected $repoFeaturedGames;
     protected $repoGameStats;
+    protected $repoDataSource;
 
     public function __construct(
         GameRepository $repoGame,
         AuditRepository $repoAudit,
         FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats
+        GameStatsRepository $repoGameStats,
+        DataSourceRepository $repoDataSource
     )
     {
         $this->repoGame = $repoGame;
         $this->repoAudit = $repoAudit;
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
+        $this->repoDataSource = $repoDataSource;
     }
 
     public function show($gameId)
@@ -56,6 +60,18 @@ class GamesDetailController extends Controller
             $lastGame = $this->repoGame->find($lastGameId);
             if ($lastGame) {
                 $bindings['LastGame'] = $lastGame;
+            }
+        }
+
+        $pageAlert = \Request::get('alertmsg');
+        if ($pageAlert) {
+            $bindings['PageAlert'] = $pageAlert;
+        }
+        $dsItemId = \Request::get('dsitemid');
+        if ($dsItemId) {
+            $dsItem = $this->repoDataSource->getParsedItemById($dsItemId);
+            if ($dsItem) {
+                $bindings['DSItem'] = $dsItem;
             }
         }
 

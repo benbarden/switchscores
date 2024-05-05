@@ -11,11 +11,25 @@ use App\Factories\GameDirectorFactory;
 use App\Services\UrlService;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+
 use App\Traits\SwitchServices;
 
 class DataSourceParsedController extends Controller
 {
     use SwitchServices;
+
+    private $repoGamesCompany;
+    private $repoGamePublisher;
+
+    public function __construct(
+        GamesCompanyRepository $repoGamesCompany,
+        GamePublisherRepository $repoGamePublisher
+    ){
+        $this->repoGamesCompany = $repoGamesCompany;
+        $this->repoGamePublisher = $repoGamePublisher;
+    }
 
     public function nintendoCoUkUnlinkedItems()
     {
@@ -138,10 +152,21 @@ class DataSourceParsedController extends Controller
                 $game->format_digital = Game::FORMAT_AVAILABLE;
                 $game->save();
 
+                // Add publishers, if they exist
+                $customGameDetailMsg = '';
+                $gamesCompany = $this->repoGamesCompany->getByName($dsParsedItem->publishers);
+                if ($gamesCompany) {
+                    $this->repoGamePublisher->create($gameId, $gamesCompany->id);
+                } else {
+                    $customGameDetailMsg = '&alertmsg=publishernotadded&dsitemid='.$dsParsedItem->id;
+                }
+
                 // Trigger event
                 event(new GameCreated($game));
 
-                return redirect('/staff/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId);
+                $redirectUrl = '/staff/games/detail/'.$gameId.'?lastaction=add&lastgameid='.$gameId.$customGameDetailMsg;
+
+                return redirect($redirectUrl);
 
             }
 

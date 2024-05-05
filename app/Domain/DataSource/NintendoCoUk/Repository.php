@@ -8,6 +8,11 @@ use App\Models\DataSourceParsed;
 
 class Repository
 {
+    public function getParsedItemById($dsItemId)
+    {
+        return DataSourceParsed::find($dsItemId);
+    }
+
     public function getUnlinked()
     {
         $sourceId = DataSource::DSID_NINTENDO_CO_UK;

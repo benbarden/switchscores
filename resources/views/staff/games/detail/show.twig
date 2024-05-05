@@ -11,6 +11,12 @@
         Successfully edited <strong>{{ LastGame.title }}</strong>.
     </div>
 {% endif %}
+{% if PageAlert is not null and DSItem is not null %}
+    <div class="alert alert-warning" role="alert">
+        No matching publisher could be linked to this game. Please check for the publisher named
+        <strong>{{ DSItem.publishers }}</strong> and add it if necessary.
+    </div>
+{% endif %}
 
 <div id="js-admin-notify" class="alert alert-success" role="alert" style="display: none;"></div>
 
