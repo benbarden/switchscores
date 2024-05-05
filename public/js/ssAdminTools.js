@@ -29,15 +29,21 @@ var ssAdminTools = {
 
         $.getJSON('/api/game/get-by-exact-title-match', {title: textToCheck, gameId: gameId}, function(data) {
             existingGameId = data.gameId;
-            if (existingGameId == null) {
+            existingDSItemId = data.dsItemId;
+            console.log(data.dsItemId);
+            if (existingGameId != null) {
+                //console.log('Found game: ' + existingGameId)
+                $('#js-game-title-pass').hide();
+                $('#js-game-title-fail-desc').html('Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>.');
+                $('#js-game-title-fail').show();
+            } else if (existingDSItemId != null) {
+                $('#js-game-title-pass').hide();
+                $('#js-game-title-fail-desc').html('Unlinked data item exists. <a href="/staff/data-sources/nintendo-co-uk/add-game/' + existingDSItemId + '">Add this game</a>.');
+                $('#js-game-title-fail').show();
+            } else {
                 //console.log('No game found');
                 $('#js-game-title-pass').show();
                 $('#js-game-title-fail').hide();
-            } else {
-                //console.log('Found game: ' + existingGameId)
-                $('#js-game-title-pass').hide();
-                $('#js-game-title-fail-desc').html('Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>');
-                $('#js-game-title-fail').show();
             }
         });
 

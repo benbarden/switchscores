@@ -126,7 +126,7 @@
 
         // Autogenerate link URL
         ssAdminTools.convertToLinkTitle('title', 'link_title');
-        // Check for duplicates
+        // Check for duplicates. Also check for unlinked items with this title.
         ssAdminTools.checkForExistingGameTitle('title', gameId);
 
     });
