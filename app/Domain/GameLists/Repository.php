@@ -3,8 +3,10 @@
 
 namespace App\Domain\GameLists;
 
+use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Models\GameSeries;
+use App\Models\DataSource;
 
 use Illuminate\Support\Facades\DB;
 
@@ -293,12 +295,35 @@ class Repository
             ->get();
     }
 
+    public function anyWithNintendoCoUkId()
+    {
+        return Game::whereNotNull('eshop_europe_fs_id')
+            ->orderBy('id')
+            ->get();
+    }
+
+    public function anyWithStoreOverride()
+    {
+        return Game::whereNotNull('nintendo_store_url_override')
+            ->orderBy('id')
+            ->get();
+    }
+
     public function noNintendoCoUkIdWithStoreOverride($limit = 5)
     {
         return Game::whereNull('eshop_europe_fs_id')
             ->whereNotNull('nintendo_store_url_override')
             ->whereNull('image_square')
             //->whereNull('image_header')
+            ->orderBy('id')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function anyWithNintendoCoUkIdOrStoreOverride($limit = 5)
+    {
+        return Game::whereNull('eshop_europe_fs_id')
+            ->orWhereNotNull('nintendo_store_url_override')
             ->orderBy('id')
             ->limit($limit)
             ->get();

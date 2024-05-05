@@ -147,10 +147,54 @@ class Images
         return $destFilename;
     }
 
-    public function generateDestFilename($remoteFile, $prefix = '', $gameId = '')
+    /**
+     * This is for packshots that exist on the file system, but may be using a custom name format.
+     * If we force a check against the expected format, custom images will never pass the check.
+     * @return string
+     */
+    public function generateCurrentPathHeader(Game $game)
     {
-        if ($gameId) {
-            $prefix .= $gameId.'-';
+        $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
+        $fullPath = $destPath.$game->image_header;
+        return $fullPath;
+    }
+
+    /**
+     * This is for packshots that exist on the file system, but may be using a custom name format.
+     * If we force a check against the expected format, custom images will never pass the check.
+     * @return string
+     */
+    public function generateCurrentPathSquare(Game $game)
+    {
+        $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
+        $fullPath = $destPath.$game->image_square;
+        return $fullPath;
+    }
+
+    public function generateFullDestPathHeader($imageUrl, $suffixId = null)
+    {
+        if ($suffixId == null) $suffixId = $this->game->id;
+        $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
+        $prefix = 'hdr-';
+        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $suffixId);
+        $fullPath = $destPath.$destFilename;
+        return $fullPath;
+    }
+
+    public function generateFullDestPathSquare($imageUrl, $suffixId = null)
+    {
+        if ($suffixId == null) $suffixId = $this->game->id;
+        $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
+        $prefix = 'sq-';
+        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $suffixId);
+        $fullPath = $destPath.$destFilename;
+        return $fullPath;
+    }
+
+    public function generateDestFilename($remoteFile, $prefix = '', $suffixId = '')
+    {
+        if ($suffixId) {
+            $prefix .= $suffixId.'-';
         } else {
             $linkId = $this->dsParsedItem->link_id;
             if ($linkId) {
