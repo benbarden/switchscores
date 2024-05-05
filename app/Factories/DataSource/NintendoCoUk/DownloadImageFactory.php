@@ -6,8 +6,17 @@ use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Services\DataSources\NintendoCoUk\Images;
 
+/**
+ * @deprecated
+ */
 class DownloadImageFactory
 {
+    /**
+     * @deprecated
+     * @param Game $game
+     * @param DataSourceParsed $dsItem
+     * @return void
+     */
     public static function downloadImages(Game $game, DataSourceParsed $dsItem)
     {
         $serviceImages = new Images($game);
@@ -23,6 +32,13 @@ class DownloadImageFactory
         $game->save();
     }
 
+    /**
+     * @deprecated
+     * @param Game $game
+     * @param $squareUrl
+     * @param $headerUrl
+     * @return void
+     */
     public static function downloadFromStoreUrl(Game $game, $squareUrl = null, $headerUrl = null)
     {
         $serviceImages = new Images($game);

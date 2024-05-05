@@ -5,14 +5,9 @@ namespace App\Console\Commands\DataSource\NintendoCoUk;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Domain\GameLists\Repository as RepoGameLists;
 use App\Domain\Game\Repository as RepoGame;
 
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
-
-use App\Domain\Scraper\NintendoCoUkPackshot;
-use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
-use App\Domain\DataSource\NintendoCoUk\PackshotUrlBuilder;
 
 use App\Traits\SwitchServices;
 

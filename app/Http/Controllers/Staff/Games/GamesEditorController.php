@@ -20,9 +20,9 @@ use App\Domain\Game\FormatOptions as GameFormatOptions;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 
 use App\Events\GameCreated;
-use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
 use App\Models\Game;
@@ -279,7 +279,10 @@ class GamesEditorController extends Controller
                 $dsNewParsedItem->save();
 
                 UpdateGameFactory::doUpdate($game, $dsNewParsedItem);
-                DownloadImageFactory::downloadImages($game, $dsNewParsedItem);
+
+                // Download packshots
+                $downloadPackshotHelper = new DownloadPackshotHelper();
+                $downloadPackshotHelper->downloadForGame($game);
 
             } else {
 

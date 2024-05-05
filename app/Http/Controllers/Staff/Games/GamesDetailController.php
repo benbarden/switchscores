@@ -8,10 +8,10 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Models\Game;
 use App\Services\DataSources\Queries\Differences;
+use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 
 use App\Traits\SwitchServices;
 
@@ -159,7 +159,8 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
         }
 
-        DownloadImageFactory::downloadImages($game, $dsItem);
+        $downloadPackshotHelper = new DownloadPackshotHelper();
+        $downloadPackshotHelper->downloadForGame($game);
 
         $data = array(
             'status' => 'OK'

@@ -3,18 +3,12 @@
 namespace App\Domain\DataSource\NintendoCoUk;
 
 use App\Domain\GameLists\Repository as RepoGameLists;
-use App\Domain\Game\Repository as RepoGame;
 use App\Domain\Scraper\NintendoCoUkPackshot;
 use App\Services\DataSources\NintendoCoUk\Images;
-use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Models\Game;
-
-use App\Domain\DataSource\NintendoCoUk\DownloadByDataSource;
-use App\Domain\DataSource\NintendoCoUk\DownloadByOverrideUrl;
 
 class DownloadPackshotHelper
 {
-    private $repoGame;
     private $repoGameLists;
 
     private $gameList;
@@ -23,17 +17,22 @@ class DownloadPackshotHelper
 
     public function __construct($logger = null)
     {
-        $this->repoGame = new RepoGame();
         $this->repoGameLists = new RepoGameLists();
 
-        if ($logger) $this->logger = $logger;
+        if ($logger) {
+            $this->logger = $logger;
+        } else {
+            $this->logger = null;
+        }
     }
 
     public function downloadAllWithDataSourceId()
     {
         $this->gameList = $this->repoGameLists->anyWithNintendoCoUkId();
 
-        $this->logger->info('Found '.count($this->gameList).' item(s)');
+        if ($this->logger) {
+            $this->logger->info('Found ' . count($this->gameList) . ' item(s)');
+        }
 
         foreach ($this->gameList as $gameItem) {
 
@@ -46,7 +45,9 @@ class DownloadPackshotHelper
     {
         $this->gameList = $this->repoGameLists->anyWithStoreOverride();
 
-        $this->logger->info('Found '.count($this->gameList).' item(s)');
+        if ($this->logger) {
+            $this->logger->info('Found ' . count($this->gameList) . ' item(s)');
+        }
 
         foreach ($this->gameList as $gameItem) {
 
@@ -60,12 +61,12 @@ class DownloadPackshotHelper
         $itemTitle = $game->title;
         $gameId = $game->id;
 
-        //$this->logger->info('Validating if download should occur for game: '.$itemTitle.' ['.$gameId.']');
         if ($this->isEligibleForDownload($game)) {
-            $this->logger->info('');
-            $this->logger->info('Game is eligible for image download: '.$itemTitle.' ['.$gameId.']');
+            if ($this->logger) {
+                $this->logger->info('');
+                $this->logger->info('Game is eligible for image download: '.$itemTitle.' ['.$gameId.']');
+            }
         } else {
-            //$this->logger->info('No download needed. Skipping...');
             return;
         }
 
@@ -74,7 +75,9 @@ class DownloadPackshotHelper
         if ($this->hasValidDataSourceItem($game)) {
 
             // use DS item data
-            $this->logger->info('Downloading using data source item...');
+            if ($this->logger) {
+                $this->logger->info('Downloading using data source item...');
+            }
 
             $dsItem = $game->dspNintendoCoUk()->first();
             $downloadByDataSource = new DownloadByDataSource($game, $dsItem);
@@ -83,7 +86,9 @@ class DownloadPackshotHelper
         } elseif ($game->nintendo_store_url_override) {
 
             // use scraper
-            $this->logger->info('Downloading using scraper...');
+            if ($this->logger) {
+                $this->logger->info('Downloading using scraper...');
+            }
 
             $scraper = new NintendoCoUkPackshot();
             $storeUrl = $game->nintendo_store_url_override;
@@ -96,7 +101,9 @@ class DownloadPackshotHelper
                 // If we have an override, the generated URL probably errored.
                 // In which case, let's just use that straight away.
                 if ($squareUrlOverride) {
-                    $this->logger->info('Found packshot_square_url_override');
+                    if ($this->logger) {
+                        $this->logger->info('Found packshot_square_url_override');
+                    }
                     $squareUrl = $squareUrlOverride;
                 }
                 // Fallback for missing square images
@@ -111,7 +118,9 @@ class DownloadPackshotHelper
                     $downloadByOverrideUrl->download($squareUrl, $headerUrl);
                 }
             } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
+                if ($this->logger) {
+                    $this->logger->error($e->getMessage());
+                }
             }
         }
     }

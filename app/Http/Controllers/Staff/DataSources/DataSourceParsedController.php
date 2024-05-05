@@ -6,10 +6,10 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Models\Game;
 use App\Events\GameCreated;
-use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
 use App\Services\UrlService;
+use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 
 use App\Traits\SwitchServices;
 
@@ -124,15 +124,19 @@ class DataSourceParsedController extends Controller
                 // Update eShop data
                 $game = $game->fresh();
                 UpdateGameFactory::doUpdate($game, $dsParsedItem);
-                DownloadImageFactory::downloadImages($game, $dsParsedItem);
+
+                // Add game id to parsed item.
+                // Must do this before downloading packshots or they won't be found.
+                $dsParsedItem->game_id = $gameId;
+                $dsParsedItem->save();
+
+                // Download packshots
+                $downloadPackshotHelper = new DownloadPackshotHelper();
+                $downloadPackshotHelper->downloadForGame($game);
 
                 // Set digital format
                 $game->format_digital = Game::FORMAT_AVAILABLE;
                 $game->save();
-
-                // Add game id to parsed item
-                $dsParsedItem->game_id = $gameId;
-                $dsParsedItem->save();
 
                 // Trigger event
                 event(new GameCreated($game));
