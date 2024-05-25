@@ -44,7 +44,7 @@ class GamesEditorController extends Controller
         'link_title' => 'required|max:100',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
-        'packshot_square_url_override' => 'required_with:nintendo_store_url_override'
+        //'packshot_square_url_override' => 'required_with:nintendo_store_url_override'
     ];
 
     private $repoGameTitleHash;
