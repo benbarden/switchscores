@@ -5,9 +5,34 @@ namespace App\Http\Controllers\Api\Game;
 use App\Models\Game;
 use App\Traits\SwitchServices;
 
+use App\Domain\Game\Repository as GameRepository;
+
 class GameController
 {
     use SwitchServices;
+
+    private $repoGame;
+
+    public function __construct(
+        GameRepository $repoGameRepository
+    )
+    {
+        $this->repoGame = $repoGameRepository;
+    }
+
+    public function findByTitle()
+    {
+        $request = request();
+
+        $title = $request->title;
+        if (!$title) {
+            return response()->json(['message' => 'Missing parameter: title'], 400);
+        }
+
+        $games = $this->repoGame->partialTitleSearch($title);
+
+        return response()->json(['games' => $games], 200);
+    }
 
     public function getList()
     {

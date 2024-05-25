@@ -107,7 +107,7 @@ class ReviewDraftsController extends Controller
         $bindings['ReviewDraftData'] = $reviewDraft;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['GamesList'] = $this->repoGameLists->getAll();
+        //$bindings['GamesList'] = $this->repoGameLists->getAll();
 
         $bindings['ProcessStatusSuccess'] = $this->repoReviewDraft->getProcessOptionsSuccess();
         $bindings['ProcessStatusFailure'] = $this->repoReviewDraft->getProcessOptionsFailure();

@@ -22,6 +22,11 @@ class Repository
             ->first();
     }
 
+    public function partialTitleSearch($title)
+    {
+        return Game::where('title', 'LIKE', '%'.$title.'%')->orderBy('title', 'asc')->get();
+    }
+
     /**
      * @param $title
      * @param null $excludeGameId

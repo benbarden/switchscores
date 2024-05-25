@@ -24,6 +24,53 @@
     $('#item_rating').val(formVals['item_rating']);
     $('#process_status').val(formVals['process_status']);
 
-    $('#game_id').select2();
+    //$('#game_id').select2();
+
+    // Autocomplete games list
+    $("#game_id").select2({
+        placeholder: "Search for a game",
+        minimumInputLength: 2,
+        templateResult: formatGame,
+        templateSelection: formatGameSelection,
+        ajax: {
+            url: "/api/game/find-by-title",
+            dataType: 'json',
+            data: function (params) {
+                var query = {
+                    title: params.term,
+                    type: 'public'
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.games
+                };
+            }
+        }
+    });
+
+    function formatGame(game) {
+        if (game.loading) {
+            return game.text;
+        }
+
+        var $container = $(
+            "<div class='select2-result-game clearfix'>" +
+            "<div class='select2-result-game__title'></div>" +
+            "</div>"
+        );
+
+        $container.find(".select2-result-game__title").text(game.title);
+
+        return $container;
+    }
+
+    function formatGameSelection(game) {
+        return game.title;
+    }
 
 </script>

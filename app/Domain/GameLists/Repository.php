@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class Repository
 {
+    /**
+     * @deprecated
+     * @return \Illuminate\Support\Collection
+     */
     public function getAll()
     {
         return DB::table('games')->select('games.*')->orderBy('games.title', 'asc')->get();
