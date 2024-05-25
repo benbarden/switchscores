@@ -180,24 +180,15 @@ class GamesEditorController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
-        if ($request->formMode == 'edit-post') {
-
-            $bindings['FormMode'] = 'edit-post';
-
-        } else {
-
-            $bindings['FormMode'] = 'edit';
-
-        }
-
         if ($request->isMethod('post')) {
 
+            $bindings['FormMode'] = 'edit-post';
             //$this->validate($request, $this->validationRules);
 
             $validator = Validator::make($request->all(), $this->validationRules);
 
             if ($validator->fails()) {
-                return redirect(route('staff.games.edit', ['gameId' => $gameId, 'formMode' => 'edit-post']))
+                return redirect(route('staff.games.edit', ['gameId' => $gameId]))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -206,6 +197,10 @@ class GamesEditorController extends Controller
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
 
         }
 
