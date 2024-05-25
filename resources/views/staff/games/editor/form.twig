@@ -1,10 +1,11 @@
-{% include 'common/form-errors.twig' %}
 {% if FormMode == 'add' %}
 <div class="alert alert-warning">
     To speed up adding new games, some fields are hidden. They can be
     seen when editing the game.
 </div>
 {% endif %}
+
+{% include 'common/form-errors.twig' %}
 
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}

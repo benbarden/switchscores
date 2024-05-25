@@ -44,6 +44,7 @@ class GamesEditorController extends Controller
         'link_title' => 'required|max:100',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
+        'packshot_square_url_override' => 'required_with:nintendo_store_url_override'
     ];
 
     private $repoGameTitleHash;
@@ -179,20 +180,32 @@ class GamesEditorController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
-        if ($request->isMethod('post')) {
+        if ($request->formMode == 'edit-post') {
 
             $bindings['FormMode'] = 'edit-post';
 
-            $this->validate($request, $this->validationRules);
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
+        }
+
+        if ($request->isMethod('post')) {
+
+            //$this->validate($request, $this->validationRules);
+
+            $validator = Validator::make($request->all(), $this->validationRules);
+
+            if ($validator->fails()) {
+                return redirect(route('staff.games.edit', ['gameId' => $gameId, 'formMode' => 'edit-post']))
+                    ->withErrors($validator)
+                    ->withInput();
+            }
 
             GameDirectorFactory::updateExisting($gameData, $request->post());
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
-
-        } else {
-
-            $bindings['FormMode'] = 'edit';
 
         }
 
