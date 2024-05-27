@@ -21,6 +21,7 @@
     }
 
     $('#game_id').val(formVals['game_id']);
+    $('#game_id').trigger('change');
     $('#item_rating').val(formVals['item_rating']);
     $('#process_status').val(formVals['process_status']);
 
@@ -52,6 +53,11 @@
             }
         }
     });
+
+    // Create a DOM Option and pre-select by default
+    var newOption = new Option('test', formVals['game_id'], true, true);
+    // Append it to the select
+    $('#game_id').append(newOption).trigger('change');
 
     function formatGame(game) {
         if (game.loading) {
