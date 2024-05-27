@@ -28,9 +28,9 @@
                     <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
                 {% endif %}
 
-                {% if GameData.video_url %}
+                {% if CleanVideoUrl %}
                     {% set VideoTypeDesc = GameData.getVideoTypeDesc() %}
-                    {% include 'public/games/page/video-modal.twig' with {'VideoUrl': GameData.video_url, 'VideoType': VideoTypeDesc} %}
+                    {% include 'public/games/page/video-modal.twig' with {'VideoUrl': CleanVideoUrl, 'VideoType': VideoTypeDesc} %}
                 {% endif %}
 
                 {% if GameData.is_low_quality == 1 %}

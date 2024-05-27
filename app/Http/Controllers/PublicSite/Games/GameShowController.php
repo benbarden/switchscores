@@ -65,6 +65,25 @@ class GameShowController extends Controller
         $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
 
+        // Video
+        $videoUrl = $gameData->video_url;
+        if ($videoUrl) {
+            if (strpos($videoUrl, 'https://youtu.be/') === false) {
+                // Standard URL
+                $cleanVideoUrl = $videoUrl;
+            } else {
+                // Shortened URL
+                $videoData = explode('https://youtu.be/', $videoUrl);
+                if (count($videoData) <> 2) {
+                    $cleanVideoUrl = null;
+                }
+                $cleanVideoUrl = 'https://www.youtube.com/watch?v='.$videoData[1];
+            }
+            if ($cleanVideoUrl != null) {
+                $bindings['CleanVideoUrl'] = $cleanVideoUrl;
+            }
+        }
+
         // Data sources
         $bindings['DSNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
 
