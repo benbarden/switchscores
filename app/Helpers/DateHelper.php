@@ -20,7 +20,7 @@ class DateHelper
         // we need to specify 'today' otherwise datetime constructor uses 'now' which includes current time
         $today = new \DateTime('today');
 
-        $firstDay = clone $today->setISODate($year, $week, 0);
+        $firstDay = clone $today->setISODate($year, $week, 1);
         return $firstDay;
         /*
         return (object)[

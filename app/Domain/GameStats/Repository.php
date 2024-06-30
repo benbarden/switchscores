@@ -124,6 +124,9 @@ class Repository
 
     public function totalYearWeekStandardQuality($year, $week)
     {
+        // fix: week needs to be -1 as MySQL is zero-indexed?
+        $week--;
+
         if ($week < 10) {
             $week = str_pad($week, 2, '0', STR_PAD_LEFT);
         }
@@ -137,6 +140,9 @@ class Repository
 
     public function totalYearWeekLowQuality($year, $week)
     {
+        // fix: week needs to be -1 as MySQL is zero-indexed?
+        $week--;
+
         if ($week < 10) {
             $week = str_pad($week, 2, '0', STR_PAD_LEFT);
         }

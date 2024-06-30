@@ -335,6 +335,9 @@ class Repository
 
     public function byYearWeek($year, $week, $isLowQuality = null)
     {
+        // fix: week needs to be -1 as MySQL is zero-indexed?
+        $week--;
+
         if ($week < 10) {
             $week = str_pad($week, 2, '0', STR_PAD_LEFT);
         }

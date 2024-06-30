@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsDbUpdate extends Model
 {
-    const SWITCH_LAUNCH_WEEK_2017 = 9;
+    const SWITCH_LAUNCH_WEEK_2017 = 10;
 
     /**
      * @var string
