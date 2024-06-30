@@ -78,6 +78,8 @@ Route::get('/partners/review-sites', 'PublicSite\ReviewSitesController@landing')
 Route::get('/reviews/site/{linkTitle}', 'PublicSite\ReviewSitesController@siteProfile')->name('partners.review-sites.siteProfile');
 
 Route::get('/partners/games-companies', 'PublicSite\GamesCompaniesController@landing')->name('partners.games-companies.landing');
+Route::match(['get', 'post'], '/partners/games-companies/signup', 'PublicSite\GamesCompaniesController@signupPage')->name('partners.games-companies.signupPage');
+Route::match(['get'], '/partners/games-companies/signup/success', 'PublicSite\GamesCompaniesController@signupSuccess')->name('partners.games-companies.signupSuccess');
 Route::get('/partners/games-company/{linkTitle}', 'PublicSite\GamesCompaniesController@companyProfile')->name('partners.detail.games-company');
 
 /* News */

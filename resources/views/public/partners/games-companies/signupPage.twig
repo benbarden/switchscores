@@ -1,0 +1,150 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+
+    <div class="col-xs-12 col-sm-12 col-md-8">
+        <p>
+            Thanks for your interest in joining Switch Scores! To request access to the games
+            company dashboard, fill out your details and we'll get back to you soon.
+        </p>
+        <p>
+            If you found this page via a direct link and you've not yet seen what we offer,
+            have a look at the <a href="{{ route('partners.games-companies.landing') }}">games company homepage</a>
+            and come back here when you're ready.
+        </p>
+
+        <p>
+            <em>* denotes a required field</em>
+        </p>
+
+        {% if errors.any %}
+            <h2>Errors</h2>
+            <p>
+                The following errors occurred with your submission:
+            </p>
+            <div class="alert alert-danger">
+                {% for error in errors.all %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form class="form-horizontal" role="form" method="post" action="{{ route('partners.games-companies.signupPage') }}">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="contact_name" class="col-md-2 control-label">Your name *</label>
+
+                <div class="col-md-4">
+                    <input id="contact_name" type="text" class="form-control" name="contact_name" value="{{ old('contact_name') }}" maxlength="50" required autofocus>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        Tell us your name.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_role" class="col-md-2 control-label">Your role *</label>
+
+                <div class="col-md-4">
+                    <input id="contact_role" type="text" class="form-control" name="contact_role" value="{{ old('contact_role') }}" maxlength="50" required>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        What's your role at the company?
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_email" class="col-md-2 control-label">Your email *</label>
+
+                <div class="col-md-4">
+                    <input id="contact_email" type="email" class="form-control" name="contact_email" value="{{ old('contact_email') }}" maxlength="100" required>
+                </div>
+                <div class="col-md-6">
+                    <small>
+                        This will be used to notify you of any updates, and to give access
+                        to Switch Scores. Make sure it's a real, working email address.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="new_company_name" class="col-md-2 control-label">Company name *</label>
+
+                <div class="col-md-4">
+                    <input id="new_company_name" type="text" class="form-control" name="new_company_name" value="{{ old('new_company_name') }}" maxlength="100" required>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        Enter the name of your company.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="new_company_type" class="col-md-2 control-label">Company type *</label>
+
+                <div class="col-md-4">
+                    <select id="new_company_type" name="new_company_type" class="form-control">
+                        <option value=""></option>
+                        <option value="Developer">Developer</option>
+                        <option value="Publisher">Publisher</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        What type of company is this?
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="new_company_url" class="col-md-2 control-label">Company website</label>
+
+                <div class="col-md-4">
+                    <input id="new_company_url" type="text" class="form-control" name="new_company_url" value="{{ old('new_company_url') }}" maxlength="100">
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        Include a link to your website, if you have one.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_role" class="col-md-2 control-label">Twitter ID</label>
+
+                <div class="col-md-4">
+                    <input id="new_company_twitter" type="text" class="form-control" name="new_company_twitter" value="{{ old('new_company_twitter') }}" maxlength="20">
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        Include your company's Twitter ID, or your own.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary pull-left">
+                        Submit your application
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

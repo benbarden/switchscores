@@ -11,7 +11,8 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th class="text-center">Games published</th>
+                    <th class="text-center">Developed</th>
+                    <th class="text-center">Published</th>
                     <th class="text-center">Date added</th>
                 </tr>
                 </thead>
@@ -20,6 +21,9 @@
                     <tr>
                         <td>
                             <a href="{{ route('partners.detail.games-company', item.link_title) }}">{{ item.name }}</a>
+                        </td>
+                        <td class="text-center">
+                            {{ item.developerGames().count }}
                         </td>
                         <td class="text-center">
                             {{ item.publisherGames().count }}
@@ -41,8 +45,8 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th class="text-center">Games developed</th>
-                    <th class="text-center">Games published</th>
+                    <th class="text-center">Developed</th>
+                    <th class="text-center">Published</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -110,9 +114,11 @@
 
         <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Getting access</h2>
         <p>
-            There are two ways you can get access to the games company dashboard:
+            To request developer or publisher access, click the button below.
         </p>
+        <a class="btn btn-primary btn-lg theme-rounded" href="{{ route('partners.games-companies.signupPage') }}">Sign up today!</a>
 
+        {#
         <ol>
             <li>
                 Go to the <a href="{{ route('login') }}">login page</a> and sign up with Twitter. Then
@@ -126,10 +132,19 @@
                 <a href="{{ route('about.landing') }}">Get in touch</a> and we'll be happy to give you an invite code.
             </li>
         </ol>
+        #}
 
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4">
+
+        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">
+            Getting access
+        </h2>
+        <p>
+            To request developer or publisher access, click the button below.
+        </p>
+        <a class="btn btn-primary btn-lg theme-rounded" href="{{ route('partners.games-companies.signupPage') }}">Sign up today!</a>
 
         <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Working with developers</h2>
         <p>
@@ -140,7 +155,7 @@
 
         <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Need help?</h2>
         <p>
-            If you run into any issues, or you'd like an invite code,
+            If you run into any issues, or you need an invite code,
             <a href="{{ route('about.landing') }}">get in touch</a> and we'll be happy to help.
         </p>
 
