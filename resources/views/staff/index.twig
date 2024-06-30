@@ -40,6 +40,16 @@
                     </td>
                 </tr>
             {% endif %}
+            {% if auth_user().isOwner() %}
+                <tr>
+                    <td>
+                        Games company signups
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ TotalGamesCompanySignups }}</span>
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
 

@@ -10,6 +10,7 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
+use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -26,6 +27,7 @@ class IndexController extends Controller
     private $repoReviewDraft;
     private $repoUser;
     private $dbGamePublisher;
+    private $repoGamesCompany;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
@@ -33,7 +35,8 @@ class IndexController extends Controller
         GameListsRepository $repoGameLists,
         ReviewDraftRepository $repoReviewDraft,
         UserRepository $repoUser,
-        GamePublisherDbQueries $dbGamePublisher
+        GamePublisherDbQueries $dbGamePublisher,
+        GamesCompanyRepository $repoGamesCompany
     )
     {
         $this->repoFeaturedGames = $featuredGames;
@@ -42,6 +45,7 @@ class IndexController extends Controller
         $this->repoReviewDraft = $repoReviewDraft;
         $this->repoUser = $repoUser;
         $this->dbGamePublisher = $dbGamePublisher;
+        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function index()
@@ -59,6 +63,7 @@ class IndexController extends Controller
         $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
+        $bindings['TotalGamesCompanySignups'] = $this->repoGamesCompany->countTotal();
 
         // Games to add
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();

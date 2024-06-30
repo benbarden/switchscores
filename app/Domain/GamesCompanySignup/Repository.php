@@ -15,4 +15,9 @@ class Repository
         return GamesCompanySignup::find($id);
     }
 
+    public function countTotal()
+    {
+        return GamesCompanySignup::orderBy('id')->count();
+    }
+
 }
