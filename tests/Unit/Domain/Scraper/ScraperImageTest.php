@@ -30,11 +30,13 @@ class ScraperImageTest extends TestCase
     {
         $this->scraper->crawlPage('https://www.nintendo.co.uk/Games/Nintendo-Switch-games/Undernauts-Labyrinth-of-Yomi-2173360.html');
         $ogImage = $this->scraper->getHeaderUrl();
-        $expected = 'https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_4/H2x1_NSwitch_UndernautsLabyrinthOfYomi_image1280w.jpg';
+        $expected = 'https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/H2x1_NSwitch_UndernautsLabyrinthOfYomi_image1280w.jpg';
 
         $this->assertEquals($expected, $ogImage);
     }
 
+    /**
+     * Can't use this since the square images were removed from the pages.
     public function testSquareUrlUndernauts()
     {
         $this->scraper->crawlPage('https://www.nintendo.co.uk/Games/Nintendo-Switch-games/Undernauts-Labyrinth-of-Yomi-2173360.html');
@@ -43,4 +45,5 @@ class ScraperImageTest extends TestCase
 
         $this->assertEquals($expected, $ogImage);
     }
+    */
 }

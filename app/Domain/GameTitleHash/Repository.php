@@ -30,4 +30,20 @@ class Repository
         $titleHash = GameTitleHash::where('title_hash', $hash)->first();
         return $titleHash != null;
     }
+
+    public function byTitleGroup(array $titles)
+    {
+        $hashGenerator = new HashGenerator();
+
+        foreach ($titles as &$title) {
+            $title = $hashGenerator->generateHash($title);
+        }
+
+        $gameTitleHash = GameTitleHash::whereIn('title_hash', $titles)->get();
+        if ($gameTitleHash) {
+            return $gameTitleHash->first();
+        } else {
+            return null;
+        }
+    }
 }

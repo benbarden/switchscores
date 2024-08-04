@@ -19,6 +19,12 @@ class ReviewSite extends Model implements Auditable
     const SITE_SWITCH_PLAYER = 2;
     const SITE_NINTENDO_LIFE = 4;
 
+    const SITE_GOD_IS_A_GEEK = 12;
+    const SITE_PURE_NINTENDO = 13;
+    const SITE_NINTENPEDIA = 621;
+    const SITE_HEY_POOR_PLAYER = 626;
+    const SITE_SWITCHABOO = 2109;
+
     /**
      * @var string
      */

@@ -10,7 +10,7 @@
 
 30 4 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
 35 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewImportByScraper >/dev/null 2>&1
-40 4 * * * www-data cd /var/www/switchscores.com && php artisan RunFeedParser >/dev/null 2>&1
+40 4 * * * www-data cd /var/www/switchscores.com && php artisan PartnerParseReviewDrafts >/dev/null 2>&1
 
 45 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewConvertDraftsToReviews >/dev/null 2>&1
 50 4 * * * www-data cd /var/www/switchscores.com && php artisan ReviewSiteUpdateStats >/dev/null 2>&1

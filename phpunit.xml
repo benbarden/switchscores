@@ -14,6 +14,9 @@
     <testsuite name="GameTitleMatch">
       <directory suffix="Test.php">./tests/Unit/Domain/GameTitleMatch</directory>
     </testsuite>
+    <testsuite name="DomainScraperScore">
+      <directory suffix="Test.php">./tests/Unit/Domain/Scraper</directory>
+    </testsuite>
     <testsuite name="DomainAll">
       <directory suffix="Test.php">./tests/Unit/Domain</directory>
     </testsuite>

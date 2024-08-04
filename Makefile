@@ -6,6 +6,9 @@ test:
 test-domain:
 	./vendor/bin/phpunit --testsuite DomainAll
 
+test-domain-scraper-score:
+	./vendor/bin/phpunit --testsuite DomainScraperScore
+
 test-feature:
 	./vendor/bin/phpunit --testsuite Feature
 
