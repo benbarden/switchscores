@@ -62,7 +62,7 @@ class ImportScraper
             throw new \Exception('Fatal error - Missing item title and/or URL ['.var_export($item, true).']');
         }
 
-        if ($reviewSite->name == 'Nintendo World Report') {
+        if ($reviewSite->id == ReviewSite::SITE_NINTENDO_WORLD_REPORT) {
             $itemUrl = $reviewSite->website_url.substr($itemUrl, 1);
         }
 
@@ -75,10 +75,15 @@ class ImportScraper
 
         $itemRating = $item[$idxItemRating];
 
-        if ($itemRating == "-") {
-            throw new \Exception('No rating; skipping: '.$itemUrl);
-        } elseif ($itemRating == "") {
-            throw new \Exception('No rating; skipping: '.$itemUrl);
+        // Include non-rated reviews for Pocket Tactics as their table isn't always up to date
+        if ($reviewSite->id == ReviewSite::SITE_NINTENDO_WORLD_REPORT) {
+            if ($itemRating == "-") {
+                throw new \Exception('No rating; skipping: '.$itemUrl);
+            } elseif ($itemRating == "") {
+                throw new \Exception('No rating; skipping: '.$itemUrl);
+            }
+        } elseif ($reviewSite->id == ReviewSite::SITE_POCKET_TACTICS) {
+            $itemRating = null;
         }
 
         $dbExistingItem = $this->repoReviewDraft->getByItemUrl($itemUrl);

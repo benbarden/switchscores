@@ -99,7 +99,7 @@ class ImportByScraper extends Command
 
             } elseif ($reviewSite->name == 'Pocket Tactics') {
 
-                $reviewYear = '2023';
+                $reviewYear = date('Y');
                 $scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-'.$reviewYear);
                 $scraper->extractRows('review-data');
                 $tableData = $scraper->getTableData();
