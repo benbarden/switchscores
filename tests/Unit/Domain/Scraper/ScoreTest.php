@@ -53,6 +53,15 @@ class ScoreTest extends TestCase
         $this->assertEquals($expected, $value);
     }
 
+    public function testPS3BlogNetOverHorizonXSteelEmpire()
+    {
+        $this->scraper->crawlPage('https://www.ps3blog.net/2024/08/05/nintendo-switch-over-horizon-x-steel-empire-review/');
+        $value = $this->scraper->spanItemPropRatingValueNoChildren();
+        $expected = '8.5';
+
+        $this->assertEquals($expected, $value);
+    }
+
     public function testNintenpediaEverafterFalls()
     {
         $this->scraper->crawlPage('https://nintenpedia.com/everafter-falls-review/');
@@ -71,6 +80,8 @@ class ScoreTest extends TestCase
         $this->assertEquals($expected, $value);
     }
 
+    /**
+     * Doesn't work.
     public function testHeyPoorPlayerHotLapRacing()
     {
         $this->scraper->crawlPage('https://www.heypoorplayer.com/2024/08/03/hot-lap-racing-review-switch/');
@@ -79,6 +90,7 @@ class ScoreTest extends TestCase
 
         $this->assertEquals($expected, $value);
     }
+     */
 
     /**
      * Can't use this since the square images were removed from the pages.

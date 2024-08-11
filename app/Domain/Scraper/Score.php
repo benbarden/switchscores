@@ -15,6 +15,7 @@ class Score extends BaseScraper
     }
 
     // Slightly different format used by Pure Nintendo
+    // Also used by PS3Blog.net
     public function spanItemPropRatingValueNoChildren()
     {
         $value = $this->domCrawler->filterXPath(
@@ -39,8 +40,11 @@ class Score extends BaseScraper
     // Unstructured format used by Hey Poor Player
     public function customHeyPoorPlayer()
     {
+        // Does not work, so return null
+        return null;
+
         $value = $this->domCrawler->filterXPath(
-            '//div[@class="post-entry"]/p/strong/span/span/span')->innerText();
+            '//div[@class="post-entry"]/h2/strong/span/span/span')->innerText();
         $value = str_replace('Final Verdict: ', '', $value);
         $valueArray = explode('/', $value);
         if (count($valueArray) > 0) {

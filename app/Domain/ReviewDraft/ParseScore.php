@@ -60,6 +60,8 @@ class ParseScore
                     break;
 
                 case ReviewSite::SITE_PURE_NINTENDO:
+                case ReviewSite::SITE_PS3BLOG_NET:
+                case ReviewSite::SITE_PS4BLOG_NET:
                     $scraperScore->crawlPage($itemUrl);
                     $score = $scraperScore->spanItemPropRatingValueNoChildren();
                     break;
@@ -70,8 +72,8 @@ class ParseScore
                     break;
 
                 case ReviewSite::SITE_HEY_POOR_PLAYER:
-                    $scraperScore->crawlPage($itemUrl);
-                    $score = $scraperScore->customHeyPoorPlayer();
+                    //$scraperScore->crawlPage($itemUrl);
+                    //$score = $scraperScore->customHeyPoorPlayer();
                     break;
 
                 case ReviewSite::SITE_SWITCHABOO:

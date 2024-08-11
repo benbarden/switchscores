@@ -27,6 +27,9 @@ class ReviewSite extends Model implements Auditable
     const SITE_SWITCHABOO = 2109;
     const SITE_POCKET_TACTICS = 2593;
 
+    const SITE_PS3BLOG_NET = 2459;
+    const SITE_PS4BLOG_NET = 2361;
+
     /**
      * @var string
      */
