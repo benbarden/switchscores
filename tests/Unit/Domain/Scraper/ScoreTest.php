@@ -80,6 +80,15 @@ class ScoreTest extends TestCase
         $this->assertEquals($expected, $value);
     }
 
+    public function testPS4BlogNetSamAndMaxDevilsPlayhouse()
+    {
+        $this->scraper->crawlPage('https://www.ps4blog.net/2024/08/nintendo-switch-sam-and-max-the-devils-playhouse-remastered-review/');
+        $value = $this->scraper->customPS4BlogNet();
+        $expected = '9.0';
+
+        $this->assertEquals($expected, $value);
+    }
+
     /**
      * Doesn't work.
     public function testHeyPoorPlayerHotLapRacing()
@@ -92,15 +101,4 @@ class ScoreTest extends TestCase
     }
      */
 
-    /**
-     * Can't use this since the square images were removed from the pages.
-    public function testSquareUrlUndernauts()
-    {
-        $this->scraper->crawlPage('https://www.nintendo.co.uk/Games/Nintendo-Switch-games/Undernauts-Labyrinth-of-Yomi-2173360.html');
-        $ogImage = $this->scraper->getSquareUrl();
-        $expected = 'https://fs-prod-cdn.nintendo-europe.com/media/images/05_packshots/games_13/nintendo_switch_8/PS_NSwitch_UndernautsLabyrinthOfYomi_PEGI.jpg';
-
-        $this->assertEquals($expected, $ogImage);
-    }
-    */
 }

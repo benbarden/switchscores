@@ -68,4 +68,11 @@ class Score extends BaseScraper
         }
     }
 
+
+    // Format used by PS4BlogNet
+    public function customPS4BlogNet()
+    {
+        $value = $this->domCrawler->filterXPath('//div[@class="penci-review-score-num"]')->innerText();
+        return $value;
+    }
 }

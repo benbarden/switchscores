@@ -61,7 +61,6 @@ class ParseScore
 
                 case ReviewSite::SITE_PURE_NINTENDO:
                 case ReviewSite::SITE_PS3BLOG_NET:
-                case ReviewSite::SITE_PS4BLOG_NET:
                     $scraperScore->crawlPage($itemUrl);
                     $score = $scraperScore->spanItemPropRatingValueNoChildren();
                     break;
@@ -79,6 +78,11 @@ class ParseScore
                 case ReviewSite::SITE_SWITCHABOO:
                     $scraperScore->crawlPage($itemUrl);
                     $score = $scraperScore->customSwitchaboo();
+                    break;
+
+                case ReviewSite::SITE_PS4BLOG_NET:
+                    $scraperScore->crawlPage($itemUrl);
+                    $score = $scraperScore->customPS4BlogNet();
                     break;
 
             }
