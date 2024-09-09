@@ -57,34 +57,6 @@
 
         <div class="col-md-4">
 
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Series matches'} %}
-            {% if GameSeriesMatchList %}
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Series</th>
-                        <th class="text-end">Potential matches</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in GameSeriesMatchList %}
-                        <tr>
-                            <td>{{ item.name }}</td>
-                            <td class="text-end">
-                                <span class="h4">
-                                    <a href="{{ route('staff.categorisation.title-match.series', {'gameSeries': item.series}) }}">
-                                        {{ item.gameCount }}
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No outstanding matches to review.</p>
-            {% endif %}
-
         </div>
 
     </div>
