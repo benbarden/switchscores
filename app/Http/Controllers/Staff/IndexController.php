@@ -73,7 +73,6 @@ class IndexController extends Controller
 
         // Missing data
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
-        $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
         $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
         $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());

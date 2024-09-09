@@ -126,7 +126,6 @@ class DashboardController extends Controller
 
         // Migrations: Category
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
-        $bindings['NoTagCount'] = $this->repoGameStats->totalUntagged();
 
         // Title matches
         $bindings['GameSeriesMatchList'] = $this->getSeriesMatchesStats();

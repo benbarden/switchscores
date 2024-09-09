@@ -112,18 +112,6 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
-    public function noTag()
-    {
-        $pageTitle = 'No tag';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noTag();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
     public function noEuReleaseDate()
     {
         $pageTitle = 'No EU release date';
