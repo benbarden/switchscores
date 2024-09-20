@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use App\Construction\Game\GameBuilder;
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\Url\LinkTitle as LinkTitleGenerator;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,6 +19,7 @@ use App\Factories\GameDirectorFactory;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use Illuminate\Support\Facades\Validator;
 
 class BulkEditorController extends Controller
 {
@@ -26,16 +33,31 @@ class BulkEditorController extends Controller
     private $validationRules = [
     ];
 
-    protected $repoGame;
-    protected $repoGameLists;
+    private $repoGameTitleHash;
+    private $gameTitleHashGenerator;
+    private $gameQualityFilter;
+    private $repoGame;
+    private $repoGameLists;
+    private $repoGamesCompany;
+    private $linkTitleGenerator;
 
     public function __construct(
+        GameTitleHashRepository $repoGameTitleHash,
+        HashGeneratorRepository $gameTitleHashGenerator,
+        GameQualityFilter $gameQualityFilter,
         GameRepository $repoGame,
-        GameListsRepository $repoGameLists
+        GameListsRepository $repoGameLists,
+        GamesCompanyRepository $repoGamesCompany,
+        LinkTitleGenerator $linkTitleGenerator
     )
     {
+        $this->repoGameTitleHash = $repoGameTitleHash;
+        $this->gameTitleHashGenerator = $gameTitleHashGenerator;
+        $this->gameQualityFilter = $gameQualityFilter;
         $this->repoGame = $repoGame;
         $this->repoGameLists = $repoGameLists;
+        $this->repoGamesCompany = $repoGamesCompany;
+        $this->linkTitleGenerator = $linkTitleGenerator;
     }
 
     public function eshopUpcomingCrosscheck()
@@ -94,6 +116,125 @@ class BulkEditorController extends Controller
         }
 
         return $fieldToUpdate;
+    }
+
+    public function bulkAdd()
+    {
+        $pageTitle = 'Bulk add games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bulkAddLimit = 20;
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $errorTitles = [];
+
+            $postData = $request->post();
+
+            foreach ($postData as $pdk => $pdv) {
+
+                if ($pdk == '_token') continue;
+
+                for ($i=1; $i<$bulkAddLimit+1; $i++) {
+
+                    $okToAdd = true;
+
+                    $title       = $postData['title_'.$i];
+                    $releaseDate = $postData['release_eu_'.$i];
+                    $price       = $postData['price_'.$i];
+
+                    $validator = Validator::make($request->all(), []);
+
+                    // Add game
+                    if ($title) {
+
+                        // Check title hash is unique
+                        $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
+                        $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+
+                        // Check for duplicates
+                        if ($hashExists) {
+                            $okToAdd = false;
+                            $errorTitles[] = $title;
+                        }
+
+                        if (!$okToAdd) continue;
+
+                        // OK to proceed
+                        $linkTitle = $this->linkTitleGenerator->generate($title);
+                        $gameBuilder = new GameBuilder();
+                        $gameBuilder->setTitle($title);
+                        $gameBuilder->setLinkTitle($linkTitle);
+                        $gameBuilder->setReviewCount(0);
+                        if ($releaseDate) {
+                            $gameBuilder->setEuReleaseDate($releaseDate);
+                        }
+                        if ($price) {
+                            $gameBuilder->setPriceEshop($price);
+                        }
+
+                        $game = $gameBuilder->getGame();
+                        $game->save();
+                        $gameId = $game->id;
+
+                        // Add title hash
+                        $this->repoGameTitleHash->create($title, $hashedTitle, $gameId);
+
+                        // Add publisher, if selected
+                        if (array_key_exists('publisher_id_'.$i, $postData)) {
+                            $publisherId = $postData['publisher_id_'.$i];
+                            $gamesCompany = $this->repoGamesCompany->find($publisherId);
+                            if ($gamesCompany) {
+                                $this->getServiceGamePublisher()->createGamePublisher($gameId, $publisherId);
+                                $this->gameQualityFilter->updateGame($game, $gamesCompany);
+                            }
+                        }
+
+                    }
+
+                }
+
+                $errorsUrl = implode("|", $errorTitles);
+                return redirect(route('staff.games.bulk-add.complete', ['errors' => $errorsUrl]));
+
+                /*
+                if ($validator) {
+                    if ($validator->fails()) {
+                        return redirect(route('staff.games.bulk-add.add'))
+                            ->withErrors($validator)
+                            ->withInput();
+                    }
+                }
+                */
+
+            }
+
+            // Done
+            return redirect(route('staff.games.bulk-add.add'));
+
+        }
+
+        $bindings['BulkAddLimit'] = $bulkAddLimit;
+
+        return view('staff.games.bulk-add.add', $bindings);
+    }
+
+    public function bulkAddComplete()
+    {
+        $pageTitle = 'Bulk add games - Complete';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $errors = request()->errors;
+        if ($errors) {
+            $errorsArray = explode("|", $errors);
+            $bindings['Errors'] = $errorsArray;
+        }
+
+        return view('staff.games.bulk-add.complete', $bindings);
     }
 
     public function editList()

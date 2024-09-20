@@ -23,6 +23,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/games/delete/{gameId}', 'Staff\Games\GamesEditorController@delete')->name('staff.games.delete');
     Route::get('/staff/games/release', 'Staff\Games\GamesEditorController@releaseGame')->name('staff.games.release');
 
+    // Games: Bulk add
+    Route::match(['get', 'post'], '/staff/games/bulk-add', 'Staff\Games\BulkEditorController@bulkAdd')->name('staff.games.bulk-add.add');
+    Route::match(['get', 'post'], '/staff/games/bulk-add-complete/{errors?}', 'Staff\Games\BulkEditorController@bulkAddComplete')->name('staff.games.bulk-add.complete');
+
     // Games: Bulk editing
     Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-predefined-list/{editMode}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editPredefinedList');
     Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editGameIdList');

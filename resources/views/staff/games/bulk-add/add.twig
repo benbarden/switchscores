@@ -1,0 +1,121 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Use this screen to quickly add some games. Duplicate titles won't be added.
+</p>
+
+{% set formSubmitAction = route('staff.games.bulk-add.add') %}
+
+{% include 'common/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <table class="table table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th class="text-center">Publisher</th>
+                        <th class="text-center" style="width: 200px;">Release (EU)</th>
+                        <th class="text-center" style="width: 200px;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for index in range(1, BulkAddLimit) %}
+                    <tr>
+                        <td>
+                            {{ index }}
+                        </td>
+                        <td>
+                            <input id="title_{{ index }}" name="title_{{ index }}" type="text" class="form-control">
+                        </td>
+                        <td>
+                            <select id="publisher_id_{{ index }}" name="publisher_id_{{ index }}" class="publisher_id" style="width: 100%;">
+                            </select>
+                        </td>
+                        <td>
+                            <input id="release_eu_{{ index }}" name="release_eu_{{ index }}" type="date" class="form-control">
+                        </td>
+                        <td>
+                            <input id="price_{{ index }}" name="price_{{ index }}" type="text" class="form-control">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-md-2">
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-8">
+            <button id="btn-submit" class="btn outline btn-primary pull-right">
+                Save changes
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(".publisher_id").select2({
+        placeholder: "Search for a partner",
+        minimumInputLength: 2,
+        templateResult: formatPartner,
+        templateSelection: formatPartnerSelection,
+        ajax: {
+            url: "/api/partner/games-company/search",
+            dataType: 'json',
+            data: function (params) {
+                var query = {
+                    name: params.term,
+                    type: 'public'
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.partners
+                };
+            }
+        }
+    });
+
+    function formatPartner(partner) {
+        if (partner.loading) {
+            return partner.text;
+        }
+
+        var $container = $(
+            "<div class='select2-result-partner clearfix'>" +
+            "<div class='select2-result-partner__name'></div>" +
+            "</div>"
+        );
+
+        $container.find(".select2-result-partner__name").text(partner.name);
+
+        return $container;
+    }
+
+    function formatPartnerSelection(partner) {
+        return partner.name;
+    }
+
+</script>
+
+{% endblock page_inner %}

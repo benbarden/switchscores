@@ -6,6 +6,9 @@ namespace App\Services;
 
 class UrlService
 {
+    /**
+     * @deprecated
+     */
     public function generateLinkText($title)
     {
         $linkText = $title;

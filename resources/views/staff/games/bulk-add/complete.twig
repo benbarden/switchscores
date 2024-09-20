@@ -1,0 +1,19 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<p>Complete.</p>
+{% if Errors %}
+    <p>
+        <strong>Some errors occurred</strong>
+        {% for error in Errors %}
+        <br>Duplicate title: {{ error }} - game not added
+        {% endfor %}
+    </p>
+{% endif %}
+
+<p>
+    <a href="{{ route('staff.games.bulk-add.add') }}">Bulk add games</a>
+</p>
+
+{% endblock page_inner %}
