@@ -26,12 +26,50 @@ class Score extends BaseScraper
     // Unstructured format used by Nintenpedia
     public function customNintenpedia()
     {
+        /**
+         * This site has either introduced a new format, or they're inconsistent with how they write their ratings.
+         * Previously, they used a simple format like this:
+         * Rating: 7/10.
+         *
+         * On 21/09/24 I spotted that their format had changed to this:
+         * (name of game) gets a 7/10.
+         *
+         * Two reviews from the same reviewer use this format, so perhaps it's one person using their own style.
+         * But in the examples I checked, there's sometimes a random Unicode character appearing:
+         * (name of game) gets a\u{A0}7/10.
+         *
+         * The best thing I can do is add support for multiple separators, check if they exist, and explode to
+         * an array based on this.
+         *
+         * It would be a lot simpler if every site used the itemprop="ratingValue" format :-[
+         */
+
+        $possibleSeparators = [
+            "Rating: ",
+            "\u{A0}",
+            " gets a ",
+        ];
+
         $value = $this->domCrawler->filterXPath(
             '//div[@class="entry-content"]')->children()->last()->children()->first()->innerText();
-        $value = str_replace('Rating: ', '', $value);
-        $valueArray = explode('/', $value);
-        if (count($valueArray) > 0) {
-            return $valueArray[0];
+
+        $useSeparator = null;
+        foreach ($possibleSeparators as $separator) {
+            if (strpos($value, $separator) !== false) {
+                $useSeparator = $separator;
+                break;
+            }
+        }
+        if (is_null($useSeparator)) return null;
+
+        $valueArray = explode($useSeparator, $value);
+
+        if (count($valueArray) == 0) return null;
+
+        $scoreToSplit = $valueArray[1];
+        $finalScore = explode('/', $scoreToSplit);
+        if (count($finalScore) > 0) {
+            return $finalScore[0];
         } else {
             return null;
         }

@@ -71,6 +71,24 @@ class ScoreTest extends TestCase
         $this->assertEquals($expected, $value);
     }
 
+    public function testNintenpediaEnderLilies()
+    {
+        $this->scraper->crawlPage('https://nintenpedia.com/ender-lilies-quietus-of-the-knights-review/');
+        $value = $this->scraper->customNintenpedia();
+        $expected = '7';
+
+        $this->assertEquals($expected, $value);
+    }
+
+    public function testNintenpediaTurnipBoy()
+    {
+        $this->scraper->crawlPage('https://nintenpedia.com/turnip-boy-commits-tax-evasion-review/');
+        $value = $this->scraper->customNintenpedia();
+        $expected = '7';
+
+        $this->assertEquals($expected, $value);
+    }
+
     public function testSwitchabooNintendoWorldChampionships()
     {
         $this->scraper->crawlPage('https://www.switchaboo.com/nintendo-world-championships-nes-edition-switch-review/');
