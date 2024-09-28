@@ -161,6 +161,14 @@ class DataSourceParsedController extends Controller
                     $customGameDetailMsg = '&alertmsg=publishernotadded&dsitemid='.$dsParsedItem->id;
                 }
 
+                // Set game to low quality if publisher is low quality
+                if ($gamesCompany) {
+                    if ($gamesCompany->is_low_quality == 1) {
+                        $game->is_low_quality = 1;
+                        $game->save();
+                    }
+                }
+
                 // Trigger event
                 event(new GameCreated($game));
 
