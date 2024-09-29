@@ -100,14 +100,26 @@ class GamesListController extends Controller
         return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);
     }
 
-    public function noCategory()
+    public function noCategoryExcludingLowQuality()
     {
-        $pageTitle = 'No category';
+        $pageTitle = 'No category (Excluding low quality)';
         $tableSort = "[ 0, 'desc']";
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->repoGameLists->noCategory();
+        $bindings['GameList'] = $this->repoGameLists->noCategoryExcludingLowQuality();
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function noCategoryAll()
+    {
+        $pageTitle = 'No category (All)';
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['GameList'] = $this->repoGameLists->noCategoryAll();
 
         return view('staff.games.list.standard-view', $bindings);
     }

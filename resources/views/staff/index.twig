@@ -86,12 +86,22 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-category') }}">
-                        No category
+                    <a href="{{ route('staff.games.list.no-category-excluding-low-quality') }}">
+                        No category (Excluding low quality)
                     </a>
                 </td>
                 <td class="text-end">
-                    <span class="h4">{{ NoCategoryCount }}</span>
+                    <span class="h4">{{ NoCategoryExcludingLowQualityCount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.no-category-all') }}">
+                        No category (All)
+                    </a>
+                </td>
+                <td class="text-end">
+                    <span class="h4">{{ NoCategoryAllCount }}</span>
                 </td>
             </tr>
             <tr>

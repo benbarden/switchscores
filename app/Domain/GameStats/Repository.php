@@ -44,7 +44,12 @@ class Repository
     /**
      * @return integer
      */
-    public function totalNoCategory()
+    public function totalNoCategoryExcludingLowQuality()
+    {
+        return Game::whereNull('category_id')->where('is_low_quality', 0)->count();
+    }
+
+    public function totalNoCategoryAll()
     {
         return Game::whereNull('category_id')->count();
     }

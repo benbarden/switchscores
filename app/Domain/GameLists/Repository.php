@@ -109,7 +109,12 @@ class Repository
         return $games;
     }
 
-    public function noCategory()
+    public function noCategoryExcludingLowQuality()
+    {
+        return Game::whereNull('category_id')->where('is_low_quality', 0)->get();
+    }
+
+    public function noCategoryAll()
     {
         return Game::whereNull('category_id')->get();
     }
