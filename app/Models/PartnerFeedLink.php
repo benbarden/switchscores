@@ -8,11 +8,13 @@ class PartnerFeedLink extends Model
 {
     const FEED_STATUS_LIVE = 1;
     const FEED_STATUS_TEST = 2;
+    const FEED_STATUS_BROKEN = 8;
     const FEED_STATUS_ARCHIVED = 9;
 
     const DESC_FEED_STATUS_LIVE = 'Live';
     const DESC_FEED_STATUS_TEST = 'Test';
     const DESC_FEED_STATUS_ARCHIVED = 'Archived';
+    const DESC_FEED_STATUS_BROKEN = 'Broken or site down';
 
     const DATA_TYPE_ARRAY = 1;
     const DATA_TYPE_OBJECT = 2;
@@ -46,7 +48,7 @@ class PartnerFeedLink extends Model
 
     public function site()
     {
-        return $this->hasOne('App\Models\ReviewSite', 'id', 'site_id');
+        return $this->hasOne('App\Models\ReviewSite', 'id', 'site_id')->orderBy('name');
     }
 
     public function allowHistoric()
@@ -77,6 +79,9 @@ class PartnerFeedLink extends Model
                 break;
             case self::FEED_STATUS_ARCHIVED:
                 $desc = self::DESC_FEED_STATUS_ARCHIVED;
+                break;
+            case self::FEED_STATUS_BROKEN:
+                $desc = self::DESC_FEED_STATUS_BROKEN;
                 break;
         }
 

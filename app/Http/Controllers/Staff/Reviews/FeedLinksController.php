@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Models\PartnerFeedLink;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 
 use App\Traits\SwitchServices;
 
@@ -32,12 +33,15 @@ class FeedLinksController extends Controller
     protected $viewBreadcrumbs;
     protected $viewBindings;
     protected $repoReviewSite;
+    private $repoPartnerFeedLink;
 
     public function __construct(
-        ReviewSiteRepository $repoReviewSite
+        ReviewSiteRepository $repoReviewSite,
+        PartnerFeedLinkRepository $repoPartnerFeedLink
     )
     {
         $this->repoReviewSite = $repoReviewSite;
+        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
     }
 
     public function index()
@@ -46,9 +50,11 @@ class FeedLinksController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $feedLinks = $this->getServicePartnerFeedLink()->getAll();
+        $feedLinksActive = $this->repoPartnerFeedLink->getActive();
+        $feedLinksInactive = $this->repoPartnerFeedLink->getInactive();
 
-        $bindings['FeedLinks'] = $feedLinks;
+        $bindings['FeedLinksActive'] = $feedLinksActive;
+        $bindings['FeedLinksInactive'] = $feedLinksInactive;
 
         return view('staff.reviews.feed-links.index', $bindings);
     }

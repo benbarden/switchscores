@@ -1,0 +1,54 @@
+{% if FeedLinks.count > 0 %}
+    <table class="table table-responsive table-condensed">
+        <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th>Site</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Data type</th>
+            <th class="text-center">Item node</th>
+            <th class="text-center">Historic</th>
+            <th class="text-center">Last run</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in FeedLinks %}
+            <tr>
+                <td class="text-center">
+                    {{ item.id }}
+                </td>
+                <td>
+                    <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': item.site.link_title}) }}" target="_blank">
+                        {{ item.site.name }}
+                    </a>
+                </td>
+                <td class="text-center">
+                    {{ item.getFeedStatusDesc() }}
+                </td>
+                <td class="text-center">{{ item.getDataTypeDesc() }}</td>
+                <td class="text-center">{{ item.getItemNodeDesc() }}</td>
+                <td class="text-center">
+                    {% if item.allowHistoric() %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+                <td style="width: 250px;">
+                    <small>
+                        {{ item.last_run_status }}
+                    </small>
+                </td>
+                <td class="text-center">
+                    <a href="{{ route('staff.reviews.feedLinks.edit', {'feedLink': item}) }}">Edit</a> :
+                    Delete
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <p>No feed links found.</p>
+{% endif %}

@@ -54,6 +54,7 @@ class PartnerFeedLinkService
         $options[PartnerFeedLink::FEED_STATUS_LIVE] = PartnerFeedLink::DESC_FEED_STATUS_LIVE;
         $options[PartnerFeedLink::FEED_STATUS_TEST] = PartnerFeedLink::DESC_FEED_STATUS_TEST;
         $options[PartnerFeedLink::FEED_STATUS_ARCHIVED] = PartnerFeedLink::DESC_FEED_STATUS_ARCHIVED;
+        $options[PartnerFeedLink::FEED_STATUS_BROKEN] = PartnerFeedLink::DESC_FEED_STATUS_BROKEN;
         return $options;
     }
 

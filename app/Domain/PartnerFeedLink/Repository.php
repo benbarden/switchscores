@@ -11,4 +11,22 @@ class Repository
     {
         return PartnerFeedLink::where('site_id', $siteId)->first();
     }
+
+    public function getActive()
+    {
+        $feedLinks = PartnerFeedLink::join('review_sites', 'partner_feed_links.site_id', '=', 'review_sites.id')
+            ->where('feed_status', PartnerFeedLink::FEED_STATUS_LIVE)
+            ->orderBy('review_sites.name', 'asc')
+            ->get();
+        return $feedLinks;
+    }
+
+    public function getInactive()
+    {
+        $feedLinks = PartnerFeedLink::join('review_sites', 'partner_feed_links.site_id', '=', 'review_sites.id')
+            ->where('feed_status', '<>', PartnerFeedLink::FEED_STATUS_LIVE)
+            ->orderBy('review_sites.name', 'asc')
+            ->get();
+        return $feedLinks;
+    }
 }
