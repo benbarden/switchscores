@@ -16,7 +16,7 @@
         {% for item in FeedLinks %}
             <tr>
                 <td class="text-center">
-                    {{ item.id }}
+                    {{ item.feed_link_id }}
                 </td>
                 <td>
                     <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': item.site.link_title}) }}" target="_blank">
@@ -41,8 +41,7 @@
                     </small>
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('staff.reviews.feedLinks.edit', {'feedLink': item}) }}">Edit</a> :
-                    Delete
+                    <a href="{{ route('staff.reviews.feedLinks.edit', {'linkId': item.feed_link_id}) }}">Edit</a>
                 </td>
             </tr>
         {% endfor %}

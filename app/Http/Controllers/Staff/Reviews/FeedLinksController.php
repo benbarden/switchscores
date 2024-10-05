@@ -109,15 +109,20 @@ class FeedLinksController extends Controller
         return view('staff.reviews.feed-links.add', $bindings);
     }
 
-    public function edit(PartnerFeedLink $feedLink)
+    public function edit()
     {
+        $request = request();
+
+        $linkId = $request->linkId;
+
+        $feedLink = $this->repoPartnerFeedLink->find($linkId);
+        if (!$feedLink) abort(404);
+
         $pageTitle = 'Edit feed link';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsFeedLinksSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $linkId = $feedLink->id;
-
-        $request = request();
 
         if ($request->isMethod('post')) {
 
