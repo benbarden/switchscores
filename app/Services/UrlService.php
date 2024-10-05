@@ -30,7 +30,9 @@ class UrlService
 
     public function cleanReviewFeedUrl($url)
     {
-        if (strpos($url, '?') === false) return $url;
+        $url = trim($url);
+
+        if (!str_contains($url, '?')) return $url;
 
         $baseUrl = explode('?', $url);
 
