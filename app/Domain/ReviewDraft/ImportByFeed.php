@@ -101,7 +101,7 @@ class ImportByFeed
                 }
                 try {
                     $this->validateItem($itemData);
-                    $logInfo = sprintf('Importing: %s - %s', $itemData['item_date'], $itemData['item_url']);
+                    $logInfo = sprintf('Importing: %s - %s', $itemData['item_date'], trim($itemData['item_url']));
                     $this->logger->info($logInfo);
                     $this->processItem($itemData);
                 } catch (AlreadyImported $e) {
