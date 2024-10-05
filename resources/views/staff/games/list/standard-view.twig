@@ -13,15 +13,32 @@
 {% endif %}
 
 {% if GameList.count > 0 %}
+    <div class="alert alert-info">
+        <div class="row">
+            <div class="col-md-2">
+                <strong>Store links key:</strong>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-globe"></i> has a store override URL
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-link"></i> linked to EU eShop API
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-unlink"></i> was linked to EU eShop API, but the link is broken
+            </div>
+        </div>
+    </div>
+
     <table class="table data-sortable">
         <thead>
             <tr>
                 <th class="text-right">#</th>
                 <th>Title</th>
+                <th>Publishers</th>
                 <th>Category</th>
                 <th>{{ CustomHeader }}</th>
-                <th class="text-center">eShop: EU</th>
-                <th class="text-center">Override<br>URL</th>
+                <th class="text-center">Store<br>links</th>
                 <th>Release date (EU)</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -29,13 +46,21 @@
         <tbody>
             {% for item in GameList %}
                 <tr>
-                    <td class="text-right">
-                        {{ item.id }}
-                    </td>
+                    <td class="text-right">{{ item.id }}</td>
                     <td>
                         {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
                         {% if item.is_low_quality == 1 %}
                             <label class="label label-danger">Low quality</label>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.gamePublishers|length > 0 %}
+                            {% for item in item.gamePublishers %}
+                                <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" tabindex="-1">
+                                    {{ item.publisher.name }}
+                                </a>
+                                <br>
+                            {% endfor %}
                         {% endif %}
                     </td>
                     <td>
@@ -57,23 +82,15 @@
                                 <i class="fas fa-link"></i>
                             {% elseif item.eshop_europe_fs_id %}
                                 <i class="fas fa-unlink"></i>
-                            {% else %}
-                                -
                             {% endif %}
                         {% else %}
                             {# Legacy code - for DB queries #}
                             {% if item.eshop_europe_fs_id %}
                                 <i class="fas fa-link"></i>
-                            {% else %}
-                                -
                             {% endif %}
                         {% endif %}
-                    </td>
-                    <td class="text-center">
                         {% if item.nintendo_store_url_override %}
                             <i class="fas fa-globe"></i>
-                        {% else %}
-                            -
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -100,7 +117,7 @@
                 null,
                 null,
                 null,
-                { "orderable": false },
+                null,
                 { "orderable": false },
                 { "orderable": false },
                 null,
