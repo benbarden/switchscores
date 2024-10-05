@@ -38,6 +38,13 @@ class Loader
                         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                         'Accept-Encoding' => 'gzip, deflate',
                     ],
+                    // https://serverfault.com/questions/1126612/ssl-error-unexpected-eof-while-reading-on-same-server-as-the-originating-reque
+                    'config' => [
+                        'curl' => [
+                            'CURLOPT_SSLVERSION' => 'CURL_SSLVERSION_TLSv1_2',
+                            'CURLOPT_SSL_CIPHER_LIST' => 'AES256+EECDH:AES256+EDH',
+                        ],
+                    ],
                     'verify' => false
                 ]
             );
