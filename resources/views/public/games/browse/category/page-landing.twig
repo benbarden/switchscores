@@ -78,14 +78,7 @@
         {% endif %}
 
         <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Browse all games</h4>
-        <ul>
-            <li><a href="{{ route('games.browse.byTitle.landing') }}">A to Z</a></li>
-            <li><a href="{{ route('games.browse.byDate.landing') }}">By release date</a></li>
-            <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
-            <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
-            <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
-            <li><a href="{{ route('games.browse.byCollection.landing') }}">By collection</a></li>
-        </ul>
+        {% include 'public/games/navRightBrowseAll.twig' %}
 
     </div>
 

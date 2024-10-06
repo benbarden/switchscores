@@ -4,19 +4,37 @@
 
 {% include 'public/games/navBrowse.twig' with {'currentNav': 'btn-nav-by-title'} %}
 
-<p>A list of Nintendo Switch games currently available to buy from the Nintendo eShop.</p>
-
-<p>All prices correct at time of publication. Any changes may not be reflected immediately.
-    Check prices prior to purchase.</p>
-
-<div class="row">
-    {% for item in LetterList %}
-        <div class="col-sm-4 col-md-3 col-lg-2 text-center" style="padding: 15px 0;">
-            <span class="h1" style="font-weight: bold;">
-                <a href="{{ route('games.browse.byTitle.page', {'letter': item}) }}">{{ item }}</a>
-            </span>
-        </div>
-    {% endfor %}
+<div class="alert alert-warning">
+    <strong>This section is archived.</strong>
 </div>
+
+<p>
+    Hello there,
+</p>
+
+<p>
+    We've decided to retire the "Browse by title" page.
+</p>
+
+<p>
+    While this was a useful resource in the early days of the Switch, there are now over
+    10,000 games. As such, most pages in this section are far too long to be useful.
+</p>
+
+<p>
+    We have lots of other, better ways to browse the Switch library. Please try one of the links
+    below:
+</p>
+    <ul>
+        <li><a href="{{ route('games.browse.byCategory.landing') }}">By category</a></li>
+        <li><a href="{{ route('games.browse.byTag.landing') }}">By tag</a></li>
+        <li><a href="{{ route('games.browse.bySeries.landing') }}">By series</a></li>
+        <li><a href="{{ route('games.browse.byCollection.landing') }}">By collection</a></li>
+        <li><a href="{{ route('games.browse.byDate.landing') }}">By release date</a></li>
+        <li>Or, you can <a href="{{ route('games.search') }}">search</a>.</li>
+    </ul>
+<p>
+
+</p>
 
 {% endblock page_body %}

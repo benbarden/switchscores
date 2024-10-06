@@ -42,17 +42,6 @@ class BrowseByTitleController extends Controller
 
     public function page($letter)
     {
-        $bindings = [];
-
-        $gamesList = $this->getServiceGameReleaseDate()->getReleasedByLetter($letter);
-
-        $bindings['GameList'] = $gamesList;
-        $bindings['GameLetter'] = $letter;
-
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by title: '.$letter;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTitleSubpage($letter);
-
-        return view('public.games.browse.byTitlePage', $bindings);
+        return redirect(route('games.browse.byTitle.landing'));
     }
 }
