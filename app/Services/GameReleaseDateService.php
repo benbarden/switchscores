@@ -8,22 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class GameReleaseDateService
 {
-    /**
-     * This is used for Staff - all unreleased games are shown.
-     * There's no limit (aka 2 Unlimited) as we want the full list.
-     * @return mixed
-     */
-    public function getAllUnreleased()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 0)
-            ->whereNotNull('games.eu_release_date')
-            ->orderBy('games.eu_release_date', 'asc')
-            ->get();
-
-        return $games;
-    }
 
     /**
      * @return mixed

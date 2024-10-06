@@ -82,7 +82,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGameReleaseDate()->getAllUnreleased();
+        $bindings['GameList'] = $this->repoGameLists->upcoming();
 
         return view('staff.games.list.standard-view', $bindings);
     }
