@@ -21,6 +21,15 @@ class Repository
         return DB::table('games')->select('games.*')->orderBy('games.title', 'asc')->get();
     }
 
+    public function getApiIdList()
+    {
+        $gameList = DB::table('games')
+            ->select('games.id', 'games.title', 'games.link_title', 'games.eshop_europe_fs_id', 'games.updated_at')
+            ->orderBy('games.id', 'asc')
+            ->get();
+        return $gameList;
+    }
+
     public function recentlyReleased($limit = 100)
     {
         $games = Game::where('eu_is_released', 1)

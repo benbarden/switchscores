@@ -17,6 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => ['auth:sanctum']], function() {
+
+    Route::get('/v2/game/list', 'Api\V2\GameController@getList')->name('api.v2.game.list');
+
+    Route::get('/v2/game/{id}', 'Api\V2\GameController@getGameDetails')->name('api.v2.game.get');
+
+});
+
 // Game
 Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');
 Route::get('/game/get-unlinked-data-source-item', 'Api\Game\TitleMatch@getUnlinkedDataSourceItem');

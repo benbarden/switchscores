@@ -1,0 +1,58 @@
+{% extends 'theme/wos/developer-hub/clean-wide.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+
+        <p>
+            This page provides a list of the API methods you can currently use.
+        </p>
+
+        <h2>Best practices</h2>
+        <p>
+            <strong>Please cache liberally</strong>.
+            Do not build applications that rely on live updates. We have limits in place
+            to prevent this.
+        </p>
+
+        <h2>API v2</h2>
+        <p>
+            Not all methods are available yet. More will be added soon.
+        </p>
+        <p>
+            All items return a JSON array.
+        </p>
+
+        <table class="table-condensed table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Purpose</th>
+                    <th>Records returned</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GET</td>
+                    <td>/api/v2/game/{id}</td>
+                    <td>Get detailed information about a game.</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/api/v2/game/list</td>
+                    <td>Get limited information about all games.</td>
+                    <td>Multiple</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock page_inner %}
