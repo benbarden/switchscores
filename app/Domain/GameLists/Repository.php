@@ -40,10 +40,36 @@ class Repository
         return Game::orderBy('id', 'desc')->limit($limit)->get();
     }
 
+    /**
+     * Upcoming games list, excluding low quality games. Use for public lists.
+     * @param $limit
+     * @return mixed
+     */
     public function upcoming($limit = null)
     {
         $games = Game::where('eu_is_released', 0)
             ->where('is_low_quality', 0)
+            ->whereNotNull('games.eu_release_date')
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    /**
+     * All upcoming games, regardless of quality. Use for staff pages.
+     * @param $limit
+     * @return mixed
+     */
+    public function upcomingAll($limit = null)
+    {
+        $games = Game::where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('eshop_europe_order', 'asc')
