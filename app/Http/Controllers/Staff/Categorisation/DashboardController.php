@@ -125,7 +125,7 @@ class DashboardController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Migrations: Category
-        $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategory();
+        $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategoryAll();
 
         return view('staff.categorisation.dashboard', $bindings);
     }
