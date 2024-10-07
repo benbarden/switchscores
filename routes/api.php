@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
 
-    Route::get('/v2/game/list', 'Api\V2\GameController@getList')->name('api.v2.game.list');
+    Route::get('/v2/games/list-all', 'Api\V2\GameController@getList')->name('api.v2.game.list');
 
     Route::get('/v2/game/{id}', 'Api\V2\GameController@getGameDetails')->name('api.v2.game.get');
 
