@@ -71,4 +71,9 @@ class Repository
 
         return $games->get();
     }
+
+    public function getByEshopEuropeId($linkId)
+    {
+        return Game::where('eshop_europe_fs_id', $linkId)->first();
+    }
 }
