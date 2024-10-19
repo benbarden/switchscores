@@ -9,6 +9,7 @@
             <th class="text-center">Data type</th>
             <th class="text-center">Item node</th>
             <th class="text-center">Historic</th>
+            <th class="text-center">Last post</th>
             <th class="text-center">Last run</th>
             <th class="text-center">Options</th>
         </tr>
@@ -40,6 +41,9 @@
                     {% else %}
                         No
                     {% endif %}
+                </td>
+                <td class="text-center">
+                    {{ item.site.last_review_date }}
                 </td>
                 <td style="width: 250px;">
                     <small>
