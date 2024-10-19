@@ -1,0 +1,23 @@
+{% if linkType == 'review-drafts' %}
+    {% set linkRoute = 'staff.reviews.review-drafts.showPending' %}
+    {% set linkTitle = 'Review drafts' %}
+{% endif %}
+
+{% if linkRoute and linkTitle and linkStat %}
+    <tr>
+        <td>
+            <a href="{{ route(linkRoute) }}">{{ linkTitle }}</a>
+        </td>
+        <td class="text-end">
+            <a href="{{ route(linkRoute) }}" class="h4">{{ linkStat }}</a>
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td>
+            ERROR - No link found
+        </td>
+        <td class="text-end">
+        </td>
+    </tr>
+{% endif %}

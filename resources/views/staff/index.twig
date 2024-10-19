@@ -11,14 +11,7 @@
         <table class="table">
             <tbody>
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.reviews.review-drafts.showPending') }}">Review drafts</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.reviews.review-drafts.showPending') }}" class="h4">{{ ReviewDraftUnprocessedCount }}</a>
-                    </td>
-                </tr>
+                {% include 'components/staff/nav/table-row-stat.twig' with {'linkType': 'review-drafts', 'linkStat': ReviewDraftUnprocessedCount} %}
             {% endif %}
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
                 <tr>
