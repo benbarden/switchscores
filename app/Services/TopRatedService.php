@@ -24,16 +24,6 @@ class TopRatedService
         return $topRatedCounter;
     }
 
-    public function getUnrankedCountByReviewCount($reviewCount)
-    {
-        $gamesCount = Game::where('eu_is_released', 1)
-            ->where('review_count', $reviewCount)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->count();
-
-        return $gamesCount;
-    }
-
     public function getUnrankedListByReviewCount($reviewCount, $limit = null)
     {
         $gamesList = Game::where('eu_is_released', 1)

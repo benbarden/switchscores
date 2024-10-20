@@ -4,11 +4,22 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\Unranked\Repository as UnrankedRepository;
+
 use App\Traits\SwitchServices;
 
 class UnrankedController extends Controller
 {
     use SwitchServices;
+
+    private $repoUnranked;
+
+    public function __construct(
+        UnrankedRepository $repoUnranked
+    )
+    {
+        $this->repoUnranked = $repoUnranked;
+    }
 
     public function reviewCountLanding()
     {
@@ -32,7 +43,7 @@ class UnrankedController extends Controller
         $bindings = resolve('View/Bindings/Staff')
             ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceTopRated()->getUnrankedListByReviewCount($reviewCount);
+        $bindings['GameList'] = $this->repoUnranked->getByReviewCount($reviewCount);
 
         return view('staff.games.list.unranked-games', $bindings);
     }
@@ -60,7 +71,7 @@ class UnrankedController extends Controller
         $bindings = resolve('View/Bindings/Staff')
             ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear($releaseYear);
+        $bindings['GameList'] = $this->repoUnranked->getByYear($releaseYear);
 
         return view('staff.games.list.unranked-games', $bindings);
     }

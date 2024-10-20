@@ -8,6 +8,7 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Stats as ReviewDraftStats;
+use App\Domain\Unranked\Repository as UnrankedRepository;
 
 use App\Models\QuickReview;
 
@@ -17,22 +18,25 @@ class DashboardController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameStats;
-    protected $repoReviewDraft;
-    protected $statsReviewDraft;
+    private $repoFeaturedGames;
+    private $repoGameStats;
+    private $repoReviewDraft;
+    private $statsReviewDraft;
+    private $repoUnranked;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameStatsRepository $repoGameStats,
         ReviewDraftRepository $repoReviewDraft,
-        ReviewDraftStats $statsReviewDraft
+        ReviewDraftStats $statsReviewDraft,
+        UnrankedRepository $repoUnranked
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameStats = $repoGameStats;
         $this->repoReviewDraft = $repoReviewDraft;
         $this->statsReviewDraft = $statsReviewDraft;
+        $this->repoUnranked = $repoUnranked;
     }
 
     public function show()
@@ -40,6 +44,8 @@ class DashboardController extends Controller
         $pageTitle = 'Reviews dashboard';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
 
         $serviceQuickReview = $this->getServiceQuickReview();
         $serviceReviewLinks = $this->getServiceReviewLink();
@@ -56,15 +62,14 @@ class DashboardController extends Controller
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         // Unranked breakdown
-        $bindings['UnrankedReviews2'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(2);
-        $bindings['UnrankedReviews1'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(1);
-        $bindings['UnrankedReviews0'] = $this->getServiceTopRated()->getUnrankedCountByReviewCount(0);
-        $bindings['UnrankedYear2022'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2022);
-        $bindings['UnrankedYear2021'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2021);
-        $bindings['UnrankedYear2020'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2020);
-        $bindings['UnrankedYear2019'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2019);
-        $bindings['UnrankedYear2018'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2018);
-        $bindings['UnrankedYear2017'] = $this->getServiceTopRated()->getUnrankedCountByReleaseYear(2017);
+        $bindings['UnrankedReviews2'] = $this->repoUnranked->totalByReviewCount(2);
+        $bindings['UnrankedReviews1'] = $this->repoUnranked->totalByReviewCount(1);
+        $bindings['UnrankedReviews0'] = $this->repoUnranked->totalByReviewCount(0);
+        foreach ($allowedYears as $year) {
+            $bindings['UnrankedYear'.$year] = $this->repoUnranked->totalByYear($year);
+        }
+        $bindings['UnrankedLowQuality'] = $this->repoUnranked->totalLowQuality();
+        $bindings['AllowedYears'] = $allowedYears;
 
         $bindings['ProcessStatusStats'] = $this->statsReviewDraft->getProcessStatusStats();
 

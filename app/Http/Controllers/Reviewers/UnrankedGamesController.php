@@ -45,6 +45,8 @@ class UnrankedGamesController extends Controller
             abort(403);
         }
 
+        $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
+
         $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceReviewLink = $this->getServiceReviewLink();
 
@@ -68,7 +70,7 @@ class UnrankedGamesController extends Controller
                 break;
 
             case 'by-year':
-                if (!in_array($filter, ['2017', '2018', '2019', '2020', '2021', '2022'])) abort(404);
+                if (!in_array($filter, $allowedYears)) abort(404);
                 //$gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
                 $gamesList = $this->repoUnranked->getByYear($filter, $gameIdsReviewedBySite);
                 $tableSort = "[3, 'asc']";
@@ -90,6 +92,7 @@ class UnrankedGamesController extends Controller
         $bindings['GamesTableSort'] = $tableSort;
 
         $bindings['GamesReviewedCount'] = $totalGameIdsReviewedBySite;
+        $bindings['AllowedYears'] = $allowedYears;
 
         $bindings['PageMode'] = $mode;
         $bindings['PageFilter'] = $filter;

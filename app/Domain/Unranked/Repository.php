@@ -7,26 +7,81 @@ use App\Models\Game;
 
 class Repository
 {
-    public function getByReviewCount($reviewCount, $gameIdsReviewedBySite)
+    public function getByReviewCount($reviewCount, $gameIdsReviewedBySite = null)
     {
-        return Game::where('eu_is_released', 1)
-            ->where('review_count', '=', $reviewCount)
-            ->whereNotIn('games.id', $gameIdsReviewedBySite)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '0')
+            ->where('review_count', '=', $reviewCount);
+
+        if ($gameIdsReviewedBySite) {
+            $gameList = $gameList->whereNotIn('games.id', $gameIdsReviewedBySite);
+        }
+
+        $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc')
-            ->get();
+            ->orderBy('games.title', 'asc');
+
+        return $gameList->get();
     }
 
-    public function getByYear($year, $gameIdsReviewedBySite)
+    public function totalByReviewCount($reviewCount)
     {
-        return Game::where('games.eu_is_released', 1)
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '0')
+            ->where('review_count', '=', $reviewCount)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+
+        return $gameList->count();
+    }
+
+    public function getByYear($year, $gameIdsReviewedBySite = null)
+    {
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '0')
+            ->where('games.release_year', '=', $year)
+            ->where('review_count', '<', '3');
+
+        if ($gameIdsReviewedBySite) {
+            $gameList = $gameList->whereNotIn('games.id', $gameIdsReviewedBySite);
+        }
+
+        $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->orderBy('games.eu_release_date', 'desc')
+            ->orderBy('games.title', 'asc');
+
+        return $gameList->get();
+    }
+
+    public function totalByYear($year)
+    {
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '0')
             ->where('games.release_year', '=', $year)
             ->where('review_count', '<', '3')
-            ->whereNotIn('games.id', $gameIdsReviewedBySite)
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+
+        return $gameList->count();
+    }
+
+    public function getLowQuality()
+    {
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '1')
+            ->where('review_count', '<', '3')
             ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc')
-            ->get();
+            ->orderBy('games.title', 'asc');
+
+        return $gameList->get();
+    }
+
+    public function totalLowQuality()
+    {
+        $gameList = Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '1')
+            ->where('review_count', '<', '3')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+
+        return $gameList->count();
     }
 }

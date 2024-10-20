@@ -31,7 +31,7 @@
 
         {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Unranked games'} %}
         <p>
-            Excludes games not released in Europe.
+            Except where stated, low quality games are excluded.
         </p>
         <table class="table">
             <tbody>
@@ -71,76 +71,28 @@
                     </a>
                 </td>
             </tr>
+            {% for WhichYear in AllowedYears %}
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': WhichYear}) }}">
+                            Unranked: {{ WhichYear }}
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': WhichYear}) }}" class="h4">
+                            {{ _context['UnrankedYear'~WhichYear] }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
             <tr>
                 <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2022}) }}">
-                        Unranked: 2022
-                    </a>
+                    Unranked: Low quality
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2022}) }}" class="h4">
-                        {{ UnrankedYear2022 }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2021}) }}">
-                        Unranked: 2021
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2021}) }}" class="h4">
-                        {{ UnrankedYear2021 }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2020}) }}">
-                        Unranked: 2020
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2020}) }}" class="h4">
-                        {{ UnrankedYear2020 }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2019}) }}">
-                        Unranked: 2019
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2019}) }}" class="h4">
-                        {{ UnrankedYear2019 }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2018}) }}">
-                        Unranked: 2018
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2018}) }}" class="h4">
-                        {{ UnrankedYear2018 }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2017}) }}">
-                        Unranked: 2017
-                    </a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.unranked.release-year-list', {'releaseYear': 2017}) }}" class="h4">
-                        {{ UnrankedYear2017 }}
-                    </a>
+                    <span class="h4">
+                        {{ UnrankedLowQuality }}
+                    </span>
                 </td>
             </tr>
             </tbody>
@@ -217,6 +169,13 @@
                     <a href="{{ route('staff.reviews.tools.updateGameReviewStats') }}">UpdateGameReviewStats</a>
                     <br>
                     <small>Updates the Review Count and Average Score fields for each game</small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.partners.tools.partnerUpdateFields') }}">PartnerUpdateFields</a>
+                    <br>
+                    <small>Updates the review count and last review date fields for review sites</small>
                 </td>
             </tr>
             </tbody>

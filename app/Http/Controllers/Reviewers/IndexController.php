@@ -8,6 +8,7 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
+use App\Domain\Unranked\Repository as UnrankedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -15,22 +16,25 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    protected $repoReviewSite;
-    protected $repoPartnerFeedLink;
-    protected $repoCampaign;
-    protected $repoReviewDraft;
+    private $repoReviewSite;
+    private $repoPartnerFeedLink;
+    private $repoCampaign;
+    private $repoReviewDraft;
+    private $repoUnranked;
 
     public function __construct(
         ReviewSiteRepository $repoReviewSite,
         PartnerFeedLinkRepository $repoPartnerFeedLink,
         CampaignRepository $repoCampaign,
-        ReviewDraftRepository $repoReviewDraft
+        ReviewDraftRepository $repoReviewDraft,
+        UnrankedRepository $repoUnranked
     )
     {
         $this->repoReviewSite = $repoReviewSite;
         $this->repoPartnerFeedLink = $repoPartnerFeedLink;
         $this->repoCampaign = $repoCampaign;
         $this->repoReviewDraft = $repoReviewDraft;
+        $this->repoUnranked = $repoUnranked;
     }
 
     public function show()
@@ -64,6 +68,17 @@ class IndexController extends Controller
         $bindings['ReviewDraftsPending'] = $this->repoReviewDraft->getUnprocessedBySite($partnerId);
         $bindings['ReviewDraftsSuccess'] = $this->repoReviewDraft->getSuccessBySite($partnerId, 10);
         $bindings['ReviewDraftsFailed'] = $this->repoReviewDraft->getFailedBySite($partnerId, 10);
+
+        // Unranked
+        $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
+        $bindings['AllowedYears'] = $allowedYears;
+        $bindings['UnrankedReviews2'] = $this->repoUnranked->totalByReviewCount(2);
+        $bindings['UnrankedReviews1'] = $this->repoUnranked->totalByReviewCount(1);
+        $bindings['UnrankedReviews0'] = $this->repoUnranked->totalByReviewCount(0);
+        foreach ($allowedYears as $year) {
+            $bindings['UnrankedYear'.$year] = $this->repoUnranked->totalByYear($year);
+        }
+        $bindings['UnrankedLowQuality'] = $this->repoUnranked->totalLowQuality();
 
         // Campaigns
         $activeCampaigns = $this->repoCampaign->getActive();

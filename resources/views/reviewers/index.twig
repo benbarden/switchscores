@@ -26,6 +26,7 @@
             {% endif %}
 
             <h2>What to review next</h2>
+            {#
             <h3>Campaigns</h3>
             <p>
                 These are games we'd love to see reviews of next.
@@ -36,14 +37,82 @@
                     {% include 'modules/campaigns/dashboard-block.twig' with {'SiteRole': 'reviewer'} %}
                 </div>
             </div>
-            <h3 style="margin-top: 0;">Unranked games</h3>
+            <h3>Unranked games</h3>
+            <p>
+                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
+            </p>
+            #}
             <p>
                 You can find all of our unranked games below. Quickly find the games that only need 1 or 2
                 reviews to get ranked.
             </p>
             <p>
-                <a href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}" class="btn btn-primary btn-md">View unranked games</a>
+                Except where stated, low quality games are excluded.
             </p>
+            <table class="table table-condensed">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 2}) }}">
+                            Unranked: 2 reviews
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 2}) }}" class="h5">
+                            {{ UnrankedReviews2 }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 1}) }}">
+                            Unranked: 1 review
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 1}) }}" class="h5">
+                            {{ UnrankedReviews1 }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 0}) }}">
+                            Unranked: 0 reviews
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 0}) }}" class="h5">
+                            {{ UnrankedReviews0 }}
+                        </a>
+                    </td>
+                </tr>
+                {% for WhichYear in AllowedYears %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-year', 'filter': WhichYear}) }}">
+                                Unranked: {{ WhichYear }}
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-year', 'filter': WhichYear}) }}" class="h5">
+                                {{ _context['UnrankedYear'~WhichYear] }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>
+                        Unranked: Low quality
+                    </td>
+                    <td class="text-right">
+                    <span class="h5">
+                        {{ UnrankedLowQuality }}
+                    </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
 

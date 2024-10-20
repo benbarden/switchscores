@@ -164,6 +164,7 @@ return [
         // Domain providers
         App\Providers\Domain\User\RepositoryProvider::class,
         App\Providers\Domain\ViewServiceProvider::class,
+        App\Providers\Domain\GameCalendar\AllowedDatesProvider::class,
 
         // App providers
         // NB. These are now auto-loaded

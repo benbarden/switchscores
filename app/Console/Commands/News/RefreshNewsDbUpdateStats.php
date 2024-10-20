@@ -62,7 +62,7 @@ class RefreshNewsDbUpdateStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $allowedYears = $this->allowedDates->getAllowedYears();
+        $allowedYears = $this->allowedDates->releaseYears();
 
         foreach ($allowedYears as $year) {
 

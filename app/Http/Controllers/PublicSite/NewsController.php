@@ -51,7 +51,7 @@ class NewsController extends Controller
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
 
-        $allowedYears = $this->allowedDates->getAllowedYears();
+        $allowedYears = $this->allowedDates->releaseYears();
         $bindings['AllowedYears'] = array_reverse($allowedYears);
         foreach ($allowedYears as $year) {
             $newsDbUpdateList = $this->repoNewsDbUpdate->getAllByYear($year, true);
