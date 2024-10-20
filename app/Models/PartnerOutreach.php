@@ -18,6 +18,8 @@ class PartnerOutreach extends Model
     const METHOD_TWITTER_DM = 'Twitter (DM)';
     const METHOD_TWITTER_TWEET = 'Twitter (tweet)';
     const METHOD_EMAIL = 'Email';
+    const METHOD_THREADS_POST = 'Threads (post)';
+    const METHOD_BLUESKY_POST = 'Bluesky (post)';
 
     /**
      * @var string

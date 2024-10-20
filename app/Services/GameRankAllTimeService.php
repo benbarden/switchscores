@@ -22,15 +22,6 @@ class GameRankAllTimeService
     }
 
     /**
-     * @deprecated
-     * @return mixed
-     */
-    public function countRanked()
-    {
-        return GameRankAllTime::orderBy('game_rank', 'asc')->count();
-    }
-
-    /**
      * @param $minRank
      * @param $maxRank
      * @param $customFilter

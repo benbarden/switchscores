@@ -1,12 +1,11 @@
 <?php
 
+namespace App\Domain\PartnerOutreach;
 
-namespace App\Services;
-
-use App\Models\PartnerOutreach;
 use Illuminate\Support\Collection;
+use App\Models\PartnerOutreach;
 
-class PartnerOutreachService
+class Repository
 {
     public function create(
         $partnerId, $newStatus, $contactMethod = null, $contactMessage = null, $internalNotes = null
@@ -40,8 +39,6 @@ class PartnerOutreachService
         PartnerOutreach::where('id', $id)->delete();
     }
 
-    // ********************************************************** //
-
     /**
      * @param $id
      * @return \App\Models\PartnerOutreach
@@ -52,15 +49,6 @@ class PartnerOutreachService
     }
 
     /**
-     * @param $partnerId
-     * @return Collection
-     */
-    public function getByPartnerId($partnerId)
-    {
-        return PartnerOutreach::where('partner_id', $partnerId)->orderBy('id', 'desc')->get();
-    }
-
-    /**
      * @return Collection
      */
     public function getAll()
@@ -68,7 +56,16 @@ class PartnerOutreachService
         return PartnerOutreach::orderBy('id', 'desc')->get();
     }
 
-    public function getStatusList()
+    /**
+     * @param $partnerId
+     * @return Collection
+     */
+    public function byPartnerId($partnerId)
+    {
+        return PartnerOutreach::where('partner_id', $partnerId)->orderBy('id', 'desc')->get();
+    }
+
+    public function statusList()
     {
         $statusList = [];
 
@@ -84,13 +81,15 @@ class PartnerOutreachService
         return $statusList;
     }
 
-    public function getContactMethodList()
+    public function contactMethodList()
     {
         $methodList = [];
 
         $methodList[] = ['title' => PartnerOutreach::METHOD_TWITTER_DM];
         $methodList[] = ['title' => PartnerOutreach::METHOD_TWITTER_TWEET];
         $methodList[] = ['title' => PartnerOutreach::METHOD_EMAIL];
+        $methodList[] = ['title' => PartnerOutreach::METHOD_THREADS_POST];
+        $methodList[] = ['title' => PartnerOutreach::METHOD_BLUESKY_POST];
 
         return $methodList;
     }

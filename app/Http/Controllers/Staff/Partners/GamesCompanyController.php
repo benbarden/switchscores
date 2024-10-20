@@ -13,6 +13,7 @@ use App\Factories\GamesCompanyFactory;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
+use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 
 use App\Traits\SwitchServices;
 
@@ -25,6 +26,7 @@ class GamesCompanyController extends Controller
     private $gameQualityFilter;
     private $repoGamesCompany;
     private $statsGamesCompany;
+    private $repoPartnerOutreach;
 
     /**
      * @var array
@@ -37,12 +39,14 @@ class GamesCompanyController extends Controller
     public function __construct(
         GameQualityFilter $gameQualityFilter,
         GamesCompanyRepository $repoGamesCompany,
-        GamesCompanyStats $statsGamesCompany
+        GamesCompanyStats $statsGamesCompany,
+        PartnerOutreachRepository $repoPartnerOutreach
     )
     {
         $this->gameQualityFilter = $gameQualityFilter;
         $this->repoGamesCompany = $repoGamesCompany;
         $this->statsGamesCompany = $statsGamesCompany;
+        $this->repoPartnerOutreach = $repoPartnerOutreach;
     }
 
     public function showList()
@@ -152,7 +156,7 @@ class GamesCompanyController extends Controller
         $bindings['GamesCompany'] = $gamesCompany;
         $bindings['GamesCompanyId'] = $gamesCompanyId;
 
-        $bindings['OutreachList'] = $this->getServicePartnerOutreach()->getByPartnerId($gamesCompanyId);
+        $bindings['OutreachList'] = $this->repoPartnerOutreach->byPartnerId($gamesCompanyId);
 
         $bindings['MergedGameList'] = $mergedGameList;
 

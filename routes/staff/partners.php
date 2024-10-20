@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{gamesCompany?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
-    Route::match(['get', 'post'], '/staff/partners/outreach/add', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
+    Route::match(['get', 'post'], '/staff/partners/outreach/add/{gamesCompany?}', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');
     Route::match(['get', 'post'], '/staff/partners/outreach/edit/{partnerOutreach}', 'Staff\Partners\OutreachController@edit')->name('staff.partners.outreach.edit');
 
     // Partners: Data cleanup

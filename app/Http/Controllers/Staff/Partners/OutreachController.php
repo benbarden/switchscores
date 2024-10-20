@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Models\GamesCompany;
 use App\Models\PartnerOutreach;
 
+use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Traits\SwitchServices;
@@ -18,14 +19,17 @@ class OutreachController extends Controller
 {
     use SwitchServices;
 
+    private $repoPartnerOutreach;
     private $repoGamesCompany;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(
+        PartnerOutreachRepository $repoPartnerOutreach,
         GamesCompanyRepository $repoGamesCompany
     )
     {
+        $this->repoPartnerOutreach = $repoPartnerOutreach;
         $this->repoGamesCompany = $repoGamesCompany;
     }
 
@@ -51,9 +55,9 @@ class OutreachController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if ($gamesCompany) {
-            $outreachList = $this->getServicePartnerOutreach()->getByPartnerId($gamesCompany->id);
+            $outreachList = $this->repoPartnerOutreach->byPartnerId($gamesCompany->id);
         } else {
-            $outreachList = $this->getServicePartnerOutreach()->getAll();
+            $outreachList = $this->repoPartnerOutreach->getAll();
         }
 
         $bindings['OutreachList'] = $outreachList;
@@ -61,7 +65,7 @@ class OutreachController extends Controller
         return view('staff.partners.outreach.list', $bindings);
     }
 
-    public function add()
+    public function add(GamesCompany $gamesCompany = null)
     {
         $pageTitle = 'Add partner outreach';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
@@ -75,7 +79,7 @@ class OutreachController extends Controller
 
             $partnerId = $request->partner_id;
 
-            $partnerOutreach = $this->getServicePartnerOutreach()->create(
+            $partnerOutreach = $this->repoPartnerOutreach->create(
                 $partnerId, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
             );
             $partnerOutreach->save();
@@ -92,12 +96,14 @@ class OutreachController extends Controller
         $bindings['FormMode'] = 'add';
 
         $bindings['PartnerList'] = $this->repoGamesCompany->getAll();
-        $bindings['StatusList'] = $this->getServicePartnerOutreach()->getStatusList();
-        $bindings['MethodList'] = $this->getServicePartnerOutreach()->getContactMethodList();
+        $bindings['StatusList'] = $this->repoPartnerOutreach->statusList();
+        $bindings['MethodList'] = $this->repoPartnerOutreach->contactMethodList();
 
-        $urlPartnerId = $request->partnerId;
-        if ($urlPartnerId) {
-            $bindings['UrlPartnerId'] = $urlPartnerId;
+        if ($gamesCompany) {
+            $urlPartnerId = $gamesCompany->id;
+            if ($urlPartnerId) {
+                $bindings['UrlPartnerId'] = $urlPartnerId;
+            }
         }
 
         return view('staff.partners.outreach.add', $bindings);
@@ -117,7 +123,7 @@ class OutreachController extends Controller
 
             $this->validate($request, $this->validationRulesEdit);
 
-            $this->getServicePartnerOutreach()->edit(
+            $this->repoPartnerOutreach->edit(
                 $partnerOutreach, $request->new_status, $request->contact_method, $request->contact_message, $request->internal_notes
             );
 
@@ -133,8 +139,8 @@ class OutreachController extends Controller
         $bindings['OutreachData'] = $partnerOutreach;
         $bindings['OutreachId'] = $partnerOutreach->id;
 
-        $bindings['StatusList'] = $this->getServicePartnerOutreach()->getStatusList();
-        $bindings['MethodList'] = $this->getServicePartnerOutreach()->getContactMethodList();
+        $bindings['StatusList'] = $this->repoPartnerOutreach->statusList();
+        $bindings['MethodList'] = $this->repoPartnerOutreach->contactMethodList();
 
         return view('staff.partners.outreach.edit', $bindings);
     }
