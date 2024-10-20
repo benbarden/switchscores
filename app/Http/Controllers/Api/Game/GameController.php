@@ -88,7 +88,7 @@ class GameController
 
     public function getDetails($gameId)
     {
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['message' => 'Not found'], 404);
         }
@@ -110,7 +110,7 @@ class GameController
 
         foreach ($linkIdList as $linkIdItem) {
 
-            $game = $this->getServiceGame()->getByEshopEuropeId($linkIdItem);
+            $game = $this->repoGame->getByEshopEuropeId($linkIdItem);
             if ($game) {
                 $gameDataList[] = ['game' => $this->parseGameData($game)];
             }
@@ -126,7 +126,7 @@ class GameController
 
     public function getReviews($gameId)
     {
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['message' => 'Not found'], 404);
         }

@@ -11,8 +11,6 @@ use App\Traits\SwitchServices;
 
 class TitleMatch
 {
-    use SwitchServices;
-
     protected $repoGame;
     protected $repoDataSource;
 
@@ -70,8 +68,6 @@ class TitleMatch
 
     public function getByTitle()
     {
-        $serviceGame = $this->getServiceGame();
-
         $request = request();
 
         $title = $request->title;
@@ -91,7 +87,7 @@ class TitleMatch
         $serviceTitleMatch->setMatchIndex($matchIndex);
         $matchedTitle = $serviceTitleMatch->generate($title);
 
-        $game = $serviceGame->getByTitle($matchedTitle);
+        $game = $this->repoGame->getByTitle($matchedTitle);
         if ($game) {
             return response()->json(['id' => $game->id], 200);
         } else {
