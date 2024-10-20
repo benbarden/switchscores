@@ -8,22 +8,26 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 use App\Services\Shortcode\DynamicShortcode;
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class NewsController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameLists;
-    protected $repoGameStats;
-    protected $repoNewsDbUpdate;
-    protected $allowedDates;
-    protected $viewBreadcrumbs;
+    private $repoFeaturedGames;
+    private $repoGameLists;
+    private $repoGameStats;
+    private $repoNewsDbUpdate;
+    private $allowedDates;
+    private $viewBreadcrumbs;
+    private $repoNewsCategory;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
@@ -31,7 +35,8 @@ class NewsController extends Controller
         GameStatsRepository $repoGameStats,
         NewsDbUpdateRepository $repoNewsDbUpdate,
         AllowedDates $allowedDates,
-        Breadcrumbs $viewBreadcrumbs
+        Breadcrumbs $viewBreadcrumbs,
+        NewsCategoryRepository $repoNewsCategory
     )
     {
         $this->repoFeaturedGames = $featuredGames;
@@ -40,6 +45,7 @@ class NewsController extends Controller
         $this->repoNewsDbUpdate = $repoNewsDbUpdate;
         $this->allowedDates = $allowedDates;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function landing()
@@ -120,7 +126,7 @@ class NewsController extends Controller
     {
         $bindings = [];
 
-        $category = $this->getServiceNewsCategory()->getByUrl($linkName);
+        $category = $this->repoNewsCategory->byUrl($linkName);
         if (!$category) abort(404);
 
         $categoryId = $category->id;
@@ -194,7 +200,7 @@ class NewsController extends Controller
         }
 
         // Category links
-        $bindings['CategoryList'] = $this->getServiceNewsCategory()->getAll();
+        $bindings['CategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('public.news.content.default', $bindings);
     }

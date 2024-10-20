@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
+
 use App\Traits\SwitchServices;
 
 class CategoryController extends Controller
@@ -14,6 +16,8 @@ class CategoryController extends Controller
     use SwitchServices;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    private $repoNewsCategory;
 
     /**
      * @var array
@@ -26,8 +30,10 @@ class CategoryController extends Controller
     protected $viewBreadcrumbs;
 
     public function __construct(
+        NewsCategoryRepository $repoNewsCategory
     )
     {
+        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function showList()
@@ -36,7 +42,7 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
+        $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('staff.news.category.list', $bindings);
     }
@@ -47,15 +53,13 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceNewsCategory = $this->getServiceNewsCategory();
-
         $request = request();
 
         if ($request->isMethod('post')) {
 
             $this->validate($request, $this->validationRules);
 
-            $serviceNewsCategory->create($request->name, $request->link_name);
+            $this->repoNewsCategory->create($request->name, $request->link_name);
 
             return redirect(route('staff.news.category.list'));
 
@@ -72,9 +76,7 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceNewsCategory = $this->getServiceNewsCategory();
-
-        $newsCategory = $serviceNewsCategory->find($newsCategoryId);
+        $newsCategory = $this->repoNewsCategory->find($newsCategoryId);
         if (!$newsCategory) abort(404);
 
         $request = request();
@@ -85,7 +87,7 @@ class CategoryController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $serviceNewsCategory->edit($newsCategory, $request->name, $request->link_name);
+            $this->repoNewsCategory->edit($newsCategory, $request->name, $request->link_name);
 
             return redirect(route('staff.news.category.list'));
 

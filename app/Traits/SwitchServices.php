@@ -24,7 +24,6 @@ use App\Services\GameRankYearMonthService;
 use App\Services\GameService;
 use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
-use App\Services\NewsCategoryService;
 use App\Services\NewsService;
 use App\Services\PartnerFeedLinkService;
 use App\Services\QuickReviewService;
@@ -278,15 +277,6 @@ trait SwitchServices
     public function getServiceGameTitleHash()
     {
         return $this->loadService('GameTitleHashService');
-    }
-
-    /**
-     * @deprecated
-     * @return NewsCategoryService
-     */
-    public function getServiceNewsCategory()
-    {
-        return $this->loadService('NewsCategoryService');
     }
 
     /**

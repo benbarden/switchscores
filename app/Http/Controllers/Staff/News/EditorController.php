@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
+
 use App\Traits\SwitchServices;
 
 class EditorController extends Controller
@@ -14,6 +16,8 @@ class EditorController extends Controller
     use SwitchServices;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    private $repoNewsCategory;
 
     /**
      * @var array
@@ -26,11 +30,13 @@ class EditorController extends Controller
         //'game_id' => 'exists:games,id',
     ];
 
-    protected $viewBreadcrumbs;
+    private $viewBreadcrumbs;
 
     public function __construct(
+        NewsCategoryRepository $repoNewsCategory
     )
     {
+        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function add()
@@ -58,7 +64,7 @@ class EditorController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
+        $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('staff.news.editor.add', $bindings);
     }
@@ -98,7 +104,7 @@ class EditorController extends Controller
 
         $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
-        $bindings['NewsCategoryList'] = $this->getServiceNewsCategory()->getAll();
+        $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('staff.news.editor.edit', $bindings);
     }
