@@ -54,7 +54,7 @@ class BrowseBySeriesController extends Controller
         $seriesId = $gameSeries->id;
         $seriesName = $gameSeries->series;
 
-        $gameList = $this->getServiceGameReleaseDate()->getBySeries($seriesId);
+        $gameList = $this->repoGameSeries->gamesBySeries($seriesId);
 
         $bindings['GameList'] = $gameList;
 

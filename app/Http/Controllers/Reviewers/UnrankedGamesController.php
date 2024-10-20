@@ -77,12 +77,6 @@ class UnrankedGamesController extends Controller
                 $bindings['FilterOnLoad'] = 'by-year-'.$filter;
                 break;
 
-            case 'by-list':
-                if (!in_array($filter, ['aca-neogeo', 'arcade-archives', 'all-others'])) abort(404);
-                $gamesList = $serviceGameReleaseDate->getUnrankedByList($filter, $gameIdsReviewedBySite);
-                $tableSort = "[1, 'asc']";
-                break;
-
             default:
                 abort(404);
 

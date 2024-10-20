@@ -303,6 +303,11 @@ class Repository
         return Game::whereDoesntHave('gameTags')->get();
     }
 
+    public function noEuReleaseDate()
+    {
+        return Game::whereNull('eu_release_date')->orderBy('id', 'desc')->get();
+    }
+
     public function relatedByCategory($categoryId, $excludeGameId, $limit = 3)
     {
         return Game::where('category_id', $categoryId)
