@@ -48,9 +48,6 @@ class WelcomeController extends Controller
         $bindings['TopRatedThisYear'] = $topRatedThisYear;
         $bindings['Year'] = $thisYear;
 
-        // Get latest News post
-        $bindings['LatestNewsPost'] = $this->getServiceNews()->getNewest();
-
         $bindings['TopTitle'] = 'Welcome';
         $bindings['PageTitle'] = 'Switch Scores - Homepage';
 

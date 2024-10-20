@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PublicSite\Games;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 use App\Traits\SwitchServices;
@@ -15,21 +16,24 @@ class GameShowController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameLists;
-    protected $repoGameStats;
-    protected $viewBreadcrumbs;
+    private $repoFeaturedGames;
+    private $repoGameLists;
+    private $repoGameStats;
+    private $repoNews;
+    private $viewBreadcrumbs;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameListsRepository $repoGameLists,
         GameStatsRepository $repoGameStats,
+        NewsRepository $repoNews,
         Breadcrumbs $viewBreadcrumbs
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
+        $this->repoNews = $repoNews;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
@@ -88,7 +92,7 @@ class GameShowController extends Controller
         $bindings['DSNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
 
         // News
-        $bindings['GameNews'] = $this->getServiceNews()->getByGameId($gameId, 10);
+        $bindings['GameNews'] = $this->repoNews->getByGameId($gameId, 10);
 
         // Related games
         if ($gameData->category_id) {

@@ -6,9 +6,11 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameCalendar\AllowedDates;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
+use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
+
 use App\Services\Shortcode\DynamicShortcode;
 use App\Services\Shortcode\TopRated;
 use App\Services\Shortcode\Unranked;
@@ -24,27 +26,30 @@ class NewsController extends Controller
     private $repoFeaturedGames;
     private $repoGameLists;
     private $repoGameStats;
-    private $repoNewsDbUpdate;
     private $allowedDates;
     private $viewBreadcrumbs;
+    private $repoNewsDbUpdate;
+    private $repoNews;
     private $repoNewsCategory;
 
     public function __construct(
         FeaturedGameRepository $featuredGames,
         GameListsRepository $repoGameLists,
         GameStatsRepository $repoGameStats,
-        NewsDbUpdateRepository $repoNewsDbUpdate,
         AllowedDates $allowedDates,
         Breadcrumbs $viewBreadcrumbs,
+        NewsDbUpdateRepository $repoNewsDbUpdate,
+        NewsRepository $repoNews,
         NewsCategoryRepository $repoNewsCategory
     )
     {
         $this->repoFeaturedGames = $featuredGames;
         $this->repoGameLists = $repoGameLists;
         $this->repoGameStats = $repoGameStats;
-        $this->repoNewsDbUpdate = $repoNewsDbUpdate;
         $this->allowedDates = $allowedDates;
         $this->viewBreadcrumbs = $viewBreadcrumbs;
+        $this->repoNewsDbUpdate = $repoNewsDbUpdate;
+        $this->repoNews = $repoNews;
         $this->repoNewsCategory = $repoNewsCategory;
     }
 
@@ -111,7 +116,7 @@ class NewsController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('Archive');
 
-        $newsList = $this->getServiceNews()->getPaginated(12);
+        $newsList = $this->repoNews->getPaginated(12);
 
         $bindings['NewsList'] = $newsList;
         $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
@@ -134,7 +139,7 @@ class NewsController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($categoryName);
 
-        $newsList = $this->getServiceNews()->getPaginatedByCategory($categoryId, 12);
+        $newsList = $this->repoNews->getPaginatedByCategory($categoryId, 12);
 
         $bindings['NewsList'] = $newsList;
         $bindings['TopTitle'] = $categoryName.' - page '.$newsList->currentPage();
@@ -147,12 +152,10 @@ class NewsController extends Controller
 
     public function displayContent()
     {
-        $serviceNews = $this->getServiceNews();
-
         $request = request();
         $requestUri = $request->getPathInfo();
 
-        $newsItem = $serviceNews->getByUrl($requestUri);
+        $newsItem = $this->repoNews->getByUrl($requestUri);
         if (!$newsItem) {
             abort(404);
         }
@@ -182,8 +185,8 @@ class NewsController extends Controller
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
 
         // Next/Previous links
-        $newsNext = $serviceNews->getNext($newsItem);
-        $newsPrev = $serviceNews->getPrevious($newsItem);
+        $newsNext = $this->repoNews->getNext($newsItem);
+        $newsPrev = $this->repoNews->getPrevious($newsItem);
         if ($newsNext) {
             $bindings['NewsNext'] = $newsNext;
         }

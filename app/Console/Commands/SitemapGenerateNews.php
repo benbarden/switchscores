@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Domain\News\Repository as NewsRepository;
+
 use App\Traits\SwitchServices;
 
 class SitemapGenerateNews extends Command
@@ -25,13 +27,18 @@ class SitemapGenerateNews extends Command
      */
     protected $description = '(Re)generates the News sitemap.';
 
+    private $repoNews;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        NewsRepository $repoNews
+    )
     {
+        $this->repoNews = $repoNews;
         parent::__construct();
     }
 
@@ -53,9 +60,7 @@ class SitemapGenerateNews extends Command
         $timestamp = $now->format('c');
         $bindings['TimestampNow'] = $timestamp;
 
-        $serviceNews = $this->getServiceNews();
-
-        $bindings['NewsList'] = $serviceNews->getAll();
+        $bindings['NewsList'] = $this->repoNews->getAll();
 
         $xmlOutput = response()->view('sitemap.news', $bindings)->content();
         file_put_contents(storage_path().'/app/public/sitemaps/sitemap-news.xml', $xmlOutput);

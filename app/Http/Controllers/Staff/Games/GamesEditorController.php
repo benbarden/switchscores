@@ -21,6 +21,7 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
+use App\Domain\News\Repository as NewsRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -56,6 +57,7 @@ class GamesEditorController extends Controller
     private $repoGame;
     private $gameQualityFilter;
     private $repoGamesCompany;
+    private $repoNews;
 
     public function __construct(
         GameTitleHashRepository $repoGameTitleHash,
@@ -66,7 +68,8 @@ class GamesEditorController extends Controller
         GameFormatOptions $formatOptions,
         GameRepository $repoGame,
         GameQualityFilter $gameQualityFilter,
-        GamesCompanyRepository $repoGamesCompany
+        GamesCompanyRepository $repoGamesCompany,
+        NewsRepository $repoNews
     )
     {
         $this->repoGameTitleHash = $repoGameTitleHash;
@@ -78,6 +81,7 @@ class GamesEditorController extends Controller
         $this->repoGame = $repoGame;
         $this->gameQualityFilter = $gameQualityFilter;
         $this->repoGamesCompany = $repoGamesCompany;
+        $this->repoNews = $repoNews;
     }
 
     public function add()
@@ -358,7 +362,7 @@ class GamesEditorController extends Controller
         $request = request();
 
         // Validation: check for any reason we should not allow the game to be deleted.
-        $gameNews = $serviceNews->getByGameId($gameId);
+        $gameNews = $this->repoNews->getByGameId($gameId);
         if (count($gameNews) > 0) {
             $customErrors[] = 'Game is linked to '.count($gameNews).' news article(s)';
         }

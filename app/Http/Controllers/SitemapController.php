@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
@@ -11,6 +12,17 @@ use App\Traits\SwitchServices;
 class SitemapController extends Controller
 {
     use SwitchServices;
+
+    private $repoNews;
+    private $repoReviewSite;
+
+    public function __construct(
+        NewsRepository $repoNews,
+        ReviewSiteRepository $repoReviewSite
+    ){
+        $this->repoNews = $repoNews;
+        $this->repoReviewSite = $repoReviewSite;
+    }
 
     public function getTimestampNow()
     {
@@ -183,8 +195,6 @@ class SitemapController extends Controller
 
     public function reviews()
     {
-        $repoReviewSite = new ReviewSiteRepository();
-
         $bindings = [];
         $timestamp = $this->getTimestampNow();
         $bindings['TimestampNow'] = $timestamp;
@@ -197,7 +207,7 @@ class SitemapController extends Controller
             'priority' => '0.8'
         );
 
-        $reviewSiteList = $repoReviewSite->getAll();
+        $reviewSiteList = $this->repoReviewSite->getAll();
         foreach ($reviewSiteList as $reviewSite) {
             $sitemapPages[] = array(
                 'url' => route('partners.review-sites.siteProfile', ['linkTitle' => $reviewSite->link_title]),
@@ -245,8 +255,6 @@ class SitemapController extends Controller
 
     public function news()
     {
-        $serviceNews = $this->getServiceNews();
-
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-news.xml';
 
         if (file_exists($xmlFilePath)) {
@@ -259,7 +267,7 @@ class SitemapController extends Controller
             $timestamp = $this->getTimestampNow();
             $bindings['TimestampNow'] = $timestamp;
 
-            $bindings['NewsList'] = $newsList = $serviceNews->getAll();
+            $bindings['NewsList'] = $newsList = $this->repoNews->getAll();
 
             return response()->view('sitemap.news', $bindings)->header('Content-Type', 'text/xml');
 

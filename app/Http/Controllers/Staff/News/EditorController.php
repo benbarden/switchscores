@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
 use App\Traits\SwitchServices;
@@ -17,6 +18,7 @@ class EditorController extends Controller
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    private $repoNews;
     private $repoNewsCategory;
 
     /**
@@ -33,9 +35,11 @@ class EditorController extends Controller
     private $viewBreadcrumbs;
 
     public function __construct(
+        NewsRepository $repoNews,
         NewsCategoryRepository $repoNewsCategory
     )
     {
+        $this->repoNews = $repoNews;
         $this->repoNewsCategory = $repoNewsCategory;
     }
 
@@ -51,7 +55,7 @@ class EditorController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $news = $this->getServiceNews()->create(
+            $news = $this->repoNews->create(
                 $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
@@ -75,7 +79,7 @@ class EditorController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $newsData = $this->getServiceNews()->find($newsId);
+        $newsData = $this->repoNews->find($newsId);
         if (!$newsData) abort(404);
 
         $request = request();
@@ -86,7 +90,7 @@ class EditorController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->getServiceNews()->edit(
+            $this->repoNews->edit(
                 $newsData, $request->title, $request->category_id, $request->url,
                 $request->content_html, $request->game_id, $request->custom_image_url
             );
