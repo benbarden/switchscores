@@ -51,7 +51,7 @@ class OutreachController extends Controller
     public function showList(GamesCompany $gamesCompany = null)
     {
         $pageTitle = 'Partner outreach';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if ($gamesCompany) {
@@ -89,7 +89,7 @@ class OutreachController extends Controller
             $gamesCompany->last_outreach_id = $partnerOutreach->id;
             $gamesCompany->save();
 
-            return redirect(route('staff.partners.games-company.show', ['gamesCompany' => $gamesCompany]));
+            return redirect(route('staff.games-companies.show', ['gamesCompany' => $gamesCompany]));
 
         }
 

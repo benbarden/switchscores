@@ -30,42 +30,42 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}">
+                    <a href="{{ route('staff.games-companies.without-twitter-ids') }}">
                         Games companies without Twitter IDs
                     </a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIdsCount }}</a>
+                    <a href="{{ route('staff.games-companies.without-twitter-ids') }}" class="h4">{{ GamesCompaniesWithoutTwitterIdsCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}">
+                    <a href="{{ route('staff.games-companies.without-website-urls') }}">
                         Games companies without URLs
                     </a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrlsCount }}</a>
+                    <a href="{{ route('staff.games-companies.without-website-urls') }}" class="h4">{{ GamesCompaniesWithoutWebsiteUrlsCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.duplicate-twitter-ids') }}">
+                    <a href="{{ route('staff.games-companies.duplicate-twitter-ids') }}">
                         Twitter IDs on multiple games companies
                     </a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.duplicate-twitter-ids') }}" class="h4">{{ GamesCompanyDuplicateTwitterIdsCount }}</a>
+                    <a href="{{ route('staff.games-companies.duplicate-twitter-ids') }}" class="h4">{{ GamesCompanyDuplicateTwitterIdsCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.duplicate-website-urls') }}">
+                    <a href="{{ route('staff.games-companies.duplicate-website-urls') }}">
                         Website URLs on multiple games companies
                     </a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.duplicate-website-urls') }}" class="h4">{{ GamesCompanyDuplicateWebsiteUrlsCount }}</a>
+                    <a href="{{ route('staff.games-companies.duplicate-website-urls') }}" class="h4">{{ GamesCompanyDuplicateWebsiteUrlsCount }}</a>
                 </td>
             </tr>
             </tbody>
@@ -81,7 +81,12 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.list') }}">Games companies</a>
+                    <a href="{{ route('staff.games-companies.add') }}">+ Add games company</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games-companies.list') }}">Games companies - view all</a>
                 </td>
             </tr>
             <tr>
@@ -103,18 +108,18 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}">Developers with unranked games</a>
+                    <a href="{{ route('staff.games-companies.devs-with-unranked-games') }}">Developers with unranked games</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.devs-with-unranked-games') }}" class="h4">{{ DevsWithUnrankedGamesCount }}</a>
+                    <a href="{{ route('staff.games-companies.devs-with-unranked-games') }}" class="h4">{{ DevsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}">Publishers with unranked games</a>
+                    <a href="{{ route('staff.games-companies.pubs-with-unranked-games') }}">Publishers with unranked games</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.pubs-with-unranked-games') }}" class="h4">{{ PubsWithUnrankedGamesCount }}</a>
+                    <a href="{{ route('staff.games-companies.pubs-with-unranked-games') }}" class="h4">{{ PubsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
             <tr>
@@ -137,18 +142,18 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.normal-quality') }}">Games companies - normal quality</a>
+                    <a href="{{ route('staff.games-companies.normal-quality') }}">Games companies - normal quality</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.normal-quality') }}" class="h4">{{ GamesCompaniesNormalQualityCount }}</a>
+                    <a href="{{ route('staff.games-companies.normal-quality') }}" class="h4">{{ GamesCompaniesNormalQualityCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.partners.games-company.low-quality') }}">Games companies - low quality</a>
+                    <a href="{{ route('staff.games-companies.low-quality') }}">Games companies - low quality</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.partners.games-company.low-quality') }}" class="h4">{{ GamesCompaniesLowQualityCount }}</a>
+                    <a href="{{ route('staff.games-companies.low-quality') }}" class="h4">{{ GamesCompaniesLowQualityCount }}</a>
                 </td>
             </tr>
             </tbody>

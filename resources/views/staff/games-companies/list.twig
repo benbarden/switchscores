@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-        <a href="{{ route('staff.partners.games-company.add') }}" class="btn outline btn-primary">+ Add games company</a>
+        <a href="{{ route('staff.games-companies.add') }}" class="btn outline btn-primary">+ Add games company</a>
     </div>
     <div class="col-xs-12 col-sm-9">
     </div>
@@ -36,7 +36,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('staff.partners.games-company.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
+                        <a href="{{ route('staff.games-companies.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
                         <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
                             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                         </a>
@@ -76,8 +76,8 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.partners.games-company.edit', {'gamesCompanyId': item.id}) }}">Edit</a> :
-                        <a href="{{ route('staff.partners.games-company.delete', {'gamesCompanyId': item.id}) }}">Delete</a>
+                        <a href="{{ route('staff.games-companies.edit', {'gamesCompanyId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.games-companies.delete', {'gamesCompanyId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

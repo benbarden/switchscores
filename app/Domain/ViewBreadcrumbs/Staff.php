@@ -35,8 +35,8 @@ class Staff extends Base
         $this->toastedCrumbs['news.list'] = ['url' => route('staff.news.list'), 'text' => 'News list'];
         $this->toastedCrumbs['news.categories'] = ['url' => route('staff.news.category.list'), 'text' => 'News categories'];
 
-        $this->toastedCrumbs['partners.dashboard'] = ['url' => route('staff.partners.dashboard'), 'text' => 'Partners'];
-        $this->toastedCrumbs['partners.gamesCompanies.list'] = ['url' => route('staff.partners.games-company.list'), 'text' => 'Games companies'];
+        $this->toastedCrumbs['gamesCompanies.dashboard'] = ['url' => route('staff.games-companies.dashboard'), 'text' => 'Games companies'];
+        $this->toastedCrumbs['gamesCompanies.list'] = ['url' => route('staff.games-companies.list'), 'text' => 'Games company list'];
         $this->toastedCrumbs['partners.outreach.list'] = ['url' => route('staff.partners.outreach.list'), 'text' => 'Outreach'];
 
         $this->toastedCrumbs['dataSources.dashboard'] = ['url' => route('staff.data-sources.dashboard'), 'text' => 'Data sources'];
@@ -194,20 +194,20 @@ class Staff extends Base
     }
 
 
-    public function partnersSubpage($pageTitle)
+    public function gamesCompaniesSubpage($pageTitle)
     {
-        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])->addTitleAndReturn($pageTitle);
+        return $this->addCrumb($this->toastedCrumbs['gamesCompanies.dashboard'])->addTitleAndReturn($pageTitle);
     }
 
-    public function partnersGamesCompaniesSubpage($pageTitle)
+    public function gamesCompaniesListSubpage($pageTitle)
     {
-        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])
-                    ->addCrumb($this->toastedCrumbs['partners.gamesCompanies.list'])->addTitleAndReturn($pageTitle);
+        return $this->addCrumb($this->toastedCrumbs['gamesCompanies.dashboard'])
+                    ->addCrumb($this->toastedCrumbs['gamesCompanies.list'])->addTitleAndReturn($pageTitle);
     }
 
     public function partnersOutreachSubpage($pageTitle)
     {
-        return $this->addCrumb($this->toastedCrumbs['partners.dashboard'])
+        return $this->addCrumb($this->toastedCrumbs['gamesCompanies.dashboard'])
             ->addCrumb($this->toastedCrumbs['partners.outreach.list'])->addTitleAndReturn($pageTitle);
     }
 

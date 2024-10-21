@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Staff\Partners;
+namespace App\Http\Controllers\Staff\GamesCompanies;
 
-use Illuminate\Routing\Controller as Controller;
-
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
-use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Stats as GamesCompanyStats;
+use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
 {
@@ -31,7 +30,7 @@ class DashboardController extends Controller
 
     public function show()
     {
-        $pageTitle = 'Partners dashboard';
+        $pageTitle = 'Games companies dashboard';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
@@ -57,6 +56,6 @@ class DashboardController extends Controller
         $bindings['GamesCompaniesNormalQualityCount'] = $this->repoGamesCompany->normalQualityCount();
         $bindings['GamesCompaniesLowQualityCount'] = $this->repoGamesCompany->lowQualityCount();
 
-        return view('staff.partners.dashboard', $bindings);
+        return view('staff.games-companies.dashboard', $bindings);
     }
 }

@@ -104,10 +104,10 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/staff/games.php'));
 
         Route::middleware('web')->namespace($this->namespace)
-            ->group(base_path('routes/staff/news.php'));
+            ->group(base_path('routes/staff/games-companies.php'));
 
         Route::middleware('web')->namespace($this->namespace)
-            ->group(base_path('routes/staff/partners.php'));
+            ->group(base_path('routes/staff/news.php'));
 
         Route::middleware('web')->namespace($this->namespace)
             ->group(base_path('routes/staff/reviews.php'));

@@ -24,7 +24,7 @@ class DataCleanupController extends Controller
     public function gamesWithMissingDeveloper()
     {
         $pageTitle = 'Games with missing developer';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ItemList'] = $this->dbGameDeveloper->getGamesWithNoDeveloper();
@@ -35,7 +35,7 @@ class DataCleanupController extends Controller
     public function gamesWithMissingPublisher()
     {
         $pageTitle = 'Games with missing publisher';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['ItemList'] = $this->dbGamePublisher->getGamesWithNoPublisher();

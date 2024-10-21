@@ -9,7 +9,7 @@ class ToolsController extends Controller
     public function partnerUpdateFields()
     {
         $pageTitle = 'Partner Update Fields';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         if (request()->post()) {

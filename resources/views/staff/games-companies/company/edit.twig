@@ -1,0 +1,10 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.games-companies.edit', {'gamesCompanyId': PartnerId}) %}
+{% include 'staff/games-companies/company/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/games-companies/company/scripts.twig' %}
+
+{% endblock page_inner %}

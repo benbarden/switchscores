@@ -22,7 +22,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        <a href="{{ route('staff.partners.games-company.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
+                        <a href="{{ route('staff.games-companies.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
                         <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
                             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                         </a>
@@ -59,7 +59,7 @@
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ item.id }}">Add outreach</a> :
-                        <a href="{{ route('staff.partners.games-company.edit', {'gamesCompanyId': item.id}) }}">Edit partner</a>
+                        <a href="{{ route('staff.games-companies.edit', {'gamesCompanyId': item.id}) }}">Edit partner</a>
                     </td>
                 </tr>
             {% endfor %}

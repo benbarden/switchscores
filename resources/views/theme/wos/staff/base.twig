@@ -87,7 +87,7 @@
                         {% endif %}
 
                         {% if auth_user().hasRole('Partnerships manager') or auth_user().isOwner() %}
-                            {% include 'theme/wos/staff/nav-top/partners.twig' %}
+                            {% include 'theme/wos/staff/nav-top/games-companies.twig' %}
                         {% endif %}
 
                         {% if auth_user().hasRole('eShop manager')
