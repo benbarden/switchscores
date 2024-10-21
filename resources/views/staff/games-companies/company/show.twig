@@ -33,6 +33,18 @@
             </tr>
             <tr>
                 <td>
+                    <span style="font-weight: bold;">Email</span>
+                </td>
+                <td>
+                    {% if GamesCompany.email %}
+                        <a href="mailto:{{ GamesCompany.email }}">{{ GamesCompany.email }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <span style="font-weight: bold;">Official site</span>
                 </td>
                 <td>
@@ -45,11 +57,35 @@
             </tr>
             <tr>
                 <td>
-                    <span style="font-weight: bold;">Twitter account</span>
+                    <span style="font-weight: bold;">Twitter</span>
                 </td>
                 <td>
                     {% if GamesCompany.twitter_id %}
                         <a href="https://twitter.com/{{ GamesCompany.twitter_id }}" target="_blank">{{ GamesCompany.twitter_id }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Threads</span>
+                </td>
+                <td>
+                    {% if GamesCompany.threads_id %}
+                        <a href="https://threads.net/@{{ GamesCompany.threads_id }}" target="_blank">@{{ GamesCompany.threads_id }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Bluesky</span>
+                </td>
+                <td>
+                    {% if GamesCompany.bluesky_id %}
+                        <a href="https://bsky.app/profile/{{ GamesCompany.bluesky_id }}" target="_blank">{{ GamesCompany.bluesky_id }}</a>
                     {% else %}
                         -
                     {% endif %}

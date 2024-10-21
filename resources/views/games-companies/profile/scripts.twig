@@ -1,0 +1,35 @@
+<script>
+
+    var formMode = '{{ FormMode }}';
+    var formVals = [];
+
+    if (formMode == 'edit') {
+
+        // This is used when editing existing records.
+        formVals['email'] = "{{ GamesCompany.email }}";
+        formVals['website_url'] = "{{ GamesCompany.website_url }}";
+        formVals['twitter_id'] = "{{ GamesCompany.twitter_id }}";
+        formVals['threads_id'] = "{{ GamesCompany.threads_id }}";
+        formVals['bluesky_id'] = "{{ GamesCompany.bluesky_id }}";
+
+    } else {
+
+        // This is used for new records.
+        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
+        formVals['email'] = "{{ old('email') }}";
+        formVals['website_url'] = "{{ old('website_url') }}";
+        formVals['twitter_id'] = "{{ old('twitter_id') }}";
+        formVals['threads_id'] = "{{ old('threads_id') }}";
+        formVals['bluesky_id'] = "{{ old('bluesky_id') }}";
+
+    }
+
+    $('#email').val(formVals['email']);
+    $('#website_url').val(formVals['website_url']);
+    $('#twitter_id').val(formVals['twitter_id']);
+    $('#threads_id').val(formVals['threads_id']);
+    $('#bluesky_id').val(formVals['bluesky_id']);
+
+    $('#email').focus();
+
+</script>

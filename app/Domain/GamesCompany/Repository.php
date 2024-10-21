@@ -8,7 +8,7 @@ use App\Models\GamesCompany;
 class Repository
 {
     public function editGamesCompany(
-        GamesCompany $gamesCompany, $name, $linkTitle, $websiteUrl, $twitterId, $isLowQuality
+        GamesCompany $gamesCompany, $name, $linkTitle, $websiteUrl, $twitterId, $isLowQuality, $email, $threadsId, $blueskyId
     )
     {
         $values = [
@@ -17,6 +17,9 @@ class Repository
             'website_url' => $websiteUrl,
             'twitter_id' => $twitterId,
             'is_low_quality' => $isLowQuality,
+            'email' => $email,
+            'threads_id' => $threadsId,
+            'bluesky_id' => $blueskyId,
         ];
 
         $gamesCompany->fill($values);

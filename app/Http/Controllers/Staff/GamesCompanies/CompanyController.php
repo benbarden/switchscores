@@ -90,7 +90,7 @@ class CompanyController extends Controller
 
             $partner = GamesCompanyFactory::createActive(
                 $request->name, $request->link_title, $request->website_url, $request->twitter_id,
-                $isLowQuality
+                $isLowQuality, $request->email, $request->threads_id, $request->bluesky_id
             );
             $partner->save();
 
@@ -127,7 +127,7 @@ class CompanyController extends Controller
             }
             $this->repoGamesCompany->editGamesCompany(
                 $gamesCompany, $request->name, $request->link_title, $request->website_url, $request->twitter_id,
-                $isLowQuality
+                $isLowQuality, $request->email, $request->threads_id, $request->bluesky_id
             );
 
             $this->gameQualityFilter->updateGamesByPartner($gamesCompany, $isLowQuality);

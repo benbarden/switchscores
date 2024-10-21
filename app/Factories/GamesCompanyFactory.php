@@ -15,7 +15,8 @@ class GamesCompanyFactory
      * $param null $isLowQuality
      * @return GamesCompany
      */
-    public static function createActive($name, $linkTitle, $websiteUrl = null, $twitterId = null, $isLowQuality = 0)
+    public static function createActive($name, $linkTitle, $websiteUrl = null, $twitterId = null, $isLowQuality = 0,
+                                        $email = null, $threadsId = null, $blueskyId = null)
     {
         return new GamesCompany(
             [
@@ -24,6 +25,9 @@ class GamesCompanyFactory
                 'website_url' => $websiteUrl,
                 'twitter_id' => $twitterId,
                 'is_low_quality' => $isLowQuality,
+                'email' => $email,
+                'threads_id' => $threadsId,
+                'bluesky_id' => $blueskyId,
             ]
         );
     }

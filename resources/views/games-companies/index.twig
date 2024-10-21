@@ -79,6 +79,18 @@
                 </tr>
                 <tr>
                     <td>
+                        <span style="font-weight: bold;">Email</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.email %}
+                            <a href="mailto:{{ PartnerData.email }}">{{ PartnerData.email }}</a>
+                        {% else %}
+                            <em>Not set!</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <span style="font-weight: bold;">Website</span>
                     </td>
                     <td>
@@ -101,7 +113,35 @@
                         {% endif %}
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Threads</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.threads_id %}
+                            <a href="https://threads.net/@{{ PartnerData.threads_id }}" target="_blank">@{{ PartnerData.threads_id }}</a>
+                        {% else %}
+                            <em>Not set!</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Bluesky</span>
+                    </td>
+                    <td>
+                        {% if PartnerData.bluesky_id %}
+                            <a href="https://bsky.app/profile/{{ PartnerData.bluesky_id }}" target="_blank">{{ PartnerData.bluesky_id }}</a>
+                        {% else %}
+                            <em>Not set!</em>
+                        {% endif %}
+                    </td>
+                </tr>
             </table>
+            <a class="btn btn-primary" href="{{ route('games-companies.profile.edit') }}">Edit details</a>
+            <a class="btn btn-primary" href="{{ route('partners.detail.games-company', {'linkTitle': PartnerData.link_title}) }}" target="_blank">View profile</a>
+            <br>
+            <br>
 
             <h2>Quick stats</h2>
             <p>

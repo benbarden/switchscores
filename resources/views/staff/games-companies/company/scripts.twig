@@ -10,7 +10,9 @@
         formVals['website_url'] = "{{ PartnerData.website_url }}";
         formVals['twitter_id'] = "{{ PartnerData.twitter_id }}";
         formVals['is_low_quality'] = "{{ PartnerData.is_low_quality }}";
-        formVals['status'] = "{{ PartnerData.status }}";
+        formVals['email'] = "{{ PartnerData.email }}";
+        formVals['threads_id'] = "{{ PartnerData.threads_id }}";
+        formVals['bluesky_id'] = "{{ PartnerData.bluesky_id }}";
 
     } else {
 
@@ -21,15 +23,12 @@
         formVals['website_url'] = "{{ old('website_url') }}";
         formVals['twitter_id'] = "{{ old('twitter_id') }}";
         formVals['is_low_quality'] = "{{ old('is_low_quality') }}";
-        if (formMode != 'add') {
-            formVals['status'] = "{{ old('status') }}";
-        }
+        formVals['email'] = "{{ old('email') }}";
+        formVals['threads_id'] = "{{ old('threads_id') }}";
+        formVals['bluesky_id'] = "{{ old('bluesky_id') }}";
 
     }
 
-    if (formMode != 'add') {
-        $('#status').val(formVals['status']);
-    }
     $('#name').val(formVals['name']);
     $('#link_title').val(formVals['link_title']);
     $('#website_url').val(formVals['website_url']);
@@ -37,6 +36,9 @@
     if (formVals['is_low_quality'] == 1) {
         $('#is_low_quality').attr('checked', true);
     }
+    $('#email').val(formVals['email']);
+    $('#threads_id').val(formVals['threads_id']);
+    $('#bluesky_id').val(formVals['bluesky_id']);
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

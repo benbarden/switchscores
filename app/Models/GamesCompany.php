@@ -18,7 +18,8 @@ class GamesCompany extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'name', 'link_title', 'website_url', 'twitter_id', 'last_outreach_id', 'is_low_quality'
+        'name', 'link_title', 'website_url', 'twitter_id', 'last_outreach_id', 'is_low_quality',
+        'email', 'threads_id', 'bluesky_id'
     ];
 
     public function developerGames()
