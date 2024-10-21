@@ -52,6 +52,11 @@ class Base
         $this->domCrawler = $this->scraperClient->request('GET', $url);
     }
 
+    public function getHtml()
+    {
+        return $this->domCrawler->html();
+    }
+
     public function crawlHtml($html)
     {
         $html = '<html><head><body>'.$html.'</body></head></html>';
