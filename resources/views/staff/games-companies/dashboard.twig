@@ -102,31 +102,29 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Outreach'} %}
+        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Outreach targets'} %}
 
         <table class="table">
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games-companies.devs-with-unranked-games') }}">Developers with unranked games</a>
+                    Low quality games are not included.
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games-companies.devs-with-unranked-games') }}" class="h4">{{ DevsWithUnrankedGamesCount }}</a>
                 </td>
             </tr>
+            {% for whichYear in AllowedYears %}
+                {% include 'components/staff/nav/table-row-stat.twig'
+                    with {'linkUrl': route('staff.games-companies.pubs-with-unranked-games', {'releaseYear': whichYear}),
+                    'linkTitle': 'Publishers with unranked games ('~whichYear~')',
+                    'linkStat': _context['PubsWithUnrankedGamesCount'~whichYear]} %}
+            {% endfor %}
             <tr>
                 <td>
-                    <a href="{{ route('staff.games-companies.pubs-with-unranked-games') }}">Publishers with unranked games</a>
+                    <a href="{{ route('staff.games-companies.pubs-with-unranked-games') }}">Publishers with unranked games - all</a>
                 </td>
                 <td class="text-end">
                     <a href="{{ route('staff.games-companies.pubs-with-unranked-games') }}" class="h4">{{ PubsWithUnrankedGamesCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Unranked games with missing partner data
-                </td>
-                <td>
                 </td>
             </tr>
             </tbody>

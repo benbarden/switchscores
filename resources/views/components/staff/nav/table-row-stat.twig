@@ -3,13 +3,13 @@
     {% set linkTitle = 'Review drafts' %}
 {% endif %}
 
-{% if linkRoute and linkTitle and linkStat %}
+{% if linkUrl and linkTitle and linkStat %}
     <tr>
         <td>
-            <a href="{{ route(linkRoute) }}">{{ linkTitle }}</a>
+            <a href="{{ linkUrl }}">{{ linkTitle }}</a>
         </td>
         <td class="text-end">
-            <a href="{{ route(linkRoute) }}" class="h4">{{ linkStat }}</a>
+            <a href="{{ linkUrl }}" class="h4">{{ linkStat }}</a>
         </td>
     </tr>
 {% else %}

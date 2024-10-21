@@ -6,9 +6,7 @@ use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
-use App\Factories\GamesCompanyFactory;
-use App\Models\GamesCompany;
-use App\Traits\SwitchServices;
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -16,8 +14,6 @@ use Illuminate\Routing\Controller as Controller;
 
 class ListController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     private $gameQualityFilter;
@@ -137,29 +133,16 @@ class ListController extends Controller
         return view('staff.games-companies.list', $bindings);
     }
 
-    public function devsWithUnrankedGames()
+    public function pubsWithUnrankedGames($releaseYear = null)
     {
-        $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
-        $pageTitle = 'Outreach targets: Developers with unranked games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getDevelopersWithUnrankedGames();
-
-        return view('staff.games-companies.list-unranked', $bindings);
-    }
-
-    public function pubsWithUnrankedGames()
-    {
-        $tableSort = "[ 1, 'asc'], [ 3, 'asc']";
+        $tableSort = "[ 5, 'desc'], [ 6, 'desc']";
         $pageTitle = 'Outreach targets: Publishers with unranked games';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')
             ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getPublishersWithUnrankedGames();
-        $bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
+        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getPublishersWithUnrankedGames($releaseYear);
+        //$bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";
 
         return view('staff.games-companies.list-unranked', $bindings);
     }

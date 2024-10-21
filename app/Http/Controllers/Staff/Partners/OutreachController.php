@@ -13,11 +13,8 @@ use App\Models\PartnerOutreach;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
-use App\Traits\SwitchServices;
-
 class OutreachController extends Controller
 {
-    use SwitchServices;
 
     private $repoPartnerOutreach;
     private $repoGamesCompany;
@@ -103,6 +100,11 @@ class OutreachController extends Controller
             $urlPartnerId = $gamesCompany->id;
             if ($urlPartnerId) {
                 $bindings['UrlPartnerId'] = $urlPartnerId;
+                // Also check if there's existing outreach
+                $outreachList = $this->repoPartnerOutreach->byPartnerId($urlPartnerId);
+                if ($outreachList) {
+                    $bindings['LatestOutreach'][] = $outreachList->first();
+                }
             }
         }
 

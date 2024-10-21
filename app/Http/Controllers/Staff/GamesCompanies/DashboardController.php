@@ -6,6 +6,7 @@ use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
+
 use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
@@ -46,11 +47,16 @@ class DashboardController extends Controller
         $bindings['GamesCompanyDuplicateTwitterIdsCount'] = count($duplicateTwitterIdsList);
         $bindings['GamesCompanyDuplicateWebsiteUrlsCount'] = count($duplicateWebsiteUrlsList);
 
-        // Outreach
-        $devsWithUnrankedGames = $this->repoGamesCompany->getDevelopersWithUnrankedGames();
-        $bindings['DevsWithUnrankedGamesCount'] = count($devsWithUnrankedGames);
-        $pubsWithUnrankedGames = $this->repoGamesCompany->getPublishersWithUnrankedGames();
-        $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGames);
+        $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
+        $bindings['AllowedYears'] = $allowedYears;
+
+        // Outreach - Publishers
+        $pubsWithUnrankedGamesAll = $this->repoGamesCompany->getPublishersWithUnrankedGames();
+        $bindings['PubsWithUnrankedGamesCount'] = count($pubsWithUnrankedGamesAll);
+        foreach ($allowedYears as $releaseYear) {
+            ${'pubsWithUnrankedGames'.$releaseYear} = $this->repoGamesCompany->getPublishersWithUnrankedGames($releaseYear);
+            $bindings['PubsWithUnrankedGamesCount'.$releaseYear] = count(${'pubsWithUnrankedGames'.$releaseYear});
+        }
 
         // Low quality filter
         $bindings['GamesCompaniesNormalQualityCount'] = $this->repoGamesCompany->normalQualityCount();

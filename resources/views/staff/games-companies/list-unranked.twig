@@ -10,6 +10,7 @@
                 <th>Name</th>
                 <th></th>
                 <th class="text-left">Game</th>
+                <th class="text-center">Release date (EU)</th>
                 <th class="text-center">Reviews</th>
                 <th class="text-center">Score</th>
                 <th class="text-center">Options</th>
@@ -52,14 +53,20 @@
                         </a>
                     </td>
                     <td class="text-center">
+                        {{ item.eu_release_date }}
+                    </td>
+                    <td class="text-center">
                         {{ item.review_count }}
                     </td>
                     <td class="text-center">
-                        {{ item.rating_avg }}
+                        {% if item.rating_avg %}
+                        {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                        {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ item.id }}">Add outreach</a> :
-                        <a href="{{ route('staff.games-companies.edit', {'gamesCompanyId': item.id}) }}">Edit partner</a>
+                        <a href="{{ route('staff.partners.outreach.add') }}?partnerId={{ item.id }}">
+                            <nobr>Add outreach</nobr>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
@@ -80,6 +87,7 @@
                 { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
+                null,
                 null,
                 null,
                 { "orderable": false }

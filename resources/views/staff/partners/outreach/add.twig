@@ -2,6 +2,41 @@
 
 {% block page_inner %}
 
+{% if LatestOutreach %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="alert alert-warning">
+            There is already outreach for this games company. Before proceeding, check you are not doubling up.
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="text-center">New status</th>
+                <th class="text-center">Contact method</th>
+                <th class="text-center">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in LatestOutreach %}
+                <tr>
+                    <td class="text-center">
+                        {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.contact_method }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+{% endif %}
+
 {% set formSubmitAction = route('staff.partners.outreach.add') %}
 {% include 'staff/partners/outreach/form.twig' with {'formSubmitAction': formSubmitAction} %}
 

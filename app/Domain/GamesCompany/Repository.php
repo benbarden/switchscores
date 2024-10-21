@@ -133,34 +133,26 @@ class Repository
     }
 
     // Outreach targets
-    public function getPublishersWithUnrankedGames()
+    public function getPublishersWithUnrankedGames($releaseYear = null)
     {
-        return GamesCompany::select(
+        $companyList = GamesCompany::select(
             'games_companies.id', 'games_companies.name', 'games_companies.link_title',
             'games.id AS game_id', 'games.title AS game_title',
-            'games.link_title AS game_link_title', 'games.review_count', 'games.rating_avg')
+            'games.link_title AS game_link_title', 'games.eu_release_date', 'games.review_count', 'games.rating_avg')
             ->join('game_publishers', 'game_publishers.publisher_id', '=', 'games_companies.id')
             ->join('games', 'games.id', '=', 'game_publishers.game_id')
             ->where('games.review_count', '<', 3)
-            ->whereNull('games_companies.last_outreach_id')
-            ->orderBy('games_companies.id', 'asc')
-            ->orderBy('games.id', 'asc')
-            ->get();
-    }
+            ->where('games.is_low_quality', 0);
 
-    // Outreach targets
-    public function getDevelopersWithUnrankedGames()
-    {
-        return GamesCompany::select(
-            'games_companies.id', 'games_companies.name', 'games_companies.link_title',
-            'games.id AS game_id', 'games.title AS game_title',
-            'games.link_title AS game_link_title', 'games.review_count', 'games.rating_avg')
-            ->join('game_developers', 'game_developers.developer_id', '=', 'games_companies.id')
-            ->join('games', 'games.id', '=', 'game_developers.game_id')
-            ->where('games.review_count', '<', 3)
-            ->whereNull('games_companies.last_outreach_id')
-            ->orderBy('games_companies.id', 'asc')
-            ->orderBy('games.id', 'asc')
-            ->get();
+        if ($releaseYear) {
+            $companyList = $companyList->where('games.release_year', $releaseYear);
+        }
+
+        //->whereNull('games_companies.last_outreach_id')
+
+        $companyList = $companyList->orderBy('games_companies.id', 'asc')
+            ->orderBy('games.id', 'asc');
+
+        return $companyList->get();
     }
 }
