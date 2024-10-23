@@ -134,7 +134,27 @@
                     {% endif %}
                 </td>
             </tr>
-            {% if GamesCompany.gamesCompanyUser.id is not null %}
+            {% if GamesCompany.gamesCompanyUser.id is null %}
+                {% if GamesCompany.email is null %}
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Invite</span>
+                        </td>
+                        <td>
+                            To invite this company, add an email.
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Invite</span>
+                        </td>
+                        <td>
+                            <a href="{{ route('staff.games-companies.invite-by-email.compose', {'gamesCompany': GamesCompany} ) }}" class="btn btn-primary btn-sm">Invite by email</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% else %}
                 <tr>
                     <td>
                         <span style="font-weight: bold;">Last access</span>

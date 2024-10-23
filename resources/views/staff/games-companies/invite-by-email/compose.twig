@@ -1,0 +1,10 @@
+{% extends 'theme/wos/staff/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('staff.games-companies.invite-by-email.compose', {'gamesCompany': GamesCompany}) %}
+{% include 'staff/games-companies/invite-by-email/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'staff/games-companies/invite-by-email/scripts.twig' %}
+
+{% endblock page_inner %}

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
+use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Events\UserCreated;
 use App\Models\User;
+
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Hash;
@@ -34,19 +36,16 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
 
-    private $repoInviteCode;
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct(
-        InviteCodeRepository $repoInviteCode
+        private InviteCodeRepository $repoInviteCode,
+        private PartnerOutreachRepository $repoPartnerOutreach
     )
     {
-        $this->repoInviteCode = $repoInviteCode;
-
         $this->middleware('guest');
         View::share('PageTitle', 'Register');
         View::share('TopTitle', 'Register');
@@ -133,8 +132,18 @@ class RegisterController extends Controller
         $user = User::create($values);
 
         if ($hasInviteCode) {
+
             $redeemInviteCode = new InviteCodeRedemption($inviteCode);
             $redeemInviteCode->redeemOnce();
+
+            if ($inviteCode->partnerOutreach) {
+                $this->repoPartnerOutreach->setStatusSuccess($inviteCode->partnerOutreach);
+                // Update last outreach for partner
+                $gamesCompany = $inviteCode->partnerOutreach->gamesCompany;
+                $gamesCompany->last_outreach_id = $inviteCode->partnerOutreach->id;
+                $gamesCompany->save();
+            }
+
         }
 
         event(new UserCreated($user));

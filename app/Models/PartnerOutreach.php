@@ -30,12 +30,17 @@ class PartnerOutreach extends Model
      * @var array
      */
     protected $fillable = [
-        'partner_id', 'new_status', 'contact_method', 'contact_message', 'internal_notes'
+        'partner_id', 'new_status', 'contact_method', 'contact_message', 'internal_notes', 'invite_code_id'
     ];
 
     public function gamesCompany()
     {
         return $this->hasOne('App\Models\GamesCompany', 'id', 'partner_id');
+    }
+
+    public function inviteCode()
+    {
+        return $this->hasOne('App\Models\InviteCode', 'id', 'invite_code_id');
     }
 
     public function getStatusDesc()

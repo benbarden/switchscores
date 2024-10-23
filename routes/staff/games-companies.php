@@ -26,6 +26,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/games-companies/duplicate-twitter-ids', 'Staff\GamesCompanies\ListController@duplicateTwitterIds')->name('staff.games-companies.duplicate-twitter-ids');
     Route::get('/staff/games-companies/duplicate-website-urls', 'Staff\GamesCompanies\ListController@duplicateWebsiteUrls')->name('staff.games-companies.duplicate-website-urls');
 
+    // Games companies: Invite by email
+    Route::match(['get', 'post'], '/staff/games-companies/invite-by-email/{gamesCompany}', 'Staff\GamesCompanies\InviteByEmailController@compose')->name('staff.games-companies.invite-by-email.compose');
+
     // Partners: Outreach
     Route::get('/staff/partners/outreach/list/{gamesCompany?}', 'Staff\Partners\OutreachController@showList')->name('staff.partners.outreach.list');
     Route::match(['get', 'post'], '/staff/partners/outreach/add/{gamesCompany?}', 'Staff\Partners\OutreachController@add')->name('staff.partners.outreach.add');

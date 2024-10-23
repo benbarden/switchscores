@@ -1,0 +1,27 @@
+<script>
+    var formVals = [];
+    var formMode = '{{ FormMode }}';
+
+    if (formMode == 'add') {
+
+        // This is used when editing existing items.
+        formVals['invite_email'] = "{{ GamesCompany.email }}";
+        formVals['invite_subject'] = "{{ InviteSubject|e('js') }}";
+        formVals['invite_body'] = "{{ InviteBody|e('js') }}";
+
+    } else {
+
+        // This is used when submitting if a validation error occurs, to avoid the DB data overwriting the form.
+        formVals['invite_email'] = "{{ old('invite_email') }}";
+        formVals['invite_subject'] = "{{ old('invite_subject')|e('js') }}";
+        formVals['invite_body'] = "{{ old('invite_body')|e('js') }}";
+
+    }
+
+    $('#invite_email').val(formVals['invite_email']);
+    $('#invite_subject').val(formVals['invite_subject']);
+    $('#invite_body').val(formVals['invite_body']);
+
+    $('#invite_email').focus();
+
+</script>

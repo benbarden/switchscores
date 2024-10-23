@@ -8,7 +8,7 @@ use App\Models\PartnerOutreach;
 class Repository
 {
     public function create(
-        $partnerId, $newStatus, $contactMethod = null, $contactMessage = null, $internalNotes = null
+        $partnerId, $newStatus, $contactMethod = null, $contactMessage = null, $internalNotes = null, $inviteCodeId = null
     )
     {
         return PartnerOutreach::create([
@@ -17,6 +17,7 @@ class Repository
             'contact_method' => $contactMethod,
             'contact_message' => $contactMessage,
             'internal_notes' => $internalNotes,
+            'invite_code_id' => $inviteCodeId,
         ]);
     }
 
@@ -37,6 +38,13 @@ class Repository
     public function delete($id)
     {
         PartnerOutreach::where('id', $id)->delete();
+    }
+
+    // Quick updates
+    public function setStatusSuccess(PartnerOutreach $partnerOutreach)
+    {
+        $partnerOutreach->new_status = PartnerOutreach::STATUS_OUTREACH_SUCCESS;
+        $partnerOutreach->save();
     }
 
     /**

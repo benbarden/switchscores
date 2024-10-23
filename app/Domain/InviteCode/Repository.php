@@ -7,9 +7,9 @@ use App\Models\InviteCode;
 
 class Repository
 {
-    public function create($code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId, $reviewerId)
+    public function create($code, $timesUsed, $timesLeft, $isActive, $gamesCompanyId = null, $reviewerId = null)
     {
-        InviteCode::create([
+        return InviteCode::create([
             'invite_code' => $code,
             'times_used' => $timesUsed,
             'times_left' => $timesLeft,

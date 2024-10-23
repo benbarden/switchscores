@@ -28,4 +28,9 @@ class InviteCode extends Model
     {
         return $this->hasOne('App\Models\ReviewSite', 'id', 'reviewer_id');
     }
+
+    public function partnerOutreach()
+    {
+        return $this->hasOne('App\Models\PartnerOutreach', 'invite_code_id', 'id');
+    }
 }
