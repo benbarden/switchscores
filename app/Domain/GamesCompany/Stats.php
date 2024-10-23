@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\DB;
 
 class Stats
 {
+    public function getWithoutEmails()
+    {
+        return GamesCompany::whereNull('email')->orderBy('id', 'desc')->get();
+    }
+
+    public function countWithoutEmails()
+    {
+        return GamesCompany::whereNull('email')->orderBy('id', 'desc')->count();
+    }
+
     public function getWithoutWebsiteUrls()
     {
         return GamesCompany::whereNull('website_url')->orderBy('id', 'desc')->get();

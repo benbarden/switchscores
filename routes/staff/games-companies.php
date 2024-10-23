@@ -21,6 +21,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     Route::get('/staff/games-companies/pubs-with-unranked-games/{releaseYear?}', 'Staff\GamesCompanies\ListController@pubsWithUnrankedGames')->name('staff.games-companies.pubs-with-unranked-games');
 
+    Route::get('/staff/games-companies/without-emails', 'Staff\GamesCompanies\ListController@withoutEmails')->name('staff.games-companies.without-emails');
     Route::get('/staff/games-companies/without-twitter-ids', 'Staff\GamesCompanies\ListController@withoutTwitterIds')->name('staff.games-companies.without-twitter-ids');
     Route::get('/staff/games-companies/without-website-urls', 'Staff\GamesCompanies\ListController@withoutWebsiteUrls')->name('staff.games-companies.without-website-urls');
     Route::get('/staff/games-companies/duplicate-twitter-ids', 'Staff\GamesCompanies\ListController@duplicateTwitterIds')->name('staff.games-companies.duplicate-twitter-ids');

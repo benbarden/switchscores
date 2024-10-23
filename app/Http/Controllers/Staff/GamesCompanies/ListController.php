@@ -75,6 +75,17 @@ class ListController extends Controller
         return view('staff.games-companies.list', $bindings);
     }
 
+    public function withoutEmails()
+    {
+        $pageTitle = 'Games companies without Emails';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutEmails();
+
+        return view('staff.games-companies.list', $bindings);
+    }
+
     public function withoutTwitterIds()
     {
         $pageTitle = 'Games companies without Twitter IDs';
