@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\Tag\Repository as TagRepository;
 
 use App\Traits\SwitchServices;
 
@@ -13,15 +14,11 @@ class SitemapController extends Controller
 {
     use SwitchServices;
 
-    private $repoNews;
-    private $repoReviewSite;
-
     public function __construct(
-        NewsRepository $repoNews,
-        ReviewSiteRepository $repoReviewSite
+        private NewsRepository $repoNews,
+        private ReviewSiteRepository $repoReviewSite,
+        private TagRepository $repoTag
     ){
-        $this->repoNews = $repoNews;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function getTimestampNow()
@@ -224,8 +221,6 @@ class SitemapController extends Controller
 
     public function tags()
     {
-        $serviceTag = $this->getServiceTag();
-
         $bindings = [];
         $timestamp = $this->getTimestampNow();
         $bindings['TimestampNow'] = $timestamp;
@@ -238,7 +233,7 @@ class SitemapController extends Controller
             'priority' => '0.8'
         );
 
-        $tagList = $serviceTag->getAll();
+        $tagList = $this->repoTag->getAll();
         foreach ($tagList as $tag) {
             $sitemapPages[] = array(
                 'url' => route('games.browse.byTag.page', ['tag' => $tag->link_title]),

@@ -18,28 +18,15 @@ class LandingController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGame;
-    protected $repoGameLists;
-    protected $repoGameStats;
-    protected $dbTopRated;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameRepository $repoGame,
-        GameListsRepository $repoGameLists,
-        GameStatsRepository $repoGameStats,
-        TopRatedDbQueries $dbTopRated,
-        Breadcrumbs $viewBreadcrumbs
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameRepository $repoGame,
+        private GameListsRepository $repoGameLists,
+        private GameStatsRepository $repoGameStats,
+        private TopRatedDbQueries $dbTopRated,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGame = $repoGame;
-        $this->repoGameLists = $repoGameLists;
-        $this->repoGameStats = $repoGameStats;
-        $this->dbTopRated = $dbTopRated;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

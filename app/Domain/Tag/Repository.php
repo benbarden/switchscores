@@ -31,6 +31,11 @@ class Repository
         $tagData->save();
     }
 
+    public function delete($tagId)
+    {
+        Tag::where('id', $tagId)->delete();
+    }
+
     public function find($tagId)
     {
         return Tag::find($tagId);

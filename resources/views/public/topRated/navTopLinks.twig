@@ -7,7 +7,6 @@
         {% for rYear in releaseYears %}
             <a id="btn-nav-{{ rYear }}" class="btn btn-sm btn-default" href="{{ route('topRated.byYear', {'year': rYear}) }}">{{ rYear }}</a>
         {% endfor %}
-        <a id="btn-nav-multiplayer" class="btn btn-sm btn-default" href="{{ route('topRated.multiplayer', {'year': 2017}) }}">Multiplayer</a>
 
     </div>
 

@@ -18,7 +18,6 @@ use App\Services\GameDeveloperService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameImportRuleWikipediaService;
 use App\Services\GamePublisherService;
-use App\Services\GameRankAllTimeService;
 use App\Services\GameRankYearService;
 use App\Services\GameRankYearMonthService;
 use App\Services\GameService;
@@ -28,7 +27,6 @@ use App\Services\PartnerFeedLinkService;
 use App\Services\QuickReviewService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
-use App\Services\TagService;
 use App\Services\TopRatedService;
 use App\Services\UrlService;
 use App\Services\UserGamesCollectionService;
@@ -226,15 +224,6 @@ trait SwitchServices
 
     /**
      * @deprecated
-     * @return GameRankAllTimeService
-     */
-    public function getServiceGameRankAllTime()
-    {
-        return $this->loadService('GameRankAllTimeService');
-    }
-
-    /**
-     * @deprecated
      * @return GameRankYearService
      */
     public function getServiceGameRankYear()
@@ -312,15 +301,6 @@ trait SwitchServices
     public function getServiceReviewStats()
     {
         return $this->loadService('ReviewStatsService');
-    }
-
-    /**
-     * @deprecated
-     * @return TagService
-     */
-    public function getServiceTag()
-    {
-        return $this->loadService('TagService');
     }
 
     /**

@@ -7,15 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
 class TagController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -26,16 +22,11 @@ class TagController extends Controller
         'link_title' => 'required',
     ];
 
-    private $repoTag;
-    private $repoTagCategory;
-
     public function __construct(
-        TagRepository $repoTag,
-        TagCategoryRepository $repoTagCategory
+        private TagRepository $repoTag,
+        private TagCategoryRepository $repoTagCategory
     )
     {
-        $this->repoTag = $repoTag;
-        $this->repoTagCategory = $repoTagCategory;
     }
 
     public function showList()
@@ -135,7 +126,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Missing data: tagId'], 400);
         }
 
-        $existingTag = $this->getServiceTag()->find($tagId);
+        $existingTag = $this->repoTag->find($tagId);
         if (!$existingTag) {
             return response()->json(['error' => 'Tag does not exist!'], 400);
         }
@@ -144,7 +135,7 @@ class TagController extends Controller
             return response()->json(['error' => 'Found '.$existingTag->gameTags()->count().' game(s) with this tag'], 400);
         }
 
-        $this->getServiceTag()->deleteTag($tagId);
+        $this->repoTag->delete($tagId);
 
         $data = array(
             'status' => 'OK'

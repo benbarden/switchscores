@@ -65,7 +65,6 @@ Route::get('/top-rated', 'PublicSite\TopRatedController@landing')->name('topRate
 Route::get('/top-rated/all-time', 'PublicSite\TopRatedController@allTime')->name('topRated.allTime');
 Route::get('/top-rated/all-time/page/{page}', 'PublicSite\TopRatedController@allTimePage')->name('topRated.allTime.page');
 Route::get('/top-rated/by-year/{year}', 'PublicSite\TopRatedController@byYear')->name('topRated.byYear');
-Route::get('/top-rated/multiplayer', 'PublicSite\TopRatedController@multiplayer')->name('topRated.multiplayer');
 
 /* Reviews */
 Route::get('/reviews/{year}', 'PublicSite\ReviewsController@landingByYear')->name('reviews.landing.byYear');

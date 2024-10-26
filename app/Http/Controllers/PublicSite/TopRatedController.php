@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
+use App\Traits\SwitchServices;
 
 class TopRatedController extends Controller
 {
     use SwitchServices;
 
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        private TopRatedDbQueries $dbTopRated,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()
     {
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
         $serviceGameRankYear = $this->getServiceGameRankYear();
 
         $bindings = [];
@@ -32,7 +32,7 @@ class TopRatedController extends Controller
         $bindings['LastYear'] = $lastYear;
         $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
         $bindings['TopRatedLastYear'] = $serviceGameRankYear->getList($lastYear, 15);
-        $bindings['TopRatedAllTime'] = $serviceGameRankAllTime->getList(1, 15);
+        $bindings['TopRatedAllTime'] = $this->dbTopRated->getList(1, 15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
         $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
@@ -41,27 +41,11 @@ class TopRatedController extends Controller
         return view('public.topRated.landing', $bindings);
     }
 
-    public function multiplayer()
-    {
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
-
-        $bindings = [];
-
-        $bindings['TopRatedMultiplayer'] = $serviceGameRankAllTime->getList(1, 100, 'multiplayer');
-
-        $bindings['TopTitle'] = 'Top Rated Nintendo Switch multiplayer games';
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch multiplayer games';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('Multiplayer');
-
-        return view('public.topRated.multiplayer', $bindings);
-    }
-
     public function allTime()
     {
         $bindings = [];
 
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
-        $gamesList = $serviceGameRankAllTime->getList(1, 100);
+        $gamesList = $this->dbTopRated->getList(1, 100);
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
@@ -87,8 +71,7 @@ class TopRatedController extends Controller
             $maxRank = 100;
         }
 
-        $serviceGameRankAllTime = $this->getServiceGameRankAllTime();
-        $gamesList = $serviceGameRankAllTime->getList($minRank, $maxRank);
+        $gamesList = $this->dbTopRated->getList($minRank, $maxRank);
 
         $bindings = [];
         $bindings['TopRatedAllTime'] = $gamesList;

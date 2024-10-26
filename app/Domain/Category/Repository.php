@@ -18,6 +18,11 @@ class Repository
         return Category::where('link_title', $linkTitle)->first();
     }
 
+    public function getAll()
+    {
+        return Category::orderBy('name', 'asc')->get();
+    }
+
     public function topLevelCategories()
     {
         return Category::whereDoesntHave('parent')->orderBy('name', 'asc')->get();

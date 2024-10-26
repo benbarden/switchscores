@@ -11,7 +11,7 @@ class DbQueries
      * @param $mode
      * @return mixed
      */
-    public function getList($maxRank = null, $mode = null)
+    public function getList($minRank = null, $maxRank = null, $mode = null)
     {
         $games = DB::table('game_rank_alltime')
             ->join('games', 'game_rank_alltime.game_id', '=', 'games.id')
@@ -20,8 +20,9 @@ class DbQueries
                 'categories.name AS category_name',
                 'game_rank_alltime.game_rank');
 
-        if ($maxRank) {
+        if ($minRank && $maxRank) {
             $games = $games->where('game_rank_alltime.game_rank', '<=', $maxRank);
+            $games = $games->where('game_rank_alltime.game_rank', '>=', $minRank);
         }
 
         if ($mode == 'random-one') {
@@ -37,6 +38,6 @@ class DbQueries
 
     public function getRandomFromTop100()
     {
-        return $this->getList(100, 'random-one'); //->inRandomOrder()->first();
+        return $this->getList(1, 100, 'random-one'); //->inRandomOrder()->first();
     }
 }

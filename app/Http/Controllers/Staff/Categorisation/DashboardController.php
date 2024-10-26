@@ -6,6 +6,9 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\Tag\Repository as TagRepository;
+use App\Domain\Category\Repository as CategoryRepository;
+
 use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
@@ -16,21 +19,18 @@ class DashboardController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameStats;
-    protected $repoGameSeries;
-
     public function __construct(
-        GameStatsRepository $repoGameStats,
-        GameSeriesRepository $repoGameSeries
+        private GameStatsRepository $repoGameStats,
+        private GameSeriesRepository $repoGameSeries,
+        private TagRepository $repoTag,
+        private CategoryRepository $repoCategory,
     )
     {
-        $this->repoGameStats = $repoGameStats;
-        $this->repoGameSeries = $repoGameSeries;
     }
 
     private function getCategoryMatchesStats()
     {
-        $categoryList = $this->getServiceCategory()->getAll();
+        $categoryList = $this->repoCategory->getAll();
 
         $categoryArray = [];
 
@@ -90,7 +90,7 @@ class DashboardController extends Controller
 
     private function getTagMatchesStats()
     {
-        $tagList = $this->getServiceTag()->getAll();
+        $tagList = $this->repoTag->getAll();
 
         $tagArray = [];
 
