@@ -21,6 +21,9 @@ test-unit:
 test-gametitlematch:
 	./vendor/bin/phpunit --testsuite GameTitleMatch
 
+test-review:
+	./vendor/bin/phpunit --testsuite ReviewLink
+
 test-data:
 	./vendor/bin/phpunit --testsuite DataSources
 

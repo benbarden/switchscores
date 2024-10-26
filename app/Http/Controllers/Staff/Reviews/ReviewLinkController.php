@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
@@ -35,7 +36,8 @@ class ReviewLinkController extends Controller
     public function __construct(
         private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite,
-        private GameRepository $repoGame
+        private GameRepository $repoGame,
+        private ReviewLinkStats $reviewLinkStats
     )
     {
     }
@@ -152,9 +154,7 @@ class ReviewLinkController extends Controller
 
             // Update game review stats
             $game = $this->repoGame->find($gameId);
-            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
-            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+            $this->reviewLinkStats->updateStats($game);
 
             // Trigger event
             event(new ReviewLinkCreated($reviewLink));
@@ -206,9 +206,7 @@ class ReviewLinkController extends Controller
 
             // Update game review stats
             $game = $this->repoGame->find($gameId);
-            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
-            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+            $this->reviewLinkStats->updateStats($game);
 
             // Update ranks
             //\Artisan::call('UpdateGameRanks');
@@ -254,9 +252,7 @@ class ReviewLinkController extends Controller
             $game = $this->repoGame->find($reviewLink->game_id);
             if ($game) {
                 // Update game review stats
-                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
-                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+                $this->reviewLinkStats->updateStats($game);
             }
 
             // Done

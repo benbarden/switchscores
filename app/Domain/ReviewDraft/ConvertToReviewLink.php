@@ -10,7 +10,9 @@ use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
 use App\Domain\ReviewLink\Director as ReviewLinkDirector;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
+
 use App\Models\Game;
+use App\Models\QuickReview;
 use App\Models\ReviewDraft;
 
 class ConvertToReviewLink
@@ -84,6 +86,11 @@ class ConvertToReviewLink
         return true;
     }
 
+    /**
+     * @param Game $game
+     * @return void
+     * @deprecated
+     */
     public function updateGameReviewStats(Game $game)
     {
         $gameId = $game->id;

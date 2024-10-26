@@ -2,6 +2,8 @@
 
 namespace App\Domain\ReviewLink;
 
+use App\Models\Game;
+use App\Models\QuickReview;
 use App\Models\ReviewLink;
 
 use Illuminate\Support\Collection;
@@ -65,6 +67,18 @@ class Stats
         $reviewAverage = $this->calculateReviewAverage($reviewLinks, $quickReviews);
 
         return [$reviewCount, $reviewAverage];
+    }
+
+    public function updateStats(Game $game)
+    {
+        $gameReviewLinks = $game->reviews;
+        $gameQuickReviews = $game->quickReviews->where('item_status', QuickReview::STATUS_ACTIVE);
+
+        $gameReviewStats = $this->calculateStats($gameReviewLinks, $gameQuickReviews);
+
+        $game->review_count = $gameReviewStats[0];
+        $game->rating_avg = $gameReviewStats[1];
+        $game->save();
     }
 
     public function countBySite($siteId)
