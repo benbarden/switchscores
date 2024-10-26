@@ -10,7 +10,7 @@ class Repository
 {
     public function create(
         $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate,
-        $reviewType = ReviewLink::TYPE_IMPORTED, $desc = null
+        $reviewType = ReviewLink::TYPE_IMPORTED, $desc = null, $userId = null
     )
     {
         return ReviewLink::create([
@@ -22,7 +22,32 @@ class Repository
             'review_date' => $reviewDate,
             'review_type' => $reviewType,
             'description' => $desc,
+            'user_id' => $userId,
         ]);
+    }
+
+    public function edit(
+        ReviewLink $reviewLinkData, $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised,
+        $reviewDate, $desc = null
+    )
+    {
+        $values = [
+            'game_id' => $gameId,
+            'site_id' => $siteId,
+            'url' => $url,
+            'rating_original' => $ratingOriginal,
+            'rating_normalised' => $ratingNormalised,
+            'review_date' => $reviewDate,
+            'description' => $desc,
+        ];
+
+        $reviewLinkData->fill($values);
+        $reviewLinkData->save();
+    }
+
+    public function delete($linkId)
+    {
+        ReviewLink::where('id', $linkId)->delete();
     }
 
     public function find($linkId)

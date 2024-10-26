@@ -10,70 +10,6 @@ use Illuminate\Support\Facades\DB;
 class ReviewLinkService
 {
     /**
-     * @param $gameId
-     * @param $siteId
-     * @param $url
-     * @param $ratingOriginal
-     * @param $ratingNormalised
-     * @param $reviewDate
-     * @param $reviewType
-     * @param $desc
-     * @param null $userId
-     * @return \App\Models\ReviewLink
-     */
-    public function create(
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $reviewType, $desc = null, $userId = null
-    )
-    {
-        return ReviewLink::create([
-            'game_id' => $gameId,
-            'site_id' => $siteId,
-            'url' => $url,
-            'rating_original' => $ratingOriginal,
-            'rating_normalised' => $ratingNormalised,
-            'review_date' => $reviewDate,
-            'review_type' => $reviewType,
-            'description' => $desc,
-            'user_id' => $userId,
-        ]);
-    }
-
-    /**
-     * @param ReviewLink $reviewLinkData
-     * @param $gameId
-     * @param $siteId
-     * @param $url
-     * @param $ratingOriginal
-     * @param $ratingNormalised
-     * @param $reviewDate
-     * @param $desc
-     * @return void
-     */
-    public function edit(
-        ReviewLink $reviewLinkData,
-        $gameId, $siteId, $url, $ratingOriginal, $ratingNormalised, $reviewDate, $desc = null
-    )
-    {
-        $values = [
-            'game_id' => $gameId,
-            'site_id' => $siteId,
-            'url' => $url,
-            'rating_original' => $ratingOriginal,
-            'rating_normalised' => $ratingNormalised,
-            'review_date' => $reviewDate,
-            'description' => $desc,
-        ];
-
-        $reviewLinkData->fill($values);
-        $reviewLinkData->save();
-    }
-
-    public function delete($linkId)
-    {
-        ReviewLink::where('id', $linkId)->delete();
-    }
-
-    /**
      * @param $id
      * @return ReviewLink
      */
@@ -253,11 +189,6 @@ class ReviewLinkService
             ->orderBy('review_sites.last_review_date', 'desc')
             ->get();
         return $gameReviews;
-    }
-
-    public function getByGameAndSite($gameId, $siteId)
-    {
-        return ReviewLink::where('game_id', $gameId)->where('site_id', $siteId)->first();
     }
 
     public function getByUser($userId)

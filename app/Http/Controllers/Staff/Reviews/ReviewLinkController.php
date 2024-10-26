@@ -32,19 +32,12 @@ class ReviewLinkController extends Controller
         'rating_original' => 'required'
     ];
 
-    private $repoReviewLink;
-    private $repoReviewSite;
-    private $repoGame;
-
     public function __construct(
-        ReviewLinkRepository $repoReviewLink,
-        ReviewSiteRepository $repoReviewSite,
-        GameRepository $repoGame
+        private ReviewLinkRepository $repoReviewLink,
+        private ReviewSiteRepository $repoReviewSite,
+        private GameRepository $repoGame
     )
     {
-        $this->repoReviewLink = $repoReviewLink;
-        $this->repoReviewSite = $repoReviewSite;
-        $this->repoGame = $repoGame;
     }
 
     public function showList()
@@ -152,13 +145,13 @@ class ReviewLinkController extends Controller
 
             $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $reviewLink = $this->getServiceReviewLink()->create(
+            $reviewLink = $this->repoReviewLink->create(
                 $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, ReviewLink::TYPE_MANUAL, $request->description
             );
 
             // Update game review stats
-            $game = $this->getServiceGame()->find($gameId);
+            $game = $this->repoGame->find($gameId);
             $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
             $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
             $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
@@ -186,7 +179,7 @@ class ReviewLinkController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $reviewLinkData = $this->getServiceReviewLink()->find($linkId);
+        $reviewLinkData = $this->repoReviewLink->find($linkId);
         if (!$reviewLinkData) abort(404);
 
         $request = request();
@@ -205,14 +198,14 @@ class ReviewLinkController extends Controller
 
             $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
 
-            $this->getServiceReviewLink()->edit(
+            $this->repoReviewLink->edit(
                 $reviewLinkData,
                 $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
                 $request->review_date, $request->description
             );
 
             // Update game review stats
-            $game = $this->getServiceGame()->find($gameId);
+            $game = $this->repoGame->find($gameId);
             $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
             $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
             $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
@@ -245,7 +238,7 @@ class ReviewLinkController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $reviewLink = $this->getServiceReviewLink()->find($linkId);
+        $reviewLink = $this->repoReviewLink->find($linkId);
         if (!$reviewLink) abort(404);
 
         $request = request();
@@ -256,9 +249,9 @@ class ReviewLinkController extends Controller
 
             $gameId = $request->game_id;
 
-            $this->getServiceReviewLink()->delete($linkId);
+            $this->repoReviewLink->delete($linkId);
 
-            $game = $this->getServiceGame()->find($reviewLink->game_id);
+            $game = $this->repoGame->find($reviewLink->game_id);
             if ($game) {
                 // Update game review stats
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
