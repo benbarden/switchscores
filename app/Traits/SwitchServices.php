@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Services\ViewHelper\Bindings;
 use App\Services\ViewHelper\MemberBreadcrumbs;
-use App\Services\ViewHelper\StaffBreadcrumbs;
 
 use App\Services\CampaignGameService;
 use App\Services\CategoryService;
@@ -101,15 +100,6 @@ trait SwitchServices
     public function getServiceViewHelperMemberBreadcrumbs()
     {
         return $this->loadService("ViewHelper\\MemberBreadcrumbs");
-    }
-
-    /**
-     * @deprecated
-     * @return StaffBreadcrumbs
-     */
-    public function getServiceViewHelperStaffBreadcrumbs()
-    {
-        return $this->loadService("ViewHelper\\StaffBreadcrumbs");
     }
 
     // ** Standard service classes ** //
