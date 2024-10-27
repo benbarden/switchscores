@@ -11,7 +11,6 @@ use App\Services\DataSourceRawService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
 use App\Services\GameImportRuleEshopService;
-use App\Services\GameImportRuleWikipediaService;
 use App\Services\GamePublisherService;
 use App\Services\GameRankYearService;
 use App\Services\GameRankYearMonthService;
@@ -159,15 +158,6 @@ trait SwitchServices
     public function getServiceGameImportRuleEshop()
     {
         return $this->loadService('GameImportRuleEshopService');
-    }
-
-    /**
-     * @deprecated
-     * @return GameImportRuleWikipediaService
-     */
-    public function getServiceGameImportRuleWikipedia()
-    {
-        return $this->loadService('GameImportRuleWikipediaService');
     }
 
     /**
