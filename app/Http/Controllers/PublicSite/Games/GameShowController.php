@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
@@ -16,25 +17,15 @@ class GameShowController extends Controller
 {
     use SwitchServices;
 
-    private $repoFeaturedGames;
-    private $repoGameLists;
-    private $repoGameStats;
-    private $repoNews;
-    private $viewBreadcrumbs;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameListsRepository $repoGameLists,
-        GameStatsRepository $repoGameStats,
-        NewsRepository $repoNews,
-        Breadcrumbs $viewBreadcrumbs
+        private GameRepository $repoGame,
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameListsRepository $repoGameLists,
+        private GameStatsRepository $repoGameStats,
+        private NewsRepository $repoNews,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameLists = $repoGameLists;
-        $this->repoGameStats = $repoGameStats;
-        $this->repoNews = $repoNews;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     /**
@@ -46,7 +37,7 @@ class GameShowController extends Controller
     {
         $bindings = [];
 
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) {
             abort(404);
         }
@@ -236,7 +227,7 @@ class GameShowController extends Controller
      */
     public function showId($id)
     {
-        $serviceGame = $this->getServiceGame();
+        $serviceGame = $this->repoGame;
 
         $gameData = $serviceGame->find($id);
         if (!$gameData) {

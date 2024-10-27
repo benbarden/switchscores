@@ -7,6 +7,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\Game\Repository as GameRepository;
+
 use App\Traits\SwitchServices;
 use App\Traits\MemberView;
 
@@ -25,6 +27,12 @@ class QuickReviewController extends Controller
         'review_body' => 'required|max:800'
     ];
 
+    public function __construct(
+        private GameRepository $repoGame
+    ){
+
+    }
+
     public function add($gameId)
     {
         $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review');
@@ -32,7 +40,7 @@ class QuickReviewController extends Controller
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
 
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
         // Don't allow duplicate reviews

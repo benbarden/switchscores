@@ -13,6 +13,7 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
 
@@ -34,17 +35,12 @@ class ReviewDraftController extends Controller
     private $validationRulesFeedItem = [
     ];
 
-    protected $repoReviewDraft;
-
-    protected $repoReviewSite;
-
     public function __construct(
-        ReviewDraftRepository $repoReviewDraft,
-        ReviewSiteRepository $repoReviewSite
+        private ReviewDraftRepository $repoReviewDraft,
+        private ReviewSiteRepository $repoReviewSite,
+        private GameRepository $repoGame
     )
     {
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function findGame()
@@ -66,7 +62,7 @@ class ReviewDraftController extends Controller
 
             if ($keywords) {
                 $bindings['SearchKeywords'] = $keywords;
-                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
+                $bindings['SearchResults'] = $this->repoGame->searchByTitle($keywords);
             }
 
         }
@@ -157,7 +153,7 @@ class ReviewDraftController extends Controller
 
         $isYoutubeChannel = $partnerData->isYoutubeChannel();
 
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(400);
 
         $reviewLinkIdList = $this->getServiceReviewLink()->getGameIdsReviewedBySite($siteId);
@@ -225,7 +221,7 @@ class ReviewDraftController extends Controller
         $isYoutubeChannel = $partnerData->isYoutubeChannel();
 
         $gameId = $reviewDraft->game_id;
-        $gameData = $this->getServiceGame()->find($gameId);
+        $gameData = $this->repoGame->find($gameId);
         if (!$gameData) {
             return redirect(route('reviewers.index'));
         }

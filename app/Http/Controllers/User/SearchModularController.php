@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\User;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -10,6 +9,7 @@ use Illuminate\Routing\Controller;
 
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\MemberView;
 use App\Traits\SwitchServices;
@@ -28,16 +28,12 @@ class SearchModularController extends Controller
         'search_keywords' => 'required|min:3',
     ];
 
-    protected $repoUserGamesCollection;
-    protected $repoFeaturedGame;
-
     public function __construct(
-        UserGamesCollectionRepository $repoUserGamesCollection,
-        FeaturedGameRepository $featuredGame
+        private UserGamesCollectionRepository $repoUserGamesCollection,
+        private FeaturedGameRepository $repoFeaturedGame,
+        private GameRepository $repoGame
     )
     {
-        $this->repoUserGamesCollection = $repoUserGamesCollection;
-        $this->repoFeaturedGame = $featuredGame;
     }
 
     public function findGame($searchMode)
@@ -62,7 +58,7 @@ class SearchModularController extends Controller
 
             if ($keywords) {
                 $bindings['SearchKeywords'] = $keywords;
-                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
+                $bindings['SearchResults'] = $this->repoGame->searchByTitle($keywords);
             }
 
         }

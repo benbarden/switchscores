@@ -7,12 +7,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
+use App\Domain\Game\Repository as GameRepository;
 
 class SearchController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -21,6 +19,13 @@ class SearchController extends Controller
     private $validationRules = [
         'search_keywords' => 'required|min:3',
     ];
+
+    public function __construct(
+        private GameRepository $repoGame
+    )
+    {
+
+    }
 
     public function show()
     {
@@ -38,7 +43,7 @@ class SearchController extends Controller
 
             if ($keywords) {
                 $bindings['SearchKeywords'] = $keywords;
-                $bindings['SearchResults'] = $this->getServiceGame()->searchByTitle($keywords);
+                $bindings['SearchResults'] = $this->repoGame->searchByTitle($keywords);
             }
 
         }

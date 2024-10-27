@@ -7,9 +7,28 @@ use App\Models\Game;
 
 class Repository
 {
+    public function markAsReleased(Game $game)
+    {
+        $dateNow = new \DateTime('now');
+
+        $game->eu_is_released = 1;
+        $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
+        $game->save();
+    }
+
+    public function delete($gameId)
+    {
+        Game::where('id', $gameId)->delete();
+    }
+
     public function find($id)
     {
         return Game::find($id);
+    }
+
+    public function searchByTitle($keywords)
+    {
+        return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();
     }
 
     public function randomGame()

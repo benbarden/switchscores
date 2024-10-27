@@ -48,40 +48,19 @@ class GamesEditorController extends Controller
         //'packshot_square_url_override' => 'required_with:nintendo_store_url_override'
     ];
 
-    private $repoGameTitleHash;
-    private $gameTitleHashGenerator;
-    private $repoGameSeries;
-    private $repoGameCollection;
-    private $repoCategory;
-    private $formatOptions;
-    private $repoGame;
-    private $gameQualityFilter;
-    private $repoGamesCompany;
-    private $repoNews;
-
     public function __construct(
-        GameTitleHashRepository $repoGameTitleHash,
-        HashGeneratorRepository $gameTitleHashGenerator,
-        GameSeriesRepository $repoGameSeries,
-        GameCollectionRepository $repoGameCollection,
-        CategoryRepository $repoCategory,
-        GameFormatOptions $formatOptions,
-        GameRepository $repoGame,
-        GameQualityFilter $gameQualityFilter,
-        GamesCompanyRepository $repoGamesCompany,
-        NewsRepository $repoNews
+        private GameTitleHashRepository $repoGameTitleHash,
+        private HashGeneratorRepository $gameTitleHashGenerator,
+        private GameSeriesRepository $repoGameSeries,
+        private GameCollectionRepository $repoGameCollection,
+        private CategoryRepository $repoCategory,
+        private GameFormatOptions $formatOptions,
+        private GameRepository $repoGame,
+        private GameQualityFilter $gameQualityFilter,
+        private GamesCompanyRepository $repoGamesCompany,
+        private NewsRepository $repoNews
     )
     {
-        $this->repoGameTitleHash = $repoGameTitleHash;
-        $this->gameTitleHashGenerator = $gameTitleHashGenerator;
-        $this->repoGameSeries = $repoGameSeries;
-        $this->repoGameCollection = $repoGameCollection;
-        $this->repoCategory = $repoCategory;
-        $this->formatOptions = $formatOptions;
-        $this->repoGame = $repoGame;
-        $this->gameQualityFilter = $gameQualityFilter;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoNews = $repoNews;
     }
 
     public function add()
@@ -340,14 +319,12 @@ class GamesEditorController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Core
-        $serviceGame = $this->getServiceGame();
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
 
         // Categorisation
         $serviceGameTag = $this->getServiceGameTag();
 
         // Validation
-        $serviceNews = $this->getServiceNews();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         // Deletion
@@ -390,7 +367,7 @@ class GamesEditorController extends Controller
             $this->getServiceDataSourceParsed()->clearGameIdFromNintendoCoUkItems($gameId);
             $this->getServiceDataSourceParsed()->removeSwitchEshopItems($gameId);
             // Ready to delete the game
-            $serviceGame->deleteGame($gameId);
+            $this->repoGame->delete($gameId);
 
             // Done
 
@@ -411,8 +388,6 @@ class GamesEditorController extends Controller
 
     public function releaseGame()
     {
-        $serviceGame = $this->getServiceGame();
-
         $currentUser = resolve('User/Repository')->currentUser();
         if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
@@ -425,12 +400,12 @@ class GamesEditorController extends Controller
             return response()->json(['error' => 'Missing data: gameId'], 400);
         }
 
-        $game = $serviceGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$gameId) {
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
 
-        $serviceGame->markAsReleased($game);
+        $this->repoGame->markAsReleased($game);
 
         $data = array(
             'status' => 'OK'

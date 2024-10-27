@@ -13,26 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class GameService
 {
-    const ORDER_TITLE = 0;
-    const ORDER_NEWEST = 1;
-    const ORDER_OLDEST = 2;
-
-    public function markAsReleased(Game $game)
-    {
-        $dateNow = new \DateTime('now');
-
-        $game->eu_is_released = 1;
-        $game->eu_released_on = $dateNow->format('Y-m-d H:i:s');
-        $game->save();
-    }
-
-    public function deleteGame($gameId)
-    {
-        Game::where('id', $gameId)->delete();
-    }
-
-    // ********************************************************** //
-
     /**
      * @param $id
      * @return Game
@@ -40,31 +20,6 @@ class GameService
     public function find($id)
     {
         return Game::find($id);
-    }
-
-    /**
-     * @param $title
-     * @return \App\Models\Game
-     */
-    public function getByTitle($title)
-    {
-        return Game::where('title', $title)->first();
-    }
-
-    /**
-     * @param $linkId
-     * @return Game
-     */
-    public function getByEshopEuropeId($linkId)
-    {
-        return Game::where('eshop_europe_fs_id', $linkId)->first();
-    }
-
-    public function searchByTitle($keywords)
-    {
-        return Game::where('title', 'like', '%'.$keywords.'%')
-            ->orderBy('eu_release_date', 'DESC')
-            ->get();
     }
 
     public function getApiIdList()
