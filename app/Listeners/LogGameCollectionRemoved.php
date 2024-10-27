@@ -41,7 +41,7 @@ class LogGameCollectionRemoved
             ActivityLog::EVENT_TYPE_USER_GAME_COLLECTION_REMOVED,
             $userId,
             'App\Domain\UserGamesCollection',
-            $userGamesCollection->id
+            $userGamesCollection->game->id
         );
     }
 }

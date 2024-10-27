@@ -1,0 +1,84 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if ActivityLog|length %}
+    <table class="table table-sm table-responsive data-sortable">
+        <thead>
+        <tr>
+            <th class="text-right">#</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Model</th>
+            <th>Model record</th>
+            <th class="text-center">Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ActivityLog %}
+            <tr>
+                <td class="text-right">
+                    <p>
+                        <small>
+                            {{ item.id }}
+                        </small>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <small>
+                            {{ item.event_type }}
+                        </small>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        {% if item.user_id %}
+                        <small>
+                            {{ item.user.display_name }}
+                        </small>
+                        {% endif %}
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <small>
+                            {{ item.event_model }}
+                        </small>
+                    </p>
+                </td>
+                <td class="text-right">
+                    <small>
+                    {% if item.event_model_id %}
+                        {% if item.event_model == 'App\\Domain\\UserGamesCollection' %}
+                            {{ item.game.title }}
+                        {% else %}
+                            {{ item.event_model_id }}
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </small>
+                </td>
+                <td class="text-center">
+                    <small>{{ item.created_at|date('Y-m-d H:i') }}</small>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No records found!</p>
+{% endif %}
+
+{% include 'common/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25
+        });
+    });
+</script>
+
+{% endblock page_inner %}

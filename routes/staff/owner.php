@@ -25,6 +25,9 @@ Route::group(['middleware' => ['auth.admin:admin']], function() {
     Route::match(['get', 'post'], '/owner/user/delete/{userId}', 'Owner\UserController@deleteUser')->name('owner.user.delete');
 
     // Audit
+    Route::get('/owner/activity-log', 'Owner\ActivityLogController@show')->name('owner.activityLog');
+
+    // Audit
     Route::get('/owner/audit/index', 'Owner\AuditController@index')->name('owner.audit.index');
     Route::get('/owner/audit/{reportName}', 'Owner\AuditController@showReport')->name('owner.audit.report');
 

@@ -28,4 +28,9 @@ class ActivityLog extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
+
+    public function game()
+    {
+        return $this->hasOne('App\Models\Game', 'id', 'event_model_id');
+    }
 }

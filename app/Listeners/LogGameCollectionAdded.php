@@ -41,7 +41,7 @@ class LogGameCollectionAdded
             ActivityLog::EVENT_TYPE_USER_GAME_COLLECTION_ADDED,
             $userId,
             'App\Domain\UserGamesCollection',
-            $userGamesCollection->id
+            $userGamesCollection->game->id
         );
     }
 }

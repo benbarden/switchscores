@@ -22,4 +22,9 @@ class Repository
         $activityLog->save();
         return $activityLog;
     }
+
+    public function getAll()
+    {
+        return ActivityLog::orderBy('id', 'desc')->get();
+    }
 }
