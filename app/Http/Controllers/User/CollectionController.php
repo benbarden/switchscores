@@ -14,6 +14,9 @@ use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
 use App\Domain\UserGamesCollection\CollectionStatsRepository;
 
+use App\Events\GameCollectionAdded;
+use App\Events\GameCollectionRemoved;
+
 use App\Services\GamesCollection\PlayStatus;
 use App\Services\UserGamesCollectionService;
 
@@ -229,10 +232,13 @@ class CollectionController extends Controller
                     ->withInput();
             }
 
-            $serviceCollection->create(
+            $userGamesCollection = $serviceCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
                 $request->hours_played, $request->play_status
             );
+
+            // Trigger event
+            event(new GameCollectionAdded($userGamesCollection));
 
             return redirect(route('user.collection.list', ['listOption' => 'recently-added']));
 
@@ -329,6 +335,9 @@ class CollectionController extends Controller
 
         // Delete from collection
         $serviceCollection->delete($collectionItemId);
+
+        // Trigger event
+        event(new GameCollectionRemoved($collectionItem));
 
         $data = array(
             'status' => 'OK'

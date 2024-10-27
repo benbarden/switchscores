@@ -24,6 +24,11 @@ class UserGamesCollection extends Model
         return $this->hasOne('App\Models\Game', 'id', 'game_id');
     }
 
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
+
     public function getPlayStatus($statusId)
     {
         if (!$statusId) return null;

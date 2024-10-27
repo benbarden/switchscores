@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserCreated' => [
             'App\Listeners\PointsForUserRegistration'
         ],
+        'App\Events\GameCollectionAdded' => [
+            'App\Listeners\LogGameCollectionAdded'
+        ],
+        'App\Events\GameCollectionRemoved' => [
+            'App\Listeners\LogGameCollectionRemoved'
+        ],
     ];
 
     /**
