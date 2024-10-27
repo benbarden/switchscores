@@ -80,7 +80,6 @@ class UserController extends Controller
         $statsCollection = $this->getServiceUserGamesCollection()->getByUser($userId);
 
         $bindings['StatsQuickReviews'] = count($statsQuickReviews);
-        $bindings['StatsGameCategorySuggestions'] = $this->getServiceDbEditGame()->countApprovedCategoryEditsByUser($userId);
         $bindings['StatsCollection'] = count($statsCollection);
 
         return view('owner.user.view', $bindings);

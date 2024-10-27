@@ -8,7 +8,6 @@ use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
 use App\Services\DataSourceRawService;
-use App\Services\DbEditGameService;
 use App\Services\GameCalendarService;
 use App\Services\GameDeveloperService;
 use App\Services\GameImportRuleEshopService;
@@ -133,15 +132,6 @@ trait SwitchServices
     public function getServiceDataSourceRaw()
     {
         return $this->loadService('DataSourceRawService');
-    }
-
-    /**
-     * @deprecated
-     * @return DbEditGameService
-     */
-    public function getServiceDbEditGame()
-    {
-        return $this->loadService('DbEditGameService');
     }
 
     /**

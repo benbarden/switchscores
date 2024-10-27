@@ -21,11 +21,6 @@ class DataSourceParsedService
         return DataSourceParsed::find($itemId);
     }
 
-    public function getAllByGame($gameId)
-    {
-        return DataSourceParsed::where('game_id', $gameId)->get();
-    }
-
     public function getAllBySource($sourceId)
     {
         return DataSourceParsed::where('source_id', $sourceId)->orderBy('title', 'asc')->get();
@@ -103,12 +98,6 @@ class DataSourceParsedService
     }
 
     // ********** Nintendo.co.uk ********** //
-
-    public function getAllNintendoCoUk()
-    {
-        $sourceId = DataSource::DSID_NINTENDO_CO_UK;
-        return $this->getAllBySource($sourceId);
-    }
 
     public function getAllNintendoCoUkWithGameId()
     {
@@ -208,58 +197,10 @@ class DataSourceParsedService
 
     // ********** Wikipedia ********** //
 
-    public function getAllWikipedia()
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getAllBySource($sourceId);
-    }
-
     public function getAllWikipediaWithGameId()
     {
         $sourceId = DataSource::DSID_WIKIPEDIA;
         return $this->getAllBySourceWithGameId($sourceId);
-    }
-
-    public function getAllWikipediaWithNoGameId($excludeTitleList = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getAllBySourceWithNoGameId($sourceId, null, $excludeTitleList);
-    }
-
-    public function getWikipediaNoGameIdWithEUDate($excludeTitleList = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getBySourceNoGameIdWithEUDate($sourceId, null, $excludeTitleList);
-    }
-
-    public function getWikipediaNoGameIdNoEUDate($excludeTitleList = null)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getBySourceNoGameIdNoEUDate($sourceId, null, $excludeTitleList);
-    }
-
-    public function getAllWikipediaInTitleList($titleList)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-
-        $dsItemList = DataSourceParsed::where('source_id', $sourceId)
-            ->whereIn('title', $titleList)
-            ->orderBy('id', 'desc')
-            ->get();
-
-        return $dsItemList;
-    }
-
-    public function getSourceWikipediaForGame($gameId)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getBySourceAndGame($sourceId, $gameId);
-    }
-
-    public function getWikipediaByLinkId($linkId)
-    {
-        $sourceId = DataSource::DSID_WIKIPEDIA;
-        return $this->getBySourceAndLinkId($sourceId, $linkId);
     }
 
     // ********* NINTENDO.CO.UK API - Games on sale ************** //
