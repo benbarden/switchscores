@@ -2,9 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\ViewHelper\Bindings;
-use App\Services\ViewHelper\MemberBreadcrumbs;
-
 use App\Services\CampaignGameService;
 use App\Services\CategoryService;
 use App\Services\DataSourceService;
@@ -80,26 +77,6 @@ trait SwitchServices
             throw new \Exception('Failed to load service class: '.$serviceKey);
         }
         return $serviceName;
-    }
-
-    // ** Classes with hierarchy ** //
-
-    /**
-     * @deprecated
-     * @return Bindings
-     */
-    public function getServiceViewHelperBindings()
-    {
-        return $this->loadService("ViewHelper\\Bindings");
-    }
-
-    /**
-     * @deprecated
-     * @return MemberBreadcrumbs
-     */
-    public function getServiceViewHelperMemberBreadcrumbs()
-    {
-        return $this->loadService("ViewHelper\\MemberBreadcrumbs");
     }
 
     // ** Standard service classes ** //

@@ -12,6 +12,8 @@ class Member extends Base
         $this->toastedCrumbs['member.dashboard'] = ['url' => route('user.index'), 'text' => 'Members'];
 
         $this->toastedCrumbs['member.collection.landing'] = ['url' => route('user.collection.landing'), 'text' => 'Games collection'];
+
+        $this->toastedCrumbs['member.quickReviews.list'] = ['url' => route('user.quick-reviews.list'), 'text' => 'Quick reviews'];
     }
 
     public function topLevelPage($pageTitle)
@@ -24,6 +26,11 @@ class Member extends Base
     public function collectionSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['member.collection.landing'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function quickReviewsSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['member.quickReviews.list'])->addTitleAndReturn($pageTitle);
     }
 
 }

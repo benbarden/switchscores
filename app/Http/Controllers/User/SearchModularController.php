@@ -11,13 +11,11 @@ use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
 
-use App\Traits\MemberView;
 use App\Traits\SwitchServices;
 
 class SearchModularController extends Controller
 {
     use SwitchServices;
-    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -38,6 +36,10 @@ class SearchModularController extends Controller
 
     public function findGame($searchMode)
     {
+        $pageTitle = 'Find game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $allowedSearchModes = [
             'add-quick-review',
             'add-featured-game',
@@ -45,8 +47,6 @@ class SearchModularController extends Controller
         ];
 
         if (!in_array($searchMode, $allowedSearchModes)) abort(404);
-
-        $bindings = $this->getBindingsDashboardGenericSubpage('Find game');
 
         $request = request();
 

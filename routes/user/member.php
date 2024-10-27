@@ -35,9 +35,6 @@ Route::group(['middleware' => ['auth']], function() {
     // Campaigns
     Route::get('/user/campaigns/{campaignId}', 'User\CampaignsController@show')->name('user.campaigns.show');
 
-    // Games companies: Games list
-    Route::get('/user/games-list/{report}', 'User\GamesListController@landing')->name('user.games-list.landing');
-
     // Settings
     Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
 

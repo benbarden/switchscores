@@ -10,12 +10,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
-use App\Traits\MemberView;
 
 class QuickReviewController extends Controller
 {
     use SwitchServices;
-    use MemberView;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -35,7 +33,9 @@ class QuickReviewController extends Controller
 
     public function add($gameId)
     {
-        $bindings = $this->getBindingsQuickReviewsSubpage('Add quick review');
+        $pageTitle = 'Add quick review';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->quickReviewsSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -76,7 +76,9 @@ class QuickReviewController extends Controller
 
     public function showList()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Quick reviews');
+        $pageTitle = 'Quick reviews';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $urlMsg = \Request::get('msg');
 

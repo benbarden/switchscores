@@ -10,14 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
 
-use App\Traits\SwitchServices;
-use App\Traits\MemberView;
-
 class FeaturedGameController extends Controller
 {
-    use SwitchServices;
-    use MemberView;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -43,7 +37,9 @@ class FeaturedGameController extends Controller
 
     public function add($gameId)
     {
-        $bindings = $this->getBindingsFeaturedGamesSubpage('Add featured game');
+        $pageTitle = 'Add featured game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);

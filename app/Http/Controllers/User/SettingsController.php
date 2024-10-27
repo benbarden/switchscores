@@ -4,17 +4,13 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-use App\Traits\MemberView;
-
 class SettingsController extends Controller
 {
-    use SwitchServices;
-    use MemberView;
-
     public function show()
     {
-        $bindings = $this->getBindingsDashboardGenericSubpage('Settings');
+        $pageTitle = 'Settings';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         return view('user.settings', $bindings);
     }
