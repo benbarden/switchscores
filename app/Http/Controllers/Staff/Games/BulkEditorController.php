@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Validator;
+
 use App\Construction\Game\GameBuilder;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Url\LinkTitle as LinkTitleGenerator;
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 
 use App\Traits\SwitchServices;
 
 use App\Factories\GameDirectorFactory;
-
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\GameLists\Repository as GameListsRepository;
-use Illuminate\Support\Facades\Validator;
 
 class BulkEditorController extends Controller
 {
@@ -33,31 +34,17 @@ class BulkEditorController extends Controller
     private $validationRules = [
     ];
 
-    private $repoGameTitleHash;
-    private $gameTitleHashGenerator;
-    private $gameQualityFilter;
-    private $repoGame;
-    private $repoGameLists;
-    private $repoGamesCompany;
-    private $linkTitleGenerator;
-
     public function __construct(
-        GameTitleHashRepository $repoGameTitleHash,
-        HashGeneratorRepository $gameTitleHashGenerator,
-        GameQualityFilter $gameQualityFilter,
-        GameRepository $repoGame,
-        GameListsRepository $repoGameLists,
-        GamesCompanyRepository $repoGamesCompany,
-        LinkTitleGenerator $linkTitleGenerator
+        private GameTitleHashRepository $repoGameTitleHash,
+        private HashGeneratorRepository $gameTitleHashGenerator,
+        private GameQualityFilter $gameQualityFilter,
+        private GameRepository $repoGame,
+        private GameListsRepository $repoGameLists,
+        private GamesCompanyRepository $repoGamesCompany,
+        private LinkTitleGenerator $linkTitleGenerator,
+        private GamePublisherRepository $repoGamePublisher
     )
     {
-        $this->repoGameTitleHash = $repoGameTitleHash;
-        $this->gameTitleHashGenerator = $gameTitleHashGenerator;
-        $this->gameQualityFilter = $gameQualityFilter;
-        $this->repoGame = $repoGame;
-        $this->repoGameLists = $repoGameLists;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->linkTitleGenerator = $linkTitleGenerator;
     }
 
     public function eshopUpcomingCrosscheck()
@@ -188,7 +175,7 @@ class BulkEditorController extends Controller
                             $publisherId = $postData['publisher_id_'.$i];
                             $gamesCompany = $this->repoGamesCompany->find($publisherId);
                             if ($gamesCompany) {
-                                $this->getServiceGamePublisher()->createGamePublisher($gameId, $publisherId);
+                                $this->repoGamePublisher->create($gameId, $publisherId);
                                 $this->gameQualityFilter->updateGame($game, $gamesCompany);
                             }
                         }
@@ -199,16 +186,6 @@ class BulkEditorController extends Controller
 
                 $errorsUrl = implode("|", $errorTitles);
                 return redirect(route('staff.games.bulk-add.complete', ['errors' => $errorsUrl]));
-
-                /*
-                if ($validator) {
-                    if ($validator->fails()) {
-                        return redirect(route('staff.games.bulk-add.add'))
-                            ->withErrors($validator)
-                            ->withInput();
-                    }
-                }
-                */
 
             }
 

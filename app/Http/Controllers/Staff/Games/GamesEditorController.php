@@ -22,11 +22,14 @@ use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\News\Repository as NewsRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
 use App\Models\Game;
+
 use App\Services\Game\Images as GameImages;
 
 use App\Traits\SwitchServices;
@@ -58,7 +61,9 @@ class GamesEditorController extends Controller
         private GameRepository $repoGame,
         private GameQualityFilter $gameQualityFilter,
         private GamesCompanyRepository $repoGamesCompany,
-        private NewsRepository $repoNews
+        private NewsRepository $repoNews,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
     }
@@ -117,7 +122,7 @@ class GamesEditorController extends Controller
                 $publisherId = $request->publisher_id;
                 $gamesCompany = $this->repoGamesCompany->find($publisherId);
                 if ($gamesCompany) {
-                    $this->getServiceGamePublisher()->createGamePublisher($gameId, $request->publisher_id);
+                    $this->repoGamePublisher->create($gameId, $request->publisher_id);
                     $this->gameQualityFilter->updateGame($game, $gamesCompany);
                 }
             }
@@ -318,19 +323,6 @@ class GamesEditorController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        // Core
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-
-        // Categorisation
-        $serviceGameTag = $this->getServiceGameTag();
-
-        // Validation
-        $serviceReviewLink = $this->getServiceReviewLink();
-
-        // Deletion
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
@@ -344,7 +336,7 @@ class GamesEditorController extends Controller
             $customErrors[] = 'Game is linked to '.count($gameNews).' news article(s)';
         }
 
-        $gameReviews = $serviceReviewLink->getByGame($gameId);
+        $gameReviews = $this->getServiceReviewLink()->getByGame($gameId);
         if (count($gameReviews) > 0) {
             $customErrors[] = 'Game is linked to '.count($gameReviews).' review(s)';
         }
@@ -353,10 +345,10 @@ class GamesEditorController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $serviceGameTitleHash->deleteByGameId($gameId);
-            $serviceGameTag->deleteGameTags($gameId);
-            $serviceGameDeveloper->deleteByGameId($gameId);
-            $serviceGamePublisher->deleteByGameId($gameId);
+            $this->getServiceGameTitleHash()->deleteByGameId($gameId);
+            $this->getServiceGameTag()->deleteGameTags($gameId);
+            $this->repoGameDeveloper->deleteByGameId($gameId);
+            $this->repoGamePublisher->deleteByGameId($gameId);
             // Game import rule cleanup
             $this->getServiceGameImportRuleEshop()->deleteByGameId($gameId);
             // Image cleanup

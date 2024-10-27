@@ -9,9 +9,7 @@ use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
 use App\Services\DataSourceRawService;
 use App\Services\GameCalendarService;
-use App\Services\GameDeveloperService;
 use App\Services\GameImportRuleEshopService;
-use App\Services\GamePublisherService;
 use App\Services\GameRankYearService;
 use App\Services\GameRankYearMonthService;
 use App\Services\GameService;
@@ -144,29 +142,11 @@ trait SwitchServices
 
     /**
      * @deprecated
-     * @return GameDeveloperService
-     */
-    public function getServiceGameDeveloper()
-    {
-        return $this->loadService('GameDeveloperService');
-    }
-
-    /**
-     * @deprecated
      * @return GameImportRuleEshopService
      */
     public function getServiceGameImportRuleEshop()
     {
         return $this->loadService('GameImportRuleEshopService');
-    }
-
-    /**
-     * @deprecated
-     * @return GamePublisherService
-     */
-    public function getServiceGamePublisher()
-    {
-        return $this->loadService('GamePublisherService');
     }
 
     /**

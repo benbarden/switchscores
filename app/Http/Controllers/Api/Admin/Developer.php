@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 
 class Developer
 {
-    use SwitchServices;
-
-    protected $repoGamesCompany;
-
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany
+        private GameRepository $repoGame,
+        private GamesCompanyRepository $repoGamesCompany,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function addGameDeveloper()
@@ -33,11 +30,8 @@ class Developer
             return response()->json(['error' => 'Missing data: developerId'], 400);
         }
 
-        $serviceGame = $this->getServiceGame();
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-
         // Validation
-        $game = $serviceGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
@@ -47,12 +41,12 @@ class Developer
             return response()->json(['error' => 'Developer not found: '.$developerId], 400);
         }
 
-        if ($serviceGameDeveloper->gameHasDeveloper($gameId, $developerId)) {
+        if ($this->repoGameDeveloper->gameHasDeveloper($gameId, $developerId)) {
             return response()->json(['error' => 'Game already linked to developer'], 400);
         }
 
         // All OK - add to game
-        $serviceGameDeveloper->createGameDeveloper($gameId, $developerId);
+        $this->repoGameDeveloper->create($gameId, $developerId);
 
         return response()->json(['message' => 'Success'], 200);
     }

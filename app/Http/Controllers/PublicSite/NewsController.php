@@ -4,7 +4,9 @@ namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameCalendar\AllowedDates;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
@@ -23,34 +25,19 @@ class NewsController extends Controller
 {
     use SwitchServices;
 
-    private $repoFeaturedGames;
-    private $repoGameLists;
-    private $repoGameStats;
-    private $allowedDates;
-    private $viewBreadcrumbs;
-    private $repoNewsDbUpdate;
-    private $repoNews;
-    private $repoNewsCategory;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameListsRepository $repoGameLists,
-        GameStatsRepository $repoGameStats,
-        AllowedDates $allowedDates,
-        Breadcrumbs $viewBreadcrumbs,
-        NewsDbUpdateRepository $repoNewsDbUpdate,
-        NewsRepository $repoNews,
-        NewsCategoryRepository $repoNewsCategory
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameListsRepository $repoGameLists,
+        private GameStatsRepository $repoGameStats,
+        private AllowedDates $allowedDates,
+        private Breadcrumbs $viewBreadcrumbs,
+        private NewsDbUpdateRepository $repoNewsDbUpdate,
+        private NewsRepository $repoNews,
+        private NewsCategoryRepository $repoNewsCategory,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameLists = $repoGameLists;
-        $this->repoGameStats = $repoGameStats;
-        $this->allowedDates = $allowedDates;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->repoNewsDbUpdate = $repoNewsDbUpdate;
-        $this->repoNews = $repoNews;
-        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function landing()
@@ -197,8 +184,8 @@ class NewsController extends Controller
         // Game details
         if ($newsItem->game_id) {
             $gameId = $newsItem->game_id;
-            $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
-            $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+            $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
+            $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
             $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
         }
 

@@ -6,23 +6,18 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
+use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 
 class IndexController extends Controller
 {
-    use SwitchServices;
-
-    protected $repoGamesCompany;
-    protected $repoReviewSite;
-
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany,
-        ReviewSiteRepository $repoReviewSite
+        private GamesCompanyRepository $repoGamesCompany,
+        private ReviewSiteRepository $repoReviewSite,
+        private GamePublisherDbQueries $dbGamePublisher,
+        private GameDeveloperDbQueries $dbGameDeveloper
     )
     {
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function show()
@@ -35,8 +30,8 @@ class IndexController extends Controller
         $partnerId = $currentUser->games_company_id;
         $partnerData = $currentUser->gamesCompany;
 
-        $gameDevList = $this->getServiceGameDeveloper()->getGamesByDeveloper($partnerId, false);
-        $gamePubList = $this->getServiceGamePublisher()->getGamesByPublisher($partnerId, false);
+        $gameDevList = $this->dbGameDeveloper->getGamesByDeveloper($partnerId, false);
+        $gamePubList = $this->dbGamePublisher->getGamesByPublisher($partnerId, false);
 
         $mergedGameList = $this->repoGamesCompany->getMergedGameList($gameDevList, $gamePubList);
 

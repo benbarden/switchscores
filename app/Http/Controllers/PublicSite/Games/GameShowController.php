@@ -4,7 +4,9 @@ namespace App\Http\Controllers\PublicSite\Games;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
@@ -23,7 +25,9 @@ class GameShowController extends Controller
         private GameListsRepository $repoGameLists,
         private GameStatsRepository $repoGameStats,
         private NewsRepository $repoNews,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
     }
@@ -56,8 +60,8 @@ class GameShowController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
         $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
-        $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
-        $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+        $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
+        $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
 
         // Video

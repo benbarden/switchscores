@@ -10,6 +10,8 @@ use App\Factories\GamesCompanyFactory;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 
 use App\Traits\SwitchServices;
 
@@ -17,26 +19,18 @@ class GamesPartnerController extends Controller
 {
     use SwitchServices;
 
-    private $repoGame;
-    private $gameQualityFilter;
-    private $repoGamesCompany;
-
     public function __construct(
-        GameRepository $repoGame,
-        GameQualityFilter $gameQualityFilter,
-        GamesCompanyRepository $repoGamesCompany
+        private GameRepository $repoGame,
+        private GameQualityFilter $gameQualityFilter,
+        private GamesCompanyRepository $repoGamesCompany,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
-        $this->repoGame = $repoGame;
-        $this->gameQualityFilter = $gameQualityFilter;
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function showGamePartners($gameId)
     {
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
@@ -49,10 +43,8 @@ class GamesPartnerController extends Controller
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
-        $bindings['GameDeveloperList'] = $serviceGameDeveloper->getByGame($gameId);
-        $bindings['GamePublisherList'] = $serviceGamePublisher->getByGame($gameId);
-        //$bindings['UnusedPublisherList'] = $serviceGamePublisher->getPublishersNotOnGame($gameId);
-        //$bindings['UnusedDeveloperList'] = $serviceGameDeveloper->getDevelopersNotOnGame($gameId);
+        $bindings['GameDeveloperList'] = $this->repoGameDeveloper->byGame($gameId);
+        $bindings['GamePublisherList'] = $this->repoGamePublisher->byGame($gameId);
 
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
 
@@ -61,8 +53,6 @@ class GamesPartnerController extends Controller
 
     public function addGameDeveloper()
     {
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-
         $currentUser = resolve('User/Repository')->currentUser();
         if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
@@ -90,12 +80,12 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Developer not found!'], 400);
         }
 
-        $existingGameDeveloper = $serviceGameDeveloper->gameHasDeveloper($gameId, $developerId);
+        $existingGameDeveloper = $this->repoGameDeveloper->gameHasDeveloper($gameId, $developerId);
         if ($existingGameDeveloper) {
             return response()->json(['error' => 'Game already has this developer!'], 400);
         }
 
-        $serviceGameDeveloper->createGameDeveloper($gameId, $developerId);
+        $this->repoGameDeveloper->create($gameId, $developerId);
 
         $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
@@ -107,8 +97,6 @@ class GamesPartnerController extends Controller
 
     public function removeGameDeveloper()
     {
-        $serviceGameDeveloper = $this->getServiceGameDeveloper();
-
         $currentUser = resolve('User/Repository')->currentUser();
         if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
@@ -122,7 +110,7 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Missing data: gameDeveloperId'], 400);
         }
 
-        $gameDeveloperData = $serviceGameDeveloper->find($gameDeveloperId);
+        $gameDeveloperData = $this->repoGameDeveloper->find($gameDeveloperId);
         if (!$gameDeveloperData) {
             return response()->json(['error' => 'Game developer not found!'], 400);
         }
@@ -131,7 +119,7 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Game id mismatch on game developer record!'], 400);
         }
 
-        $serviceGameDeveloper->delete($gameDeveloperId);
+        $this->repoGameDeveloper->delete($gameDeveloperId);
 
         $data = array(
             'status' => 'OK'
@@ -141,8 +129,6 @@ class GamesPartnerController extends Controller
 
     public function addGamePublisher()
     {
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-
         $currentUser = resolve('User/Repository')->currentUser();
         if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
@@ -170,12 +156,12 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Publisher not found!'], 400);
         }
 
-        $existingGamePublisher = $serviceGamePublisher->gameHasPublisher($gameId, $publisherId);
+        $existingGamePublisher = $this->repoGamePublisher->gameHasPublisher($gameId, $publisherId);
         if ($existingGamePublisher) {
             return response()->json(['error' => 'Game already has this publisher!'], 400);
         }
 
-        $serviceGamePublisher->createGamePublisher($gameId, $publisherId);
+        $this->repoGamePublisher->create($gameId, $publisherId);
 
         $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
@@ -187,8 +173,6 @@ class GamesPartnerController extends Controller
 
     public function removeGamePublisher()
     {
-        $serviceGamePublisher = $this->getServiceGamePublisher();
-
         $currentUser = resolve('User/Repository')->currentUser();
         if (!$currentUser) {
             return response()->json(['error' => 'Cannot find user!'], 400);
@@ -202,7 +186,7 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Missing data: gamePublisherId'], 400);
         }
 
-        $gamePublisherData = $serviceGamePublisher->find($gamePublisherId);
+        $gamePublisherData = $this->repoGamePublisher->find($gamePublisherId);
         if (!$gamePublisherData) {
             return response()->json(['error' => 'Game publisher not found!'], 400);
         }
@@ -211,7 +195,7 @@ class GamesPartnerController extends Controller
             return response()->json(['error' => 'Game id mismatch on game publisher record!'], 400);
         }
 
-        $serviceGamePublisher->delete($gamePublisherId);
+        $this->repoGamePublisher->delete($gamePublisherId);
 
         $data = array(
             'status' => 'OK'
@@ -261,10 +245,9 @@ class GamesPartnerController extends Controller
             $game = $this->repoGame->find($gameId);
             $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
             if ($gamesCompany) {
-                $serviceGamePublisher = $this->getServiceGamePublisher();
-                $existingGamePublisher = $serviceGamePublisher->gameHasPublisher($gameId, $gamesCompanyId);
+                $existingGamePublisher = $this->repoGamePublisher->gameHasPublisher($gameId, $gamesCompanyId);
                 if (!$existingGamePublisher) {
-                    $serviceGamePublisher->createGamePublisher($gameId, $gamesCompanyId);
+                    $this->repoGamePublisher->create($gameId, $gamesCompanyId);
                     $this->gameQualityFilter->updateGame($game, $gamesCompany);
                 }
             }

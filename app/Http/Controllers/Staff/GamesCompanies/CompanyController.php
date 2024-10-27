@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Staff\GamesCompanies;
 
 use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
+use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
@@ -21,11 +25,6 @@ class CompanyController extends Controller
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $gameQualityFilter;
-    private $repoGamesCompany;
-    private $statsGamesCompany;
-    private $repoPartnerOutreach;
-
     /**
      * @var array
      */
@@ -35,16 +34,16 @@ class CompanyController extends Controller
     ];
 
     public function __construct(
-        GameQualityFilter $gameQualityFilter,
-        GamesCompanyRepository $repoGamesCompany,
-        GamesCompanyStats $statsGamesCompany,
-        PartnerOutreachRepository $repoPartnerOutreach
+        private GameQualityFilter $gameQualityFilter,
+        private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyStats $statsGamesCompany,
+        private PartnerOutreachRepository $repoPartnerOutreach,
+        private GamePublisherRepository $repoGamePublisher,
+        private GamePublisherDbQueries $dbGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper,
+        private GameDeveloperDbQueries $dbGameDeveloper
     )
     {
-        $this->gameQualityFilter = $gameQualityFilter;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->statsGamesCompany = $statsGamesCompany;
-        $this->repoPartnerOutreach = $repoPartnerOutreach;
     }
 
     public function show(GamesCompany $gamesCompany)
@@ -55,8 +54,8 @@ class CompanyController extends Controller
 
         $gamesCompanyId = $gamesCompany->id;
 
-        $gameDevList = $this->getServiceGameDeveloper()->getGamesByDeveloper($gamesCompanyId, false);
-        $gamePubList = $this->getServiceGamePublisher()->getGamesByPublisher($gamesCompanyId, false);
+        $gameDevList = $this->dbGameDeveloper->getGamesByDeveloper($gamesCompanyId, false);
+        $gamePubList = $this->dbGamePublisher->getGamesByPublisher($gamesCompanyId, false);
 
         $mergedGameList = $this->repoGamesCompany->getMergedGameList($gameDevList, $gamePubList);
 
@@ -167,11 +166,11 @@ class CompanyController extends Controller
         $request = request();
 
         // Validation: check for any reason we should not allow the record to be deleted.
-        $gameDevelopers = $this->getServiceGameDeveloper()->getByDeveloperId($gamesCompanyId);
+        $gameDevelopers = $this->repoGameDeveloper->byDeveloperId($gamesCompanyId);
         if (count($gameDevelopers) > 0) {
             $customErrors[] = 'Games company is marked as the developer for '.count($gameDevelopers).' game(s)';
         }
-        $gamePublishers = $this->getServiceGamePublisher()->getByPublisherId($gamesCompanyId);
+        $gamePublishers = $this->repoGamePublisher->byPublisherId($gamesCompanyId);
         if (count($gamePublishers) > 0) {
             $customErrors[] = 'Games company is marked as the publisher for '.count($gamePublishers).' game(s)';
         }

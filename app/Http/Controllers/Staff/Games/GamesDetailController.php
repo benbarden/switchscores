@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
-use App\Models\Game;
-use App\Services\DataSources\Queries\Differences;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
+
+use App\Models\Game;
+
+use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
+
+use App\Services\DataSources\Queries\Differences;
 
 use App\Traits\SwitchServices;
 
@@ -20,25 +25,16 @@ class GamesDetailController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGame;
-    protected $repoAudit;
-    protected $repoFeaturedGames;
-    protected $repoGameStats;
-    protected $repoDataSource;
-
     public function __construct(
-        GameRepository $repoGame,
-        AuditRepository $repoAudit,
-        FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats,
-        DataSourceRepository $repoDataSource
+        private GameRepository $repoGame,
+        private AuditRepository $repoAudit,
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameStatsRepository $repoGameStats,
+        private DataSourceRepository $repoDataSource,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameDeveloperRepository $repoGameDeveloper
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoAudit = $repoAudit;
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameStats = $repoGameStats;
-        $this->repoDataSource = $repoDataSource;
     }
 
     public function show($gameId)
@@ -82,8 +78,8 @@ class GamesDetailController extends Controller
         $bindings['GameData'] = $game;
         $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
         $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
-        $bindings['GameDevelopers'] = $this->getServiceGameDeveloper()->getByGame($gameId);
-        $bindings['GamePublishers'] = $this->getServiceGamePublisher()->getByGame($gameId);
+        $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
+        $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
         $bindings['GameTitleHashes'] = $this->getServiceGameTitleHash()->getByGameId($gameId);
 
