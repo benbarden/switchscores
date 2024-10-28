@@ -19,7 +19,9 @@ class DbQueries
         $games = DB::table('games')
             ->join('game_developers', 'games.id', '=', 'game_developers.game_id')
             ->join('games_companies', 'game_developers.developer_id', '=', 'games_companies.id')
+            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
             ->select('games.*',
+                'categories.name AS category_name',
                 'game_developers.developer_id',
                 'games_companies.name',
                 'games.eu_release_date')

@@ -56,7 +56,7 @@
                     <td>
                         {% if item.gamePublishers|length > 0 %}
                             {% for item in item.gamePublishers %}
-                                <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}" tabindex="-1">
+                                <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
                                     {{ item.publisher.name }}
                                 </a>
                                 <br>

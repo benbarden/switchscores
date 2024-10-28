@@ -217,6 +217,7 @@
             <table class="table table-responsive">
                 <tr>
                     <th>Game</th>
+                    <th class="text-center">Category</th>
                     <th class="text-center">Involvement</th>
                     <th class="text-center">Release date</th>
                     <th class="text-center">Released?</th>
@@ -236,6 +237,13 @@
                     <tr>
                         <td>
                             {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.category_name %}
+                            {{ item.category_name }}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td class="text-center">{{ ExtraDetailLine }}</td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
