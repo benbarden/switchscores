@@ -9,6 +9,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Category\Blurb as CategoryBlurb;
+
 use App\Traits\SwitchServices;
 
 class CategoryController extends Controller
@@ -25,13 +28,21 @@ class CategoryController extends Controller
         'link_title' => 'required',
     ];
 
+    public function __construct(
+        private CategoryRepository $repoCategory,
+        private CategoryBlurb $blurbCategory
+    )
+    {
+
+    }
+
     public function showList()
     {
         $pageTitle = 'Categories';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAll();
+        $bindings['CategoryList'] = $this->repoCategory->getAll();
 
         return view('staff.categorisation.category.list', $bindings);
     }
@@ -56,7 +67,7 @@ class CategoryController extends Controller
                     ->withInput();
             }
 
-            $existingCategory = $this->getServiceCategory()->getByName($request->name);
+            $existingCategory = $this->repoCategory->getByName($request->name);
 
             $validator->after(function ($validator) use ($existingCategory) {
                 // Check for duplicates
@@ -72,7 +83,7 @@ class CategoryController extends Controller
             }
 
             // All ok
-            $this->getServiceCategory()->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->repoCategory->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -84,8 +95,8 @@ class CategoryController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
-        $bindings['BlurbOptionList'] = $this->getServiceCategory()->getBlurbOptions();
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+        $bindings['BlurbOptionList'] = $this->blurbCategory->getOptions();
 
         return view('staff.categorisation.category.add', $bindings);
     }
@@ -96,7 +107,7 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $categoryData = $this->getServiceCategory()->find($categoryId);
+        $categoryData = $this->repoCategory->find($categoryId);
         if (!$categoryData) abort(404);
 
         $request = request();
@@ -107,7 +118,7 @@ class CategoryController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->getServiceCategory()->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->repoCategory->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -120,8 +131,8 @@ class CategoryController extends Controller
         $bindings['CategoryData'] = $categoryData;
         $bindings['CategoryId'] = $categoryId;
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
-        $bindings['BlurbOptionList'] = $this->getServiceCategory()->getBlurbOptions();
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+        $bindings['BlurbOptionList'] = $this->blurbCategory->getOptions();
 
         return view('staff.categorisation.category.edit', $bindings);
     }
@@ -132,7 +143,7 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $categoryData = $this->getServiceCategory()->find($categoryId);
+        $categoryData = $this->repoCategory->find($categoryId);
         if (!$categoryData) abort(404);
 
         $request = request();
@@ -141,7 +152,7 @@ class CategoryController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $this->getServiceCategory()->delete($categoryId);
+            $this->repoCategory->delete($categoryId);
 
             // Done
 

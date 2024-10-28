@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    const BLURB_NONE = 0;
+    const BLURB_A_XX_GAME = 1;
+    const BLURB_AN_XX_GAME = 2;
+    const BLURB_A_XX = 3;
+    const BLURB_AN_XX = 4;
+    const BLURB_INVOLVES_XX = 5;
+
     /**
      * @var string
      */

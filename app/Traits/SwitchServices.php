@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use App\Services\CampaignGameService;
-use App\Services\CategoryService;
 use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
@@ -84,15 +83,6 @@ trait SwitchServices
     public function getServiceCampaignGame()
     {
         return $this->loadService('CampaignGameService');
-    }
-
-    /**
-     * @deprecated
-     * @return CategoryService
-     */
-    public function getServiceCategory()
-    {
-        return $this->loadService('CategoryService');
     }
 
     /**

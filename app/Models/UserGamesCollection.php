@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\GamesCollection\PlayStatus;
+use App\Domain\UserGamesCollection\PlayStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class UserGamesCollection extends Model

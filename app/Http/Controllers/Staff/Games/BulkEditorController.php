@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use App\Domain\Category\Repository as CategoryRepository;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,6 +36,7 @@ class BulkEditorController extends Controller
     ];
 
     public function __construct(
+        private CategoryRepository $repoCategory,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator,
         private GameQualityFilter $gameQualityFilter,
@@ -300,16 +302,7 @@ class BulkEditorController extends Controller
         $bindings['EditMode'] = $editMode;
         $bindings['GameList'] = $gameList;
 
-        $bindings['CategoryList'] = $this->getServiceCategory()->getAllWithoutParents();
-
-        /*
-        $bindings['GameSeriesList'] = $this->getServiceGameSeries()->getAll();
-
-        $bindings['FormatDigitalList'] = $this->getServiceGame()->getFormatOptionsDigital();
-        $bindings['FormatPhysicalList'] = $this->getServiceGame()->getFormatOptionsPhysical();
-        $bindings['FormatDLCList'] = $this->getServiceGame()->getFormatOptionsDLC();
-        $bindings['FormatDemoList'] = $this->getServiceGame()->getFormatOptionsDemo();
-        */
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
 
         return view('staff.games.bulk-edit.edit-list', $bindings);
     }

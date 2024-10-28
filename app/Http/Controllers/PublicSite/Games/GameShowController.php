@@ -10,6 +10,7 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\Game\AutoDescription;
 
 use App\Traits\SwitchServices;
 
@@ -27,7 +28,8 @@ class GameShowController extends Controller
         private NewsRepository $repoNews,
         private Breadcrumbs $viewBreadcrumbs,
         private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper
+        private GameDeveloperRepository $repoGameDeveloper,
+        private AutoDescription $autoDescription
     )
     {
     }
@@ -134,92 +136,9 @@ class GameShowController extends Controller
         }
 
         // Game blurb
-        $blurb = '';
-
-        if ($gameData->category) {
-
-            if ($gameData->category->blurb_option) {
-
-                $categoryBlurb = $this->getServiceCategory()->parseBlurbOption($gameData->category);
-
-            } else {
-
-                $categoryBlurb = 'a game for the Nintendo Switch';
-
-            }
-
-            if ($gameData->isDigitalDelisted()) {
-
-                $blurb .= '<strong>' . $gameData->title . '</strong> is ' . $categoryBlurb .
-                    '. It has been <strong>de-listed</strong> from the eShop. ';
-
-            } else {
-
-                $blurb .= '<strong>' . $gameData->title . '</strong> is ' . $categoryBlurb . '. ';
-
-            }
-
-        } elseif ($gameData->isDigitalDelisted()) {
-
-            $blurb .= '<strong>'.$gameData->title.'</strong> is a game for the Nintendo Switch' .
-                '. It has been <strong>de-listed</strong> from the eShop. ';
-
-        } elseif ($gameData->eu_is_released == 1) {
-
-            $blurb .= '<strong>'.$gameData->title.'</strong> is currently uncategorised. (Help us out!) ';
-
-        } else {
-
-            $blurb .= '<strong>'.$gameData->title.'</strong> is an upcoming game for the Nintendo Switch. ';
-
-        }
-
-        if ($gameData->isDigitalDelisted()) {
-
-            $blurb .= 'De-listed games are no longer included in our site rankings.';
-
-        } else {
-
-            if ($gameData->game_rank) {
-
-                $blurb .= 'It is ranked #'.$gameData->game_rank.' on the all-time Top Rated Switch games, '.
-                    'with a total of '.$gameData->review_count.' reviews and an average score of '.$gameData->rating_avg.'. ';
-
-            } elseif ($gameData->eu_is_released == 1) {
-
-                // If the game has no reviews but isn't released, this part can be ignored
-                switch ($gameData->review_count) {
-                    case 0:
-                        $blurb .= 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
-                        break;
-                    case 1:
-                        $blurb .= 'As it only has 1 review, it is currently unranked. We need 2 more reviews to give the game a rank. ';
-                        break;
-                    case 2:
-                        $blurb .= 'As it only has 2 reviews, it is currently unranked. We need 1 more review to give the game a rank. ';
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-
-        }
-
-        if ($gameData->series_id) {
-
-            $blurb .= 'It is part of the '.$gameData->series->series.' series. ';
-
-        }
-
-        if ($gameData->collection_id) {
-
-            $blurb .= 'It is part of the '.$gameData->gameCollection->name.' collection. ';
-
-        }
-
-        $bindings['GameBlurb'] = $blurb;
-        $bindings['MetaDescription'] = strip_tags($blurb);
+        $autoDescription = $this->autoDescription->generate($gameData);
+        $bindings['GameBlurb'] = $autoDescription;
+        $bindings['MetaDescription'] = strip_tags($autoDescription);
 
         return view('public.games.page.show', $bindings);
     }

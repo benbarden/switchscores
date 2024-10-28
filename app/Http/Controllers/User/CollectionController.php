@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Category\DbQueries as CategoryDbQueries;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Domain\UserGamesCollection\PlayStatus as UserGamesCollectionPlayStatus;
 use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
 use App\Domain\UserGamesCollection\CollectionStatsRepository;
 
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
 
-use App\Services\GamesCollection\PlayStatus;
 use App\Services\UserGamesCollectionService;
 
 use App\Traits\SwitchServices;
@@ -37,8 +39,11 @@ class CollectionController extends Controller
 
     public function __construct(
         private GameRepository $repoGame,
+        private CategoryRepository $repoCategory,
+        private CategoryDbQueries $dbCategory,
         private UserGamesCollectionService $serviceUserGamesCollection,
         private UserGamesCollectionRepository $repoUserGamesCollection,
+        private UserGamesCollectionPlayStatus $ugcPlayStatus,
         private UserGamesCollectionDbQueries $dbUserGamesCollection,
         private CollectionStatsRepository $repoCollectionStats
     )
@@ -51,8 +56,6 @@ class CollectionController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $serviceCollectionPlayStatus = new PlayStatus();
-
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
         $bindings['UserId'] = $userId;
@@ -62,7 +65,7 @@ class CollectionController extends Controller
 
         $bindings['CollectionStats'] = $this->repoCollectionStats->userStats($userId);
 
-        $playStatusList = $serviceCollectionPlayStatus->generateAll();
+        $playStatusList = $this->ugcPlayStatus->generateAll();
 
         $userPlayStatusList = [];
 
@@ -116,7 +119,7 @@ class CollectionController extends Controller
 
     public function topRatedByCategory($categoryId)
     {
-        $category = $this->getServiceCategory()->find($categoryId);
+        $category = $this->repoCategory->find($categoryId);
         if (!$category) abort(404);
 
         $currentUser = resolve('User/Repository')->currentUser();
@@ -127,7 +130,7 @@ class CollectionController extends Controller
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['Category'] = $category;
-        $bindings['RankedGameList'] = $this->getServiceCategory()->getRankedByCategory($category->id);
+        $bindings['RankedGameList'] = $this->dbCategory->getRankedByCategory($category->id);
         $bindings['OwnedGamedIdList'] = $this->getServiceUserGamesCollection()->getGameIdsByUser($userId);
 
         return view('user.collection.top-rated-by-category', $bindings);
@@ -140,11 +143,11 @@ class CollectionController extends Controller
         $tableSort = '[4, "desc"]';
 
         switch ($listOption) {
-            case PlayStatus::PLAY_STATUS_NOT_STARTED:
+            case UserGamesCollectionPlayStatus::PLAY_STATUS_NOT_STARTED:
                 $pageTitle = 'Not started';
                 $collectionList = $this->repoUserGamesCollection->byUserNotStarted($userId);
                 break;
-            case PlayStatus::PLAY_STATUS_PAUSED:
+            case UserGamesCollectionPlayStatus::PLAY_STATUS_PAUSED:
                 $pageTitle = 'Paused';
                 $collectionList = $this->repoUserGamesCollection->byUserPaused($userId);
                 break;
@@ -154,15 +157,15 @@ class CollectionController extends Controller
                 $collectionReplaying = $this->repoUserGamesCollection->byUserReplaying($userId);
                 $collectionList = $collectionNowPlaying->merge($collectionReplaying);
                 break;
-            case PlayStatus::PLAY_STATUS_COMPLETED:
+            case UserGamesCollectionPlayStatus::PLAY_STATUS_COMPLETED:
                 $pageTitle = 'Completed';
                 $collectionList = $this->repoUserGamesCollection->byUserCompleted($userId);
                 break;
-            case PlayStatus::PLAY_STATUS_ABANDONED:
+            case UserGamesCollectionPlayStatus::PLAY_STATUS_ABANDONED:
                 $pageTitle = 'Abandoned';
                 $collectionList = $this->repoUserGamesCollection->byUserAbandoned($userId);
                 break;
-            case PlayStatus::PLAY_STATUS_ENDLESS:
+            case UserGamesCollectionPlayStatus::PLAY_STATUS_ENDLESS:
                 $pageTitle = 'Endless';
                 $collectionList = $this->repoUserGamesCollection->byUserEndless($userId);
                 break;
@@ -193,9 +196,7 @@ class CollectionController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $serviceGame = $this->getServiceGame();
         $serviceCollection = $this->getServiceUserGamesCollection();
-        $serviceCollectionPlayStatus = new PlayStatus();
 
         $request = request();
 
@@ -235,8 +236,7 @@ class CollectionController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        //$bindings['GamesList'] = $serviceGame->getAll();
-        $bindings['PlayStatusList'] = $serviceCollectionPlayStatus->generateAll();
+        $bindings['PlayStatusList'] = $this->ugcPlayStatus->generateAll();
 
         $urlGameId = $request->gameId;
         if ($urlGameId) {
@@ -258,7 +258,6 @@ class CollectionController extends Controller
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $serviceCollection = $this->getServiceUserGamesCollection();
-        $serviceCollectionPlayStatus = new PlayStatus();
 
         $request = request();
 
@@ -292,7 +291,7 @@ class CollectionController extends Controller
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 
-        $bindings['PlayStatusList'] = $serviceCollectionPlayStatus->generateAll();
+        $bindings['PlayStatusList'] = $this->ugcPlayStatus->generateAll();
 
         return view('user.collection.edit', $bindings);
     }

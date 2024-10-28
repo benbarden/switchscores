@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
+use App\Domain\Category\Repository as CategoryRepository;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Construction\GameImportRule\EshopBuilder;
@@ -14,6 +15,13 @@ use App\Traits\SwitchServices;
 class DifferencesController extends Controller
 {
     use SwitchServices;
+
+    public function __construct(
+        private CategoryRepository $repoCategory
+    )
+    {
+
+    }
 
     public function getCategoryId($genresJson)
     {
@@ -51,7 +59,7 @@ class DifferencesController extends Controller
             }
         }
 
-        $category = $this->getServiceCategory()->getByName($categoryName);
+        $category = $this->repoCategory->getByName($categoryName);
         if (!$category) {
             throw new \Exception('Cannot auto-match this genre combination to a category.');
         }

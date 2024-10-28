@@ -8,6 +8,34 @@ use App\Models\Game;
 
 class Repository
 {
+    public function create($name, $linkTitle, $blurbOption, $parentId = null)
+    {
+        Category::create([
+            'name' => $name,
+            'link_title' => $linkTitle,
+            'blurb_option' => $blurbOption,
+            'parent_id' => $parentId,
+        ]);
+    }
+
+    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null)
+    {
+        $values = [
+            'name' => $name,
+            'link_title' => $linkTitle,
+            'blurb_option' => $blurbOption,
+            'parent_id' => $parentId,
+        ];
+
+        $category->fill($values);
+        $category->save();
+    }
+
+    public function delete($id)
+    {
+        Category::where('id', $id)->delete();
+    }
+
     public function find($id)
     {
         return Category::find($id);
@@ -16,6 +44,11 @@ class Repository
     public function getByLinkTitle($linkTitle)
     {
         return Category::where('link_title', $linkTitle)->first();
+    }
+
+    public function getByName($name)
+    {
+        return Category::where('name', $name)->first();
     }
 
     public function getAll()
