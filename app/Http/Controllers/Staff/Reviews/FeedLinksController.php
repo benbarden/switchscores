@@ -30,18 +30,11 @@ class FeedLinksController extends Controller
         'item_node' => 'required',
     ];
 
-    protected $viewBreadcrumbs;
-    protected $viewBindings;
-    protected $repoReviewSite;
-    private $repoPartnerFeedLink;
-
     public function __construct(
-        ReviewSiteRepository $repoReviewSite,
-        PartnerFeedLinkRepository $repoPartnerFeedLink
+        private ReviewSiteRepository $repoReviewSite,
+        private PartnerFeedLinkRepository $repoPartnerFeedLink
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
-        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
     }
 
     public function index()

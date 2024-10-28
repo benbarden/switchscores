@@ -14,19 +14,12 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    protected $repoCampaign;
-    protected $repoGamesCompany;
-    protected $repoCollectionStats;
-
     public function __construct(
-        CampaignRepository $repoCampaign,
-        GamesCompanyRepository $repoGamesCompany,
-        CollectionStatsRepository $repoCollectionStats
+        private CampaignRepository $repoCampaign,
+        private GamesCompanyRepository $repoGamesCompany,
+        private CollectionStatsRepository $repoCollectionStats
     )
     {
-        $this->repoCampaign = $repoCampaign;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoCollectionStats = $repoCollectionStats;
     }
 
     public function show()

@@ -10,19 +10,12 @@ use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 class CampaignsController extends Controller
 {
-    protected $repoCampaign;
-    protected $repoGame;
-    protected $repoQuickReview;
-
     public function __construct(
-        CampaignRepository $repoCampaign,
-        GameRepository $repoGame,
-        QuickReviewRepository $repoQuickReview
+        private CampaignRepository $repoCampaign,
+        private GameRepository $repoGame,
+        private QuickReviewRepository $repoQuickReview
     )
     {
-        $this->repoCampaign = $repoCampaign;
-        $this->repoGame = $repoGame;
-        $this->repoQuickReview = $repoQuickReview;
     }
 
     public function show($campaignId)

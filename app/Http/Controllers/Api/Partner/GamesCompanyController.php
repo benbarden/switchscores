@@ -6,13 +6,10 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 class GamesCompanyController
 {
-    private $repoGamesCompany;
-
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany
+        private GamesCompanyRepository $repoGamesCompany
     )
     {
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function findByName()

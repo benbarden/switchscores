@@ -11,12 +11,10 @@ use App\Models\PersonalAccessToken;
 
 class ApiController extends Controller
 {
-    private $repoPersonalAccessToken;
     public function __construct(
-        PersonalAccessTokenRepo $repoPersonalAccessToken
+        private PersonalAccessTokenRepo $repoPersonalAccessToken
     )
     {
-        $this->repoPersonalAccessToken = $repoPersonalAccessToken;
     }
 
     public function guide()

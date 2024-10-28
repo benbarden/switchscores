@@ -24,9 +24,9 @@ class InviteByEmailController extends Controller
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(
-        protected PartnerOutreachRepository $repoPartnerOutreach,
-        protected GamesCompanyRepository $repoGamesCompany,
-        protected InviteCodeRepository $repoInviteCode
+        private PartnerOutreachRepository $repoPartnerOutreach,
+        private GamesCompanyRepository $repoGamesCompany,
+        private InviteCodeRepository $repoInviteCode
     )
     {
     }

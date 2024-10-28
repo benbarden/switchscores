@@ -28,22 +28,13 @@ class GamesTagController extends Controller
     private $validationRules = [
     ];
 
-    protected $repoGame;
-    protected $repoGameTag;
-    protected $repoTag;
-    protected $repoTagCategory;
-
     public function __construct(
-        GameRepository $repoGame,
-        GameTagRepository $repoGameTag,
-        TagRepository $repoTag,
-        TagCategoryRepository $repoTagCategory
+        private GameRepository $repoGame,
+        private GameTagRepository $repoGameTag,
+        private TagRepository $repoTag,
+        private TagCategoryRepository $repoTagCategory
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoGameTag = $repoGameTag;
-        $this->repoTag = $repoTag;
-        $this->repoTagCategory = $repoTagCategory;
     }
 
     public function edit($gameId)

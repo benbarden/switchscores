@@ -17,8 +17,6 @@ class ProfileController extends Controller
     use SwitchServices;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $repoReviewSite;
-
     /**
      * @var array
      */
@@ -28,10 +26,9 @@ class ProfileController extends Controller
     ];
 
     public function __construct(
-        ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function edit()

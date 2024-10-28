@@ -27,13 +27,10 @@ class GameCollectionController extends Controller
         'link_title' => 'required',
     ];
 
-    protected $repoGameCollection;
-
     public function __construct(
-        GameCollectionRepository $repoGameCollection
+        private GameCollectionRepository $repoGameCollection
     )
     {
-        $this->repoGameCollection = $repoGameCollection;
     }
 
     public function showList()

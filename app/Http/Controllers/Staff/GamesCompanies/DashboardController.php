@@ -11,22 +11,13 @@ use Illuminate\Routing\Controller as Controller;
 
 class DashboardController extends Controller
 {
-    private $repoGamesCompany;
-    private $statsGamesCompany;
-    private $dbGameDeveloper;
-    private $dbGamePublisher;
-
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany,
-        GamesCompanyStats $statsGamesCompany,
-        GameDeveloperDbQueries $dbGameDeveloper,
-        GamePublisherDbQueries $dbGamePublisher
+        private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyStats $statsGamesCompany,
+        private GameDeveloperDbQueries $dbGameDeveloper,
+        private GamePublisherDbQueries $dbGamePublisher
     )
     {
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->statsGamesCompany = $statsGamesCompany;
-        $this->dbGameDeveloper = $dbGameDeveloper;
-        $this->dbGamePublisher = $dbGamePublisher;
     }
 
     public function show()

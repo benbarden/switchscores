@@ -14,19 +14,12 @@ class ReviewSiteController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameStats;
-    protected $repoReviewSite;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats,
-        ReviewSiteRepository $repoReviewSite
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameStatsRepository $repoGameStats,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameStats = $repoGameStats;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function show()

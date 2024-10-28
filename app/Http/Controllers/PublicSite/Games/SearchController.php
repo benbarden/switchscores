@@ -24,19 +24,12 @@ class SearchController extends Controller
         //'search_keywords' => 'required|min:3',
     ];
 
-    private $searchBuilder;
-    protected $repoGameSeries;
-    protected $repoGameCollection;
-
     public function __construct(
-        GameSearchBuilder $searchBuilder,
-        GameSeriesRepository $repoGameSeries,
-        GameCollectionRepository $repoGameCollection
+        private GameSearchBuilder $searchBuilder,
+        private GameSeriesRepository $repoGameSeries,
+        private GameCollectionRepository $repoGameCollection
     )
     {
-        $this->searchBuilder = $searchBuilder;
-        $this->repoGameSeries = $repoGameSeries;
-        $this->repoGameCollection = $repoGameCollection;
     }
 
     public function show()

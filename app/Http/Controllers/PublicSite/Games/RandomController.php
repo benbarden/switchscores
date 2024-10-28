@@ -7,13 +7,10 @@ use Illuminate\Routing\Controller as Controller;
 
 class RandomController extends Controller
 {
-    protected $repoGame;
-
     public function __construct(
-        GameRepository $repoGame
+        private GameRepository $repoGame
     )
     {
-        $this->repoGame = $repoGame;
     }
 
     /**

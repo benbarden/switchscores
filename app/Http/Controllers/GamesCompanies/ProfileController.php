@@ -14,8 +14,6 @@ class ProfileController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $repoGamesCompany;
-
     /**
      * @var array
      */
@@ -24,10 +22,9 @@ class ProfileController extends Controller
     ];
 
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany
+        private GamesCompanyRepository $repoGamesCompany
     )
     {
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function edit()

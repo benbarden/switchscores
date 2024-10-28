@@ -12,13 +12,10 @@ class ReviewLinkController extends Controller
 {
     use SwitchServices;
 
-    protected $repoReviewSite;
-
     public function __construct(
-        ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function landing($report = '')

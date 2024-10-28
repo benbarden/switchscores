@@ -14,19 +14,12 @@ class FeedHealthController extends Controller
 {
     use SwitchServices;
 
-    protected $repoReviewSite;
-    protected $repoPartnerFeedLink;
-    protected $repoReviewDraft;
-
     public function __construct(
-        ReviewSiteRepository $repoReviewSite,
-        PartnerFeedLinkRepository $repoPartnerFeedLink,
-        ReviewDraftRepository $repoReviewDraft
+        private ReviewSiteRepository $repoReviewSite,
+        private PartnerFeedLinkRepository $repoPartnerFeedLink,
+        private ReviewDraftRepository $repoReviewDraft
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
-        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
-        $this->repoReviewDraft = $repoReviewDraft;
     }
 
     public function landing()

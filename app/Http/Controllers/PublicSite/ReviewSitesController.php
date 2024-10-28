@@ -11,16 +11,11 @@ class ReviewSitesController extends Controller
 {
     use SwitchServices;
 
-    protected $viewBreadcrumbs;
-    protected $repoReviewSite;
-
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        ReviewSiteRepository $repoReviewSite
+        private Breadcrumbs $viewBreadcrumbs,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function landing()

@@ -18,19 +18,12 @@ class QuickReviewController extends Controller
 {
     use SwitchServices;
 
-    private $repoQuickReview;
-    private $repoGame;
-    private $repoUser;
-
     public function __construct(
-        QuickReviewRepository $repoQuickReview,
-        GameRepository $repoGame,
-        UserRepository $repoUser
+        private QuickReviewRepository $repoQuickReview,
+        private GameRepository $repoGame,
+        private UserRepository $repoUser
     )
     {
-        $this->repoQuickReview = $repoQuickReview;
-        $this->repoGame = $repoGame;
-        $this->repoUser = $repoUser;
     }
 
     public function showList()

@@ -11,19 +11,12 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 class ReviewCoverageController extends Controller
 {
 
-    protected $repoGame;
-    protected $repoReviewLink;
-    protected $repoReviewSite;
-
     public function __construct(
-        GameRepository $repoGame,
-        ReviewLinkRepository $repoReviewLink,
-        ReviewSiteRepository $repoReviewSite
+        private GameRepository $repoGame,
+        private ReviewLinkRepository $repoReviewLink,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoReviewLink = $repoReviewLink;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function show($gameId)

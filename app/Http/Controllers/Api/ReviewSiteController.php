@@ -8,13 +8,10 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepo;
 
 class ReviewSiteController extends Controller
 {
-    private $repoReviewSite;
-
     public function __construct(
-        ReviewSiteRepo $repoReviewSite
+        private ReviewSiteRepo $repoReviewSite
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function getByDomain()

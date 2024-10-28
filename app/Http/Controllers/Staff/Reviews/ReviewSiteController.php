@@ -27,13 +27,10 @@ class ReviewSiteController extends Controller
         'rating_scale' => 'required',
     ];
 
-    protected $repoReviewSite;
-
     public function __construct(
-        ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function index()

@@ -21,11 +21,6 @@ class GamesCompaniesController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $viewBreadcrumbs;
-    private $repoGamesCompany;
-    private $dbGameDeveloper;
-    private $dbGamePublisher;
-
     /**
      * @var array
      */
@@ -38,16 +33,12 @@ class GamesCompaniesController extends Controller
     ];
 
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs,
-        GamesCompanyRepository $repoGamesCompany,
-        GameDeveloperDbQueries $dbGameDeveloper,
-        GamePublisherDbQueries $dbGamePublisher
+        private Breadcrumbs $viewBreadcrumbs,
+        private GamesCompanyRepository $repoGamesCompany,
+        private GameDeveloperDbQueries $dbGameDeveloper,
+        private GamePublisherDbQueries $dbGamePublisher
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->dbGameDeveloper = $dbGameDeveloper;
-        $this->dbGamePublisher = $dbGamePublisher;
     }
 
     public function landing()

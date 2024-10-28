@@ -27,13 +27,10 @@ class ImportRuleEshopController extends Controller
     private $validationRules = [
     ];
 
-    private $repoGame;
-
     public function __construct(
-        GameRepository $repoGame
+        private GameRepository $repoGame
     )
     {
-        $this->repoGame = $repoGame;
     }
 
     public function edit($gameId)

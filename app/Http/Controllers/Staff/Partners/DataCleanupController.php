@@ -9,16 +9,11 @@ use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 
 class DataCleanupController extends Controller
 {
-    private $dbGameDeveloper;
-    private $dbGamePublisher;
-
     public function __construct(
-        GameDeveloperDbQueries $dbGameDeveloper,
-        GamePublisherDbQueries $dbGamePublisher
+        private GameDeveloperDbQueries $dbGameDeveloper,
+        private GamePublisherDbQueries $dbGamePublisher
     )
     {
-        $this->dbGameDeveloper = $dbGameDeveloper;
-        $this->dbGamePublisher = $dbGamePublisher;
     }
 
     public function gamesWithMissingDeveloper()

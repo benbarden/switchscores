@@ -16,11 +16,6 @@ class ListController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $gameQualityFilter;
-    private $repoGamesCompany;
-    private $statsGamesCompany;
-    private $repoPartnerOutreach;
-
     /**
      * @var array
      */
@@ -30,16 +25,12 @@ class ListController extends Controller
     ];
 
     public function __construct(
-        GameQualityFilter $gameQualityFilter,
-        GamesCompanyRepository $repoGamesCompany,
-        GamesCompanyStats $statsGamesCompany,
-        PartnerOutreachRepository $repoPartnerOutreach
+        private GameQualityFilter $gameQualityFilter,
+        private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyStats $statsGamesCompany,
+        private PartnerOutreachRepository $repoPartnerOutreach
     )
     {
-        $this->gameQualityFilter = $gameQualityFilter;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->statsGamesCompany = $statsGamesCompany;
-        $this->repoPartnerOutreach = $repoPartnerOutreach;
     }
 
     public function showList()

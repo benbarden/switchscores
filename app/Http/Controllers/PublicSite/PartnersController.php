@@ -7,13 +7,10 @@ use Illuminate\Routing\Controller as Controller;
 
 class PartnersController extends Controller
 {
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

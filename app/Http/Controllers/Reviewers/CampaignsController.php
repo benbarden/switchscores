@@ -12,13 +12,10 @@ class CampaignsController extends Controller
 {
     use SwitchServices;
 
-    protected $repoCampaign;
-
     public function __construct(
-        CampaignRepository $repoCampaign
+        private CampaignRepository $repoCampaign
     )
     {
-        $this->repoCampaign = $repoCampaign;
     }
 
     public function show($campaignId)

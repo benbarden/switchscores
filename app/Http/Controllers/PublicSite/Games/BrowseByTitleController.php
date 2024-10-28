@@ -2,29 +2,16 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
-use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class BrowseByTitleController extends Controller
 {
-    use SwitchServices;
-
-    protected $repoGameLists;
-    protected $dbGameLists;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        GameListsDbQueries $dbGameLists,
-        Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->dbGameLists = $dbGameLists;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

@@ -13,22 +13,13 @@ class BrowseByCollectionController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameLists;
-    protected $dbGameLists;
-    protected $repoGameCollection;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        GameListsDbQueries $dbGameLists,
-        GameCollectionRepository $repoGameCollection,
-        Breadcrumbs $viewBreadcrumbs
+        private GameListsRepository $repoGameLists,
+        private GameListsDbQueries $dbGameLists,
+        private GameCollectionRepository $repoGameCollection,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->dbGameLists = $dbGameLists;
-        $this->repoGameCollection = $repoGameCollection;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

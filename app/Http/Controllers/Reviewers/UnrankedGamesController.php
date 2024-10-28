@@ -12,13 +12,10 @@ class UnrankedGamesController extends Controller
 {
     use SwitchServices;
 
-    private $repoUnranked;
-
     public function __construct(
-        UnrankedRepository $repoUnranked
+        private UnrankedRepository $repoUnranked
     )
     {
-        $this->repoUnranked = $repoUnranked;
     }
 
     public function landing()

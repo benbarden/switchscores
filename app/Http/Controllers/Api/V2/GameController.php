@@ -9,16 +9,11 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 
 class GameController
 {
-    private $repoGame;
-    private $repoGameLists;
-
     public function __construct(
-        GameRepository $repoGame,
-        GameListsRepository $repoGameLists
+        private GameRepository $repoGame,
+        private GameListsRepository $repoGameLists
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoGameLists = $repoGameLists;
     }
 
     public function getGameDetails($gameId)

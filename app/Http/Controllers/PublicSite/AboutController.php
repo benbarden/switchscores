@@ -11,16 +11,11 @@ class AboutController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameStats;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameStatsRepository $repoGameStats,
-        Breadcrumbs $viewBreadcrumbs
+        private GameStatsRepository $repoGameStats,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameStats = $repoGameStats;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

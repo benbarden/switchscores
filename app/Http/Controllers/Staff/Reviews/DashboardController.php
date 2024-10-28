@@ -18,25 +18,14 @@ class DashboardController extends Controller
 {
     use SwitchServices;
 
-    private $repoFeaturedGames;
-    private $repoGameStats;
-    private $repoReviewDraft;
-    private $statsReviewDraft;
-    private $repoUnranked;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats,
-        ReviewDraftRepository $repoReviewDraft,
-        ReviewDraftStats $statsReviewDraft,
-        UnrankedRepository $repoUnranked
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameStatsRepository $repoGameStats,
+        private ReviewDraftRepository $repoReviewDraft,
+        private ReviewDraftStats $statsReviewDraft,
+        private UnrankedRepository $repoUnranked
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameStats = $repoGameStats;
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->statsReviewDraft = $statsReviewDraft;
-        $this->repoUnranked = $repoUnranked;
     }
 
     public function show()

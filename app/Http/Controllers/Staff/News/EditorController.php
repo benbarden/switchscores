@@ -18,9 +18,6 @@ class EditorController extends Controller
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $repoNews;
-    private $repoNewsCategory;
-
     /**
      * @var array
      */
@@ -32,15 +29,11 @@ class EditorController extends Controller
         //'game_id' => 'exists:games,id',
     ];
 
-    private $viewBreadcrumbs;
-
     public function __construct(
-        NewsRepository $repoNews,
-        NewsCategoryRepository $repoNewsCategory
+        private NewsRepository $repoNews,
+        private NewsCategoryRepository $repoNewsCategory
     )
     {
-        $this->repoNews = $repoNews;
-        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function add()

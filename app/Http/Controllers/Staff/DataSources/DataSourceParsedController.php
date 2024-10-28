@@ -20,15 +20,10 @@ class DataSourceParsedController extends Controller
 {
     use SwitchServices;
 
-    private $repoGamesCompany;
-    private $repoGamePublisher;
-
     public function __construct(
-        GamesCompanyRepository $repoGamesCompany,
-        GamePublisherRepository $repoGamePublisher
+        private GamesCompanyRepository $repoGamesCompany,
+        private GamePublisherRepository $repoGamePublisher
     ){
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoGamePublisher = $repoGamePublisher;
     }
 
     public function nintendoCoUkUnlinkedItems()

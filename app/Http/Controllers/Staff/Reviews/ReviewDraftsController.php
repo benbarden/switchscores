@@ -27,16 +27,11 @@ class ReviewDraftsController extends Controller
         //'site_id' => 'required',
     ];
 
-    protected $repoReviewDraft;
-    protected $repoGameLists;
-
     public function __construct(
-        ReviewDraftRepository $repoReviewDraft,
-        GameListsRepository $repoGameLists
+        private ReviewDraftRepository $repoReviewDraft,
+        private GameListsRepository $repoGameLists
     )
     {
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->repoGameLists = $repoGameLists;
     }
 
     public function showPending()

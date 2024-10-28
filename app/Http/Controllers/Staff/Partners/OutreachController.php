@@ -15,19 +15,13 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 class OutreachController extends Controller
 {
-
-    private $repoPartnerOutreach;
-    private $repoGamesCompany;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(
-        PartnerOutreachRepository $repoPartnerOutreach,
-        GamesCompanyRepository $repoGamesCompany
+        private PartnerOutreachRepository $repoPartnerOutreach,
+        private GamesCompanyRepository $repoGamesCompany
     )
     {
-        $this->repoPartnerOutreach = $repoPartnerOutreach;
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     /**

@@ -11,16 +11,11 @@ class WelcomeController extends Controller
 {
     use SwitchServices;
 
-    protected $repoFeaturedGames;
-    protected $repoGameLists;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameListsRepository $repoGameLists
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameListsRepository $repoGameLists
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameLists = $repoGameLists;
     }
 
     public function show()

@@ -10,13 +10,10 @@ class CommunityController extends Controller
 {
     use SwitchServices;
 
-    private $repoUser;
-
     public function __construct(
-        UserRepository $repoUser
+        private UserRepository $repoUser
     )
     {
-        $this->repoUser = $repoUser;
     }
 
     public function landing()

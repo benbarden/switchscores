@@ -30,25 +30,14 @@ class UserController extends Controller
         //'email' => 'required',
     ];
 
-    protected $viewBindings;
-    protected $viewBreadcrumbs;
-    protected $repoUser;
-    protected $repoGamesCompany;
-    protected $repoReviewSite;
-
     public function __construct(
-        Bindings $viewBindings,
-        Breadcrumbs $viewBreadcrumbs,
-        UserRepository $repoUser,
-        GamesCompanyRepository $repoGamesCompany,
-        ReviewSiteRepository $repoReviewSite
+        private Bindings $viewBindings,
+        private Breadcrumbs $viewBreadcrumbs,
+        private UserRepository $repoUser,
+        private GamesCompanyRepository $repoGamesCompany,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->viewBindings = $viewBindings;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->repoUser = $repoUser;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function showList()

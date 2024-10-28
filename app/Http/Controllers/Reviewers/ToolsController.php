@@ -15,17 +15,11 @@ class ToolsController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $repoReviewDraft;
-
-    protected $repoReviewSite;
-
     public function __construct(
-        ReviewDraftRepository $repoReviewDraft,
-        ReviewSiteRepository $repoReviewSite
+        private ReviewDraftRepository $repoReviewDraft,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function importReviews()

@@ -29,13 +29,10 @@ class GamesTitleHashController extends Controller
         'game_id' => 'required',
     ];
 
-    private $repoGame;
-
     public function __construct(
-        GameRepository $repoGame
+        private GameRepository $repoGame
     )
     {
-        $this->repoGame = $repoGame;
     }
 
     public function showList($gameId = null)

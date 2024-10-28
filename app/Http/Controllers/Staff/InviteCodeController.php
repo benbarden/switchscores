@@ -33,19 +33,12 @@ class InviteCodeController extends Controller
         'codes_count' => 'required|numeric|min:1|max:10',
     ];
 
-    protected $repoInviteCode;
-    protected $repoGamesCompany;
-    protected $repoReviewSite;
-
     public function __construct(
-        InviteCodeRepository $repoInviteCode,
-        GamesCompanyRepository $repoGamesCompany,
-        ReviewSiteRepository $repoReviewSite
+        private InviteCodeRepository $repoInviteCode,
+        private GamesCompanyRepository $repoGamesCompany,
+        private ReviewSiteRepository $repoReviewSite
     )
     {
-        $this->repoInviteCode = $repoInviteCode;
-        $this->repoGamesCompany = $repoGamesCompany;
-        $this->repoReviewSite = $repoReviewSite;
     }
 
     public function showList()

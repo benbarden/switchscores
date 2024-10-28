@@ -16,25 +16,14 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    private $repoReviewSite;
-    private $repoPartnerFeedLink;
-    private $repoCampaign;
-    private $repoReviewDraft;
-    private $repoUnranked;
-
     public function __construct(
-        ReviewSiteRepository $repoReviewSite,
-        PartnerFeedLinkRepository $repoPartnerFeedLink,
-        CampaignRepository $repoCampaign,
-        ReviewDraftRepository $repoReviewDraft,
-        UnrankedRepository $repoUnranked
+        private ReviewSiteRepository $repoReviewSite,
+        private PartnerFeedLinkRepository $repoPartnerFeedLink,
+        private CampaignRepository $repoCampaign,
+        private ReviewDraftRepository $repoReviewDraft,
+        private UnrankedRepository $repoUnranked
     )
     {
-        $this->repoReviewSite = $repoReviewSite;
-        $this->repoPartnerFeedLink = $repoPartnerFeedLink;
-        $this->repoCampaign = $repoCampaign;
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->repoUnranked = $repoUnranked;
     }
 
     public function show()

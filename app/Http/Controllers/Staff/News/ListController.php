@@ -8,13 +8,10 @@ use App\Domain\News\Repository as RepoNews;
 
 class ListController extends Controller
 {
-    private $repoNews;
-
     public function __construct(
-        RepoNews $repoNews
+        private RepoNews $repoNews
     )
     {
-        $this->repoNews = $repoNews;
     }
 
     public function show()

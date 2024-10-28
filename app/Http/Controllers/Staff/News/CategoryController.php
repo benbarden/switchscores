@@ -17,8 +17,6 @@ class CategoryController extends Controller
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $repoNewsCategory;
-
     /**
      * @var array
      */
@@ -27,13 +25,10 @@ class CategoryController extends Controller
         'link_name' => 'required|max:100',
     ];
 
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        NewsCategoryRepository $repoNewsCategory
+        private NewsCategoryRepository $repoNewsCategory
     )
     {
-        $this->repoNewsCategory = $repoNewsCategory;
     }
 
     public function showList()

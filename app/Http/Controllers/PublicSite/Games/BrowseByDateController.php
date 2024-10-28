@@ -12,19 +12,12 @@ class BrowseByDateController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameLists;
-    protected $dbGameLists;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        GameListsDbQueries $dbGameLists,
-        Breadcrumbs $viewBreadcrumbs
+        private GameListsRepository $repoGameLists,
+        private GameListsDbQueries $dbGameLists,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->dbGameLists = $dbGameLists;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

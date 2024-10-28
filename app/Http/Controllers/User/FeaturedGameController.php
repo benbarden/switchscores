@@ -23,16 +23,11 @@ class FeaturedGameController extends Controller
         'featured_type' => 'required'
     ];
 
-    protected $repoFeaturedGame;
-    protected $repoGame;
-
     public function __construct(
-        FeaturedGameRepository $featuredGame,
-        GameRepository $repoGame
+        private FeaturedGameRepository $repoFeaturedGame,
+        private GameRepository $repoGame
     )
     {
-        $this->repoFeaturedGame = $featuredGame;
-        $this->repoGame = $repoGame;
     }
 
     public function add($gameId)

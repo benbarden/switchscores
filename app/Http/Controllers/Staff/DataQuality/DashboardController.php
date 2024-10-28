@@ -12,15 +12,10 @@ use App\Services\DataQuality\QualityStats;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
-    protected $repoIntegrityCheck;
-
     public function __construct(
-        IntegrityCheckRepository $repoIntegrityCheck
+        private IntegrityCheckRepository $repoIntegrityCheck
     )
     {
-        $this->repoIntegrityCheck = $repoIntegrityCheck;
     }
 
     public function show()

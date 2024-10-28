@@ -3,25 +3,16 @@
 namespace App\Http\Controllers\PublicSite\Games;
 
 use App\Domain\Category\Repository as CategoryRepository;
-use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use Illuminate\Routing\Controller as Controller;
 
 class BrowseByCategoryController extends Controller
 {
-    private $repoGameLists;
-    private $repoCategory;
-    private $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        CategoryRepository $repoCategory,
-        Breadcrumbs $viewBreadcrumbs
+        private CategoryRepository $repoCategory,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->repoCategory = $repoCategory;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

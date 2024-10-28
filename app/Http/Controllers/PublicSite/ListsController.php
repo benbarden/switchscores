@@ -11,16 +11,11 @@ class ListsController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameLists;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        Breadcrumbs $viewBreadcrumbs
+        private GameListsRepository $repoGameLists,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

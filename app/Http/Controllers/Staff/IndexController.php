@@ -21,31 +21,16 @@ class IndexController extends Controller
 {
     use SwitchServices;
 
-    private $repoFeaturedGames;
-    private $repoGameStats;
-    private $repoGameLists;
-    private $repoReviewDraft;
-    private $repoUser;
-    private $dbGamePublisher;
-    private $repoGamesCompany;
-
     public function __construct(
-        FeaturedGameRepository $featuredGames,
-        GameStatsRepository $repoGameStats,
-        GameListsRepository $repoGameLists,
-        ReviewDraftRepository $repoReviewDraft,
-        UserRepository $repoUser,
-        GamePublisherDbQueries $dbGamePublisher,
-        GamesCompanyRepository $repoGamesCompany
+        private FeaturedGameRepository $repoFeaturedGames,
+        private GameStatsRepository $repoGameStats,
+        private GameListsRepository $repoGameLists,
+        private ReviewDraftRepository $repoReviewDraft,
+        private UserRepository $repoUser,
+        private GamePublisherDbQueries $dbGamePublisher,
+        private GamesCompanyRepository $repoGamesCompany
     )
     {
-        $this->repoFeaturedGames = $featuredGames;
-        $this->repoGameStats = $repoGameStats;
-        $this->repoGameLists = $repoGameLists;
-        $this->repoReviewDraft = $repoReviewDraft;
-        $this->repoUser = $repoUser;
-        $this->dbGamePublisher = $dbGamePublisher;
-        $this->repoGamesCompany = $repoGamesCompany;
     }
 
     public function index()

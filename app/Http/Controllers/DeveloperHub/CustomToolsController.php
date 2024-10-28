@@ -8,13 +8,10 @@ use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 
 class CustomToolsController extends Controller
 {
-    protected $dbGameLists;
-
     public function __construct(
-        GameListsDbQueries $dbGameLists
+        private GameListsDbQueries $dbGameLists
     )
     {
-        $this->dbGameLists = $dbGameLists;
     }
 
     public function upcomingGamesSwitchWeekly()

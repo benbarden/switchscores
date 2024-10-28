@@ -10,8 +10,6 @@ use App\Services\DataQuality\QualityStats;
 
 class CategoryController extends Controller
 {
-    use SwitchServices;
-
     public function dashboard()
     {
         $pageTitle = 'Category dashboard';

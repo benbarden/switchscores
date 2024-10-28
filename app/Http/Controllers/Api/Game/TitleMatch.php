@@ -11,16 +11,11 @@ use App\Traits\SwitchServices;
 
 class TitleMatch
 {
-    protected $repoGame;
-    protected $repoDataSource;
-
     public function __construct(
-        GameRepository $repoGame,
-        DataSourceRepository $repoDataSource
+        private GameRepository $repoGame,
+        private DataSourceRepository $repoDataSource
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoDataSource = $repoDataSource;
     }
 
     public function getByExactTitleMatch()

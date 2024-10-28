@@ -19,22 +19,13 @@ class GamesListController extends Controller
 {
     use SwitchServices;
 
-    private $repoGameLists;
-    private $repoCategory;
-    private $repoGameSeries;
-    private $repoTag;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        CategoryRepository $repoCategory,
-        GameSeriesRepository $repoGameSeries,
-        TagRepository $repoTag
+        private GameListsRepository $repoGameLists,
+        private CategoryRepository $repoCategory,
+        private GameSeriesRepository $repoGameSeries,
+        private TagRepository $repoTag
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->repoCategory = $repoCategory;
-        $this->repoGameSeries = $repoGameSeries;
-        $this->repoTag = $repoTag;
     }
 
     public function gamesToRelease()

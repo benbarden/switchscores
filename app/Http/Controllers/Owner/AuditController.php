@@ -15,19 +15,12 @@ class AuditController extends Controller
 {
     use SwitchServices;
 
-    protected $repoAudit;
-    protected $viewBreadcrumbs;
-    protected $viewBindings;
-
     public function __construct(
-        AuditRepository $repoAudit,
-        Bindings $viewBindings,
-        Breadcrumbs $viewBreadcrumbs
+        private AuditRepository $repoAudit,
+        private Bindings $viewBindings,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoAudit = $repoAudit;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
-        $this->viewBindings = $viewBindings;
     }
 
     public function index()

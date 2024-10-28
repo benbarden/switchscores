@@ -10,13 +10,10 @@ class ReviewsController extends Controller
 {
     use SwitchServices;
 
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landingByYear($year)

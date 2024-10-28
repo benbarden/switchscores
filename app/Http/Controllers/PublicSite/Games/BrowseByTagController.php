@@ -14,25 +14,14 @@ class BrowseByTagController extends Controller
 {
     use SwitchServices;
 
-    protected $repoGameLists;
-    protected $dbGameLists;
-    protected $repoTag;
-    protected $repoTagCategory;
-    protected $viewBreadcrumbs;
-
     public function __construct(
-        GameListsRepository $repoGameLists,
-        GameListsDbQueries $dbGameLists,
-        TagRepository $repoTag,
-        TagCategoryRepository $repoTagCategory,
-        Breadcrumbs $viewBreadcrumbs
+        private GameListsRepository $repoGameLists,
+        private GameListsDbQueries $dbGameLists,
+        private TagRepository $repoTag,
+        private TagCategoryRepository $repoTagCategory,
+        private Breadcrumbs $viewBreadcrumbs
     )
     {
-        $this->repoGameLists = $repoGameLists;
-        $this->dbGameLists = $dbGameLists;
-        $this->repoTag = $repoTag;
-        $this->repoTagCategory = $repoTagCategory;
-        $this->viewBreadcrumbs = $viewBreadcrumbs;
     }
 
     public function landing()

@@ -9,16 +9,11 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 
 class BulkUpdate
 {
-    protected $repoGame;
-    protected $repoGameLists;
-
     public function __construct(
-        GameRepository $repoGame,
-        GameListsRepository $repoGameLists
+        private GameRepository $repoGame,
+        private GameListsRepository $repoGameLists
     )
     {
-        $this->repoGame = $repoGame;
-        $this->repoGameLists = $repoGameLists;
     }
     public function eshopUpcomingCrosscheck()
     {

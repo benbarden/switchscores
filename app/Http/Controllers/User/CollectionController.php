@@ -35,25 +35,14 @@ class CollectionController extends Controller
         'game_id' => 'required',
     ];
 
-    protected $repoGame;
-    protected $serviceUserGamesCollection;
-    protected $repoUserGamesCollection;
-    protected $dbUserGamesCollection;
-    protected $repoCollectionStats;
-
     public function __construct(
-        GameRepository $repoGame,
-        UserGamesCollectionService $serviceUserGamesCollection,
-        UserGamesCollectionRepository $repoUserGamesCollection,
-        UserGamesCollectionDbQueries $dbUserGamesCollection,
-        CollectionStatsRepository $repoCollectionStats
+        private GameRepository $repoGame,
+        private UserGamesCollectionService $serviceUserGamesCollection,
+        private UserGamesCollectionRepository $repoUserGamesCollection,
+        private UserGamesCollectionDbQueries $dbUserGamesCollection,
+        private CollectionStatsRepository $repoCollectionStats
     )
     {
-        $this->repoGame = $repoGame;
-        $this->serviceUserGamesCollection = $serviceUserGamesCollection;
-        $this->repoUserGamesCollection = $repoUserGamesCollection;
-        $this->dbUserGamesCollection = $dbUserGamesCollection;
-        $this->repoCollectionStats = $repoCollectionStats;
     }
 
     public function landing()

@@ -11,13 +11,10 @@ class GameController
 {
     use SwitchServices;
 
-    private $repoGame;
-
     public function __construct(
-        GameRepository $repoGameRepository
+        private GameRepository $repoGame
     )
     {
-        $this->repoGame = $repoGameRepository;
     }
 
     public function findByTitle()
