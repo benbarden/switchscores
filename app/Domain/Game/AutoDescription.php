@@ -42,16 +42,18 @@ class AutoDescription
 
     public function ranking()
     {
+        $blurb = '';
         if (!$this->game->isDigitalDelisted() && ($this->game->game_rank)) {
             $blurb = 'It is ranked #'.$this->game->game_rank.' on the all-time Top Rated Switch games, '.
                 ' with a total of '.$this->game->review_count.' reviews '.
                 ' and an average score of '.$this->game->rating_avg.'. ';
-            return $blurb;
         }
+        return $blurb;
     }
 
     public function reviews()
     {
+        $blurb = '';
         if (!$this->game->isDigitalDelisted() && (!$this->game->game_rank) && ($this->game->eu_is_released == 1)) {
             switch ($this->game->review_count) {
                 case 0:
@@ -66,8 +68,8 @@ class AutoDescription
                 default:
                     break;
             }
-            return $blurb;
         }
+        return $blurb;
     }
 
     public function series()
