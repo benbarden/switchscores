@@ -1,0 +1,13 @@
+{% extends 'theme/member-b5/base.twig' %}
+
+{% block page_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            {% include 'theme/member-b5/breadcrumbs.twig' %}
+            <h1>{{ PageTitle }}</h1>
+        </div>
+    </div>
+    {% block page_inner %}{% endblock page_inner %}
+</div>
+{% endblock page_body %}

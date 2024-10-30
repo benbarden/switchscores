@@ -1,4 +1,4 @@
-{% extends 'theme/wos/member/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% set crumbNav = [{'text': 'Index'}] %}
 
@@ -31,10 +31,10 @@
 {% endif %}
 
 {% if ReviewList.count > 0 %}
-    <table class="table data-sortable">
+    <table class="table table-sm data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th class="text-left">Game</th>
                 <th class="text-center">Date</th>
                 <th class="text-center">Score</th>
@@ -44,7 +44,7 @@
         <tbody>
             {% for item in ReviewList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td class="text-left">
@@ -54,7 +54,7 @@
                         {{ item.created_at }}
                     </td>
                     <td class="text-center">
-                        {% include 'modules/rating/badge.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
+                        {% include 'modules/rating/badge-b5.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
                     </td>
                     <td class="text-center">
                         {{ item.getStatusDesc() }}
@@ -67,7 +67,7 @@
     <p>You have not added any reviews yet.</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({
