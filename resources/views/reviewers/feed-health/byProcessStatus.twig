@@ -1,9 +1,4 @@
-{% extends 'theme/wos/reviewers/clean-wide.twig' %}
-
-{% set crumbNav = [
-    {'url': route('reviewers.feed-health.landing'), 'text': 'Feed health'},
-    {'text': PageTitle}
-] %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -94,7 +89,7 @@
 
     </div>
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

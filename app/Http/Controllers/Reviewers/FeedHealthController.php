@@ -24,7 +24,9 @@ class FeedHealthController extends Controller
 
     public function landing()
     {
-        $bindings = [];
+        $pageTitle = 'Feed health';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -40,23 +42,20 @@ class FeedHealthController extends Controller
         $partnerFeedLink = $this->repoPartnerFeedLink->firstBySite($partnerId);
         $bindings['PartnerFeedLink'] = $partnerFeedLink;
 
-        $pageTitle = 'Feed health';
-
         $bindings['ImportStatsFailuresList'] = $this->repoReviewDraft->getFailedImportStatsBySite($partnerId);
 
         $bindings['SuccessFailStats'] = $this->repoReviewDraft->getSuccessFailStatsBySite($partnerId);
 
         $bindings['ParseStatusStats'] = $this->repoReviewDraft->getParseStatusStatsBySite($partnerId);
 
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-
         return view('reviewers.feed-health.landing', $bindings);
     }
 
     public function byProcessStatus($status)
     {
-        $bindings = [];
+        $pageTitle = 'Feed health - by process status';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -69,22 +68,19 @@ class FeedHealthController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        $pageTitle = 'Feed health - view by process status';
-
         $bindings['ReviewFeedItems'] = $this->repoReviewDraft->getByProcessStatusAndSite($status, $partnerId);
         $bindings['StatusDesc'] = $status;
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('reviewers.feed-health.byProcessStatus', $bindings);
     }
 
     public function byParseStatus($status)
     {
-        $tableLimit = 50;
+        $pageTitle = 'Feed health - by parse status';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $bindings = [];
+        $tableLimit = 50;
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -97,13 +93,9 @@ class FeedHealthController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        $pageTitle = 'Feed health - view by parse status';
-
         $bindings['ReviewFeedItems'] = $this->repoReviewDraft->getByParseStatusAndSite($status, $partnerId, $tableLimit);
         $bindings['StatusDesc'] = $status;
 
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
         $bindings['TableLimit'] = $tableLimit;
 
         return view('reviewers.feed-health.byParseStatus', $bindings);

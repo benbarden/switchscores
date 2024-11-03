@@ -33,6 +33,10 @@ class ProfileController extends Controller
 
     public function edit()
     {
+        $pageTitle = 'Edit profile';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
 
         $reviewSite = $currentUser->partner;
@@ -43,7 +47,6 @@ class ProfileController extends Controller
 
         //$partnerData = $this->repoReviewSite->find($siteId);
 
-        $bindings = [];
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -72,9 +75,6 @@ class ProfileController extends Controller
         } else {
             $bindings['FormMode'] = 'edit';
         }
-
-        $bindings['TopTitle'] = 'Edit profile';
-        $bindings['PageTitle'] = 'Edit profile';
 
         $bindings['PartnerData'] = $reviewSite;
 

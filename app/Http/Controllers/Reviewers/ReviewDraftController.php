@@ -45,12 +45,12 @@ class ReviewDraftController extends Controller
 
     public function findGame()
     {
+        $pageTitle = 'Add manual review: Find game';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;
-
-        $bindings = [];
-
-        $pageTitle = 'Add manual review: Find game';
 
         $request = request();
 
@@ -66,9 +66,6 @@ class ReviewDraftController extends Controller
             }
 
         }
-
-        $bindings['TopTitle'] = $pageTitle.' - Reviewers';
-        $bindings['PageTitle'] = $pageTitle;
 
         $bindings['jsInitialSort'] = "[0, 'desc']";
 
@@ -143,6 +140,10 @@ class ReviewDraftController extends Controller
 
     public function add($gameId)
     {
+        $pageTitle = 'Add manual review';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;
 
@@ -163,7 +164,6 @@ class ReviewDraftController extends Controller
             return redirect(route('reviewers.index'));
         }
 
-        $bindings = [];
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -198,9 +198,6 @@ class ReviewDraftController extends Controller
             return redirect(route('reviewers.index'));
         }
 
-        $bindings['TopTitle'] = 'Add manual feed item';
-        $bindings['PageTitle'] = 'Add manual feed item';
-
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['ReviewSite'] = $partnerData;
@@ -212,6 +209,10 @@ class ReviewDraftController extends Controller
 
     public function edit(ReviewDraft $reviewDraft)
     {
+        $pageTitle = 'Edit manual review';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;
 
@@ -226,7 +227,6 @@ class ReviewDraftController extends Controller
             return redirect(route('reviewers.index'));
         }
 
-        $bindings = [];
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -257,9 +257,6 @@ class ReviewDraftController extends Controller
 
             return redirect(route('reviewers.index'));
         }
-
-        $bindings['TopTitle'] = 'Edit manual feed item';
-        $bindings['PageTitle'] = 'Edit manual feed item';
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;

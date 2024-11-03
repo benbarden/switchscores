@@ -18,24 +18,12 @@ class UnrankedGamesController extends Controller
     {
     }
 
-    public function landing()
-    {
-        $currentUser = resolve('User/Repository')->currentUser();
-        $partnerId = $currentUser->partner_id;
-        if ($partnerId == 0) {
-            abort(403);
-        }
-
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Unranked games';
-        $bindings['PageTitle'] = 'Unranked games';
-
-        return view('reviewers.unranked-games.landing', $bindings);
-    }
-
     public function showList($mode, $filter)
     {
+        $pageTitle = 'Unranked games';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
         $partnerId = $currentUser->partner_id;
         if ($partnerId == 0) {
@@ -48,8 +36,6 @@ class UnrankedGamesController extends Controller
 
         $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($partnerId);
         $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($partnerId);
-
-        $bindings = [];
 
         switch ($mode) {
 
@@ -86,9 +72,6 @@ class UnrankedGamesController extends Controller
 
         $bindings['PageMode'] = $mode;
         $bindings['PageFilter'] = $filter;
-
-        $bindings['TopTitle'] = 'Unranked games';
-        $bindings['PageTitle'] = 'Unranked games';
 
         return view('reviewers.unranked-games.list', $bindings);
     }

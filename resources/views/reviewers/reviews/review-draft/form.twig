@@ -12,60 +12,48 @@
 {% endif %}
 </div>
 {% include 'common/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="item_url" class="col-md-4 control-label">URL</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="item_url" class="col-sm-2 col-form-label">URL</label>
+        <div class="col-sm-4">
             <input id="item_url" type="text" class="form-control" name="item_url">
-            <p>
-                <small>
-                    {% if IsYoutubeChannel %}
-                        A link to the review on your Youtube channel.
-                    {% else %}
-                        A link to the review on your site.
-                        <br>This must start with: <strong>{{ ReviewSite.website_url }}</strong>
-                        <br>If this looks wrong, let us know.
-                    {% endif %}
-                </small>
-            </p>
+            <div class="form-text">
+                {% if IsYoutubeChannel %}
+                    A link to the review on your Youtube channel.
+                {% else %}
+                    A link to the review on your site.
+                    <br>This must start with: <strong>{{ ReviewSite.website_url }}</strong>
+                    <br>If this looks wrong, let us know.
+                {% endif %}
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="item_date" class="col-md-4 control-label">Date</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="item_date" class="col-sm-2 col-form-label">Date</label>
+        <div class="col-sm-4">
             <input id="item_date" type="date" class="form-control" name="item_date">
-            <p>
-                <small>
-                    The date when the review was published.
-                </small>
-            </p>
+            <div class="form-text">
+                The date when the review was published.
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="item_rating" class="col-md-4 control-label">Rating</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="item_rating" class="col-sm-2 col-form-label">Rating</label>
+        <div class="col-sm-4">
             <input id="item_rating" type="text" class="form-control" name="item_rating">
-            <p>
-                <small>
-                    {% if ReviewSite.rating_scale == 5 %}
-                        Enter the score here. As your site ranks games out of 5 rather than 10,
-                        we will convert this to a rank out of 10 on submission. Please don't do this
-                        yourself, it'll mess things up :-)
-                    {% else %}
-                        Enter the score out of 10 here.
-                    {% endif %}
-                </small>
-            </p>
+            <div class="form-text">
+                {% if ReviewSite.rating_scale == 5 %}
+                    Enter the score here. As your site ranks games out of 5 rather than 10,
+                    we will convert this to a rank out of 10 on submission. Please don't do this
+                    yourself, it'll mess things up :-)
+                {% else %}
+                    Enter the score out of 10 here.
+                {% endif %}
+            </div>
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-primary">
-                Submit
-            </button>
-        </div>
-    </div>
+    {% include 'common/forms/submit.twig' %}
 </form>

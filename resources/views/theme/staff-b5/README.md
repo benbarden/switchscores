@@ -2,7 +2,7 @@
 
 This folder contains theme files for Staff pages that have been migrated to Bootstrap v5.
 
-This file will document some of the changes relevant to switchscores.
+This file will document any changes relevant to switchscores.
 
 # Including the new theme
 
@@ -31,11 +31,6 @@ They can mostly be swapped as follows:
 
 A new version of `modules/rating/badge.twig` can be found under `modules/rating/badge-b5.twig`.
 
-# Forms
-
-Forms have changed a lot and will need quite a bit of work to get them 
-looking good. A good example is in `staff/invite-code/form.twig`.
-
 # Text alignment
 
 Replace instances of `class="text-right` with `class="text-end"`.
@@ -43,3 +38,18 @@ Replace instances of `class="text-right` with `class="text-end"`.
 # Tables
 
 Replace `table-condensed` with `table-sm`.
+
+# Forms
+
+Forms have changed a lot and will need quite a bit of work to get them
+looking good. A good example is in `staff/invite-code/form.twig`.
+
+Tips:
+
+* Replace `<div class="form-group">` with `<div class="row mb-3">`
+* Replace `control-label` with `col-form-label`
+* Wrap form text in `<div class="form-text">`
+* Change the columns on labels and form fields
+* Replace the submit button with `{% include 'common/forms/submit.twig' %}`. The button is wrapped in `<div class="row mb-3">`
+
+

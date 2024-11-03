@@ -1,12 +1,10 @@
-{% extends 'theme/wos/reviewers/clean-wide.twig' %}
-{% set hideHeader = 'Y' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
     <div class="row member-dashboard">
 
         <div class="col-xs-12 col-sm-8 col-md-8">
-            <h1>{{ PageTitle }}</h1>
 
             {% if ShowNewSignup %}
                 <div class="alert alert-success">
@@ -49,7 +47,7 @@
             <p>
                 Except where stated, low quality games are excluded.
             </p>
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <tbody>
                 <tr>
                     <td>
@@ -57,7 +55,7 @@
                             Unranked: 2 reviews
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 2}) }}" class="h5">
                             {{ UnrankedReviews2 }}
                         </a>
@@ -69,7 +67,7 @@
                             Unranked: 1 review
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 1}) }}" class="h5">
                             {{ UnrankedReviews1 }}
                         </a>
@@ -81,7 +79,7 @@
                             Unranked: 0 reviews
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                         <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 0}) }}" class="h5">
                             {{ UnrankedReviews0 }}
                         </a>
@@ -94,7 +92,7 @@
                                 Unranked: {{ WhichYear }}
                             </a>
                         </td>
-                        <td class="text-right">
+                        <td class="text-end">
                             <a href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-year', 'filter': WhichYear}) }}" class="h5">
                                 {{ _context['UnrankedYear'~WhichYear] }}
                             </a>
@@ -105,7 +103,7 @@
                     <td>
                         Unranked: Low quality
                     </td>
-                    <td class="text-right">
+                    <td class="text-end">
                     <span class="h5">
                         {{ UnrankedLowQuality }}
                     </span>
@@ -123,7 +121,15 @@
                 Fill out your details so publishers and developers can contact you with review codes.
                 Only publishers and developers will be able to view your contact details.
             </p>
-            <table class="table table-condensed table-responsive">
+            <table class="table table-sm table-responsive">
+                <tr>
+                    <td>
+                        <span style="font-weight: bold;">Site name</span>
+                    </td>
+                    <td>
+                        {{ PartnerData.name }}
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <span style="font-weight: bold;">Website URL</span>

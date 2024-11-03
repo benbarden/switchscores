@@ -1,5 +1,4 @@
-{% extends 'theme/wos/games-companies/clean-wide.twig' %}
-{% set hideHeader = 'Y' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -7,7 +6,6 @@
 
         <div class="col-xs-12 col-sm-8 col-md-8">
 
-            <h1>{{ PageTitle }}</h1>
             <h2>{{ GameData.title }}</h2>
 
             {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Reviewed'} %}
@@ -30,7 +28,7 @@
                                 <td>{{ item.site.name }}</td>
                                 <td class="text-center">{{ item.review_date }}</td>
                                 <td class="text-center">
-                                    {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
+                                    {% include 'modules/rating/badge-b5.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ item.url }}" target="_blank" title="Opens in a new tab">Read review</a>

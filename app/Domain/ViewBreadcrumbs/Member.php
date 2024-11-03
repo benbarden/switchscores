@@ -15,6 +15,10 @@ class Member extends Base
 
         $this->toastedCrumbs['member.quickReviews.list'] = ['url' => route('user.quick-reviews.list'), 'text' => 'Quick reviews'];
 
+        $this->toastedCrumbs['member.reviewers.index'] = ['url' => route('reviewers.index'), 'text' => 'Reviewers'];
+
+        $this->toastedCrumbs['gamesCompanies.index'] = ['url' => route('games-companies.index'), 'text' => 'Games companies'];
+
         $this->toastedCrumbs['member.developers.index'] = ['url' => route('user.developers.index'), 'text' => 'Developers'];
     }
 
@@ -33,6 +37,16 @@ class Member extends Base
     public function quickReviewsSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['member.quickReviews.list'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function reviewersSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['member.reviewers.index'])->addTitleAndReturn($pageTitle);
+    }
+
+    public function gamesCompaniesSubpage($pageTitle)
+    {
+        return $this->addCrumb($this->toastedCrumbs['gamesCompanies.index'])->addTitleAndReturn($pageTitle);
     }
 
     public function developersSubpage($pageTitle)

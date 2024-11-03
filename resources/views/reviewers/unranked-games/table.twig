@@ -1,12 +1,12 @@
 {% if GamesList %}
-    <table class="table data-sortable">
+    <table class="table table-sm data-sortable">
         <thead>
             <tr>
                 <th class="text-center">Rank</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th class="text-center">Release date</th>
-                <th class="text-right">Quality filter</th>
+                <th class="text-center">Quality filter</th>
                 <th class="text-center">Avg rating</th>
                 <th class="text-center">Total reviews</th>
             </tr>
@@ -43,7 +43,7 @@
                     </td>
                     <td class="text-center">
                         {% if item.rating_avg %}
-                            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h5'} %}
+                            {% include 'modules/rating/badge-b5.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
                         {% endif %}
                     </td>
                     <td class="text-center">
@@ -57,7 +57,7 @@
     <p>No games to display!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     {% if GamesTableSort is not defined %}
     {% set GamesTableSort = "[3, 'desc']" %}

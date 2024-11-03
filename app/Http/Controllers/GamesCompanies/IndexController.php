@@ -22,7 +22,9 @@ class IndexController extends Controller
 
     public function show()
     {
-        $bindings = [];
+        $pageTitle = 'Games company dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
 
@@ -49,10 +51,6 @@ class IndexController extends Controller
         $bindings['RankedGames'] = $rankedGames;
         $bindings['UnrankedGames'] = $unrankedGames;
         $bindings['PartnerData'] = $partnerData;
-
-        $pageTitle = 'Games company dashboard';
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         if (request()->action == 'newsignup') {
             $bindings['ShowNewSignup'] = true;

@@ -29,6 +29,10 @@ class ProfileController extends Controller
 
     public function edit()
     {
+        $pageTitle = 'Edit profile';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->gamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
 
         $gamesCompany = $currentUser->gamesCompany;
@@ -37,7 +41,6 @@ class ProfileController extends Controller
 
         $gamesCompanyId = $gamesCompany->id;
 
-        $bindings = [];
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -68,9 +71,6 @@ class ProfileController extends Controller
         } else {
             $bindings['FormMode'] = 'edit';
         }
-
-        $bindings['TopTitle'] = 'Edit profile';
-        $bindings['PageTitle'] = 'Edit profile';
 
         $bindings['GamesCompany'] = $gamesCompany;
 

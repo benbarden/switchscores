@@ -1,4 +1,4 @@
-{% extends 'theme/wos/reviewers/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -7,57 +7,51 @@
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="website_url" class="col-md-4 control-label">Site URL (include http://)</label>
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <label for="website_url" class="col-sm-2 col-form-label">Site URL (include http://)</label>
+        <div class="col-sm-4">
             {{ PartnerData.website_url }}
-            <br><small>Please get in touch if you need to change this.</small>
+            <div class="form-text">Please get in touch if you need to change this.</div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="contact_name" class="col-md-4 control-label">
+    <div class="row mb-3">
+        <label for="contact_name" class="col-sm-2 col-form-label">
             Contact name
         </label>
-        <div class="col-md-6">
+        <div class="col-sm-4">
             <input id="contact_name" type="text" class="form-control" name="contact_name" maxlength="100">
-            <small>The name that any queries should be addressed to.</small>
+            <div class="form-text">The name that any queries should be addressed to.</div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="contact_email" class="col-md-4 control-label">
+    <div class="row mb-3">
+        <label for="contact_email" class="col-sm-2 col-form-label">
             Contact email
         </label>
-        <div class="col-md-6">
+        <div class="col-sm-4">
             <input id="contact_email" type="text" class="form-control" name="contact_email">
-            <small>The email address you want publishers and developers to use for getting in touch.</small>
+            <div class="form-text">The email address you want publishers and developers to use for getting in touch.</div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="contact_form_link" class="col-md-4 control-label">
+    <div class="row mb-3">
+        <label for="contact_form_link" class="col-sm-2 col-form-label">
             Contact form link
         </label>
-        <div class="col-md-6">
+        <div class="col-sm-4">
             <input id="contact_form_link" type="text" class="form-control" name="contact_form_link">
-            <small>Optional - if you'd prefer not to include your email, you can also use a contact form link.</small>
+            <div class="form-text">Optional - if you'd prefer not to include your email, you can also use a contact form link.</div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="review_code_regions" class="col-md-4 control-label">
+    <div class="row mb-3">
+        <label for="review_code_regions" class="col-sm-2 col-form-label">
             Review code regions
         </label>
-        <div class="col-md-6">
+        <div class="col-sm-4">
             <input id="review_code_regions" type="text" class="form-control" name="review_code_regions" maxlength="100">
-            <small>List the regions you will codes for. Keep it brief - e.g. UK, Europe, US.</small>
+            <div class="form-text">List the regions you will accept codes for. Keep it brief - e.g. UK, Europe, US.</div>
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
-            <button type="submit" class="btn outline btn-primary">
-                Submit
-            </button>
-        </div>
-    </div>
+    {% include 'common/forms/submit.twig' %}
 </form>
 
 {% include 'reviewers/profile/scripts.twig' %}

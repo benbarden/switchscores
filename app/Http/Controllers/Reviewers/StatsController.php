@@ -20,9 +20,9 @@ class StatsController extends Controller
 
     public function landing()
     {
-        $serviceReviewLink = $this->getServiceReviewLink();
-
-        $bindings = [];
+        $pageTitle = 'Stats';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -35,17 +35,12 @@ class StatsController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        $pageTitle = 'Stats';
-
         // Review stats (for infobox)
-        $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
+        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($partnerId);
         $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
         // Score distribution
-        $bindings['ScoreDistribution'] = $serviceReviewLink->getSiteScoreDistribution($partnerId);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings['ScoreDistribution'] = $this->getServiceReviewLink()->getSiteScoreDistribution($partnerId);
 
         return view('reviewers.stats.landing', $bindings);
     }

@@ -22,12 +22,12 @@ class GamesController extends Controller
 
     public function show($gameId)
     {
-        $bindings = [];
-
         $game = $this->getServiceGame()->find($gameId);
         if (!$game) abort(404);
 
         $pageTitle = 'Game detail: '.$game->title;
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $bindings['GameData'] = $game;
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
@@ -38,9 +38,6 @@ class GamesController extends Controller
 
         // Nintendo.co.uk API data
         $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('reviewers.games.show', $bindings);
     }

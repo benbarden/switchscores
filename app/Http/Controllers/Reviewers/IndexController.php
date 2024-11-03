@@ -28,6 +28,10 @@ class IndexController extends Controller
 
     public function show()
     {
+        $pageTitle = 'Reviewers dashboard';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $currentUser = resolve('User/Repository')->currentUser();
 
         $reviewSite = $currentUser->partner;
@@ -39,11 +43,7 @@ class IndexController extends Controller
 
         $serviceReviewLink = $this->getServiceReviewLink();
 
-        $bindings = [];
-
         $bindings['PartnerData'] = $reviewSite;
-
-        $pageTitle = 'Reviewers dashboard: '.$reviewSite->name;
 
         // Review stats (for infobox)
         $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);

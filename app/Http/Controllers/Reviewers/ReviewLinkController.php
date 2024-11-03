@@ -20,9 +20,11 @@ class ReviewLinkController extends Controller
 
     public function landing($report = '')
     {
-        $serviceReviewLink = $this->getServiceReviewLink();
+        $pageTitle = 'Review links';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $bindings = [];
+        $serviceReviewLink = $this->getServiceReviewLink();
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -60,9 +62,6 @@ class ReviewLinkController extends Controller
 
         $bindings['ReviewLinks'] = $reviewLinks;
         $bindings['jsInitialSort'] = "[ 3, 'desc']";
-
-        $bindings['TopTitle'] = 'Review links';
-        $bindings['PageTitle'] = 'Review links';
 
         return view('reviewers.reviews.list', $bindings);
     }

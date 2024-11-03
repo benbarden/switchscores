@@ -1,31 +1,25 @@
-{% extends 'theme/wos/reviewers/clean-wide.twig' %}
-
-{% set crumbNav = [{'text': PageTitle}] %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
     <div class="col-xs-12 col-sm-3">
-    </div>
-    <div class="col-xs-12 col-sm-9">
-        <div class="pull-right">
-            <label for="user-review-filter">Filter</label>
-            <select id="user-review-filter" name="user-review-filter" class="form-control">
-                <option value="">All reviews</option>
-                <optgroup label="By score">
-                    <option value="score-1">1</option>
-                    <option value="score-2">2</option>
-                    <option value="score-3">3</option>
-                    <option value="score-4">4</option>
-                    <option value="score-5">5</option>
-                    <option value="score-6">6</option>
-                    <option value="score-7">7</option>
-                    <option value="score-8">8</option>
-                    <option value="score-9">9</option>
-                    <option value="score-10">10</option>
-                </optgroup>
-            </select>
-        </div>
+        <label for="user-review-filter">Filter</label>
+        <select id="user-review-filter" name="user-review-filter" class="form-control">
+            <option value="">All reviews</option>
+            <optgroup label="By score">
+                <option value="score-1">1</option>
+                <option value="score-2">2</option>
+                <option value="score-3">3</option>
+                <option value="score-4">4</option>
+                <option value="score-5">5</option>
+                <option value="score-6">6</option>
+                <option value="score-7">7</option>
+                <option value="score-8">8</option>
+                <option value="score-9">9</option>
+                <option value="score-10">10</option>
+            </optgroup>
+        </select>
     </div>
 </div>
 
@@ -45,7 +39,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th class="text-left">Game</th>
                 <th class="text-left">Site</th>
                 <th class="text-center">Date</th>
@@ -57,7 +51,7 @@
         <tbody>
             {% for item in ReviewLinks %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td class="text-left">
@@ -90,7 +84,7 @@
     <p>No review links found!</p>
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'common/table-sorting-b5.twig' %}
 <script>
     $('#user-review-filter').on('change', function() {
         selectedFilter = $(this).val();

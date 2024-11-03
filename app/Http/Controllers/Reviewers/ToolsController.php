@@ -24,14 +24,13 @@ class ToolsController extends Controller
 
     public function importReviews()
     {
-        $bindings = [];
+        $pageTitle = 'Import reviews';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;
         if (!$siteId) abort(403);
-
-        $bindings['PageTitle'] = "Import reviews";
-        $bindings['TopTitle'] = "Import reviews";
 
         $partnerData = $this->repoReviewSite->find($siteId);
 

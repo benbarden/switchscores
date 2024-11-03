@@ -21,10 +21,12 @@ class ReviewCoverageController extends Controller
 
     public function show($gameId)
     {
+        $pageTitle = 'Review coverage';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->gamesCompaniesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
-
-        $bindings = [];
 
         $bindings['GameData'] = $game;
         $reviewLinkList = $this->repoReviewLink->byGame($gameId)->sortByDesc('review_date');
@@ -36,10 +38,6 @@ class ReviewCoverageController extends Controller
         $bindings['NotReviewedPartnerList'] = $notReviewedList;
 
         $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
-
-        $pageTitle = 'Review coverage';
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('games-companies.review-coverage.show', $bindings);
     }
