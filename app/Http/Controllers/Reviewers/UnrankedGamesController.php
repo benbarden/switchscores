@@ -44,7 +44,6 @@ class UnrankedGamesController extends Controller
 
         $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
 
-        $serviceGameReleaseDate = $this->getServiceGameReleaseDate();
         $serviceReviewLink = $this->getServiceReviewLink();
 
         $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($partnerId);
