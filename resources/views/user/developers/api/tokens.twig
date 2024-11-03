@@ -1,4 +1,4 @@
-{% extends 'theme/wos/developer-hub/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -26,7 +26,7 @@
                             <td>{{ item.created_at }}</td>
                             <td>{{ item.expires_at }}</td>
                             <td>
-                                <a href="{{ route('developer-hub.api.tokens.delete', {'tokenId': item.id}) }}">Delete</a>
+                                <a href="{{ route('user.developers.api.tokens.delete', {'tokenId': item.id}) }}">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -43,7 +43,7 @@
             </p>
         {% else %}
             <p>
-                <a href="{{ route('developer-hub.api.tokens.create') }}">Get a new token</a>.
+                <a href="{{ route('user.developers.api.tokens.create') }}">Get a new token</a>.
             </p>
         {% endif %}
 

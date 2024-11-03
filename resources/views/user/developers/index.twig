@@ -1,13 +1,6 @@
-{% extends 'theme/wos/developer-hub/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
-
-    <p>
-        Welcome to the developer hub.
-        Please send questions or feedback to Ben via
-        <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-        <a href="mailto:ben@switchscores.com">email</a>.
-    </p>
 
     <div class="row member-dashboard">
 
@@ -16,7 +9,7 @@
             <h2>API</h2>
 
             <p>
-                <a href="{{ route('developer-hub.api.guide') }}">
+                <a href="{{ route('user.developers.api.guide') }}">
                     API guide
                 </a>
                 <br>
@@ -24,7 +17,7 @@
             </p>
 
             <p>
-                <a href="{{ route('developer-hub.api.methods') }}">
+                <a href="{{ route('user.developers.api.methods') }}">
                     API methods
                 </a>
                 <br>
@@ -32,7 +25,7 @@
             </p>
 
             <p>
-                <a href="{{ route('developer-hub.api.tokens') }}">
+                <a href="{{ route('user.developers.api.tokens') }}">
                     API tokens
                 </a>
                 <br>
@@ -46,7 +39,7 @@
             <h2>Custom tools</h2>
 
             <p>
-                <a href="{{ route('developer-hub.custom-tools.upcoming-games-switch-weekly') }}">
+                <a href="{{ route('user.developers.switch-weekly') }}">
                     Upcoming games (Switch Weekly)
                 </a>
                 <br>

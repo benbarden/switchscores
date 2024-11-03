@@ -116,11 +116,9 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ route('user.index') }}">Members dashboard</a></li>
+                            <li><a href="{{ route('user.developers.index') }}">Developers</a></li>
                             {% if auth_user().isReviewer() %}
                                 <li><a href="{{ route('reviewers.index') }}">Reviewers dashboard</a></li>
-                            {% endif %}
-                            {% if auth_user().isDeveloper() %}
-                                <li><a href="{{ route('developer-hub.index') }}">Developer hub</a></li>
                             {% endif %}
                             {% if auth_user().isGamesCompany() %}
                                 <li><a href="{{ route('games-companies.index') }}">Games company dashboard</a></li>

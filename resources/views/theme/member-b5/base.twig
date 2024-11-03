@@ -68,7 +68,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user.index') }}">Dashboard</a>
+                            <a class="nav-link" href="{{ route('user.index') }}">Members</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.collection.landing') }}">Games collection</a>
@@ -76,9 +76,52 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.quick-reviews.list') }}">Quick reviews</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user.settings') }}">Settings</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDevelopers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Developers
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDevelopers">
+                                <li><a class="dropdown-item" href="{{ route('user.developers.index') }}">Developer index</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('user.developers.api.guide') }}">API guide</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.developers.api.methods') }}">API methods</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.developers.api.tokens') }}">API tokens</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('user.developers.switch-weekly') }}">Upcoming games (Switch Weekly)</a></li>
+                            </ul>
                         </li>
+                        {% if auth_user().isReviewer() %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarReviewers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reviewers
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarReviewers">
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.index') }}">Reviewers index</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.profile.edit') }}">Edit your details</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.reviews.landing') }}">Your reviews</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.feed-health.landing') }}">Feed health</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.stats.landing') }}">Stats</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 2}) }}">Unranked: 2 reviews</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 1}) }}">Unranked: 1 review</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 0}) }}">Unranked: 0 reviews</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if auth_user().isGamesCompany() %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarGamesCompanies" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Games companies
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarGamesCompanies">
+                                    <li><a class="dropdown-item" href="{{ route('games-companies.index') }}">Games companies index</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('games-companies.profile.edit') }}">Edit your details</a>
+                                </ul>
+                            </li>
+                        {% endif %}
                         {% if auth_user().isStaff() %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('staff.index') }}">Staff index</a>

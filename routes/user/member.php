@@ -38,4 +38,19 @@ Route::group(['middleware' => ['auth']], function() {
     // Settings
     Route::get('/user/settings', 'User\SettingsController@show')->name('user.settings');
 
+    // Developers
+    // *************** Developer hub: Dashboard *************** //
+    Route::get('/user/developers', 'User\DevelopersController@index')->name('user.developers.index');
+
+    // Custom tools
+    Route::get('/user/developers/switch-weekly', 'User\DevelopersController@switchWeekly')->name('user.developers.switch-weekly');
+
+    // API
+    Route::get('/user/developers/api/guide', 'User\DevelopersApiController@guide')->name('user.developers.api.guide');
+    Route::get('/user/developers/api/methods', 'User\DevelopersApiController@methods')->name('user.developers.api.methods');
+
+    Route::get('/user/developers/api/tokens', 'User\DevelopersApiController@tokens')->name('user.developers.api.tokens');
+    Route::get('/user/developers/api/tokens/create', 'User\DevelopersApiController@createToken')->name('user.developers.api.tokens.create');
+    Route::get('/user/developers/api/tokens/delete/{tokenId}', 'User\DevelopersApiController@deleteToken')->name('user.developers.api.tokens.delete');
+
 });
