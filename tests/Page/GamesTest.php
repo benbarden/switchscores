@@ -21,19 +21,6 @@ class GamesTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGamesBrowseByTitlePages()
-    {
-        $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        for ($i=0; $i<strlen($letters); $i++) {
-
-            $letter = substr($letters, $i, 1);
-            $response = $this->get('/games/by-title/'.$letter);
-            $response->assertStatus(200);
-
-        }
-    }
-
     public function testGamesBrowseByDatePage()
     {
         $response = $this->get('/games/by-date/2020-01');

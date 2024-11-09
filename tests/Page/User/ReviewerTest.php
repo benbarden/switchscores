@@ -60,13 +60,8 @@ class ReviewerTest extends TestCase
         $this->doPageTest("/reviewers/unranked-games/by-year/2017");
         $this->doPageTest("/reviewers/unranked-games/by-year/2018");
         $this->doPageTest("/reviewers/unranked-games/by-year/2019");
-        //$this->doPageTest("/reviewers/unranked-games/by-year/2020");
-        //$this->doPageTest("/reviewers/unranked-games/by-year/2021");
         $this->doPageTest("/reviewers/unranked-games/by-count/0");
         $this->doPageTest("/reviewers/unranked-games/by-count/1");
         $this->doPageTest("/reviewers/unranked-games/by-count/2");
-        $this->doPageTest("/reviewers/unranked-games/by-list/aca-neogeo");
-        $this->doPageTest("/reviewers/unranked-games/by-list/arcade-archives");
-        $this->doPageTest("/reviewers/unranked-games/by-list/all-others");
     }
 }

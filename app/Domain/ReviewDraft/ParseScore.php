@@ -66,8 +66,9 @@ class ParseScore
                     break;
 
                 case ReviewSite::SITE_NINTENPEDIA:
-                    $scraperScore->crawlPage($itemUrl);
-                    $score = $scraperScore->customNintenpedia();
+                    // Does not work anymore :-(
+                    //$scraperScore->crawlPage($itemUrl);
+                    //$score = $scraperScore->customNintenpedia();
                     break;
 
                 case ReviewSite::SITE_HEY_POOR_PLAYER:

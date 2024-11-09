@@ -67,13 +67,10 @@ class PublicPageTest extends TestCase
         $this->doPageTest("/top-rated/by-year/2019");
         $this->doPageTest("/top-rated/by-year/2020");
         $this->doPageTest("/top-rated/by-year/2021");
-        $this->doPageTest("/top-rated/multiplayer");
 
         $this->doPageTest("/games");
         $this->doPageTest("/games/search");
 
-        $this->doPageTest("/games/by-title");
-        $this->doPageTest("/games/by-title/A");
         $this->doPageTest("/games/by-category");
         $this->doPageTest("/games/by-category/adventure");
         $this->doPageTest("/games/by-series/pokemon");

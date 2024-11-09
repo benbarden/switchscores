@@ -231,38 +231,38 @@ class RoleNameTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testPartnersDashboard()
+    public function testGamesCompaniesDashboard()
     {
         $this->be($this->userOwner);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(200);
 
         $this->be($this->userNotStaff);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(401);
 
         $this->be($this->userGamesManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userReviewsManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userCategoryManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userPartnershipsManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(200);
 
         $this->be($this->userNewsManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(403);
 
         $this->be($this->userDataSourceManager);
-        $response = $this->get('/staff/partners/dashboard');
+        $response = $this->get('/staff/games-companies/dashboard');
         $response->assertStatus(403);
     }
 
