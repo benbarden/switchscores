@@ -42,9 +42,16 @@ class Repository
             ->get();
     }
 
+    public function getArchived()
+    {
+        return ReviewSite::where('status', ReviewSite::STATUS_ARCHIVED)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
     public function getActiveWithContactDetails()
     {
-        return ReviewSite::where('status', ReviewSite::STATUS_ACTIVE)
+        return ReviewSite::where('status', '<>', ReviewSite::STATUS_ARCHIVED)
             ->whereNotNull('contact_email')->orWhereNotNull('contact_form_link')
             ->orderBy('name', 'asc')
             ->get();

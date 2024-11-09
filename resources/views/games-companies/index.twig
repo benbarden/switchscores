@@ -199,7 +199,7 @@
 
                 <table class="table table-responsive">
                     <thead>
-                    <th>Site name</th>
+                    <th>Site</th>
                     <th>Regions</th>
                     <th>Contact name</th>
                     <th>Email or contact form</th>
@@ -207,7 +207,11 @@
                     <tbody>
                     {% for item in ReviewSitesWithContactDetails %}
                         <tr>
-                            <td>{{ item.name }}</td>
+                            <td>
+                                <a href="{{ item.website_url }}" target="_blank">
+                                    {{ item.name }}
+                                </a>
+                            </td>
                             <td>{{ item.review_code_regions }}</td>
                             <td>{{ item.contact_name }}</td>
                             <td>

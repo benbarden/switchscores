@@ -41,6 +41,7 @@ class ReviewSiteController extends Controller
 
         $bindings['ReviewSitesActive'] = $this->repoReviewSite->getActive();
         $bindings['ReviewSitesNoRecentReviews'] = $this->repoReviewSite->getNoRecentReviews();
+        $bindings['ReviewSitesArchived'] = $this->repoReviewSite->getArchived();
 
         return view('staff.reviews.review-sites.index', $bindings);
     }
@@ -116,7 +117,8 @@ class ReviewSiteController extends Controller
 
         $bindings['StatusList'] = [
             ReviewSite::STATUS_ACTIVE,
-            ReviewSite::STATUS_NO_RECENT_REVIEWS
+            ReviewSite::STATUS_NO_RECENT_REVIEWS,
+            ReviewSite::STATUS_ARCHIVED,
         ];
 
         return view('staff.reviews.review-sites.edit', $bindings);

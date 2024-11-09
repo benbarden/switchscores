@@ -11,6 +11,7 @@ class ReviewSite extends Model implements Auditable
 
     const STATUS_ACTIVE = 'Active';
     const STATUS_NO_RECENT_REVIEWS = 'No recent reviews';
+    const STATUS_ARCHIVED = 'Archived';
 
     const REVIEW_IMPORT_BY_FEED = 'Feed';
     const REVIEW_IMPORT_BY_SCRAPER = 'Scraper';
