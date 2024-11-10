@@ -9,8 +9,6 @@ use App\Services\DataSourceParsedService;
 use App\Services\DataSourceRawService;
 use App\Services\GameCalendarService;
 use App\Services\GameImportRuleEshopService;
-use App\Services\GameRankYearService;
-use App\Services\GameRankYearMonthService;
 use App\Services\GameService;
 use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
@@ -136,24 +134,6 @@ trait SwitchServices
     public function getServiceGameImportRuleEshop()
     {
         return $this->loadService('GameImportRuleEshopService');
-    }
-
-    /**
-     * @deprecated
-     * @return GameRankYearService
-     */
-    public function getServiceGameRankYear()
-    {
-        return $this->loadService('GameRankYearService');
-    }
-
-    /**
-     * @deprecated
-     * @return GameRankYearMonthService
-     */
-    public function getServiceGameRankYearMonth()
-    {
-        return $this->loadService('GameRankYearMonthService');
     }
 
     /**

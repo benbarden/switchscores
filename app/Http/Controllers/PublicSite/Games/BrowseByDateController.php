@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PublicSite\Games;
 
 use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Traits\SwitchServices;
 use Illuminate\Routing\Controller as Controller;
@@ -15,7 +16,8 @@ class BrowseByDateController extends Controller
     public function __construct(
         private GameListsRepository $repoGameLists,
         private GameListsDbQueries $dbGameLists,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private TopRatedDbQueries $dbTopRated
     )
     {
     }
@@ -128,7 +130,7 @@ class BrowseByDateController extends Controller
 
         // Top Rated by month
         $yearMonth = $calendarYear.$calendarMonth;
-        $bindings['GamesRatingsWithRanks'] = $this->getServiceGameRankYearMonth()->getList($yearMonth, 50);
+        $bindings['GamesRatingsWithRanks'] = $this->dbTopRated->byYearMonth($yearMonth, 50);
 
         return view('public.games.browse.byDatePage', $bindings);
     }

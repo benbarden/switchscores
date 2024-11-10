@@ -22,16 +22,14 @@ class TopRatedController extends Controller
 
     public function landing()
     {
-        $serviceGameRankYear = $this->getServiceGameRankYear();
-
         $bindings = [];
 
         $thisYear = date('Y');
         $lastYear = $thisYear - 1;
         $bindings['Year'] = $thisYear;
         $bindings['LastYear'] = $lastYear;
-        $bindings['TopRatedThisYear'] = $serviceGameRankYear->getList($thisYear, 15);
-        $bindings['TopRatedLastYear'] = $serviceGameRankYear->getList($lastYear, 15);
+        $bindings['TopRatedThisYear'] = $this->dbTopRated->byYear($thisYear, 15);
+        $bindings['TopRatedLastYear'] = $this->dbTopRated->byYear($lastYear, 15);
         $bindings['TopRatedAllTime'] = $this->dbTopRated->getList(1, 15);
 
         $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
@@ -85,8 +83,6 @@ class TopRatedController extends Controller
 
     public function byYear($year)
     {
-        $serviceGameRankYear = $this->getServiceGameRankYear();
-
         $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
         if (!in_array($year, $allowedYears)) {
             abort(404);
@@ -94,7 +90,7 @@ class TopRatedController extends Controller
 
         $bindings = [];
 
-        $gamesList = $serviceGameRankYear->getList($year, 100);
+        $gamesList = $this->dbTopRated->byYear($year, 100);
 
         $bindings['TopRatedByYear'] = $gamesList;
         $bindings['GamesTableSort'] = "[5, 'desc']";
