@@ -38,7 +38,7 @@ class ReviewSiteStats
         $siteId = $reviewSite->id;
         $siteName = $reviewSite->name;
 
-        $reviewCount = $this->statsReviewLink->countBySite($siteId);
+        $reviewCount = $this->statsReviewLink->totalBySite($siteId);
         $reviewLatest = $this->repoReviewLink->getLatestBySite($siteId);
         if ($reviewLatest) {
             $latestReviewDate = $reviewLatest->review_date;

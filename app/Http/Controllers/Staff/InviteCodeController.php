@@ -9,8 +9,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\InviteCode\CodeGenerator;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
@@ -18,8 +16,6 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 class InviteCodeController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

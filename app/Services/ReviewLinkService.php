@@ -191,14 +191,6 @@ class ReviewLinkService
         return $gameReviews;
     }
 
-    public function getByUser($userId)
-    {
-        return ReviewLink::where('user_id', $userId)
-            ->orderBy('review_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->get();
-    }
-
     public function getNormalisedRating($ratingOriginal, ReviewSite $reviewSite)
     {
         $normalisedScaleLimit = 10;

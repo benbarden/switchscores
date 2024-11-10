@@ -11,18 +11,17 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Domain\QuickReview\Stats as QuickReviewStats;
+use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 use App\Domain\ViewBindings\Staff as Bindings;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
 use App\Models\UserRole;
 
-use App\Traits\SwitchServices;
-
 class UserController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -39,7 +38,10 @@ class UserController extends Controller
         private UserRepository $repoUser,
         private GamesCompanyRepository $repoGamesCompany,
         private ReviewSiteRepository $repoReviewSite,
-        private UserGamesCollectionRepository $repoUserGamesCollection
+        private UserGamesCollectionRepository $repoUserGamesCollection,
+        private QuickReviewStats $statsQuickReview,
+        private UserGamesCollectionStats $statsUserGamesCollection,
+        private ReviewLinkStats $statsReviewLink
     )
     {
     }
@@ -69,11 +71,8 @@ class UserController extends Controller
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
 
-        $statsQuickReviews = $this->getServiceQuickReview()->getAllByUser($userId);
-        $statsCollection = $this->repoUserGamesCollection->byUser($userId);
-
-        $bindings['StatsQuickReviews'] = count($statsQuickReviews);
-        $bindings['StatsCollection'] = count($statsCollection);
+        $bindings['StatsQuickReviews'] = $this->statsQuickReview->totalByUser($userId);
+        $bindings['StatsCollection'] = $this->statsUserGamesCollection->totalByUser($userId);
 
         return view('owner.user.view', $bindings);
     }
@@ -164,13 +163,13 @@ class UserController extends Controller
         $request = request();
 
         // Validation: check for any reason we should not allow the user to be deleted.
-        $reviewLinks = $this->getServiceReviewLink()->getByUser($userId);
-        if (count($reviewLinks) > 0) {
-            $customErrors[] = 'User has created '.count($reviewLinks).' review link(s)';
+        $totalReviewLinks = $this->statsReviewLink->totalByUser($userId);
+        if ($totalReviewLinks > 0) {
+            $customErrors[] = 'User has created '.$totalReviewLinks.' review link(s)';
         }
-        $quickReviews = $this->getServiceQuickReview()->getAllByUser($userId);
-        if (count($quickReviews) > 0) {
-            $customErrors[] = 'User has created '.count($quickReviews).' quick review(s)';
+        $totalQuickReviews = $this->statsQuickReview->totalByUser($userId);
+        if ($totalQuickReviews > 0) {
+            $customErrors[] = 'User has created '.$totalQuickReviews.' quick review(s)';
         }
 
         if ($request->isMethod('post')) {

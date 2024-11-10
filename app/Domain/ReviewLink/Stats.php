@@ -10,6 +10,16 @@ use Illuminate\Support\Collection;
 
 class Stats
 {
+    public function totalBySite($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)->count();
+    }
+
+    public function totalByUser($userId)
+    {
+        return ReviewLink::where('user_id', $userId)->count();
+    }
+
     public function calculateReviewCount(Collection $reviewLinks, Collection $quickReviews = null)
     {
         $reviewLinkCount = 0;
@@ -79,10 +89,5 @@ class Stats
         $game->review_count = $gameReviewStats[0];
         $game->rating_avg = $gameReviewStats[1];
         $game->save();
-    }
-
-    public function countBySite($siteId)
-    {
-        return ReviewLink::where('site_id', $siteId)->count();
     }
 }

@@ -10,4 +10,9 @@ class Stats
     {
         return UserGamesCollection::count();
     }
+
+    public function totalByUser($userId)
+    {
+        return UserGamesCollection::where('user_id', $userId)->count();
+    }
 }
