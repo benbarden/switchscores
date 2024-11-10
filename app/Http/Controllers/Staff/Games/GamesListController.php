@@ -155,7 +155,7 @@ class GamesListController extends Controller
     public function noAmazonUkLink()
     {
         $pageTitle = 'No Amazon UK link';
-        $tableSort = "[ 0, 'asc']";
+        $tableSort = "[ 0, 'desc']";
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 

@@ -67,7 +67,7 @@ class GameService
     {
         return Game::where('format_physical', Game::FORMAT_AVAILABLE)
             ->whereNull('amazon_uk_link')
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->limit($limit)
             ->get();
     }
