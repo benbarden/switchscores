@@ -29,7 +29,7 @@ class ReviewLink extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised', 'review_date', 'review_type', 'description'
+        'user_id', 'game_id', 'site_id', 'url', 'rating_original', 'rating_normalised', 'review_date', 'review_type', 'description'
     ];
 
     public function site()

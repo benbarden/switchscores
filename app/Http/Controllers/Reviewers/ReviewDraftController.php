@@ -145,6 +145,7 @@ class ReviewDraftController extends Controller
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
         $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
         $siteId = $currentUser->partner_id;
 
         if (!$siteId) abort(403);
@@ -182,6 +183,7 @@ class ReviewDraftController extends Controller
 
             // OK to proceed
             $params = [
+                'user_id' => $userId,
                 'site_id' => $siteId,
                 'game_id' => $gameId,
                 'item_title' => 'Review of '.$gameData->title,

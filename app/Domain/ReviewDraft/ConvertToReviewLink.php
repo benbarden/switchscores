@@ -33,6 +33,7 @@ class ConvertToReviewLink
 
         $itemId = $draftItem->id;
 
+        $userId = $draftItem->user_id;
         $gameId = $draftItem->game_id;
         $siteId = $draftItem->site_id;
         $itemUrl = $draftItem->item_url;
@@ -58,6 +59,7 @@ class ConvertToReviewLink
         $ratingNormalised = $calcReviewLink->normaliseRating($itemRating, $partner->rating_scale);
 
         $params = [
+            'user_id' => $userId,
             'game_id' => $gameId,
             'site_id' => $siteId,
             'url' => $itemUrl,
