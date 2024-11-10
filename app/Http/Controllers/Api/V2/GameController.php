@@ -162,7 +162,7 @@ class GameController
         }
 
         if ($game->amazon_uk_link) {
-            $amazonId = $this->affiliateAmazon->getId();
+            $amazonId = $this->affiliateAmazon->getUKId();
             $gameData['amazon_uk_url'] = $game->amazon_uk_link.'?tag='.$amazonId;
         } else {
             unset($gameData['amazon_uk_url']);

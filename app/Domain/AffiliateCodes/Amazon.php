@@ -4,10 +4,17 @@ namespace App\Domain\AffiliateCodes;
 
 class Amazon
 {
-    const SWITCHSCORES_AMAZON_ID = 'switchscore07-21';
+    const AMAZON_UK_ID = 'switchscore07-21';
 
-    public function getId()
+    const AMAZON_US_ID = 'switchscores-20';
+
+    public function getUKId()
     {
-        return self::SWITCHSCORES_AMAZON_ID;
+        return self::AMAZON_UK_ID;
+    }
+
+    public function getUSId()
+    {
+        return self::AMAZON_US_ID;
     }
 }

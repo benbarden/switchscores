@@ -62,10 +62,13 @@
 
                 {% endif %}
 
-                {% if GameData.format_digital != 'De-listed' and ((FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
+                {% if GameData.format_digital != 'De-listed' and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
                     <h2>Buy this game</h2>
                     {% if FullAmazonUkLink %}
                         <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
+                    {% endif %}
+                    {% if FullAmazonUsLink %}
+                        <a href="{{ FullAmazonUsLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon US</a>
                     {% endif %}
                     {% if DSNintendoCoUk is not null %}
                         <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" class="btn btn-primary btn-md" target="_blank">Buy at Nintendo.co.uk</a>
