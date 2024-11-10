@@ -62,6 +62,18 @@
 
                 {% endif %}
 
+                {% if GameData.format_digital != 'De-listed' and ((FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
+                    <h2>Buy this game</h2>
+                    {% if FullAmazonUkLink %}
+                        <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
+                    {% endif %}
+                    {% if DSNintendoCoUk is not null %}
+                        <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" class="btn btn-primary btn-md" target="_blank">Buy at Nintendo.co.uk</a>
+                    {% elseif GameData.nintendo_store_url_override %}
+                        <a href="{{ GameData.nintendo_store_url_override }}" class="btn btn-primary btn-md" target="_blank">Buy at Nintendo store</a>
+                    {% endif %}
+                {% endif %}
+
                 {% include 'public/games/page/reviews.twig' with {'GameReviews': GameReviews} %}
                 {% include 'public/games/page/quickReviews.twig' with {'ReviewList': GameQuickReviewList} %}
                 {% include 'public/games/page/news.twig' with {'NewsList': GameNews} %}
