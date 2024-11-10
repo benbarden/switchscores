@@ -16,7 +16,7 @@ class BrowseByCategoryController extends Controller
 
     public function landing()
     {
-        $pageTitle = 'Browse Nintendo Switch games by category';
+        $pageTitle = 'Nintendo Switch games list - By category';
         $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->gamesSubpage('By category');
         $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 

@@ -32,8 +32,8 @@ class TopRatedController extends Controller
         $bindings['TopRatedLastYear'] = $this->dbTopRated->byYear($lastYear, 15);
         $bindings['TopRatedAllTime'] = $this->dbTopRated->getList(1, 15);
 
-        $bindings['TopTitle'] = 'Top Rated Nintendo Switch games';
-        $bindings['PageTitle'] = 'Top Rated Nintendo Switch games';
+        $bindings['TopTitle'] = 'Best Nintendo Switch games';
+        $bindings['PageTitle'] = 'Best Nintendo Switch games';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Top Rated');
 
         return view('public.topRated.landing', $bindings);
@@ -47,8 +47,8 @@ class TopRatedController extends Controller
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
-        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
+        $bindings['TopTitle'] = 'Best Nintendo Switch games of all time';
+        $bindings['PageTitle'] = 'Best Nintendo Switch games of all time';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
 
         return view('public.topRated.allTime', $bindings);
@@ -74,8 +74,8 @@ class TopRatedController extends Controller
         $bindings = [];
         $bindings['TopRatedAllTime'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games';
-        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games';
+        $bindings['TopTitle'] = 'Best Nintendo Switch games of all time - Page '.$page;
+        $bindings['PageTitle'] = 'Best Nintendo Switch games of all time - Page '.$page;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
 
         return view('public.topRated.allTime', $bindings);
@@ -96,8 +96,8 @@ class TopRatedController extends Controller
         $bindings['GamesTableSort'] = "[5, 'desc']";
         $bindings['Year'] = $year;
 
-        $bindings['TopTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
-        $bindings['PageTitle'] = 'Top 100 Nintendo Switch games - released in '.$year;
+        $bindings['TopTitle'] = 'Best Nintendo Switch games of '.$year;
+        $bindings['PageTitle'] = 'Best Nintendo Switch games of '.$year;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage($year);
 
         return view('public.topRated.byYear', $bindings);

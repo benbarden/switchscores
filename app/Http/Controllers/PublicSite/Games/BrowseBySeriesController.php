@@ -28,8 +28,8 @@ class BrowseBySeriesController extends Controller
 
         $bindings['SeriesList'] = $this->repoGameSeries->getAll();
 
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series';
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series';
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By series';
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By series';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By series');
 
         return view('public.games.browse.bySeriesLanding', $bindings);
@@ -49,8 +49,8 @@ class BrowseBySeriesController extends Controller
 
         $bindings['GameList'] = $gameList;
 
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by series: '.$seriesName;
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By series: '.$seriesName;
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By series: '.$seriesName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySeriesSubpage($seriesName);
 
         return view('public.games.browse.bySeriesPage', $bindings);

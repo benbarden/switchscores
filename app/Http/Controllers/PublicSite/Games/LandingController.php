@@ -54,8 +54,8 @@ class LandingController extends Controller
             $bindings['RandomTop100Game'] = $topGameList;
         }
 
-        $bindings['TopTitle'] = 'Nintendo Switch games database';
-        $bindings['PageTitle'] = 'Nintendo Switch games database';
+        $bindings['TopTitle'] = 'Nintendo Switch games list';
+        $bindings['PageTitle'] = 'Nintendo Switch games list';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Games');
 
         return view('public.games.landing', $bindings);

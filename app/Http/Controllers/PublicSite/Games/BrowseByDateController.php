@@ -30,8 +30,8 @@ class BrowseByDateController extends Controller
     {
         $bindings = [];
 
-        $bindings['TopTitle'] = 'Nintendo Switch games by release date';
-        $bindings['PageTitle'] = 'Nintendo Switch games by release date';
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By release date';
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By release date';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By date');
 
         $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
@@ -125,8 +125,8 @@ class BrowseByDateController extends Controller
         }
         $bindings['CalendarGamesList'] = $calendarGames;
 
-        $bindings['TopTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
-        $bindings['PageTitle'] = 'Nintendo Switch games by release date: '.$dtDateDesc;
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By release date: '.$dtDateDesc;
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By release date: '.$dtDateDesc;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByDateSubpage($dtDateDesc);
 
         $bindings['CalendarDateDesc'] = $dtDateDesc;

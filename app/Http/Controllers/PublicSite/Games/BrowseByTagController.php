@@ -30,8 +30,8 @@ class BrowseByTagController extends Controller
 
         $bindings['TagCategoryList'] = $this->repoTagCategory->getAll();
 
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by tag';
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by tag';
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By tag';
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By tag';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By tag');
 
         return view('public.games.browse.byTagLanding', $bindings);
@@ -53,8 +53,8 @@ class BrowseByTagController extends Controller
         $bindings['UnrankedGameList'] = $this->repoTag->unrankedByTag($tagId);
         $bindings['DelistedGameList'] = $this->repoTag->delistedByTag($tagId);
 
-        $bindings['PageTitle'] = 'Browse games by tag: '.$tagName;
-        $bindings['TopTitle'] = 'Browse games by tag: '.$tagName;
+        $bindings['PageTitle'] = 'Nintendo Switch games list - By tag: '.$tagName;
+        $bindings['TopTitle'] = 'Nintendo Switch games list - By tag: '.$tagName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTagSubpage($tagName);
 
         return view('public.games.browse.tag.page-landing', $bindings);
