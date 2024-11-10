@@ -20,7 +20,6 @@ use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 use App\Services\TopRatedService;
 use App\Services\UrlService;
-use App\Services\UserGamesCollectionService;
 
 trait SwitchServices
 {
@@ -236,14 +235,5 @@ trait SwitchServices
     public function getServiceUrl()
     {
         return $this->loadService('UrlService');
-    }
-
-    /**
-     * @deprecated
-     * @return UserGamesCollectionService
-     */
-    public function getServiceUserGamesCollection()
-    {
-        return $this->loadService('UserGamesCollectionService');
     }
 }

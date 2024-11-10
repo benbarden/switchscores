@@ -20,8 +20,6 @@ use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
 
-use App\Services\UserGamesCollectionService;
-
 use App\Traits\SwitchServices;
 
 class CollectionController extends Controller
@@ -41,7 +39,6 @@ class CollectionController extends Controller
         private GameRepository $repoGame,
         private CategoryRepository $repoCategory,
         private CategoryDbQueries $dbCategory,
-        private UserGamesCollectionService $serviceUserGamesCollection,
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private UserGamesCollectionPlayStatus $ugcPlayStatus,
         private UserGamesCollectionDbQueries $dbUserGamesCollection,
@@ -131,7 +128,7 @@ class CollectionController extends Controller
 
         $bindings['Category'] = $category;
         $bindings['RankedGameList'] = $this->dbCategory->getRankedByCategory($category->id);
-        $bindings['OwnedGamedIdList'] = $this->getServiceUserGamesCollection()->getGameIdsByUser($userId);
+        $bindings['OwnedGamedIdList'] = $this->repoUserGamesCollection->byUserGameIds($userId);
 
         return view('user.collection.top-rated-by-category', $bindings);
     }
@@ -196,8 +193,6 @@ class CollectionController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
         $request = request();
 
         $currentUser = resolve('User/Repository')->currentUser();
@@ -211,7 +206,7 @@ class CollectionController extends Controller
 
             $validator->after(function ($validator) use ($userId, $gameId) {
                 // Check for duplicates
-                if ($this->getServiceUserGamesCollection()->isGameInCollection($userId, $gameId)) {
+                if ($this->repoUserGamesCollection->isGameInCollection($userId, $gameId)) {
                     $validator->errors()->add('title', 'This game is already in your collection.');
                 }
             });
@@ -222,7 +217,7 @@ class CollectionController extends Controller
                     ->withInput();
             }
 
-            $userGamesCollection = $serviceCollection->create(
+            $userGamesCollection = $this->repoUserGamesCollection->create(
                 $userId, $request->game_id, $request->owned_from, $request->owned_type,
                 $request->hours_played, $request->play_status
             );
@@ -257,14 +252,12 @@ class CollectionController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
         $request = request();
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
 
-        $collectionData = $serviceCollection->find($itemId);
+        $collectionData = $this->repoUserGamesCollection->find($itemId);
         if (!$collectionData) abort(404);
 
         if ($collectionData->user_id != $userId) abort(403);
@@ -275,7 +268,7 @@ class CollectionController extends Controller
 
             //$this->validate($request, $this->validationRules);
 
-            $serviceCollection->edit(
+            $this->repoUserGamesCollection->edit(
                 $collectionData, $request->owned_from, $request->owned_type,
                 $request->hours_played, $request->play_status
             );
@@ -298,8 +291,6 @@ class CollectionController extends Controller
 
     public function delete()
     {
-        $serviceCollection = $this->getServiceUserGamesCollection();
-
         $request = request();
 
         $collectionItemId = $request->itemId;
@@ -308,7 +299,7 @@ class CollectionController extends Controller
             return response()->json(['error' => 'Missing data: itemId'], 400);
         }
 
-        $collectionItem = $serviceCollection->find($collectionItemId);
+        $collectionItem = $this->repoUserGamesCollection->find($collectionItemId);
 
         if (!$collectionItem) {
             return response()->json(['error' => 'Not found: '.$collectionItemId], 404);
@@ -322,7 +313,7 @@ class CollectionController extends Controller
         }
 
         // Delete from collection
-        $serviceCollection->delete($collectionItemId);
+        $this->repoUserGamesCollection->delete($collectionItemId);
 
         // Trigger event
         event(new GameCollectionRemoved($collectionItem));

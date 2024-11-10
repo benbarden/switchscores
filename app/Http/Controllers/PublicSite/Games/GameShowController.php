@@ -9,8 +9,10 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\News\Repository as NewsRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\Game\AutoDescription;
+
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 use App\Traits\SwitchServices;
 
@@ -29,7 +31,8 @@ class GameShowController extends Controller
         private Breadcrumbs $viewBreadcrumbs,
         private GamePublisherRepository $repoGamePublisher,
         private GameDeveloperRepository $repoGameDeveloper,
-        private AutoDescription $autoDescription
+        private AutoDescription $autoDescription,
+        private UserGamesCollectionRepository $repoUserGamesCollection
     )
     {
     }
@@ -131,7 +134,7 @@ class GameShowController extends Controller
         $currentUser = resolve('User/Repository')->currentUser();
         if ($currentUser) {
             $userId = $currentUser->id;
-            $bindings['UserCollectionItem'] = $this->getServiceUserGamesCollection()->getUserGameItem($userId, $gameId);
+            $bindings['UserCollectionItem'] = $this->repoUserGamesCollection->byUserGameItem($userId, $gameId);
             $bindings['UserCollectionGame'] = $gameData;
         }
 

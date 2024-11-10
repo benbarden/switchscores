@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class CommunityController extends Controller
@@ -11,7 +14,8 @@ class CommunityController extends Controller
     use SwitchServices;
 
     public function __construct(
-        private UserRepository $repoUser
+        private UserRepository $repoUser,
+        private UserGamesCollectionStats $statsUserGamesCollection
     )
     {
     }
@@ -25,7 +29,7 @@ class CommunityController extends Controller
 
         // Stats
         $bindings['NewestUser'] = $this->repoUser->getNewest();
-        $bindings['CollectionCount'] = $this->getServiceUserGamesCollection()->countAllCollections();
+        $bindings['CollectionCount'] = $this->statsUserGamesCollection->countAllCollections();
 
 
         $bindings['TopTitle'] = 'Community';

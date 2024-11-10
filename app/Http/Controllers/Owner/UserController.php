@@ -10,8 +10,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+
 use App\Domain\ViewBindings\Staff as Bindings;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
+
 use App\Models\UserRole;
 
 use App\Traits\SwitchServices;
@@ -35,7 +38,8 @@ class UserController extends Controller
         private Breadcrumbs $viewBreadcrumbs,
         private UserRepository $repoUser,
         private GamesCompanyRepository $repoGamesCompany,
-        private ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite,
+        private UserGamesCollectionRepository $repoUserGamesCollection
     )
     {
     }
@@ -66,7 +70,7 @@ class UserController extends Controller
         $bindings['UserId'] = $userId;
 
         $statsQuickReviews = $this->getServiceQuickReview()->getAllByUser($userId);
-        $statsCollection = $this->getServiceUserGamesCollection()->getByUser($userId);
+        $statsCollection = $this->repoUserGamesCollection->byUser($userId);
 
         $bindings['StatsQuickReviews'] = count($statsQuickReviews);
         $bindings['StatsCollection'] = count($statsCollection);
@@ -173,7 +177,7 @@ class UserController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $this->getServiceUserGamesCollection()->deleteByUserId($userId);
+            $this->repoUserGamesCollection->deleteByUserId($userId);
             $this->repoUser->deleteUser($userId);
 
             // Done

@@ -3,40 +3,52 @@
 namespace App\Http\Controllers\PublicSite\Games;
 
 use App\Domain\Category\Repository as CategoryRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use Illuminate\Routing\Controller as Controller;
 
 class BrowseByCategoryController extends Controller
 {
     public function __construct(
-        private CategoryRepository $repoCategory,
-        private Breadcrumbs $viewBreadcrumbs
+        private CategoryRepository $repoCategory
     )
     {
     }
 
     public function landing()
     {
-        $bindings = [];
+        $pageTitle = 'Browse Nintendo Switch games by category';
+        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->gamesSubpage('By category');
+        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
-
-        $bindings['PageTitle'] = 'Browse Nintendo Switch games by category';
-        $bindings['TopTitle'] = 'Browse Nintendo Switch games by category';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By category');
 
         return view('public.games.browse.byCategoryLanding', $bindings);
     }
 
     public function page($category)
     {
-        $bindings = [];
-
         $category = $this->repoCategory->getByLinkTitle($category);
         if (!$category) abort(404);
 
         $categoryId = $category->id;
         $categoryName = $category->name;
+
+        $pageTitle = 'Nintendo Switch '.$categoryName;
+        if (str_ends_with($categoryName, 'game')) {
+            $pageTitle .= 's';
+        } else {
+            $pageTitle .= ' games';
+        }
+
+        if ($category->parent_id) {
+            $categoryParent = $this->repoCategory->find($category->parent_id);
+            if (!$categoryParent) abort(500);
+            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->gamesBySubcategorySubpage($categoryParent, $categoryName);
+        } else {
+            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->gamesByCategorySubpage($categoryName);
+        }
+
+        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
         $bindings['Category'] = $category;
 
@@ -48,24 +60,6 @@ class BrowseByCategoryController extends Controller
         // Tables
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
-
-        $pageTitle = 'Nintendo Switch '.$categoryName;
-        if (substr($categoryName, -4) == 'game') {
-            $pageTitle .= 's';
-        } else {
-            $pageTitle .= ' games';
-        }
-
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['TopTitle'] = $pageTitle;
-
-        if ($category->parent_id) {
-            $categoryParent = $this->repoCategory->find($category->parent_id);
-            if (!$categoryParent) abort(500);
-            $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySubcategorySubpage($categoryParent, $categoryName);
-        } else {
-            $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCategorySubpage($categoryName);
-        }
 
         return view('public.games.browse.category.page-landing', $bindings);
     }
