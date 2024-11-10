@@ -52,6 +52,12 @@
                         {% if item.is_low_quality == 1 %}
                             <label class="label label-danger">Low quality</label>
                         {% endif %}
+                        {% if item.review_count > 0 %}
+                            <br>
+                            <small>
+                                [avg: {{ item.rating_avg }} / scores: {{ item.review_count }}]
+                            </small>
+                        {% endif %}
                     </td>
                     <td>
                         {% if item.gamePublishers|length > 0 %}
