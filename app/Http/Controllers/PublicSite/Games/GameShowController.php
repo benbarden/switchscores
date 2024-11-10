@@ -11,6 +11,7 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\Game\AutoDescription;
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
@@ -32,7 +33,8 @@ class GameShowController extends Controller
         private GamePublisherRepository $repoGamePublisher,
         private GameDeveloperRepository $repoGameDeveloper,
         private AutoDescription $autoDescription,
-        private UserGamesCollectionRepository $repoUserGamesCollection
+        private UserGamesCollectionRepository $repoUserGamesCollection,
+        private AmazonAffiliate $affiliateAmazon
     )
     {
     }
@@ -68,6 +70,14 @@ class GameShowController extends Controller
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+
+        // Amazon
+        $tempAmazonUkLink = $gameData['amazon_uk_link'];
+        if ($tempAmazonUkLink) {
+            $amazonId = $this->affiliateAmazon->getId();
+            $fullAmazonUkLink = $tempAmazonUkLink.'?tag='.$amazonId;
+            $bindings['FullAmazonUkLink'] = $fullAmazonUkLink;
+        }
 
         // Video
         $videoUrl = $gameData->video_url;

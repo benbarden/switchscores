@@ -6,12 +6,14 @@ use App\Models\Game;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 
 class GameController
 {
     public function __construct(
         private GameRepository $repoGame,
-        private GameListsRepository $repoGameLists
+        private GameListsRepository $repoGameLists,
+        private AmazonAffiliate $affiliateAmazon
     )
     {
     }
@@ -84,7 +86,6 @@ class GameController
             'format_demo' => $game->format_demo,
             'video_url' => $game->video_url,
             'amazon_uk_url' => null,
-            'amazon_uk_url_tagged' => null,
             'developers' => null,
             'publishers' => null,
             'tags' => null,
@@ -161,11 +162,10 @@ class GameController
         }
 
         if ($game->amazon_uk_link) {
-            $gameData['amazon_uk_url'] = $game->amazon_uk_link;
-            $gameData['amazon_uk_url_tagged'] = $game->amazon_uk_link.'?tag=switchscores-21';
+            $amazonId = $this->affiliateAmazon->getId();
+            $gameData['amazon_uk_url'] = $game->amazon_uk_link.'?tag='.$amazonId;
         } else {
             unset($gameData['amazon_uk_url']);
-            unset($gameData['amazon_uk_url_tagged']);
         }
 
         return $gameData;
