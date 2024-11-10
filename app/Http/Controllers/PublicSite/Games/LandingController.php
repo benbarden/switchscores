@@ -33,7 +33,7 @@ class LandingController extends Controller
     {
         $bindings = [];
 
-        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(20);
+        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality(20);
         $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming(20);
 
         $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, 35, 15);

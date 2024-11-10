@@ -34,7 +34,7 @@ class ListsController extends Controller
     {
         $bindings = [];
 
-        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleased(50);
+        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality(50);
         $bindings['CalendarThisMonth'] = date('Y-m');
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';

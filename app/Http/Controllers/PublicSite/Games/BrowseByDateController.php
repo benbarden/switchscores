@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
+use Illuminate\Routing\Controller as Controller;
+
 use App\Domain\GameLists\DbQueries as GameListsDbQueries;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\GameCalendar\Repository as GameCalendarRepository;
+
 use App\Traits\SwitchServices;
-use Illuminate\Routing\Controller as Controller;
 
 class BrowseByDateController extends Controller
 {
@@ -17,7 +20,8 @@ class BrowseByDateController extends Controller
         private GameListsRepository $repoGameLists,
         private GameListsDbQueries $dbGameLists,
         private Breadcrumbs $viewBreadcrumbs,
-        private TopRatedDbQueries $dbTopRated
+        private TopRatedDbQueries $dbTopRated,
+        private GameCalendarRepository $repoGameCalendar
     )
     {
     }
@@ -45,7 +49,7 @@ class BrowseByDateController extends Controller
 
                 list($dateYear, $dateMonth) = explode('-', $date);
 
-                $gameCalendarStat = $this->getServiceGameCalendar()->getStat($dateYear, $dateMonth);
+                $gameCalendarStat = $this->repoGameCalendar->getStat($dateYear, $dateMonth);
                 if ($gameCalendarStat) {
                     $dateCount = $gameCalendarStat->released_count;
                 } else {

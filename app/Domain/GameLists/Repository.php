@@ -30,11 +30,15 @@ class Repository
         return $gameList;
     }
 
-    public function recentlyReleased($limit = 100)
+    public function recentlyReleased($includeLowQuality = false, $limit = 100)
     {
-        $games = Game::where('eu_is_released', 1)
-            ->where('is_low_quality', 0)
-            ->orderBy('eu_release_date', 'desc')
+        $games = Game::where('eu_is_released', 1);
+
+        if (!$includeLowQuality) {
+            $games = $games->where('is_low_quality', 0);
+        }
+
+        $games = $games->orderBy('eu_release_date', 'desc')
             ->orderBy('eu_released_on', 'desc')
             ->orderBy('updated_at', 'desc')
             ->orderBy('title', 'asc')
@@ -42,6 +46,16 @@ class Repository
             ->get();
 
         return $games;
+    }
+
+    public function recentlyReleasedAll($limit = 100)
+    {
+        return $this->recentlyReleased(true, $limit);
+    }
+
+    public function recentlyReleasedExceptLowQuality($limit = 100)
+    {
+        return $this->recentlyReleased(false, $limit);
     }
 
     public function recentlyAdded($limit = 100)

@@ -64,7 +64,7 @@ class IndexController extends Controller
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         // New games
-        $bindings['RecentlyReleasedGames'] = $this->getServiceGame()->getRecentlyReleased(15);
+        $bindings['RecentlyReleasedGames'] = $this->repoGameLists->recentlyReleasedAll(15);
         $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(15);
 
         // Owner links

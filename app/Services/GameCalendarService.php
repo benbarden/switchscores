@@ -23,25 +23,6 @@ class GameCalendarService
     }
 
     /**
-     * @param $year
-     * @param $month
-     * @return GameCalendarStat
-     */
-    public function getStat($year, $month)
-    {
-        $monthName = $year.'-'.$month;
-        $gameCalendarStat = GameCalendarStat::
-            where('month_name', $monthName)
-            ->get();
-
-        if ($gameCalendarStat) {
-            return $gameCalendarStat->first();
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @param bool $reverse
      * @return array
      */
