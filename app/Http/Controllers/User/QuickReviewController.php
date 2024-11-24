@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
@@ -26,6 +27,7 @@ class QuickReviewController extends Controller
     ];
 
     public function __construct(
+        private QuickReviewRepository $repoQuickReview,
         private GameRepository $repoGame
     ){
 
@@ -59,7 +61,7 @@ class QuickReviewController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $quickReview = $this->getServiceQuickReview()->create(
+            $quickReview = $this->repoQuickReview->create(
                 $userId, $gameId, $request->review_score, $reviewBody
             );
 

@@ -77,7 +77,7 @@ class QuickReviewController extends Controller
                 throw new \Exception('Unknown status: '.$itemStatus);
             }
 
-            $this->getServiceQuickReview()->editStatus($reviewData, $itemStatus);
+            $this->repoQuickReview->editStatus($reviewData, $itemStatus);
 
             if ($itemStatus == QuickReview::STATUS_ACTIVE) {
 
@@ -133,7 +133,7 @@ class QuickReviewController extends Controller
 
             $gameId = $reviewData->game_id;
 
-            $this->getServiceQuickReview()->delete($reviewId);
+            $this->repoQuickReview->delete($reviewId);
 
             $game = $this->repoGame->find($gameId);
             if ($game) {
