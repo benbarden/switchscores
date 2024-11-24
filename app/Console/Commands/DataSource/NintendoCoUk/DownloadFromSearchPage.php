@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Domain\DataSource\NintendoCoUk\ImportSearchPage;
 
-use App\Traits\SwitchServices;
-
 class DownloadFromSearchPage extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -52,8 +48,12 @@ class DownloadFromSearchPage extends Command
 
         $logger->info('');
         $logger->info('========== IMPORT SEARCH PAGE ==========');
-        $html = $scraper->downloadHtml();
-        print($html);
+
+        for ($page = 1; $page < 4; $page++) {
+            $items = $scraper->loadHtml($page);
+            $logger->info('PAGE '.$page);
+            $logger->info(var_export($items, true));
+        }
 
         $logger->info('Complete');
     }
