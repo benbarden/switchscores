@@ -14,7 +14,7 @@ class ImportSearchPage
 
     public function loadHtml($page = 1)
     {
-        $client = Client::createChromeClient(null, ['--headless'], [
+        $client = Client::createChromeClient(env('CHROMIUM_PATH'), ['--headless'], [
             'timeout_in_seconds' => 30,
         ]);
 
