@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/games/list/no-eshop-price', 'Staff\Games\GamesListController@noEshopPrice')->name('staff.games.list.no-eshop-price');
     Route::get('/staff/games/list/no-video-type', 'Staff\Games\GamesListController@noVideoType')->name('staff.games.list.no-video-type');
     Route::get('/staff/games/list/no-amazon-uk-link', 'Staff\Games\GamesListController@noAmazonUkLink')->name('staff.games.list.no-amazon-uk-link');
+    Route::get('/staff/games/list/no-amazon-us-link', 'Staff\Games\GamesListController@noAmazonUsLink')->name('staff.games.list.no-amazon-us-link');
     Route::get('/staff/games/list/no-nintendo-co-uk-link', 'Staff\Games\GamesListController@noNintendoCoUkLink')->name('staff.games.list.no-nintendo-co-uk-link');
     Route::get('/staff/games/list/broken-nintendo-co-uk-link', 'Staff\Games\GamesListController@brokenNintendoCoUkLink')->name('staff.games.list.broken-nintendo-co-uk-link');
     Route::get('/staff/games/list/format-option/{format}/{option?}', 'Staff\Games\GamesListController@formatOptionList')->name('staff.games.list.format-option');

@@ -159,8 +159,23 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getWithNoAmazonUkLink();
-        $bindings['ListLimit'] = "200";
+        $listLimit = 1000;
+        $bindings['GameList'] = $this->repoGameLists->noAmazonUkLink($listLimit);
+        $bindings['ListLimit'] = $listLimit;
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
+    public function noAmazonUsLink()
+    {
+        $pageTitle = 'No Amazon US link';
+        $tableSort = "[ 6, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $listLimit = 1000;
+        $bindings['GameList'] = $this->repoGameLists->noAmazonUsLink($listLimit);
+        $bindings['ListLimit'] = $listLimit;
 
         return view('staff.games.list.standard-view', $bindings);
     }

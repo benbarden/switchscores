@@ -59,29 +59,6 @@ class GameService
     }
 
     // ********************************************************** //
-    // Rewritten lists for Staff > Games
-    // ********************************************************** //
-
-
-    public function getWithNoAmazonUkLink($limit = 200)
-    {
-        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
-            ->whereNull('amazon_uk_link')
-            ->orderBy('rating_avg', 'desc')
-            ->orderBy('review_count', 'desc')
-            ->limit($limit)
-            ->get();
-    }
-
-    public function countWithNoAmazonUkLink()
-    {
-        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
-            ->whereNull('amazon_uk_link')
-            ->orderBy('id', 'asc')
-            ->count();
-    }
-
-    // ********************************************************** //
     // Action lists.
     // These don't have a forced limit as we need to know the total
     // ********************************************************** //

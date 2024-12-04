@@ -322,6 +322,26 @@ class Repository
         return Game::whereNull('eu_release_date')->orderBy('id', 'desc')->get();
     }
 
+    public function noAmazonUkLink($limit = 200)
+    {
+        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
+            ->whereNull('amazon_uk_link')
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('review_count', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function noAmazonUsLink($limit = 200)
+    {
+        return Game::where('format_physical', Game::FORMAT_AVAILABLE)
+            ->whereNull('amazon_us_link')
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('review_count', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
     public function relatedByCategory($categoryId, $excludeGameId, $limit = 3)
     {
         return Game::where('category_id', $categoryId)

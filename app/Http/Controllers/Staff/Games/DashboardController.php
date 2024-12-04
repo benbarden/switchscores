@@ -34,7 +34,8 @@ class DashboardController extends Controller
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->getServiceGame()->countWithoutPrices();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStats->totalNoVideoType();
-        $bindings['MissingAmazonUkLink'] = $this->getServiceGame()->countWithNoAmazonUkLink();
+        $bindings['MissingAmazonUkLink'] = $this->repoGameStats->totalNoAmazonUkLink();
+        $bindings['MissingAmazonUsLink'] = $this->repoGameStats->totalNoAmazonUsLink();
 
         // Release date stats
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
