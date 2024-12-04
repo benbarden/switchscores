@@ -68,7 +68,11 @@
                         <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
                     {% endif %}
                     {% if FullAmazonUsLink %}
-                        <a href="{{ FullAmazonUsLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon US</a>
+                        {% if AmazonUSLinkType == 'product' %}
+                            <a href="{{ FullAmazonUsLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon US</a>
+                        {% else %}
+                            <a href="{{ FullAmazonUsLink }}" class="btn btn-primary btn-md" target="_blank">Find at Amazon US</a>
+                        {% endif %}
                     {% endif %}
                     {% if DSNintendoCoUk is not null %}
                         <a href="{{ LinkHelper.eshopUrl('eu', DSNintendoCoUk.url) }}" class="btn btn-primary btn-md" target="_blank">Buy at Nintendo.co.uk</a>

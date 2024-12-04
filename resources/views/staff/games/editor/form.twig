@@ -220,7 +220,18 @@
                     </div>
                     <div class="col-md-2">
                         {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.amazon.co.uk/s?k={{ GameData.title|url_encode }}+switch+game" target="_blank">Search Amazon</a>
+                            <a class="btn btn-default btn-sm" href="https://www.amazon.co.uk/s?k={{ GameData.title|url_encode }}+switch+game" target="_blank">Search Amazon UK</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group" id="grp_amazon_us_link">
+                    <label for="amazon_us_link" class="col-md-3 control-label">Amazon US link</label>
+                    <div class="col-md-6">
+                        <input id="amazon_us_link" type="text" class="form-control" name="amazon_us_link">
+                    </div>
+                    <div class="col-md-2">
+                        {% if GameData %}
+                            <a class="btn btn-default btn-sm" href="https://www.amazon.com/s?k={{ GameData.title|url_encode }}+switch+game" target="_blank">Search Amazon US</a>
                         {% endif %}
                     </div>
                 </div>

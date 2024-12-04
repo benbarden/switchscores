@@ -29,7 +29,7 @@ class Game extends Model implements Auditable
      */
     protected $fillable = [
         'title', 'link_title', 'price_eshop', 'players', 'rating_avg', 'review_count',
-        'amazon_uk_link', 'game_rank', 'video_url',
+        'amazon_uk_link', 'amazon_us_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
         'series_id', 'category_id', 'collection_id',

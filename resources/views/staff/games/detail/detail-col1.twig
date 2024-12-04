@@ -84,5 +84,15 @@
             </td>
         </tr>
     {% endif %}
+    {% if GameData.amazon_us_link %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Buy link</span>
+            </td>
+            <td>
+                <a href="{{ GameData.amazon_us_link }}" target="_blank">Amazon US</a>
+            </td>
+        </tr>
+    {% endif %}
 
 </table>

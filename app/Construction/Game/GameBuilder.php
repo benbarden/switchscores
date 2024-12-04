@@ -115,6 +115,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setAmazonUsLink($amazonUsLink): GameBuilder
+    {
+        $this->game->amazon_us_link = $amazonUsLink;
+        return $this;
+    }
+
     public function setNintendoStoreUrlOverride($storeUrl): GameBuilder
     {
         $this->game->nintendo_store_url_override = $storeUrl;

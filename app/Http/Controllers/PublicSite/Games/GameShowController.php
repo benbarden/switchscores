@@ -81,8 +81,21 @@ class GameShowController extends Controller
 
         // Amazon US id
         $amazonUSId = $this->affiliateAmazon->getUSId();
-        $urlTitle = $gameData->title;
-        $bindings['FullAmazonUsLink'] = 'https://www.amazon.com/s?k=nintendo+switch+games+'.$urlTitle.'&tag='.$amazonUSId;
+        $tempAmazonUsLink = $gameData['amazon_us_link'];
+        if ($tempAmazonUsLink) {
+            if (str_contains($tempAmazonUsLink, '?')) {
+                $fullAmazonUsLink = $tempAmazonUsLink.'&tag='.$amazonUSId;
+            } else {
+                $fullAmazonUsLink = $tempAmazonUsLink.'?tag='.$amazonUSId;
+            }
+            $bindings['FullAmazonUsLink'] = $fullAmazonUsLink;
+            $bindings['AmazonUSLinkType'] = 'product';
+        } else {
+            // Fallback; go to search page
+            $urlTitle = $gameData->title;
+            $bindings['FullAmazonUsLink'] = 'https://www.amazon.com/s?k=nintendo+switch+games+'.$urlTitle.'&tag='.$amazonUSId;
+            $bindings['AmazonUSLinkType'] = 'search';
+        }
 
         // Video
         $videoUrl = $gameData->video_url;

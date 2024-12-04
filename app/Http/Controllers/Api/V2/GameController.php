@@ -86,6 +86,7 @@ class GameController
             'format_demo' => $game->format_demo,
             'video_url' => $game->video_url,
             'amazon_uk_url' => null,
+            'amazon_us_url' => null,
             'developers' => null,
             'publishers' => null,
             'tags' => null,
@@ -166,6 +167,13 @@ class GameController
             $gameData['amazon_uk_url'] = $game->amazon_uk_link.'?tag='.$amazonId;
         } else {
             unset($gameData['amazon_uk_url']);
+        }
+
+        if ($game->amazon_us_link) {
+            $amazonId = $this->affiliateAmazon->getUSId();
+            $gameData['amazon_us_url'] = $game->amazon_us_link.'?tag='.$amazonId;
+        } else {
+            unset($gameData['amazon_us_url']);
         }
 
         return $gameData;
