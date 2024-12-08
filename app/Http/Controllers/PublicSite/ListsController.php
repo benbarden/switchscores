@@ -161,19 +161,19 @@ class ListsController extends Controller
             66, // Super Mario Odyssey
             9416, // Metroid Prime Remastered
             74, // Celeste
-            4496, // Hades
+            //4496, // Hades
             9452, // Zelda: Tears of the Kingdom
             8560, // Persona 5 Royal
             7740, // Xenoblade Chronicles 3
-            6696, // Tetris Effect: Connected
+            //6696, // Tetris Effect: Connected
             4610, // Monster Hunter Rise
             40, // Mario Kart 8 Deluxe
             927, // Dead Cells
-            458, // SteamWorld Heist
-            4423, // A Short Hike
+            //458, // SteamWorld Heist
+            //4423, // A Short Hike
             67, // Hollow Knight
             11947, // Unicorn Overlord
-            8071, // Portal: Companion Collection
+            //8071, // Portal: Companion Collection
             98, // Stardew Valley
             627, // Super Smash Bros Ultimate
             2147, // Dragon Quest XI S
