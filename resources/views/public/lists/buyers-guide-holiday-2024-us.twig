@@ -1,0 +1,99 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <p>A buyer's guide for the Nintendo Switch. (Holiday 2024 edition)</p>
+
+        <div class="alert alert-info">
+            Links go to Amazon US. We may receive a commission from these links. Stock levels may vary.
+        </div>
+
+        <h2>Hardware</h2>
+        <p>
+            Consoles and accessories.
+        </p>
+
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch Monster Hunter Rise Deluxe Edition</h3>
+                <br>
+                <a href="https://amzn.to/49tPoSz" target="_blank">
+                    <img src="/img/static/buyers-guide/holiday-2024-us/console-monster-hunter.png" alt="Nintendo Switch Monster Hunter Rise Deluxe Edition">
+                </a>
+                <br>
+                <a href="https://amzn.to/49tPoSz" target="_blank">Buy at Amazon US</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch Lite Dialga and Palkia Edition (Pokemon)</h3>
+                <br>
+                <a href="https://amzn.to/3VrTZ1H" target="_blank">
+                    <img src="/img/static/buyers-guide/holiday-2024-us/console-pokemon.png" alt="Nintendo Switch Lite Dialga and Palkia Edition (Pokemon)">
+                </a>
+                <br>
+                <a href="https://amzn.to/3VrTZ1H" target="_blank">Buy at Amazon US</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch Mario Kart Bundle</h3>
+                <br>
+                <a href="https://amzn.to/4fdy710" target="_blank">
+                <img src="/img/static/buyers-guide/holiday-2024-us/console-mario-kart.png" alt="Nintendo Switch Mario Kart Bundle">
+                </a>
+                <br>
+                <a href="https://amzn.to/4fdy710" target="_blank">Buy at Amazon US</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch OLED model</h3>
+                <br>
+                <a href="https://amzn.to/3ZIKvSk" target="_blank">
+                    <img src="/img/static/buyers-guide/holiday-2024-us/console-oled.png" alt="Nintendo Switch OLED model">
+                </a>
+                <br>
+                <a href="https://amzn.to/3ZIKvSk" target="_blank">Buy at Amazon US</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch with Neon Blue and Neon Red Joy-Con</h3>
+                <br>
+                <a href="https://amzn.to/3ON1YCK" target="_blank">
+                    <img src="/img/static/buyers-guide/holiday-2024-us/console-classic.png" alt="Nintendo Switch with Neon Blue and Neon Red Joy-Con">
+                </a>
+                <br>
+                <a href="https://amzn.to/3ON1YCK" target="_blank">Buy at Amazon US</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <h3>Nintendo Switch Lite - Coral - Pink</h3>
+                <br>
+                <a href="https://amzn.to/49tPiKH" target="_blank">
+                    <img src="/img/static/buyers-guide/holiday-2024-us/console-lite-pink.png" alt="Nintendo Switch Lite - Coral - Pink">
+                </a>
+                <br>
+                <a href="https://amzn.to/49tPiKH" target="_blank">Buy at Amazon US</a>
+            </div>
+        </div>
+
+        <h2>Top Rated - All-time</h2>
+        <p>
+            A selection of the best games for the Nintendo Switch.
+        </p>
+
+        {% include 'public/games/layouts/tiledGrid/layoutAmazonUSLink.twig' with {'GameList': TopRatedAllTimeList, 'batchOverride': 3} %}
+
+        <h2>Amazon.com bestsellers</h2>
+        <p>
+            These Nintendo Switch games are currently popular at Amazon.com.
+        </p>
+
+        {% include 'public/games/layouts/tiledGrid/layoutAmazonUSLink.twig' with {'GameList': AmazonBestsellersList, 'batchOverride': 3} %}
+
+    </div>
+
+</div>
+
+{% endblock %}

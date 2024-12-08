@@ -168,6 +168,11 @@ class Repository
         return Game::whereNull('category_id')->get();
     }
 
+    public function byIdList($idList)
+    {
+        return Game::whereIn('id', $idList)->get();
+    }
+
     public function byCollection($collectionId, $limit = null)
     {
         $games = Game::where('collection_id', $collectionId)

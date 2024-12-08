@@ -29,6 +29,7 @@ Route::get('/games/on-sale/archive', 'PublicSite\ListsController@gamesOnSaleArch
 Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
 Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
 Route::get('/lists/recently-reviewed-still-unranked', 'PublicSite\ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
+Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@buyersGuideHoliday2024US')->name('lists.buyersGuideHoliday2024US');
 
 // Main game pages
 Route::match(['get', 'post'], '/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');

@@ -151,4 +151,62 @@ class ListsController extends Controller
         return view('public.lists.list-recently-reviewed-still-unranked', $bindings);
     }
 
+    public function buyersGuideHoliday2024US()
+    {
+        $pageTitle = 'Buyer\'s Guide Holiday 2024 (US)';
+        $bindings = [];
+
+        $topRatedAllTime = [
+            1, // Zelda: Breath of the Wild
+            66, // Super Mario Odyssey
+            9416, // Metroid Prime Remastered
+            74, // Celeste
+            4496, // Hades
+            9452, // Zelda: Tears of the Kingdom
+            8560, // Persona 5 Royal
+            7740, // Xenoblade Chronicles 3
+            6696, // Tetris Effect: Connected
+            4610, // Monster Hunter Rise
+            40, // Mario Kart 8 Deluxe
+            927, // Dead Cells
+            458, // SteamWorld Heist
+            4423, // A Short Hike
+            67, // Hollow Knight
+            11947, // Unicorn Overlord
+            8071, // Portal: Companion Collection
+            98, // Stardew Valley
+            627, // Super Smash Bros Ultimate
+            2147, // Dragon Quest XI S
+            7154, // Kirby and the Forgotten Land
+            5893, // The Great Ace Attorney Chronicles
+            2583, // Animal Crossing New Horizons
+            11026, // Super Mario Bros Wonder
+            12498, // Paper Mario: The Thousand Year Door
+        ];
+
+        $amazonBestsellers = [
+            13592, // Mario Party Jamboree
+            8104, // Pac-Man World Re-Pac
+            7328, // Lego Star Wars Skywalker Saga
+            12772, // Echoes of Wisdom
+            40, // Mario Kart
+            8981, // The Oregon Trail
+            319, // Yoshi's Crafted World
+            2126, // Super Mario Maker 2
+            10614, // Sonic Superstars
+            1223, // Super Mario Party
+            627, // Super Smash Bros Ultimate
+        ];
+
+        $bindings['TopRatedAllTimeList'] = $this->repoGameLists->byIdList($topRatedAllTime);
+        $bindings['AmazonBestsellersList'] = $this->repoGameLists->byIdList($amazonBestsellers);
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage($pageTitle);
+
+        $bindings['TopTitle'] = $pageTitle;
+        $bindings['PageTitle'] = $pageTitle;
+
+        return view('public.lists.buyers-guide-holiday-2024-us', $bindings);
+    }
+
 }
