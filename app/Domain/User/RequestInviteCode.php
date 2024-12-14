@@ -22,10 +22,7 @@ class RequestInviteCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address(env('ADMIN_EMAIL'), 'Ben at Switch Scores'),
-            replyTo: [
-                new Address('noreply@switchscores.com', 'noreply@switchscores.com'),
-            ],
+            from: new Address($this->email, $this->email),
             subject: self::SUBJECT_LINE,
         );
     }
