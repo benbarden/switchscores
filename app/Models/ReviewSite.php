@@ -43,7 +43,7 @@ class ReviewSite extends Model implements Auditable
         'status', 'name', 'link_title', 'website_url', 'twitter_id',
         'rating_scale', 'review_count', 'last_review_date',
         'contact_name', 'contact_email', 'contact_form_link',
-        'review_code_regions', 'review_import_method'
+        'review_code_regions', 'review_import_method', 'disable_links'
     ];
 
     public function links()

@@ -73,9 +73,11 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
-                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                            </a>
+                            {% if PartnerData.disable_links != "1" %}
+                                <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
+                                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

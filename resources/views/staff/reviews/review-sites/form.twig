@@ -97,6 +97,19 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+        <label for="disable_links" class="col-md-2 col-form-label">Disable links</label>
+        <div class="col-sm-4">
+            <div class="form-check form-switch">
+                <input id="disable_links" name="disable_links" class="form-check-input mt-0" type="checkbox">
+            </div>
+            <div class="form-text">
+                Will stop linking out to reviews from this site. If the site is no longer online, use this option
+                to keep the reviews in the database, but without linking.
+            </div>
+        </div>
+    </div>
+
     {% include 'common/forms/submit.twig' %}
 
 </form>

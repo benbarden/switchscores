@@ -71,5 +71,16 @@ class ReviewSiteDirector
         if (array_key_exists('review_import_method', $params)) {
             $this->builder->setReviewImportMethod($params['review_import_method']);
         }
+        $disableLinks = false;
+        if (array_key_exists('disable_links', $params)) {
+            if ($params['disable_links'] == "on") {
+                $disableLinks = true;
+            }
+        }
+        if ($disableLinks) {
+            $this->builder->setDisableLinks(1);
+        } else {
+            $this->builder->setDisableLinks(null);
+        }
     }
 }

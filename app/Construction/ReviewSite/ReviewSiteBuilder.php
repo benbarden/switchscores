@@ -110,4 +110,10 @@ class ReviewSiteBuilder
         return $this;
     }
 
+    public function setDisableLinks($value): ReviewSiteBuilder
+    {
+        $this->reviewSite->disable_links = $value;
+        return $this;
+    }
+
 }

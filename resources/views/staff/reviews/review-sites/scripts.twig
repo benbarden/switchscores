@@ -17,6 +17,7 @@
         formVals['rating_scale'] = "{{ ReviewSiteData.rating_scale }}";
         formVals['status'] = "{{ ReviewSiteData.status }}";
         formVals['review_import_method'] = "{{ ReviewSiteData.review_import_method }}";
+        formVals['disable_links'] = "{{ ReviewSiteData.disable_links }}";
 
     } else {
 
@@ -35,6 +36,7 @@
             formVals['status'] = "{{ old('status') }}";
         }
         formVals['review_import_method'] = "{{ old('review_import_method') }}";
+        formVals['disable_links'] = "{{ old('disable_links') }}";
 
     }
 
@@ -51,6 +53,11 @@
     $('#review_code_regions').val(formVals['review_code_regions']);
     $('#rating_scale').val(formVals['rating_scale']);
     $('#review_import_method').val(formVals['review_import_method']);
+    if (formVals['disable_links'] == '1') {
+        $('#disable_links').attr('checked', true);
+    } else {
+        $('#disable_links').attr('checked', false);
+    }
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

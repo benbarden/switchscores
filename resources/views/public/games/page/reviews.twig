@@ -15,7 +15,9 @@
                             {{ Review.review_date|date('jS M Y') }}
                         </td>
                         <td>
-                            {{ Review.site.name }}
+                            <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': Review.site.link_title}) }}" target="_blank">
+                                {{ Review.site.name }}
+                            </a>
                         </td>
                         <td class="text-center">
                             {% if Review.rating_normalised %}
@@ -25,10 +27,14 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <a href="{{ Review.url }}" target="_blank" title="Go to review (will open in new tab)">
-                                Read review
-                                <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                            </a>
+                            {% if Review.site.disable_links == "1" %}
+                                <em>Page is offline</em>
+                            {% else %}
+                                <a href="{{ Review.url }}" target="_blank" title="Go to review (will open in new tab)">
+                                    Read review
+                                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% if Review.description %}
