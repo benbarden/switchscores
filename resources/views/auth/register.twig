@@ -6,6 +6,7 @@
 
     <div class="col-md-12">
 
+        {#
         <p>
             To register with your email address and a password, you need an invite code. This is
             to stop spam. <a href="{{ route('about.landing') }}">Get in touch</a> and we'll be happy
@@ -16,8 +17,12 @@
             <a href="{{ route('login') }}">Go to the login screen</a>
             and click the Twitter button.
         </p>
+        #}
 
         <h3>Request an invite code</h3>
+        <p>
+            To register, you'll need an invite code. Enter your details below and we'll send you an invite code soon.
+        </p>
         <form class="form-horizontal" role="form" method="POST" action="{{ route('auth.register.request-invite-code') }}">
             {{ csrf_field() }}
             <div class="form-group">
@@ -48,6 +53,9 @@
         </form>
 
         <h3>Sign up</h3>
+        <p>
+            When you have an invite code, you can register below.
+        </p>
         {% if errors.any %}
             <div class="alert alert-danger">
                 {% for error in errors.all %}
