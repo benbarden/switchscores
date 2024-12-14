@@ -7,6 +7,9 @@ Route::get('/', 'PublicSite\WelcomeController@show')->name('welcome');
 
 Auth::routes();
 
+// Request invite code
+Route::match(['get', 'post'], '/request-invite-code', 'Auth\RegisterController@requestInviteCode')->name('auth.register.request-invite-code');
+
 // Third-party logins
 Route::get('/login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->name('auth.login.twitter');
 Route::get('/login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');

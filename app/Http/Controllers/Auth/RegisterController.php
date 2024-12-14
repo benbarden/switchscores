@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\User\RequestInviteCode;
 use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
@@ -149,5 +151,19 @@ class RegisterController extends Controller
         event(new UserCreated($user));
 
         return $user;
+    }
+
+    protected function requestInviteCode()
+    {
+        $request = request();
+
+        $email = $request['waitlist_email'];
+        $bio = $request['waitlist_bio'];
+
+        // Send the email
+        $email = new RequestInviteCode($email, $bio);
+        Mail::to(env('ADMIN_EMAIL'))->send($email);
+
+        return redirect(route('welcome'));
     }
 }

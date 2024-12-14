@@ -17,7 +17,37 @@
             and click the Twitter button.
         </p>
 
-        <h3>Enter your details</h3>
+        <h3>Request an invite code</h3>
+        <form class="form-horizontal" role="form" method="POST" action="{{ route('auth.register.request-invite-code') }}">
+            {{ csrf_field() }}
+            <div class="form-group">
+                <label for="waitlist_email" class="col-md-2 control-label">Email address</label>
+
+                <div class="col-md-4">
+                    <input id="waitlist_email" type="email" class="form-control" name="waitlist_email" maxlength="100" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="waitlist_bio" class="col-md-2 control-label">Tell us how you found us (anti-spam)</label>
+
+                <div class="col-md-4">
+                    <textarea id="waitlist_bio" name="waitlist_bio" class="form-control" rows="6" cols="50" required></textarea>
+                    <small>In a few words, tell us how you found Switch Scores. This is to reduce fake signups.</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary pull-left">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <h3>Sign up</h3>
         {% if errors.any %}
             <div class="alert alert-danger">
                 {% for error in errors.all %}
@@ -32,7 +62,7 @@
                 <label for="signup_name" class="col-md-2 control-label">Display name</label>
 
                 <div class="col-md-4">
-                    <input id="signup_name" type="text" class="form-control" name="signup_name" value="{{ old('signup_name') }}" maxlength="50" required autofocus>
+                    <input id="signup_name" type="text" class="form-control" name="signup_name" value="{{ old('signup_name') }}" maxlength="50" required>
                 </div>
             </div>
 
