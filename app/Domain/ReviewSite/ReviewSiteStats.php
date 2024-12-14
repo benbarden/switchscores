@@ -46,12 +46,17 @@ class ReviewSiteStats
             $latestReviewDate = null;
         }
 
-        if (is_null($latestReviewDate)) {
-            $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
-        } elseif (date('Y-m-d', strtotime('-30 days')) > $latestReviewDate) {
-            $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
+        if ($reviewSite->status == ReviewSite::STATUS_ARCHIVED) {
+            // Don't update archived sites
+            $siteStatus = ReviewSite::STATUS_ARCHIVED;
         } else {
-            $siteStatus = ReviewSite::STATUS_ACTIVE;
+            if (is_null($latestReviewDate)) {
+                $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
+            } elseif (date('Y-m-d', strtotime('-30 days')) > $latestReviewDate) {
+                $siteStatus = ReviewSite::STATUS_NO_RECENT_REVIEWS;
+            } else {
+                $siteStatus = ReviewSite::STATUS_ACTIVE;
+            }
         }
 
         $padSiteName = str_pad($siteName, 30);
