@@ -129,7 +129,9 @@ class CompanyController extends Controller
                 $isLowQuality, $request->email, $request->threads_id, $request->bluesky_id
             );
 
-            $this->gameQualityFilter->updateGamesByPartner($gamesCompany, $isLowQuality);
+            if ($request->update_existing_games == 'on') {
+                $this->gameQualityFilter->updateGamesByPartner($gamesCompany, $isLowQuality);
+            }
 
             return redirect(route('staff.games-companies.show', ['gamesCompany' => $gamesCompany]));
 

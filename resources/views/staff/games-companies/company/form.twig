@@ -66,16 +66,28 @@
                     <input id="is_low_quality" type="checkbox" name="is_low_quality">
                     <br>
                     <small>
-                        When this box is ticked, any games linked to this games company will be flagged
+                        When this box is ticked, any future games linked to this games company will be flagged
                         in our low quality filter. They may be hidden from certain pages on the site, and
                         signposted as low quality in some places.
                         <br>Only use this for companies that consistently
                         publish shovelware, asset flips, or other very low quality games - not simply games that
                         didn't review well.
-                        <br>
-                        <strong>
-                            This setting will affect every game linked to this company.
-                        </strong>
+                    </small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="update_existing_games" class="col-md-4 control-label">Update existing games?</label>
+                <div class="col-md-6">
+                    <input id="update_existing_games" type="checkbox" name="update_existing_games">
+                    <br>
+                    <small>
+                        When changing the "Is low quality?" flag above, tick this box to also update all
+                        games linked to this company.
+                        <br>If you are only editing the details of the games company, this box should
+                        normally be left unticked.
+                        <br>However, if you are changing the "Is low quality?" flag, tick this box and
+                        the games will be updated too, to either low quality or standard quality, to match
+                        the publisher setting.
                     </small>
                 </div>
             </div>
