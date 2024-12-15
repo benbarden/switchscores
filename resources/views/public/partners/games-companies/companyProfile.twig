@@ -20,6 +20,17 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6 col-lg-6">
+        {% if PartnerData.is_low_quality == 1 %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                This publisher has been flagged with our low quality filter.
+                <a href="{{ route('help.low-quality-filter') }}" style="color: #fff; font-weight: bold;">Learn more</a>.
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6">
         <table class="table table-condensed table-responsive">
             <tr>
                 <td style="max-width: 150px;">
@@ -43,24 +54,66 @@
                     <td><a href="https://twitter.com/{{ PartnerData.twitter_id }}" target="_blank">{{ PartnerData.twitter_id }}</a></td>
                 </tr>
             {% endif %}
-            {% if PartnerData.is_low_quality == 1 %}
-                <tr>
-                    <td>
-                        <span style="font-weight: bold;">Quality filter</span>
-                    </td>
-                    <td>
-                        <label class="label label-danger">Low quality</label>
-                    </td>
-                </tr>
+            {% if PartnerData.threads_id %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Threads</span>
+                </td>
+                <td>
+                    <a href="https://threads.net/@{{ PartnerData.threads_id }}" target="_blank">@{{ PartnerData.threads_id }}</a>
+                </td>
+            </tr>
+            {% endif %}
+            {% if PartnerData.bluesky_id %}
+            <tr>
+                <td>
+                    <span style="font-weight: bold;">Bluesky</span>
+                </td>
+                <td>
+                    <a href="https://bsky.app/profile/{{ PartnerData.bluesky_id }}" target="_blank">{{ PartnerData.bluesky_id }}</a>
+                </td>
+            </tr>
             {% endif %}
         </table>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-3 text-center">
+                <h2>
+                    {{ AllGames|length }}
+                    <br>
+                    <span class="h4">games</span>
+                </h2>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-3 text-center">
+                <h2>
+                    {{ RankedGameList|length }}
+                    <br>
+                    <span class="h4">ranked</span>
+                </h2>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-3 text-center">
+                <h2>
+                    {{ UnrankedGameList|length }}
+                    <br>
+                    <span class="h4">unranked</span>
+                </h2>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-3 text-center">
+                <h2>
+                    {{ DelistedGameList|length }}
+                    <br>
+                    <span class="h4">de-listed</span>
+                </h2>
+            </div>
+        </div>
     </div>
 </div>
 
 {% if RankedGameList or UnrankedGameList or DelistedGameList %}
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Nintendo Switch games by {{ PartnerData.name }}</h2>
+            <h2>Nintendo Switch games by {{ PartnerData.name }}</h2>
             <h5 class="theme-header theme-rounded theme-padding-10 theme-colour-1">
                 <strong>Navigation</strong>:
                 <a id="js-toggle-list-ranked" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">

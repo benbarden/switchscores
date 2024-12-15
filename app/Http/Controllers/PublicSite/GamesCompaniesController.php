@@ -92,6 +92,11 @@ class GamesCompaniesController extends Controller
         $mergedDelistedList = collect($delistedList)->sortBy('title')->toArray();
         $bindings['DelistedGameList'] = $mergedDelistedList;
 
+        // Total
+        $allDev = $this->dbGameDeveloper->getGamesByDeveloper($gamesCompanyId);
+        $allPub = $this->dbGamePublisher->getGamesByPublisher($gamesCompanyId);
+        $allGames = $this->repoGamesCompany->getMergedGameList($allDev, $allPub);
+        $bindings['AllGames'] = $allGames;
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
