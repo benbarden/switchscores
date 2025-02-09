@@ -79,6 +79,11 @@
                         <a href="{{ route('user.collection.landing') }}">View your collection</a>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">Suggest a featured game</a>
+                    </td>
+                </tr>
             </table>
 
         </div>
@@ -87,6 +92,12 @@
 
             <h2>Recent updates</h2>
             <table class="table">
+                <tr>
+                    <td>
+                        9th Feb 2025: <strong>Added featured games</strong>.
+                        Why not <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>?
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'bowling'}) }}">Bowling</a>.
@@ -134,6 +145,30 @@
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Featured game</h2>
+            <p>
+                This is where we feature games that are interesting, unusual, or that simply need
+                more reviews.
+                <br>You can <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>.
+            </p>
+            {% if FeaturedGame %}
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': FeaturedGameData, 'batchOverride': 1} %}
+                <p>
+                    <small>
+                        Check this out because:
+                        <strong>
+                            {{ FeaturedGame.getTypeForMemberPage() }}.
+                        </strong>
+                        <br>
+                        Suggested by {{ FeaturedGame.user.display_name }} on {{ FeaturedGame.created_at|date('d M Y') }}
+                    </small>
+                </p>
+            {% else %}
+                <p>
+                    <strong>Oops! There aren't any featured games right now. Check back soon!</strong>
+                </p>
+            {% endif %}
 
         </div>
 

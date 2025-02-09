@@ -69,6 +69,11 @@ class Repository
         return FeaturedGame::orderBy('id', 'desc')->get();
     }
 
+    public function getLatest()
+    {
+        return FeaturedGame::where('status', FeaturedGame::STATUS_ACCEPTED)->orderBy('id', 'desc')->first();
+    }
+
     public function getAllGameIds()
     {
         return FeaturedGame::orderBy('id', 'desc')->pluck('game_id');

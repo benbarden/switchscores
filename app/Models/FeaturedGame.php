@@ -8,6 +8,8 @@ class FeaturedGame extends Model
 {
     const TYPE_INTERESTING = 1;
     const TYPE_HIDDEN_GEM = 2;
+    const TYPE_UNUSUAL_OR_UNIQUE = 3;
+    const TYPE_NEEDS_MORE_REVIEWS = 4;
 
     const STATUS_PENDING = 0;
     const STATUS_ACCEPTED = 1;
@@ -45,6 +47,33 @@ class FeaturedGame extends Model
                 break;
             case self::TYPE_HIDDEN_GEM;
                 $desc = 'Hidden gem';
+                break;
+            case self::TYPE_UNUSUAL_OR_UNIQUE;
+                $desc = 'Unusual or unique';
+                break;
+            case self::TYPE_NEEDS_MORE_REVIEWS;
+                $desc = 'Needs more reviews';
+                break;
+        }
+
+        return $desc;
+    }
+
+    public function getTypeForMemberPage()
+    {
+        $desc = '';
+        switch ($this->featured_type) {
+            case self::TYPE_INTERESTING:
+                $desc = 'This game looks interesting';
+                break;
+            case self::TYPE_HIDDEN_GEM;
+                $desc = 'This is a hidden gem';
+                break;
+            case self::TYPE_UNUSUAL_OR_UNIQUE;
+                $desc = 'This looks unusual or unique';
+                break;
+            case self::TYPE_NEEDS_MORE_REVIEWS;
+                $desc = 'This needs more reviews';
                 break;
         }
 

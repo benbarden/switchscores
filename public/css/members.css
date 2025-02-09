@@ -43,3 +43,21 @@ h6, .h6 {font-size: 14px;}
 .member-dashboard table thead tr th {
     background: #dedede;
 }
+
+/* Theme */
+.theme-colour-1 {background: #C9312C; color: #ffffff;}
+.theme-colour-2 {background: #C9802C; color: #ffffff;}
+.theme-colour-3 {background: #C4C92C; color: #000000;}
+.theme-colour-4 {background: #75C92C; color: #000000;}
+.theme-colour-5 {background: #C92C75; color: #ffffff;}
+.theme-colour-6 {background: #DA5C58; color: #ffffff;}
+.theme-colour-7 {background: #E58D8A; color: #ffffff;}
+.theme-colour-8 {background: #2CC931; color: #ffffff;}
+.theme-colour-9 {background: #C92CC4; color: #ffffff;}
+.theme-colour-10 {background: #8AE2E5; color: #000000;}
+.theme-colour-11 {background: #58D6DA; color: #000000;}
+.theme-colour-12 {background: #2CC980; color: #000000;}
+.theme-colour-13 {background: #802CC9; color: #ffffff;}
+.theme-colour-14 {background: #312CC9; color: #ffffff;}
+.theme-colour-15 {background: #2C75C9; color: #ffffff;}
+.theme-colour-16 {background: #2CC4C9; color: #ffffff;}
