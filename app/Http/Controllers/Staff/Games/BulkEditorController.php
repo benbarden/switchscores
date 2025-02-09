@@ -77,6 +77,8 @@ class BulkEditorController extends Controller
             case 'category_sim':
             case 'category_puzzle':
             case 'category_sports_racing':
+            case 'category_quiz':
+            case 'category_spot_the_difference':
                 $editModeHeader1 = 'Category';
                 $templateEditCell = 'category/edit-cell.twig';
                 $templateScripts = 'category/scripts.twig';
@@ -242,6 +244,8 @@ class BulkEditorController extends Controller
             $editModeList = [
                 'eshop_upcoming_crosscheck',
                 'category_sim',
+                'category_quiz',
+                'category_spot_the_difference',
                 'category_puzzle',
                 'category_sports_racing',
             ];
@@ -255,6 +259,12 @@ class BulkEditorController extends Controller
                     break;
                 case 'category_sim':
                     $gameList = $this->repoGameListMissingCategory->simulation();
+                    break;
+                case 'category_quiz':
+                    $gameList = $this->repoGameListMissingCategory->quiz();
+                    break;
+                case 'category_spot_the_difference':
+                    $gameList = $this->repoGameListMissingCategory->spotTheDifference();
                     break;
                 case 'category_puzzle':
                     $gameList = $this->repoGameListMissingCategory->puzzle();

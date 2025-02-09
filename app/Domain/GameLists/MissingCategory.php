@@ -22,6 +22,38 @@ class MissingCategory
         return $games;
     }
 
+    public function quiz($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%quiz%')
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('id', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function spotTheDifference($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%spot the difference%')
+            ->orderBy('eu_release_date', 'asc')
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('id', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
     public function puzzle($limit = null)
     {
         $games = Game::whereNull('category_id')

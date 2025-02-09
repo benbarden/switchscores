@@ -72,6 +72,26 @@
                 </tr>
                 <tr>
                     <td>
+                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_quiz'}) }}">
+                            Edit missing category groups: Quiz
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ BulkEditMissingCategoryQuizCount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_spot_the_difference'}) }}">
+                            Edit missing category groups: Spot the Difference
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ BulkEditMissingCategorySpotTheDifferenceCount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_puzzle'}) }}">
                             Edit missing category groups: Puzzle
                         </a>

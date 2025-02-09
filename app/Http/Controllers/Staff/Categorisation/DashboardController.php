@@ -132,6 +132,10 @@ class DashboardController extends Controller
         // Bulk edit stats
         $missingCategorySimulation = $this->repoGameListMissingCategory->simulation();
         $bindings['BulkEditMissingCategorySimCount'] = count($missingCategorySimulation);
+        $missingCategoryQuiz = $this->repoGameListMissingCategory->quiz();
+        $bindings['BulkEditMissingCategoryQuizCount'] = count($missingCategoryQuiz);
+        $missingCategorySpotTheDifference = $this->repoGameListMissingCategory->spotTheDifference();
+        $bindings['BulkEditMissingCategorySpotTheDifferenceCount'] = count($missingCategorySpotTheDifference);
         $missingCategoryPuzzle = $this->repoGameListMissingCategory->puzzle();
         $bindings['BulkEditMissingCategoryPuzzleCount'] = count($missingCategoryPuzzle);
         $missingCategorySportsRacing = $this->repoGameListMissingCategory->sportsAndRacing();
