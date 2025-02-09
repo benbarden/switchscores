@@ -70,6 +70,15 @@
                         <span class="h4">{{ BulkEditMissingCategorySimCount }}</span>
                     </td>
                 </tr>
+                <td>
+                    <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_survival'}) }}">
+                        Edit missing category groups: Survival
+                    </a>
+                </td>
+                <td class="text-end">
+                    <span class="h4">{{ BulkEditMissingCategorySurvivalCount }}</span>
+                </td>
+                </tr>
                 <tr>
                     <td>
                         <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_quiz'}) }}">

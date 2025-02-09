@@ -75,6 +75,7 @@ class BulkEditorController extends Controller
         switch ($editMode) {
             case 'category':
             case 'category_sim':
+            case 'category_survival':
             case 'category_puzzle':
             case 'category_sports_racing':
             case 'category_quiz':
@@ -107,6 +108,7 @@ class BulkEditorController extends Controller
                 break;
             case 'category':
             case 'category_sim':
+            case 'category_survival':
             case 'category_puzzle':
             case 'category_sports_racing':
                 $fieldToUpdate = 'category_id';
@@ -244,6 +246,7 @@ class BulkEditorController extends Controller
             $editModeList = [
                 'eshop_upcoming_crosscheck',
                 'category_sim',
+                'category_survival',
                 'category_quiz',
                 'category_spot_the_difference',
                 'category_puzzle',
@@ -259,6 +262,9 @@ class BulkEditorController extends Controller
                     break;
                 case 'category_sim':
                     $gameList = $this->repoGameListMissingCategory->simulation();
+                    break;
+                case 'category_survival':
+                    $gameList = $this->repoGameListMissingCategory->survival();
                     break;
                 case 'category_quiz':
                     $gameList = $this->repoGameListMissingCategory->quiz();

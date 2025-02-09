@@ -10,9 +10,21 @@ class MissingCategory
     {
         $games = Game::whereNull('category_id')
             ->where('games.title', 'LIKE', '%sim%')
-            ->orderBy('eu_release_date', 'asc')
-            ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('id', 'asc');
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function survival($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%surviv%')
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -26,9 +38,7 @@ class MissingCategory
     {
         $games = Game::whereNull('category_id')
             ->where('games.title', 'LIKE', '%quiz%')
-            ->orderBy('eu_release_date', 'asc')
-            ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('id', 'asc');
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -42,9 +52,7 @@ class MissingCategory
     {
         $games = Game::whereNull('category_id')
             ->where('games.title', 'LIKE', '%spot the difference%')
-            ->orderBy('eu_release_date', 'asc')
-            ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('id', 'asc');
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -62,9 +70,7 @@ class MissingCategory
                     ->orWhere('games.title', 'LIKE', '%soko%')
                     ->orWhere('games.title', 'LIKE', '%zumba%');
             })
-            ->orderBy('eu_release_date', 'asc')
-            ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('id', 'asc');
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -86,9 +92,7 @@ class MissingCategory
                     ->orWhere('games.title', 'LIKE', '%golf%')
                     ->orWhere('games.title', 'LIKE', '%racing%');
             })
-            ->orderBy('eu_release_date', 'asc')
-            ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('id', 'asc');
+            ->orderBy('title', 'asc');
 
         if ($limit != null) {
             $games = $games->limit($limit);
