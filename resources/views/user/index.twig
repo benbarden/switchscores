@@ -11,6 +11,7 @@
         Follow us for the latest updates.
     </p>
 #}
+{#
     <div class="row">
         <div class="col-xs-12 col-sm-4 col-md-4">
             <div class="alert alert-info">
@@ -18,6 +19,7 @@
             </div>
         </div>
     </div>
+#}
 
     <div class="row member-dashboard">
 
@@ -83,6 +85,23 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
+            <h2>Recent updates</h2>
+            <table class="table">
+                <tr>
+                    <td>
+                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'bowling'}) }}">Bowling</a>.
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="row member-dashboard">
+
+        <div class="col-xs-12 col-sm-4 col-md-4">
+
             {% if SiteRole == 'review-partner' %}
                 <h2>Reviewers</h2>
                 <p>
@@ -101,14 +120,6 @@
                     more details.
                 </p>
             {% endif %}
-
-        </div>
-
-    </div>
-
-    <div class="row member-dashboard">
-
-        <div class="col-xs-12 col-sm-4 col-md-4">
 
         </div>
 
