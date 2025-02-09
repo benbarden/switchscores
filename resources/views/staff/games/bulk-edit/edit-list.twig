@@ -8,6 +8,9 @@
     {% set formSubmitAction = route('staff.games.bulk-edit.editPredefinedList', {'editMode': EditMode}) %}
 {% endif %}
 
+<p>
+    Found {{ GameList|length }} item(s).
+</p>
 {% include 'common/form-errors.twig' %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}

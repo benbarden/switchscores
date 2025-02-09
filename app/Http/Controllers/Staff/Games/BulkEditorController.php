@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 
 use App\Construction\Game\GameBuilder;
+
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
@@ -17,6 +18,7 @@ use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Url\LinkTitle as LinkTitleGenerator;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 
 use App\Traits\SwitchServices;
@@ -42,6 +44,7 @@ class BulkEditorController extends Controller
         private GameQualityFilter $gameQualityFilter,
         private GameRepository $repoGame,
         private GameListsRepository $repoGameLists,
+        private GameListMissingCategoryRepository $repoGameListMissingCategory,
         private GamesCompanyRepository $repoGamesCompany,
         private LinkTitleGenerator $linkTitleGenerator,
         private GamePublisherRepository $repoGamePublisher
@@ -71,6 +74,9 @@ class BulkEditorController extends Controller
 
         switch ($editMode) {
             case 'category':
+            case 'category_sim':
+            case 'category_puzzle':
+            case 'category_sports_racing':
                 $editModeHeader1 = 'Category';
                 $templateEditCell = 'category/edit-cell.twig';
                 $templateScripts = 'category/scripts.twig';
@@ -98,6 +104,9 @@ class BulkEditorController extends Controller
                 $fieldToUpdate = 'eshop_europe_order';
                 break;
             case 'category':
+            case 'category_sim':
+            case 'category_puzzle':
+            case 'category_sports_racing':
                 $fieldToUpdate = 'category_id';
                 break;
             default:
@@ -231,7 +240,10 @@ class BulkEditorController extends Controller
             // This populates the game list from a DB query.
 
             $editModeList = [
-                'eshop_upcoming_crosscheck'
+                'eshop_upcoming_crosscheck',
+                'category_sim',
+                'category_puzzle',
+                'category_sports_racing',
             ];
             if (!in_array($editMode, $editModeList)) abort(404);
 
@@ -241,6 +253,15 @@ class BulkEditorController extends Controller
                 case 'eshop_upcoming_crosscheck':
                     $gameList = $this->repoGameLists->upcomingEshopCrosscheck();
                     break;
+                case 'category_sim':
+                    $gameList = $this->repoGameListMissingCategory->simulation();
+                    break;
+                case 'category_puzzle':
+                    $gameList = $this->repoGameListMissingCategory->puzzle();
+                    break;
+                case 'category_sports_racing':
+                    $gameList = $this->repoGameListMissingCategory->sportsAndRacing();
+                    break;
             }
 
         } else {
@@ -249,7 +270,7 @@ class BulkEditorController extends Controller
 
             $editModeList = [
                 'category',
-                'eshop_europe_order'
+                'eshop_europe_order',
             ];
             if (!in_array($editMode, $editModeList)) abort(404);
 

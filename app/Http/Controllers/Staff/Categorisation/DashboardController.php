@@ -8,6 +8,7 @@ use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
 
 use App\Models\Category;
 use App\Models\GameSeries;
@@ -24,6 +25,7 @@ class DashboardController extends Controller
         private GameSeriesRepository $repoGameSeries,
         private TagRepository $repoTag,
         private CategoryRepository $repoCategory,
+        private GameListMissingCategoryRepository $repoGameListMissingCategory,
     )
     {
     }
@@ -126,6 +128,14 @@ class DashboardController extends Controller
 
         // Migrations: Category
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategoryAll();
+
+        // Bulk edit stats
+        $missingCategorySimulation = $this->repoGameListMissingCategory->simulation();
+        $bindings['BulkEditMissingCategorySimCount'] = count($missingCategorySimulation);
+        $missingCategoryPuzzle = $this->repoGameListMissingCategory->puzzle();
+        $bindings['BulkEditMissingCategoryPuzzleCount'] = count($missingCategoryPuzzle);
+        $missingCategorySportsRacing = $this->repoGameListMissingCategory->sportsAndRacing();
+        $bindings['BulkEditMissingCategorySportsRacingCount'] = count($missingCategorySportsRacing);
 
         return view('staff.categorisation.dashboard', $bindings);
     }

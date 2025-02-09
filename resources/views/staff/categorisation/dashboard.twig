@@ -57,6 +57,42 @@
 
         <div class="col-md-4">
 
+            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_sim'}) }}">
+                            Edit missing category groups: Sim(ulation)
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ BulkEditMissingCategorySimCount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_puzzle'}) }}">
+                            Edit missing category groups: Puzzle
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ BulkEditMissingCategoryPuzzleCount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_sports_racing'}) }}">
+                            Edit missing category groups: Sports and Racing
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ BulkEditMissingCategorySportsRacingCount }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
         </div>
 
     </div>
