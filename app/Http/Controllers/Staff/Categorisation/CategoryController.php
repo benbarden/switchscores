@@ -42,7 +42,16 @@ class CategoryController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['CategoryList'] = $this->repoCategory->getAll();
+        $fullCategoryList = [];
+        $topLevelCategories = $this->repoCategory->topLevelCategories();
+        foreach ($topLevelCategories as $categoryItem) {
+            $fullCategoryList[] = $categoryItem;
+            $categoryChildren = $this->repoCategory->categoryChildren($categoryItem->id);
+            foreach ($categoryChildren as $categoryChild) {
+                $fullCategoryList[] = $categoryChild;
+            }
+        }
+        $bindings['CategoryList'] = $fullCategoryList;
 
         return view('staff.categorisation.category.list', $bindings);
     }

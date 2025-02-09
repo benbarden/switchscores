@@ -61,6 +61,11 @@ class Repository
         return Category::whereDoesntHave('parent')->orderBy('name', 'asc')->get();
     }
 
+    public function categoryChildren($categoryId)
+    {
+        return Category::where('parent_id', $categoryId)->orderBy('name', 'asc')->get();
+    }
+
     public function gamesByCategory($categoryId)
     {
         return Game::where('category_id', $categoryId)->orderBy('title', 'asc')->get();

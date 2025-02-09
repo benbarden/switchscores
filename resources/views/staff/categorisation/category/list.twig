@@ -6,13 +6,12 @@
 <br>
 <br>
 
-{% if CategoryList.count > 0 %}
-    <table class="table data-sortable">
+{% if CategoryList %}
+    <table class="table table-condensed">
         <thead>
             <tr>
                 <th class="text-end">#</th>
                 <th>Category</th>
-                <th>Parent</th>
                 <th class="text-center">Game count</th>
                 <th class="text-center">View</th>
                 <th class="text-center">Options</th>
@@ -25,16 +24,13 @@
                         {{ item.id }}
                     </td>
                     <td>
+                        {% if item.parent.id %}
+                            {{ item.parent.name }}
+                            &gt;&gt;
+                        {% endif %}
                         <a href="{{ route('games.browse.byCategory.page', {'category': item.link_title}) }}" target="_blank">
                             {{ item.name }}
                         </a>
-                    </td>
-                    <td>
-                        {% if item.parent.id %}
-                        <a href="{{ route('games.browse.byCategory.page', {'category': item.parent.link_title}) }}" target="_blank">
-                            {{ item.parent.name }}
-                        </a>
-                        {% endif %}
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}
@@ -55,23 +51,5 @@
 {% else %}
     <p>No categories found!</p>
 {% endif %}
-
-{% include 'common/table-sorting-b5.twig' %}
-<script>
-    $(document).ready(function() {
-        $('.data-sortable').DataTable({
-            "order": [0, 'desc'],
-            "pageLength": 25,
-            "columns": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            ]
-        });
-    });
-</script>
 
 {% endblock page_inner %}
