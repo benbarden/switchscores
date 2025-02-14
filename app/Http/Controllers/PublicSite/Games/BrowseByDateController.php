@@ -103,7 +103,7 @@ class BrowseByDateController extends Controller
 
         $calendarYear = $dtDate->format('Y');
         $calendarMonth = $dtDate->format('m');
-        $gamesByMonthList = $this->getServiceGameCalendar()->getList($calendarYear, $calendarMonth);
+        $gamesByMonthList = $this->repoGameCalendar->getList($calendarYear, $calendarMonth);
         $bindings['GamesByMonthList'] = $gamesByMonthList;
 
         // Get all dates

@@ -60,37 +60,15 @@ class GameCalendarService
      * @param $month
      * @return mixed
      */
-    public function getList($year, $month)
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        $games = $games->get();
-        return $games;
-    }
-
-    /**
-     * @param $year
-     * @param $month
-     * @return mixed
-     */
     public function getListCount($year, $month)
     {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', 1)
-            ->whereYear('games.eu_release_date', '=', $year)
+        return Game::whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where(function ($query) {
+                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
+                    ->orWhereNull('format_digital');
+            })
             ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc');
-
-        $games = $games->count();
-        return $games;
+            ->orderBy('games.title', 'asc')->count();
     }
 }
