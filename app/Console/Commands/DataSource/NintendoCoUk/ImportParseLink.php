@@ -63,42 +63,66 @@ class ImportParseLink extends Command
 
             } else {
 
-                if (\App::environment() == 'localx') {
-                    $logger->info('Loading local data from JSON file');
-                    $importer->loadLocalData('europe-test-1500-games.json');
-                } else {
-                    $logger->warning('Loading LIVE data from eShop. Do not abuse!');
-                    $importer->loadGames();
-                }
-                $responseArray = $importer->getResponseData();
-
-                $gameData = $responseArray['response']['docs'];
-                if (!is_array($gameData)) {
-                    throw new \Exception('Cannot load game data');
-                }
-                $logger->info('Successfully loaded game data into temporary storage.');
-
-                // Raw data
+                // Do cleanup first
                 $logger->info('Clearing previous raw data...');
                 $this->getServiceDataSourceRaw()->deleteBySourceId($sourceId);
-                $logger->info('Importing raw data...');
-                $importer->importToDb($sourceId);
-                $importedItemCount = $importer->getImportedCount();
-                $logger->info('Imported '.$importedItemCount.' item(s)');
+                $logger->info('Clearing previous parsed data...');
+                $this->getServiceDataSourceParsed()->deleteBySourceId($sourceId);
+
+                //
+                //if (\App::environment() == 'localx') {
+                //    $logger->info('Loading local data from JSON file');
+                //    $importer->loadLocalData('europe-test-1500-games.json');
+                //} else {
+                //}
+                $logger->warning('Loading LIVE data from eShop. Do not abuse!');
+
+                $loadLimit = 1000;
+                $maxExpectedItems = 10000;
+                $loadOffsets = [];
+                for ($i = $loadLimit; $i <= $maxExpectedItems; $i+=$loadLimit) {
+                    $loadOffsets[] = $i;
+                }
+
+                foreach ($loadOffsets as $offset) {
+
+                    $logger->info(sprintf('Loading %s items; offset %s', $loadLimit, $offset));
+                    $importer->loadGames($loadLimit, $offset);
+
+                    $responseArray = $importer->getResponseData();
+
+                    $gameData = $responseArray['response']['docs'];
+                    if (!is_array($gameData)) {
+                        $logger->error('Cannot load game data');
+                        continue;
+                    }
+                    $logger->info('Successfully loaded game data into temporary storage.');
+
+                    // Raw data
+                    $logger->info('Importing raw data...');
+                    $importer->importToDb($sourceId);
+                    $importedItemCount = $importer->getImportedCount();
+                    $logger->info('Imported '.$importedItemCount.' item(s)');
+
+                }
 
             }
 
             // Parsed data
-            $logger->info('Clearing previous parsed data...');
-            $this->getServiceDataSourceParsed()->deleteBySourceId($sourceId);
             $logger->info('Parsing data...');
+            $parsedItemCount = 0;
             $rawSourceData = $this->getServiceDataSourceRaw()->getBySourceId($sourceId);
+            $totalItemCount = count($rawSourceData);
             foreach ($rawSourceData as $rawItem) {
+                if (($parsedItemCount % 1000) == 0) {
+                    $logger->info(sprintf('Parsed %s/%s items', $parsedItemCount, $totalItemCount));
+                }
                 $parser = new Parser($rawItem, $logger);
                 $parsedItem = $parser->parseItem();
                 $parsedItem->save();
+                $parsedItemCount++;
             }
-            $logger->info('Parsing complete');
+            $logger->info('Parsing complete. Parsed '.$parsedItemCount.' items(s).');
 
             // Link games
             $logger->info('Updating game links...');

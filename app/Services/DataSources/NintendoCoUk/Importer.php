@@ -11,7 +11,7 @@ class Importer
     const MODE_LIVE = 2;
 
     const DEFAULT_LOCALE = "en";
-    const GET_GAMES_EU_URL = "http://search.nintendo-europe.com/{locale}/select";
+    const GET_GAMES_EU_URL = "https://search.nintendo-europe.com/{locale}/select";
 
     /**
      * @var array
@@ -89,12 +89,18 @@ class Importer
         $this->responseData = json_decode($json, true);
     }
 
-    public function loadGames($limit = 9999, $locale = 'en')
+    public function loadGames($limit = 1000, $start = 0, $locale = 'en')
     {
         /*
          * TEST URL
-         http://search.nintendo-europe.com/en/select
-         ?fq=type:GAME AND system_type:nintendoswitch* AND product_code_txt:*&q=*&rows=10&sort=sorting_title asc&start=0&wt=json
+         https://search.nintendo-europe.com/en/select
+         ?fq=type:GAME AND system_type:nintendoswitch* AND product_code_txt:*
+         &q=*&rows=10&sort=sorting_title asc&start=0&wt=json
+         */
+        /*
+         https://search.nintendo-europe.com/en/select
+         ?fq=type:GAME AND system_type:nintendoswitch* AND product_code_txt:*
+         &q=*&rows=10&sort=sorting_title asc&start=0&wt=json
          */
 
         // Base url
@@ -104,11 +110,11 @@ class Importer
         $qsFq = "type:GAME AND system_type:nintendoswitch* AND product_code_txt:*";
         $qsQ = "*";
         $qsSort = "sorting_title asc";
-        $qsStart = "0";
+        //$qsStart = "0";
         $qsWt = "json";
 
         $queryString = sprintf('?fq=%s&q=%s&rows=%s&sort=%s&start=%s&wt=%s',
-            $qsFq, $qsQ, $limit, $qsSort, $qsStart, $qsWt
+            $qsFq, $qsQ, $limit, $qsSort, $start, $qsWt
         );
 
         // Request url
