@@ -109,6 +109,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\InviteCode', 'id', 'invite_code_id');
     }
 
+    public function gamesCollection()
+    {
+        return $this->hasMany('App\Models\UserGamesCollection', 'user_id', 'id');
+    }
+
     // Roles
 
     /***
