@@ -68,6 +68,7 @@ class GameService
         $gameList = Game::whereNull('eshop_europe_fs_id')
             ->whereNull('nintendo_store_url_override')
             ->whereNotNull('eu_release_date')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
             ->orderBy('id', 'desc');
         if ($limit) {
             $gameList = $gameList->limit($limit);
