@@ -200,7 +200,7 @@ class GamesListController extends Controller
 
         $bindings['GameList'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink();
 
-        $bindings['CustomHeader'] = 'Review count';
+        $bindings['CustomHeader'] = 'Rating avg';
         $bindings['ListMode'] = 'broken-nintendo-co-uk-link';
 
         return view('staff.games.list.standard-view', $bindings);
