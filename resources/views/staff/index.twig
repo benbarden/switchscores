@@ -1,4 +1,5 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "macros/blocks/headings/slick.twig" as headings %}
 
 {% block page_inner %}
 
@@ -6,7 +7,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Submissions'} %}
+        {{ headings.slickHeadingTitle('Submissions') }}
 
         <table class="table">
             <tbody>
@@ -48,7 +49,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Games to add'} %}
+        {{ headings.slickHeadingTitle('Games to add') }}
 
         <table class="table">
             <tbody>
@@ -75,7 +76,30 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Missing data'} %}
+        {{ headings.slickHeadingTitle('Nintendo links') }}
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        {{ headings.slickHeadingTitle('Missing data') }}
 
         <table class="table">
             <tbody>
@@ -109,14 +133,6 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
                 </td>
                 <td class="text-end">
@@ -126,7 +142,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Invite codes'} %}
+        {{ headings.slickHeadingTitle('Invite codes') }}
         <table class="table">
             <tbody>
             <tr>
@@ -139,7 +155,7 @@
         </table>
 
         {% if auth_user().isOwner() %}
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Owner links'} %}
+            {{ headings.slickHeadingTitle('Owner links') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -177,7 +193,7 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Recently released'} %}
+            {{ headings.slickHeadingTitle('Recently released') }}
             {% if RecentlyReleasedGames.count > 0 %}
                 <div class="col-md-12">
                     {% for item in RecentlyReleasedGames %}
@@ -210,7 +226,7 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Recently added'} %}
+            {{ headings.slickHeadingTitle('Recently added') }}
             {% if RecentlyAddedGames.count > 0 %}
                 <div class="col-md-12">
                     {% for item in RecentlyAddedGames %}

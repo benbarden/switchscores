@@ -56,11 +56,14 @@ class IndexController extends Controller
         $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
+        // Nintendo links
+        $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
+        $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
+
         // Missing data
         $bindings['NoCategoryExcludingLowQualityCount'] = $this->repoGameStats->totalNoCategoryExcludingLowQuality();
         $bindings['NoCategoryAllCount'] = $this->repoGameStats->totalNoCategoryAll();
         $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
-        $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
         // New games
