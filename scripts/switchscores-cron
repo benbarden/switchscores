@@ -3,7 +3,8 @@
 0 2 * * * www-data cd /var/www/switchscores.com && php artisan IGSeriesImage >/dev/null 2>&1
 
 0 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkImportParseLink >/dev/null 2>&1
-10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
+10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateAvailability >/dev/null 2>&1
+15 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
 20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadPackshots >/dev/null 2>&1
 #20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImages >/dev/null 2>&1
 #25 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadImagesByScraper >/dev/null 2>&1
