@@ -81,7 +81,8 @@ class GameService
             ->select('games.*')
             ->leftJoin('data_source_parsed', 'games.eshop_europe_fs_id', '=', 'data_source_parsed.link_id')
             ->whereNotNull('games.eshop_europe_fs_id')
-            ->whereNull('data_source_parsed.link_id');
+            ->whereNull('data_source_parsed.link_id')
+            ->whereNull('games.nintendo_store_url_override');
         if ($limit) {
             $gameList = $gameList->limit($limit);
         }

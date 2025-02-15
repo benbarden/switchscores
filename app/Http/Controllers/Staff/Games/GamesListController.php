@@ -200,6 +200,9 @@ class GamesListController extends Controller
 
         $bindings['GameList'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink();
 
+        $bindings['CustomHeader'] = 'Format digital';
+        $bindings['ListMode'] = 'broken-nintendo-co-uk-link';
+
         return view('staff.games.list.standard-view', $bindings);
     }
 

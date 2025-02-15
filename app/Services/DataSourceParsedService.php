@@ -180,6 +180,13 @@ class DataSourceParsedService
                 SELECT link_id FROM data_source_parsed WHERE source_id = ?
             );
         ', [Game::FORMAT_AVAILABLE, $sourceId]);
+
+        DB::update('
+            UPDATE games
+            SET format_digital = ?
+            WHERE nintendo_store_url_override IS NOT NULL
+            AND format_digital = ?
+        ', [Game::FORMAT_AVAILABLE, Game::FORMAT_DELISTED]);
     }
 
     public function updateNintendoCoUkDigitalDelisted()

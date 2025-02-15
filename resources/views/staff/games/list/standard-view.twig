@@ -80,6 +80,8 @@
                             {{ item.genres_json }}
                         {% elseif ListMode == 'games-to-release' %}
                             <a href="javascript:void(0);" id="lnk-release-game-{{ item.id }}" class="lnk-release-game">Release</a>
+                        {% elseif ListMode == 'broken-nintendo-co-uk-link' %}
+                            {{ item.format_digital }}
                         {% endif %}
                     </td>
                     <td class="text-center">
