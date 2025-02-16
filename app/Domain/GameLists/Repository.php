@@ -21,6 +21,11 @@ class Repository
         return DB::table('games')->select('games.*')->orderBy('games.title', 'asc')->get();
     }
 
+    public function allGames()
+    {
+        return Game::orderBy('title', 'asc')->get();
+    }
+
     public function getApiIdList()
     {
         $gameList = DB::table('games')

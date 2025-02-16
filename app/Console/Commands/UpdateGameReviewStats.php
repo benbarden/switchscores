@@ -4,13 +4,13 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
-use App\Traits\SwitchServices;
+use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 class UpdateGameReviewStats extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -79,7 +79,10 @@ class UpdateGameReviewStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $gameList = $this->getServiceGame()->getAllAsObjects();
+        $repoGameLists = new GameListsRepository();
+        $statsReviewLink = new ReviewLinkStats();
+
+        $gameList = $repoGameLists->allGames();
 
         foreach ($gameList as $game) {
 
@@ -87,10 +90,7 @@ class UpdateGameReviewStats extends Command
 
             $this->storeGameData($game, 'old');
 
-            $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-            $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
-
-            $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+            $statsReviewLink->updateStats($game);
 
             $this->storeGameData($game, 'new');
 
@@ -100,6 +100,6 @@ class UpdateGameReviewStats extends Command
 
         // Cleanup
         $logger->info('Cleanup: zeroing rating average for games with no reviews');
-        \DB::update("UPDATE games SET rating_avg = NULL WHERE review_count = 0");
+        DB::update("UPDATE games SET rating_avg = NULL WHERE review_count = 0");
     }
 }

@@ -94,6 +94,10 @@ class GameService
     // Stuff to sort through
     // ********************************************************** //
 
+    /**
+     * @deprecated
+     * @return \Illuminate\Support\Collection
+     */
     public function getAll()
     {
         $games = DB::table('games')
@@ -113,11 +117,6 @@ class GameService
         $games = $games->get();
 
         return $games;
-    }
-
-    public function getAllAsObjects()
-    {
-        return Game::orderBy('id', 'asc')->get();
     }
 
     // ** ACTION LISTS (New) ** //
