@@ -79,7 +79,7 @@ class ImportParseLink extends Command
 
                 $loadLimit = 1000;
                 $maxExpectedItems = 10000;
-                $loadOffsets = [];
+                $loadOffsets = [0];
                 for ($i = $loadLimit; $i <= $maxExpectedItems; $i+=$loadLimit) {
                     $loadOffsets[] = $i;
                 }
