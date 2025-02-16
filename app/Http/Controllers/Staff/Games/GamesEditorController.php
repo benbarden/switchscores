@@ -282,8 +282,8 @@ class GamesEditorController extends Controller
 
             } else {
 
-                // Clear digital status
-                $game->format_digital = null;
+                // Clear digital status - Removed, we can keep the previous value.
+                //$game->format_digital = null;
                 // Clear fs_id
                 $game->eshop_europe_fs_id = null;
                 $game->save();
