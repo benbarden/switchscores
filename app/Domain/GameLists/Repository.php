@@ -173,6 +173,11 @@ class Repository
         return Game::whereNull('category_id')->get();
     }
 
+    public function noCategoryWithCollection()
+    {
+        return Game::whereNotNull('collection_id')->whereNull('category_id')->get();
+    }
+
     public function byIdList($idList)
     {
         return Game::whereIn('id', $idList)->get();

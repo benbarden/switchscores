@@ -54,6 +54,11 @@ class Repository
         return Game::whereNull('category_id')->count();
     }
 
+    public function totalNoCategoryWithCollectionId()
+    {
+        return Game::whereNotNull('collection_id')->whereNull('category_id')->count();
+    }
+
     /**
      * @return integer
      */

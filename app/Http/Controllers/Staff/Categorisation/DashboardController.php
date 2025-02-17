@@ -128,6 +128,7 @@ class DashboardController extends Controller
 
         // Migrations: Category
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategoryAll();
+        $bindings['NoCategoryWithCollectionCount'] = $this->repoGameStats->totalNoCategoryWithCollectionId();
 
         // Bulk edit stats
         $missingCategorySimulation = $this->repoGameListMissingCategory->simulation();

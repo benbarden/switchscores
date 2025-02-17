@@ -115,6 +115,18 @@ class GamesListController extends Controller
         return view('staff.games.list.standard-view', $bindings);
     }
 
+    public function noCategoryWithCollection()
+    {
+        $pageTitle = 'No category with collection';
+        $tableSort = "[ 0, 'desc']";
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['GameList'] = $this->repoGameLists->noCategoryWithCollection();
+
+        return view('staff.games.list.standard-view', $bindings);
+    }
+
     public function noEuReleaseDate()
     {
         $pageTitle = 'No EU release date';
