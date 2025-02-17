@@ -50,6 +50,8 @@ Route::get('/games/by-series/{series}', 'PublicSite\Games\BrowseBySeriesControll
 
 Route::get('/games/by-collection', 'PublicSite\Games\BrowseByCollectionController@landing')->name('games.browse.byCollection.landing');
 Route::get('/games/by-collection/{collection}', 'PublicSite\Games\BrowseByCollectionController@page')->name('games.browse.byCollection.page');
+Route::get('/games/by-collection/{collection}/category/{category}', 'PublicSite\Games\BrowseByCollectionController@pageCategory')->name('games.browse.byCollection.pageCategory');
+Route::get('/games/by-collection/{collection}/series/{series}', 'PublicSite\Games\BrowseByCollectionController@pageSeries')->name('games.browse.byCollection.pageSeries');
 
 Route::get('/games/by-tag', 'PublicSite\Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
 Route::get('/games/by-tag/{tag}', 'PublicSite\Games\BrowseByTagController@page')->name('games.browse.byTag.page');

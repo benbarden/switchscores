@@ -191,6 +191,26 @@ class Repository
         return $games->get();
     }
 
+    public function byCollectionAndCategory($collectionId, $categoryId)
+    {
+        $games = Game::where('collection_id', $collectionId)
+            ->where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->orderBy('title', 'asc');
+
+        return $games->get();
+    }
+
+    public function byCollectionAndSeries($collectionId, $seriesId)
+    {
+        $games = Game::where('collection_id', $collectionId)
+            ->where('series_id', $seriesId)
+            ->where('eu_is_released', 1)
+            ->orderBy('title', 'asc');
+
+        return $games->get();
+    }
+
     public function bySeries(GameSeries $gameSeries)
     {
         return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
