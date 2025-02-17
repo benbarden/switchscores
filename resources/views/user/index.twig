@@ -21,7 +21,7 @@
     </div>
 #}
 
-    <div class="row member-dashboard">
+    <div class="row">
 
         <div class="col-xs-12 col-sm-4 col-md-4">
             <h2>Your details</h2>
@@ -90,36 +90,31 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Recent updates</h2>
-            <table class="table">
-                <tr>
-                    <td>
-                        9th Feb 2025: <strong>Added featured games</strong>.
-                        Why not <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>?
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'bowling'}) }}">Bowling</a>.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'quiz'}) }}">Quiz</a>.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'spot-the-difference'}) }}">Spot the Difference</a>.
-                    </td>
-                </tr>
-            </table>
+            {% if NextToReviewFromCollection %}
+                <h2>Add your review</h2>
+                <p>
+                    Why not review this game from your collection?
+                </p>
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': NextToReviewFromCollection, 'batchOverride': 1} %}
+                <br>
+                <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}';" />
+            {% elseif NextToReviewFromUnranked %}
+                <h2>Add your review</h2>
+                <p>
+                    This game only needs 1 review to be ranked. Why not check it out?
+                </p>
+                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': NextToReviewFromUnranked, 'batchOverride': 1} %}
+                <br>
+                <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromUnranked[0].id}) }}';" />
+            {% endif %}
 
         </div>
 
     </div>
 
-    <div class="row member-dashboard">
+    <br><br>
+
+    <div class="row">
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
@@ -173,6 +168,31 @@
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <h2>Recent updates</h2>
+            <table class="table">
+                <tr>
+                    <td>
+                        9th Feb 2025: <strong>Added featured games</strong>.
+                        Why not <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>?
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'bowling'}) }}">Bowling</a>.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'quiz'}) }}">Quiz</a>.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        9th Feb 2025: Added new category: <a href="{{ route('games.browse.byCategory.page', {'category': 'spot-the-difference'}) }}">Spot the Difference</a>.
+                    </td>
+                </tr>
+            </table>
 
         </div>
 

@@ -7,6 +7,18 @@ use App\Models\Game;
 
 class Repository
 {
+    public function getForMemberDashboard()
+    {
+        return Game::where('eu_is_released', 1)
+            ->where('is_low_quality', '0')
+            ->where('review_count', '2')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('rating_avg', '>', '7.0')
+            ->inRandomOrder()
+            ->limit(1)
+            ->get();
+    }
+
     public function getByReviewCount($reviewCount, $gameIdsReviewedBySite = null)
     {
         $gameList = Game::where('eu_is_released', 1)
