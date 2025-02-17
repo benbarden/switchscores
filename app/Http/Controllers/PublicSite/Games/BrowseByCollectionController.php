@@ -53,7 +53,6 @@ class BrowseByCollectionController extends Controller
 
         $splitPageCutoff = 30;
         $useSplitPageCutoff = "Y"; // change to Y to test the new layout
-        $bindings['UseSplitPageCutoff'] = $useSplitPageCutoff;
 
         $bindings['GameList'] = $gameList;
 
@@ -62,7 +61,10 @@ class BrowseByCollectionController extends Controller
             $gameCollectionSeriesList = $this->dbGameCollection->collectionSeriesStats($collectionId);
             $bindings['CollectionCategoryList'] = $gameCollectionCategoryList;
             $bindings['CollectionSeriesList'] = $gameCollectionSeriesList;
+        } else {
+            $useSplitPageCutoff = "N"; // revert to old style if we don't have enough games
         }
+        $bindings['UseSplitPageCutoff'] = $useSplitPageCutoff;
 
         $bindings['PageTitle'] = 'Nintendo Switch games list - By collection: '.$collectionName;
         $bindings['TopTitle'] = 'Nintendo Switch games list - By collection: '.$collectionName;
