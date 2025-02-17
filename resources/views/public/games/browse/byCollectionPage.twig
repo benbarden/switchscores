@@ -12,29 +12,32 @@
     {% endif %}
 {% endif %}
 
-<div class="row">
 {% if UseSplitPageCutoff == 'Y' %}
-    <div class="col-xs-12 col-sm-12 col-md-6">
-        <h2>Browse collection by category</h2>
-        <ul>
-        {% for item in CollectionCategoryList %}
-            <li><a href="{{ route('games.browse.byCollection.pageCategory', {'collection': GameCollection.link_title, 'category': item.link_title}) }}">{{ item.name }} - {{ item.count }}</a></li>
-        {% endfor %}
-        </ul>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-6">
-        <h2>Browse collection by series</h2>
-        <ul>
-        {% for item in CollectionSeriesList %}
-            <li><a href="{{ route('games.browse.byCollection.pageSeries', {'collection': GameCollection.link_title, 'series': item.link_title}) }}">{{ item.series }} - {{ item.count }}</a></li>
-        {% endfor %}
-        </ul>
-    </div>
-{% else %}
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <h2>Browse collection by category</h2>
+            <ul>
+            {% for item in CollectionCategoryList %}
+                <li><a href="{{ route('games.browse.byCollection.pageCategory', {'collection': GameCollection.link_title, 'category': item.link_title}) }}">{{ item.name }} - {{ item.count }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <h2>Browse collection by series</h2>
+            <ul>
+            {% for item in CollectionSeriesList %}
+                <li><a href="{{ route('games.browse.byCollection.pageSeries', {'collection': GameCollection.link_title, 'series': item.link_title}) }}">{{ item.series }} - {{ item.count }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endif %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <h2>Browse all</h2>
+        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': GameList, 'batchOverride': 4} %}
+    </div>
 </div>
 
 {% endblock page_body %}
