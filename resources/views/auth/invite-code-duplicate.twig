@@ -1,0 +1,22 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>Oops...</h2>
+        <p>
+            Hold up - you've already requested an invite code. Don't worry, we'll get back to you soon.
+        </p>
+        <button type="button" class="btn btn-primary pull-left" onclick="top.location.href='{{ route('welcome') }}';">
+            Back to the homepage.
+        </button>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}
+

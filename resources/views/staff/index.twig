@@ -42,6 +42,13 @@
             {% if auth_user().isOwner() %}
                 <tr>
                     <td>
+                        <a href="{{ route('staff.invite-code-request.list') }}">Invite code requests</a>
+                    </td>
+                    <td class="text-end">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         Games company signups
                     </td>
                     <td class="text-end">

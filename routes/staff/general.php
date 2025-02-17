@@ -12,6 +12,8 @@ Route::group(['middleware' => ['auth.staff']], function() {
 // *************** Staff: INVITE CODES *************** //
 Route::group(['middleware' => ['auth.staff']], function() {
 
+    Route::get('/staff/invite-code-request/list', 'Staff\InviteCodeRequestController@showList')->name('staff.invite-code-request.list');
+
     Route::get('/staff/invite-code/list', 'Staff\InviteCodeController@showList')->name('staff.invite-code.list');
     Route::match(['get', 'post'], '/staff/invite-code/add', 'Staff\InviteCodeController@addInviteCode')->name('staff.invite-code.add');
     Route::match(['get', 'post'], '/staff/invite-code/edit/{inviteCodeId}', 'Staff\InviteCodeController@editInviteCode')->name('staff.invite-code.edit');

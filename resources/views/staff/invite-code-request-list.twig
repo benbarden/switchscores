@@ -1,0 +1,56 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if InviteCodeRequestList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th class="text-left">Email</th>
+                <th class="text-left">Bio</th>
+                <th class="text-center">Times requested</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in InviteCodeRequestList %}
+                <tr>
+                    <td class="text-end">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        {{ item.waitlist_email }}
+                    </td>
+                    <td class="text-left">
+                        {{ item.waitlist_bio }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.times_requested }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at|date('Y-m-d') }}
+                    </td>
+                    <td class="text-center">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No invite code requests found!</p>
+{% endif %}
+
+{% include 'common/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 5 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

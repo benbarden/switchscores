@@ -6,6 +6,7 @@ use App\Domain\User\RequestInviteCode;
 use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
+use App\Domain\InviteCodeRequest\Repository as InviteCodeRequestRepository;
 use App\Events\UserCreated;
 use App\Models\User;
 
@@ -45,7 +46,8 @@ class RegisterController extends Controller
      */
     public function __construct(
         private InviteCodeRepository $repoInviteCode,
-        private PartnerOutreachRepository $repoPartnerOutreach
+        private PartnerOutreachRepository $repoPartnerOutreach,
+        private InviteCodeRequestRepository $repoInviteCodeRequest,
     )
     {
         $this->middleware('guest');
@@ -160,10 +162,19 @@ class RegisterController extends Controller
         $email = $request['waitlist_email'];
         $bio = $request['waitlist_bio'];
 
+        // Check if it exists
+        $inviteCodeRequest = $this->repoInviteCodeRequest->getByEmail($email);
+        if ($inviteCodeRequest) {
+            $this->repoInviteCodeRequest->incrementTimesRequested($inviteCodeRequest);
+            return redirect(route('about.invite-request-failure'));
+        } else {
+            $this->repoInviteCodeRequest->create($email, $bio);
+        }
+
         // Send the email
         $email = new RequestInviteCode($email, $bio);
         Mail::to(env('ADMIN_EMAIL'))->send($email);
 
-        return redirect(route('welcome'));
+        return redirect(route('about.invite-request-success'));
     }
 }

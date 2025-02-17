@@ -57,4 +57,28 @@ class AboutController extends Controller
 
         return view('public.about.changelog', $bindings);
     }
+
+    public function inviteRequestSuccess()
+    {
+        $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Invite request');
+
+        $bindings['TopTitle'] = 'Invite request successful';
+        $bindings['PageTitle'] = 'Invite request successful';
+
+        return view('auth.invite-code-requested', $bindings);
+    }
+
+    public function inviteRequestFailure()
+    {
+        $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Invite request');
+
+        $bindings['TopTitle'] = 'Invite request failure';
+        $bindings['PageTitle'] = 'Invite request failure';
+
+        return view('auth.invite-code-duplicate', $bindings);
+    }
 }
