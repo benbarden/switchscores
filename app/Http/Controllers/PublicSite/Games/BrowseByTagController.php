@@ -34,7 +34,7 @@ class BrowseByTagController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By tag';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By tag');
 
-        return view('public.games.browse.byTagLanding', $bindings);
+        return view('public.games.browse.tag.landing', $bindings);
     }
 
     public function page($tag)
@@ -57,6 +57,6 @@ class BrowseByTagController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By tag: '.$tagName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByTagSubpage($tagName);
 
-        return view('public.games.browse.tag.page-landing', $bindings);
+        return view('public.games.browse.tag.page', $bindings);
     }
 }

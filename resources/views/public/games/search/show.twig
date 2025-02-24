@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 
 {% set crumbNav = [
     {'url': route('games.landing'), 'text': 'Games'},
@@ -24,10 +25,11 @@
                 </p>
                 {% if SearchResults|length == 200 %}
                     <p>
-                        A maximum of 200 results are shown. Try narrowing your criteria a bit.
+                        Your search returned over 200 games.
+                        We're only showing 200 results. Try narrowing your criteria a bit.
                     </p>
                 {% endif %}
-                {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': SearchResults, 'batchOverride': 3} %}
+                {{ gameslayouts.noHero(SearchResults, 3) }}
             {% else %}
                 <p>No results. Try expanding your search criteria.</p>
             {% endif %}

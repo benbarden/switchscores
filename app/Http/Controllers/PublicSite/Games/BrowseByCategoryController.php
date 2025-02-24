@@ -22,7 +22,7 @@ class BrowseByCategoryController extends Controller
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
 
-        return view('public.games.browse.byCategoryLanding', $bindings);
+        return view('public.games.browse.category.landing', $bindings);
     }
 
     public function page($category)
@@ -61,6 +61,6 @@ class BrowseByCategoryController extends Controller
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
-        return view('public.games.browse.category.page-landing', $bindings);
+        return view('public.games.browse.category.page', $bindings);
     }
 }

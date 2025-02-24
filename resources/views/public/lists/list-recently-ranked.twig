@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 
 {% block page_body %}
 
@@ -9,7 +10,7 @@
         <p>
             These games have only recently been ranked. Thanks to everyone who's reviewed these games!
         </p>
-        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': HighlightsRecentlyRanked, 'batchOverride': 4} %}
+        {{ gameslayouts.noHero(HighlightsRecentlyRanked, 4) }}
 
     </div>
 

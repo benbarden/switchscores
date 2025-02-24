@@ -1,0 +1,24 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/games/navBrowse.twig' with {'currentNav': 'btn-nav-by-date'} %}
+
+<p>
+    This page allows you to find which games were released in every month since
+    the Nintendo Switch launched back in March 2017.
+</p>
+<p>
+    On each page, you'll find a full list of games based on their month of release.
+    Where games are future releases, the packshots are slightly faded.
+    You can also see the top rated games for each month, on the right side of each page.
+</p>
+
+{% for item in AllowedYears %}
+    {% set YearItem = attribute(_context, 'DateList'~item) %}
+    {% if YearItem|length %}
+        {% include 'public/games/browse/date/landing-year-item.twig' with {'Year': item, 'DateList': YearItem} %}
+    {% endif %}
+{% endfor %}
+
+{% endblock page_body %}

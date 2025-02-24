@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 
 {% block page_body %}
 
@@ -12,7 +13,7 @@
                 Help us out!
             </a>
         </p>
-        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': HighlightsStillUnranked, 'batchOverride': 4} %}
+        {{ gameslayouts.noHero(HighlightsStillUnranked, 4) }}
 
     </div>
 

@@ -86,7 +86,7 @@ class BrowseByDateController extends Controller
             $bindings['DateList'.$allowedYear] = $dateListArray[$allowedYear];
         }
 
-        return view('public.games.browse.byDateLanding', $bindings);
+        return view('public.games.browse.date.landing', $bindings);
     }
 
     public function page($dateUrl)
@@ -136,7 +136,7 @@ class BrowseByDateController extends Controller
         $yearMonth = $calendarYear.$calendarMonth;
         $bindings['GamesRatingsWithRanks'] = $this->dbTopRated->byYearMonth($yearMonth, 50);
 
-        return view('public.games.browse.byDatePage', $bindings);
+        return view('public.games.browse.date.page', $bindings);
     }
 
     /**

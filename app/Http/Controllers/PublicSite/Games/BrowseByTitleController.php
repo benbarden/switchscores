@@ -17,7 +17,7 @@ class BrowseByTitleController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->gamesSubpage('By title');
         $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
-        return view('public.games.browse.byTitleLanding', $bindings);
+        return view('public.games.browse.title.landing', $bindings);
     }
 
     public function page($letter)

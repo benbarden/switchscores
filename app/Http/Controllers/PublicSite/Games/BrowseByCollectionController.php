@@ -35,7 +35,7 @@ class BrowseByCollectionController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By collection';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By collection');
 
-        return view('public.games.browse.byCollectionLanding', $bindings);
+        return view('public.games.browse.collection.landing', $bindings);
     }
 
     public function page($collection)
@@ -70,7 +70,7 @@ class BrowseByCollectionController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By collection: '.$collectionName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCollectionSubpage($collectionName);
 
-        return view('public.games.browse.byCollectionPage', $bindings);
+        return view('public.games.browse.collection.page', $bindings);
     }
 
     public function pageCategory($urlCollection, $urlCategory)
@@ -95,7 +95,7 @@ class BrowseByCollectionController extends Controller
         $bindings['PageDesc'] = count($gameList).' games in '.$collectionName.' - '.$category->name.'.';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCollectionSubpage($collectionName);
 
-        return view('public.games.browse.byCollectionPage', $bindings);
+        return view('public.games.browse.collection.page', $bindings);
     }
 
     public function pageSeries($urlCollection, $urlGameSeries)
@@ -120,6 +120,6 @@ class BrowseByCollectionController extends Controller
         $bindings['PageDesc'] = count($gameList).' games in '.$collectionName.' - '.$gameSeries->series.'.';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCollectionSubpage($collectionName);
 
-        return view('public.games.browse.byCollectionPage', $bindings);
+        return view('public.games.browse.collection.page', $bindings);
     }
 }

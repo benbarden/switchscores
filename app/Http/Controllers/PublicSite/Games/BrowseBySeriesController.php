@@ -32,7 +32,7 @@ class BrowseBySeriesController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By series';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By series');
 
-        return view('public.games.browse.bySeriesLanding', $bindings);
+        return view('public.games.browse.series.landing', $bindings);
     }
 
     public function page($series)
@@ -53,6 +53,6 @@ class BrowseBySeriesController extends Controller
         $bindings['TopTitle'] = 'Nintendo Switch games list - By series: '.$seriesName;
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesBySeriesSubpage($seriesName);
 
-        return view('public.games.browse.bySeriesPage', $bindings);
+        return view('public.games.browse.series.page', $bindings);
     }
 }

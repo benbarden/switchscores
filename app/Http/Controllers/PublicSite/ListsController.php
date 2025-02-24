@@ -105,10 +105,6 @@ class ListsController extends Controller
 
         $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(28);
 
-        foreach ($highlightsRecentlyRanked as &$item) {
-            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
-        }
-
         $bindings['HighlightsRecentlyRanked'] = $highlightsRecentlyRanked;
 
         return view('public.lists.list-recently-ranked', $bindings);
@@ -124,10 +120,6 @@ class ListsController extends Controller
         $bindings['PageTitle'] = 'Recently reviewed, still unranked';
 
         $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked(28);
-
-        foreach ($highlightsStillUnranked as &$item) {
-            $item->ExtraDetailLine = 'Reviews: '.$item->review_count;
-        }
 
         $bindings['HighlightsStillUnranked'] = $highlightsStillUnranked;
 
