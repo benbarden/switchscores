@@ -80,23 +80,6 @@ class ListsController extends Controller
         return view('public.lists.list-games-on-sale', $bindings);
     }
 
-    public function gamesOnSaleArchive()
-    {
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Games on sale');
-
-        $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
-        $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(50);
-        $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(50);
-
-        //$bindings['AllGamesOnSale'] = $gamesOnSale;
-
-        return view('public.lists.list-games-on-sale-archive', $bindings);
-    }
-
     public function recentReviews()
     {
         $bindings = [];

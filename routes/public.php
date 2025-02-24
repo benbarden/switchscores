@@ -30,7 +30,6 @@ Route::get('/lists', 'PublicSite\ListsController@landing')->name('lists.landing'
 Route::get('/games/recent', 'PublicSite\ListsController@recentReleases')->name('games.recentReleases');
 Route::get('/games/upcoming', 'PublicSite\ListsController@upcomingReleases')->name('games.upcomingReleases');
 Route::get('/games/on-sale', 'PublicSite\ListsController@gamesOnSale')->name('games.onSale');
-Route::get('/games/on-sale/archive', 'PublicSite\ListsController@gamesOnSaleArchive')->name('lists.gamesOnSaleArchive');
 Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
 Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
 Route::get('/lists/recently-reviewed-still-unranked', 'PublicSite\ListsController@recentlyReviewedStillUnranked')->name('lists.recently-reviewed-still-unranked');
