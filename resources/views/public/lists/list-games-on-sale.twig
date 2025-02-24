@@ -31,7 +31,7 @@
                 </p>
 
                 {% if GoodRanks|length %}
-                    {% include 'public/games/browse/byCategoryPageTableRanked.twig' with {'GameList': GoodRanks, 'TableId': 'table-top-rated', 'TableSort': TopRatedSort} %}
+                    {% include 'public/lists/on-sale/table-ranked.twig' with {'GameList': GoodRanks, 'TableId': 'table-top-rated', 'TableSort': TopRatedSort} %}
                 {% else %}
                     <p>
                         No discounts to display.
@@ -52,7 +52,7 @@
                 </p>
 
                 {% if HighestDiscounts|length %}
-                    {% include 'public/games/browse/byCategoryPageTableRanked.twig' with {'GameList': HighestDiscounts, 'TableId': 'table-highest', 'TableSort': HighestDiscountsSort} %}
+                    {% include 'public/lists/on-sale/table-ranked.twig' with {'GameList': HighestDiscounts, 'TableId': 'table-highest', 'TableSort': HighestDiscountsSort} %}
                 {% else %}
                     <p>
                         No discounts to display.
@@ -79,7 +79,7 @@
                 </p>
 
                 {% if UnrankedDiscounts|length %}
-                    {% include 'public/games/browse/byCategoryPageTableUnranked.twig' with {'GameList': UnrankedDiscounts, 'TableId': 'table-unranked', 'TableSort': UnrankedDiscountsSort} %}
+                    {% include 'public/lists/on-sale/table-unranked.twig' with {'GameList': UnrankedDiscounts, 'TableId': 'table-unranked', 'TableSort': UnrankedDiscountsSort} %}
                 {% else %}
                     <p>
                         No discounts to display.

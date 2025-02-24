@@ -1,4 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
 
 {% block page_body %}
 
@@ -35,38 +37,26 @@
         </h5>
 
         <div id="list-ranked">
-            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Ranked</h2>
-            {% if RankedGameList %}
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RankedGameList, 'batchOverride': 2} %}
-            {% else %}
-                <p>No games to display.</p>
-            {% endif %}
+            {{ headings.roundedBlue('h2', 'Ranked') }}
+            {{ gameslayouts.noHero(RankedGameList, 2) }}
         </div>
         <div id="list-unranked" style="display: none;">
-            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Unranked</h2>
-            {% if UnrankedGameList %}
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': UnrankedGameList, 'batchOverride': 2} %}
-            {% else %}
-                <p>No games to display.</p>
-            {% endif %}
+            {{ headings.roundedBlue('h2', 'Unranked') }}
+            {{ gameslayouts.noHero(UnrankedGameList, 2) }}
         </div>
         <div id="list-delisted" style="display: none;">
-            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">De-listed</h2>
-            {% if DelistedGameList %}
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': DelistedGameList, 'batchOverride': 2} %}
-            {% else %}
-                <p>No games to display.</p>
-            {% endif %}
+            {{ headings.roundedBlue('h2', 'De-listed') }}
+            {{ gameslayouts.noHero(DelistedGameList, 2) }}
         </div>
 
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Search games</h4>
+        {{ headings.roundedBlue('h4', 'Search games') }}
         {% include 'modules/game/search/form-mini.twig' %}
 
-        <h4 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Browse all games</h4>
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
         {% include 'public/games/navRightBrowseAll.twig' %}
 
     </div>

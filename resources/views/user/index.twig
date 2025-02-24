@@ -1,4 +1,6 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
+{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
 
 {% block page_inner %}
 
@@ -95,7 +97,7 @@
                 <p>
                     Why not review this game from your collection?
                 </p>
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': NextToReviewFromCollection, 'batchOverride': 1} %}
+                {{ gameslayouts.noHero(NextToReviewFromCollection, 1) }}
                 <br>
                 <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}';" />
             {% elseif NextToReviewFromUnranked %}
@@ -103,7 +105,7 @@
                 <p>
                     This game only needs 1 review to be ranked. Why not check it out?
                 </p>
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': NextToReviewFromUnranked, 'batchOverride': 1} %}
+                {{ gameslayouts.noHero(NextToReviewFromUnranked, 1) }}
                 <br>
                 <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromUnranked[0].id}) }}';" />
             {% endif %}
@@ -148,7 +150,7 @@
                 <br>You can <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>.
             </p>
             {% if FeaturedGame %}
-                {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': FeaturedGameData, 'batchOverride': 1} %}
+                {{ gameslayouts.noHero(FeaturedGameData, 1) }}
                 <p>
                     <small>
                         Check this out because:

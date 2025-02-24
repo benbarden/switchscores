@@ -1,4 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
 
 {% set hideHeader = true %}
 
@@ -91,20 +93,20 @@
 
         {% if RelatedByCategory %}
             <h2>More in this category: {{ CategoryName }}</h2>
-            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCategory, 'batchOverride': 2} %}
+            {{ gameslayouts.noHero(RelatedByCategory, 2) }}
             <p>
                 <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">View all in this category</a>.
             </p>
         {% endif %}
         {% if RelatedByCollection %}
             <h2>More in this collection: {{ CollectionName }}</h2>
-            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedByCollection, 'batchOverride': 2} %}
+            {{ gameslayouts.noHero(RelatedByCollection, 2) }}
             <p>
                 <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
             </p>
         {% elseif RelatedBySeries %}
             <h2>More in this series: {{ SeriesName }}</h2>
-            {% include 'public/games/layouts/modernDebut/layout.twig' with {'GameList': RelatedBySeries, 'batchOverride': 2} %}
+            {{ gameslayouts.noHero(RelatedBySeries, 2) }}
             <p>
                 <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">View all in this series</a>.
             </p>
@@ -115,7 +117,7 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Staff links</h2>
+            {{ headings.roundedBlue('h2', 'Staff links') }}
             <table class="table">
                 <tr>
                     <td>
@@ -130,19 +132,18 @@
             </table>
         {% endif %}
 
-        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Rank</h2>
-
+        {{ headings.roundedBlue('h2', 'Rank') }}
         {% include 'modules/game/rank/all-time.twig' %}
         {% include 'modules/game/rank/year.twig' %}
         {% include 'modules/game/rank/year-month.twig' %}
 
-        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Buy this game</h2>
+        {{ headings.roundedBlue('h2', 'Buy this game') }}
         {% include 'public/games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
 
-        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Infobox</h2>
+        {{ headings.roundedBlue('h2', 'Infobox') }}
         {% include 'public/games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
-        <h2 class="theme-header theme-rounded theme-padding-10 theme-colour-15">Collection</h2>
+        {{ headings.roundedBlue('h2', 'Collection') }}
         {% if auth_user() %}
             {% if UserCollectionItem %}
                 <p>
