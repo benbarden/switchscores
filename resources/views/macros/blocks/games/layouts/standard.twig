@@ -25,30 +25,68 @@
     {% endif %}
 {% endmacro %}
 
-{% macro layoutItem(item, mode) %}
+{% macro withHero(GameList, batchOverride = 0, mode = 'default') %}
+    {#
+        modes: no-price
+    #}
+    {% import "macros/_includes/row-break.twig" as rowbreak %}
+    {# Concatenate an empty string to force conversion to plain string #}
+    {% set batchItemCountStr = "" ~ rowbreak.batchItemCount(batchOverride) %}
+    {% set batchItemCount = batchItemCountStr|trim + 0 %}
+
+    {% set colBreakStr = "" ~ rowbreak.colBreak(batchItemCount) %}
+    {% set colBreak = colBreakStr|trim %}
+
+    {% if GameList|length %}
+        {% set firstItem = GameList.first() %}
+        {{ _self.layoutItem(firstItem, mode, 'hero') }}
+        {% if GameList|length > 1 %}
+            {% for item in GameList|slice(1)|batch(batchItemCount, null) %}
+                <div class="row">
+                    {% for batchItem in item %}
+                        <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
+                            {{ _self.layoutItem(batchItem, mode) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p>No games found!</p>
+    {% endif %}
+{% endmacro %}
+
+{% macro layoutItem(item, mode, hero = '') %}
     {% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
     {% import "macros/blocks/games/components/release-date.twig" as gamereleasedate %}
     {% import "macros/blocks/games/components/price.twig" as gameprice %}
     {% import "macros/blocks/games/components/rating.twig" as gamerating %}
-    <div class="row" style="margin-top: 16px;">
 
+    {% if hero == 'hero' %}
+        {% set titleSize = 'h4' %}
+        {% set subSize = 'h5' %}
+    {% else %}
+        {% set titleSize = 'h5' %}
+        {% set subSize = 'h6' %}
+    {% endif %}
+
+    <div class="row" style="margin-top: 16px;">
         <div class="col-sm-12 col-md-12 col-lg-12">
             {{ gamepackshots.header(item) }}
         </div>
-
     </div>
 
     <div class="row" style="margin-top: 8px;">
 
         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-        <span class="h5">
+        <span class="{{ titleSize }}">
             <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
         </span>
             <br>
-            {{ gamereleasedate.standard(item, 'h6') }}
+            {{ gamereleasedate.standard(item, subSize) }}
             {% if item.ExtraDetailLine != '' %}
                 <br>
-                <span class="h6">
+                <span class="{{ subSize }}">
                 {{ item.ExtraDetailLine }}
             </span>
             {% endif %}

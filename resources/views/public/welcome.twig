@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 
 {% set hideHeader = true %}
 
@@ -54,10 +55,7 @@
         <p>
             Top rated Nintendo Switch games released in the last {{ RecentTopRatedLimit }} days.
         </p>
-        {% include 'public/games/layouts/tiledGrid/layoutWithHero.twig' with {'GameList': RecentWithGoodRanks} %}
-        {#
-        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': HighlightsRecentlyRanked} %}
-        #}
+        {{ gameslayouts.withHero(RecentWithGoodRanks, 2, 'no-price') }}
 
         <h3 class="text-center">
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
