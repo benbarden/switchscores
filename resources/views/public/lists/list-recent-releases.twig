@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standardNoHero.twig" as gameslayouts %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 
 {% block page_body %}
 
@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        {{ gameslayouts.layout(NewReleases, 4) }}
+        {{ gameslayouts.noHero(NewReleases, 4) }}
     </div>
 </div>
 

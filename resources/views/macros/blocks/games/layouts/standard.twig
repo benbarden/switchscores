@@ -1,4 +1,7 @@
-{% macro layout(GameList, batchOverride = 0) %}
+{% macro noHero(GameList, batchOverride = 0, mode = 'default') %}
+    {#
+        modes: no-price
+    #}
     {% import "macros/_includes/row-break.twig" as rowbreak %}
     {# Concatenate an empty string to force conversion to plain string #}
     {% set batchItemCountStr = "" ~ rowbreak.batchItemCount(batchOverride) %}
@@ -12,7 +15,7 @@
             <div class="row">
                 {% for batchItem in item %}
                     <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                        {{ _self.layoutItem(batchItem) }}
+                        {{ _self.layoutItem(batchItem, mode) }}
                     </div>
                 {% endfor %}
             </div>
@@ -22,7 +25,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro layoutItem(item) %}
+{% macro layoutItem(item, mode) %}
     {% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
     {% import "macros/blocks/games/components/release-date.twig" as gamereleasedate %}
     {% import "macros/blocks/games/components/price.twig" as gameprice %}
@@ -49,7 +52,9 @@
                 {{ item.ExtraDetailLine }}
             </span>
             {% endif %}
-            {{ gameprice.standard(item) }}
+            {% if mode != 'no-price' %}
+                {{ gameprice.standard(item) }}
+            {% endif %}
         </div>
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
             <div class="pull-right">
