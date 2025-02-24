@@ -1,0 +1,62 @@
+{% macro layout(GameList, batchOverride = 0) %}
+    {% import "macros/_includes/row-break.twig" as rowbreak %}
+    {# Concatenate an empty string to force conversion to plain string #}
+    {% set batchItemCountStr = "" ~ rowbreak.batchItemCount(batchOverride) %}
+    {% set batchItemCount = batchItemCountStr|trim + 0 %}
+
+    {% set colBreakStr = "" ~ rowbreak.colBreak(batchItemCount) %}
+    {% set colBreak = colBreakStr|trim %}
+
+    {% if GameList|length %}
+        {% for item in GameList|batch(batchItemCount, null) %}
+            <div class="row">
+                {% for batchItem in item %}
+                    <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
+                        {{ _self.layoutItem(batchItem) }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No games found!</p>
+    {% endif %}
+{% endmacro %}
+
+{% macro layoutItem(item) %}
+    {% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
+    {% import "macros/blocks/games/components/release-date.twig" as gamereleasedate %}
+    {% import "macros/blocks/games/components/price.twig" as gameprice %}
+    {% import "macros/blocks/games/components/rating.twig" as gamerating %}
+    <div class="row" style="margin-top: 16px;">
+
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            {{ gamepackshots.header(item) }}
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top: 8px;">
+
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+        <span class="h5">
+            <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+        </span>
+            <br>
+            {{ gamereleasedate.standard(item, 'h6') }}
+            {% if item.ExtraDetailLine != '' %}
+                <br>
+                <span class="h6">
+                {{ item.ExtraDetailLine }}
+            </span>
+            {% endif %}
+            {{ gameprice.standard(item) }}
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <div class="pull-right">
+                {{ gamerating.standard(item) }}
+            </div>
+        </div>
+
+    </div>
+
+{% endmacro %}

@@ -1,0 +1,21 @@
+{% macro batchItemCount(batchOverride) %}
+    {% if batchOverride is defined and batchOverride > 0 %}
+        {% set batchItemCount = batchOverride %}
+    {% else %}
+        {% set batchItemCount = 2 %}
+    {% endif %}
+    {{ batchItemCount }}
+{% endmacro %}
+
+{% macro colBreak(batchItemCount) %}
+    {% if batchItemCount == 4 %}
+        {% set colBreak = '3' %}
+    {% elseif batchItemCount == 3 %}
+        {% set colBreak = '4' %}
+    {% elseif batchItemCount == 1 %}
+        {% set colBreak = '12' %}
+    {% else %}
+        {% set colBreak = '6' %}
+    {% endif %}
+    {{ colBreak }}
+{% endmacro %}

@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standardNoHero.twig" as gameslayouts %}
 
 {% block page_body %}
 
@@ -11,7 +12,7 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-        {% include 'public/games/layouts/standardNoHero/layout.twig' with {'GameList': NewReleases, 'batchOverride': 4} %}
+        {{ gameslayouts.layout(NewReleases, 4) }}
     </div>
 </div>
 
