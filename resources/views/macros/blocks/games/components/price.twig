@@ -1,13 +1,23 @@
-{% macro standard(item) %}
+{% macro standard(item, mode = '') %}
+    {#
+        modes: small
+    #}
     {% if item.price_eshop %}
+        {% if mode == 'small' %}
+            {% set mainSize = 'h5' %}
+            {% set subSize = 'h6' %}
+        {% else %}
+            {% set mainSize = 'h4' %}
+            {% set subSize = 'h5' %}
+        {% endif %}
         <br>
         <span class="h5">
             {% if item.price_eshop_discounted and item.price_eshop_discount_pc %}
-                <s><span class="h4">&pound;{{ item.price_eshop }}</span></s>
-                <span class="h4" style="font-weight: bold;">&pound;{{ item.price_eshop_discounted }}</span>
-                <span class="h5" style="color: #f00;">{{ item.price_eshop_discount_pc }}% off</span>
+                <s><span class="{{ mainSize }}">&pound;{{ item.price_eshop }}</span></s>
+                <span class="{{ mainSize }}" style="font-weight: bold;">&pound;{{ item.price_eshop_discounted }}</span>
+                <span class="{{ subSize }}" style="color: #f00;">{{ item.price_eshop_discount_pc }}% off</span>
             {% else %}
-                <span class="h4">&pound;{{ item.price_eshop }}</span>
+                <span class="{{ mainSize }}">&pound;{{ item.price_eshop }}</span>
             {% endif %}
         </span>
     {% endif %}

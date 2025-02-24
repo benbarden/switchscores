@@ -1,4 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 {% import 'macros/blocks/headings/chunky.twig' as headings %}
 
 {% block page_body %}
@@ -9,7 +10,7 @@
 
         {{ headings.roundedBlue('h2', 'Newest') }}
         <p>Updated weekly. <a href="{{ route('games.recentReleases') }}">View all new games</a>.</p>
-        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': NewReleases, 'batchOverride': 1} %}
+        {{ gameslayouts.noHero(NewReleases, 1, 'no-price') }}
 
     </div>
 
@@ -17,7 +18,7 @@
 
         {{ headings.roundedBlue('h2', 'Upcoming') }}
         <p>Updated weekly. <a href="{{ route('games.upcomingReleases') }}">View all upcoming games</a>.</p>
-        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': UpcomingReleases, 'batchOverride': 1} %}
+        {{ gameslayouts.noHero(UpcomingReleases, 1, 'no-price') }}
 
     </div>
 
@@ -40,10 +41,10 @@
         </ul>
 
         {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
-        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': RandomTop100Game, 'batchOverride': 1} %}
+        {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
 
         {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
-        {% include 'public/games/layouts/tiledGrid/layoutNoHero.twig' with {'GameList': RecentWithGoodRanks, 'batchOverride': 1} %}
+        {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
 
     </div>
 
