@@ -21,6 +21,8 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 
+use Carbon\Carbon;
+
 use App\Traits\SwitchServices;
 
 use App\Factories\GameDirectorFactory;
@@ -227,6 +229,105 @@ class BulkEditorController extends Controller
         }
 
         return view('staff.games.bulk-add.complete', $bindings);
+    }
+
+    public function importFromCsv()
+    {
+        $pageTitle = 'Import games from CSV';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $importData = $request->import_data;
+
+            $games = explode("\n", $importData);
+
+            if (count($games) == 0) {
+                return redirect(route('staff.games.import-from-csv.import'));
+            }
+
+            $errorTitles = [];
+
+            foreach ($games as $gameRowRaw) {
+
+                $okToAdd = true;
+
+                $gameRow = explode("\t", $gameRowRaw);
+
+                $title = $gameRow[0];
+                $storeUrl = $gameRow[1];
+                $releaseDate = $gameRow[2];
+                $price = $gameRow[3];
+                $imageUrl = $gameRow[4];
+
+                if (!$title) continue;
+
+                // Check title hash is unique
+                $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
+                $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+
+                // Check for duplicates
+                if ($hashExists) {
+                    $okToAdd = false;
+                    $errorTitles[] = $title;
+                }
+
+                if (!$okToAdd) continue;
+
+                // OK to proceed
+                $linkTitle = $this->linkTitleGenerator->generate($title);
+                $gameBuilder = new GameBuilder();
+                $gameBuilder->setTitle($title);
+                $gameBuilder->setLinkTitle($linkTitle);
+                $gameBuilder->setReviewCount(0);
+                if ($releaseDate) {
+                    $carbonDate = Carbon::createFromFormat('d/m/Y', $releaseDate);
+                    $releaseDateYMD = $carbonDate->format('Y-m-d');
+                    $gameBuilder->setEuReleaseDate($releaseDateYMD);
+                }
+                if ($price) {
+                    $gameBuilder->setPriceEshop($price);
+                }
+                if ($storeUrl) {
+                    $gameBuilder->setNintendoStoreUrlOverride($storeUrl);
+                }
+                if ($imageUrl) {
+                    $gameBuilder->setPackshotSquareUrlOverride($imageUrl);
+                }
+
+                $game = $gameBuilder->getGame();
+                $game->save();
+                $gameId = $game->id;
+
+                // Add title hash
+                $this->repoGameTitleHash->create($title, $hashedTitle, $gameId);
+
+            }
+
+            $errorsUrl = implode("|", $errorTitles);
+            return redirect(route('staff.games.import-from-csv.complete', ['errors' => $errorsUrl]));
+
+        }
+
+        return view('staff.games.import-from-csv.import', $bindings);
+    }
+
+    public function importFromCsvComplete()
+    {
+        $pageTitle = 'Import games from CSV - Complete';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $errors = request()->errors;
+        if ($errors) {
+            $errorsArray = explode("|", $errors);
+            $bindings['Errors'] = $errorsArray;
+        }
+
+        return view('staff.games.import-from-csv.complete', $bindings);
     }
 
     public function editList()
