@@ -261,7 +261,7 @@ class BulkEditorController extends Controller
                 $storeUrl = $gameRow[1];
                 $releaseDate = $gameRow[2];
                 $price = $gameRow[3];
-                $imageUrl = $gameRow[4];
+                $imageUrl = trim($gameRow[4]);
 
                 if (!$title) continue;
 
