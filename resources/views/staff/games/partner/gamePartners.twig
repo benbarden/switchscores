@@ -171,6 +171,15 @@
                 <td>Publishers</td>
                 <td>{{ DataSourceNintendoCoUk.publishers }}</td>
             </tr>
+            {% if GameData.nintendo_store_url_override %}
+            <tr>
+                <td>Website</td>
+                <td>
+                    <a href="{{ GameData.nintendo_store_url_override }}#gameDetails" target="_blank">View on external site</a>
+                </td>
+            </tr>
+            {% endif %}
+
         </table>
 
     </div>

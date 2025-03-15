@@ -30,7 +30,9 @@
                     {% endif %}
                 </td>
                 <td class="text-left">
-                    {{ item.nintendo_co_uk_publishers }}
+                    {% if item.nintendo_store_url_override %}
+                    <a href="{{ item.nintendo_store_url_override }}#gameDetails" target="_blank">Details tab</a>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit game</a> :
