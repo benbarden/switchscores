@@ -8,8 +8,8 @@ use App\Models\Game;
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
-use App\Services\UrlService;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
+use App\Domain\Url\LinkTitle;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
@@ -22,7 +22,8 @@ class DataSourceParsedController extends Controller
 
     public function __construct(
         private GamesCompanyRepository $repoGamesCompany,
-        private GamePublisherRepository $repoGamePublisher
+        private GamePublisherRepository $repoGamePublisher,
+        private LinkTitle $urlLinkTitle
     ){
     }
 
@@ -86,7 +87,6 @@ class DataSourceParsedController extends Controller
         $customErrors = [];
 
         $serviceGameTitleHash = $this->getServiceGameTitleHash();
-        $serviceUrl = new UrlService();
 
         $bindings['ItemId'] = $itemId;
 
@@ -111,7 +111,7 @@ class DataSourceParsedController extends Controller
             if ($okToProceed) {
 
                 // Generate usable game data
-                $linkText = $serviceUrl->generateLinkText($title);
+                $linkText = $this->urlLinkTitle->generate($title);
 
                 $gameData = [
                     'title' => $title,

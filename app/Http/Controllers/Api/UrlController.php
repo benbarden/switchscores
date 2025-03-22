@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\News\Repository as NewsRepository;
 
+use App\Domain\Url\LinkTitle;
+
 use App\Traits\SwitchServices;
 
 class UrlController extends Controller
@@ -22,8 +24,8 @@ class UrlController extends Controller
             return response()->json(['error' => 'Missing data: title'], 404);
         }
 
-        $serviceUrl = $this->getServiceUrl();
-        $linkText = $serviceUrl->generateLinkText($title);
+        $linkTitle = new LinkTitle();
+        $linkText = $linkTitle->generate($title);
 
         if ($linkText) {
             $data = array(
@@ -58,8 +60,8 @@ class UrlController extends Controller
         }
         $newsDateString = $newsDate->format('Y-m-d');
 
-        $serviceUrl = $this->getServiceUrl();
-        $linkText = $serviceUrl->generateLinkText($title);
+        $linkTitle = new LinkTitle();
+        $linkText = $linkTitle->generate($title);
 
         if ($linkText) {
             $fullNewsUrl = '/news/'.$newsDateString.'/'.$linkText;

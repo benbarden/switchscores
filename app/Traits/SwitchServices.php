@@ -17,7 +17,6 @@ use App\Services\QuickReviewService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 use App\Services\TopRatedService;
-use App\Services\UrlService;
 
 trait SwitchServices
 {
@@ -206,14 +205,5 @@ trait SwitchServices
     public function getServiceTopRated()
     {
         return $this->loadService('TopRatedService');
-    }
-
-    /**
-     * @deprecated
-     * @return UrlService
-     */
-    public function getServiceUrl()
-    {
-        return $this->loadService('UrlService');
     }
 }

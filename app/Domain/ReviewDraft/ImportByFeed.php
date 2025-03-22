@@ -16,8 +16,8 @@ use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\ReviewDraft\Repository as RepoReviewDraft;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\Url\StripUtm;
 use App\Services\Game\TitleMatch as ServiceTitleMatch;
-use App\Services\UrlService;
 
 use App\Exceptions\Review\AlreadyImported;
 use App\Exceptions\Review\FeedUrlPrefixNotMatched;
@@ -54,9 +54,9 @@ class ImportByFeed
     private $repoReviewDraft;
 
     /**
-     * @var UrlService
+     * @var StripUtm
      */
-    private $serviceUrl;
+    private $urlStripUtm;
 
     public function __construct(PartnerFeedLink $partnerFeedLink, $logger)
     {
@@ -66,7 +66,7 @@ class ImportByFeed
         $this->repoGame = new RepoGame();
         $this->repoReviewSite = new ReviewSiteRepository();
         $this->repoReviewDraft = new RepoReviewDraft();
-        $this->serviceUrl = new UrlService();
+        $this->urlStripUtm = new StripUtm();
 
         $siteId = $this->partnerFeedLink->site_id;
         $this->reviewSite = $this->repoReviewSite->find($siteId);
@@ -142,7 +142,7 @@ class ImportByFeed
 
     public function cleanUpUrl($url)
     {
-        return $this->serviceUrl->cleanReviewFeedUrl($url);
+        return $this->urlStripUtm->clean($url);
     }
 
     public function buildFromAtom($item)

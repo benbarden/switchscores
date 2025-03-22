@@ -20,6 +20,10 @@ use App\Services\ReviewFeedItemService;
 use App\Services\UrlService;
 
 
+/**
+ * Should be safe to delete
+ * @deprecated
+ */
 class Importer
 {
     /**

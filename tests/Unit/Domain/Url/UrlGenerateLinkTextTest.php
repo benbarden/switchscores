@@ -1,31 +1,27 @@
 <?php
 
-namespace Tests\Unit\Services\Url;
+namespace Tests\Unit\Domain\Url;
 
+use App\Domain\Url\LinkTitle;
 use Tests\TestCase;
-use Illuminate\Support\Collection;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use App\Services\UrlService;
 
 class UrlGenerateLinkTextTest extends TestCase
 {
     /**
-     * @var UrlService
+     * @var LinkTitle
      */
-    private $serviceUrl;
+    private $urlLinkTitle;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->serviceUrl = new UrlService();
+        $this->urlLinkTitle = new LinkTitle();
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-        unset($this->serviceUrl);
+        unset($this->urlLinkTitle);
     }
 
     public function testSimpleText()
@@ -33,7 +29,7 @@ class UrlGenerateLinkTextTest extends TestCase
         $title = 'Super Mario Odyssey';
         $expected = 'super-mario-odyssey';
 
-        $linkText = $this->serviceUrl->generateLinkText($title);
+        $linkText = $this->urlLinkTitle->generate($title);
         $this->assertEquals($expected, $linkText);
     }
 }

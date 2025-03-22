@@ -3,7 +3,7 @@
 namespace App\Factories;
 
 use App\Models\GamesCompany;
-use App\Services\UrlService;
+use App\Domain\Url\LinkTitle;
 
 class GamesCompanyFactory
 {
@@ -34,8 +34,8 @@ class GamesCompanyFactory
 
     public static function createActiveNameOnly($name)
     {
-        $serviceUrl = new UrlService();
-        $linkText = $serviceUrl->generateLinkText($name);
+        $serviceUrl = new LinkTitle();
+        $linkText = $serviceUrl->generate($name);
         return self::createActive($name, $linkText);
     }
 }
