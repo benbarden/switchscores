@@ -57,11 +57,11 @@ class ReviewLinkController extends Controller
         if (!$siteId) {
             $bindings['ActiveSiteId'] = '';
             $tableLimit = 250;
-            $reviewLinks = $this->getServiceReviewLink()->getAll($tableLimit);
+            $reviewLinks = $this->repoReviewLink->recentlyAdded($tableLimit);
             $bindings['TableLimit'] = $tableLimit;
         } else {
             $bindings['ActiveSiteId'] = $siteId;
-            $reviewLinks = $this->getServiceReviewLink()->getAllBySite($siteId);
+            $reviewLinks = $this->repoReviewLink->bySite($siteId);
         }
 
         $bindings['ReviewLinks'] = $reviewLinks;

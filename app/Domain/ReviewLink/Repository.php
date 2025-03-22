@@ -55,9 +55,29 @@ class Repository
         return ReviewLink::find($linkId);
     }
 
+    public function recentlyAdded($limit)
+    {
+        return ReviewLink::orderBy('id', 'desc')->limit($limit)->get();
+    }
+
+    public function bySite($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)->get();
+    }
+
+    public function bySiteGameIdList($siteId)
+    {
+        return ReviewLink::where('site_id', $siteId)->orderBy('id', 'desc')->pluck('game_id');
+    }
+
     public function byGame($gameId)
     {
         return ReviewLink::where('game_id', $gameId)->get();
+    }
+
+    public function byUrl($url)
+    {
+        return ReviewLink::where('url', $url)->first();
     }
 
     public function byGameAndSite($gameId, $siteId)

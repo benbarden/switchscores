@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
@@ -13,6 +14,7 @@ class ReviewLinkController extends Controller
     use SwitchServices;
 
     public function __construct(
+        private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite
     )
     {
@@ -56,7 +58,7 @@ class ReviewLinkController extends Controller
                 $bindings['FilterValue'] = $rating;
                 break;
             default:
-                $reviewLinks = $serviceReviewLink->getAllBySite($partnerId);
+                $reviewLinks = $this->repoReviewLink->bySite($partnerId);
                 break;
         }
 

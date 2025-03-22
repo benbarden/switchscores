@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class AboutController extends Controller
@@ -13,6 +16,7 @@ class AboutController extends Controller
 
     public function __construct(
         private GameStatsRepository $repoGameStats,
+        private ReviewLinkStats $statsReviewLink,
         private Breadcrumbs $viewBreadcrumbs
     )
     {
@@ -27,7 +31,7 @@ class AboutController extends Controller
         // Quick stats
         $totalReleased = $this->repoGameStats->totalReleased();
         $totalRanked = $this->repoGameStats->totalRanked();
-        $totalReviews = $this->getServiceReviewLink()->countActive();
+        $totalReviews = $this->statsReviewLink->totalOverall();
         $totalLowQuality = $this->repoGameStats->totalLowQuality();
 
         $bindings['TotalReleasedGames'] = $totalReleased;

@@ -9,6 +9,7 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Stats as ReviewDraftStats;
 use App\Domain\Unranked\Repository as UnrankedRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 use App\Models\QuickReview;
 
@@ -23,7 +24,8 @@ class DashboardController extends Controller
         private GameStatsRepository $repoGameStats,
         private ReviewDraftRepository $repoReviewDraft,
         private ReviewDraftStats $statsReviewDraft,
-        private UnrankedRepository $repoUnranked
+        private UnrankedRepository $repoUnranked,
+        private ReviewLinkStats $statsReviewLink
     )
     {
     }
@@ -46,7 +48,7 @@ class DashboardController extends Controller
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Stats
-        $bindings['ReviewLinkCount'] = $serviceReviewLinks->countActive();
+        $bindings['ReviewLinkCount'] = $this->statsReviewLink->totalOverall();
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 

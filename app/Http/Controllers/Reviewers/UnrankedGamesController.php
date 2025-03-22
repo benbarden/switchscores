@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 
 class UnrankedGamesController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
+        private ReviewLinkRepository $repoReviewLink,
+        private ReviewLinkStats $statsReviewLink,
         private UnrankedRepository $repoUnranked
     )
     {
@@ -32,16 +32,13 @@ class UnrankedGamesController extends Controller
 
         $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
 
-        $serviceReviewLink = $this->getServiceReviewLink();
-
-        $gameIdsReviewedBySite = $serviceReviewLink->getAllGameIdsReviewedBySite($partnerId);
-        $totalGameIdsReviewedBySite = $serviceReviewLink->countAllGameIdsReviewedBySite($partnerId);
+        $gameIdsReviewedBySite = $this->repoReviewLink->bySiteGameIdList($partnerId);
+        $totalReviewLinksBySite = $this->statsReviewLink->totalBySite($partnerId);
 
         switch ($mode) {
 
             case 'by-count':
                 if (!in_array($filter, ['0', '1', '2'])) abort(404);
-                //$gamesList = $serviceGameReleaseDate->getUnrankedByReviewCount($filter, $gameIdsReviewedBySite);
                 $gamesList = $this->repoUnranked->getByReviewCount($filter, $gameIdsReviewedBySite);
                 if ($filter == 0) {
                     $tableSort = "[3, 'asc']";
@@ -53,7 +50,6 @@ class UnrankedGamesController extends Controller
 
             case 'by-year':
                 if (!in_array($filter, $allowedYears)) abort(404);
-                //$gamesList = $serviceGameReleaseDate->getUnrankedByYear($filter, $gameIdsReviewedBySite);
                 $gamesList = $this->repoUnranked->getByYear($filter, $gameIdsReviewedBySite);
                 $tableSort = "[3, 'asc']";
                 $bindings['FilterOnLoad'] = 'by-year-'.$filter;
@@ -67,7 +63,7 @@ class UnrankedGamesController extends Controller
         $bindings['GamesList'] = $gamesList;
         $bindings['GamesTableSort'] = $tableSort;
 
-        $bindings['GamesReviewedCount'] = $totalGameIdsReviewedBySite;
+        $bindings['GamesReviewedCount'] = $totalReviewLinksBySite;
         $bindings['AllowedYears'] = $allowedYears;
 
         $bindings['PageMode'] = $mode;

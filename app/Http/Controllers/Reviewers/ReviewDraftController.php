@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ReviewDraft;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\Game\Repository as GameRepository;
@@ -38,6 +39,7 @@ class ReviewDraftController extends Controller
     public function __construct(
         private ReviewDraftRepository $repoReviewDraft,
         private ReviewSiteRepository $repoReviewSite,
+        private ReviewLinkRepository $repoReviewLink,
         private GameRepository $repoGame
     )
     {
@@ -69,7 +71,7 @@ class ReviewDraftController extends Controller
 
         $bindings['jsInitialSort'] = "[0, 'desc']";
 
-        $bindings['ReviewLinkIdList'] = $this->getServiceReviewLink()->getGameIdsReviewedBySite($siteId);
+        $bindings['ReviewLinkIdList'] = $this->repoReviewLink->bySiteGameIdList($siteId);
 
         return view('reviewers.reviews.review-draft.game-search', $bindings);
     }
@@ -99,7 +101,7 @@ class ReviewDraftController extends Controller
             if ($existingReviewDraft) {
                 $validator->errors()->add('title', 'The URL you\'ve entered matches an existing review draft. Please try another.');
             }
-            $existingReviewLink = $this->getServiceReviewLink()->getByUrl($feedItemUrl);
+            $existingReviewLink = $this->repoReviewLink->byUrl($feedItemUrl);
             if ($existingReviewLink) {
                 $validator->errors()->add('title', 'The URL you\'ve entered matches an existing review link. Please try another.');
             }
@@ -158,7 +160,7 @@ class ReviewDraftController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(400);
 
-        $reviewLinkIdList = $this->getServiceReviewLink()->getGameIdsReviewedBySite($siteId);
+        $reviewLinkIdList = $this->repoReviewLink->bySiteGameIdList($siteId);
         /* @var $reviewLinkIdList \Illuminate\Support\Collection */
         if ($reviewLinkIdList->contains($gameId)) {
             //abort(500);

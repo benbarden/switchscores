@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Reviewers;
 
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use Illuminate\Routing\Controller as Controller;
-
-use App\Traits\SwitchServices;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
 
 class CampaignsController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
+        private ReviewLinkRepository $repoReviewLink,
         private CampaignRepository $repoCampaign
     )
     {
@@ -50,7 +48,7 @@ class CampaignsController extends Controller
 
         $currentUser = resolve('User/Repository')->currentUser();
         $partnerId = $currentUser->partner_id;
-        $bindings['ReviewedGameIdList'] = $this->getServiceReviewLink()->getGameIdsReviewedBySite($partnerId);
+        $bindings['ReviewedGameIdList'] = $this->repoReviewLink->bySiteGameIdList($partnerId);
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;

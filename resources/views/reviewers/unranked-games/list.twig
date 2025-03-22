@@ -11,6 +11,10 @@
     Once a game has 3 reviews, it will disappear from this list.
 </p>
 
+<p>
+    Total games you have reviewed: {{ GamesReviewedCount }}
+</p>
+
 {% if PageMode == 'by-count' %}
     <h2>Unranked games - {{ PageFilter }} review(s)</h2>
 {% elseif PageMode == 'by-year' %}

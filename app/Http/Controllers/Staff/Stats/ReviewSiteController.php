@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 use App\Traits\SwitchServices;
 
@@ -17,7 +18,8 @@ class ReviewSiteController extends Controller
     public function __construct(
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
-        private ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite,
+        private ReviewLinkStats $statsReviewLink
     )
     {
     }
@@ -28,7 +30,6 @@ class ReviewSiteController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->statsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceReviewLinks = $this->getServiceReviewLink();
         $serviceTopRated = $this->getServiceTopRated();
         $serviceReviewStats = $this->getServiceReviewStats();
 
@@ -36,7 +37,7 @@ class ReviewSiteController extends Controller
         $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
 
         $releasedGameCount = $this->repoGameStats->totalReleased();
-        $reviewLinkCount = $serviceReviewLinks->countActive();
+        $reviewLinkCount = $this->statsReviewLink->totalOverall();
 
         $bindings['ReleasedGameCount'] = $releasedGameCount;
         $bindings['ReviewLinkCount'] = $reviewLinkCount;

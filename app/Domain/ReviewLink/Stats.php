@@ -10,6 +10,11 @@ use Illuminate\Support\Collection;
 
 class Stats
 {
+    public function totalOverall()
+    {
+        return ReviewLink::count();
+    }
+
     public function totalBySite($siteId)
     {
         return ReviewLink::where('site_id', $siteId)->count();
