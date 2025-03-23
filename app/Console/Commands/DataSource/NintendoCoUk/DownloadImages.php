@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
 
@@ -44,6 +45,8 @@ class DownloadImages extends Command
      */
     public function handle()
     {
+        $repoGame = new GameRepository();
+
         $argGameId = $this->argument('gameId');
 
         $logger = Log::channel('cron');
@@ -68,7 +71,7 @@ class DownloadImages extends Command
                 $logger->info('Processing item...');
                 $itemTitle = $dsItem->title;
                 $gameId = $dsItem->game_id;
-                $game = $this->getServiceGame()->find($gameId);
+                $game = $repoGame->find($gameId);
 
                 if ($game) {
                     $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
@@ -90,7 +93,7 @@ class DownloadImages extends Command
 
                 $itemTitle = $dsItem->title;
                 $gameId = $dsItem->game_id;
-                $game = $this->getServiceGame()->find($gameId);
+                $game = $repoGame->find($gameId);
 
                 if (!$game) {
                     $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');

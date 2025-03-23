@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Staff\DataSources;
 
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Game\Repository as GameRepository;
+
 use Illuminate\Routing\Controller as Controller;
 
 use App\Construction\GameImportRule\EshopBuilder;
@@ -17,7 +19,8 @@ class DifferencesController extends Controller
     use SwitchServices;
 
     public function __construct(
-        private CategoryRepository $repoCategory
+        private CategoryRepository $repoCategory,
+        private GameRepository $repoGame
     )
     {
 
@@ -80,7 +83,7 @@ class DifferencesController extends Controller
             return response()->json(['error' => 'Missing required parameter(s)'], 400);
         }
 
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }
@@ -137,7 +140,7 @@ class DifferencesController extends Controller
             return response()->json(['error' => 'Missing required parameter(s)'], 400);
         }
 
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) {
             return response()->json(['error' => 'Game not found: '.$gameId], 400);
         }

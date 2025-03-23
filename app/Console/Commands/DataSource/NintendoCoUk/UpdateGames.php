@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
+use App\Domain\Game\Repository as GameRepository;
 
 use App\Traits\SwitchServices;
 
@@ -44,6 +45,7 @@ class UpdateGames extends Command
      */
     public function handle()
     {
+        $repoGame = new GameRepository();
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
@@ -58,7 +60,7 @@ class UpdateGames extends Command
 
             $itemTitle = $dsItem->title;
             $gameId = $dsItem->game_id;
-            $game = $this->getServiceGame()->find($gameId);
+            $game = $repoGame->find($gameId);
 
             if (!$game) {
                 $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');

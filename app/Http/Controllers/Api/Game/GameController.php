@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Models\Game;
 
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 
 use App\Traits\SwitchServices;
 
-use App\Domain\Game\Repository as GameRepository;
 
 class GameController
 {
@@ -16,6 +17,7 @@ class GameController
 
     public function __construct(
         private GameRepository $repoGame,
+        private GameListsRepository $repoGameLists,
         private AmazonAffiliate $affiliateAmazon
     )
     {
@@ -37,7 +39,7 @@ class GameController
 
     public function getList()
     {
-        $gameList = $this->getServiceGame()->getApiIdList();
+        $gameList = $this->repoGameLists->getApiIdList();
 
         if ($gameList) {
             return response()->json(['games' => $gameList], 200);

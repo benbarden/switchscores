@@ -3,15 +3,16 @@
 
 namespace App\Helpers;
 
-use App\Services\GameService;
+use App\Domain\Game\Repository as GameRepository;
+
 use App\Services\Game\Images as GameImages;
 
 class ImageHelper
 {
     static function packshotHtmlBuilder($gameId, $page)
     {
-        $serviceGame = new GameService();
-        $game = $serviceGame->find($gameId);
+        $repoGame = new GameRepository;
+        $game = $repoGame->find($gameId);
 
         if (!$game) {
             return '<img src="/img/placeholder/no-image-found-square.png" style="border: 0; height: 75px;" alt="Nintendo Switch games">';

@@ -13,23 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class GameService
 {
-    /**
-     * @param $id
-     * @return Game
-     */
-    public function find($id)
-    {
-        return Game::find($id);
-    }
-
-    public function getApiIdList()
-    {
-        $gameList = DB::table('games')
-            ->select('games.id', 'games.title', 'games.link_title', 'games.eshop_europe_fs_id', 'games.updated_at')
-            ->orderBy('games.id', 'asc')
-            ->get();
-        return $gameList;
-    }
 
     /**
      * @param $idList

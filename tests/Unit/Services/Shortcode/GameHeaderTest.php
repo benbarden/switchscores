@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Services\Shortcode;
 
-use App\Services\GameService;
+use App\Domain\Game\Repository as GameRepository;
+
 use App\Services\Shortcode\DynamicShortcode;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -28,11 +29,11 @@ class GameHeaderTest extends TestCase
 
     public function testSimpleTable()
     {
-        $serviceGame = new GameService();
+        $repoGame = new GameRepository();
 
         $seedGames = new Collection();
-        $seedGames->push($serviceGame->find(1));
-        $seedGames->push($serviceGame->find(2));
+        $seedGames->push($repoGame->find(1));
+        $seedGames->push($repoGame->find(2));
 
         $html = '<p>HELLO</p>[gameheader ids="1"]<p>AND THIS IS A MIDDLE LINE</p>[gameheader ids="2"]<p>BYE BYE</p>';
 

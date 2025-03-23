@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
@@ -14,6 +15,7 @@ class GamesController extends Controller
     use SwitchServices;
 
     public function __construct(
+        private GameRepository $repoGame,
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats
     )
@@ -22,7 +24,7 @@ class GamesController extends Controller
 
     public function show($gameId)
     {
-        $game = $this->getServiceGame()->find($gameId);
+        $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
         $pageTitle = 'Game detail: '.$game->title;

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use App\Construction\GameQualityScore\QualityScoreBuilder;
 use App\Construction\GameQualityScore\QualityScoreDirector;
 
+use App\Domain\Game\Repository as GameRepository;
+
 use App\Traits\SwitchServices;
 
 class GameUpdateQualityScores extends Command
@@ -51,6 +53,8 @@ class GameUpdateQualityScores extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
+        $repoGame = new GameRepository();
+
         if ($argGameId) {
             $gameIds = $this->getServiceGame()->getByIdList($argGameId);
         } else {
@@ -59,7 +63,7 @@ class GameUpdateQualityScores extends Command
 
         foreach ($gameIds as $gameRow) {
 
-            $game = $this->getServiceGame()->find($gameRow->id);
+            $game = $repoGame->find($gameRow->id);
             $gameId = $game->id;
 
             //$logger->info('Processing game: '.$game->id.' - '.$game->title);
