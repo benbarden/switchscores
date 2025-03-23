@@ -37,9 +37,6 @@ class LandingController extends Controller
         $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming(20);
 
         $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, 35, 15);
-        $bindings['HighlightsRecentlyRanked'] = $this->getServiceReviewLink()->getHighlightsRecentlyRanked();
-        $bindings['HighlightsStillUnranked'] = $this->getServiceReviewLink()->getHighlightsStillUnranked();
-        $bindings['TopRatedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(50);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 

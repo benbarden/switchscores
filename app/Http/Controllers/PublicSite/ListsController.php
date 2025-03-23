@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class ListsController extends Controller
@@ -13,6 +15,7 @@ class ListsController extends Controller
 
     public function __construct(
         private GameListsRepository $repoGameLists,
+        private ReviewLinkDb $dbReviewLink,
         private Breadcrumbs $viewBreadcrumbs
     )
     {
@@ -103,27 +106,11 @@ class ListsController extends Controller
         $bindings['TopTitle'] = 'Recently ranked Nintendo Switch games';
         $bindings['PageTitle'] = 'Recently ranked';
 
-        $highlightsRecentlyRanked = $this->getServiceReviewLink()->getHighlightsRecentlyRanked(28);
+        $highlightsRecentlyRanked = $this->dbReviewLink->recentlyRanked(28);
 
         $bindings['HighlightsRecentlyRanked'] = $highlightsRecentlyRanked;
 
         return view('public.lists.list-recently-ranked', $bindings);
-    }
-
-    public function recentlyReviewedStillUnranked()
-    {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Recently reviewed, still unranked');
-
-        $bindings['TopTitle'] = 'Recently reviewed, still unranked Nintendo Switch games';
-        $bindings['PageTitle'] = 'Recently reviewed, still unranked';
-
-        $highlightsStillUnranked = $this->getServiceReviewLink()->getHighlightsStillUnranked(28);
-
-        $bindings['HighlightsStillUnranked'] = $highlightsStillUnranked;
-
-        return view('public.lists.list-recently-reviewed-still-unranked', $bindings);
     }
 
     public function buyersGuideHoliday2024US()

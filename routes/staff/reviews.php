@@ -34,9 +34,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/review-drafts/by-process-status/{status}', 'Staff\Reviews\ReviewDraftsController@byProcessStatus')->name('staff.reviews.review-drafts.by-process-status');
     Route::match(['get', 'post'], '/staff/reviews/review-drafts/edit/{itemId}', 'Staff\Reviews\ReviewDraftsController@edit')->name('staff.reviews.review-drafts.edit');
 
-    // Review highlights
-    Route::get('/staff/reviews/highlights', 'Staff\Reviews\HighlightsController@show')->name('staff.reviews.highlights');
-
     // Review campaigns
     Route::get('/staff/reviews/campaigns', 'Staff\Reviews\CampaignsController@show')->name('staff.reviews.campaigns');
     Route::match(['get', 'post'], '/staff/reviews/campaigns/add', 'Staff\Reviews\CampaignsController@add')->name('staff.reviews.campaigns.add');
