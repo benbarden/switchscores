@@ -58,8 +58,33 @@ class Repository
         return QuickReview::where('game_id', $gameId)->where('item_status', QuickReview::STATUS_ACTIVE)->get();
     }
 
+    public function byUser($userId)
+    {
+        return QuickReview::where('user_id', $userId)->orderBy('id', 'desc')->get();
+    }
+
     public function byUserGameIdList($userId)
     {
         return QuickReview::where('user_id', $userId)->orderBy('id', 'desc')->pluck('game_id');
+    }
+
+    public function byStatus($status)
+    {
+        return QuickReview::where('item_status', $status)->orderBy('id', 'desc')->get();
+    }
+
+    public function getLatestActive($limit = 10)
+    {
+        return QuickReview::where('item_status', QuickReview::STATUS_ACTIVE)->orderBy('created_at', 'desc')->limit($limit)->get();
+    }
+
+    public function getAll($limit = null)
+    {
+        $reviewList = QuickReview::orderBy('id', 'desc');
+        if ($limit) {
+            $reviewList = $reviewList->limit($limit);
+        }
+        $reviewList = $reviewList->get();
+        return $reviewList;
     }
 }

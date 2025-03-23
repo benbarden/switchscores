@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
         private ReviewDraftRepository $repoReviewDraft,
+        private QuickReviewRepository $repoQuickReview,
         private ReviewDraftStats $statsReviewDraft,
         private UnrankedRepository $repoUnranked,
         private ReviewLinkStats $statsReviewLink
@@ -38,19 +40,15 @@ class DashboardController extends Controller
 
         $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
 
-        $serviceQuickReview = $this->getServiceQuickReview();
-        $serviceReviewLinks = $this->getServiceReviewLink();
-        $serviceTopRated = $this->getServiceTopRated();
-
         // Action lists
         $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
-        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
+        $pendingQuickReview = $this->repoQuickReview->byStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
 
         // Stats
         $bindings['ReviewLinkCount'] = $this->statsReviewLink->totalOverall();
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
-        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
+        $bindings['UnrankedGameCount'] = $this->getServiceTopRated()->getUnrankedCount();
 
         // Unranked breakdown
         $bindings['UnrankedReviews2'] = $this->repoUnranked->totalByReviewCount(2);

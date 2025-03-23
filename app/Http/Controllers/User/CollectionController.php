@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Category\DbQueries as CategoryDbQueries;
@@ -37,6 +38,7 @@ class CollectionController extends Controller
 
     public function __construct(
         private GameRepository $repoGame,
+        private QuickReviewRepository $repoQuickReview,
         private CategoryRepository $repoCategory,
         private CategoryDbQueries $dbCategory,
         private UserGamesCollectionRepository $repoUserGamesCollection,
@@ -57,7 +59,7 @@ class CollectionController extends Controller
         $userId = $currentUser->id;
         $bindings['UserId'] = $userId;
 
-        $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
+        $quickReviewGameIdList = $this->repoQuickReview->byUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
         $bindings['CollectionStats'] = $this->repoCollectionStats->userStats($userId);
@@ -181,7 +183,7 @@ class CollectionController extends Controller
         $bindings['CollectionList'] = $collectionList;
         $bindings['UserId'] = $userId;
 
-        $quickReviewGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
+        $quickReviewGameIdList = $this->repoQuickReview->byUserGameIdList($userId);
         $bindings['QuickReviewGameIdList'] = $quickReviewGameIdList;
 
         return view('user.collection.list', $bindings);

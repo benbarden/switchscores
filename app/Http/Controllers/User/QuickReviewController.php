@@ -46,7 +46,7 @@ class QuickReviewController extends Controller
         if (!$gameData) abort(404);
 
         // Don't allow duplicate reviews
-        $reviewedGameIdList = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
+        $reviewedGameIdList = $this->repoQuickReview->byUserGameIdList($userId);
         if ($reviewedGameIdList->contains($gameId)) {
             return redirect(route('user.quick-reviews.list'));
         }
@@ -91,7 +91,7 @@ class QuickReviewController extends Controller
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewList'] = $this->getServiceQuickReview()->getAllByUser($userId);
+        $bindings['ReviewList'] = $this->repoQuickReview->byUser($userId);
 
         return view('user.quick-reviews.list', $bindings);
     }

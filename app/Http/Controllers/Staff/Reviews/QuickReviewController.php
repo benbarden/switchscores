@@ -37,10 +37,10 @@ class QuickReviewController extends Controller
 
         if (!isset($filterStatus)) {
             $bindings['FilterStatus'] = '';
-            $reviewList = $this->getServiceQuickReview()->getAll();
+            $reviewList = $this->repoQuickReview->getAll();
         } else {
             $bindings['FilterStatus'] = $filterStatus;
-            $reviewList = $this->getServiceQuickReview()->getByStatus($filterStatus);
+            $reviewList = $this->repoQuickReview->byStatus($filterStatus);
         }
 
         $bindings['QuickReviewList'] = $reviewList;

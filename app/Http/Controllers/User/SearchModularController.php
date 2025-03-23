@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
@@ -29,6 +30,7 @@ class SearchModularController extends Controller
     public function __construct(
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private FeaturedGameRepository $repoFeaturedGame,
+        private QuickReviewRepository $repoQuickReview,
         private GameRepository $repoGame
     )
     {
@@ -70,7 +72,7 @@ class SearchModularController extends Controller
 
         switch ($searchMode) {
             case 'add-quick-review':
-                $bindings['ReviewedGameIdList'] = $this->getServiceQuickReview()->getAllByUserGameIdList($userId);
+                $bindings['ReviewedGameIdList'] = $this->repoQuickReview->byUserGameIdList($userId);
                 break;
             case 'add-featured-game':
                 $bindings['FeaturedGameIdList'] = $this->repoFeaturedGame->getAllGameIds();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
 
@@ -14,6 +15,7 @@ class CommunityController extends Controller
     use SwitchServices;
 
     public function __construct(
+        private QuickReviewRepository $repoQuickReview,
         private UserRepository $repoUser,
         private UserGamesCollectionStats $statsUserGamesCollection
     )
@@ -24,7 +26,7 @@ class CommunityController extends Controller
     {
         $bindings = [];
 
-        $bindings['QuickReviews'] = $this->getServiceQuickReview()->getLatestActive(5);
+        $bindings['QuickReviews'] = $this->repoQuickReview->getLatestActive(5);
         $bindings['HallOfFame'] = $this->repoUser->getMostPoints(5);
 
         // Stats

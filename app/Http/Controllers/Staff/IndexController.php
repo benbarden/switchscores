@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
@@ -26,6 +27,7 @@ class IndexController extends Controller
         private GameStatsRepository $repoGameStats,
         private GameListsRepository $repoGameLists,
         private ReviewDraftRepository $repoReviewDraft,
+        private QuickReviewRepository $repoQuickReview,
         private UserRepository $repoUser,
         private GamePublisherDbQueries $dbGamePublisher,
         private GamesCompanyRepository $repoGamesCompany
@@ -45,7 +47,7 @@ class IndexController extends Controller
 
         // Submissions
         $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
-        $pendingQuickReview = $serviceQuickReview->getByStatus(QuickReview::STATUS_PENDING);
+        $pendingQuickReview = $this->repoQuickReview->byStatus(QuickReview::STATUS_PENDING);
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
         $bindings['TotalGamesCompanySignups'] = $this->repoGamesCompany->countTotal();
