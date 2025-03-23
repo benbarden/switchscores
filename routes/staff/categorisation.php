@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_CATEGORY_MANAGER]], function() {
 
     Route::get('/staff/categorisation/dashboard', 'Staff\Categorisation\DashboardController@show')->name('staff.categorisation.dashboard');
-    Route::get('/staff/categorisation/title-match/category/{category}', 'Staff\Categorisation\DashboardController@categoryTitleMatch')->name('staff.categorisation.title-match.category');
-    Route::get('/staff/categorisation/title-match/series/{gameSeries}', 'Staff\Categorisation\DashboardController@seriesTitleMatch')->name('staff.categorisation.title-match.series');
-    Route::get('/staff/categorisation/title-match/tag/{tag}', 'Staff\Categorisation\DashboardController@tagTitleMatch')->name('staff.categorisation.title-match.tag');
 
     // Categories
     Route::get('/staff/categorisation/category/list', 'Staff\Categorisation\CategoryController@showList')->name('staff.categorisation.category.list');

@@ -32,7 +32,7 @@ class DashboardController extends Controller
         // Missing data
         $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
-        $bindings['NoPriceCount'] = $this->getServiceGame()->countWithoutPrices();
+        $bindings['NoPriceCount'] = $this->repoGameStats->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStats->totalNoVideoType();
         $bindings['MissingAmazonUkLink'] = $this->repoGameStats->totalNoAmazonUkLink();
         $bindings['MissingAmazonUsLink'] = $this->repoGameStats->totalNoAmazonUsLink();

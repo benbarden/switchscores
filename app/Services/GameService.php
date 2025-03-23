@@ -90,10 +90,6 @@ class GameService
         return $gameList->get();
     }
 
-    // ********************************************************** //
-    // Stuff to sort through
-    // ********************************************************** //
-
     /**
      * @deprecated
      * @return \Illuminate\Support\Collection
@@ -119,48 +115,4 @@ class GameService
         return $games;
     }
 
-    // ** ACTION LISTS (New) ** //
-
-    public function countWithoutPrices()
-    {
-        return Game::whereNull('price_eshop')
-            ->orderBy('id', 'asc')
-            ->count();
-    }
-
-    public function getWithoutPrices()
-    {
-        return Game::whereNull('price_eshop')
-            ->orderBy('id', 'asc')
-            ->get();
-    }
-
-    // Category
-    public function getCategoryTitleMatch($category)
-    {
-        return Game::where('title', 'LIKE', $category.'%')
-            ->whereNull('category_id')
-            ->orderBy('id', 'asc')
-            ->get();
-    }
-
-    // Series
-    public function getSeriesTitleMatch($series)
-    {
-        return Game::where('title', 'LIKE', $series.'%')
-            ->whereNull('series_id')
-            ->orderBy('id', 'asc')
-            ->get();
-    }
-
-    // Tag
-    public function getTagTitleMatch(Tag $tag)
-    {
-        $gamesWithTag = GameTag::where('tag_id', $tag->id)->pluck('game_id');
-
-        return Game::where('title', 'LIKE', '%'.$tag->tag_name.'%')
-            ->whereNotIn('id', $gamesWithTag)
-            ->orderBy('id', 'asc')
-            ->get();
-    }
 }

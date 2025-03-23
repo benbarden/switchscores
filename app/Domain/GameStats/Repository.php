@@ -132,6 +132,11 @@ class Repository
         return Game::whereNull('video_type')->count();
     }
 
+    public function totalNoPrice()
+    {
+        return Game::whereNull('price_eshop')->count();
+    }
+
     public function totalNoAmazonUkLink()
     {
         return Game::where('format_physical', Game::FORMAT_AVAILABLE)->whereNull('amazon_uk_link')->count();
