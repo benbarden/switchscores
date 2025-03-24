@@ -25,9 +25,9 @@ class UnrankedController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Unranked breakdown
-        $bindings['UnrankedReviews2List'] = $this->getServiceTopRated()->getUnrankedListByReviewCount(2, 15);
-        $bindings['UnrankedReviews1List'] = $this->getServiceTopRated()->getUnrankedListByReviewCount(1, 15);
-        $bindings['UnrankedReviews0List'] = $this->getServiceTopRated()->getUnrankedListByReviewCount(0, 15);
+        $bindings['UnrankedReviews2List'] = $this->repoUnranked->getByReviewCount(2, null, 15);
+        $bindings['UnrankedReviews1List'] = $this->repoUnranked->getByReviewCount(1, null, 15);
+        $bindings['UnrankedReviews0List'] = $this->repoUnranked->getByReviewCount(0, null, 15);
 
         return view('staff.reviews.unranked.reviewCountLanding', $bindings);
     }
@@ -52,10 +52,9 @@ class UnrankedController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         // Unranked breakdown
-        $bindings['UnrankedYear2020List'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear(2020, 15);
-        $bindings['UnrankedYear2019List'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear(2019, 15);
-        $bindings['UnrankedYear2018List'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear(2018, 15);
-        $bindings['UnrankedYear2017List'] = $this->getServiceTopRated()->getUnrankedListByReleaseYear(2017, 15);
+        $bindings['UnrankedYear2025List'] = $this->repoUnranked->getByYear(2025, null, 15,);
+        $bindings['UnrankedYear2024List'] = $this->repoUnranked->getByYear(2024, null, 15,);
+        $bindings['UnrankedYear2023List'] = $this->repoUnranked->getByYear(2023, null, 15,);
 
         return view('staff.reviews.unranked.releaseYearLanding', $bindings);
     }

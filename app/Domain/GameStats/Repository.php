@@ -38,7 +38,7 @@ class Repository
      */
     public function totalRanked()
     {
-        return Game::whereNotNull('game_rank')->count();
+        return Game::whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
     }
 
     /**

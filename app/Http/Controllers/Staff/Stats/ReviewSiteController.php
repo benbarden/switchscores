@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
@@ -18,6 +19,7 @@ class ReviewSiteController extends Controller
     public function __construct(
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
+        private UnrankedRepository $repoUnranked,
         private ReviewSiteRepository $repoReviewSite,
         private ReviewLinkStats $statsReviewLink
     )
@@ -30,11 +32,8 @@ class ReviewSiteController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->statsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $serviceTopRated = $this->getServiceTopRated();
-        $serviceReviewStats = $this->getServiceReviewStats();
-
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
-        $bindings['UnrankedGameCount'] = $serviceTopRated->getUnrankedCount();
+        $bindings['UnrankedGameCount'] = $this->repoUnranked->totalUnranked();
 
         $releasedGameCount = $this->repoGameStats->totalReleased();
         $reviewLinkCount = $this->statsReviewLink->totalOverall();
@@ -53,8 +52,8 @@ class ReviewSiteController extends Controller
             $reviewCount = $reviewSite->review_count;
             $latestReviewDate = $reviewSite->last_review_date;
 
-            $reviewLinkContribTotal = $serviceReviewStats->calculateContributionPercentage($reviewCount, $reviewLinkCount);
-            $reviewGameCompletionTotal = $serviceReviewStats->calculateContributionPercentage($reviewCount, $releasedGameCount);
+            $reviewLinkContribTotal = $this->getServiceReviewStats()->calculateContributionPercentage($reviewCount, $reviewLinkCount);
+            $reviewGameCompletionTotal = $this->getServiceReviewStats()->calculateContributionPercentage($reviewCount, $releasedGameCount);
 
             $reviewSitesRender[] = [
                 'id' => $id,

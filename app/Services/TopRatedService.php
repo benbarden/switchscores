@@ -8,63 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class TopRatedService
 {
-    /**
-     * @return integer
-     */
-    public function getUnrankedCount()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('games.eu_is_released', '=', '1')
-            ->where('games.review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.rating_avg', 'desc');
-
-        $topRatedCounter = $games->count();
-        return $topRatedCounter;
-    }
-
-    public function getUnrankedListByReviewCount($reviewCount, $limit = null)
-    {
-        $gamesList = Game::where('eu_is_released', 1)
-            ->where('review_count', $reviewCount)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('rating_avg', 'desc')
-            ->orderBy('eu_release_date', 'desc');
-
-        if ($limit) {
-            $gamesList = $gamesList->limit($limit);
-        }
-
-        return $gamesList->get();
-    }
-
-    public function getUnrankedCountByReleaseYear($releaseYear)
-    {
-        $gamesCount = Game::where('eu_is_released', 1)
-            ->where('release_year', $releaseYear)
-            ->where('review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->count();
-
-        return $gamesCount;
-    }
-
-    public function getUnrankedListByReleaseYear($releaseYear, $limit = null)
-    {
-        $gamesList = Game::where('eu_is_released', 1)
-            ->where('release_year', $releaseYear)
-            ->where('review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('rating_avg', 'desc')
-            ->orderBy('eu_release_date', 'desc');
-
-        if ($limit) {
-            $gamesList = $gamesList->limit($limit);
-        }
-
-        return $gamesList->get();
-    }
 
     /**
      * $param $year

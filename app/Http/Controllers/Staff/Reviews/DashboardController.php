@@ -48,7 +48,7 @@ class DashboardController extends Controller
         // Stats
         $bindings['ReviewLinkCount'] = $this->statsReviewLink->totalOverall();
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
-        $bindings['UnrankedGameCount'] = $this->getServiceTopRated()->getUnrankedCount();
+        $bindings['UnrankedGameCount'] = $this->repoUnranked->totalUnranked();
 
         // Unranked breakdown
         $bindings['UnrankedReviews2'] = $this->repoUnranked->totalByReviewCount(2);

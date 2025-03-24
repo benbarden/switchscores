@@ -7,6 +7,11 @@ use App\Models\Game;
 
 class Repository
 {
+    public function totalUnranked()
+    {
+        return Game::whereNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+    }
+
     public function getForMemberDashboard()
     {
         return Game::where('eu_is_released', 1)
@@ -19,7 +24,7 @@ class Repository
             ->get();
     }
 
-    public function getByReviewCount($reviewCount, $gameIdsReviewedBySite = null)
+    public function getByReviewCount($reviewCount, $gameIdsReviewedBySite = null, $limit = null)
     {
         $gameList = Game::where('eu_is_released', 1)
             ->where('is_low_quality', '0')
@@ -30,8 +35,13 @@ class Repository
         }
 
         $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc');
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('eu_release_date', 'desc')
+            ->orderBy('title', 'asc');
+
+        if ($limit) {
+            $gameList = $gameList->limit($limit);
+        }
 
         return $gameList->get();
     }
@@ -46,7 +56,7 @@ class Repository
         return $gameList->count();
     }
 
-    public function getByYear($year, $gameIdsReviewedBySite = null)
+    public function getByYear($year, $gameIdsReviewedBySite = null, $limit = null)
     {
         $gameList = Game::where('eu_is_released', 1)
             ->where('is_low_quality', '0')
@@ -58,8 +68,13 @@ class Repository
         }
 
         $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.eu_release_date', 'desc')
-            ->orderBy('games.title', 'asc');
+            ->orderBy('rating_avg', 'desc')
+            ->orderBy('eu_release_date', 'desc')
+            ->orderBy('title', 'asc');
+
+        if ($limit) {
+            $gameList = $gameList->limit($limit);
+        }
 
         return $gameList->get();
     }
