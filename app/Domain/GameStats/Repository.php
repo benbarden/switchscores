@@ -59,6 +59,11 @@ class Repository
         return Game::whereNotNull('collection_id')->whereNull('category_id')->count();
     }
 
+    public function totalNoCategoryWithReviews()
+    {
+        return Game::where('review_count', '>', 0)->whereNull('category_id')->count();
+    }
+
     /**
      * @return integer
      */

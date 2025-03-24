@@ -1,4 +1,6 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "macros/blocks/headings/slick.twig" as headings %}
+{% import "macros/blocks/tables/rowStat.twig" as tableRowStat %}
 
 {% block page_inner %}
 
@@ -6,8 +8,7 @@
 
         <div class="col-md-4">
 
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Action lists'} %}
-
+            {{ headings.slickHeadingTitle('Action lists') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -30,6 +31,16 @@
                         <span class="h4">{{ NoCategoryWithCollectionCount }}</span>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.list.no-category-with-reviews') }}">
+                            No category with reviews
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="h4">{{ NoCategoryWithReviewsCount }}</span>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
@@ -37,7 +48,7 @@
 
         <div class="col-md-4">
 
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Navigation'} %}
+            {{ headings.slickHeadingTitle('Navigation') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -67,7 +78,7 @@
 
         <div class="col-md-4">
 
-            {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Tools'} %}
+            {{ headings.slickHeadingTitle('Tools') }}
             <table class="table">
                 <tbody>
                 <tr>

@@ -36,9 +36,10 @@ class DashboardController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        // Migrations: Category
+        // Action lists: Category
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategoryAll();
         $bindings['NoCategoryWithCollectionCount'] = $this->repoGameStats->totalNoCategoryWithCollectionId();
+        $bindings['NoCategoryWithReviewsCount'] = $this->repoGameStats->totalNoCategoryWithReviews();
 
         // Bulk edit stats
         $missingCategorySimulation = $this->repoGameListMissingCategory->simulation();

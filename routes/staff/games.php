@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/games/list/no-category-excluding-low-quality', 'Staff\Games\GamesListController@noCategoryExcludingLowQuality')->name('staff.games.list.no-category-excluding-low-quality');
     Route::get('/staff/games/list/no-category-all', 'Staff\Games\GamesListController@noCategoryAll')->name('staff.games.list.no-category-all');
     Route::get('/staff/games/list/no-category-with-collection', 'Staff\Games\GamesListController@noCategoryWithCollection')->name('staff.games.list.no-category-with-collection');
+    Route::get('/staff/games/list/no-category-with-reviews', 'Staff\Games\GamesListController@noCategoryWithReviews')->name('staff.games.list.no-category-with-reviews');
     Route::get('/staff/games/list/no-eu-release-date', 'Staff\Games\GamesListController@noEuReleaseDate')->name('staff.games.list.no-eu-release-date');
     Route::get('/staff/games/list/no-eshop-price', 'Staff\Games\GamesListController@noEshopPrice')->name('staff.games.list.no-eshop-price');
     Route::get('/staff/games/list/no-video-type', 'Staff\Games\GamesListController@noVideoType')->name('staff.games.list.no-video-type');

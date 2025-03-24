@@ -178,6 +178,11 @@ class Repository
         return Game::whereNotNull('collection_id')->whereNull('category_id')->get();
     }
 
+    public function noCategoryWithReviews()
+    {
+        return Game::where('review_count', '>', 0)->whereNull('category_id')->get();
+    }
+
     public function byIdList($idList)
     {
         return Game::whereIn('id', $idList)->get();
