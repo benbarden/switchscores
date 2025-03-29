@@ -1,20 +1,20 @@
 <?php
 
 
-namespace App\Services\Shortcode;
+namespace App\Domain\Shortcode;
 
 use Illuminate\Support\Collection;
 
-use App\Services\GameService;
+use App\Domain\Game\Repository as GameRepository;
 
 class DynamicShortcode
 {
     private $pattern = "/\[gametable (.+?)\]/";
 
     /**
-     * @var GameService
+     * @var GameRepository
      */
-    private $serviceGame;
+    private $repoGame;
 
     /**
      * @var Collection
@@ -23,13 +23,11 @@ class DynamicShortcode
 
     private $html;
 
-    public function __construct($html, $serviceGame = null)
+    public function __construct($html)
     {
         $this->html = $html;
 
-        if ($serviceGame) {
-            $this->serviceGame = $serviceGame;
-        }
+        $this->repoGame = new GameRepository();
     }
 
     public function setSeedGames(Collection $seedGames)
@@ -54,38 +52,36 @@ class DynamicShortcode
                 if ($this->seedGamesCollection) {
                     $gameList = $this->seedGamesCollection;
                 } else {
-                    $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
+                    $gameList = $this->repoGame->getByIdList($idList, ['rating_avg', 'desc']);
                 }
 
                 $bindings['GameList'] = $gameList;
                 $shortcodeHtml = view('modules.shortcodes.game-table', $bindings);
-                return $shortcodeHtml;
                 break;
             case "gamegrid":
                 $idList = $params['ids'];
                 if ($this->seedGamesCollection) {
                     $gameList = $this->seedGamesCollection;
                 } else {
-                    $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
+                    $gameList = $this->repoGame->getByIdList($idList, ['rating_avg', 'desc']);
                 }
 
                 $bindings['GameList'] = $gameList;
                 $shortcodeHtml = view('modules.shortcodes.game-grid', $bindings);
-                return $shortcodeHtml;
                 break;
             case "gameheader":
                 $idList = $params['ids'];
                 if ($this->seedGamesCollection) {
                     $gameList = $this->seedGamesCollection;
                 } else {
-                    $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
+                    $gameList = $this->repoGame->getByIdList($idList, ['rating_avg', 'desc']);
                 }
 
                 $bindings['GameList'] = $gameList;
                 $shortcodeHtml = view('modules.shortcodes.game-header', $bindings);
-                return $shortcodeHtml;
                 break;
         }
+        return $shortcodeHtml;
 
     }
 

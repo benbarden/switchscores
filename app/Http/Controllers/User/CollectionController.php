@@ -21,12 +21,8 @@ use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
 
-use App\Traits\SwitchServices;
-
 class CollectionController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

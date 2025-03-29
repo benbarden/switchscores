@@ -4,17 +4,11 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-
-use App\Traits\SwitchServices;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats
     )
     {

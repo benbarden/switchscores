@@ -43,8 +43,6 @@ class IndexController extends Controller
 
         $serviceQualityStats = new QualityStats();
 
-        $serviceQuickReview = $this->getServiceQuickReview();
-
         // Submissions
         $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
         $pendingQuickReview = $this->repoQuickReview->byStatus(QuickReview::STATUS_PENDING);

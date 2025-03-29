@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\TopRated\DbQueries as DbTopRated;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class ReviewsController extends Controller
@@ -11,6 +14,7 @@ class ReviewsController extends Controller
     use SwitchServices;
 
     public function __construct(
+        private DbTopRated $dbTopRated,
         private Breadcrumbs $viewBreadcrumbs
     )
     {
@@ -62,7 +66,7 @@ class ReviewsController extends Controller
         $bindings['ScoreDistributionByYear'] = $this->getServiceReviewLink()->getFullScoreDistributionByYear($year);
 
         // Ranked/Unranked count
-        $bindings['RankedCountByYear'] = $this->getServiceTopRated()->getRankedCountByYear($year);
+        $bindings['RankedCountByYear'] = $this->dbTopRated->rankedCountByYear($year);
 
         // Review count stats
         $bindings['ReviewCountStatsByYear'] = $this->getServiceReviewLink()->getReviewCountStatsByYear($year);

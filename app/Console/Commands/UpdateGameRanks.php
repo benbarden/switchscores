@@ -100,7 +100,7 @@ class UpdateGameRanks extends Command
 
         $dateList = $serviceGameCalendar->getAllowedDates(false);
 
-        $serviceRankYearMonth = new RankYearMonth($logger, $this->getServiceTopRated());
+        $serviceRankYearMonth = new RankYearMonth($logger);
 
         foreach ($dateList as $date) {
 

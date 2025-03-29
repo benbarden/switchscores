@@ -13,9 +13,9 @@ use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
-use App\Services\Shortcode\DynamicShortcode;
-use App\Services\Shortcode\TopRated;
-use App\Services\Shortcode\Unranked;
+use App\Domain\Shortcode\DynamicShortcode;
+use App\Domain\Shortcode\TopRated;
+use App\Domain\Shortcode\Unranked;
 
 use App\Traits\SwitchServices;
 
@@ -157,13 +157,13 @@ class NewsController extends Controller
         // Content
         $contentHtml = $newsItem->content_html;
 
-        $shortcodeTopRated = new TopRated($this->getServiceTopRated(), $contentHtml);
+        $shortcodeTopRated = new TopRated($contentHtml);
         $contentHtml = $shortcodeTopRated->parseShortcodes();
 
-        $shortcodeUnranked = new Unranked($this->getServiceTopRated(), $contentHtml);
+        $shortcodeUnranked = new Unranked($contentHtml);
         $contentHtml = $shortcodeUnranked->parseShortcodes();
 
-        $shortcodeDynamic = new DynamicShortcode($contentHtml, $this->getServiceGame());
+        $shortcodeDynamic = new DynamicShortcode($contentHtml);
         $contentHtml = $shortcodeDynamic->parseShortcodes();
 
         $bindings['NewsContentParsed'] = $contentHtml;

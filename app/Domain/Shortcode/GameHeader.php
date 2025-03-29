@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\Shortcode;
+namespace App\Domain\Shortcode;
 
 use Illuminate\Support\Collection;
 use App\Services\GameService;

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Services\Shortcode;
+namespace App\Domain\Shortcode;
 
-use App\Services\TopRatedService;
+use App\Domain\TopRated\DbQueries as DbTopRated;
 
 class Unranked
 {
@@ -37,15 +37,15 @@ class Unranked
     ];
 
     /**
-     * @var TopRatedService
+     * @var DbTopRated
      */
-    private $serviceTopRated;
+    private $dbTopRated;
 
     private $html;
 
-    public function __construct($serviceTopRated, $html)
+    public function __construct($html)
     {
-        $this->serviceTopRated = $serviceTopRated;
+        $this->dbTopRated = new DbTopRated();
         $this->html = $html;
     }
 
@@ -60,7 +60,7 @@ class Unranked
             $month = $shortcode['month'];
 
             if (strpos($parsedHtml, $key)) {
-                $gameList = $this->serviceTopRated->getByMonthUnranked($year, $month);
+                $gameList = $this->dbTopRated->byMonthUnranked($year, $month);
                 $shortcodeHtml = view('modules.shortcodes.unranked', ['GameList' => $gameList]);
                 $parsedHtml = str_replace($key, $shortcodeHtml, $parsedHtml);
             }

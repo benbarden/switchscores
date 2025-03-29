@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Services\Shortcode;
+namespace Tests\Unit\Domain\Shortcode;
 
 use App\Models\Game;
-use App\Services\Shortcode\DynamicShortcode;
+use App\Domain\Shortcode\DynamicShortcode;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 

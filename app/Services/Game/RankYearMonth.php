@@ -6,7 +6,8 @@ namespace App\Services\Game;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Log\Logger;
 use Carbon\Carbon;
-use App\Services\TopRatedService;
+
+use App\Domain\TopRated\DbQueries as DbTopRated;
 
 class RankYearMonth
 {
@@ -16,22 +17,19 @@ class RankYearMonth
     private $logger;
 
     /**
-     * @var TopRatedService
+     * @var DbTopRated
      */
-    private $serviceTopRated;
+    private $dbTopRated;
 
     /**
      * @param Logger|null $logger
-     * @param TopRatedService|null $serviceTopRated
      */
-    public function __construct(Logger $logger = null, TopRatedService $serviceTopRated = null)
+    public function __construct(Logger $logger = null)
     {
         if ($logger) {
             $this->logger = $logger;
         }
-        if ($serviceTopRated) {
-            $this->serviceTopRated = $serviceTopRated;
-        }
+        $this->dbTopRated = new DbTopRated();
     }
 
     public function log($level, $message)
@@ -43,7 +41,7 @@ class RankYearMonth
 
     public function getGameList($calendarYear, $calendarMonth)
     {
-        return $this->serviceTopRated->getByMonthWithRanks($calendarYear, $calendarMonth);
+        return $this->dbTopRated->byMonthWithRanks($calendarYear, $calendarMonth);
     }
 
     public function process($date)

@@ -10,12 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Game\Repository as GameRepository;
 
-use App\Traits\SwitchServices;
-
 class QuickReviewController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

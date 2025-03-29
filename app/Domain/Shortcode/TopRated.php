@@ -1,24 +1,24 @@
 <?php
 
 
-namespace App\Services\Shortcode;
+namespace App\Domain\Shortcode;
 
-use App\Services\TopRatedService;
+use App\Domain\TopRated\DbQueries as DbTopRated;
 
 class TopRated
 {
     private $matches;
 
     /**
-     * @var TopRatedService
+     * @var DbTopRated
      */
-    private $serviceTopRated;
+    private $dbTopRated;
 
     private $html;
 
-    public function __construct($serviceTopRated, $html)
+    public function __construct($html)
     {
-        $this->serviceTopRated = $serviceTopRated;
+        $this->dbTopRated = new DbTopRated();
         $this->html = $html;
         $this->generateMatches();
     }
@@ -52,7 +52,7 @@ class TopRated
             $month = $shortcode['month'];
 
             if (strpos($parsedHtml, $key)) {
-                $gameList = $this->serviceTopRated->getByMonthWithRanks($year, $month, 10);
+                $gameList = $this->dbTopRated->byMonthWithRanks($year, $month, 10);
                 $shortcodeHtml = view('modules.shortcodes.top-rated', ['GameList' => $gameList]);
                 $parsedHtml = str_replace($key, $shortcodeHtml, $parsedHtml);
             }
