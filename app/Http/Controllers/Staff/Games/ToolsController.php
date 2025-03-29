@@ -4,12 +4,8 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-
 class ToolsController extends Controller
 {
-    use SwitchServices;
-
     public function updateGameCalendarStats()
     {
         $pageTitle = 'Update Game Calendar Stats';

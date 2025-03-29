@@ -10,14 +10,10 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Illuminate\Support\Facades\Validator;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
 class GameSeriesController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

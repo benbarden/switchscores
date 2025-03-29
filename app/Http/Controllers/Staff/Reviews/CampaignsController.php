@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\SwitchServices;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
+use App\Domain\CampaignGame\Repository as CampaignGameRepository;
 
 class CampaignsController extends Controller
 {
@@ -25,7 +26,8 @@ class CampaignsController extends Controller
     ];
 
     public function __construct(
-        private CampaignRepository $repoCampaign
+        private CampaignRepository $repoCampaign,
+        private CampaignGameRepository $repoCampaignGame
     )
     {
     }
@@ -119,8 +121,6 @@ class CampaignsController extends Controller
 
         $request = request();
 
-        $serviceCampaignGame = $this->getServiceCampaignGame();
-
         $campaignData = $this->repoCampaign->find($campaignId);
         if (!$campaignData) abort(404);
 
@@ -132,9 +132,9 @@ class CampaignsController extends Controller
             $gameIds = $request->game_ids;
             $gameIdList = explode("\r\n", $gameIds);
 
-            $serviceCampaignGame->deleteAllByCampaign($campaignId);
+            $this->repoCampaignGame->deleteAllByCampaign($campaignId);
             foreach ($gameIdList as $gameId) {
-                $serviceCampaignGame->create($campaignId, $gameId);
+                $this->repoCampaignGame->create($campaignId, $gameId);
             }
 
             return redirect(route('staff.reviews.campaigns'));
@@ -148,7 +148,7 @@ class CampaignsController extends Controller
         $bindings['CampaignData'] = $campaignData;
         $bindings['CampaignId'] = $campaignId;
 
-        $campaignGameList = $serviceCampaignGame->getByCampaignNumeric($campaignId);
+        $campaignGameList = $this->repoCampaignGame->byCampaignNumeric($campaignId);
         if ($campaignGameList) {
             $gameIdList = '';
             foreach ($campaignGameList as $listItem) {

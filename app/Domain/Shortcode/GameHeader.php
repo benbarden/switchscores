@@ -4,16 +4,17 @@
 namespace App\Domain\Shortcode;
 
 use Illuminate\Support\Collection;
-use App\Services\GameService;
+
+use App\Domain\Game\Repository as GameRepository;
 
 class GameHeader
 {
     private $pattern = "/\[gameheader (.+?)\]/";
 
     /**
-     * @var GameService
+     * @var GameRepository
      */
-    private $serviceGame;
+    private $repoGame;
 
     /**
      * @var Collection
@@ -22,13 +23,11 @@ class GameHeader
 
     private $html;
 
-    public function __construct($html, $serviceGame = null)
+    public function __construct($html)
     {
         $this->html = $html;
 
-        if ($serviceGame) {
-            $this->serviceGame = $serviceGame;
-        }
+        $this->repoGame = new GameRepository();
     }
 
     public function setSeedGames(Collection $seedGames)
@@ -53,7 +52,7 @@ class GameHeader
                 if ($this->seedGamesCollection) {
                     $gameList = $this->seedGamesCollection;
                 } else {
-                    $gameList = $this->serviceGame->getByIdList($idList, ['rating_avg', 'desc']);
+                    $gameList = $this->repoGame->getByIdList($idList, ['rating_avg', 'desc']);
                 }
 
                 $bindings['GameList'] = $gameList;

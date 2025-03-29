@@ -10,12 +10,8 @@ use Illuminate\Routing\Controller;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 
-use App\Traits\SwitchServices;
-
 class FeaturedGameController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -29,78 +25,6 @@ class FeaturedGameController extends Controller
         private FeaturedGameRepository $repoFeaturedGames
     )
     {
-    }
-
-    public function add()
-    {
-        $pageTitle = 'Add featured game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesFeaturedGamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $request = request();
-
-        if ($request->isMethod('post')) {
-
-            $this->validate($request, $this->validationRules);
-
-            $this->repoFeaturedGames->create(
-                $request->user_id,
-                $request->game_id,
-                $request->featured_date,
-                $request->featured_type,
-                $request->status
-            );
-
-            return redirect(route('staff.games.featured-games.list'));
-
-        }
-
-        $bindings['FormMode'] = 'add';
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
-
-        return view('staff.games.featured-games.add', $bindings);
-    }
-
-    public function edit($featuredGameId)
-    {
-        $pageTitle = 'Edit featured game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesFeaturedGamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $featuredGame = $this->repoFeaturedGames->find($featuredGameId);
-        if (!$featuredGame) abort(404);
-
-        $request = request();
-
-        if ($request->isMethod('post')) {
-
-            $bindings['FormMode'] = 'edit-post';
-
-            $this->validate($request, $this->validationRules);
-
-            $this->repoFeaturedGames->edit(
-                $featuredGame,
-                $request->game_id,
-                $request->featured_date,
-                $request->featured_type,
-                $request->status
-            );
-
-            return redirect(route('staff.games.featured-games.list'));
-
-        } else {
-
-            $bindings['FormMode'] = 'edit';
-
-        }
-
-        $bindings['FeaturedGameData'] = $featuredGame;
-        $bindings['FeaturedGameId'] = $featuredGameId;
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
-
-        return view('staff.games.featured-games.edit', $bindings);
     }
 
     public function showList()

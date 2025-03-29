@@ -14,38 +14,6 @@ use Illuminate\Support\Facades\DB;
 class GameService
 {
 
-    /**
-     * @param $idList
-     * @param string[] $orderBy
-     * @return \Illuminate\Support\Collection
-     */
-    public function getByIdList($idList, $orderBy = "")
-    {
-        if ($orderBy) {
-            list($orderField, $orderDir) = $orderBy;
-        } else {
-            list($orderField, $orderDir) = ['id', 'desc'];
-        }
-
-        $idList = str_replace('&quot;', '', $idList);
-        $idList = explode(",", $idList);
-
-        $games = DB::table('games')
-            ->select('games.*')
-            ->whereIn('games.id', $idList)
-            ->orderBy($orderField, $orderDir)
-        ;
-
-        $games = $games->get();
-
-        return $games;
-    }
-
-    // ********************************************************** //
-    // Action lists.
-    // These don't have a forced limit as we need to know the total
-    // ********************************************************** //
-
     public function getWithNoNintendoCoUkLink($limit = null)
     {
         $gameList = Game::whereNull('eshop_europe_fs_id')

@@ -9,6 +9,7 @@ use App\Construction\GameQualityScore\QualityScoreBuilder;
 use App\Construction\GameQualityScore\QualityScoreDirector;
 
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Game\DbQueries as DbGame;
 
 use App\Traits\SwitchServices;
 
@@ -54,11 +55,12 @@ class GameUpdateQualityScores extends Command
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $repoGame = new GameRepository();
+        $dbGame = new DbGame();
 
         if ($argGameId) {
-            $gameIds = $this->getServiceGame()->getByIdList($argGameId);
+            $gameIds = $repoGame->getByIdList($argGameId);
         } else {
-            $gameIds = $this->getServiceGame()->getAll();
+            $gameIds = $dbGame->getAll();
         }
 
         foreach ($gameIds as $gameRow) {

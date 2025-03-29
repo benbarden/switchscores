@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\CampaignGameService;
 use App\Services\DataSourceService;
 use App\Services\DataSourceIgnoreService;
 use App\Services\DataSourceParsedService;
@@ -70,15 +69,6 @@ trait SwitchServices
     }
 
     // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return CampaignGameService
-     */
-    public function getServiceCampaignGame()
-    {
-        return $this->loadService('CampaignGameService');
-    }
 
     /**
      * @deprecated

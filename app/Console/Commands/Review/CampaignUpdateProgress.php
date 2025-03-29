@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\SwitchServices;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
+use App\Domain\CampaignGame\Repository as CampaignGameRepository;
+use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
+
 
 class CampaignUpdateProgress extends Command
 {
@@ -27,18 +30,17 @@ class CampaignUpdateProgress extends Command
      */
     protected $description = 'Updates progress for review campaigns.';
 
-    protected $repoCampaign;
-
     /**
      * Create a new command instance.
      *
      * @return void
      */
     public function __construct(
-        CampaignRepository $repoCampaign
+        private CampaignRepository $repoCampaign,
+        private CampaignGameRepository $repoCampaignGame,
+        private DbCampaignGame $dbCampaignGame
     )
     {
-        $this->repoCampaign = $repoCampaign;
         parent::__construct();
     }
 
@@ -63,8 +65,8 @@ class CampaignUpdateProgress extends Command
         foreach ($campaignsActive as $campaign) {
 
             $campaignId = $campaign->id;
-            $rankedCount = $this->getServiceCampaignGame()->countRankedGames($campaignId);
-            $campaignGames = $this->getServiceCampaignGame()->getByCampaign($campaignId);
+            $rankedCount = $this->dbCampaignGame->countRankedGames($campaignId);
+            $campaignGames = $this->repoCampaignGame->byCampaign($campaignId);
             $totalCount = count($campaignGames);
             if ($totalCount == 0) {
                 $progress = 0;

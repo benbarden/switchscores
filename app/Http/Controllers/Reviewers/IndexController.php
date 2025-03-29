@@ -9,6 +9,7 @@ use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
+use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
 
 use App\Traits\SwitchServices;
 
@@ -21,7 +22,8 @@ class IndexController extends Controller
         private PartnerFeedLinkRepository $repoPartnerFeedLink,
         private CampaignRepository $repoCampaign,
         private ReviewDraftRepository $repoReviewDraft,
-        private UnrankedRepository $repoUnranked
+        private UnrankedRepository $repoUnranked,
+        private DbCampaignGame $dbCampaignGame
     )
     {
     }
@@ -73,7 +75,7 @@ class IndexController extends Controller
         $activeCampaigns = $this->repoCampaign->getActive();
         foreach ($activeCampaigns as &$item) {
             $campaignId = $item->id;
-            $item['ranked_count'] = $this->getServiceCampaignGame()->countRankedGames($campaignId);
+            $item['ranked_count'] = $this->dbCampaignGame->countRankedGames($campaignId);
         }
         $bindings['ActiveCampaigns'] = $activeCampaigns;
 

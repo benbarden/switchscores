@@ -1,12 +1,10 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\CampaignGame;
 
 use App\Models\CampaignGame;
-use Illuminate\Support\Facades\DB;
 
-class CampaignGameService
+class Repository
 {
     public function create($campaignId, $gameId)
     {
@@ -21,25 +19,13 @@ class CampaignGameService
         CampaignGame::where('campaign_id', $campaignId)->delete();
     }
 
-    public function getByCampaign($campaignId)
+    public function byCampaign($campaignId)
     {
         return CampaignGame::where('campaign_id', $campaignId)->get();
     }
 
-    public function getByCampaignNumeric($campaignId)
+    public function byCampaignNumeric($campaignId)
     {
         return CampaignGame::where('campaign_id', $campaignId)->orderBy('game_id', 'asc')->get();
-    }
-
-    public function countRankedGames($campaignId)
-    {
-        $gamesList = DB::select('
-            SELECT count(*) AS count FROM campaign_games cg
-            JOIN games g ON cg.game_id = g.id
-            WHERE cg.campaign_id = ?
-            AND g.review_count > 2
-        ', [$campaignId]);
-
-        return $gamesList[0]->count;
     }
 }

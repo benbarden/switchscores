@@ -9,14 +9,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 
 class GameCollectionController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
