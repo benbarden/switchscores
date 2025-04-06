@@ -10,6 +10,7 @@ use App\Construction\GameQualityScore\QualityScoreDirector;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\DbQueries as DbGame;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -56,6 +57,7 @@ class GameUpdateQualityScores extends Command
 
         $repoGame = new GameRepository();
         $dbGame = new DbGame();
+        $repoDataSourceParsed = new DataSourceParsedRepository();
 
         if ($argGameId) {
             $gameIds = $repoGame->getByIdList($argGameId);
@@ -86,7 +88,7 @@ class GameUpdateQualityScores extends Command
                 $qsDirector->setImportRuleEshop($importRuleEshop);
             }
 
-            $dsParsedNintendoCoUk = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+            $dsParsedNintendoCoUk = $repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
             if ($dsParsedNintendoCoUk) {
                 $qsDirector->setDataSourceParsedNintendoCoUk($dsParsedNintendoCoUk);
             }

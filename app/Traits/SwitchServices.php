@@ -2,10 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\DataSourceService;
-use App\Services\DataSourceIgnoreService;
-use App\Services\DataSourceParsedService;
-use App\Services\DataSourceRawService;
 use App\Services\GameCalendarService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameService;
@@ -69,42 +65,6 @@ trait SwitchServices
     }
 
     // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return DataSourceService
-     */
-    public function getServiceDataSource()
-    {
-        return $this->loadService('DataSourceService');
-    }
-
-    /**
-     * @deprecated
-     * @return DataSourceIgnoreService
-     */
-    public function getServiceDataSourceIgnore()
-    {
-        return $this->loadService('DataSourceIgnoreService');
-    }
-
-    /**
-     * @deprecated
-     * @return DataSourceParsedService
-     */
-    public function getServiceDataSourceParsed()
-    {
-        return $this->loadService('DataSourceParsedService');
-    }
-
-    /**
-     * @deprecated
-     * @return DataSourceRawService
-     */
-    public function getServiceDataSourceRaw()
-    {
-        return $this->loadService('DataSourceRawService');
-    }
 
     /**
      * @deprecated

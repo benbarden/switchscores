@@ -12,6 +12,8 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
+use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -30,7 +32,9 @@ class IndexController extends Controller
         private QuickReviewRepository $repoQuickReview,
         private UserRepository $repoUser,
         private GamePublisherDbQueries $dbGamePublisher,
-        private GamesCompanyRepository $repoGamesCompany
+        private GamesCompanyRepository $repoGamesCompany,
+        private DataSourceIgnoreRepository $repoDataSourceIgnore,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
     }
@@ -52,8 +56,8 @@ class IndexController extends Controller
 
         // Games to add
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
-        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
-        $unlinkedItemList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
+        $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
+        $unlinkedItemList = $this->repoDataSourceParsed->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Nintendo links

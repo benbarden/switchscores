@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -47,6 +48,8 @@ class DownloadImages extends Command
     {
         $repoGame = new GameRepository();
 
+        $repoDataSourceParsed = new DataSourceParsedRepository();
+
         $argGameId = $this->argument('gameId');
 
         $logger = Log::channel('cron');
@@ -65,7 +68,7 @@ class DownloadImages extends Command
 
             $logger->info('Importing for game id: '.$importGameId);
 
-            $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($importGameId);
+            $dsItem = $repoDataSourceParsed->getSourceNintendoCoUkForGame($importGameId);
 
             if ($dsItem) {
                 $logger->info('Processing item...');
@@ -85,7 +88,7 @@ class DownloadImages extends Command
 
         } else {
 
-            $dsParsedList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithGameId();
+            $dsParsedList = $repoDataSourceParsed->getAllNintendoCoUkWithGameId();
 
             $logger->info('Found '.count($dsParsedList).' item(s); processing');
 

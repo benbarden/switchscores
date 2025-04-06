@@ -12,6 +12,7 @@ use App\Domain\News\Repository as NewsRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\Game\AutoDescription;
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
@@ -34,7 +35,8 @@ class GameShowController extends Controller
         private GameDeveloperRepository $repoGameDeveloper,
         private AutoDescription $autoDescription,
         private UserGamesCollectionRepository $repoUserGamesCollection,
-        private AmazonAffiliate $affiliateAmazon
+        private AmazonAffiliate $affiliateAmazon,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
     }
@@ -117,7 +119,7 @@ class GameShowController extends Controller
         }
 
         // Data sources
-        $bindings['DSNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $bindings['DSNintendoCoUk'] = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
 
         // News
         $bindings['GameNews'] = $this->repoNews->getByGameId($gameId, 10);

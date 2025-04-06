@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -46,13 +47,16 @@ class UpdateGames extends Command
     public function handle()
     {
         $repoGame = new GameRepository();
+
+        $repoDataSourceParsed = new DataSourceParsedRepository();
+
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $logger->info('Loading data...');
 
-        $dsParsedList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithGameId();
+        $dsParsedList = $repoDataSourceParsed->getAllNintendoCoUkWithGameId();
 
         $logger->info('Found '.count($dsParsedList).' item(s); processing');
 

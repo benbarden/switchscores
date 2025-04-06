@@ -12,6 +12,7 @@ use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -24,7 +25,8 @@ class GamesPartnerController extends Controller
         private GameQualityFilter $gameQualityFilter,
         private GamesCompanyRepository $repoGamesCompany,
         private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper
+        private GameDeveloperRepository $repoGameDeveloper,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
     }
@@ -46,7 +48,7 @@ class GamesPartnerController extends Controller
         $bindings['GameDeveloperList'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublisherList'] = $this->repoGamePublisher->byGame($gameId);
 
-        $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $bindings['DataSourceNintendoCoUk'] = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
 
         return view('staff.games.partner.gamePartners', $bindings);
     }

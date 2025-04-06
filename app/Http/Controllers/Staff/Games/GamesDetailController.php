@@ -12,6 +12,7 @@ use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Models\Game;
 
@@ -32,7 +33,8 @@ class GamesDetailController extends Controller
         private GameStatsRepository $repoGameStats,
         private DataSourceRepository $repoDataSource,
         private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper
+        private GameDeveloperRepository $repoGameDeveloper,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
     }
@@ -95,7 +97,7 @@ class GamesDetailController extends Controller
         $bindings['PlayersNintendoCoUkDifferenceCount'] = $playersEUNintendoCoUkDifferenceCount[0]->count;
 
         // Nintendo.co.uk API data
-        $bindings['DataSourceNintendoCoUk'] = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $bindings['DataSourceNintendoCoUk'] = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
 
         // Audit data
         //$gameAuditsCore = $game->audits()->orderBy('id', 'desc')->get();
@@ -137,7 +139,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
 
-        $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $dsItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
         if (!$dsItem) {
             return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
         }
@@ -166,7 +168,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
 
-        $dsItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $dsItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
         if (!$dsItem) {
             return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
         }

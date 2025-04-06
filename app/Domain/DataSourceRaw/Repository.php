@@ -1,11 +1,10 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\DataSourceRaw;
 
 use App\Models\DataSourceRaw;
 
-class DataSourceRawService
+class Repository
 {
     public function find($itemId)
     {

@@ -3,13 +3,26 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Models\DataSource;
-use App\Traits\SwitchServices;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\DataSource\Repository as DataSourceRepository;
+use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+
+use App\Models\DataSource;
+
+use App\Traits\SwitchServices;
 
 class DataSourceIgnoreController extends Controller
 {
     use SwitchServices;
+
+    public function __construct(
+        private DataSourceRepository $repoDataSource,
+        private DataSourceIgnoreRepository $repoDataSourceIgnore,
+        private DataSourceParsedRepository $repoDataSourceParsed
+    ){
+    }
 
     public function addToIgnoreList()
     {
@@ -26,7 +39,7 @@ class DataSourceIgnoreController extends Controller
             return response()->json(['error' => 'Missing data: dsParsedItemId'], 400);
         }
 
-        $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
+        $dsParsedItem = $this->repoDataSourceParsed->find($dsParsedItemId);
         if (!$dsParsedItem) {
             return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
         }
@@ -37,12 +50,12 @@ class DataSourceIgnoreController extends Controller
 
                 $linkId = $dsParsedItem->link_id;
 
-                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
+                $dsIgnoredItem = $this->repoDataSourceIgnore->getBySourceAndLinkId($sourceId, $linkId);
                 if ($dsIgnoredItem->count() > 0) {
                     return response()->json(['error' => 'Item is already marked as ignored [Source: '.$sourceId.'; Link: '.$linkId.']'], 400);
                 }
 
-                $this->getServiceDataSourceIgnore()->addLinkId($sourceId, $linkId);
+                $this->repoDataSourceIgnore->addLinkId($sourceId, $linkId);
 
                 $data = array(
                     'status' => 'OK'
@@ -73,7 +86,7 @@ class DataSourceIgnoreController extends Controller
             return response()->json(['error' => 'Missing data: dsParsedItemId'], 400);
         }
 
-        $dsParsedItem = $this->getServiceDataSourceParsed()->find($dsParsedItemId);
+        $dsParsedItem = $this->repoDataSourceParsed->find($dsParsedItemId);
         if (!$dsParsedItem) {
             return response()->json(['error' => 'Cannot find dsParsedItem for id: '.$dsParsedItemId], 400);
         }
@@ -84,12 +97,12 @@ class DataSourceIgnoreController extends Controller
 
                 $linkId = $dsParsedItem->link_id;
 
-                $dsIgnoredItem = $this->getServiceDataSourceIgnore()->getBySourceAndLinkId($sourceId, $linkId);
+                $dsIgnoredItem = $this->repoDataSourceIgnore->getBySourceAndLinkId($sourceId, $linkId);
                 if (!$dsIgnoredItem) {
                     return response()->json(['error' => 'Item is not marked as ignored'], 400);
                 }
 
-                $this->getServiceDataSourceIgnore()->deleteByLinkId($sourceId, $linkId);
+                $this->repoDataSourceIgnore->deleteByLinkId($sourceId, $linkId);
 
                 $data = array(
                     'status' => 'OK'

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameLists\DbQueries as GameListsDb;
 use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Traits\SwitchServices;
@@ -15,6 +16,7 @@ class ListsController extends Controller
 
     public function __construct(
         private GameListsRepository $repoGameLists,
+        private GameListsDb $dbGameLists,
         private ReviewLinkDb $dbReviewLink,
         private Breadcrumbs $viewBreadcrumbs
     )
@@ -72,9 +74,9 @@ class ListsController extends Controller
         $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Games on sale');
 
-        $bindings['GoodRanks'] = $this->getServiceDataSourceParsed()->getGamesOnSaleGoodRanks(200);
-        $bindings['HighestDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleHighestDiscounts(200);
-        $bindings['UnrankedDiscounts'] = $this->getServiceDataSourceParsed()->getGamesOnSaleUnranked(200);
+        $bindings['GoodRanks'] = $this->dbGameLists->onSaleGoodRanks(200);
+        $bindings['HighestDiscounts'] = $this->dbGameLists->onSaleHighestDiscounts(200);
+        $bindings['UnrankedDiscounts'] = $this->dbGameLists->onSaleUnranked(200);
 
         $bindings['TopRatedSort'] = "[8, 'desc'], [4, 'desc']";
         $bindings['HighestDiscountsSort'] = "[4, 'desc'], [8, 'desc']";

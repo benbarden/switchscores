@@ -5,6 +5,10 @@ namespace App\Console\Commands\DataSource\NintendoCoUk;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Domain\DataSource\Repository as DataSourceRepository;
+use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+
 use App\Traits\SwitchServices;
 
 use App\Services\DataSources\NintendoCoUk\Importer;
@@ -33,7 +37,8 @@ class ImportParseLink extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+    )
     {
         parent::__construct();
     }
@@ -52,7 +57,11 @@ class ImportParseLink extends Command
 
         $importer = new Importer();
 
-        $sourceId = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $repoDataSource = new DataSourceRepository();
+        $repoDataSourceRaw = new DataSourceRawRepository();
+        $repoDataSourceParsed = new DataSourceParsedRepository();
+
+        $sourceId = $repoDataSource->getSourceNintendoCoUk()->id;
 
         try {
 
@@ -65,9 +74,9 @@ class ImportParseLink extends Command
 
                 // Do cleanup first
                 $logger->info('Clearing previous raw data...');
-                $this->getServiceDataSourceRaw()->deleteBySourceId($sourceId);
+                $repoDataSourceRaw->deleteBySourceId($sourceId);
                 $logger->info('Clearing previous parsed data...');
-                $this->getServiceDataSourceParsed()->deleteBySourceId($sourceId);
+                $repoDataSourceParsed->deleteBySourceId($sourceId);
 
                 //
                 //if (\App::environment() == 'localx') {
@@ -111,7 +120,7 @@ class ImportParseLink extends Command
             // Parsed data
             $logger->info('Parsing data...');
             $parsedItemCount = 0;
-            $rawSourceData = $this->getServiceDataSourceRaw()->getBySourceId($sourceId);
+            $rawSourceData = $repoDataSourceRaw->getBySourceId($sourceId);
             $totalItemCount = count($rawSourceData);
             foreach ($rawSourceData as $rawItem) {
                 if (($parsedItemCount % 1000) == 0) {
@@ -126,7 +135,7 @@ class ImportParseLink extends Command
 
             // Link games
             $logger->info('Updating game links...');
-            $this->getServiceDataSourceParsed()->updateNintendoCoUkGameIds();
+            $repoDataSourceParsed->updateNintendoCoUkGameIds();
             $logger->info('Linking complete');
 
         } catch (\Exception $e) {

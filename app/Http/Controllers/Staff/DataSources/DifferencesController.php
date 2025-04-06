@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Domain\Category\Repository as CategoryRepository;
-use App\Domain\Game\Repository as GameRepository;
-
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\DataSource\Repository as DataSourceRepository;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Construction\GameImportRule\EshopBuilder;
 use App\Construction\GameImportRule\EshopDirector;
@@ -20,7 +22,9 @@ class DifferencesController extends Controller
 
     public function __construct(
         private CategoryRepository $repoCategory,
-        private GameRepository $repoGame
+        private GameRepository $repoGame,
+        private DataSourceRepository $repoDataSource,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
 
@@ -92,7 +96,7 @@ class DifferencesController extends Controller
 
             case DataSource::DSID_NINTENDO_CO_UK:
 
-                $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+                $dsParsedItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
                 if (!$dsParsedItem) {
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
@@ -149,7 +153,7 @@ class DifferencesController extends Controller
 
             case DataSource::DSID_NINTENDO_CO_UK:
 
-                $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+                $dsParsedItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
                 if (!$dsParsedItem) {
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
@@ -218,7 +222,7 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'eu_release_date';
         $bindings['SourceField'] = 'release_date_eu';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['DataSourceId'] = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;
@@ -237,7 +241,7 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'price_eshop';
         $bindings['SourceField'] = 'price_standard';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['DataSourceId'] = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;
@@ -256,7 +260,7 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'game_players';
         $bindings['SourceField'] = 'dsp_players';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['DataSourceId'] = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;
@@ -275,7 +279,7 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'game_publishers';
         $bindings['SourceField'] = 'dsp_publishers';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['DataSourceId'] = $this->repoDataSource->getSourceNintendoCoUk()->id;
         $bindings['HideApplyChange'] = 'Y';
 
         $highlightGameId = \Request::get('gameid');
@@ -295,7 +299,7 @@ class DifferencesController extends Controller
 
         $bindings['GameField'] = 'category_name';
         $bindings['SourceField'] = 'dsp_genres';
-        $bindings['DataSourceId'] = $this->getServiceDataSource()->getSourceNintendoCoUk()->id;
+        $bindings['DataSourceId'] = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
         $highlightGameId = \Request::get('gameid');
         $bindings['HighlightGameId'] = $highlightGameId;

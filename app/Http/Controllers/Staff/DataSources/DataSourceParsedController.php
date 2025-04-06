@@ -13,6 +13,9 @@ use App\Domain\Url\LinkTitle;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\DataSource\Repository as DataSourceRepository;
+use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Traits\SwitchServices;
 
@@ -23,13 +26,16 @@ class DataSourceParsedController extends Controller
     public function __construct(
         private GamesCompanyRepository $repoGamesCompany,
         private GamePublisherRepository $repoGamePublisher,
-        private LinkTitle $urlLinkTitle
+        private LinkTitle $urlLinkTitle,
+        private DataSourceRepository $repoDataSource,
+        private DataSourceIgnoreRepository $repoDataSourceIgnore,
+        private DataSourceParsedRepository $repoDataSourceParsed
     ){
     }
 
     public function nintendoCoUkUnlinkedItems()
     {
-        $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
+        $dataSource = $this->repoDataSource->getSourceNintendoCoUk();
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Unlinked items';
@@ -42,10 +48,10 @@ class DataSourceParsedController extends Controller
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
 
-        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
+        $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
 
-        $bindings['ItemsWithEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedWithEUDate($ignoreIdList);
-        $bindings['ItemsNoEUDate'] = $this->getServiceDataSourceParsed()->getNintendoCoUkUnlinkedNoEUDate($ignoreIdList);
+        $bindings['ItemsWithEUDate'] = $this->repoDataSourceParsed->getNintendoCoUkUnlinkedWithEUDate($ignoreIdList);
+        $bindings['ItemsNoEUDate'] = $this->repoDataSourceParsed->getNintendoCoUkUnlinkedNoEUDate($ignoreIdList);
         $bindings['ListRef'] = 'unlinked';
 
         return view('staff.data-sources.parsed.list-unlinked', $bindings);
@@ -53,7 +59,7 @@ class DataSourceParsedController extends Controller
 
     public function nintendoCoUkIgnoredItems()
     {
-        $dataSource = $this->getServiceDataSource()->getSourceNintendoCoUk();
+        $dataSource = $this->repoDataSource->getSourceNintendoCoUk();
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Ignored items';
@@ -66,9 +72,9 @@ class DataSourceParsedController extends Controller
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
 
-        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
+        $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
 
-        $bindings['ItemList'] = $this->getServiceDataSourceParsed()->getAllNintendoCoUkInLinkIdList($ignoreIdList);
+        $bindings['ItemList'] = $this->repoDataSourceParsed->getAllNintendoCoUkInLinkIdList($ignoreIdList);
         $bindings['ListRef'] = 'ignored';
 
         return view('staff.data-sources.parsed.list-ignored', $bindings);
@@ -76,7 +82,7 @@ class DataSourceParsedController extends Controller
 
     public function addGameNintendoCoUk($itemId)
     {
-        $dsParsedItem = $this->getServiceDataSourceParsed()->find($itemId);
+        $dsParsedItem = $this->repoDataSourceParsed->find($itemId);
         if (!$dsParsedItem) abort(404);
 
         $pageTitle = 'Add game from Nintendo.co.uk API';

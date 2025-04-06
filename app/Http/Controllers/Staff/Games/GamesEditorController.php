@@ -24,6 +24,8 @@ use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
+use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -63,7 +65,9 @@ class GamesEditorController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private NewsRepository $repoNews,
         private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper
+        private GameDeveloperRepository $repoGameDeveloper,
+        private DataSourceIgnoreRepository $repoDataSourceIgnore,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
     }
@@ -218,7 +222,7 @@ class GamesEditorController extends Controller
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
 
-        $dsCurrentParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $dsCurrentParsedItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
 
         if ($request->isMethod('post')) {
 
@@ -227,7 +231,7 @@ class GamesEditorController extends Controller
             $nintendoCoUkLinkId = $request->nintendo_co_uk_link_id;
 
             if ($nintendoCoUkLinkId) {
-                $dsNewParsedItem = $this->getServiceDataSourceParsed()->getNintendoCoUkByLinkId($nintendoCoUkLinkId);
+                $dsNewParsedItem = $this->repoDataSourceParsed->getNintendoCoUkByLinkId($nintendoCoUkLinkId);
                 if (!$dsNewParsedItem) abort(500);
             } else {
                 $dsNewParsedItem = null;
@@ -302,14 +306,14 @@ class GamesEditorController extends Controller
         $bindings['GameData'] = $game;
         $bindings['GameId'] = $gameId;
 
-        $ignoreIdList = $this->getServiceDataSourceIgnore()->getNintendoCoUkLinkIdList();
-        $dsNintendoCoUkParsedList = $this->getServiceDataSourceParsed()->getAllNintendoCoUkWithNoGameId($ignoreIdList);
+        $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
+        $dsNintendoCoUkParsedList = $this->repoDataSourceParsed->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         if ($dsCurrentParsedItem) {
             $dsNintendoCoUkParsedList->prepend($dsCurrentParsedItem);
         }
         $bindings['DSNintendoCoUkParsedList'] = $dsNintendoCoUkParsedList;
 
-        $dsParsedItem = $this->getServiceDataSourceParsed()->getSourceNintendoCoUkForGame($gameId);
+        $dsParsedItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
         if ($dsParsedItem) {
             $bindings['DSParsedItem'] = $dsParsedItem;
         }
@@ -356,8 +360,8 @@ class GamesEditorController extends Controller
             $serviceGameImages->deleteSquare();
             $serviceGameImages->deleteHeader();
             // Data source cleanup
-            $this->getServiceDataSourceParsed()->clearGameIdFromNintendoCoUkItems($gameId);
-            $this->getServiceDataSourceParsed()->removeSwitchEshopItems($gameId);
+            $this->repoDataSourceParsed->clearGameIdFromNintendoCoUkItems($gameId);
+            $this->repoDataSourceParsed->removeSwitchEshopItems($gameId);
             // Ready to delete the game
             $this->repoGame->delete($gameId);
 

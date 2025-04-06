@@ -1,12 +1,11 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\DataSourceIgnore;
 
 use App\Models\DataSource;
 use App\Models\DataSourceIgnore;
 
-class DataSourceIgnoreService
+class Repository
 {
     public function getAllBySource($sourceId)
     {

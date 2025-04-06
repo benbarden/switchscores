@@ -1,11 +1,10 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\DataSource;
 
 use App\Models\DataSource;
 
-class DataSourceService
+class Repository
 {
     public function getAll()
     {
@@ -25,10 +24,5 @@ class DataSourceService
     public function getSourceNintendoCoUk()
     {
         return $this->getByName(DataSource::SOURCE_NINTENDO_CO_UK);
-    }
-
-    public function getSourceWikipedia()
-    {
-        return $this->getByName(DataSource::SOURCE_WIKIPEDIA);
     }
 }
