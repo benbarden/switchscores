@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Domain\ReviewDraft\ImportByFeed;
+use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 
 use App\Traits\SwitchServices;
 
@@ -48,7 +49,9 @@ class ImportActiveFeeds extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $partnerFeedLinks = $this->getServicePartnerFeedLink()->getActive();
+        $repoPartnerFeedLink = new PartnerFeedLinkRepository;
+
+        $partnerFeedLinks = $repoPartnerFeedLink->getActive();
         if (!$partnerFeedLinks) {
             $logger->error('No feeds to import!');
             return 0;

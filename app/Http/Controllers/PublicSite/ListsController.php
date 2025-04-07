@@ -5,20 +5,19 @@ namespace App\Http\Controllers\PublicSite;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDb;
 use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
 
 use Illuminate\Routing\Controller as Controller;
 
 class ListsController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameListsRepository $repoGameLists,
         private GameListsDb $dbGameLists,
         private ReviewLinkDb $dbReviewLink,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private ReviewLinkRepository $repoReviewLink
     )
     {
     }
@@ -94,7 +93,7 @@ class ListsController extends Controller
         $bindings['TopTitle'] = 'Recent reviews of Nintendo Switch games';
         $bindings['PageTitle'] = 'Recent reviews';
 
-        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(35);
+        $bindings['ReviewList'] = $this->repoReviewLink->recentNaturalOrder(35);
 
         return view('public.lists.list-recent-reviews', $bindings);
     }

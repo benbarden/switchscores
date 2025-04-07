@@ -7,16 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Models\PartnerFeedLink;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 
-use App\Traits\SwitchServices;
-
 class FeedLinksController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -85,7 +80,7 @@ class FeedLinksController extends Controller
 
             $values = $this->buildValuesArray($request);
 
-            $this->getServicePartnerFeedLink()->create($values);
+            $this->repoPartnerFeedLink->create($values);
 
             return redirect(route('staff.reviews.feedLinks.index'));
 
@@ -93,9 +88,9 @@ class FeedLinksController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['FeedStatusList'] = $this->getServicePartnerFeedLink()->getFeedStatusDropdown();
-        $bindings['DataTypeList'] = $this->getServicePartnerFeedLink()->getDataTypeDropdown();
-        $bindings['ItemNodeList'] = $this->getServicePartnerFeedLink()->getItemNodeDropdown();
+        $bindings['FeedStatusList'] = $this->repoPartnerFeedLink->getFeedStatusDropdown();
+        $bindings['DataTypeList'] = $this->repoPartnerFeedLink->getDataTypeDropdown();
+        $bindings['ItemNodeList'] = $this->repoPartnerFeedLink->getItemNodeDropdown();
 
         $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
 
@@ -125,7 +120,7 @@ class FeedLinksController extends Controller
 
             $values = $this->buildValuesArray($request);
 
-            $this->getServicePartnerFeedLink()->edit($feedLink, $values);
+            $this->repoPartnerFeedLink->edit($feedLink, $values);
 
             return redirect(route('staff.reviews.feedLinks.index'));
 
@@ -134,9 +129,9 @@ class FeedLinksController extends Controller
         $bindings['FeedLinkData'] = $feedLink;
         $bindings['LinkId'] = $linkId;
 
-        $bindings['FeedStatusList'] = $this->getServicePartnerFeedLink()->getFeedStatusDropdown();
-        $bindings['DataTypeList'] = $this->getServicePartnerFeedLink()->getDataTypeDropdown();
-        $bindings['ItemNodeList'] = $this->getServicePartnerFeedLink()->getItemNodeDropdown();
+        $bindings['FeedStatusList'] = $this->repoPartnerFeedLink->getFeedStatusDropdown();
+        $bindings['DataTypeList'] = $this->repoPartnerFeedLink->getDataTypeDropdown();
+        $bindings['ItemNodeList'] = $this->repoPartnerFeedLink->getItemNodeDropdown();
 
         $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
 

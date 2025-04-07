@@ -13,6 +13,8 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Domain\GameTag\Repository as GameTagRepository;
 
 use App\Models\Game;
 
@@ -34,7 +36,9 @@ class GamesDetailController extends Controller
         private DataSourceRepository $repoDataSource,
         private GamePublisherRepository $repoGamePublisher,
         private GameDeveloperRepository $repoGameDeveloper,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private QuickReviewRepository $repoQuickReview,
+        private GameTagRepository $repoGameTag
     )
     {
     }
@@ -79,10 +83,10 @@ class GamesDetailController extends Controller
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;
         $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
-        $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
+        $bindings['GameQuickReviewList'] = $this->repoQuickReview->byGameActive($gameId);
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
-        $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+        $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
         $bindings['GameTitleHashes'] = $this->getServiceGameTitleHash()->getByGameId($gameId);
 
         // Differences

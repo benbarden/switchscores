@@ -26,6 +26,7 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\GameTag\Repository as GameTagRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -67,7 +68,8 @@ class GamesEditorController extends Controller
         private GamePublisherRepository $repoGamePublisher,
         private GameDeveloperRepository $repoGameDeveloper,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private GameTagRepository $repoGameTag
     )
     {
     }
@@ -350,7 +352,7 @@ class GamesEditorController extends Controller
             $bindings['FormMode'] = 'delete-post';
 
             $this->getServiceGameTitleHash()->deleteByGameId($gameId);
-            $this->getServiceGameTag()->deleteGameTags($gameId);
+            $this->repoGameTag->deleteByGameId($gameId);
             $this->repoGameDeveloper->deleteByGameId($gameId);
             $this->repoGamePublisher->deleteByGameId($gameId);
             // Game import rule cleanup

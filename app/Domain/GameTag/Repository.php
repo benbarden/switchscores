@@ -15,7 +15,7 @@ class Repository
         ]);
     }
 
-    public function deleteAllForGame($gameId)
+    public function deleteByGameId($gameId)
     {
         GameTag::where('game_id', $gameId)->delete();
     }

@@ -4,20 +4,16 @@ namespace App\Http\Controllers\PublicSite;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
-
-use App\Traits\SwitchServices;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 class WelcomeController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameListsRepository $repoGameLists,
-        private TopRatedDbQueries $dbTopRated
+        private TopRatedDbQueries $dbTopRated,
+        private ReviewLinkRepository $repoReviewLink
     )
     {
     }
@@ -36,7 +32,7 @@ class WelcomeController extends Controller
         $bindings['RecentTopRatedLimit'] = $recentTopRatedLimit;
         $bindings['RecentWithGoodRanks'] = $recentWithGoodRanks;
 
-        $bindings['ReviewList'] = $this->getServiceReviewLink()->getLatestNaturalOrder(30);
+        $bindings['ReviewList'] = $this->repoReviewLink->recentNaturalOrder(30);
 
         $thisYear = date('Y');
         $topRatedThisYear = $this->dbTopRated->byYear($thisYear, 10);

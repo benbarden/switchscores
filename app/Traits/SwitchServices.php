@@ -5,10 +5,7 @@ namespace App\Traits;
 use App\Services\GameCalendarService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameService;
-use App\Services\GameTagService;
 use App\Services\GameTitleHashService;
-use App\Services\PartnerFeedLinkService;
-use App\Services\QuickReviewService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 
@@ -95,38 +92,11 @@ trait SwitchServices
 
     /**
      * @deprecated
-     * @return GameTagService
-     */
-    public function getServiceGameTag()
-    {
-        return $this->loadService('GameTagService');
-    }
-
-    /**
-     * @deprecated
      * @return GameTitleHashService
      */
     public function getServiceGameTitleHash()
     {
         return $this->loadService('GameTitleHashService');
-    }
-
-    /**
-     * @deprecated
-     * @return PartnerFeedLinkService
-     */
-    public function getServicePartnerFeedLink()
-    {
-        return $this->loadService('PartnerFeedLinkService');
-    }
-
-    /**
-     * @deprecated
-     * @return QuickReviewService
-     */
-    public function getServiceQuickReview()
-    {
-        return $this->loadService('QuickReviewService');
     }
 
     /**

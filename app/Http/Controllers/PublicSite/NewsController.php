@@ -12,6 +12,7 @@ use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
+use App\Domain\GameTag\Repository as GameTagRepository;
 
 use App\Domain\Shortcode\DynamicShortcode;
 use App\Domain\Shortcode\TopRated;
@@ -35,7 +36,8 @@ class NewsController extends Controller
         private NewsRepository $repoNews,
         private NewsCategoryRepository $repoNewsCategory,
         private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper
+        private GameDeveloperRepository $repoGameDeveloper,
+        private GameTagRepository $repoGameTag
     )
     {
     }
@@ -186,7 +188,7 @@ class NewsController extends Controller
             $gameId = $newsItem->game_id;
             $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
             $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
-            $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+            $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
         }
 
         // Category links

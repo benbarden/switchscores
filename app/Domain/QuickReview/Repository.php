@@ -87,4 +87,13 @@ class Repository
         $reviewList = $reviewList->get();
         return $reviewList;
     }
+
+    public function getStatusList()
+    {
+        $statuses = [];
+        $statuses[] = ['id' => QuickReview::STATUS_PENDING, 'title' => 'Pending'];
+        $statuses[] = ['id' => QuickReview::STATUS_ACTIVE, 'title' => 'Active'];
+        $statuses[] = ['id' => QuickReview::STATUS_INACTIVE, 'title' => 'Inactive'];
+        return $statuses;
+    }
 }

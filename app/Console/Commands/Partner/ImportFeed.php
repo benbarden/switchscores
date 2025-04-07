@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Domain\ReviewDraft\ImportByFeed;
+use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 
 use App\Traits\SwitchServices;
 
@@ -51,7 +52,9 @@ class ImportFeed extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $partnerFeedLink = $this->getServicePartnerFeedLink()->find($argFeedId);
+        $repoPartnerFeedLink = new PartnerFeedLinkRepository;
+
+        $partnerFeedLink = $repoPartnerFeedLink->find($argFeedId);
         if (!$partnerFeedLink) {
             $logger->error('Cannot find feed with id: '.$argFeedId);
             return 0;

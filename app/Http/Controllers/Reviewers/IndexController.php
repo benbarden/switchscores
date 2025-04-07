@@ -10,6 +10,7 @@ use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 use App\Traits\SwitchServices;
 
@@ -23,7 +24,8 @@ class IndexController extends Controller
         private CampaignRepository $repoCampaign,
         private ReviewDraftRepository $repoReviewDraft,
         private UnrankedRepository $repoUnranked,
-        private DbCampaignGame $dbCampaignGame
+        private DbCampaignGame $dbCampaignGame,
+        private ReviewLinkRepository $repoReviewLink
     )
     {
     }
@@ -43,16 +45,14 @@ class IndexController extends Controller
         $partnerId = $reviewSite->id;
         $partnerUrl = $reviewSite->website_url;
 
-        $serviceReviewLink = $this->getServiceReviewLink();
-
         $bindings['PartnerData'] = $reviewSite;
 
         // Review stats (for infobox)
-        $reviewStats = $serviceReviewLink->getSiteReviewStats($partnerId);
+        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($partnerId);
         $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
 
         // Recent reviews
-        $bindings['SiteReviewsLatest'] = $serviceReviewLink->getLatestBySite($partnerId, 10);
+        $bindings['SiteReviewsLatest'] = $this->repoReviewLink->bySiteLatest($partnerId, 10);
 
         // Feed items
         $bindings['PartnerFeed'] = $this->repoPartnerFeedLink->firstBySite($partnerId);

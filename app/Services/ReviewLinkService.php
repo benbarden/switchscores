@@ -19,26 +19,6 @@ class ReviewLinkService
         return $reviewCount;
     }
 
-    public function getLatestNaturalOrder($limit = 10)
-    {
-        return ReviewLink::orderBy('review_date', 'desc')->limit($limit)->get();
-    }
-
-    /**
-     * @param $siteId
-     * @param $limit
-     * @return mixed
-     * @deprecated
-     */
-    public function getLatestBySite($siteId, $limit = 20)
-    {
-        return ReviewLink::where('site_id', $siteId)
-            ->orderBy('review_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->limit($limit)
-            ->get();
-    }
-
     public function getByGame($gameId)
     {
         $gameReviews = ReviewLink::select('review_links.*', 'review_sites.name')

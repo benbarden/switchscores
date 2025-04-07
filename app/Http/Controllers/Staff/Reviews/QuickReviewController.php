@@ -44,7 +44,7 @@ class QuickReviewController extends Controller
         }
 
         $bindings['QuickReviewList'] = $reviewList;
-        $bindings['QuickReviewStatusList'] = $this->getServiceQuickReview()->getStatusList();
+        $bindings['QuickReviewStatusList'] = $this->repoQuickReview->getStatusList();
 
         return view('staff.reviews.quick-reviews.list', $bindings);
     }
@@ -60,7 +60,7 @@ class QuickReviewController extends Controller
         $reviewData = $this->repoQuickReview->find($reviewId);
         if (!$reviewData) abort(404);
 
-        $statusList = $this->getServiceQuickReview()->getStatusList();
+        $statusList = $this->repoQuickReview->getStatusList();
 
         if ($request->isMethod('post')) {
 
@@ -87,7 +87,7 @@ class QuickReviewController extends Controller
                 // Update game review stats
                 $game = $this->repoGame->find($gameId);
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
                 // Credit points
@@ -139,7 +139,7 @@ class QuickReviewController extends Controller
             if ($game) {
                 // Update game review stats
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
             }
 

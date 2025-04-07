@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
 use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class ReviewSitesController extends Controller
@@ -13,6 +16,7 @@ class ReviewSitesController extends Controller
 
     public function __construct(
         private Breadcrumbs $viewBreadcrumbs,
+        private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite
     )
     {
@@ -38,8 +42,6 @@ class ReviewSitesController extends Controller
     {
         $bindings = [];
 
-        $serviceReviewLink = $this->getServiceReviewLink();
-
         $reviewSite = $this->repoReviewSite->getByLinkTitle($linkTitle);
 
         if (!$reviewSite) {
@@ -56,9 +58,9 @@ class ReviewSitesController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        $siteReviewsLatest = $serviceReviewLink->getLatestBySite($siteId);
-        $reviewStats = $serviceReviewLink->getSiteReviewStats($siteId);
-        $reviewScoreDistribution = $serviceReviewLink->getSiteScoreDistribution($siteId);
+        $siteReviewsLatest = $this->repoReviewLink->bySiteLatest($siteId);
+        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($siteId);
+        $reviewScoreDistribution = $this->getServiceReviewLink()->getSiteScoreDistribution($siteId);
 
         $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
         if ($reviewScoreDistribution) {

@@ -60,9 +60,24 @@ class Repository
         return ReviewLink::orderBy('id', 'desc')->limit($limit)->get();
     }
 
+    public function recentNaturalOrder($limit)
+    {
+        return ReviewLink::orderBy('review_date', 'desc')->limit($limit)->get();
+    }
+
     public function bySite($siteId)
     {
         return ReviewLink::where('site_id', $siteId)->get();
+    }
+
+    public function bySiteLatest($siteId, $limit = 20)
+    {
+        $reviews = ReviewLink::where('site_id', $siteId)->orderBy('review_date', 'desc')->orderBy('id', 'desc');
+        if ($limit) {
+            $reviews = $reviews->limit($limit);
+        }
+        $reviews = $reviews->get();
+        return $reviews;
     }
 
     public function bySiteGameIdList($siteId)
@@ -97,13 +112,5 @@ class Repository
         }
 
         return $ratingNormalised;
-    }
-
-    public function getLatestBySite($siteId)
-    {
-        return ReviewLink::where('site_id', $siteId)
-            ->orderBy('review_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->first();
     }
 }

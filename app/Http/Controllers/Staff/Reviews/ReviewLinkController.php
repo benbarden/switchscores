@@ -11,6 +11,7 @@ use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
@@ -37,7 +38,8 @@ class ReviewLinkController extends Controller
         private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite,
         private GameRepository $repoGame,
-        private ReviewLinkStats $reviewLinkStats
+        private ReviewLinkStats $reviewLinkStats,
+        private QuickReviewRepository $repoQuickReview
     )
     {
     }
@@ -114,7 +116,7 @@ class ReviewLinkController extends Controller
 
                 // Update game review stats
                 $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
-                $quickReviews = $this->getServiceQuickReview()->getActiveByGame($gameId);
+                $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
             }

@@ -9,8 +9,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\Tag\Repository as TagRepository;
@@ -18,8 +16,6 @@ use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
 class GamesTagController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -54,7 +50,7 @@ class GamesTagController extends Controller
             $bindings['FormMode'] = 'edit-post';
 
             // Delete existing tags for this game
-            $this->repoGameTag->deleteAllForGame($gameId);
+            $this->repoGameTag->deleteByGameId($gameId);
 
             $tagItems = $request->tag_item;
             if ($tagItems) {

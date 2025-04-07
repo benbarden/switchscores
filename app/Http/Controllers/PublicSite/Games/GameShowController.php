@@ -8,11 +8,13 @@ use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
+use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\Game\AutoDescription;
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
@@ -36,7 +38,9 @@ class GameShowController extends Controller
         private AutoDescription $autoDescription,
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private AmazonAffiliate $affiliateAmazon,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private QuickReviewRepository $repoQuickReview,
+        private GameTagRepository $repoGameTag
     )
     {
     }
@@ -68,10 +72,10 @@ class GameShowController extends Controller
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
-        $bindings['GameQuickReviewList'] = $this->getServiceQuickReview()->getActiveByGame($gameId);
+        $bindings['GameQuickReviewList'] = $this->repoQuickReview->byGameActive($gameId);
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
-        $bindings['GameTags'] = $this->getServiceGameTag()->getByGame($gameId);
+        $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
 
         // Amazon
         $tempAmazonUkLink = $gameData['amazon_uk_link'];
