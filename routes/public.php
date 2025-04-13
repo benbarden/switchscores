@@ -16,6 +16,9 @@ Route::get('/invite-request-failure', 'PublicSite\AboutController@inviteRequestF
 Route::get('/login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->name('auth.login.twitter');
 Route::get('/login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
 
+// Switch 2
+Route::get('/switch-2', 'PublicSite\ConsoleController@landingSwitch2')->name('console.landing.switch-2');
+
 // Static content
 Route::get('/about', 'PublicSite\AboutController@landing')->name('about.landing');
 Route::get('/about/changelog', 'PublicSite\AboutController@changelog')->name('about.changelog');
