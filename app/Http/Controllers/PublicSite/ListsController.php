@@ -22,23 +22,11 @@ class ListsController extends Controller
     {
     }
 
-    public function landing()
-    {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Lists');
-
-        $bindings['TopTitle'] = 'Lists';
-        $bindings['PageTitle'] = 'Lists';
-
-        return view('public.lists.landing', $bindings);
-    }
-
     public function recentReleases()
     {
         $bindings = [];
 
-        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality(50);
+        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality(1, 50);
         $bindings['CalendarThisMonth'] = date('Y-m');
 
         $bindings['TopTitle'] = 'Nintendo Switch recent releases';

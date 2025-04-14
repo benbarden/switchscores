@@ -31,19 +31,23 @@ Route::get('/help', 'PublicSite\HelpController@landing')->name('help.landing');
 Route::get('/help/low-quality-filter', 'PublicSite\HelpController@lowQualityFilter')->name('help.low-quality-filter');
 
 // Lists
-Route::get('/lists', 'PublicSite\ListsController@landing')->name('lists.landing');
-Route::get('/games/recent', 'PublicSite\ListsController@recentReleases')->name('games.recentReleases');
-Route::get('/games/upcoming', 'PublicSite\ListsController@upcomingReleases')->name('games.upcomingReleases');
+Route::redirect('/lists', '/games')->name('lists.landing');
+Route::redirect('/games/recent', '/c/switch-1/new-releases')->name('games.recentReleases');
+Route::redirect('/games/upcoming', '/c/switch-1/upcoming')->name('games.upcomingReleases');
 Route::get('/games/on-sale', 'PublicSite\ListsController@gamesOnSale')->name('games.onSale');
 Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
 Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
 Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@buyersGuideHoliday2024US')->name('lists.buyersGuideHoliday2024US');
 
 // Switch 1/2
-Route::get('/c/{console:slug}', 'PublicSite\ConsoleController@landing')->name('console.landing');
+Route::controller('PublicSite\ConsoleController')->group(function () {
+    Route::get('/c/{console:slug}', 'landing')->name('console.landing');
+    Route::get('/c/{console:slug}/new-releases', 'newReleases')->name('console.newReleases');
+    Route::get('/c/{console:slug}/upcoming', 'upcomingReleases')->name('console.upcomingReleases');
+});
 
 // Main game pages
-Route::match(['get', 'post'], '/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');
+Route::get('/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');
 Route::match(['get', 'post'], '/games/search', 'PublicSite\Games\SearchController@show')->name('games.search');
 
 // Browse by...

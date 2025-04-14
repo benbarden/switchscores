@@ -13,4 +13,9 @@ class Repository
             ['id' => Console::ID_SWITCH_2, 'name' => Console::DESC_SWITCH_2],
         ];
     }
+
+    public function find($id)
+    {
+        return Console::find($id);
+    }
 }

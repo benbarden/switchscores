@@ -35,9 +35,9 @@ class Repository
         return $gameList;
     }
 
-    public function recentlyReleased($includeLowQuality = false, $limit = 100)
+    public function recentlyReleased($consoleId, $includeLowQuality = false, $limit = 100)
     {
-        $games = Game::where('eu_is_released', 1);
+        $games = Game::where('console_id', $consoleId)->where('eu_is_released', 1);
 
         if (!$includeLowQuality) {
             $games = $games->where('is_low_quality', 0);
@@ -53,14 +53,14 @@ class Repository
         return $games;
     }
 
-    public function recentlyReleasedAll($limit = 100)
+    public function recentlyReleasedAll($consoleId, $limit = 100)
     {
-        return $this->recentlyReleased(true, $limit);
+        return $this->recentlyReleased($consoleId, true, $limit);
     }
 
-    public function recentlyReleasedExceptLowQuality($limit = 100)
+    public function recentlyReleasedExceptLowQuality($consoleId, $limit = 100)
     {
-        return $this->recentlyReleased(false, $limit);
+        return $this->recentlyReleased($consoleId, false, $limit);
     }
 
     public function recentlyAdded($limit = 100)
@@ -112,9 +112,10 @@ class Repository
         return $games;
     }
 
-    public function upcomingNextDays($days, $limit = null)
+    public function upcomingNextDays($consoleId, $days, $limit = null)
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::where('console_id', $consoleId)
+            ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
             ->orderBy('eu_release_date', 'asc')
@@ -129,9 +130,10 @@ class Repository
         return $games;
     }
 
-    public function upcomingBetweenDays($startDays, $endDays, $limit = null)
+    public function upcomingBetweenDays($consoleId, $startDays, $endDays, $limit = null)
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::where('console_id', $consoleId)
+            ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $startDays)
             ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $endDays)
@@ -147,9 +149,10 @@ class Repository
         return $games;
     }
 
-    public function upcomingBeyondDays($days, $limit = null)
+    public function upcomingBeyondDays($consoleId, $days, $limit = null)
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::where('console_id', $consoleId)
+            ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
             ->orderBy('eu_release_date', 'asc')

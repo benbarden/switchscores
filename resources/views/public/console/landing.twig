@@ -9,16 +9,24 @@
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
         {{ headings.roundedBlue('h2', 'Newest') }}
-        <p>Updated weekly. <a href="{{ route('games.recentReleases') }}">View all new games</a>.</p>
-        {{ gameslayouts.noHero(NewReleases, 1, 'no-price') }}
+        {% if NewReleases|length %}
+            <p>Updated weekly. <a href="{{ route('console.newReleases', {'console': Console}) }}">View all new games</a>.</p>
+            {{ gameslayouts.noHero(NewReleases, 1, 'no-price') }}
+        {% else %}
+            <p>There are currently no new releases to show.</p>
+        {% endif %}
 
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
         {{ headings.roundedBlue('h2', 'Upcoming') }}
-        <p>Updated weekly. <a href="{{ route('games.upcomingReleases') }}">View all upcoming games</a>.</p>
-        {{ gameslayouts.noHero(UpcomingReleases, 1, 'no-price') }}
+        {% if UpcomingReleases|length %}
+            <p>Updated weekly. <a href="{{ route('console.upcomingReleases', {'console': Console}) }}">View all upcoming games</a>.</p>
+            {{ gameslayouts.noHero(UpcomingReleases, 1, 'no-price') }}
+        {% else %}
+            <p>There are currently no upcoming titles to show.</p>
+        {% endif %}
 
     </div>
 
@@ -27,23 +35,35 @@
         {{ headings.roundedBlue('h4', 'Search games') }}
         {% include 'modules/game/search/form-mini.twig' %}
 
-        {{ headings.roundedBlue('h4', 'Browse all games') }}
-        {% include 'public/games/navRightBrowseAll.twig' %}
+        {% if Console.name == 'Switch 1' %}
 
-        {{ headings.roundedBlue('h4', 'More lists') }}
-        <ul>
-            <li><a href="{{ route('games.recentReleases') }}">Newest games</a></li>
-            <li><a href="{{ route('games.upcomingReleases') }}">Upcoming games</a></li>
-            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-            <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
-            <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
-        </ul>
+            {{ headings.roundedBlue('h4', 'Browse all games') }}
+            {% include 'public/games/navRightBrowseAll.twig' %}
 
-        {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
-        {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+            {{ headings.roundedBlue('h4', 'More lists') }}
+            <ul>
+                <li><a href="{{ route('games.recentReleases') }}">Newest games</a></li>
+                <li><a href="{{ route('games.upcomingReleases') }}">Upcoming games</a></li>
+                <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+                <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+                <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+            </ul>
 
-        {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
-        {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
+            {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
+            {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+
+            {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
+            {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
+
+        {% else %}
+
+            {{ headings.roundedBlue('h4', 'Coming soon') }}
+            <p>
+                As we approach the launch of the Switch 2, we'll be adding more links here.
+                Stay tuned!
+            </p>
+
+        {% endif %}
 
     </div>
 
