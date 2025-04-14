@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Models\Game;
@@ -103,10 +104,24 @@ class DataSourceParsedController extends Controller
 
             $title = $dsParsedItem->title;
 
+            // Perform common title replacements
+            $title = str_replace('®', '', $title);
+            $title = str_replace('™', '', $title);
+            $title = str_replace(' – ', ': ', $title);
+
             // Check title hash is unique
             $titleLowercase = strtolower($title);
             $hashedTitle = $serviceGameTitleHash->generateHash($title);
             $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+
+            // Switch 2 duplicate title check
+            if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $existingTitleHash != null) {
+                // Generate new title hash
+                $title .= ' (Switch 2)';
+                $titleLowercase = strtolower($title);
+                $hashedTitle = $serviceGameTitleHash->generateHash($title);
+                $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+            }
 
             // Check for duplicates
             if ($existingTitleHash != null) {
