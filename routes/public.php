@@ -41,9 +41,9 @@ Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@bu
 
 // Switch 1/2
 Route::controller('PublicSite\ConsoleController')->group(function () {
-    Route::get('/c/{console:slug}', 'landing')->name('console.landing');
-    Route::get('/c/{console:slug}/new-releases', 'newReleases')->name('console.newReleases');
-    Route::get('/c/{console:slug}/upcoming', 'upcomingReleases')->name('console.upcomingReleases');
+    Route::get('/c/{console:slug?}', 'landing')->name('console.landing');
+    Route::get('/c/{console:slug?}/new-releases', 'newReleases')->name('console.newReleases');
+    Route::get('/c/{console:slug?}/upcoming', 'upcomingReleases')->name('console.upcomingReleases');
 });
 
 // Main game pages
