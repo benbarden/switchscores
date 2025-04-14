@@ -19,7 +19,7 @@ class AutoDescription
 
         if ($this->game->category) {
             if ($this->game->category->blurb_option) {
-                $blurb .= $blurbCategory->parse($this->game->category).'. ';
+                $blurb .= $blurbCategory->parse($this->game->category, $this->game->console).'. ';
             } else {
                 $blurb .= $default;
             }
