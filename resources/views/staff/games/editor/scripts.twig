@@ -10,6 +10,7 @@
         // *** Main *** //
         formVals['title'] = "{{ GameData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ GameData.link_title }}";
+        formVals['console_id'] = "{{ GameData.console_id }}";
         formVals['category_id'] = "{{ GameData.category_id }}";
         formVals['series_id'] = "{{ GameData.series_id }}";
         formVals['collection_id'] = "{{ GameData.collection_id }}";
@@ -49,6 +50,7 @@
         // *** Main *** //
         formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
         formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['console_id'] = "{{ old('console_id') }}";
         formVals['category_id'] = "{{ old('category_id') }}";
         formVals['series_id'] = "{{ old('series_id') }}";
         formVals['collection_id'] = "{{ old('collection_id') }}";
@@ -89,6 +91,7 @@
     // *** Main *** //
     $('#title').val(formVals['title']);
     $('#link_title').val(formVals['link_title']);
+    $('#console_id').val(formVals['console_id']);
     $('#category_id').val(formVals['category_id']);
     $('#series_id').val(formVals['series_id']);
     $('#collection_id').val(formVals['collection_id']);

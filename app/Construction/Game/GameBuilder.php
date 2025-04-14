@@ -43,6 +43,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setConsoleId($consoleId): GameBuilder
+    {
+        $this->game->console_id = $consoleId;
+        return $this;
+    }
+
     public function setEuReleaseDate($releaseDate): GameBuilder
     {
         $this->game->eu_release_date = $releaseDate;

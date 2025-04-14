@@ -44,6 +44,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="console_id" class="col-md-3 control-label">Console</label>
+                    <div class="col-md-6">
+                        <select id="console_id" class="form-control" name="console_id" size="2">
+                            {% for item in ConsoleList %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="category_id" class="col-md-3 control-label">Category</label>
                     <div class="col-md-6">
                         <select id="category_id" class="form-control" name="category_id">

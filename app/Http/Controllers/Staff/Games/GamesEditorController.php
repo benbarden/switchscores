@@ -27,6 +27,7 @@ use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -49,6 +50,7 @@ class GamesEditorController extends Controller
     private $validationRules = [
         'title' => 'required|max:255',
         'link_title' => 'required|max:100',
+        'console_id' => 'required',
         'price_eshop' => 'max:6',
         'players' => 'max:10',
         //'packshot_square_url_override' => 'required_with:nintendo_store_url_override'
@@ -69,7 +71,8 @@ class GamesEditorController extends Controller
         private GameDeveloperRepository $repoGameDeveloper,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
-        private GameTagRepository $repoGameTag
+        private GameTagRepository $repoGameTag,
+        private ConsoleRepository $repoConsole
     )
     {
     }
@@ -151,6 +154,7 @@ class GamesEditorController extends Controller
 
         $bindings['FormMode'] = 'add';
 
+        $bindings['ConsoleList'] = $this->repoConsole->consoleList();
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
@@ -201,6 +205,7 @@ class GamesEditorController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameId'] = $gameId;
 
+        $bindings['ConsoleList'] = $this->repoConsole->consoleList();
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();

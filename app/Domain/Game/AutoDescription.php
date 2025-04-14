@@ -2,6 +2,7 @@
 
 namespace App\Domain\Game;
 
+use App\Models\Console;
 use App\Models\Game;
 use App\Domain\Category\Blurb as CategoryBlurb;
 
@@ -25,7 +26,14 @@ class AutoDescription
         } elseif ($this->game->eu_is_released == 1) {
             $blurb .= ' currently uncategorised. (Help us out!) ';
         } else {
-            $blurb .= ' an upcoming game for the Nintendo Switch. ';
+            $blurb .= ' an upcoming game';
+            if ($this->game->console->id == Console::ID_SWITCH_1) {
+                $blurb .= ' for the Nintendo Switch 1. ';
+            } elseif ($this->game->console->id == Console::ID_SWITCH_2) {
+                $blurb .= ' for the Nintendo Switch 2. ';
+            } else {
+                $blurb .= '.';
+            }
         }
 
         return $blurb;

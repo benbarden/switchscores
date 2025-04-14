@@ -24,6 +24,9 @@
                 <h1 style="margin: 10px 0;">
                     {{ GameData.title }}
                 </h1>
+                {% if GameData.console_id %}
+                    <span class="h4 label label-info">{{ GameData.console.name }}</span>
+                {% endif %}
 
                 {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
                 {% if boxartUrl %}

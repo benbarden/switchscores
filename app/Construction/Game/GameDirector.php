@@ -37,6 +37,9 @@ class GameDirector
         if (array_key_exists('link_title', $params)) {
             $this->builder->setLinkTitle($params['link_title']);
         }
+        if (array_key_exists('console_id', $params)) {
+            $this->builder->setConsoleId($params['console_id']);
+        }
         if (array_key_exists('eu_release_date', $params)) {
             $this->builder->setEuReleaseDate($params['eu_release_date']);
             $releaseYear = $this->buildReleaseYear($params['eu_release_date']);

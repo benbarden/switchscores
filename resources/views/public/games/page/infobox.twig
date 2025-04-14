@@ -1,5 +1,18 @@
 <table class="table table-condensed table-responsive">
 
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Console</span>
+        </td>
+        <td>
+            {% if GameData.console_id %}
+                {{ GameData.console.name }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+
     {% if GameData.category_id %}
         <tr>
             <td>

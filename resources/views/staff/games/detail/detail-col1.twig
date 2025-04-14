@@ -3,6 +3,18 @@
 
     <tr>
         <td>
+            <span style="font-weight: bold;">Console</span>
+        </td>
+        <td>
+            {% if GameData.console_id %}
+                {{ GameData.console.name }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
             <span style="font-weight: bold;">Europe release</span>
         </td>
         <td>

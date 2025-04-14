@@ -28,7 +28,7 @@ class Game extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'title', 'link_title', 'price_eshop', 'players', 'rating_avg', 'review_count',
+        'title', 'link_title', 'console_id', 'price_eshop', 'players', 'rating_avg', 'review_count',
         'amazon_uk_link', 'amazon_us_link', 'game_rank', 'video_url',
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
@@ -40,19 +40,9 @@ class Game extends Model implements Auditable
         'is_low_quality', 'packshot_square_url_override'
     ];
 
-    public function gameQualityScore()
+    public function console()
     {
-        return $this->hasOne('App\Models\GameQualityScore', 'game_id', 'id');
-    }
-
-    public function gameRankYear()
-    {
-        return $this->hasOne('App\Models\GameRankYear', 'game_id', 'id');
-    }
-
-    public function gameRankYearMonth()
-    {
-        return $this->hasOne('App\Models\GameRankYearMonth', 'game_id', 'id');
+        return $this->hasOne('App\Models\Console', 'id', 'console_id');
     }
 
     public function category()
@@ -98,6 +88,21 @@ class Game extends Model implements Auditable
     public function gamePublishers()
     {
         return $this->hasMany('App\Models\GamePublisher', 'game_id', 'id');
+    }
+
+    public function gameQualityScore()
+    {
+        return $this->hasOne('App\Models\GameQualityScore', 'game_id', 'id');
+    }
+
+    public function gameRankYear()
+    {
+        return $this->hasOne('App\Models\GameRankYear', 'game_id', 'id');
+    }
+
+    public function gameRankYearMonth()
+    {
+        return $this->hasOne('App\Models\GameRankYearMonth', 'game_id', 'id');
     }
 
     public function eshopUSGame()
