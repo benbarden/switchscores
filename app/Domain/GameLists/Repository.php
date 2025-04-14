@@ -73,9 +73,10 @@ class Repository
      * @param $limit
      * @return mixed
      */
-    public function upcoming($limit = null)
+    public function upcoming($consoleId, $limit = null)
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::where('console_id', $consoleId)
+            ->where('eu_is_released', 0)
             ->where('is_low_quality', 0)
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')

@@ -52,7 +52,6 @@ class ListsController extends Controller
     {
         $bindings = [];
 
-        //$bindings['UpcomingGames'] = $this->repoGameLists->upcoming();
         $bindings['UpcomingNext7Days'] = $this->repoGameLists->upcomingNextDays(7);
         $bindings['UpcomingNext14Days'] = $this->repoGameLists->upcomingBetweenDays(7, 14);
         $bindings['UpcomingNext28Days'] = $this->repoGameLists->upcomingBetweenDays(14, 28);

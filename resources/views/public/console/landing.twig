@@ -1,0 +1,52 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h2', 'Newest') }}
+        <p>Updated weekly. <a href="{{ route('games.recentReleases') }}">View all new games</a>.</p>
+        {{ gameslayouts.noHero(NewReleases, 1, 'no-price') }}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h2', 'Upcoming') }}
+        <p>Updated weekly. <a href="{{ route('games.upcomingReleases') }}">View all upcoming games</a>.</p>
+        {{ gameslayouts.noHero(UpcomingReleases, 1, 'no-price') }}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h4', 'Search games') }}
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
+        {% include 'public/games/navRightBrowseAll.twig' %}
+
+        {{ headings.roundedBlue('h4', 'More lists') }}
+        <ul>
+            <li><a href="{{ route('games.recentReleases') }}">Newest games</a></li>
+            <li><a href="{{ route('games.upcomingReleases') }}">Upcoming games</a></li>
+            <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+            <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+            <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+        </ul>
+
+        {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
+        {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+
+        {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
+        {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

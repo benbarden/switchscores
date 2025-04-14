@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Models\Console;
+
 // Front page
 Route::get('/', 'PublicSite\WelcomeController@show')->name('welcome');
 
@@ -16,12 +18,12 @@ Route::get('/invite-request-failure', 'PublicSite\AboutController@inviteRequestF
 Route::get('/login/twitter', 'Auth\LoginController@redirectToProviderTwitter')->name('auth.login.twitter');
 Route::get('/login/twitter/callback', 'Auth\LoginController@handleProviderCallbackTwitter')->name('auth.login.twitter.callback');
 
-// Switch 2
-Route::get('/switch-2', 'PublicSite\ConsoleController@landingSwitch2')->name('console.landing.switch-2');
-
 // Static content
-Route::get('/about', 'PublicSite\AboutController@landing')->name('about.landing');
-Route::get('/about/changelog', 'PublicSite\AboutController@changelog')->name('about.changelog');
+Route::controller('PublicSite\AboutController')->group(function () {
+    Route::get('/about', 'landing')->name('about.landing');
+    Route::get('/about/changelog', 'changelog')->name('about.changelog');
+});
+
 Route::get('/privacy', 'PublicSite\PrivacyController@show')->name('privacy');
 
 // Help
@@ -36,6 +38,9 @@ Route::get('/games/on-sale', 'PublicSite\ListsController@gamesOnSale')->name('ga
 Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
 Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
 Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@buyersGuideHoliday2024US')->name('lists.buyersGuideHoliday2024US');
+
+// Switch 1/2
+Route::get('/c/{console:slug}', 'PublicSite\ConsoleController@landing')->name('console.landing');
 
 // Main game pages
 Route::match(['get', 'post'], '/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');
