@@ -6,6 +6,7 @@
             <th class="text-left">Title</th>
             <th class="text-center">Release date (EU)</th>
             {% if DataSource.isNintendoCoUk() %}
+                <th class="text-center">Console</th>
                 <th class="text-center">Price (standard)</th>
                 <th class="text-center">Nintendo Url</th>
             {% endif %}
@@ -25,6 +26,9 @@
                     {{ item.release_date_eu }}
                 </td>
                 {% if DataSource.isNintendoCoUk() %}
+                    <td class="text-center">
+                        {{ item.console.name }}
+                    </td>
                     <td class="text-center">
                         {{ item.price_standard }}
                     </td>

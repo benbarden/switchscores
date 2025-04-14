@@ -33,6 +33,7 @@ class Parser
         $dataSourceParsed = new DataSourceParsed();
 
         $dataSourceParsed->source_id = $dataSourceRaw->source_id;
+        $dataSourceParsed->console_id = $dataSourceRaw->console_id;
         $dataSourceParsed->title = $dataSourceRaw->title;
 
         $this->dataSourceParsed = $dataSourceParsed;

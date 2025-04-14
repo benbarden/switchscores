@@ -15,6 +15,6 @@ class DataSourceRaw extends Model
      * @var array
      */
     protected $fillable = [
-        'source_id', 'game_id', 'title', 'source_data_json'
+        'source_id', 'console_id', 'game_id', 'title', 'source_data_json'
     ];
 }

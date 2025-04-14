@@ -2,6 +2,7 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
+use App\Models\Console;
 use App\Models\DataSourceRaw;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -89,7 +90,12 @@ class Importer
         $this->responseData = json_decode($json, true);
     }
 
-    public function loadGames($limit = 1000, $start = 0, $locale = 'en')
+    public function loadGamesSwitch2($limit = 1000, $start = 0, $locale = 'en')
+    {
+        $this->loadGames($limit, $start, $locale, 'switch2');
+    }
+
+    public function loadGames($limit = 1000, $start = 0, $locale = 'en', $systemType = '')
     {
         /*
          * TEST URL
@@ -106,8 +112,15 @@ class Importer
         // Base url
         $baseUrl = str_replace('{locale}', $locale, self::GET_GAMES_EU_URL);
 
+        // System type
+        if ($systemType == 'switch2') {
+            $systemQuery = '"nintendoswitch2"';
+        } else {
+            $systemQuery = 'nintendoswitch*'." AND product_code_txt:*";
+        }
+
         // Build query string
-        $qsFq = "type:GAME AND system_type:nintendoswitch* AND product_code_txt:*";
+        $qsFq = "type:GAME AND system_type:".$systemQuery;
         $qsQ = "*";
         $qsSort = "sorting_title asc";
         //$qsStart = "0";
@@ -167,9 +180,18 @@ class Importer
             foreach ($rawSourceData as $sourceItem) {
 
                 if (!array_key_exists('title', $sourceItem)) continue;
+                if (!array_key_exists('system_type', $sourceItem)) continue;
+
+                $systemType = $sourceItem['system_type'][0];
+                if ($systemType == 'nintendoswitch2') {
+                    $consoleId = Console::ID_SWITCH_2;
+                } else {
+                    $consoleId = Console::ID_SWITCH_1;
+                }
 
                 $dataSourceRaw = new DataSourceRaw();
                 $dataSourceRaw->source_id = $sourceId;
+                $dataSourceRaw->console_id = $consoleId;
                 $dataSourceRaw->title = $sourceItem['title'];
                 $dataSourceRaw->source_data_json = json_encode($sourceItem);
                 $dataSourceRaw->save();

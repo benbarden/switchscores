@@ -93,6 +93,7 @@ class ImportParseLink extends Command
                     $loadOffsets[] = $i;
                 }
 
+                // Switch 1
                 foreach ($loadOffsets as $offset) {
 
                     $logger->info(sprintf('Loading %s items; offset %s', $loadLimit, $offset));
@@ -113,6 +114,25 @@ class ImportParseLink extends Command
                     $importedItemCount = $importer->getImportedCount();
                     $logger->info('Imported '.$importedItemCount.' item(s)');
 
+                }
+
+                // Switch 2
+                $logger->info('Loading Switch 2 data... ');
+                $importer->loadGamesSwitch2($loadLimit, 0);
+
+                $responseArray = $importer->getResponseData();
+
+                $gameData = $responseArray['response']['docs'];
+                if (!is_array($gameData)) {
+                    $logger->error('Cannot load game data');
+                } else {
+                    $logger->info('Successfully loaded game data into temporary storage.');
+
+                    // Raw data
+                    $logger->info('Importing raw data...');
+                    $importer->importToDb($sourceId);
+                    $importedItemCount = $importer->getImportedCount();
+                    $logger->info('Imported '.$importedItemCount.' item(s)');
                 }
 
             }

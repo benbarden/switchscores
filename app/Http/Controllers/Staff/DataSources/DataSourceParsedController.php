@@ -121,6 +121,7 @@ class DataSourceParsedController extends Controller
 
                 $gameData = [
                     'title' => $title,
+                    'console_id' => $dsParsedItem->console_id,
                     'link_title' => $linkText,
                     'eshop_europe_fs_id' => $dsParsedItem->link_id,
                     //'eu_release_date' => $dsParsedItem->release_date_eu,
