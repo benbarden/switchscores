@@ -4,24 +4,18 @@ namespace App\Http\Controllers\PublicSite\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
-use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\GameCalendar\Repository as GameCalendarRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 class BrowseByDateController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private GameListsRepository $repoGameLists,
-        private GameListsDbQueries $dbGameLists,
         private Breadcrumbs $viewBreadcrumbs,
         private TopRatedDbQueries $dbTopRated,
-        private GameCalendarRepository $repoGameCalendar
+        private GameCalendarRepository $repoGameCalendar,
+        private GameCalendarAllowedDates $allowedDates
     )
     {
     }
@@ -34,10 +28,10 @@ class BrowseByDateController extends Controller
         $bindings['PageTitle'] = 'Nintendo Switch games list - By release date';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By date');
 
-        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
+        $dateList = $this->allowedDates->allowedDates(false);
         $dateListArray = [];
 
-        $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
+        $allowedYears = $this->allowedDates->releaseYears(false);
 
         foreach ($allowedYears as $allowedYear) {
             $dateListArray[$allowedYear] = [];
@@ -91,7 +85,7 @@ class BrowseByDateController extends Controller
 
     public function page($dateUrl)
     {
-        $dates = $this->getServiceGameCalendar()->getAllowedDates();
+        $dates = $this->allowedDates->allowedDates(false);
         if (!in_array($dateUrl, $dates)) {
             abort(404);
         }
