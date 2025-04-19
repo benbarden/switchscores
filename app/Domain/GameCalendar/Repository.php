@@ -30,4 +30,16 @@ class Repository
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
     }
+
+    public function byYear($consoleId, $year)
+    {
+        return Game::where('console_id', $consoleId)
+            ->whereYear('games.eu_release_date', '=', $year)
+            ->where(function ($query) {
+                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
+                    ->orWhereNull('format_digital');
+            })
+            ->orderBy('games.eu_release_date', 'asc')
+            ->orderBy('games.title', 'asc')->get();
+    }
 }

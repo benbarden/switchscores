@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>{{ route('sitemap.site') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.games') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.calendar') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.topRated') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.reviews') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.tags') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>{{ route('sitemap.news') }}</loc>
-        <lastmod>{{ TimestampNow }}</lastmod>
-    </sitemap>
+    {% for item in IndexList %}
+        <sitemap>
+            <loc>{{ url(item.XmlFile) }}</loc>
+            <lastmod>{{ item.Timestamp }}</lastmod>
+        </sitemap>
+    {% endfor %}
 </sitemapindex>

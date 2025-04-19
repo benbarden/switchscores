@@ -55,15 +55,4 @@ class GameService
         return $games;
     }
 
-    public function getGamesForSitemap()
-    {
-        $games = DB::table('games')
-            ->select('games.*')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
-            ->orderBy('games.title', 'asc');
-        $games = $games->get();
-
-        return $games;
-    }
-
 }

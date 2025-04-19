@@ -110,12 +110,13 @@ Route::get('/news/{date}/{title}', 'PublicSite\NewsController@displayContent')->
 Route::get('/community', 'PublicSite\CommunityController@landing')->name('community.landing');
 
 // Sitemaps
-Route::get('/sitemap', 'SitemapController@show')->name('sitemap.index');
-Route::get('/sitemap/site', 'SitemapController@site')->name('sitemap.site');
-Route::get('/sitemap/games', 'SitemapController@games')->name('sitemap.games');
-Route::get('/sitemap/calendar', 'SitemapController@calendar')->name('sitemap.calendar');
-Route::get('/sitemap/top-rated', 'SitemapController@topRated')->name('sitemap.topRated');
-Route::get('/sitemap/reviews', 'SitemapController@reviews')->name('sitemap.reviews');
-Route::get('/sitemap/tags', 'SitemapController@tags')->name('sitemap.tags');
-Route::get('/sitemap/news', 'SitemapController@news')->name('sitemap.news');
-
+Route::controller('SitemapController')->group(function () {
+    Route::redirect('/sitemap', '/sitemaps/index.xml');
+    Route::redirect('/sitemap/site', '/sitemaps/sitemap-site.xml');
+    Route::redirect('/sitemap/games', '/sitemaps/sitemap-games.xml');
+    Route::redirect('/sitemap/calendar', '/sitemaps/sitemap-calendar.xml');
+    Route::redirect('/sitemap/top-rated', '/sitemaps/sitemap-top-rated.xml');
+    Route::redirect('/sitemap/reviews', '/sitemaps/sitemap-reviews.xml');
+    Route::redirect('/sitemap/tags', '/sitemaps/sitemap-tags.xml');
+//    Route::redirect('/sitemap/news', '/sitemaps/sitemap-news.xml');
+});
