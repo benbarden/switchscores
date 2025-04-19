@@ -8,13 +8,10 @@ use Illuminate\Support\Facades\Log;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
 class UpdateGames extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -49,6 +46,7 @@ class UpdateGames extends Command
         $repoGame = new GameRepository();
 
         $repoDataSourceParsed = new DataSourceParsedRepository();
+        $repoGameImportRuleEshop = new GameImportRuleEshopRepository;
 
         $logger = Log::channel('cron');
 
@@ -71,7 +69,7 @@ class UpdateGames extends Command
                 continue;
             }
 
-            $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+            $gameImportRule = $repoGameImportRuleEshop->getByGameId($gameId);
 
             UpdateGameFactory::doUpdate($game, $dsItem, $gameImportRule);
 

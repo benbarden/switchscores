@@ -28,6 +28,7 @@ use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\Console\Repository as ConsoleRepository;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -72,7 +73,8 @@ class GamesEditorController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private GameTagRepository $repoGameTag,
-        private ConsoleRepository $repoConsole
+        private ConsoleRepository $repoConsole,
+        private GameImportRuleEshopRepository $repoGameImportRuleEshop
     )
     {
     }
@@ -98,6 +100,7 @@ class GamesEditorController extends Controller
             }
 
             // Check title hash is unique
+            $titleLowercase = strtolower($request->title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
             $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
 
@@ -124,7 +127,7 @@ class GamesEditorController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $this->repoGameTitleHash->create($request->title, $hashedTitle, $gameId);
+            $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
             // Add publisher, if selected
             if ($request->publisher_id) {
@@ -356,12 +359,12 @@ class GamesEditorController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $this->getServiceGameTitleHash()->deleteByGameId($gameId);
+            $this->repoGameTitleHash->deleteByGameId($gameId);
             $this->repoGameTag->deleteByGameId($gameId);
             $this->repoGameDeveloper->deleteByGameId($gameId);
             $this->repoGamePublisher->deleteByGameId($gameId);
             // Game import rule cleanup
-            $this->getServiceGameImportRuleEshop()->deleteByGameId($gameId);
+            $this->repoGameImportRuleEshop->deleteByGameId($gameId);
             // Image cleanup
             $serviceGameImages = new GameImages($gameData);
             $serviceGameImages->deleteSquare();

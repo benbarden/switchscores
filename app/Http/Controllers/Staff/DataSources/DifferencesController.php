@@ -8,23 +8,21 @@ use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
 use App\Construction\GameImportRule\EshopBuilder;
 use App\Construction\GameImportRule\EshopDirector;
 use App\Models\DataSource;
 use App\Services\DataSources\Queries\Differences;
 
-use App\Traits\SwitchServices;
-
 class DifferencesController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private CategoryRepository $repoCategory,
         private GameRepository $repoGame,
         private DataSourceRepository $repoDataSource,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private GameImportRuleEshopRepository $repoGameImportRuleEshop
     )
     {
 
@@ -158,7 +156,7 @@ class DifferencesController extends Controller
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
 
-                $gameImportRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+                $gameImportRuleEshop = $this->repoGameImportRuleEshop->getByGameId($gameId);
                 if ($gameImportRuleEshop) {
                     $importRuleParams = [
                         'ignore_europe_dates' => $gameImportRuleEshop->ignore_europe_date,

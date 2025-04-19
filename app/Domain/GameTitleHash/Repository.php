@@ -3,7 +3,6 @@
 
 namespace App\Domain\GameTitleHash;
 
-
 use App\Models\GameTitleHash;
 
 class Repository
@@ -19,6 +18,35 @@ class Repository
             'title_hash' => $titleHash,
             'game_id' => $gameId,
         ]);
+    }
+
+    public function edit(
+        GameTitleHash $gameTitleHash, $title, $titleHash, $gameId
+    )
+    {
+        $values = [
+            'title' => $title,
+            'title_hash' => $titleHash,
+            'game_id' => $gameId,
+        ];
+
+        $gameTitleHash->fill($values);
+        $gameTitleHash->save();
+    }
+
+    public function delete($titleHashId)
+    {
+        GameTitleHash::where('id', $titleHashId)->delete();
+    }
+
+    public function deleteByGameId($gameId)
+    {
+        GameTitleHash::where('game_id', $gameId)->delete();
+    }
+
+    public function find($id): GameTitleHash
+    {
+        return GameTitleHash::find($id);
     }
 
     /**
@@ -45,5 +73,15 @@ class Repository
         } else {
             return null;
         }
+    }
+
+    public function getByGameId($gameId)
+    {
+        return GameTitleHash::where('game_id', $gameId)->orderBy('id', 'desc')->get();
+    }
+
+    public function getAll()
+    {
+        return GameTitleHash::orderBy('id', 'desc')->get();
     }
 }

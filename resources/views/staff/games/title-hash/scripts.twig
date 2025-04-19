@@ -2,32 +2,22 @@
     var formMode = '{{ FormMode }}';
     var formVals = [];
 
-    var urlGameId = '{{ UrlGameId }}';
+    var urlGameId = '{{ GameId }}';
 
     if (formMode == 'edit') {
 
         // This is used when editing existing records.
         formVals['title'] = "{{ GameTitleHashData.title|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['game_id'] = "{{ GameTitleHashData.game_id }}";
 
     } else {
 
         // This is used for new records.
         // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
         formVals['title'] = "{{ old('title')|replace({'\"': '\\"', '&quot;': '\\"'})|raw }}";
-        formVals['game_id'] = "{{ old('game_id') }}";
-
-        if (formVals['game_id'] == '') {
-            if (urlGameId != '') {
-                formVals['game_id'] = urlGameId;
-            }
-        }
 
     }
 
     // *** Main *** //
     $('#title').val(formVals['title']);
-    $('#game_id').val(formVals['game_id']);
-    $('#game_id').select2();
 
 </script>

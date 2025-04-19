@@ -11,13 +11,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\Game\Repository as GameRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
 class GamesTitleHashController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -30,7 +28,9 @@ class GamesTitleHashController extends Controller
     ];
 
     public function __construct(
-        private GameRepository $repoGame
+        private GameRepository $repoGame,
+        private GameTitleHashRepository $repoGameTitleHash,
+        private HashGeneratorRepository $gameTitleHashGenerator
     )
     {
     }
@@ -42,10 +42,10 @@ class GamesTitleHashController extends Controller
             $game = $this->repoGame->find($gameId);
             if (!$game) abort(404);
             $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-            $titleHashList = $this->getServiceGameTitleHash()->getByGameId($gameId);
+            $titleHashList = $this->repoGameTitleHash->getByGameId($gameId);
         } else {
             $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-            $titleHashList = $this->getServiceGameTitleHash()->getAll();
+            $titleHashList = $this->repoGameTitleHash->getAll();
         }
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
@@ -60,17 +60,6 @@ class GamesTitleHashController extends Controller
     {
         $pageTitle = 'Add game title hash';
 
-        $urlGameId = \Request::get('gameId');
-
-        if ($urlGameId) {
-            $game = $this->repoGame->find($urlGameId);
-            if (!$game) abort(404);
-            $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        } else {
-            $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        }
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
         $request = request();
 
         if ($request->isMethod('post')) {
@@ -83,13 +72,14 @@ class GamesTitleHashController extends Controller
                     ->withInput();
             }
 
+            // Check title hash is unique
             $titleLowercase = strtolower($request->title);
-            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
-            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
+            $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
+            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
 
-            $validator->after(function ($validator) use ($existingTitleHash) {
+            $validator->after(function ($validator) use ($hashExists) {
                 // Check for duplicates
-                if ($existingTitleHash != null) {
+                if ($hashExists) {
                     $validator->errors()->add('title', 'Title already exists for another record!');
                 }
             });
@@ -102,28 +92,37 @@ class GamesTitleHashController extends Controller
 
             // Add to DB
             $gameId = $request->game_id;
-            $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
+            $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
 
         } else {
 
+            $urlGameId = \Request::get('gameId');
+
             if ($urlGameId) {
-                $bindings['UrlGameId'] = $urlGameId;
+                $game = $this->repoGame->find($urlGameId);
+                if (!$game) abort(404);
+                $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
+            } else {
+                abort(404);
+            }
+            $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+            if ($urlGameId) {
+                $bindings['GameId'] = $urlGameId;
             }
         }
 
         $bindings['FormMode'] = 'add';
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         return view('staff.games.title-hash.add', $bindings);
     }
 
     public function edit($gameTitleHashId)
     {
-        $gameTitleHashData = $this->getServiceGameTitleHash()->find($gameTitleHashId);
+        $gameTitleHashData = $this->repoGameTitleHash->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
 
         $pageTitle = 'Edit game title hash';
@@ -144,10 +143,10 @@ class GamesTitleHashController extends Controller
             $this->validate($request, $this->validationRules);
 
             $titleLowercase = strtolower($request->title);
-            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($request->title);
+            $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
 
             $gameId = $request->game_id;
-            $this->getServiceGameTitleHash()->edit($gameTitleHashData, $titleLowercase, $hashedTitle, $gameId);
+            $this->repoGameTitleHash->edit($gameTitleHashData, $titleLowercase, $hashedTitle, $gameId);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');
@@ -161,15 +160,14 @@ class GamesTitleHashController extends Controller
         $bindings['GameTitleHashData'] = $gameTitleHashData;
         $bindings['GameTitleHashId'] = $gameTitleHashId;
         $bindings['FormMode'] = 'edit';
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
+        $bindings['GameId'] = $gameId;
 
         return view('staff.games.title-hash.edit', $bindings);
     }
 
     public function delete($gameTitleHashId)
     {
-        $gameTitleHashData = $this->getServiceGameTitleHash()->find($gameTitleHashId);
+        $gameTitleHashData = $this->repoGameTitleHash->find($gameTitleHashId);
         if (!$gameTitleHashData) abort(404);
 
         $pageTitle = 'Delete game title hash';
@@ -187,7 +185,7 @@ class GamesTitleHashController extends Controller
 
             $bindings['FormMode'] = 'delete-post';
 
-            $this->getServiceGameTitleHash()->delete($gameTitleHashId);
+            $this->repoGameTitleHash->delete($gameTitleHashId);
 
             // Done
 

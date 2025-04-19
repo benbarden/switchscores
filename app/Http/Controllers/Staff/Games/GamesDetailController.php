@@ -15,6 +15,8 @@ use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 
 use App\Models\Game;
 
@@ -38,7 +40,9 @@ class GamesDetailController extends Controller
         private GameDeveloperRepository $repoGameDeveloper,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private QuickReviewRepository $repoQuickReview,
-        private GameTagRepository $repoGameTag
+        private GameTagRepository $repoGameTag,
+        private GameImportRuleEshopRepository $repoGameImportRuleEshop,
+        private GameTitleHashRepository $repoGameTitleHash
     )
     {
     }
@@ -87,7 +91,7 @@ class GamesDetailController extends Controller
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
-        $bindings['GameTitleHashes'] = $this->getServiceGameTitleHash()->getByGameId($gameId);
+        $bindings['GameTitleHashes'] = $this->repoGameTitleHash->getByGameId($gameId);
 
         // Differences
         $dsDifferences = new Differences();
@@ -109,7 +113,7 @@ class GamesDetailController extends Controller
         $bindings['GameAuditsCore'] = $gameAudits;
 
         // Import rules
-        $bindings['ImportRulesEshop'] = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+        $bindings['ImportRulesEshop'] = $this->repoGameImportRuleEshop->getByGameId($gameId);
 
         return view('staff.games.detail.show', $bindings);
     }
@@ -148,7 +152,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
         }
 
-        $gameImportRule = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+        $gameImportRule = $this->repoGameImportRuleEshop->getByGameId($gameId);
 
         UpdateGameFactory::doUpdate($game, $dsItem, $gameImportRule);
 

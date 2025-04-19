@@ -1,11 +1,10 @@
 <?php
 
-
-namespace App\Services;
+namespace App\Domain\GameImportRuleEshop;
 
 use App\Models\GameImportRuleEshop;
 
-class GameImportRuleEshopService
+class Repository
 {
     public function getByGameId($gameId)
     {

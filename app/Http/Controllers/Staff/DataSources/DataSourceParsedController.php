@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Staff\DataSources;
 
-use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Models\Console;
 use App\Models\Game;
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -17,20 +17,20 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
 class DataSourceParsedController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GamesCompanyRepository $repoGamesCompany,
         private GamePublisherRepository $repoGamePublisher,
         private LinkTitle $urlLinkTitle,
         private DataSourceRepository $repoDataSource,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private GameTitleHashRepository $repoGameTitleHash,
+        private HashGeneratorRepository $gameTitleHashGenerator
     ){
     }
 
@@ -109,21 +109,21 @@ class DataSourceParsedController extends Controller
 
             // Check title hash is unique
             $titleLowercase = strtolower($title);
-            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($title);
-            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
+            $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
+            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
 
             // Switch 2 duplicate title check
-            if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $existingTitleHash != null) {
+            if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $hashExists) {
                 // Generate new title hash
                 $title .= ' (Switch 2)';
                 $titleLowercase = strtolower($title);
-                $hashedTitle = $this->getServiceGameTitleHash()->generateHash($title);
-                $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
+                $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
+                $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
             }
 
             // Check for duplicates
-            if ($existingTitleHash != null) {
-                $customErrors[] = 'Title already exists for another record! Game id: '.$existingTitleHash->game_id;
+            if ($hashExists) {
+                $customErrors[] = 'Title already exists for another record!';
                 $okToProceed = false;
             }
 
@@ -148,7 +148,7 @@ class DataSourceParsedController extends Controller
                 $gameId = $game->id;
 
                 // Add title hash
-                $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
+                $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
 
                 // Update eShop data
                 $game = $game->fresh();

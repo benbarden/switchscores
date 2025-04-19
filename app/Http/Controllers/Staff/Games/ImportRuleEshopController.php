@@ -12,13 +12,10 @@ use App\Construction\GameImportRule\EshopDirector;
 use App\Construction\GameImportRule\EshopBuilder;
 
 use App\Domain\Game\Repository as GameRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
 class ImportRuleEshopController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -28,7 +25,8 @@ class ImportRuleEshopController extends Controller
     ];
 
     public function __construct(
-        private GameRepository $repoGame
+        private GameRepository $repoGame,
+        private GameImportRuleEshopRepository $repoGameImportRuleEshop
     )
     {
     }
@@ -42,7 +40,7 @@ class ImportRuleEshopController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $gameImportRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+        $gameImportRuleEshop = $this->repoGameImportRuleEshop->getByGameId($gameId);
 
         $request = request();
 

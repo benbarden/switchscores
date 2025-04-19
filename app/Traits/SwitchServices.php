@@ -2,9 +2,7 @@
 
 namespace App\Traits;
 
-use App\Services\GameImportRuleEshopService;
 use App\Services\GameService;
-use App\Services\GameTitleHashService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 
@@ -64,29 +62,11 @@ trait SwitchServices
 
     /**
      * @deprecated
-     * @return GameImportRuleEshopService
-     */
-    public function getServiceGameImportRuleEshop()
-    {
-        return $this->loadService('GameImportRuleEshopService');
-    }
-
-    /**
-     * @deprecated
      * @return GameService
      */
     public function getServiceGame()
     {
         return $this->loadService('GameService');
-    }
-
-    /**
-     * @deprecated
-     * @return GameTitleHashService
-     */
-    public function getServiceGameTitleHash()
-    {
-        return $this->loadService('GameTitleHashService');
     }
 
     /**

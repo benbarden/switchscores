@@ -11,13 +11,10 @@ use App\Construction\GameQualityScore\QualityScoreDirector;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\DbQueries as DbGame;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
 class GameUpdateQualityScores extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -58,6 +55,7 @@ class GameUpdateQualityScores extends Command
         $repoGame = new GameRepository();
         $dbGame = new DbGame();
         $repoDataSourceParsed = new DataSourceParsedRepository();
+        $repoGameImportRuleEshop = new GameImportRuleEshopRepository;
 
         if ($argGameId) {
             $gameIds = $repoGame->getByIdList($argGameId);
@@ -83,7 +81,7 @@ class GameUpdateQualityScores extends Command
 
             $qsDirector->setGame($game);
 
-            $importRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
+            $importRuleEshop = $repoGameImportRuleEshop->getByGameId($gameId);
             if ($importRuleEshop) {
                 $qsDirector->setImportRuleEshop($importRuleEshop);
             }
