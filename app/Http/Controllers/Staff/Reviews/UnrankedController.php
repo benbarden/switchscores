@@ -6,12 +6,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\Unranked\Repository as UnrankedRepository;
 
-use App\Traits\SwitchServices;
-
 class UnrankedController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private UnrankedRepository $repoUnranked
     )

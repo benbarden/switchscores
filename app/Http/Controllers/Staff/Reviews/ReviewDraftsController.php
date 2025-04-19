@@ -12,12 +12,8 @@ use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
 use App\Domain\GameLists\Repository as GameListsRepository;
 
-use App\Traits\SwitchServices;
-
 class ReviewDraftsController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

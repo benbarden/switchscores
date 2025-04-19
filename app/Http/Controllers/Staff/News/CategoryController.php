@@ -9,12 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
-use App\Traits\SwitchServices;
-
 class CategoryController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

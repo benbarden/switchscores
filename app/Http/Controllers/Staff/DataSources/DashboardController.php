@@ -8,14 +8,10 @@ use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
-use App\Traits\SwitchServices;
-
 use App\Services\DataSources\Queries\Differences;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private DataSourceRepository $repoDataSource,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,

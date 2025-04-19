@@ -12,12 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Category\Blurb as CategoryBlurb;
 
-use App\Traits\SwitchServices;
-
 class CategoryController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

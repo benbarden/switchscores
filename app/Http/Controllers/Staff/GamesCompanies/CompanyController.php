@@ -12,7 +12,6 @@ use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Factories\GamesCompanyFactory;
 use App\Models\GamesCompany;
-use App\Traits\SwitchServices;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -21,8 +20,6 @@ use Illuminate\Routing\Controller as Controller;
 
 class CompanyController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

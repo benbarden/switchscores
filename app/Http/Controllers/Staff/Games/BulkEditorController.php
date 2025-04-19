@@ -23,14 +23,8 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 
 use Carbon\Carbon;
 
-use App\Traits\SwitchServices;
-
-use App\Factories\GameDirectorFactory;
-
 class BulkEditorController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

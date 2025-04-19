@@ -7,15 +7,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\CampaignGame\Repository as CampaignGameRepository;
 
 class CampaignsController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

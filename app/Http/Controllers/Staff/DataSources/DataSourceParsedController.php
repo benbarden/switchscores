@@ -93,8 +93,6 @@ class DataSourceParsedController extends Controller
         $bindings['DSParsedItem'] = $dsParsedItem;
         $customErrors = [];
 
-        $serviceGameTitleHash = $this->getServiceGameTitleHash();
-
         $bindings['ItemId'] = $itemId;
 
         $request = request();
@@ -111,16 +109,16 @@ class DataSourceParsedController extends Controller
 
             // Check title hash is unique
             $titleLowercase = strtolower($title);
-            $hashedTitle = $serviceGameTitleHash->generateHash($title);
-            $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+            $hashedTitle = $this->getServiceGameTitleHash()->generateHash($title);
+            $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
 
             // Switch 2 duplicate title check
             if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $existingTitleHash != null) {
                 // Generate new title hash
                 $title .= ' (Switch 2)';
                 $titleLowercase = strtolower($title);
-                $hashedTitle = $serviceGameTitleHash->generateHash($title);
-                $existingTitleHash = $serviceGameTitleHash->getByHash($hashedTitle);
+                $hashedTitle = $this->getServiceGameTitleHash()->generateHash($title);
+                $existingTitleHash = $this->getServiceGameTitleHash()->getByHash($hashedTitle);
             }
 
             // Check for duplicates
@@ -150,7 +148,7 @@ class DataSourceParsedController extends Controller
                 $gameId = $game->id;
 
                 // Add title hash
-                $gameTitleHash = $serviceGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+                $gameTitleHash = $this->getServiceGameTitleHash()->create($titleLowercase, $hashedTitle, $gameId);
 
                 // Update eShop data
                 $game = $game->fresh();

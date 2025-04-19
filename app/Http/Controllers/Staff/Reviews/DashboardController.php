@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Staff\Reviews;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Stats as ReviewDraftStats;
@@ -14,14 +13,9 @@ use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 
 use App\Models\QuickReview;
 
-use App\Traits\SwitchServices;
-
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
         private ReviewDraftRepository $repoReviewDraft,
         private QuickReviewRepository $repoQuickReview,

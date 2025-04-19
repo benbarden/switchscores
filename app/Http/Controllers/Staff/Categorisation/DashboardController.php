@@ -4,27 +4,13 @@ namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\Tag\Repository as TagRepository;
-use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
-
-use App\Models\Category;
-use App\Models\GameSeries;
-use App\Models\Tag;
-
-use App\Traits\SwitchServices;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameStatsRepository $repoGameStats,
-        private GameSeriesRepository $repoGameSeries,
-        private TagRepository $repoTag,
-        private CategoryRepository $repoCategory,
         private GameListMissingCategoryRepository $repoGameListMissingCategory,
     )
     {

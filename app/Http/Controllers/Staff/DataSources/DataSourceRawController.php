@@ -7,12 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
 
-use App\Traits\SwitchServices;
-
 class DataSourceRawController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private DataSourceRepository $repoDataSource,
         private DataSourceRawRepository $repoDataSourceRaw

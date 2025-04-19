@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Factories\GameDirectorFactory;
 use App\Factories\GamesCompanyFactory;
 
 use App\Domain\Game\Repository as GameRepository;
@@ -14,12 +13,8 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
-use App\Traits\SwitchServices;
-
 class GamesPartnerController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameRepository $repoGame,
         private GameQualityFilter $gameQualityFilter,

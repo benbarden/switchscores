@@ -158,8 +158,7 @@ class DifferencesController extends Controller
                     return response()->json(['error' => 'DS parsed item not found for game: '.$gameId], 400);
                 }
 
-                $serviceImportRuleEshop = $this->getServiceGameImportRuleEshop();
-                $gameImportRuleEshop = $serviceImportRuleEshop->getByGameId($gameId);
+                $gameImportRuleEshop = $this->getServiceGameImportRuleEshop()->getByGameId($gameId);
                 if ($gameImportRuleEshop) {
                     $importRuleParams = [
                         'ignore_europe_dates' => $gameImportRuleEshop->ignore_europe_date,
