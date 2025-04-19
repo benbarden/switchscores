@@ -60,25 +60,25 @@ class Generator
         $yearListS2 = $allowedDates->releaseYearsByConsole(Console::ID_SWITCH_2);
 
         $indexList = [];
-        $indexList[] = ['XmlFile' => self::SITEMAP_SITE, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_SITE, 'Timestamp' => $timestamp];
         foreach ($yearListS1 as $year) {
-            $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);
+            $xmlFile = str_replace('[YEAR]', $year, '/sitemaps/'.self::SITEMAP_GAMES);
             $xmlFile = str_replace('[CONSOLE]', 'switch-1', $xmlFile);
             $indexList[] = ['XmlFile' => $xmlFile, 'Timestamp' => $timestamp];
         }
         foreach ($yearListS2 as $year) {
-            $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);
+            $xmlFile = str_replace('[YEAR]', $year, '/sitemaps/'.self::SITEMAP_GAMES);
             $xmlFile = str_replace('[CONSOLE]', 'switch-2', $xmlFile);
             $indexList[] = ['XmlFile' => $xmlFile, 'Timestamp' => $timestamp];
         }
-        $indexList[] = ['XmlFile' => self::SITEMAP_TOP_RATED, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_REVIEW_STATS, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_REVIEW_PARTNERS, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_CALENDAR, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_CATEGORY, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_COLLECTION, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_SERIES, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => self::SITEMAP_TAG, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_TOP_RATED, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_REVIEW_STATS, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_REVIEW_PARTNERS, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_CALENDAR, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_CATEGORY, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_COLLECTION, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_SERIES, 'Timestamp' => $timestamp];
+        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_TAG, 'Timestamp' => $timestamp];
 
         $bindings['IndexList'] = $indexList;
 
