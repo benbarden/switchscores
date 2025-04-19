@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\GameCalendarService;
 use App\Services\GameImportRuleEshopService;
 use App\Services\GameService;
 use App\Services\GameTitleHashService;
@@ -62,15 +61,6 @@ trait SwitchServices
     }
 
     // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return GameCalendarService
-     */
-    public function getServiceGameCalendar()
-    {
-        return $this->loadService('GameCalendarService');
-    }
 
     /**
      * @deprecated

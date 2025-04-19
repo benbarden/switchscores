@@ -6,16 +6,14 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 class TopRatedController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private TopRatedDbQueries $dbTopRated,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private GameCalendarAllowedDates $allowedDates
     )
     {
     }
@@ -83,7 +81,7 @@ class TopRatedController extends Controller
 
     public function byYear($year)
     {
-        $allowedYears = $this->getServiceGameCalendar()->getAllowedYears();
+        $allowedYears = $this->allowedDates->releaseYears(false);
         if (!in_array($year, $allowedYears)) {
             abort(404);
         }

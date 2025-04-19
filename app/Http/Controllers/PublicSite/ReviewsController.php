@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\TopRated\DbQueries as DbTopRated;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 use App\Traits\SwitchServices;
 
@@ -15,7 +16,8 @@ class ReviewsController extends Controller
 
     public function __construct(
         private DbTopRated $dbTopRated,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private GameCalendarAllowedDates $allowedDates
     )
     {
     }
@@ -31,7 +33,7 @@ class ReviewsController extends Controller
         $bindings['ReviewYear'] = $year;
 
         // Review counts
-        $dateList = $this->getServiceGameCalendar()->getAllowedDates(false);
+        $dateList = $this->allowedDates->allowedDates(false);
         $dateListArray = [];
         $reviewTotal = 0;
 

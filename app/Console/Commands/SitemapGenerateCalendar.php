@@ -5,12 +5,10 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\SwitchServices;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 class SitemapGenerateCalendar extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -47,7 +45,7 @@ class SitemapGenerateCalendar extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $serviceCalendar = $this->getServiceGameCalendar();
+        $allowedDates = new GameCalendarAllowedDates();
 
         $bindings = [];
 
@@ -64,7 +62,7 @@ class SitemapGenerateCalendar extends Command
             'priority' => '0.8'
         );
 
-        $dateList = $serviceCalendar->getAllowedDates();
+        $dateList = $allowedDates->allowedDates(false);
 
         foreach ($dateList as $dateListItem) {
 

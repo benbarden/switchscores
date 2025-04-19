@@ -6,16 +6,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-use App\Traits\SwitchServices;
-
 use App\Services\Game\RankAllTime;
 use App\Services\Game\RankYear;
 use App\Services\Game\RankYearMonth;
 
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
+
 class UpdateGameRanks extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -82,7 +80,9 @@ class UpdateGameRanks extends Command
 
         DB::statement("TRUNCATE TABLE game_rank_year");
 
-        $years = $this->getServiceGameCalendar()->getAllowedYears();
+        $allowedDates = new GameCalendarAllowedDates();
+
+        $years = $allowedDates->releaseYears(false);
 
         $serviceRankYear = new RankYear($logger);
 
@@ -96,9 +96,7 @@ class UpdateGameRanks extends Command
 
         DB::statement("TRUNCATE TABLE game_rank_yearmonth");
 
-        $serviceGameCalendar = $this->getServiceGameCalendar();
-
-        $dateList = $serviceGameCalendar->getAllowedDates(false);
+        $dateList = $allowedDates->allowedDates(false);
 
         $serviceRankYearMonth = new RankYearMonth($logger);
 

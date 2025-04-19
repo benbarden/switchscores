@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\Tag\Repository as TagRepository;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 use App\Traits\SwitchServices;
 
@@ -17,7 +18,8 @@ class SitemapController extends Controller
     public function __construct(
         private NewsRepository $repoNews,
         private ReviewSiteRepository $repoReviewSite,
-        private TagRepository $repoTag
+        private TagRepository $repoTag,
+        private GameCalendarAllowedDates $allowedDates
     ){
     }
 
@@ -63,8 +65,6 @@ class SitemapController extends Controller
 
     public function games()
     {
-        $serviceGame = $this->getServiceGame();
-
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-games.xml';
 
         if (file_exists($xmlFilePath)) {
@@ -77,7 +77,7 @@ class SitemapController extends Controller
             $timestamp = $this->getTimestampNow();
             $bindings['TimestampNow'] = $timestamp;
 
-            $bindings['GameList'] = $serviceGame->getGamesForSitemap();
+            $bindings['GameList'] = $this->getServiceGame()->getGamesForSitemap();
 
             return response()->view('sitemap.games', $bindings)->header('Content-Type', 'text/xml');
 
@@ -86,8 +86,6 @@ class SitemapController extends Controller
 
     public function calendar()
     {
-        $serviceCalendar = $this->getServiceGameCalendar();
-
         $xmlFilePath = storage_path().'/app/public/sitemaps/sitemap-calendar.xml';
 
         if (file_exists($xmlFilePath)) {
@@ -109,7 +107,7 @@ class SitemapController extends Controller
                 'priority' => '0.8'
             );
 
-            $dateList = $serviceCalendar->getAllowedDates();
+            $dateList = $this->allowedDates->allowedDates(false);
 
             foreach ($dateList as $dateListItem) {
 

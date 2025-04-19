@@ -5,12 +5,11 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\SwitchServices;
+use App\Domain\GameCalendar\Stats as GameCalendarStats;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 class UpdateGameCalendarStats extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
@@ -47,9 +46,10 @@ class UpdateGameCalendarStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $serviceGameCalendar = $this->getServiceGameCalendar();
+        $statsGameCalendar = new GameCalendarStats;
+        $datesGameCalendar = new GameCalendarAllowedDates;
 
-        $dateList = $serviceGameCalendar->getAllowedDates(false);
+        $dateList = $datesGameCalendar->allowedDates(false);
 
         \DB::statement('TRUNCATE TABLE game_calendar_stats');
 
@@ -61,7 +61,7 @@ class UpdateGameCalendarStats extends Command
             $calendarYear = $dtDate->format('Y');
             $calendarMonth = $dtDate->format('m');
 
-            $monthCount = $serviceGameCalendar->getListCount($calendarYear, $calendarMonth);
+            $monthCount = $statsGameCalendar->calendarStatCount($calendarYear, $calendarMonth);
 
             $logger->info($date.' // '.$monthCount.' game(s)');
 

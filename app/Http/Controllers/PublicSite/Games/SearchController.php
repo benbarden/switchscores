@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\Category\Repository as CategoryRepository;
-use App\Domain\GameCollection\Repository as GameCollectionRepository;
-use App\Domain\GameSearch\Builder as GameSearchBuilder;
-use App\Domain\GameSeries\Repository as GameSeriesRepository;
-use App\Traits\SwitchServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
+use App\Domain\GameSearch\Builder as GameSearchBuilder;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+
 class SearchController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -29,7 +28,8 @@ class SearchController extends Controller
         private CategoryRepository $repoCategory,
         private GameSearchBuilder $searchBuilder,
         private GameSeriesRepository $repoGameSeries,
-        private GameCollectionRepository $repoGameCollection
+        private GameCollectionRepository $repoGameCollection,
+        private GameCalendarAllowedDates $allowedDates
     )
     {
     }
@@ -52,7 +52,7 @@ class SearchController extends Controller
         }
 
         // Search options
-        $bindings['YearList'] = array_reverse($this->getServiceGameCalendar()->getAllowedYears());
+        $bindings['YearList'] = array_reverse($this->allowedDates->releaseYears(false));
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
