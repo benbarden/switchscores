@@ -9,12 +9,8 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\Scraper\ReviewTable as ScraperReviewTable;
 use App\Domain\ReviewDraft\ImportScraper;
 
-use App\Traits\SwitchServices;
-
 class ImportByScraper extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

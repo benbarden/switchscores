@@ -8,14 +8,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
-use App\Traits\SwitchServices;
-
 use App\Services\Game\Images as GameImages;
 
 class ResizeLargePackshots extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

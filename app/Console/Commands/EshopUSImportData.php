@@ -8,12 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\Eshop\US\Loader;
 
-use App\Traits\SwitchServices;
-
 class EshopUSImportData extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

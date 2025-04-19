@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Domain\News\Repository as NewsRepository;
 
-use App\Traits\SwitchServices;
-
 class SitemapGenerateNews extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

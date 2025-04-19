@@ -5,17 +5,12 @@ namespace App\Console\Commands\Review;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\CampaignGame\Repository as CampaignGameRepository;
 use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
 
-
 class CampaignUpdateProgress extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

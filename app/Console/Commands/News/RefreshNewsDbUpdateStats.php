@@ -6,16 +6,12 @@ use App\Models\NewsDbUpdate;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\GameCalendar\AllowedDates;
 use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 
 class RefreshNewsDbUpdateStats extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

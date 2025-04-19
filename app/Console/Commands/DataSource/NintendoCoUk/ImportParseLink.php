@@ -9,15 +9,11 @@ use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
-use App\Traits\SwitchServices;
-
 use App\Services\DataSources\NintendoCoUk\Importer;
 use App\Services\DataSources\NintendoCoUk\Parser;
 
 class ImportParseLink extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

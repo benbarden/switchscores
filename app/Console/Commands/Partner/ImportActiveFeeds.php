@@ -8,12 +8,8 @@ use Illuminate\Support\Facades\Log;
 use App\Domain\ReviewDraft\ImportByFeed;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 
-use App\Traits\SwitchServices;
-
 class ImportActiveFeeds extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

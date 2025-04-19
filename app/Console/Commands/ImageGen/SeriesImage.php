@@ -5,8 +5,6 @@ namespace App\Console\Commands\ImageGen;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Traits\SwitchServices;
-
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
@@ -14,8 +12,6 @@ use Intervention\Image\Facades\Image;
 
 class SeriesImage extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *
