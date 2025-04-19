@@ -6,14 +6,10 @@ use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
 
-use App\Traits\SwitchServices;
-
 use Illuminate\Routing\Controller as Controller;
 
 class CommunityController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private QuickReviewRepository $repoQuickReview,
         private UserRepository $repoUser,

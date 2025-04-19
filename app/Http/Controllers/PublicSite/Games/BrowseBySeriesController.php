@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
-use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class BrowseBySeriesController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private GameListsRepository $repoGameLists,
-        private GameListsDbQueries $dbGameLists,
         private GameSeriesRepository $repoGameSeries,
         private Breadcrumbs $viewBreadcrumbs
     )

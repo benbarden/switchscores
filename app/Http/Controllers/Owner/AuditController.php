@@ -9,12 +9,8 @@ use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 use App\Domain\ViewBindings\Staff as Bindings;
 
-use App\Traits\SwitchServices;
-
 class AuditController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private AuditRepository $repoAudit,
         private Bindings $viewBindings,

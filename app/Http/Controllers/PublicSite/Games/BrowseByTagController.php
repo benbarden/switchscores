@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
-use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class BrowseByTagController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private GameListsRepository $repoGameLists,
-        private GameListsDbQueries $dbGameLists,
         private TagRepository $repoTag,
         private TagCategoryRepository $repoTagCategory,
         private Breadcrumbs $viewBreadcrumbs

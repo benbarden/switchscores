@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameCalendar\AllowedDates;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -18,16 +17,11 @@ use App\Domain\Shortcode\DynamicShortcode;
 use App\Domain\Shortcode\TopRated;
 use App\Domain\Shortcode\Unranked;
 
-use App\Traits\SwitchServices;
-
 use Illuminate\Routing\Controller as Controller;
 
 class NewsController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameListsRepository $repoGameLists,
         private GameStatsRepository $repoGameStats,
         private AllowedDates $allowedDates,

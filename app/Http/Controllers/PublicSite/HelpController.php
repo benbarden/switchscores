@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\PublicSite;
 
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Traits\SwitchServices;
+
 use Illuminate\Routing\Controller as Controller;
 
 class HelpController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private Breadcrumbs $viewBreadcrumbs
     )

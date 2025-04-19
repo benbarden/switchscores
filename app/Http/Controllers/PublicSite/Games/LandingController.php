@@ -2,27 +2,19 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
-use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
-use App\Traits\SwitchServices;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Collection;
 
 class LandingController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameRepository $repoGame,
         private GameListsRepository $repoGameLists,
-        private GameStatsRepository $repoGameStats,
         private TopRatedDbQueries $dbTopRated,
         private Breadcrumbs $viewBreadcrumbs
     )

@@ -7,8 +7,6 @@ use App\Services\Game\TitleMatch as ServiceTitleMatch;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 
-use App\Traits\SwitchServices;
-
 class TitleMatch
 {
     public function __construct(

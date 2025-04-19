@@ -8,12 +8,8 @@ use App\Domain\News\Repository as NewsRepository;
 
 use App\Domain\Url\LinkTitle;
 
-use App\Traits\SwitchServices;
-
 class UrlController extends Controller
 {
-    use SwitchServices;
-
     public function generateLinkText()
     {
         $request = request();

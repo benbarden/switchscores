@@ -6,14 +6,10 @@ use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
-use App\Traits\SwitchServices;
-
 use Illuminate\Routing\Controller as Controller;
 
 class AboutController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameStatsRepository $repoGameStats,
         private ReviewLinkStats $statsReviewLink,

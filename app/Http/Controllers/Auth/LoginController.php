@@ -12,12 +12,8 @@ use App\Domain\User\Repository as UserRepository;
 
 use App\Events\UserCreated;
 
-use App\Traits\SwitchServices;
-
 class LoginController extends Controller
 {
-    use SwitchServices;
-
     /*
     |--------------------------------------------------------------------------
     | Login Controller
