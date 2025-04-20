@@ -9,6 +9,7 @@
                 <th class="text-end">#</th>
                 <th class="text-left">Email</th>
                 <th class="text-left">Bio</th>
+                <th class="text-center">Status</th>
                 <th class="text-center">Times requested</th>
                 <th class="text-center">Date</th>
                 <th class="text-center">Options</th>
@@ -25,6 +26,13 @@
                     </td>
                     <td class="text-left">
                         {{ item.waitlist_bio }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.status == 'Spam' %}
+                            <badge class="badge bg-danger">{{ item.status }}</badge>
+                        {% else %}
+                            <badge class="badge bg-info">{{ item.status }}</badge>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {{ item.times_requested }}

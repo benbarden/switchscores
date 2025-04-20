@@ -7,12 +7,13 @@ use App\Models\InviteCodeRequest;
 
 class Repository
 {
-    public function create($email, $bio)
+    public function create($email, $bio, $status = InviteCodeRequest::STATUS_PENDING)
     {
         return InviteCodeRequest::create([
             'waitlist_email' => $email,
             'waitlist_bio' => $bio,
             'times_requested' => 1,
+            'status' => $status,
         ]);
     }
 

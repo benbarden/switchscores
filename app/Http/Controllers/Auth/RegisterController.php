@@ -7,7 +7,10 @@ use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Domain\InviteCodeRequest\Repository as InviteCodeRequestRepository;
+use App\Domain\InviteCodeDenyList\Repository as InviteCodeDenyListRepository;
+
 use App\Events\UserCreated;
+use App\Models\InviteCodeRequest;
 use App\Models\User;
 
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -48,6 +51,7 @@ class RegisterController extends Controller
         private InviteCodeRepository $repoInviteCode,
         private PartnerOutreachRepository $repoPartnerOutreach,
         private InviteCodeRequestRepository $repoInviteCodeRequest,
+        private InviteCodeDenyListRepository $repoInviteCodeDenyList,
     )
     {
         $this->middleware('guest');
@@ -168,12 +172,26 @@ class RegisterController extends Controller
             $this->repoInviteCodeRequest->incrementTimesRequested($inviteCodeRequest);
             return redirect(route('about.invite-request-failure'));
         } else {
-            $this->repoInviteCodeRequest->create($email, $bio);
-        }
 
-        // Send the email
-        $email = new RequestInviteCode($email, $bio);
-        Mail::to(env('ADMIN_EMAIL'))->send($email);
+            // Check deny list
+            list($emailName, $emailDomain) = explode('@', $email);
+            if ($this->repoInviteCodeDenyList->isDomainInDenyList($emailDomain)) {
+                $status = InviteCodeRequest::STATUS_SPAM;
+                $sendEmail = false;
+            } else {
+                $status = InviteCodeRequest::STATUS_PENDING;
+                $sendEmail = true;
+            }
+
+            $this->repoInviteCodeRequest->create($email, $bio, $status);
+
+            if ($sendEmail) {
+                // Send the email
+                $email = new RequestInviteCode($email, $bio);
+                Mail::to(env('ADMIN_EMAIL'))->send($email);
+            }
+
+        }
 
         return redirect(route('about.invite-request-success'));
     }
