@@ -146,6 +146,7 @@ class Game extends Model implements Auditable
 
     public function scopeSearchTitle($query, $title)
     {
+        if (is_array($title)) return false;
         if ($title) $query->where('title', 'like', '%'.$title.'%');
     }
 
