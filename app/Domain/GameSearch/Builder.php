@@ -21,25 +21,31 @@ class Builder
     {
         $paramsEntered = 0;
 
+        $title = null;
+        $yearReleased = null;
+        $scoreMinimum = null;
+        $priceMaximum = null;
+        $categoryId = null;
+        $seriesId = null;
+        $collectionId = null;
+
         if (array_key_exists('search_keywords', $params)) {
             $title = $params['search_keywords'];
             if ($title != '') {
                 $paramsEntered++;
             }
-        } else {
-            $title = null;
         }
         if (array_key_exists('search_year_released', $params)) {
-            $yearReleased = $params['search_year_released'];
-            $paramsEntered++;
-        } else {
-            $yearReleased = null;
+            if ($params['search_year_released']) {
+                $yearReleased = (int) $params['search_year_released'];
+                $paramsEntered++;
+            }
         }
         if (array_key_exists('search_score_minimum', $params)) {
-            $scoreMinimum = $params['search_score_minimum'];
-            $paramsEntered++;
-        } else {
-            $scoreMinimum = null;
+            if ($params['search_score_minimum']) {
+                $scoreMinimum = (float) $params['search_score_minimum'];
+                $paramsEntered++;
+            }
         }
         if ($scoreMinimum) {
             $showRankedUnranked = 'Ranked';
@@ -50,28 +56,28 @@ class Builder
             $showRankedUnranked = null;
         }
         if (array_key_exists('search_price_maximum', $params)) {
-            $priceMaximum = $params['search_price_maximum'];
-            $paramsEntered++;
-        } else {
-            $priceMaximum = null;
+            if ($params['search_price_maximum']) {
+                $priceMaximum = (float) $params['search_price_maximum'];
+                $paramsEntered++;
+            }
         }
         if (array_key_exists('search_category', $params)) {
-            $categoryId = $params['search_category'];
-            $paramsEntered++;
-        } else {
-            $categoryId = null;
+            if ($params['search_category']) {
+                $categoryId = (int) $params['search_category'];
+                $paramsEntered++;
+            }
         }
         if (array_key_exists('search_series', $params)) {
-            $seriesId = $params['search_series'];
-            $paramsEntered++;
-        } else {
-            $seriesId = null;
+            if ($params['search_series']) {
+                $seriesId = (int) $params['search_series'];
+                $paramsEntered++;
+            }
         }
         if (array_key_exists('search_collection', $params)) {
-            $collectionId = $params['search_collection'];
-            $paramsEntered++;
-        } else {
-            $collectionId = null;
+            if ($params['search_collection']) {
+                $collectionId = (int) $params['search_collection'];
+                $paramsEntered++;
+            }
         }
 
         if ($paramsEntered == 0) return null;
@@ -113,6 +119,22 @@ class Builder
             ->searchCategoryId($categoryIdList)
             ->searchSeriesId($seriesId)
             ->searchCollectionId($collectionId);
+
+        if ($title == 'the') {
+            if (!file_exists(storage_path('123.txt'))) {
+                $lineBreak = "\r\n";
+                $searchData =
+                    "Title: $title".$lineBreak.
+                    "Year: $yearReleased".$lineBreak.
+                    "Score: $scoreMinimum".$lineBreak.
+                    "Price: $priceMaximum".$lineBreak.
+                    "Category: ".var_export($categoryIdList, true).$lineBreak.
+                    "Series: $seriesId".$lineBreak.
+                    "Collection: $collectionId".$lineBreak;
+                    file_put_contents(storage_path('123.txt'), $searchData);
+                    abort(404);
+            }
+        }
 
         // Hide de-listed
         if (!$title) {

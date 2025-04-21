@@ -152,12 +152,10 @@ class Game extends Model implements Auditable
 
     public function scopeSearchShowRankedUnranked($query, $showRankedUnranked)
     {
-        if ($showRankedUnranked) {
-            if ($showRankedUnranked == 'Ranked') {
-                $query->whereNotNull('game_rank');
-            } elseif ($showRankedUnranked == 'Unranked') {
-                $query->whereNull('game_rank');
-            }
+        if ($showRankedUnranked == 'Ranked') {
+            $query->whereNotNull('game_rank');
+        } elseif ($showRankedUnranked == 'Unranked') {
+            $query->whereNull('game_rank');
         }
     }
 
