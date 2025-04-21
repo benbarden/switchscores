@@ -3,7 +3,7 @@
     {% for item in GameList %}
     <url>
         <loc>{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}</loc>
-        <lastmod>{{ item.updated_at }}</lastmod>
+        <lastmod>{{ item.updated_at|date('c') }}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
