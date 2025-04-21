@@ -162,31 +162,38 @@ class Game extends Model implements Auditable
 
     public function scopeSearchScoreMinimum($query, $scoreMinimum)
     {
+        $scoreMinimum = (float) $scoreMinimum;
         if ($scoreMinimum) $query->where('rating_avg', '>=', $scoreMinimum)->whereNotNull('game_rank');
     }
 
     public function scopeSearchPriceMaximum($query, $priceMaximum)
     {
+        $priceMaximum = (float) $priceMaximum;
         if ($priceMaximum) $query->where('price_eshop', '<=', $priceMaximum);
     }
 
     public function scopeSearchYearReleased($query, $yearReleased)
     {
+        $yearReleased = (int) $yearReleased;
         if ($yearReleased) $query->where('release_year', $yearReleased);
     }
 
     public function scopeSearchCategoryId($query, $categoryIdList)
     {
-        if ($categoryIdList) $query->whereIn('category_id', $categoryIdList);
+        if ($categoryIdList && is_array($categoryIdList)) {
+            $query->whereIn('category_id', $categoryIdList);
+        }
     }
 
     public function scopeSearchSeriesId($query, $seriesId)
     {
+        $seriesId = (int) $seriesId;
         if ($seriesId) $query->where('series_id', $seriesId);
     }
 
     public function scopeSearchCollectionId($query, $collectionId)
     {
+        $collectionId = (int) $collectionId;
         if ($collectionId) $query->where('collection_id', $collectionId);
     }
 }
