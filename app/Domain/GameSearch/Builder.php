@@ -120,21 +120,7 @@ class Builder
             ->searchSeriesId($seriesId)
             ->searchCollectionId($collectionId);
 
-        if ($title == 'the') {
-            if (!file_exists(storage_path('123.txt'))) {
-                $lineBreak = "\r\n";
-                $searchData =
-                    "Title: $title".$lineBreak.
-                    "Year: $yearReleased".$lineBreak.
-                    "Score: $scoreMinimum".$lineBreak.
-                    "Price: $priceMaximum".$lineBreak.
-                    "Category: ".var_export($categoryIdList, true).$lineBreak.
-                    "Series: $seriesId".$lineBreak.
-                    "Collection: $collectionId".$lineBreak;
-                    file_put_contents(storage_path('123.txt'), $searchData);
-                    abort(404);
-            }
-        }
+        if ($title == 'the') abort(404);
 
         // Hide de-listed
         if (!$title) {
