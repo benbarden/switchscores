@@ -173,6 +173,11 @@ class RegisterController extends Controller
             return redirect(route('about.invite-request-failure'));
         } else {
 
+            // Check email format
+            if (!str_contains($email, '@')) {
+                return redirect(route('about.invite-request-failure'));
+            }
+
             // Check deny list
             list($emailName, $emailDomain) = explode('@', $email);
             if ($this->repoInviteCodeDenyList->isDomainInDenyList($emailDomain)) {
