@@ -118,7 +118,7 @@ class Generator
 
         foreach ($yearListS1 as $year) {
 
-            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_1, $year);
+            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_1, $year, false);
             $bindings = $this->getBindings();
             $bindings['GameList'] = $gameList;
             $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);
@@ -129,7 +129,7 @@ class Generator
 
         foreach ($yearListS2 as $year) {
 
-            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_2, $year);
+            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_2, $year, false);
             $bindings = $this->getBindings();
             $bindings['GameList'] = $gameList;
             $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);

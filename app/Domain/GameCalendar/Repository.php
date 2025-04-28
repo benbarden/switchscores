@@ -31,15 +31,20 @@ class Repository
             ->orderBy('games.title', 'asc')->get();
     }
 
-    public function byYear($consoleId, $year)
+    public function byYear($consoleId, $year, $includeLowQuality = true)
     {
-        return Game::where('console_id', $consoleId)
+        $gameList = Game::where('console_id', $consoleId)
             ->whereYear('games.eu_release_date', '=', $year)
             ->where(function ($query) {
                 $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
                     ->orWhereNull('format_digital');
-            })
-            ->orderBy('games.eu_release_date', 'asc')
-            ->orderBy('games.title', 'asc')->get();
+            });
+
+        if (!$includeLowQuality) {
+            $gameList = $gameList->where('is_low_quality', 0);
+        }
+
+        $gameList = $gameList->orderBy('games.eu_release_date', 'asc')->orderBy('games.title', 'asc')->get();
+        return $gameList;
     }
 }
