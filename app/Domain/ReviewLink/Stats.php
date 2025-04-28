@@ -7,6 +7,7 @@ use App\Models\QuickReview;
 use App\Models\ReviewLink;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class Stats
 {
@@ -23,6 +24,86 @@ class Stats
     public function totalByUser($userId)
     {
         return ReviewLink::where('user_id', $userId)->count();
+    }
+
+    public function totalActiveByYearMonth($year, $month)
+    {
+        return ReviewLink::whereYear('review_links.review_date', $year)
+            ->whereMonth('review_links.review_date', $month)
+            ->count();
+    }
+
+    public function reviewCountStats($year)
+    {
+        return DB::select('
+            SELECT review_count, count(*) AS count
+            FROM games
+            WHERE release_year = ?
+            AND review_count != 0
+            GROUP BY review_count
+            ORDER BY review_count DESC
+        ', [$year]);
+    }
+
+    public function monthlyCountBySite($siteId)
+    {
+        return DB::select("
+            SELECT DATE_FORMAT(review_date, '%Y-%m') AS review_month, count(*) AS count
+            FROM review_links
+            WHERE site_id = ?
+            GROUP BY review_month, site_id
+        ", [$siteId]);
+    }
+
+    public function scoreDistributionBySite($siteId)
+    {
+        $reviewScores = DB::select("
+            SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
+            FROM review_links
+            WHERE site_id = ?
+            GROUP BY round(rating_normalised, 0);
+        ", [$siteId]);
+
+        return $this->scoreDistribution($reviewScores);
+    }
+
+    public function scoreDistributionByYear($year)
+    {
+        $reviewScores = DB::select("
+            SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
+            FROM review_links
+            WHERE YEAR(review_date) = ?
+            GROUP BY round(rating_normalised, 0);
+        ", [$year]);
+
+        return $this->scoreDistribution($reviewScores);
+    }
+
+    public function scoreDistribution($reviewScores)
+    {
+        if (!$reviewScores) return null;
+
+        $scoresArray = [
+            '0' => '0',
+            '1' => '0',
+            '2' => '0',
+            '3' => '0',
+            '4' => '0',
+            '5' => '0',
+            '6' => '0',
+            '7' => '0',
+            '8' => '0',
+            '9' => '0',
+            '10' => '0',
+        ];
+
+        foreach ($reviewScores as $score) {
+            $scoreValue = $score->RatingValue;
+            $scoreCount = $score->RatingCount;
+            $scoresArray[$scoreValue] = $scoreCount;
+        }
+
+        return $scoresArray;
     }
 
     public function calculateReviewCount(Collection $reviewLinks, Collection $quickReviews = null)

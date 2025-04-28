@@ -6,18 +6,16 @@ use App\Models\Game;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
-
-use App\Traits\SwitchServices;
 
 
 class GameController
 {
-    use SwitchServices;
-
     public function __construct(
         private GameRepository $repoGame,
         private GameListsRepository $repoGameLists,
+        private ReviewLinkRepository $repoReviewLink,
         private AmazonAffiliate $affiliateAmazon
     )
     {
@@ -132,7 +130,7 @@ class GameController
             return response()->json(['message' => 'Not found'], 404);
         }
 
-        $gameReviews = $this->getServiceReviewLink()->getByGame($gameId);
+        $gameReviews = $this->repoReviewLink->byGame($gameId);
 
         return response()->json(['reviews' => $gameReviews], 200);
     }

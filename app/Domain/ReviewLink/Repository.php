@@ -5,6 +5,7 @@ namespace App\Domain\ReviewLink;
 
 use App\Models\ReviewLink;
 use App\Models\ReviewSite;
+use Illuminate\Support\Facades\DB;
 
 class Repository
 {
@@ -80,6 +81,13 @@ class Repository
         return $reviews;
     }
 
+    public function bySiteScore($siteId, $rating)
+    {
+        return ReviewLink::where('site_id', $siteId)
+            ->where(DB::raw('round(rating_normalised, 0)'), $rating)
+            ->get();
+    }
+
     public function bySiteGameIdList($siteId)
     {
         return ReviewLink::where('site_id', $siteId)->orderBy('id', 'desc')->pluck('game_id');
@@ -87,7 +95,10 @@ class Repository
 
     public function byGame($gameId)
     {
-        return ReviewLink::where('game_id', $gameId)->get();
+        return ReviewLink::where('game_id', $gameId)
+            ->orderBy('review_links.rating_normalised', 'desc')
+            ->orderBy('review_links.review_date', 'asc')
+            ->get();
     }
 
     public function byUrl($url)
@@ -98,19 +109,5 @@ class Repository
     public function byGameAndSite($gameId, $siteId)
     {
         return ReviewLink::where('game_id', $gameId)->where('site_id', $siteId)->first();
-    }
-
-    public function getNormalisedRating($ratingOriginal, $ratingScale)
-    {
-        $normalisedScaleLimit = 10;
-
-        if ($ratingScale != $normalisedScaleLimit) {
-            $scaleMultiple = $normalisedScaleLimit / $ratingScale;
-            $ratingNormalised = round($ratingOriginal * $scaleMultiple, 2);
-        } else {
-            $ratingNormalised = $ratingOriginal;
-        }
-
-        return $ratingNormalised;
     }
 }

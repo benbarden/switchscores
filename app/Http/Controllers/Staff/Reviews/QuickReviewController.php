@@ -8,8 +8,9 @@ use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 use App\Models\QuickReview;
 
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\User\Repository as UserRepository;
 
 use App\Traits\SwitchServices;
@@ -19,9 +20,10 @@ class QuickReviewController extends Controller
     use SwitchServices;
 
     public function __construct(
-        private QuickReviewRepository $repoQuickReview,
         private GameRepository $repoGame,
-        private UserRepository $repoUser
+        private QuickReviewRepository $repoQuickReview,
+        private ReviewLinkRepository $repoReviewLink,
+        private UserRepository $repoUser,
     )
     {
     }
@@ -86,7 +88,7 @@ class QuickReviewController extends Controller
 
                 // Update game review stats
                 $game = $this->repoGame->find($gameId);
-                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $reviewLinks = $this->repoReviewLink->byGame($gameId);
                 $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
@@ -138,7 +140,7 @@ class QuickReviewController extends Controller
             $game = $this->repoGame->find($gameId);
             if ($game) {
                 // Update game review stats
-                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $reviewLinks = $this->repoReviewLink->byGame($gameId);
                 $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
             }

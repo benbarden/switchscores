@@ -5,19 +5,17 @@ namespace App\Http\Controllers\PublicSite;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\TopRated\DbQueries as DbTopRated;
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
-
-use App\Traits\SwitchServices;
+use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 
 use Illuminate\Routing\Controller as Controller;
 
 class ReviewsController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private DbTopRated $dbTopRated,
         private Breadcrumbs $viewBreadcrumbs,
-        private GameCalendarAllowedDates $allowedDates
+        private GameCalendarAllowedDates $allowedDates,
+        private ReviewLinkStatsRepository $repoReviewLinkStats,
     )
     {
     }
@@ -45,7 +43,7 @@ class ReviewsController extends Controller
 
                 if ($dateYear != $year) continue;
 
-                $reviewLinkStat = $this->getServiceReviewLink()->countActiveByYearMonth($dateYear, $dateMonth);
+                $reviewLinkStat = $this->repoReviewLinkStats->totalActiveByYearMonth($dateYear, $dateMonth);
                 if ($reviewLinkStat) {
                     $dateCount = $reviewLinkStat;
                 } else {
@@ -65,13 +63,13 @@ class ReviewsController extends Controller
         }
 
         // Score distribution
-        $bindings['ScoreDistributionByYear'] = $this->getServiceReviewLink()->getFullScoreDistributionByYear($year);
+        $bindings['ScoreDistributionByYear'] = $this->repoReviewLinkStats->scoreDistributionByYear($year);
 
         // Ranked/Unranked count
         $bindings['RankedCountByYear'] = $this->dbTopRated->rankedCountByYear($year);
 
         // Review count stats
-        $bindings['ReviewCountStatsByYear'] = $this->getServiceReviewLink()->getReviewCountStatsByYear($year);
+        $bindings['ReviewCountStatsByYear'] = $this->repoReviewLinkStats->reviewCountStats($year);
 
         $bindings['DateList'] = $dateListArray;
         $bindings['ReviewTotal'.$year] = $reviewTotal;

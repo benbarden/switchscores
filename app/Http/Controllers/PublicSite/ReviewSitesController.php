@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 use App\Traits\SwitchServices;
 
@@ -17,7 +18,8 @@ class ReviewSitesController extends Controller
     public function __construct(
         private Breadcrumbs $viewBreadcrumbs,
         private ReviewLinkRepository $repoReviewLink,
-        private ReviewSiteRepository $repoReviewSite
+        private ReviewLinkStatsRepository $repoReviewLinkStats,
+        private ReviewSiteRepository $repoReviewSite,
     )
     {
     }
@@ -59,8 +61,7 @@ class ReviewSitesController extends Controller
         $bindings['PartnerData'] = $reviewSite;
 
         $siteReviewsLatest = $this->repoReviewLink->bySiteLatest($siteId);
-        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($siteId);
-        $reviewScoreDistribution = $this->getServiceReviewLink()->getSiteScoreDistribution($siteId);
+        $reviewScoreDistribution = $this->repoReviewLinkStats->scoreDistributionBySite($siteId);
 
         $mostUsedScore = ['topScore' => 0, 'topScoreCount' => 0];
         if ($reviewScoreDistribution) {
@@ -72,7 +73,6 @@ class ReviewSitesController extends Controller
         }
 
         $bindings['SiteReviewsLatest'] = $siteReviewsLatest;
-        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
         $bindings['ReviewScoreDistribution'] = $reviewScoreDistribution;
         $bindings['MostUsedScore'] = $mostUsedScore;
 

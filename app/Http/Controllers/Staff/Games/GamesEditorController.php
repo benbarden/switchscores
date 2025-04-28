@@ -11,24 +11,25 @@ use Illuminate\Support\Facades\Validator;
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
-use App\Domain\GameCollection\Repository as GameCollectionRepository;
-use App\Domain\GameSeries\Repository as GameSeriesRepository;
-use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
-use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Category\Repository as CategoryRepository;
-use App\Domain\Game\FormatOptions as GameFormatOptions;
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\Game\QualityFilter as GameQualityFilter;
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\Console\Repository as ConsoleRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
-use App\Domain\News\Repository as NewsRepository;
-use App\Domain\GamePublisher\Repository as GamePublisherRepository;
-use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
-use App\Domain\GameTag\Repository as GameTagRepository;
-use App\Domain\Console\Repository as ConsoleRepository;
+use App\Domain\Game\FormatOptions as GameFormatOptions;
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
+use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
+use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
+use App\Domain\GameTag\Repository as GameTagRepository;
+use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
+use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\News\Repository as NewsRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -37,12 +38,8 @@ use App\Models\Game;
 
 use App\Services\Game\Images as GameImages;
 
-use App\Traits\SwitchServices;
-
 class GamesEditorController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -58,23 +55,24 @@ class GamesEditorController extends Controller
     ];
 
     public function __construct(
-        private GameTitleHashRepository $repoGameTitleHash,
-        private HashGeneratorRepository $gameTitleHashGenerator,
-        private GameSeriesRepository $repoGameSeries,
-        private GameCollectionRepository $repoGameCollection,
         private CategoryRepository $repoCategory,
-        private GameFormatOptions $formatOptions,
-        private GameRepository $repoGame,
-        private GameQualityFilter $gameQualityFilter,
-        private GamesCompanyRepository $repoGamesCompany,
-        private NewsRepository $repoNews,
-        private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper,
+        private ConsoleRepository $repoConsole,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private GameRepository $repoGame,
+        private GameFormatOptions $formatOptions,
+        private GameCollectionRepository $repoGameCollection,
+        private GameDeveloperRepository $repoGameDeveloper,
+        private GameImportRuleEshopRepository $repoGameImportRuleEshop,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameQualityFilter $gameQualityFilter,
+        private GameSeriesRepository $repoGameSeries,
         private GameTagRepository $repoGameTag,
-        private ConsoleRepository $repoConsole,
-        private GameImportRuleEshopRepository $repoGameImportRuleEshop
+        private GameTitleHashRepository $repoGameTitleHash,
+        private HashGeneratorRepository $gameTitleHashGenerator,
+        private GamesCompanyRepository $repoGamesCompany,
+        private NewsRepository $repoNews,
+        private ReviewLinkRepository $repoReviewLink,
     )
     {
     }
@@ -350,7 +348,7 @@ class GamesEditorController extends Controller
             $customErrors[] = 'Game is linked to '.count($gameNews).' news article(s)';
         }
 
-        $gameReviews = $this->getServiceReviewLink()->getByGame($gameId);
+        $gameReviews = $this->repoReviewLink->byGame($gameId);
         if (count($gameReviews) > 0) {
             $customErrors[] = 'Game is linked to '.count($gameReviews).' review(s)';
         }

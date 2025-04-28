@@ -47,10 +47,6 @@ class IndexController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        // Review stats (for infobox)
-        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($partnerId);
-        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
-
         // Recent reviews
         $bindings['SiteReviewsLatest'] = $this->repoReviewLink->bySiteLatest($partnerId, 10);
 

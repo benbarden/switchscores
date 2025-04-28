@@ -7,11 +7,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
@@ -35,11 +36,12 @@ class ReviewLinkController extends Controller
     ];
 
     public function __construct(
+        private GameRepository $repoGame,
+        private QuickReviewRepository $repoQuickReview,
+        private ReviewLinkCalculations $calcReviewLink,
         private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite,
-        private GameRepository $repoGame,
         private ReviewLinkStats $reviewLinkStats,
-        private QuickReviewRepository $repoQuickReview
     )
     {
     }
@@ -108,14 +110,14 @@ class ReviewLinkController extends Controller
                 $existingReview = $this->repoReviewLink->byGameAndSite($gameId, $siteId);
                 if ($existingReview) continue;
 
-                $ratingNormalised = $this->repoReviewLink->getNormalisedRating($rating, $reviewSite->rating_scale);
+                $ratingNormalised = $this->calcReviewLink->normaliseRating($rating, $reviewSite->rating_scale);
 
                 $reviewLink = $this->repoReviewLink->create(
                     $gameId, $siteId, $url, $rating, $ratingNormalised, $reviewDate
                 );
 
                 // Update game review stats
-                $reviewLinks = $this->getServiceReviewLink()->getByGame($gameId);
+                $reviewLinks = $this->repoReviewLink->byGame($gameId);
                 $quickReviews = $this->repoQuickReview->byGameActive($gameId);
                 $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
 
@@ -147,7 +149,7 @@ class ReviewLinkController extends Controller
             $reviewSite = $this->repoReviewSite->find($siteId);
             $gameId = $request->game_id;
 
-            $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $this->calcReviewLink->normaliseRating($ratingOriginal, $reviewSite->rating_scale);
 
             $reviewLink = $this->repoReviewLink->create(
                 $gameId, $siteId, $request->url, $ratingOriginal, $ratingNormalised,
@@ -196,7 +198,7 @@ class ReviewLinkController extends Controller
             $reviewSite = $this->repoReviewSite->find($siteId);
             $gameId = $request->game_id;
 
-            $ratingNormalised = $this->getServiceReviewLink()->getNormalisedRating($ratingOriginal, $reviewSite);
+            $ratingNormalised = $this->calcReviewLink->normaliseRating($ratingOriginal, $reviewSite->rating_scale);
 
             $this->repoReviewLink->edit(
                 $reviewLinkData,

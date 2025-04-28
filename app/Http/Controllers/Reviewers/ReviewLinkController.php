@@ -26,8 +26,6 @@ class ReviewLinkController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $serviceReviewLink = $this->getServiceReviewLink();
-
         $currentUser = resolve('User/Repository')->currentUser();
 
         $partnerId = $currentUser->partner_id;
@@ -52,7 +50,7 @@ class ReviewLinkController extends Controller
             case 'score-9':
             case 'score-10':
                 $rating = str_replace('score-', '', $report);
-                $reviewLinks = $serviceReviewLink->getBySiteScore($partnerId, $rating);
+                $reviewLinks = $this->repoReviewLink->bySiteScore($partnerId, $rating);
                 $bindings['FilterType'] = 'by-score';
                 $bindings['FilterName'] = $report;
                 $bindings['FilterValue'] = $rating;

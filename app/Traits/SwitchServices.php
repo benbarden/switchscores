@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 
 trait SwitchServices
@@ -58,15 +57,6 @@ trait SwitchServices
     }
 
     // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return ReviewLinkService
-     */
-    public function getServiceReviewLink()
-    {
-        return $this->loadService('ReviewLinkService');
-    }
 
     /**
      * @deprecated

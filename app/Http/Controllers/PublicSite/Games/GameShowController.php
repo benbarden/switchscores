@@ -2,45 +2,42 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
+use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\Game\AutoDescription;
 use App\Domain\Game\Repository as GameRepository;
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\News\Repository as NewsRepository;
-use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
-use App\Domain\Game\AutoDescription;
-use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
-use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
-
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
-use App\Traits\SwitchServices;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 
 use Illuminate\Routing\Controller as Controller;
 
 class GameShowController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private GameRepository $repoGame,
-        private FeaturedGameRepository $repoFeaturedGames,
-        private GameListsRepository $repoGameLists,
-        private GameStatsRepository $repoGameStats,
-        private NewsRepository $repoNews,
         private Breadcrumbs $viewBreadcrumbs,
-        private GamePublisherRepository $repoGamePublisher,
-        private GameDeveloperRepository $repoGameDeveloper,
-        private AutoDescription $autoDescription,
-        private UserGamesCollectionRepository $repoUserGamesCollection,
+
         private AmazonAffiliate $affiliateAmazon,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private AutoDescription $autoDescription,
+        private GameRepository $repoGame,
+        private GameDeveloperRepository $repoGameDeveloper,
+        private GameListsRepository $repoGameLists,
+        private GamePublisherRepository $repoGamePublisher,
+        private GameStatsRepository $repoGameStats,
+        private GameTagRepository $repoGameTag,
+        private NewsRepository $repoNews,
         private QuickReviewRepository $repoQuickReview,
-        private GameTagRepository $repoGameTag
+        private ReviewLinkRepository $repoReviewLink,
+        private UserGamesCollectionRepository $repoUserGamesCollection,
     )
     {
     }
@@ -71,7 +68,7 @@ class GameShowController extends Controller
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
-        $bindings['GameReviews'] = $this->getServiceReviewLink()->getByGame($gameId);
+        $bindings['GameReviews'] = $this->repoReviewLink->byGame($gameId);
         $bindings['GameQuickReviewList'] = $this->repoQuickReview->byGameActive($gameId);
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
@@ -187,9 +184,7 @@ class GameShowController extends Controller
      */
     public function showId($id)
     {
-        $serviceGame = $this->repoGame;
-
-        $gameData = $serviceGame->find($id);
+        $gameData = $this->repoGame->find($id);
         if (!$gameData) {
             abort(404);
         }

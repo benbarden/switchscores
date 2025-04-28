@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reviewers;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 
 use App\Traits\SwitchServices;
 
@@ -13,7 +14,8 @@ class StatsController extends Controller
     use SwitchServices;
 
     public function __construct(
-        private ReviewSiteRepository $repoReviewSite
+        private ReviewSiteRepository $repoReviewSite,
+        private ReviewLinkStatsRepository $repoReviewLinkStats,
     )
     {
     }
@@ -35,12 +37,8 @@ class StatsController extends Controller
 
         $bindings['PartnerData'] = $reviewSite;
 
-        // Review stats (for infobox)
-        $reviewStats = $this->getServiceReviewLink()->getSiteReviewStats($partnerId);
-        $bindings['ReviewAvg'] = round($reviewStats[0]->ReviewAvg, 2);
-
         // Score distribution
-        $bindings['ScoreDistribution'] = $this->getServiceReviewLink()->getSiteScoreDistribution($partnerId);
+        $bindings['ScoreDistribution'] = $this->repoReviewLinkStats->scoreDistributionBySite($partnerId);
 
         return view('reviewers.stats.landing', $bindings);
     }
