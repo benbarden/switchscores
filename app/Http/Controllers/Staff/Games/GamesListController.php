@@ -13,12 +13,8 @@ use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
 
-use App\Traits\SwitchServices;
-
 class GamesListController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameListsRepository $repoGameLists,
         private CategoryRepository $repoCategory,
@@ -211,7 +207,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getWithNoNintendoCoUkLink();
+        $bindings['GameList'] = $this->repoGameLists->noNintendoCoUkLink();
 
         return view('staff.games.list.standard-view', $bindings);
     }
@@ -223,7 +219,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink();
+        $bindings['GameList'] = $this->repoGameLists->brokenNintendoCoUkLink();
 
         $bindings['CustomHeader'] = 'Review count';
         $bindings['ListMode'] = 'broken-nintendo-co-uk-link';

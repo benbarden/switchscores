@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\GameService;
 use App\Services\ReviewLinkService;
 use App\Services\ReviewStatsService;
 
@@ -59,15 +58,6 @@ trait SwitchServices
     }
 
     // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return GameService
-     */
-    public function getServiceGame()
-    {
-        return $this->loadService('GameService');
-    }
 
     /**
      * @deprecated

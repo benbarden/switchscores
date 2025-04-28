@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-
-use App\Traits\SwitchServices;
+use App\Domain\GameLists\Repository as GameListsRepository;
 
 class DashboardController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
-        private GameStatsRepository $repoGameStats
+        private GameStatsRepository $repoGameStats,
+        private GameListsRepository $repoGameLists
     )
     {
     }
@@ -30,8 +26,8 @@ class DashboardController extends Controller
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
 
         // Missing data
-        $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
-        $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
+        $bindings['NoNintendoCoUkLinkCount'] = $this->repoGameLists->noNintendoCoUkLink()->count();
+        $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->repoGameStats->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStats->totalNoVideoType();
         $bindings['MissingAmazonUkLink'] = $this->repoGameStats->totalNoAmazonUkLink();

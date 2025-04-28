@@ -29,14 +29,9 @@
         <div class="col-md-2"></div>
     </div>
     <div class="form-group">
-        <label for="game_id" class="col-md-2 control-label">Game</label>
+        <label for="game_id" class="col-md-2 control-label">Game id</label>
         <div class="col-md-8">
-            <select id="game_id" class="form-control" name="game_id">
-                <option value="">&nbsp;</option>
-                {% for item in GamesList %}
-                    <option value="{{ item.id }}">{{ item.title }}</option>
-                {% endfor %}
-            </select>
+            <input id="game_id" type="text" class="form-control" name="game_id" maxlength="12">
         </div>
         <div class="col-md-2"></div>
     </div>

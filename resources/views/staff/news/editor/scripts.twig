@@ -31,8 +31,6 @@
     $('#game_id').val(formVals['game_id']);
     $('#custom_image_url').val(formVals['custom_image_url']);
 
-    $('#game_id').select2();
-
     $('#url').on('focus', function() {
         ssAdminTools.generateNewsUrl('title', 'url', newsId);
     });

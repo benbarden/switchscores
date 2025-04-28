@@ -33,8 +33,6 @@
     $('#review_date').val(formVals['review_date']);
     $('#description').val(formVals['description']);
 
-    $('#game_id').select2();
-
     $('#url').on('blur', function() {
         reviewUrl = $(this).val();
         if (reviewUrl == '') {

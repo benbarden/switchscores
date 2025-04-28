@@ -10,12 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
-use App\Traits\SwitchServices;
-
 class EditorController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -59,8 +55,6 @@ class EditorController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
-
         $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('staff.news.editor.add', $bindings);
@@ -98,8 +92,6 @@ class EditorController extends Controller
 
         $bindings['NewsData'] = $newsData;
         $bindings['NewsId'] = $newsId;
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 

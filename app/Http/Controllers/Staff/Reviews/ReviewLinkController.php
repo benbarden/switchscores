@@ -168,8 +168,6 @@ class ReviewLinkController extends Controller
 
         $bindings['FormMode'] = 'add';
 
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
-
         $bindings['ReviewSites'] = $this->repoReviewSite->getAll();
 
         return view('staff.reviews.link.add', $bindings);
@@ -224,8 +222,6 @@ class ReviewLinkController extends Controller
 
         $bindings['ReviewLinkData'] = $reviewLinkData;
         $bindings['LinkId'] = $linkId;
-
-        $bindings['GamesList'] = $this->getServiceGame()->getAll();
 
         $bindings['ReviewSites'] = $this->repoReviewSite->getAll();
 

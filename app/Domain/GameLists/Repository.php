@@ -452,6 +452,33 @@ class Repository
             ->get();
     }
 
+    public function noNintendoCoUkLink($limit = null)
+    {
+        $gameList = Game::whereNull('eshop_europe_fs_id')
+            ->whereNull('nintendo_store_url_override')
+            ->whereNotNull('eu_release_date')
+            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->orderBy('id', 'desc');
+        if ($limit) {
+            $gameList = $gameList->limit($limit);
+        }
+        return $gameList->get();
+    }
+
+    public function brokenNintendoCoUkLink($limit = null)
+    {
+        $gameList = DB::table('games')
+            ->select('games.*')
+            ->leftJoin('data_source_parsed', 'games.eshop_europe_fs_id', '=', 'data_source_parsed.link_id')
+            ->whereNotNull('games.eshop_europe_fs_id')
+            ->whereNull('data_source_parsed.link_id')
+            ->whereNull('games.nintendo_store_url_override');
+        if ($limit) {
+            $gameList = $gameList->limit($limit);
+        }
+        return $gameList->get();
+    }
+
     public function anyWithNintendoCoUkIdOrStoreOverride($limit = 5)
     {
         return Game::whereNull('eshop_europe_fs_id')

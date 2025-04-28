@@ -18,12 +18,8 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
 
-use App\Traits\SwitchServices;
-
 class IndexController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
@@ -61,8 +57,8 @@ class IndexController extends Controller
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
 
         // Nintendo links
-        $bindings['NoNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithNoNintendoCoUkLink()->count();
-        $bindings['BrokenNintendoCoUkLinkCount'] = $this->getServiceGame()->getWithBrokenNintendoCoUkLink()->count();
+        $bindings['NoNintendoCoUkLinkCount'] = $this->repoGameLists->noNintendoCoUkLink()->count();
+        $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
 
         // Missing data
         $bindings['NoCategoryExcludingLowQualityCount'] = $this->repoGameStats->totalNoCategoryExcludingLowQuality();
