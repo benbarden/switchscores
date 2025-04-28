@@ -109,7 +109,7 @@ class AsGamesManagerTest extends TestCase
     {
         $this->be($this->activeUser);
         $this->doPageTest("/staff/games/title-hash/list/1");
-        $this->doPageTest("/staff/games/title-hash/add");
+        $this->doPageTest("/staff/games/title-hash/add?gameId=1");
         $this->doPageTest("/staff/games/title-hash/edit/1");
         $this->doPageTest("/staff/games/title-hash/delete/1");
     }

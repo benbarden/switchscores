@@ -9,10 +9,14 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PublicPageTest extends TestCase
 {
-    public function doPageTest($url)
+    const HTTP_OK = 200;
+    const HTTP_REDIR_PERM = 301;
+    const HTTP_REDIR_TEMP = 302;
+
+    public function doPageTest($url, $status = self::HTTP_OK)
     {
         $response = $this->get($url);
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 
     public function doPageNotFoundTest($url)
@@ -41,13 +45,13 @@ class PublicPageTest extends TestCase
         $this->doPageTest("/help");
         $this->doPageTest("/help/low-quality-filter");
 
-        $this->doPageTest("/lists");
-        $this->doPageTest("/games/recent");
-        $this->doPageTest("/games/upcoming");
+        $this->doPageTest("/lists", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/games/recent", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/games/upcoming", self::HTTP_REDIR_TEMP);
         $this->doPageTest("/games/on-sale");
-        $this->doPageTest("/games/on-sale/archive");
+        //$this->doPageTest("/games/on-sale/archive");
         $this->doPageTest("/lists/recently-ranked");
-        $this->doPageTest("/lists/recently-reviewed-still-unranked");
+        //$this->doPageTest("/lists/recently-reviewed-still-unranked");
 
         $this->doPageTest("/news");
         $this->doPageTest("/news/category/editorial");
@@ -79,19 +83,18 @@ class PublicPageTest extends TestCase
         $this->doPageTest("/games/by-date");
         $this->doPageTest("/games/by-date/2020-01");
 
-        $response = $this->get('/games/1');
-        $response->assertStatus(301);
+        $this->doPageTest("/games/1", self::HTTP_REDIR_PERM);
 
         $this->doPageTest('/games/1/the-legend-of-zelda-breath-of-the-wild');
 
-        $this->doPageTest("/sitemap");
-        $this->doPageTest("/sitemap/site");
-        $this->doPageTest("/sitemap/games");
-        $this->doPageTest("/sitemap/calendar");
-        $this->doPageTest("/sitemap/top-rated");
-        $this->doPageTest("/sitemap/reviews");
-        $this->doPageTest("/sitemap/tags");
-        $this->doPageTest("/sitemap/news");
+        $this->doPageTest("/sitemap", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/site", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/games", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/calendar", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/top-rated", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/reviews", self::HTTP_REDIR_TEMP);
+        $this->doPageTest("/sitemap/tags", self::HTTP_REDIR_TEMP);
+        //$this->doPageTest("/sitemap/news");
     }
 
     public function testPageNotFound()

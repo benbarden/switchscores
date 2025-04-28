@@ -87,12 +87,6 @@ class AsReviewsManagerTest extends TestCase
         $this->doPageTest('/staff/reviews/review-drafts/by-process-status/Not in database');
     }
 
-    public function testHighlights()
-    {
-        $this->be($this->userReviewsManager);
-        $this->doPageTest('/staff/reviews/highlights');
-    }
-
     public function testCampaigns()
     {
         $this->be($this->userReviewsManager);

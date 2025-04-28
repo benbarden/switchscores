@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Reviewers;
 
-use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\Campaign\Repository as CampaignRepository;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 class CampaignsController extends Controller
 {
     public function __construct(
+        private CampaignRepository $repoCampaign,
+        private GameRepository $repoGame,
         private ReviewLinkRepository $repoReviewLink,
-        private CampaignRepository $repoCampaign
     )
     {
     }
@@ -34,7 +36,7 @@ class CampaignsController extends Controller
             if ($gameItem->game) {
                 $gameId = $gameItem->game->id;
                 if ($gameId) {
-                    $game = $this->getServiceGame()->find($gameId);
+                    $game = $this->repoGame->find($gameId);
                     if ($game) {
                         $gameList[] = $game;
                     }

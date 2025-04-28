@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Services\ReviewStatsService;
-
 trait SwitchServices
 {
     private $services = [];
@@ -54,16 +52,5 @@ trait SwitchServices
             throw new \Exception('Failed to load service class: '.$serviceKey);
         }
         return $serviceName;
-    }
-
-    // ** Standard service classes ** //
-
-    /**
-     * @deprecated
-     * @return ReviewStatsService
-     */
-    public function getServiceReviewStats()
-    {
-        return $this->loadService('ReviewStatsService');
     }
 }

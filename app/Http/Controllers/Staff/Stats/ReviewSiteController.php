@@ -4,23 +4,19 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-
-use App\Traits\SwitchServices;
 
 class ReviewSiteController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
         private UnrankedRepository $repoUnranked,
         private ReviewSiteRepository $repoReviewSite,
+        private ReviewLinkCalculations $calcReviewLink,
         private ReviewLinkStats $statsReviewLink
     )
     {
@@ -52,8 +48,8 @@ class ReviewSiteController extends Controller
             $reviewCount = $reviewSite->review_count;
             $latestReviewDate = $reviewSite->last_review_date;
 
-            $reviewLinkContribTotal = $this->getServiceReviewStats()->calculateContributionPercentage($reviewCount, $reviewLinkCount);
-            $reviewGameCompletionTotal = $this->getServiceReviewStats()->calculateContributionPercentage($reviewCount, $releasedGameCount);
+            $reviewLinkContribTotal = $this->calcReviewLink->contributionPercentage($reviewCount, $reviewLinkCount);
+            $reviewGameCompletionTotal = $this->calcReviewLink->contributionPercentage($reviewCount, $releasedGameCount);
 
             $reviewSitesRender[] = [
                 'id' => $id,

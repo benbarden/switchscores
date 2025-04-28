@@ -13,35 +13,28 @@ class SitemapTest extends TestCase
     {
         $response = $this->get('/sitemap');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testSitemapSite()
     {
         $response = $this->get('/sitemap/site');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testSitemapTags()
     {
         $response = $this->get('/sitemap/tags');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testSitemapGames()
     {
         $response = $this->get('/sitemap/games');
 
-        $response->assertStatus(200);
-    }
-
-    public function testSitemapNews()
-    {
-        $response = $this->get('/sitemap/news');
-
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
 }

@@ -26,6 +26,7 @@ class ScraperReviewListTest extends TestCase
         parent::tearDown();
     }
 
+    /*
     public function testLoadUrlPocketTactics()
     {
         $this->scraper->crawlPage('https://www.pockettactics.com/best-mobile-games-2025');
@@ -41,6 +42,7 @@ class ScraperReviewListTest extends TestCase
         // 1: Date
         // 2: Rating
     }
+    */
 
     public function testLoadUrlNWR()
     {

@@ -19,4 +19,15 @@ class Calculations
 
         return $ratingNormalised;
     }
+
+    public function contributionPercentage($contribTotal, $siteTotal)
+    {
+        if ($siteTotal == 0) return 0;
+        if ($contribTotal == 0) return 0;
+
+        $percentage = ($contribTotal / $siteTotal) * 100;
+        $percentage = round($percentage, 2);
+
+        return $percentage;
+    }
 }

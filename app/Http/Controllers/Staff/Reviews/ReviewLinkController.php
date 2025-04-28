@@ -116,10 +116,7 @@ class ReviewLinkController extends Controller
                     $gameId, $siteId, $url, $rating, $ratingNormalised, $reviewDate
                 );
 
-                // Update game review stats
-                $reviewLinks = $this->repoReviewLink->byGame($gameId);
-                $quickReviews = $this->repoQuickReview->byGameActive($gameId);
-                $this->getServiceReviewStats()->updateGameReviewStats($game, $reviewLinks, $quickReviews);
+                $this->reviewLinkStats->updateStats($game);
 
             }
 

@@ -97,4 +97,48 @@ class CalculationsTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function testCalculateReviewLinkContributionTenPercent()
+    {
+        $contribTotal = 100;
+        $siteTotal = 1000;
+        $expected = 10.0;
+
+        $actual = $this->calculations->contributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateReviewLinkContributionHalfPercent()
+    {
+        $contribTotal = 5;
+        $siteTotal = 1000;
+        $expected = 0.5;
+
+        $actual = $this->calculations->contributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateGameDatabaseCompletionOnePercent()
+    {
+        $contribTotal = 15;
+        $siteTotal = 1500;
+        $expected = 1.0;
+
+        $actual = $this->calculations->contributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCalculateGameDatabaseCompletionOneHundredPercent()
+    {
+        $contribTotal = 1500;
+        $siteTotal = 1500;
+        $expected = 100;
+
+        $actual = $this->calculations->contributionPercentage($contribTotal, $siteTotal);
+
+        $this->assertEquals($expected, $actual);
+    }
 }

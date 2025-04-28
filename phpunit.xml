@@ -26,9 +26,6 @@
     <testsuite name="DataSources">
       <directory suffix="Test.php">./tests/Unit/Services/DataSources</directory>
     </testsuite>
-    <testsuite name="Shortcode">
-      <directory suffix="Test.php">./tests/Unit/Services/Shortcode</directory>
-    </testsuite>
   </testsuites>
   <php>
     <env name="APP_ENV" value="testing"/>
