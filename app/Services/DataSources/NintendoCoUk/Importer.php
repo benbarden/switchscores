@@ -185,6 +185,8 @@ class Importer
                 $systemType = $sourceItem['system_type'][0];
                 if ($systemType == 'nintendoswitch2') {
                     $consoleId = Console::ID_SWITCH_2;
+                } elseif ($systemType == 'nintendoswitch2,nintendoswitch2') {
+                    $consoleId = Console::ID_SWITCH_2;
                 } else {
                     $consoleId = Console::ID_SWITCH_1;
                 }
