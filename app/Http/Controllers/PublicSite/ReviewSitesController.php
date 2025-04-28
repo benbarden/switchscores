@@ -7,14 +7,10 @@ use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
-use App\Traits\SwitchServices;
-
 use Illuminate\Routing\Controller as Controller;
 
 class ReviewSitesController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private Breadcrumbs $viewBreadcrumbs,
         private ReviewLinkRepository $repoReviewLink,

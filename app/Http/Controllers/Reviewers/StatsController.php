@@ -7,12 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 
-use App\Traits\SwitchServices;
-
 class StatsController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private ReviewSiteRepository $repoReviewSite,
         private ReviewLinkStatsRepository $repoReviewLinkStats,

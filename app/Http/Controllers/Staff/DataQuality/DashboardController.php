@@ -6,8 +6,6 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\IntegrityCheck\Repository as IntegrityCheckRepository;
 
-use App\Traits\SwitchServices;
-
 use App\Services\DataQuality\QualityStats;
 
 class DashboardController extends Controller

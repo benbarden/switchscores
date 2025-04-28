@@ -9,12 +9,8 @@ use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
-use App\Traits\SwitchServices;
-
 class DownloadImages extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

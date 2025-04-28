@@ -10,11 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
-use App\Traits\SwitchServices;
-
 class ProfileController extends Controller
 {
-    use SwitchServices;
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**

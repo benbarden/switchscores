@@ -8,12 +8,8 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 
-use App\Traits\SwitchServices;
-
 class FeedHealthController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private ReviewSiteRepository $repoReviewSite,
         private PartnerFeedLinkRepository $repoPartnerFeedLink,

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Reviewers;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
@@ -12,14 +11,9 @@ use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
-use App\Traits\SwitchServices;
-
 class IndexController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
-        private ReviewSiteRepository $repoReviewSite,
         private PartnerFeedLinkRepository $repoPartnerFeedLink,
         private CampaignRepository $repoCampaign,
         private ReviewDraftRepository $repoReviewDraft,

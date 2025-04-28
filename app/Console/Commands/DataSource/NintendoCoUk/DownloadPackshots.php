@@ -9,12 +9,8 @@ use App\Domain\Game\Repository as RepoGame;
 
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 
-use App\Traits\SwitchServices;
-
 class DownloadPackshots extends Command
 {
-    use SwitchServices;
-
     const MODE_REFRESH_ALL = 'refreshAll';
     const MODE_NOT_DOWNLOADED = 'notDownloaded';
 

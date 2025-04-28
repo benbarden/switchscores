@@ -12,12 +12,8 @@ use App\Domain\Scraper\NintendoCoUkPackshot;
 use App\Factories\DataSource\NintendoCoUk\DownloadImageFactory;
 use App\Domain\DataSource\NintendoCoUk\PackshotUrlBuilder;
 
-use App\Traits\SwitchServices;
-
 class DownloadImagesByScraper extends Command
 {
-    use SwitchServices;
-
     /**
      * The name and signature of the console command.
      *

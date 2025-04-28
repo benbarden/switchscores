@@ -10,20 +10,14 @@ use App\Models\QuickReview;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
-use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Domain\User\Repository as UserRepository;
 
-use App\Traits\SwitchServices;
-
 class QuickReviewController extends Controller
 {
-    use SwitchServices;
-
     public function __construct(
         private GameRepository $repoGame,
         private QuickReviewRepository $repoQuickReview,
-        private ReviewLinkRepository $repoReviewLink,
         private ReviewLinkStats $reviewLinkStats,
         private UserRepository $repoUser,
     )

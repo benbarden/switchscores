@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Traits\SwitchServices;
-
 use App\Services\DataQuality\QualityStats;
 
 class CategoryController extends Controller

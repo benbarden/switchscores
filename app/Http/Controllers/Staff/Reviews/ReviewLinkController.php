@@ -17,12 +17,8 @@ use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Events\ReviewLinkCreated;
 use App\Models\ReviewLink;
 
-use App\Traits\SwitchServices;
-
 class ReviewLinkController extends Controller
 {
-    use SwitchServices;
-
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
