@@ -5,16 +5,14 @@
             <tr>
                 <th>Date</th>
                 <th class="text-center">Games</th>
-                <th></th>
+                <th>Options</th>
             </tr>
             {% for item in DateList %}
                 {% set YearMonthRoute = route('console.byMonth',
                     {'console': Console, 'year': item.DateRaw|date('Y'), 'month': item.DateRaw|date('m')}) %}
                 <tr>
                     <td>
-                        <a href="{{ YearMonthRoute }}">
-                            {{ item.DateRaw|date('M Y') }}
-                        </a>
+                        {{ item.DateRaw|date('M Y') }}
                     </td>
                     <td class="text-center">
                         {{ item.GameCount }}
@@ -27,6 +25,11 @@
                 </tr>
             {% endfor %}
         </table>
+        <p>
+            <a class="btn btn-sm btn-primary" style="color: #fff;" href="{{ route('console.topRated.byYear', {'console': Console, 'year': Year}) }}">
+                Top Rated - {{ Console.name}} - {{ Year }}
+            </a>
+        </p>
     </div>
     <div class="col-sm-6 col-md-6 col-lg-6">
         <h2>Releases by month</h2>

@@ -45,11 +45,19 @@ Route::controller('PublicSite\Console\ConsoleController')->group(function () {
     Route::get('/c/{console:slug?}/new-releases', 'newReleases')->name('console.newReleases');
     Route::get('/c/{console:slug?}/upcoming', 'upcomingReleases')->name('console.upcomingReleases');
 });
+Route::controller('PublicSite\Console\TopRatedController')->group(function () {
+    Route::get('/c/{console:slug?}/top-rated', 'landing')->name('console.topRated.landing');
+    Route::get('/c/{console:slug?}/top-rated/all-time', 'allTime')->name('console.topRated.allTime');
+    Route::get('/c/{console:slug?}/top-rated/all-time/page/{page}', 'allTimePage')->name('console.topRated.allTime.page');
+    Route::get('/c/{console:slug?}/top-rated/by-year/{year}', 'byYear')->name('console.topRated.byYear');
+});
+// These must appear after the other console links
 Route::controller('PublicSite\Console\BrowseByDateController')->group(function () {
     Route::get('/c/{console:slug?}/{year}', 'byYear')->name('console.byYear');
     Route::get('/c/{console:slug?}/{year}/{month}', 'byMonth')->name('console.byMonth');
 });
 
+/*
 Route::controller('PublicSite\Console\BrowseController')->group(function () {
     Route::get('/c/{console:slug?}/category/{category}', 'byCategoryLanding')->name('console.byCategoryLanding');
     Route::get('/c/{console:slug?}/category', 'byCategoryPage')->name('console.byCategoryPage');
@@ -60,6 +68,7 @@ Route::controller('PublicSite\Console\BrowseController')->group(function () {
     Route::get('/c/{console:slug?}/tag/{tag}', 'byTagLanding')->name('console.byTagLanding');
     Route::get('/c/{console:slug?}/tag', 'byTagPage')->name('console.byTagPage');
 });
+*/
 
 // Main game pages
 Route::redirect('/games', '/c/switch-1')->name('games.landing');
@@ -94,10 +103,10 @@ Route::get('/games/{id}', 'PublicSite\Games\GameShowController@showId')->name('g
 Route::get('/games/{id}/{linkTitle}', 'PublicSite\Games\GameShowController@show')->name('game.show');
 
 /* Top Rated */
-Route::get('/top-rated', 'PublicSite\TopRatedController@landing')->name('topRated.landing');
-Route::get('/top-rated/all-time', 'PublicSite\TopRatedController@allTime')->name('topRated.allTime');
-Route::get('/top-rated/all-time/page/{page}', 'PublicSite\TopRatedController@allTimePage')->name('topRated.allTime.page');
-Route::get('/top-rated/by-year/{year}', 'PublicSite\TopRatedController@byYear')->name('topRated.byYear');
+Route::redirect('/top-rated', '/c/switch-1/top-rated')->name('topRated.landing');
+Route::redirect('/top-rated/all-time', '/c/switch-1/top-rated/all-time')->name('topRated.allTime');
+Route::redirect('/top-rated/all-time/page/{page}', '/c/switch-1/top-rated/all-time/page/{page}')->name('topRated.allTime.page');
+Route::redirect('/top-rated/by-year/{year}', '/c/switch-1/top-rated/by-year/{year}')->name('topRated.byYear');
 
 /* Reviews */
 Route::redirect('/reviews/{year}', '/c/switch-1/{year}')->name('reviews.landing.byYear');

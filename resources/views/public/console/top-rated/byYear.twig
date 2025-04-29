@@ -1,0 +1,27 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/console/top-rated/navTopLinks.twig' with {'currentNav': 'btn-nav-console-top-rated-landing-'~ConsoleId} %}
+
+<p>
+    <strong>The best Nintendo Switch games of {{ Year }}</strong>.
+    Games need to have at least 3 ratings to be ranked.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            Top 100 Switch games - released in {{ Year }}
+        </h2>
+        {% if TopRatedByYear|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedByYear, 'batchOverride': 3} %}
+        {% else %}
+            <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock page_body %}

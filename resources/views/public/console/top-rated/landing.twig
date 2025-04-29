@@ -1,0 +1,64 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+{% include 'public/console/top-rated/navTopLinks.twig' with {'currentNav': 'btn-nav-console-top-rated-landing-'~ConsoleId} %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p>
+            This page lists the <strong>best Nintendo {{ ConsoleName }} games</strong>, split by all-time and by release year (in Europe).
+        </p>
+        <p>
+            Ratings are calculated from the reviews we store from our carefully selected review partners.
+            Games need to have at least 3 ratings to be included in these lists.
+        </p>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        {{ headings.roundedBlue('h4', ConsoleName~': Best of '~Year) }}
+        <span class="h5">(<a href="{{ route('console.topRated.byYear', {'console': Console, 'year': Year}) }}">view all</a>)</span>
+        {% if TopRatedThisYear|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedThisYear, 'batchOverride': 1} %}
+        {% else %}
+            <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border-left: 1px solid #cecece;">
+        {{ headings.roundedBlue('h4', ConsoleName~': All-time') }}
+        <span class="h5">(<a href="{{ route('console.topRated.allTime', {'console': Console}) }}">view all</a>)</span>
+        {% if TopRatedAllTime|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedAllTime, 'batchOverride': 1} %}
+        {% else %}
+            <p>No games found!</p>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border-left: 1px solid #cecece;">
+        {{ headings.roundedBlue('h4', 'All Top Rated links') }}
+        <h4>Switch 1</h4>
+        <ul>
+            <li><a href="{{ route('console.topRated.allTime', {'console': consoleSwitch1}) }}">All-time</a></li>
+            {% for item in Switch1Years %}
+                <li><a href="{{ route('console.topRated.byYear', {'console': consoleSwitch1, 'year': item}) }}">{{ item }}</a></li>
+            {% endfor %}
+        </ul>
+        <h4>Switch 2</h4>
+        <ul>
+            <li><a href="{{ route('console.topRated.allTime', {'console': consoleSwitch2}) }}">All-time</a></li>
+            {% for item in Switch2Years %}
+                <li><a href="{{ route('console.topRated.byYear', {'console': consoleSwitch2, 'year': item}) }}">{{ item }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+{% endblock page_body %}

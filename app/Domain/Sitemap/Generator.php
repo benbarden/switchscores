@@ -148,20 +148,26 @@ class Generator
 
     public function generateTopRated(): void
     {
+        $allowedDates = new AllowedDates();
+        $repoConsole = new ConsoleRepository();
+
         $bindings = $this->getBindings();
         $timestamp = $this->getTimestampNow();
 
         $sitemapPages = [];
 
-        $sitemapPages[] = ['url' => route('topRated.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-        $sitemapPages[] = ['url' => route('topRated.allTime'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+        $consoleList = $repoConsole->getAll();
+        foreach ($consoleList as $console) {
 
-        $allowedDates = new AllowedDates();
+            $sitemapPages[] = ['url' => route('console.topRated.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            $sitemapPages[] = ['url' => route('console.topRated.allTime', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
-        $yearListS1 = $allowedDates->releaseYearsByConsole(Console::ID_SWITCH_1);
+            $yearList = $allowedDates->releaseYearsByConsole($console->id);
 
-        foreach ($yearListS1 as $year) {
-            $sitemapPages[] = ['url' => route('topRated.byYear', ['year' => $year]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            foreach ($yearList as $year) {
+                $sitemapPages[] = ['url' => route('console.topRated.byYear', ['console' => $console, 'year' => $year]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            }
+
         }
 
         $bindings['SitemapPages'] = $sitemapPages;

@@ -1,0 +1,39 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% include 'public/console/top-rated/navTopLinks.twig' with {'currentNav': 'btn-nav-console-top-rated-landing-'~ConsoleId} %}
+
+<p>
+    <strong>The best Nintendo {{ ConsoleName}} games of all time</strong>.
+    Games need to have at least 3 ratings to be ranked.
+</p>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>
+            Top 100 Switch games - all-time
+        </h2>
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <a class="btn btn-sm btn-default" href="{{ route('console.topRated.allTime.page', {'console': Console, 'page': 1}) }}">Page 1</a>
+                <a class="btn btn-sm btn-default" href="{{ route('console.topRated.allTime.page', {'console': Console, 'page': 2}) }}">Page 2</a>
+                <a class="btn btn-sm btn-default" href="{{ route('console.topRated.allTime.page', {'console': Console, 'page': 3}) }}">Page 3</a>
+                <a class="btn btn-sm btn-default" href="{{ route('console.topRated.allTime.page', {'console': Console, 'page': 4}) }}">Page 4</a>
+                <a class="btn btn-sm btn-default" href="{{ route('console.topRated.allTime.page', {'console': Console, 'page': 5}) }}">Page 5</a>
+
+            </div>
+
+        </div>
+        {% if TopRatedAllTime|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedAllTime, 'batchOverride': 3} %}
+        {% else %}
+            <p>No games found!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock page_body %}

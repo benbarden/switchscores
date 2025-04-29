@@ -1,0 +1,21 @@
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        {% for item in ConsoleList %}
+            <a id="btn-nav-console-top-rated-landing-{{ item.id }}" class="btn btn-sm btn-default" href="{{ route('console.topRated.landing', {'console': item}) }}">
+                Top Rated - {{ item.name }}
+            </a>
+        {% endfor %}
+
+    </div>
+
+</div>
+<br>
+
+<script>
+    var currentNav = '{{ currentNav }}';
+    if (currentNav != '') {
+        $('#' + currentNav).addClass('btn-primary');
+    }
+</script>
