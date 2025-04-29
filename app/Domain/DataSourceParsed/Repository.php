@@ -53,7 +53,7 @@ class Repository
         if ($excludeTitleList) {
             $dsItemList = $dsItemList->whereNotIn('title', $excludeTitleList);
         }
-        $dsItemList = $dsItemList->orderBy('title', 'asc')->get();
+        $dsItemList = $dsItemList->orderBy('release_date_eu', 'asc')->orderBy('title', 'asc')->get();
         return $dsItemList;
     }
 
