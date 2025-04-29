@@ -27,6 +27,7 @@
         {% if TopRatedThisYear|length %}
             {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedThisYear, 'batchOverride': 1} %}
         {% else %}
+            <hr>
             <p>No Top Rated games this year... yet. It's early days. Come back soon for more!</p>
         {% endif %}
     </div>
@@ -37,6 +38,7 @@
         {% if TopRatedAllTime|length %}
             {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedAllTime, 'batchOverride': 1} %}
         {% else %}
+            <hr>
             <p>No games found!</p>
         {% endif %}
     </div>
