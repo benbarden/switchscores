@@ -10,6 +10,7 @@ use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameCalendar\AllowedDates;
 use App\Models\Console;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 class Generator
 {
@@ -22,7 +23,6 @@ class Generator
     const SITEMAP_GAMES = 'sitemap-games-[CONSOLE]-[YEAR].xml';
     const SITEMAP_CALENDAR = 'sitemap-calendar.xml';
     const SITEMAP_TOP_RATED = 'sitemap-top-rated.xml';
-    const SITEMAP_REVIEW_STATS = 'sitemap-review-stats.xml';
     const SITEMAP_REVIEW_PARTNERS = 'sitemap-review-partners.xml';
     const SITEMAP_CATEGORY = 'sitemap-category.xml';
     const SITEMAP_COLLECTION = 'sitemap-collection.xml';
@@ -72,7 +72,6 @@ class Generator
             $indexList[] = ['XmlFile' => $xmlFile, 'Timestamp' => $timestamp];
         }
         $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_TOP_RATED, 'Timestamp' => $timestamp];
-        $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_REVIEW_STATS, 'Timestamp' => $timestamp];
         $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_REVIEW_PARTNERS, 'Timestamp' => $timestamp];
         $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_CALENDAR, 'Timestamp' => $timestamp];
         $indexList[] = ['XmlFile' => '/sitemaps/'.self::SITEMAP_CATEGORY, 'Timestamp' => $timestamp];
@@ -92,12 +91,20 @@ class Generator
 
         $sitemapPages = [];
         $sitemapPages[] = array('url' => route('welcome'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '1.0');
-        $sitemapPages[] = array('url' => route('games.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+
+        $repoConsole = new ConsoleRepository();
+        $consoleList = $repoConsole->getAll();
+        foreach ($consoleList as $console) {
+            // Landing
+            $sitemapPages[] = array('url' => route('console.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        }
+
         $sitemapPages[] = array('url' => route('games.browse.byCategory.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.bySeries.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.byTag.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.browse.byCollection.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-        $sitemapPages[] = array('url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+
+        //$sitemapPages[] = array('url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.onSale'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.recentReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         $sitemapPages[] = array('url' => route('games.upcomingReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
@@ -162,26 +169,6 @@ class Generator
         $this->saveToXml(self::VIEW_STANDARD, $bindings, self::SITEMAP_TOP_RATED);
     }
 
-    public function generateReviewStats(): void
-    {
-        $bindings = $this->getBindings();
-        $timestamp = $this->getTimestampNow();
-
-        $sitemapPages = [];
-
-        $allowedDates = new AllowedDates();
-
-        $yearListS1 = $allowedDates->releaseYearsByConsole(Console::ID_SWITCH_1);
-
-        foreach ($yearListS1 as $year) {
-            $sitemapPages[] = ['url' => route('reviews.landing.byYear', ['year' => $year]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-        }
-
-        $bindings['SitemapPages'] = $sitemapPages;
-
-        $this->saveToXml(self::VIEW_STANDARD, $bindings, self::SITEMAP_REVIEW_STATS);
-    }
-
     public function generateReviewPartners(): void
     {
         $bindings = $this->getBindings();
@@ -210,14 +197,14 @@ class Generator
 
         $sitemapPages = [];
 
-        $sitemapPages[] = ['url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-
+        $repoConsole = new ConsoleRepository();
         $allowedDates = new AllowedDates();
-
-        $dateList = $allowedDates->allowedDates();
-
-        foreach ($dateList as $dateListItem) {
-            $sitemapPages[] = ['url' => route('games.browse.byDate.page', ['date' => $dateListItem]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+        $consoleList = $repoConsole->getAll();
+        foreach ($consoleList as $console) {
+            $years = $allowedDates->releaseYearsByConsole($console->id);
+            foreach ($years as $year) {
+                $sitemapPages[] = array('url' => route('console.byYear', ['console' => $console, 'year' => $year]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+            }
         }
 
         $bindings['SitemapPages'] = $sitemapPages;

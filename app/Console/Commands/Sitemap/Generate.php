@@ -53,8 +53,7 @@ class Generate extends Command
         $generator->generateSite();
         $logger->info('Generating: Top Rated');
         $generator->generateTopRated();
-        $logger->info('Generating: Review stats, Review partners');
-        $generator->generateReviewStats();
+        $logger->info('Generating: Review partners');
         $generator->generateReviewPartners();
         $logger->info('Generating: Browse by date, category, collection, series, tag');
         $generator->generateCalendar();

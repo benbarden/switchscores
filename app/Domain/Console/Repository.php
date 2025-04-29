@@ -14,6 +14,11 @@ class Repository
         ];
     }
 
+    public function getAll()
+    {
+        return Console::orderBy('id')->get();
+    }
+
     public function find($id)
     {
         return Console::find($id);
