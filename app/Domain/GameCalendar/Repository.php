@@ -19,6 +19,25 @@ class Repository
         }
     }
 
+    public function getListByConsole($consoleId, $year, $month)
+    {
+        return Game::where('console_id', $consoleId)
+            ->whereYear('games.eu_release_date', '=', $year)
+            ->whereMonth('games.eu_release_date', '=', $month)
+            ->where(function ($query) {
+                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
+                    ->orWhereNull('format_digital');
+            })
+            ->orderBy('games.eu_release_date', 'asc')
+            ->orderBy('games.title', 'asc')->get();
+    }
+
+    /**
+     * @deprecated
+     * @param $year
+     * @param $month
+     * @return mixed
+     */
     public function getList($year, $month)
     {
         return Game::whereYear('games.eu_release_date', '=', $year)
