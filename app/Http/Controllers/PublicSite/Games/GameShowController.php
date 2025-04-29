@@ -140,7 +140,7 @@ class GameShowController extends Controller
         }
 
         // Total rank count
-        $rankMaximum = $this->repoGameStats->totalRanked();
+        $rankMaximum = $this->repoGameStats->totalRankedByConsole($gameData->console_id);
         $bindings['RankMaximum'] = $rankMaximum;
 
         // Top %

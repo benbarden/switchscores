@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Domain\Console\Repository as ConsoleRepository;
 use App\Domain\GameCalendar\Stats as GameCalendarStats;
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
@@ -46,30 +47,40 @@ class UpdateGameCalendarStats extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
+        $repoConsole = new ConsoleRepository();
+        $consoleList = $repoConsole->consoleList();
+
         $statsGameCalendar = new GameCalendarStats;
         $datesGameCalendar = new GameCalendarAllowedDates;
 
-        $dateList = $datesGameCalendar->allowedDates(false);
-
         \DB::statement('TRUNCATE TABLE game_calendar_stats');
 
-        foreach ($dateList as $date) {
+        foreach ($consoleList as $console) {
 
-            $dtDate = new \DateTime($date);
-            $dtDateDesc = $dtDate->format('M Y');
+            $consoleId = $console['id'];
 
-            $calendarYear = $dtDate->format('Y');
-            $calendarMonth = $dtDate->format('m');
+            $logger->info(sprintf('Processing console: %s [id: %s]', $console['name'], $console['id']));
 
-            $monthCount = $statsGameCalendar->calendarStatCount($calendarYear, $calendarMonth);
+            $dateList = $datesGameCalendar->allowedDatesByConsole($consoleId, false);
 
-            $logger->info($date.' // '.$monthCount.' game(s)');
+            foreach ($dateList as $date) {
 
-            \DB::insert('
-                INSERT INTO game_calendar_stats(month_name, released_count, created_at, updated_at)
-                VALUES(?, ?, NOW(), NOW())
-            ', [$date, $monthCount]);
+                $dtDate = new \DateTime($date);
+                $dtDateDesc = $dtDate->format('M Y');
 
+                $calendarYear = $dtDate->format('Y');
+                $calendarMonth = $dtDate->format('m');
+
+                $monthCount = $statsGameCalendar->calendarStatCount($consoleId, $calendarYear, $calendarMonth);
+
+                $logger->info($date.' // '.$monthCount.' game(s)');
+
+                \DB::insert('
+                INSERT INTO game_calendar_stats(month_name, console_id, released_count, created_at, updated_at)
+                VALUES(?, ?, ?, NOW(), NOW())
+            ', [$date, $consoleId, $monthCount]);
+
+            }
         }
 
     }

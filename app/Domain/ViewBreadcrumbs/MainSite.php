@@ -4,6 +4,8 @@
 namespace App\Domain\ViewBreadcrumbs;
 
 
+use App\Models\Console;
+
 class MainSite extends Base
 {
     private $toastedCrumbs = [];
@@ -30,6 +32,17 @@ class MainSite extends Base
     public function topLevelPage($pageTitle)
     {
         return $this->addPageTitle($pageTitle)->getBreadcrumbs();
+    }
+
+    public function consoleSubpage($pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        return $this->addCrumb($crumb1)
+            ->addTitleAndReturn($pageTitle);
+
     }
 
     public function listsSubpage($pageTitle)

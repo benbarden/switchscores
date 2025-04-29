@@ -4,7 +4,7 @@
 
         {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
         {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
-        <div class="col-md-4 col-sm-4 col-xs-6"">
+        <div class="col-md-4 col-sm-4 col-xs-6">
             <h4 class="rating-title">
                 <a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a>
             </h4>

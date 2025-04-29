@@ -1,0 +1,46 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<p>
+    A list of all Nintendo {{ ConsoleName}} games released in {{ CalendarDateDesc }}.
+</p>
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        <h2>Games</h2>
+
+        {% if CalendarGamesList %}
+            <table class="table">
+                {% for key,item in CalendarGamesList %}
+                    <tr>
+                        <td class="text-center" style="max-width: 150px; min-width: 75px;">
+                            <span id="calendar-date-{{ key|date('jS') }}" class="h3">{{ key|date('jS') }}</span>
+                        </td>
+                        <td>
+                            {% include 'public/games/layouts/tiledGrid/layoutCalendar.twig' with {'GameList': item.games, 'batchOverride': 3} %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h2>Top 50 this month</h2>
+
+        {% if GamesRatingsWithRanks|length %}
+            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': GamesRatingsWithRanks, 'batchOverride': 1} %}
+        {% else %}
+            <p>No Top Rated games this month... yet. Come back soon for more!</p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

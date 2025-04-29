@@ -26,6 +26,25 @@ class Stats
         return ReviewLink::where('user_id', $userId)->count();
     }
 
+    public function totalActiveByConsoleYearMonth($consoleId, $year, $month)
+    {
+        $result = DB::select("
+            SELECT count(*) AS count
+            FROM review_links rl
+            JOIN games g on rl.game_id = g.id
+            WHERE g.console_id = ?
+            AND YEAR(rl.review_date) = ?
+            AND MONTH(rl.review_date) = ?
+        ", [$consoleId, $year, $month]);
+        if ($result) return $result[0]->count;
+    }
+
+    /**
+     * @deprecated
+     * @param $year
+     * @param $month
+     * @return mixed
+     */
     public function totalActiveByYearMonth($year, $month)
     {
         return ReviewLink::whereYear('review_links.review_date', $year)
@@ -33,6 +52,24 @@ class Stats
             ->count();
     }
 
+    public function reviewCountStatsByConsoleAndYear($consoleId, $year)
+    {
+        return DB::select('
+            SELECT review_count, count(*) AS count
+            FROM games
+            WHERE console_id = ?
+            AND release_year = ?
+            AND review_count != 0
+            GROUP BY review_count
+            ORDER BY review_count DESC
+        ', [$consoleId, $year]);
+    }
+
+    /**
+     * @deprecated
+     * @param $year
+     * @return array
+     */
     public function reviewCountStats($year)
     {
         return DB::select('
@@ -67,6 +104,25 @@ class Stats
         return $this->scoreDistribution($reviewScores);
     }
 
+    public function scoreDistributionByConsoleAndYear($consoleId, $year)
+    {
+        $reviewScores = DB::select("
+            SELECT round(rating_normalised, 0) AS RatingValue, count(*) AS RatingCount
+            FROM review_links rl
+            JOIN games g ON rl.game_id = g.id
+            WHERE g.console_id = ?
+            AND YEAR(review_date) = ?
+            GROUP BY round(rating_normalised, 0);
+        ", [$consoleId, $year]);
+
+        return $this->scoreDistribution($reviewScores);
+    }
+
+    /**
+     * @deprecated
+     * @param $year
+     * @return string[]|null
+     */
     public function scoreDistributionByYear($year)
     {
         $reviewScores = DB::select("

@@ -15,7 +15,7 @@ class GameRankYearMonth extends Model
      * @var array
      */
     protected $fillable = [
-        'release_yearmonth', 'game_rank', 'game_id',
+        'console_id', 'release_yearmonth', 'game_rank', 'game_id',
     ];
 
     public function game()

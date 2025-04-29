@@ -40,14 +40,29 @@ Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked'
 Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@buyersGuideHoliday2024US')->name('lists.buyersGuideHoliday2024US');
 
 // Switch 1/2
-Route::controller('PublicSite\ConsoleController')->group(function () {
+Route::controller('PublicSite\Console\ConsoleController')->group(function () {
     Route::get('/c/{console:slug?}', 'landing')->name('console.landing');
     Route::get('/c/{console:slug?}/new-releases', 'newReleases')->name('console.newReleases');
     Route::get('/c/{console:slug?}/upcoming', 'upcomingReleases')->name('console.upcomingReleases');
 });
+Route::controller('PublicSite\Console\BrowseByDateController')->group(function () {
+    Route::get('/c/{console:slug?}/{year}', 'byYear')->name('console.byYear');
+    Route::get('/c/{console:slug?}/{year}/{month}', 'byMonth')->name('console.byMonth');
+});
+
+Route::controller('PublicSite\Console\BrowseController')->group(function () {
+    Route::get('/c/{console:slug?}/category/{category}', 'byCategoryLanding')->name('console.byCategoryLanding');
+    Route::get('/c/{console:slug?}/category', 'byCategoryPage')->name('console.byCategoryPage');
+    Route::get('/c/{console:slug?}/series/{series}', 'bySeriesLanding')->name('console.bySeriesLanding');
+    Route::get('/c/{console:slug?}/series', 'bySeriesPage')->name('console.bySeriesPage');
+    Route::get('/c/{console:slug?}/collection/{collection}', 'byCollectionLanding')->name('console.byCollectionLanding');
+    Route::get('/c/{console:slug?}/collection', 'byCollectionPage')->name('console.byCollectionPage');
+    Route::get('/c/{console:slug?}/tag/{tag}', 'byTagLanding')->name('console.byTagLanding');
+    Route::get('/c/{console:slug?}/tag', 'byTagPage')->name('console.byTagPage');
+});
 
 // Main game pages
-Route::get('/games', 'PublicSite\Games\LandingController@landing')->name('games.landing');
+Route::redirect('/games', '/c/switch-1')->name('games.landing');
 Route::match(['get', 'post'], '/games/search', 'PublicSite\Games\SearchController@show')->name('games.search');
 
 // Browse by...
@@ -68,8 +83,8 @@ Route::get('/games/by-collection/{collection}/series/{series}', 'PublicSite\Game
 Route::get('/games/by-tag', 'PublicSite\Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
 Route::get('/games/by-tag/{tag}', 'PublicSite\Games\BrowseByTagController@page')->name('games.browse.byTag.page');
 
-Route::get('/games/by-date', 'PublicSite\Games\BrowseByDateController@landing')->name('games.browse.byDate.landing');
-Route::get('/games/by-date/{date}', 'PublicSite\Games\BrowseByDateController@page')->name('games.browse.byDate.page');
+Route::redirect('/games/by-date', '/c/switch-1/2025')->name('games.browse.byDate.landing');
+Route::redirect('/games/by-date/{date}', '/c/switch-1/2025')->name('games.browse.byDate.page');
 
 // Random
 Route::get('/games/random', 'PublicSite\Games\RandomController@getRandom')->name('game.random');
@@ -85,7 +100,7 @@ Route::get('/top-rated/all-time/page/{page}', 'PublicSite\TopRatedController@all
 Route::get('/top-rated/by-year/{year}', 'PublicSite\TopRatedController@byYear')->name('topRated.byYear');
 
 /* Reviews */
-Route::get('/reviews/{year}', 'PublicSite\ReviewsController@landingByYear')->name('reviews.landing.byYear');
+Route::redirect('/reviews/{year}', '/c/switch-1/{year}')->name('reviews.landing.byYear');
 
 /* Partners */
 Route::get('/partners', 'PublicSite\PartnersController@landing')->name('partners.landing');

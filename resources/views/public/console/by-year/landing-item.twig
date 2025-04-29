@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <h2>List of games</h2>
+        <table class="table table-responsive table-condensed">
+            <tr>
+                <th>Date</th>
+                <th class="text-center">Games</th>
+                <th></th>
+            </tr>
+            {% for item in DateList %}
+                {% set YearMonthRoute = route('console.byMonth',
+                    {'console': Console, 'year': item.DateRaw|date('Y'), 'month': item.DateRaw|date('m')}) %}
+                <tr>
+                    <td>
+                        <a href="{{ YearMonthRoute }}">
+                            {{ item.DateRaw|date('M Y') }}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        {{ item.GameCount }}
+                    </td>
+                    <td>
+                        <a href="{{ YearMonthRoute }}">
+                            View games
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <h2>Releases by month</h2>
+        {% include 'public/console/by-year/landing-item-chart.twig' with {'ChartDataSet': DateList} %}
+    </div>
+</div>

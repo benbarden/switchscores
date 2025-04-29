@@ -82,11 +82,12 @@ class DbQueries
         return $games;
     }
 
-    public function byMonthWithRanks($year, $month, $limit = null)
+    public function byMonthWithRanks($consoleId, $year, $month, $limit = null)
     {
         $games = DB::table('games')
             ->select('games.*',
                 'games.id AS game_id')
+            ->where('games.console_id', $consoleId)
             ->whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
             ->whereNotNull('games.game_rank')
@@ -114,6 +115,30 @@ class DbQueries
         return $games;
     }
 
+    public function rankedCountByConsoleAndYear($consoleId, $year)
+    {
+        $rankCount = DB::select('
+            SELECT
+            CASE
+            WHEN game_rank IS NULL THEN "Unranked"
+            ELSE "Ranked"
+            END AS is_ranked,
+            count(*) AS count
+            FROM games
+            WHERE console_id = ?
+            AND release_year = ?
+            AND format_digital <> ?
+            GROUP BY is_ranked
+        ', [$consoleId, $year, Game::FORMAT_DELISTED]);
+
+        return $rankCount;
+    }
+
+    /**
+     * @deprecated
+     * @param $year
+     * @return array
+     */
     public function rankedCountByYear($year)
     {
         $rankCount = DB::select('

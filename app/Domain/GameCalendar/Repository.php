@@ -7,10 +7,10 @@ use App\Models\Game;
 
 class Repository
 {
-    public function getStat($year, $month)
+    public function getStat($consoleId, $year, $month)
     {
         $monthName = $year.'-'.$month;
-        $gameCalendarStat = GameCalendarStat::where('month_name', $monthName)->get();
+        $gameCalendarStat = GameCalendarStat::where('console_id', $consoleId, )->where('month_name', $monthName)->get();
 
         if ($gameCalendarStat) {
             return $gameCalendarStat->first();

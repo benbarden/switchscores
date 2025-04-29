@@ -6,9 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-use App\Services\Game\RankAllTime;
-use App\Services\Game\RankYear;
-use App\Services\Game\RankYearMonth;
+use App\Domain\GameRank\RankAllTime;
+use App\Domain\GameRank\RankYear;
+use App\Domain\GameRank\RankYearMonth;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
@@ -69,42 +70,48 @@ class UpdateGameRanks extends Command
             WHERE format_digital IS NULL AND nintendo_store_url_override IS NOT NULL
         ");
 
-        // *** 1. ALL-TIME RANK *** //
+        // Setup
 
-        DB::statement("TRUNCATE TABLE game_rank_alltime");
-
-        $serviceRankAllTime = new RankAllTime($logger);
-        $serviceRankAllTime->process();
-
-        // *** 2. YEAR RANK *** //
-
-        DB::statement("TRUNCATE TABLE game_rank_year");
-
+        $repoConsole = new ConsoleRepository();
+        $consoleList = $repoConsole->consoleList();
         $allowedDates = new GameCalendarAllowedDates();
 
-        $years = $allowedDates->releaseYears(false);
-
-        $serviceRankYear = new RankYear($logger);
-
-        foreach ($years as $year) {
-
-            $serviceRankYear->process($year);
-
-        }
-
-        // *** 3. YEAR/MONTH RANK *** //
-
+        $logger->info('Truncating tables');
+        DB::statement("TRUNCATE TABLE game_rank_alltime");
+        DB::statement("TRUNCATE TABLE game_rank_year");
         DB::statement("TRUNCATE TABLE game_rank_yearmonth");
 
-        $dateList = $allowedDates->allowedDates(false);
+        // Loop through consoles
 
-        $serviceRankYearMonth = new RankYearMonth($logger);
+        foreach ($consoleList as $console) {
 
-        foreach ($dateList as $date) {
+            $consoleId = $console['id'];
 
-            $serviceRankYearMonth->process($date);
+            $logger->info(sprintf('Processing console: %s [id: %s]', $console['name'], $console['id']));
+
+            // *** 1. ALL-TIME RANK *** //
+            $domainRankAllTime = new RankAllTime($consoleId, $logger);
+            $domainRankAllTime->process();
+
+            // *** 2. YEAR RANK *** //
+            $years = $allowedDates->releaseYearsByConsole($consoleId, false);
+            $domainRankYear = new RankYear($consoleId, $logger);
+            $logger->info('Updating table: game_rank_year');
+            foreach ($years as $year) {
+                $domainRankYear->process($year);
+            }
+
+            // *** 3. YEAR/MONTH RANK *** //
+            $dateList = $allowedDates->allowedDatesByConsole($consoleId, false);
+            $domainRankYearMonth = new RankYearMonth($consoleId, $logger);
+            $logger->info('Updating table: game_rank_yearmonth');
+            foreach ($dateList as $date) {
+                $domainRankYearMonth->process($date);
+            }
 
         }
+
+        $logger->info('Complete');
 
     }
 }

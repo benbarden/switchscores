@@ -51,8 +51,13 @@ class AutoDescription
     public function ranking()
     {
         $blurb = '';
+        if ($this->game->console_id == Console::ID_SWITCH_2) {
+            $consoleDesc = Console::DESC_SWITCH_2;
+        } else {
+            $consoleDesc = Console::DESC_SWITCH_1;
+        }
         if (!$this->game->isDigitalDelisted() && ($this->game->game_rank)) {
-            $blurb = 'It is ranked #'.$this->game->game_rank.' on the all-time Top Rated Switch games, '.
+            $blurb = 'It is ranked #'.$this->game->game_rank.' on the all-time Top Rated '.$consoleDesc.' games, '.
                 ' with a total of '.$this->game->review_count.' reviews '.
                 ' and an average score of '.$this->game->rating_avg.'. ';
         }

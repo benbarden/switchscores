@@ -11,12 +11,54 @@
             Nintendo Switch library as possible.
         </p>
         <p>
-            With over 12000 games on the Switch
-            <a href="{{ route('games.browse.byDate.landing') }}">and over 100 more coming out every month</a>,
-            this is an ongoing challenge!
+            Now featuring Switch 2, too ...
         </p>
+        <h2>Database stats</h2>
+        <p>
+            "Total released" excludes games that are yet to be released, or that have been de-listed.
+        </p>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3>Switch 1</h3>
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="h5">Total released games</td>
+                            <td class="h4 text-right">{{ Switch1Stats.total_count }}</td>
+                        </tr>
+                        <tr>
+                            <td class="h5">Ranked games</td>
+                            <td class="h4 text-right">{{ Switch1Stats.ranked_count }}</td>
+                        </tr>
+                        <tr>
+                            <td class="h5">Low quality (<a href="{{ route('help.low-quality-filter') }}">What is this?</a>)</td>
+                            <td class="h4 text-right">{{ Switch1Stats.low_quality_count }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3>Switch 2</h3>
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                    <tr>
+                        <td class="h5">Total released games</td>
+                        <td class="h4 text-right">{{ Switch2Stats.total_count }}</td>
+                    </tr>
+                    <tr>
+                        <td class="h5">Ranked games</td>
+                        <td class="h4 text-right">{{ Switch2Stats.ranked_count }}</td>
+                    </tr>
+                    <tr>
+                        <td class="h5">Low quality</td>
+                        <td class="h4 text-right">{{ Switch2Stats.low_quality_count }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <h2>
-            How many games are there?
+            Why do other sites show a different number of games?
         </h2>
         <p>
             Depending where you go, you'll see a different figure.
@@ -42,12 +84,12 @@
             and Switch Online games. But we include everything else.
         </p>
         <p>
-            There are some nuances. Some games get delisted; we keep those on the site. Occasionally a game is delisted
-            and then a brand new version added. We've even seen a few games where the original release date is changed
+            There are some nuances. Some games get de-listed; we keep those on the site. Occasionally a game is de-listed
+            and then a brand-new version added. We've even seen a few games where the original release date is changed
             so the game appears to be new again. In these cases we keep the original release date intact.
         </p>
         <p>
-            Additionally, we'll edit some of the titles of games for length or clarity. We'll clean up titles all
+            We occasionally edit game titles for length or clarity. We clean up titles all
             in capital letters, or where the first letter of every word is capitalised. Some games have a
             subtitle that we remove, leaving only the game title and not additional descriptive text.
         </p>
@@ -61,8 +103,7 @@
             get in touch if you publish reviews on your own site.
         </p>
         <p>
-            You can also <a href="{{ route('register') }}">register</a> and start adding your own
-            quick reviews.
+            Mmebers can also <a href="{{ route('register') }}">register</a> and submit quick reviews.
         </p>
         <h2>
             History
@@ -74,13 +115,6 @@
     </div>
     <div class="ss-sidebar col-xs-12 col-sm-3 col-md-3">
         <img src="/img/switch-scores-logo-bg.jpg" alt="Switch Scores" class="img-responsive">
-        <h2>Database stats</h2>
-        <ul>
-            <li><a href="{{ route('games.landing') }}">{{ TotalReleasedGames }} games</a></li>
-            <li><a href="{{ route('topRated.landing') }}">{{ TotalRanked }} ranked</a></li>
-            <li><a href="{{ route('reviews.landing') }}">{{ TotalReviews }} scores</a></li>
-            <li><a href="{{ route('help.low-quality-filter') }}">{{ TotalLowQualityGames }} low quality games ({{ LowQualityPercent }})</a></li>
-        </ul>
         <h2>Support the site</h2>
         <p>
             If you enjoy Switch Scores, consider becoming a Patron to show your support.

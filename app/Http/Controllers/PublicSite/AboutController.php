@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\ReviewLink\Stats as ReviewLinkStats;
+use App\Domain\GameStats\DbQueries as GameStatsDbQueries;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
 class AboutController extends Controller
 {
     public function __construct(
-        private GameStatsRepository $repoGameStats,
-        private ReviewLinkStats $statsReviewLink,
+        private GameStatsDbQueries $dbGameStats,
         private Breadcrumbs $viewBreadcrumbs
     )
     {
@@ -24,21 +23,11 @@ class AboutController extends Controller
 
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('About');
 
-        // Quick stats
-        $totalReleased = $this->repoGameStats->totalReleased();
-        $totalRanked = $this->repoGameStats->totalRanked();
-        $totalReviews = $this->statsReviewLink->totalOverall();
-        $totalLowQuality = $this->repoGameStats->totalLowQuality();
-
-        $bindings['TotalReleasedGames'] = $totalReleased;
-        $bindings['TotalRanked'] = $totalRanked;
-        $bindings['TotalReviews'] = $totalReviews;
-        $bindings['TotalLowQualityGames'] = $totalLowQuality;
-
-        if ($totalReleased > 0) {
-            $lowQualityPercent = round(($totalLowQuality / $totalReleased) * 100, 2);
-            $bindings['LowQualityPercent'] = $lowQualityPercent.'%';
-        }
+        // Stats by console
+        $switch1Stats = $this->dbGameStats->siteStatsByConsole(Console::ID_SWITCH_1);
+        $switch2Stats = $this->dbGameStats->siteStatsByConsole(Console::ID_SWITCH_2);
+        $bindings['Switch1Stats'] = $switch1Stats[0];
+        $bindings['Switch2Stats'] = $switch2Stats[0];
 
         $bindings['TopTitle'] = 'About';
         $bindings['PageTitle'] = 'About Switch Scores';

@@ -1,35 +1,32 @@
 <?php
 
 
-namespace App\Services\Game;
+namespace App\Domain\GameRank;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Log\Logger;
+use App\Models\Game;
 use Carbon\Carbon;
+use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\DB;
 
-use App\Domain\TopRated\DbQueries as DbTopRated;
-
-class RankYearMonth
+class RankYear
 {
+    private $consoleId;
+
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var DbTopRated
+     * @param integer
+     * @param LoggerInterface|null $logger
      */
-    private $dbTopRated;
-
-    /**
-     * @param Logger|null $logger
-     */
-    public function __construct(Logger $logger = null)
+    public function __construct($consoleId, LoggerInterface $logger = null)
     {
+        $this->consoleId = $consoleId;
         if ($logger) {
             $this->logger = $logger;
         }
-        $this->dbTopRated = new DbTopRated();
     }
 
     public function log($level, $message)
@@ -39,23 +36,24 @@ class RankYearMonth
         }
     }
 
-    public function getGameList($calendarYear, $calendarMonth)
+    public function getGameList($year)
     {
-        return $this->dbTopRated->byMonthWithRanks($calendarYear, $calendarMonth);
+        return DB::select("
+            select g.id AS game_id, g.title, g.rating_avg, g.game_rank
+            from games g
+            where g.console_id = ?
+            and g.release_year = ?
+            and g.review_count > 2
+            and g.format_digital != ?
+            order by rating_avg desc
+        ", [$this->consoleId, $year, Game::FORMAT_DELISTED]);
     }
 
-    public function process($date)
+    public function process($year)
     {
-        $dtDate = new \DateTime($date);
-        $dtDateDesc = $dtDate->format('M Y');
+        $gameList = $this->getGameList($year);
 
-        $calendarYear = $dtDate->format('Y');
-        $calendarMonth = $dtDate->format('m');
-
-        $yearMonth = $calendarYear.$calendarMonth;
-        $gameList = $this->getGameList($calendarYear, $calendarMonth);
-
-        $this->log('info', 'Yearmonth ['.$yearMonth.']: checking '.count($gameList).' games');
+        //$this->log('info', 'Year rank ['.$year.']: checking '.count($gameList).' games');
 
         $rankCounter = 1;
         $actualRank = 1;
@@ -88,7 +86,8 @@ class RankYearMonth
             if ($actualRank > 100) break;
 
             $rowsToInsert[] = [
-                'release_yearmonth' => $yearMonth,
+                'console_id' => $this->consoleId,
+                'release_year' => $year,
                 'game_rank' => $actualRank,
                 'game_id' => $gameId,
                 'created_at' => $now,
@@ -101,6 +100,6 @@ class RankYearMonth
         }
 
         // Update table
-        DB::table('game_rank_yearmonth')->insert($rowsToInsert);
+        DB::table('game_rank_year')->insert($rowsToInsert);
     }
 }

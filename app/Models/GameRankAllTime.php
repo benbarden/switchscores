@@ -15,7 +15,7 @@ class GameRankAllTime extends Model
      * @var array
      */
     protected $fillable = [
-        'game_rank', 'game_id',
+        'console_id', 'game_rank', 'game_id',
     ];
 
     public function game()

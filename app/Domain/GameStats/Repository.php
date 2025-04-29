@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Repository
 {
     /**
+     * @deprecated
      * @return integer
      */
     public function grandTotal()
@@ -18,6 +19,7 @@ class Repository
     }
 
     /**
+     * @deprecated
      * @return integer
      */
     public function totalReleased()
@@ -26,14 +28,7 @@ class Repository
     }
 
     /**
-     * @return integer
-     */
-    public function totalLowQuality()
-    {
-        return Game::where('eu_is_released', 1)->where('is_low_quality', '1')->count();
-    }
-
-    /**
+     * @deprecated
      * @return integer
      */
     public function totalRanked()
@@ -41,7 +36,13 @@ class Repository
         return Game::whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
     }
 
+    public function totalRankedByConsole($consoleId)
+    {
+        return Game::where('console_id', $consoleId)->whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+    }
+
     /**
+     * @deprecated
      * @return integer
      */
     public function totalNoCategoryExcludingLowQuality()
@@ -49,22 +50,35 @@ class Repository
         return Game::whereNull('category_id')->where('is_low_quality', 0)->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoCategoryAll()
     {
         return Game::whereNull('category_id')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoCategoryWithCollectionId()
     {
         return Game::whereNotNull('collection_id')->whereNull('category_id')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoCategoryWithReviews()
     {
         return Game::where('review_count', '>', 0)->whereNull('category_id')->count();
     }
 
     /**
+     * @deprecated
      * @return integer
      */
     public function totalUntagged()
@@ -73,6 +87,7 @@ class Repository
     }
 
     /**
+     * @deprecated
      * @return integer
      */
     public function totalUpcoming()
@@ -81,6 +96,7 @@ class Repository
     }
 
     /**
+     * @deprecated
      * @return integer
      */
     public function totalToBeReleased()
@@ -92,6 +108,10 @@ class Repository
         return $games;
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function getFormatDigital()
     {
         return DB::select("
@@ -102,6 +122,10 @@ class Repository
         ");
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function getFormatPhysical()
     {
         return DB::select("
@@ -112,6 +136,10 @@ class Repository
         ");
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function getFormatDLC()
     {
         return DB::select("
@@ -122,6 +150,10 @@ class Repository
         ");
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function getFormatDemo()
     {
         return DB::select("
@@ -132,26 +164,46 @@ class Repository
         ");
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoVideoType()
     {
         return Game::whereNull('video_type')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoPrice()
     {
         return Game::whereNull('price_eshop')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoAmazonUkLink()
     {
         return Game::where('format_physical', Game::FORMAT_AVAILABLE)->whereNull('amazon_uk_link')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalNoAmazonUsLink()
     {
         return Game::where('format_physical', Game::FORMAT_AVAILABLE)->whereNull('amazon_us_link')->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalYearWeekStandardQuality($year, $week)
     {
         // fix: week needs to be -1 as MySQL is zero-indexed?
@@ -168,6 +220,10 @@ class Repository
             ->count();
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
     public function totalYearWeekLowQuality($year, $week)
     {
         // fix: week needs to be -1 as MySQL is zero-indexed?

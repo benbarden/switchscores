@@ -1,0 +1,101 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<!-- jQuery UI -->
+<script src="/js/jquery-ui-1.12.1.min.js"></script>
+<link href="/css/jquery-ui-1.12.1.min.css" rel="stylesheet" />
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-summary">Summary</a></li>
+                <li><a href="#tabs-review-stats">Review stats</a></li>
+            </ul>
+
+            <div id="tabs-summary">
+                {% set YearItem = attribute(_context, 'DateList'~Year) %}
+                {% include 'public/console/by-year/landing-item.twig' with {'Year': Year, 'DateList': YearItem} %}
+            </div>
+
+            <div id="tabs-review-stats">
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                        <h2>
+                            Reviews by month
+                        </h2>
+                        <p>
+                            The total number of reviews published each month in {{ Year }}.
+                        </p>
+
+                        {% if ReviewDateList|length %}
+                            {% include 'public/reviews/reviewYearChart.twig' with {'ChartDataSet': ReviewDateList} %}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                        <h2>
+                            Score distribution
+                        </h2>
+                        <p>
+                            The spread of scores for reviews published in {{ Year }}.
+                        </p>
+                        {% include 'public/reviews/charts/scoreDistribution.twig' with {'ChartDataSet': ScoreDistributionByYear} %}
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                        <h2>
+                            Ranked / Unranked
+                        </h2>
+                        <p>
+                            The proportion of games released this year that are ranked or unranked.
+                            To be ranked, a game must have 3 reviews on the site.
+                        </p>
+
+                        {% include 'public/reviews/charts/rankedUnranked.twig' with {'ChartDataSet': RankedCountByYear} %}
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                        <h2>
+                            Ranked games: Review count stats
+                        </h2>
+                        <p>
+                            This shows how many games have received e.g. 3 reviews, or 4 reviews, or 5 reviews, etc.
+                        </p>
+
+                        {% include 'public/reviews/charts/reviewCountStats.twig' with {'ChartDataSet': ReviewCountStatsByYear} %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $('#tabs').tabs();
+</script>
+
+{% endblock page_body %}

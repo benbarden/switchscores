@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\PublicSite;
-
-use Illuminate\Routing\Controller as Controller;
+namespace App\Http\Controllers\PublicSite\Console;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
-
+use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 use App\Models\Console;
 
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Collection;
 
 
@@ -20,7 +19,8 @@ class ConsoleController extends Controller
         private GameRepository $repoGame,
         private GameListsRepository $repoGameLists,
         private TopRatedDbQueries $dbTopRated,
-        private Breadcrumbs $viewBreadcrumbs
+        private Breadcrumbs $viewBreadcrumbs,
+        private GameCalendarAllowedDates $allowedDates,
     )
     {
     }
@@ -49,6 +49,9 @@ class ConsoleController extends Controller
             $topGameList->push($topGameModel);
             $bindings['RandomTop100Game'] = $topGameList;
         }
+
+        // List of years
+        $bindings['AllowedYears'] = $this->allowedDates->releaseYearsByConsole($consoleId);
 
         $bindings['TopTitle'] = 'Nintendo '.$consoleName.' games';
         $bindings['PageTitle'] = 'Nintendo '.$consoleName.' games';

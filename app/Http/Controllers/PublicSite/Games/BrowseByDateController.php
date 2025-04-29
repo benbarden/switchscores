@@ -43,7 +43,8 @@ class BrowseByDateController extends Controller
 
                 list($dateYear, $dateMonth) = explode('-', $date);
 
-                $gameCalendarStat = $this->repoGameCalendar->getStat($dateYear, $dateMonth);
+                // @todo replace console id or remove this entirely (page will ultimately be superseded)
+                $gameCalendarStat = $this->repoGameCalendar->getStat(1, $dateYear, $dateMonth);
                 if ($gameCalendarStat) {
                     $dateCount = $gameCalendarStat->released_count;
                 } else {

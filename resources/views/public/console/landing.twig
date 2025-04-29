@@ -35,6 +35,13 @@
         {{ headings.roundedBlue('h4', 'Search games') }}
         {% include 'modules/game/search/form-mini.twig' %}
 
+        {{ headings.roundedBlue('h4', 'Browse by year') }}
+        <ul>
+            {% for Year in AllowedYears %}
+                <li><a href="{{ route('console.byYear', {'console': Console, 'year': Year}) }}">{{ Year }}</a></li>
+            {% endfor %}
+        </ul>
+
         {% if Console.name == 'Switch 1' %}
 
             {{ headings.roundedBlue('h4', 'Browse all games') }}
