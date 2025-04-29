@@ -60,11 +60,11 @@
                         Top Rated <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{ route('topRated.landing') }}">Top Rated home</a></li>
-                        <li><a href="{{ route('topRated.allTime') }}">Top 100 - all-time</a></li>
-                        {% for rYear in releaseYears %}
-                            <li><a href="{{ route('topRated.byYear', {'year': rYear}) }}">Top 100 - {{ rYear }}</a></li>
-                        {% endfor %}
+                        <li><a href="{{ route('console.topRated.landing', {'console': consoleSwitch1}) }}">Top Rated: Switch 1</a></li>
+                        <li><a href="{{ route('console.topRated.landing', {'console': consoleSwitch2}) }}">Top Rated: Switch 2</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('console.topRated.allTime', {'console': consoleSwitch1}) }}">All-time Top Rated - Switch 1</a></li>
+                        <li><a href="{{ route('console.topRated.allTime', {'console': consoleSwitch2}) }}">All-time Top Rated - Switch 2</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
