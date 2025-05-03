@@ -109,6 +109,8 @@ class BulkEditorController extends Controller
             case 'category':
             case 'category_sim':
             case 'category_survival':
+            case 'category_quiz':
+            case 'category_spot_the_difference':
             case 'category_puzzle':
             case 'category_sports_racing':
             case 'category_hidden':
