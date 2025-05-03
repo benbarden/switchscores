@@ -88,10 +88,68 @@ class MissingCategory
                     ->orWhere('games.title', 'LIKE', '%snooker%')
                     ->orWhere('games.title', 'LIKE', '%tennis%')
                     ->orWhere('games.title', 'LIKE', '%football%')
+                    ->orWhere('games.title', 'LIKE', '%soccer%')
                     ->orWhere('games.title', 'LIKE', '%baseball%')
                     ->orWhere('games.title', 'LIKE', '%golf%')
+                    ->orWhere('games.title', 'LIKE', '%fishing%')
                     ->orWhere('games.title', 'LIKE', '%racing%');
             })
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function hidden($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%hidden%')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function escape($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%escape%')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function hentaiGirls($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%hentai girls%')
+            ->orderBy('title', 'asc');
+
+        if ($limit != null) {
+            $games = $games->limit($limit);
+        }
+        $games = $games->get();
+
+        return $games;
+    }
+
+    public function droneFlyingTour($limit = null)
+    {
+        $games = Game::whereNull('category_id')
+            ->where('games.title', 'LIKE', '%drone flying tour%')
             ->orderBy('title', 'asc');
 
         if ($limit != null) {

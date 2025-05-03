@@ -76,6 +76,10 @@ class BulkEditorController extends Controller
             case 'category_sports_racing':
             case 'category_quiz':
             case 'category_spot_the_difference':
+            case 'category_hidden':
+            case 'category_escape':
+            case 'category_hentai_girls':
+            case 'category_drone_flying_tour':
                 $editModeHeader1 = 'Category';
                 $templateEditCell = 'category/edit-cell.twig';
                 $templateScripts = 'category/scripts.twig';
@@ -107,6 +111,10 @@ class BulkEditorController extends Controller
             case 'category_survival':
             case 'category_puzzle':
             case 'category_sports_racing':
+            case 'category_hidden':
+            case 'category_escape':
+            case 'category_hentai_girls':
+            case 'category_drone_flying_tour':
                 $fieldToUpdate = 'category_id';
                 break;
             default:
@@ -346,6 +354,10 @@ class BulkEditorController extends Controller
                 'category_spot_the_difference',
                 'category_puzzle',
                 'category_sports_racing',
+                'category_hidden',
+                'category_escape',
+                'category_hentai_girls',
+                'category_drone_flying_tour',
             ];
             if (!in_array($editMode, $editModeList)) abort(404);
 
@@ -372,6 +384,18 @@ class BulkEditorController extends Controller
                     break;
                 case 'category_sports_racing':
                     $gameList = $this->repoGameListMissingCategory->sportsAndRacing();
+                    break;
+                case 'category_hidden':
+                    $gameList = $this->repoGameListMissingCategory->hidden();
+                    break;
+                case 'category_escape':
+                    $gameList = $this->repoGameListMissingCategory->escape();
+                    break;
+                case 'category_hentai_girls':
+                    $gameList = $this->repoGameListMissingCategory->hentaiGirls();
+                    break;
+                case 'category_drone_flying_tour':
+                    $gameList = $this->repoGameListMissingCategory->droneFlyingTour();
                     break;
             }
 

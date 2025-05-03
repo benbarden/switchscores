@@ -40,6 +40,14 @@ class DashboardController extends Controller
         $bindings['BulkEditMissingCategoryPuzzleCount'] = count($missingCategoryPuzzle);
         $missingCategorySportsRacing = $this->repoGameListMissingCategory->sportsAndRacing();
         $bindings['BulkEditMissingCategorySportsRacingCount'] = count($missingCategorySportsRacing);
+        $missingCategoryHidden = $this->repoGameListMissingCategory->hidden();
+        $bindings['BulkEditMissingCategoryHiddenCount'] = count($missingCategoryHidden);
+        $missingCategoryEscape = $this->repoGameListMissingCategory->escape();
+        $bindings['BulkEditMissingCategoryEscapeCount'] = count($missingCategoryEscape);
+        $missingCategoryHentaiGirls = $this->repoGameListMissingCategory->hentaiGirls();
+        $bindings['BulkEditMissingCategoryHentaiGirlsCount'] = count($missingCategoryHentaiGirls);
+        $missingCategoryDroneFlyingTour = $this->repoGameListMissingCategory->droneFlyingTour();
+        $bindings['BulkEditMissingCategoryDroneFlyingTourCount'] = count($missingCategoryDroneFlyingTour);
 
         return view('staff.categorisation.dashboard', $bindings);
     }
