@@ -40,7 +40,7 @@ class GamesTagController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
-        $pageTitle = 'Game title hashes';
+        $pageTitle = 'Game tags';
 
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage('Editing tags for game: '.$gameData->title, $gameData);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
