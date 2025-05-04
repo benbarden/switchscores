@@ -53,18 +53,9 @@ class Repository
 
     public function gamesByTag($tagId)
     {
-        $games = DB::table('games')
-            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
-            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
-            ->select('games.*',
-                'game_tags.tag_id',
-                'games.id AS game_id',
-                'game_tags.id AS game_tag_id',
-                'tags.tag_name')
-            ->where('game_tags.tag_id', $tagId)
-            ->orderBy('games.id', 'desc');
-
-        return $games->get();
+        return Game::whereHas('gameTags', function($query) use ($tagId) {
+            $query->where('tag_id', $tagId);
+        })->get();
     }
 
     public function rankedByTag($tagId, $limit = null)
