@@ -12,7 +12,9 @@
                     {'console': Console, 'year': item.DateRaw|date('Y'), 'month': item.DateRaw|date('m')}) %}
                 <tr>
                     <td>
-                        {{ item.DateRaw|date('M Y') }}
+                        <a href="{{ YearMonthRoute }}">
+                            {{ item.DateRaw|date('M Y') }}
+                        </a>
                     </td>
                     <td class="text-center">
                         {{ item.GameCount }}
