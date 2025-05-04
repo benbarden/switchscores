@@ -2,11 +2,12 @@
     <!-- Month -->
     <div class="row">
 
-        {% set GameRankYearMonthUrl = GameData.eu_release_date|date('Y-m') %}
+        {% set GameRankYear = GameData.eu_release_date|date('Y') %}
+        {% set GameRankMonth = GameData.eu_release_date|date('m') %}
         {% set GameRankYearMonthDisplay = GameData.eu_release_date|date('M Y') %}
         <div class="col-md-4 col-sm-4 col-xs-6">
             <h4 class="rating-title">
-                <a href="{{ route('games.browse.byDate.page', {'date': GameRankYearMonthUrl}) }}">{{ GameRankYearMonthDisplay }}</a>
+                <a href="{{ route('console.byMonth', {'console': GameData.console, 'year': GameRankYear, 'month': GameRankMonth}) }}">{{ GameRankYearMonthDisplay }}</a>
             </h4>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-6">
