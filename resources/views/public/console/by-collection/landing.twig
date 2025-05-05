@@ -1,0 +1,42 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+        {% if CollectionList %}
+            <table class="table">
+                {% for item in CollectionList %}
+                    <tr>
+                        <td>
+                            <a href="{{ route('console.byCollection.page', {'console': Console, 'collection': item.link_title}) }}">{{ item.name }}</a>
+                        </td>
+                        <td class="text-right">
+                            <span class="h4">
+                                {% if Console.id == 1 %}
+                                    {{ item.gamesSwitch1.count }}
+                                {% elseif Console.id == 2 %}
+                                    {{ item.gamesSwitch2.count }}
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No collections found!</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h4', 'Search games') }}
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
+        {% include 'public/console/nav-right-browse-all.twig' %}
+
+    </div>
+</div>
+
+{% endblock page_body %}

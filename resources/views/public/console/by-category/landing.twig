@@ -1,0 +1,76 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+
+        {% if CategoryList %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th class="text-center">No of games</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in CategoryList %}
+                    <tr>
+                        <td>
+                            <h2 style="font-size: 20px; margin: 5px 0;">
+                                <a href="{{ route('console.byCategory.page', {'console': Console, 'category': item.link_title}) }}">
+                                    {{ item.name }}
+                                </a>
+                            </h2>
+                        </td>
+                        <td class="text-center">
+                            <h2 style="font-size: 20px; margin: 5px 0;">
+                                {% if Console.id == 1 %}
+                                    {{ item.gamesSwitch1.count }}
+                                {% elseif Console.id == 2 %}
+                                    {{ item.gamesSwitch2.count }}
+                                {% endif %}
+                            </h2>
+                        </td>
+                    </tr>
+                    {% if item.children %}
+                        {% for itemChild in item.children %}
+                            <tr>
+                                <td>
+                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                    <a href="{{ route('console.byCategory.page', {'console': Console, 'category': itemChild.link_title}) }}">
+                                        {{ itemChild.name }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    {% if Console.id == 1 %}
+                                        {{ itemChild.gamesSwitch1.count }}
+                                    {% elseif Console.id == 2 %}
+                                        {{ itemChild.gamesSwitch2.count }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No categories found!</p>
+        {% endif %}
+
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h4', 'Search games') }}
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
+        {% include 'public/console/nav-right-browse-all.twig' %}
+
+    </div>
+</div>
+
+{% endblock page_body %}

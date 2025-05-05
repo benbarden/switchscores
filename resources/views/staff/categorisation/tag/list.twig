@@ -25,7 +25,7 @@
                         {{ item.id }}
                     </td>
                     <td class="text-left">
-                        <a href="{{ route('games.browse.byTag.page', {'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
+                        <a href="{{ route('console.byTag.page', {'console': 'switch-1', 'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
                     </td>
                     <td class="text-left">
                         {% if item.category.id is not null %}

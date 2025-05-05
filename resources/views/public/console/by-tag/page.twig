@@ -1,0 +1,66 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<script>
+    $(document).ready(function() {
+        $('a.js-toggle-list').on('click', function() {
+            var elemId = $(this).attr('id');
+            var listToShow = elemId.replace('js-toggle-', '');
+            toggleList(listToShow);
+        });
+    });
+    function toggleList(showWhich) {
+        $('#list-ranked').hide();
+        $('#list-unranked').hide();
+        $('#list-delisted').hide();
+        $('#' + showWhich).show();
+    }
+</script>
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+
+        <h5 class="theme-header theme-rounded theme-padding-10 theme-colour-1">
+            <strong>Navigation</strong>:
+            <a id="js-toggle-list-ranked" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                Ranked ({{ RankedGameList|length }})</a>
+             |
+            <a id="js-toggle-list-unranked" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                Unranked ({{ UnrankedGameList|length }})</a>
+             |
+            <a id="js-toggle-list-delisted" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                De-listed ({{ DelistedGameList|length }})</a>
+        </h5>
+
+        <div id="list-ranked">
+            {{ headings.roundedBlue('h2', 'Ranked') }}
+            {{ gameslayouts.noHero(RankedGameList, 2) }}
+        </div>
+        <div id="list-unranked" style="display: none;">
+            {{ headings.roundedBlue('h2', 'Unranked') }}
+            {{ gameslayouts.noHero(UnrankedGameList, 2) }}
+        </div>
+        <div id="list-delisted" style="display: none;">
+            {{ headings.roundedBlue('h2', 'De-listed') }}
+            {{ gameslayouts.noHero(DelistedGameList, 2) }}
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h4', 'Search games') }}
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
+        {% include 'public/console/nav-right-browse-all.twig' %}
+
+    </div>
+
+</div>
+
+{% endblock page_body %}

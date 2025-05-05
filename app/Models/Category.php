@@ -30,6 +30,18 @@ class Category extends Model
         return $this->hasMany('App\Models\Game', 'category_id', 'id');
     }
 
+    public function gamesSwitch1()
+    {
+        return $this->hasMany('App\Models\Game', 'category_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_1);
+    }
+
+    public function gamesSwitch2()
+    {
+        return $this->hasMany('App\Models\Game', 'category_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_2);
+    }
+
     public function children()
     {
         return $this->hasMany('App\Models\Category', 'parent_id', 'id')->orderBy('name', 'asc');

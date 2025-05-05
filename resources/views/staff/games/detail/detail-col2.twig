@@ -8,7 +8,7 @@
         </td>
         <td>
             {% if GameData.category_id %}
-                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
+                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
             {% endif %}
         </td>
     </tr>
@@ -19,7 +19,7 @@
         </td>
         <td>
             {% if GameData.series_id %}
-                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+                <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
             {% endif %}
         </td>
     </tr>
@@ -30,7 +30,7 @@
         </td>
         <td>
             {% if GameData.collection_id %}
-                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">{{ GameData.gameCollection.name }}</a>
+                <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}" target="_blank">{{ GameData.gameCollection.name }}</a>
             {% endif %}
         </td>
     </tr>
@@ -46,7 +46,7 @@
         <td>
             {% if GameTags|length > 0 %}
                 {% for item in GameTags %}
-                    <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
+                    <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}" target="_blank">
                         <nobr>{{ item.tag.tag_name }}</nobr>
                     </a>
                     {% if not loop.last %}, {% endif %}

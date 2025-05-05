@@ -45,6 +45,91 @@ class MainSite extends Base
 
     }
 
+    public function consoleCategorySubpage($pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.byCategory.landing', ['console' => $console]),
+            'text' => 'By category'
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
+    public function consoleSubcategorySubpage($parentCategory, $pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.byCategory.landing', ['console' => $console]),
+            'text' => 'By category'
+        ];
+        $crumb3 = [
+            'url' => route('console.byCategory.page', ['console' => $console, 'category' => $parentCategory->link_title]),
+            'text' => $parentCategory->name
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addCrumb($crumb3)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
+    public function consoleSeriesSubpage($pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.bySeries.landing', ['console' => $console]),
+            'text' => 'By series'
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
+    public function consoleCollectionSubpage($pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.byCollection.landing', ['console' => $console]),
+            'text' => 'By collection'
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
+    public function consoleTagSubpage($pageTitle, Console $console)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.byTag.landing', ['console' => $console]),
+            'text' => 'By tag'
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
     public function listsSubpage($pageTitle)
     {
         return $this->addCrumb($this->toastedCrumbs['listsLanding'])

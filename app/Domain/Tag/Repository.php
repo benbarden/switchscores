@@ -58,7 +58,7 @@ class Repository
         })->get();
     }
 
-    public function rankedByTag($tagId, $limit = null)
+    public function rankedByTag($consoleId, $tagId, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
@@ -68,6 +68,7 @@ class Repository
                 'games.id AS game_id',
                 'game_tags.id AS game_tag_id',
                 'tags.tag_name')
+            ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNotNull('games.game_rank')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
@@ -82,7 +83,7 @@ class Repository
 
     }
 
-    public function unrankedByTag($tagId, $limit = null)
+    public function unrankedByTag($consoleId, $tagId, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
@@ -92,6 +93,7 @@ class Repository
                 'games.id AS game_id',
                 'game_tags.id AS game_tag_id',
                 'tags.tag_name')
+            ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
@@ -105,7 +107,7 @@ class Repository
 
     }
 
-    public function delistedByTag($tagId, $limit = null)
+    public function delistedByTag($consoleId, $tagId, $limit = null)
     {
         $games = DB::table('games')
             ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
@@ -115,6 +117,7 @@ class Repository
                 'games.id AS game_id',
                 'game_tags.id AS game_tag_id',
                 'tags.tag_name')
+            ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
             ->where('format_digital', '=', Game::FORMAT_DELISTED)

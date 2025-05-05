@@ -22,4 +22,16 @@ class GameCollection extends Model
     {
         return $this->hasMany('App\Models\Game', 'collection_id', 'id');
     }
+
+    public function gamesSwitch1()
+    {
+        return $this->hasMany('App\Models\Game', 'collection_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_1);
+    }
+
+    public function gamesSwitch2()
+    {
+        return $this->hasMany('App\Models\Game', 'collection_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_2);
+    }
 }

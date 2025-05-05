@@ -71,9 +71,10 @@ class Repository
         return Game::where('category_id', $categoryId)->orderBy('title', 'asc')->get();
     }
 
-    public function rankedByCategory($categoryId, $limit = null)
+    public function rankedByCategory($consoleId, $categoryId, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::where('console_id', $consoleId)
+            ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->where('format_digital', '<>', Game::FORMAT_DELISTED)
@@ -88,9 +89,10 @@ class Repository
 
     }
 
-    public function unrankedByCategory($categoryId, $limit = null)
+    public function unrankedByCategory($consoleId, $categoryId, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::where('console_id', $consoleId)
+            ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
             ->where('format_digital', '<>', Game::FORMAT_DELISTED)
@@ -105,9 +107,10 @@ class Repository
 
     }
 
-    public function delistedByCategory($categoryId, $limit = null)
+    public function delistedByCategory($consoleId, $categoryId, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::where('console_id', $consoleId)
+            ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
             ->where('format_digital', '=', Game::FORMAT_DELISTED)

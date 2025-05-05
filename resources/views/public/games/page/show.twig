@@ -58,7 +58,7 @@
                         <i class="fa fa-tag" aria-hidden="true"></i>
                         <strong>Tags -</strong>
                         {% for item in GameTags %}
-                            <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                            <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}">
                                 <nobr>{{ item.tag.tag_name }}</nobr>
                             </a>
                             {% if not loop.last %},{% endif %}
@@ -98,20 +98,21 @@
             <h2>More in this category: {{ CategoryName }}</h2>
             {{ gameslayouts.noHero(RelatedByCategory, 2) }}
             <p>
-                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">View all in this category</a>.
+                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">View all in this category</a>.
             </p>
         {% endif %}
         {% if RelatedByCollection %}
             <h2>More in this collection: {{ CollectionName }}</h2>
             {{ gameslayouts.noHero(RelatedByCollection, 2) }}
             <p>
-                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
+                <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
             </p>
-        {% elseif RelatedBySeries %}
+        {% endif %}
+        {% if RelatedBySeries %}
             <h2>More in this series: {{ SeriesName }}</h2>
             {{ gameslayouts.noHero(RelatedBySeries, 2) }}
             <p>
-                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">View all in this series</a>.
+                <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}">View all in this series</a>.
             </p>
         {% endif %}
 

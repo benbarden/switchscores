@@ -27,4 +27,16 @@ class Tag extends Model
     {
         return $this->hasOne('App\Models\TagCategory', 'id', 'tag_category_id');
     }
+
+    public function gamesSwitch1()
+    {
+        return $this->hasMany('App\Models\Game', 'tag_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_1);
+    }
+
+    public function gamesSwitch2()
+    {
+        return $this->hasMany('App\Models\Game', 'tag_id', 'id')
+            ->where('console_id', Console::ID_SWITCH_2);
+    }
 }

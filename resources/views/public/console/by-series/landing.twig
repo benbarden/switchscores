@@ -1,0 +1,37 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+{% if SeriesList %}
+    <div class="row">
+        {% for item in SeriesList %}
+            <div class="col-md-3">
+                {% if item.landing_image %}
+                    <a href="{{ route('console.bySeries.page', {'console': Console, 'series': item.link_title}) }}">
+                        <img src="/img/gen/series/{{ item.landing_image }}" alt="{{ item.series }}" title="{{ item.series }}" style="border: 0;" class="img-responsive">
+                    </a>
+                {% endif %}
+                <div class="row" style="margin: 15px 0;">
+                    <div class="col-md-10" style="padding-left: 0;">
+                        <span class="h5">
+                            <a href="{{ route('console.bySeries.page', {'console': Console, 'series': item.link_title}) }}">{{ item.series }}</a>
+                        </span>
+                    </div>
+                    <div class="col-md-2" style="padding-right: 0;">
+                        <span class="h4 text-right">
+                            {% if Console.id == 1 %}
+                                {{ item.gamesSwitch1.count }}
+                            {% elseif Console.id == 2 %}
+                                {{ item.gamesSwitch2.count }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No series found!</p>
+{% endif %}
+
+{% endblock page_body %}

@@ -51,46 +51,49 @@ Route::controller('PublicSite\Console\TopRatedController')->group(function () {
     Route::get('/c/{console:slug?}/top-rated/all-time/page/{page}', 'allTimePage')->name('console.topRated.allTime.page');
     Route::get('/c/{console:slug?}/top-rated/by-year/{year}', 'byYear')->name('console.topRated.byYear');
 });
+Route::controller('PublicSite\Console\BrowseByCategoryController')->group(function () {
+    Route::get('/c/{console:slug?}/category', 'landing')->name('console.byCategory.landing');
+    Route::get('/c/{console:slug?}/category/{category}', 'page')->name('console.byCategory.page');
+});
+Route::controller('PublicSite\Console\BrowseBySeriesController')->group(function () {
+    Route::get('/c/{console:slug?}/series', 'landing')->name('console.bySeries.landing');
+    Route::get('/c/{console:slug?}/series/{series}', 'page')->name('console.bySeries.page');
+});
+Route::controller('PublicSite\Console\BrowseByCollectionController')->group(function () {
+    Route::get('/c/{console:slug?}/collection', 'landing')->name('console.byCollection.landing');
+    Route::get('/c/{console:slug?}/collection/{collection}', 'page')->name('console.byCollection.page');
+});
+Route::controller('PublicSite\Console\BrowseByTagController')->group(function () {
+    Route::get('/c/{console:slug?}/tag', 'landing')->name('console.byTag.landing');
+    Route::get('/c/{console:slug?}/tag/{tag}', 'page')->name('console.byTag.page');
+});
 // These must appear after the other console links
 Route::controller('PublicSite\Console\BrowseByDateController')->group(function () {
     Route::get('/c/{console:slug?}/{year}', 'byYear')->name('console.byYear');
     Route::get('/c/{console:slug?}/{year}/{month}', 'byMonth')->name('console.byMonth');
 });
 
-/*
-Route::controller('PublicSite\Console\BrowseController')->group(function () {
-    Route::get('/c/{console:slug?}/category/{category}', 'byCategoryLanding')->name('console.byCategoryLanding');
-    Route::get('/c/{console:slug?}/category', 'byCategoryPage')->name('console.byCategoryPage');
-    Route::get('/c/{console:slug?}/series/{series}', 'bySeriesLanding')->name('console.bySeriesLanding');
-    Route::get('/c/{console:slug?}/series', 'bySeriesPage')->name('console.bySeriesPage');
-    Route::get('/c/{console:slug?}/collection/{collection}', 'byCollectionLanding')->name('console.byCollectionLanding');
-    Route::get('/c/{console:slug?}/collection', 'byCollectionPage')->name('console.byCollectionPage');
-    Route::get('/c/{console:slug?}/tag/{tag}', 'byTagLanding')->name('console.byTagLanding');
-    Route::get('/c/{console:slug?}/tag', 'byTagPage')->name('console.byTagPage');
-});
-*/
-
 // Main game pages
 Route::redirect('/games', '/c/switch-1')->name('games.landing');
 Route::match(['get', 'post'], '/games/search', 'PublicSite\Games\SearchController@show')->name('games.search');
 
 // Browse by...
-Route::get('/games/by-title', 'PublicSite\Games\BrowseByTitleController@landing')->name('games.browse.byTitle.landing');
-Route::get('/games/by-title/{letter}', 'PublicSite\Games\BrowseByTitleController@page')->name('games.browse.byTitle.page');
+Route::redirect('/games/by-title', '/c/switch-1')->name('games.browse.byTitle.landing');
+Route::redirect('/games/by-title/{letter}', '/c/switch-1')->name('games.browse.byTitle.page');
 
-Route::get('/games/by-category', 'PublicSite\Games\BrowseByCategoryController@landing')->name('games.browse.byCategory.landing');
-Route::get('/games/by-category/{category}', 'PublicSite\Games\BrowseByCategoryController@page')->name('games.browse.byCategory.page');
+Route::redirect('/games/by-category', '/c/switch-1/category')->name('games.browse.byCategory.landing');
+Route::redirect('/games/by-category/{category}', '/c/switch-1/category/{category}')->name('games.browse.byCategory.page');
 
-Route::get('/games/by-series', 'PublicSite\Games\BrowseBySeriesController@landing')->name('games.browse.bySeries.landing');
-Route::get('/games/by-series/{series}', 'PublicSite\Games\BrowseBySeriesController@page')->name('games.browse.bySeries.page');
+Route::redirect('/games/by-series', '/c/switch-1/series')->name('games.browse.bySeries.landing');
+Route::redirect('/games/by-series/{series}', '/c/switch-1/series/{series}')->name('games.browse.bySeries.page');
 
-Route::get('/games/by-collection', 'PublicSite\Games\BrowseByCollectionController@landing')->name('games.browse.byCollection.landing');
-Route::get('/games/by-collection/{collection}', 'PublicSite\Games\BrowseByCollectionController@page')->name('games.browse.byCollection.page');
-Route::get('/games/by-collection/{collection}/category/{category}', 'PublicSite\Games\BrowseByCollectionController@pageCategory')->name('games.browse.byCollection.pageCategory');
-Route::get('/games/by-collection/{collection}/series/{series}', 'PublicSite\Games\BrowseByCollectionController@pageSeries')->name('games.browse.byCollection.pageSeries');
+Route::redirect('/games/by-collection', '/c/switch-1/collection')->name('games.browse.byCollection.landing');
+Route::redirect('/games/by-collection/{collection}', '/c/switch-1/collection/{collection}')->name('games.browse.byCollection.page');
+//Route::get('/games/by-collection/{collection}/category/{category}', 'PublicSite\Games\BrowseByCollectionController@pageCategory')->name('games.browse.byCollection.pageCategory');
+//Route::get('/games/by-collection/{collection}/series/{series}', 'PublicSite\Games\BrowseByCollectionController@pageSeries')->name('games.browse.byCollection.pageSeries');
 
-Route::get('/games/by-tag', 'PublicSite\Games\BrowseByTagController@landing')->name('games.browse.byTag.landing');
-Route::get('/games/by-tag/{tag}', 'PublicSite\Games\BrowseByTagController@page')->name('games.browse.byTag.page');
+Route::redirect('/games/by-tag', '/c/switch-1/tag')->name('games.browse.byTag.landing');
+Route::redirect('/games/by-tag/{tag}', '/c/switch-1/tag/{tag}')->name('games.browse.byTag.page');
 
 Route::redirect('/games/by-date', '/c/switch-1/2025')->name('games.browse.byDate.landing');
 Route::redirect('/games/by-date/{date}', '/c/switch-1/2025')->name('games.browse.byDate.page');

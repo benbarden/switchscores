@@ -31,9 +31,9 @@
             <td style="vertical-align: middle;">
                 {% if item.category_id %}
                     {% if item.category.parent.id %}
-                        <a href="{{ route('games.browse.byCategory.page', {'category': item.category.parent.link_title}) }}">{{ item.category.parent.name }}</a> &raquo;
+                        <a href="{{ route('console.byCategory.page', {'console': item.console, 'category': item.category.parent.link_title}) }}">{{ item.category.parent.name }}</a> &raquo;
                     {% endif %}
-                    <a href="{{ route('games.browse.byCategory.page', {'category': item.category.link_title}) }}">{{ item.category.name }}</a>
+                    <a href="{{ route('console.byCategory.page', {'console': item.console, 'category': item.category.link_title}) }}">{{ item.category.name }}</a>
                 {% endif %}
             </td>
             <td style="vertical-align: middle;">

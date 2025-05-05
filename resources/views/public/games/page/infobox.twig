@@ -20,9 +20,9 @@
             </td>
             <td>
                 {% if GameData.category.parent.id %}
-                    <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
                 {% endif %}
-                <a href="{{ route('games.browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
             </td>
         </tr>
     {% endif %}
@@ -36,7 +36,7 @@
             </td>
             <td>
                 {% for item in GameTags %}
-                    <a href="{{ route('games.browse.byTag.page', {'tag': item.tag.link_title}) }}">
+                    <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}">
                         <nobr>{{ item.tag.tag_name }}</nobr>
                     </a>
                     {% if not loop.last %},{% endif %}
@@ -52,7 +52,7 @@
                 <span style="font-weight: bold;">Series</span>
             </td>
             <td>
-                <a href="{{ route('games.browse.bySeries.page', {'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
+                <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}">{{ GameData.series.series }}</a>
             </td>
         </tr>
     {% endif %}
@@ -63,7 +63,7 @@
                 <span style="font-weight: bold;">Collection</span>
             </td>
             <td>
-                <a href="{{ route('games.browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}">{{ GameData.gameCollection.name }}</a>
+                <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}">{{ GameData.gameCollection.name }}</a>
             </td>
         </tr>
     {% endif %}

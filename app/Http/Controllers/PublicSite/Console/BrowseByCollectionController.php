@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PublicSite\Games;
+namespace App\Http\Controllers\PublicSite\Console;
 
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GameCollection\DbQueries as GameCollectionDbQueries;
@@ -8,6 +8,8 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+
+use App\Models\Console;
 
 use Illuminate\Routing\Controller as Controller;
 
@@ -25,54 +27,50 @@ class BrowseByCollectionController extends Controller
     {
     }
 
-    public function landing()
+    public function landing(Console $console)
     {
         $bindings = [];
 
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
-        $bindings['PageTitle'] = 'Nintendo Switch games list - By collection';
-        $bindings['TopTitle'] = 'Nintendo Switch games list - By collection';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage('By collection');
+        $bindings['Console'] = $console;
 
-        return view('public.games.browse.collection.landing', $bindings);
+        $bindings['PageTitle'] = 'Nintendo '.$console->name.' games list - By collection';
+        $bindings['TopTitle'] = 'Nintendo '.$console->name.' games list - By collection';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->consoleSubpage('By collection', $console);
+
+        return view('public.console.by-collection.landing', $bindings);
     }
 
-    public function page($collection)
+    public function page(Console $console, $collection)
     {
         $bindings = [];
 
         $gameCollection = $this->repoGameCollection->getByLinkTitle($collection);
         if (!$gameCollection) abort(404);
 
+        $consoleId = $console->id;
         $collectionId = $gameCollection->id;
         $collectionName = $gameCollection->name;
         $bindings['GameCollection'] = $gameCollection;
 
-        $gameList = $this->repoGameLists->byCollection(1, $collectionId);
+        $gameList = $this->repoGameLists->byCollection($consoleId, $collectionId);
 
-        $splitPageCutoff = 30;
-        $useSplitPageCutoff = "Y"; // change to Y to test the new layout
+        // Lists
+        $bindings['RankedGameList'] = $this->repoGameCollection->rankedByCollection($consoleId, $collectionId);
+        $bindings['UnrankedGameList'] = $this->repoGameCollection->unrankedByCollection($consoleId, $collectionId);
+        $bindings['DelistedGameList'] = $this->repoGameCollection->delistedByCollection($consoleId, $collectionId);
 
         $bindings['GameList'] = $gameList;
+        $bindings['Console'] = $console;
 
-        if (($useSplitPageCutoff == "Y") && (count($gameList) >= $splitPageCutoff)) {
-            $gameCollectionCategoryList = $this->dbGameCollection->collectionCategoryStats($collectionId);
-            $gameCollectionSeriesList = $this->dbGameCollection->collectionSeriesStats($collectionId);
-            $bindings['CollectionCategoryList'] = $gameCollectionCategoryList;
-            $bindings['CollectionSeriesList'] = $gameCollectionSeriesList;
-        } else {
-            $useSplitPageCutoff = "N"; // revert to old style if we don't have enough games
-        }
-        $bindings['UseSplitPageCutoff'] = $useSplitPageCutoff;
+        $bindings['PageTitle'] = 'Nintendo '.$console->name.' games list - By collection: '.$collectionName;
+        $bindings['TopTitle'] = 'Nintendo '.$console->name.' games list - By collection: '.$collectionName;
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->consoleCollectionSubpage($collectionName, $console);
 
-        $bindings['PageTitle'] = 'Nintendo Switch games list - By collection: '.$collectionName;
-        $bindings['TopTitle'] = 'Nintendo Switch games list - By collection: '.$collectionName;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesByCollectionSubpage($collectionName);
-
-        return view('public.games.browse.collection.page', $bindings);
+        return view('public.console.by-collection.page', $bindings);
     }
-
+/*
     public function pageCategory($urlCollection, $urlCategory)
     {
         $bindings = [];
@@ -122,4 +120,5 @@ class BrowseByCollectionController extends Controller
 
         return view('public.games.browse.collection.page', $bindings);
     }
+    */
 }

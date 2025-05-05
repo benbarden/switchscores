@@ -192,9 +192,10 @@ class Repository
         return Game::whereIn('id', $idList)->get();
     }
 
-    public function byCollection($collectionId, $limit = null)
+    public function byCollection($consoleId, $collectionId, $limit = null)
     {
-        $games = Game::where('collection_id', $collectionId)
+        $games = Game::where('console_id', $consoleId)
+            ->where('collection_id', $collectionId)
             ->where('eu_is_released', 1)
             ->orderBy('title', 'asc');
 

@@ -1,0 +1,37 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-md-12">
+        {% if TagCategoryList %}
+            {% for item in TagCategoryList %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>
+                            {{ item.name }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for categoryItem in item.tags %}
+                        <div class="col-md-3">
+                            <i class="fa fa-tag" aria-hidden="true"></i>
+                            <span class="h6">
+                                <a href="{{ route('console.byTag.page', {'console': Console, 'tag': categoryItem.link_title}) }}">{{ categoryItem.tag_name }}</a>
+                            </span>
+                            <div class="pull-right text-muted">
+                                {# {{ categoryItem.gameTags.count }} #}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No tags found!</p>
+        {% endif %}
+    </div>
+</div>
+<br><br>
+
+{% endblock page_body %}
