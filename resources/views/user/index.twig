@@ -26,8 +26,8 @@
     <div class="row">
 
         <div class="col-xs-12 col-sm-4 col-md-4">
-            <h2>Your details</h2>
-            <table class="table">
+            {{ headings.roundedBlue('h4', 'Your details') }}
+            <table class="table table-condensed">
                 <tr>
                     <td>Display name</td>
                     <td>{{ UserData.display_name }}</td>
@@ -47,7 +47,11 @@
                     <td>{{ UserData.points_balance }}</td>
                 </tr>
                 <tr>
-                    <td>Games in your collection</td>
+                    <td>
+                        <a href="{{ route('user.collection.landing') }}">
+                            Games in your collection
+                        </a>
+                    </td>
                     <td>{{ TotalGames }}</td>
                 </tr>
                 <tr>
@@ -59,7 +63,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Quick links</h2>
+            {{ headings.roundedBlue('h4', 'Quick links') }}
             <table class="table">
                 <tr>
                     <td>
@@ -93,21 +97,23 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
 
             {% if NextToReviewFromCollection %}
-                <h2>Add your review</h2>
+                {{ headings.roundedBlue('h4', 'Add a review') }}
                 <p>
                     Why not review this game from your collection?
                 </p>
                 {{ gameslayouts.noHero(NextToReviewFromCollection, 1) }}
                 <br>
-                <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}';" />
+                <a class="btn btn-primary btn-lg" href="{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}">Add your review</a>
+                <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Review a different game</a>
             {% elseif NextToReviewFromUnranked %}
-                <h2>Add your review</h2>
+                {{ headings.roundedBlue('h4', 'Add your review') }}
                 <p>
                     This game only needs 1 review to be ranked. Why not check it out?
                 </p>
                 {{ gameslayouts.noHero(NextToReviewFromUnranked, 1) }}
                 <br>
-                <input type="button" class="btn btn-primary btn-lg" value="Add your review" onclick="top.location.href = '{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromUnranked[0].id}) }}';" />
+                <a class="btn btn-primary btn-lg" href="{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromUnranked[0].id}) }}">Add your review</a>
+                <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Review a different game</a>
             {% endif %}
 
         </div>
@@ -120,37 +126,13 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% if SiteRole == 'review-partner' %}
-                <h2>Reviewers</h2>
-                <p>
-                    Find all the tools and stats for reviewers here.
-                </p>
-                <p>
-                    <a href="{{ route('reviewers.index') }}" class="btn btn-sm btn-primary">Reviewers dashboard</a>
-                </p>
-            {% else %}
-                <h2>Partners</h2>
-                <p>
-                    <strong>Got a website with Switch reviews?</strong>
-                    You might be interested in joining as a review partner.
-                    Partners have their reviews linked from Switch Scores.
-                    Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
-                    more details.
-                </p>
-            {% endif %}
-
-        </div>
-
-        <div class="col-xs-12 col-sm-4 col-md-4">
-
-            <h2>Featured game</h2>
+            {{ headings.roundedBlue('h4', 'Featured games') }}
             <p>
-                This is where we feature games that are interesting, unusual, or that simply need
-                more reviews.
-                <br>You can <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">suggest a featured game here</a>.
+                Games that are interesting, unusual, or need more reviews.
             </p>
-            {% if FeaturedGame %}
+            {% if FeaturedGameData %}
                 {{ gameslayouts.noHero(FeaturedGameData, 1) }}
+                {#
                 <p>
                     <small>
                         Check this out because:
@@ -161,17 +143,59 @@
                         Suggested by {{ FeaturedGame.user.display_name }} on {{ FeaturedGame.created_at|date('d M Y') }}
                     </small>
                 </p>
+                #}
             {% else %}
                 <p>
                     <strong>Oops! There aren't any featured games right now. Check back soon!</strong>
                 </p>
             {% endif %}
+            <br>
+            <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">Suggest a featured game</a>
 
         </div>
 
+        <div class="col-xs-12 col-sm-8 col-md-8">
+
+            {{ headings.roundedBlue('h4', 'Recent member reviews') }}
+            <div class="row homepage-quick-reviews">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <p>
+                        Reviews from Switch Scores members.
+                        <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>.
+                    </p>
+                    {% for item in QuickReviews %}
+                        {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            {#
+            {% if SiteRole == 'review-partner' %}
+                {{ headings.roundedBlue('h4', 'Reviewers') }}
+                <p>
+                    Find all the tools and stats for reviewers here.
+                </p>
+                <p>
+                    <a href="{{ route('reviewers.index') }}" class="btn btn-sm btn-primary">Reviewers dashboard</a>
+                </p>
+            {% else %}
+                {{ headings.roundedBlue('h4', 'Partners') }}
+                <p>
+                    <strong>Got a website with Switch reviews?</strong>
+                    You might be interested in joining as a review partner.
+                    Partners have their reviews linked from Switch Scores.
+                    Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+                    more details.
+                </p>
+            {% endif %}
+            #}
+
+        </div>
+
+        {#
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            <h2>Recent updates</h2>
+            {{ headings.roundedBlue('h4', 'Recent updates') }}
             <table class="table">
                 <tr>
                     <td>
@@ -197,6 +221,7 @@
             </table>
 
         </div>
+        #}
 
     </div>
 

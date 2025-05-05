@@ -100,6 +100,44 @@ nav ol.breadcrumb {
 .theme-colour-15 {background: #2C75C9; color: #ffffff;}
 .theme-colour-16 {background: #2CC4C9; color: #ffffff;}
 
+.theme-header {font-family: 'Merriweather', serif;}
+
+.theme-rounded {border-radius: 8px;}
+
+.theme-padding-10 {padding: 10px;}
+
+/* Quick reviews */
+.quick-reviews-title {
+    color: #000;
+    font-size: 1.1em;
+    margin: 10px 2px 2px 0;
+    padding: 5px;
+}
+.quick-reviews-title a {
+    color: #000;
+}
+.quick-reviews-title div {
+    margin: 0;
+    padding: 0;
+}
+.quick-reviews-header {
+    margin: 0 2px 2px 0;
+}
+.quick-reviews-header div {
+    background-color: #f6f6f6;
+    color: #000;
+    font-size: 0.9em;
+    padding: 5px;
+}
+.quick-reviews-body {
+    margin: 0 2px;
+}
+.quick-reviews-body div {
+    background-color: #fff;
+    color: #000;
+    font-size: 13px;
+    padding: 5px;
+}
 
 /* NOT YET MIGRATED */
 

@@ -8,6 +8,7 @@ use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Domain\UserGamesCollection\DbQueries as CollectionDbQueries;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 
 class IndexController extends Controller
@@ -17,6 +18,7 @@ class IndexController extends Controller
         private CollectionDbQueries $dbCollection,
         private FeaturedGameRepository $repoFeaturedGame,
         private GameRepository $repoGame,
+        private QuickReviewRepository $repoQuickReview,
         private UnrankedRepository $repoUnranked,
     )
     {
@@ -33,17 +35,24 @@ class IndexController extends Controller
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
 
+        // Recent quick reviews (all members)
+        $bindings['QuickReviews'] = $this->repoQuickReview->getLatestActive(5);
+
         $bindings['SiteRole'] = $siteRole;
         $bindings['UserData'] = $currentUser;
         $bindings['TotalGames'] = $this->repoCollectionStats->userTotalGames($userId);
         $bindings['TotalHours'] = $this->repoCollectionStats->userTotalHours($userId);
 
         // Featured game
-        $featuredGame = $this->repoFeaturedGame->getLatest();
-        $game = $this->repoGame->find($featuredGame->game_id);
-        if ($game) {
-            $bindings['FeaturedGame'] = $featuredGame;
-            $bindings['FeaturedGameData'][] = $game;
+        $featuredGame = $this->repoFeaturedGame->getLatest(3);
+        if ($featuredGame) {
+            foreach ($featuredGame as $fgame) {
+                $game = $this->repoGame->find($fgame->game_id);
+                if ($game) {
+                    //$bindings['FeaturedGame'] = $fgame;
+                    $bindings['FeaturedGameData'][] = $game;
+                }
+            }
         }
 
         // Games to review
