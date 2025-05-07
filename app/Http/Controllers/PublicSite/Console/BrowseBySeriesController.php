@@ -50,6 +50,7 @@ class BrowseBySeriesController extends Controller
         $bindings['RankedGameList'] = $this->repoGameSeries->rankedBySeries($consoleId, $seriesId);
         $bindings['UnrankedGameList'] = $this->repoGameSeries->unrankedBySeries($consoleId, $seriesId);
         $bindings['DelistedGameList'] = $this->repoGameSeries->delistedBySeries($consoleId, $seriesId);
+        $bindings['LowQualityGameList'] = $this->repoGameSeries->lowQualityBySeries($consoleId, $seriesId);
 
         $bindings['GameList'] = $gameList;
         $bindings['Console'] = $console;

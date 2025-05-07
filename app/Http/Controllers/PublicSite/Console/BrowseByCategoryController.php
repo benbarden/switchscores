@@ -63,6 +63,7 @@ class BrowseByCategoryController extends Controller
         $bindings['RankedGameList'] = $this->repoCategory->rankedByCategory($consoleId, $categoryId);
         $bindings['UnrankedGameList'] = $this->repoCategory->unrankedByCategory($consoleId, $categoryId);
         $bindings['DelistedGameList'] = $this->repoCategory->delistedByCategory($consoleId, $categoryId);
+        $bindings['LowQualityGameList'] = $this->repoCategory->lowQualityByCategory($consoleId, $categoryId);
 
         // Tables
         $bindings['RankedListSort'] = "[4, 'desc']";

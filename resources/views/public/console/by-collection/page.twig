@@ -16,6 +16,7 @@
             $('#list-ranked').hide();
             $('#list-unranked').hide();
             $('#list-delisted').hide();
+            $('#list-lowquality').hide();
             $('#' + showWhich).show();
         }
     </script>
@@ -34,6 +35,9 @@
                 |
                 <a id="js-toggle-list-delisted" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
                     De-listed ({{ DelistedGameList|length }})</a>
+                |
+                <a id="js-toggle-list-lowquality" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                    Low quality ({{ LowQualityGameList|length }})</a>
             </h5>
 
             <div id="list-ranked">
@@ -48,6 +52,10 @@
                 {{ headings.roundedBlue('h2', 'De-listed') }}
                 {{ gameslayouts.noHero(DelistedGameList, 2) }}
             </div>
+            <div id="list-lowquality" style="display: none;">
+                {{ headings.roundedBlue('h2', 'De-listed') }}
+                {{ gameslayouts.noHero(LowQualityGameList, 2) }}
+            </div>
 
         </div>
 
@@ -55,6 +63,19 @@
 
             {{ headings.roundedBlue('h4', 'Search games') }}
             {% include 'modules/game/search/form-mini.twig' %}
+
+            {% if Category.children.count() > 0 %}
+                {{ headings.roundedBlue('h4', 'Subcategories') }}
+                <ul>
+                    {% for item in Category.children %}
+                        <li>
+                            <a href="{{ route('console.byCategory.page', {'console': Console, 'category': item.link_title}) }}">
+                                {{ item.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             {{ headings.roundedBlue('h4', 'Browse all games') }}
             {% include 'public/console/nav-right-browse-all.twig' %}

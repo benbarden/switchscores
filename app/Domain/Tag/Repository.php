@@ -72,6 +72,7 @@ class Repository
             ->where('game_tags.tag_id', $tagId)
             ->whereNotNull('games.game_rank')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.is_low_quality', 0)
             ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.title', 'asc');
 
@@ -97,6 +98,7 @@ class Repository
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
             ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.is_low_quality', 0)
             ->orderBy('games.title', 'asc');
 
         if ($limit) {
@@ -121,6 +123,30 @@ class Repository
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
             ->where('format_digital', '=', Game::FORMAT_DELISTED)
+            ->orderBy('games.title', 'asc');
+
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+
+        return $games->get();
+
+    }
+    public function lowQualityByTag($consoleId, $tagId, $limit = null)
+    {
+        $games = DB::table('games')
+            ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+            ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+            ->select('games.*',
+                'game_tags.tag_id',
+                'games.id AS game_id',
+                'game_tags.id AS game_tag_id',
+                'tags.tag_name')
+            ->where('games.console_id', $consoleId)
+            ->where('game_tags.tag_id', $tagId)
+            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.is_low_quality', 1)
+            ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.title', 'asc');
 
         if ($limit) {

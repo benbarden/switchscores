@@ -51,6 +51,7 @@ class BrowseByTagController extends Controller
         $bindings['RankedGameList'] = $this->repoTag->rankedByTag($consoleId, $tagId);
         $bindings['UnrankedGameList'] = $this->repoTag->unrankedByTag($consoleId, $tagId);
         $bindings['DelistedGameList'] = $this->repoTag->delistedByTag($consoleId, $tagId);
+        $bindings['LowQualityGameList'] = $this->repoTag->lowQualityByTag($consoleId, $tagId);
 
         $bindings['Console'] = $console;
 

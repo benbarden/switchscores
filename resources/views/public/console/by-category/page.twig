@@ -16,6 +16,7 @@
             $('#list-ranked').hide();
             $('#list-unranked').hide();
             $('#list-delisted').hide();
+            $('#list-lowquality').hide();
             $('#' + showWhich).show();
         }
     </script>
@@ -34,6 +35,9 @@
                 |
                 <a id="js-toggle-list-delisted" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
                     De-listed ({{ DelistedGameList|length }})</a>
+                |
+                <a id="js-toggle-list-lowquality" class="js-toggle-list" href="javascript:void(0);" style="color: #fff;">
+                    Low quality ({{ LowQualityGameList|length }})</a>
             </h5>
 
             <div id="list-ranked">
@@ -47,6 +51,10 @@
             <div id="list-delisted" style="display: none;">
                 {{ headings.roundedBlue('h2', 'De-listed') }}
                 {{ gameslayouts.noHero(DelistedGameList, 2) }}
+            </div>
+            <div id="list-lowquality" style="display: none;">
+                {{ headings.roundedBlue('h2', 'De-listed') }}
+                {{ gameslayouts.noHero(LowQualityGameList, 2) }}
             </div>
 
         </div>
