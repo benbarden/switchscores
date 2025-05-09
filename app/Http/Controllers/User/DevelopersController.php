@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\GameLists\DbQueries as GameListsDbQueries;
+use App\Domain\GameLists\Repository as GameListsRepository;
 
 class DevelopersController extends Controller
 {
     public function __construct(
-        private GameListsDbQueries $dbGameLists
+        private GameListsRepository $repoGameLists,
     )
     {
     }
@@ -29,9 +30,16 @@ class DevelopersController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
 
-        $upcomingGames = $this->dbGameLists->getUpcomingSwitchWeekly(7);
+        $daysS1 = 7;
+        $daysS2 = 30;
 
-        $bindings['UpcomingGames'] = $upcomingGames;
+        $upcomingGamesS1 = $this->repoGameLists->upcomingSwitchWeekly(Console::ID_SWITCH_1, $daysS1);
+        $upcomingGamesS2 = $this->repoGameLists->upcomingSwitchWeekly(Console::ID_SWITCH_2, $daysS2);
+
+        $bindings['UpcomingGamesS1'] = $upcomingGamesS1;
+        $bindings['UpcomingGamesS2'] = $upcomingGamesS2;
+        $bindings['DaysLimitS1'] = $daysS1;
+        $bindings['DaysLimitS2'] = $daysS2;
 
         return view('user.developers.switch-weekly', $bindings);
     }

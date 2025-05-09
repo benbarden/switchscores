@@ -1,0 +1,12 @@
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h2>{{ BlockTitle }}</h2>
+        {% if GamesList %}
+            <div class="alert alert-info">
+                <strong>There are {{ GamesList|length }} games due to be released in the next {{ DaysLimit}} days.</strong>
+            </div>
+        {% endif %}
+    </div>
+
+</div>

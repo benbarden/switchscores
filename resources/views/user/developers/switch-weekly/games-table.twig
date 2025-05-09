@@ -1,0 +1,56 @@
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        <h2>Data</h2>
+
+        <table class="table table-sm table-responsive">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Publishers</th>
+                <th>Category</th>
+                <th class="text-center">EU release date</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Store link</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in GamesList %}
+                <tr>
+                    <td>
+                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank">
+                            {{ item.title }}
+                        </a>
+                        {% if item.is_low_quality == 1 %}
+                            <label class="badge bg-danger">Low quality</label>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.gamePublishers|length > 0 %}
+                            {% for item in item.gamePublishers %}
+                                <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
+                                    {{ item.publisher.name }}
+                                </a>
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ item.category.name }}
+                    </td>
+                    <td class="text-center">{{ item.eu_release_date }}</td>
+                    <td class="text-center">{{ item.price_eshop }}</td>
+                    <td class="text-center">
+                        {% if item.nintendo_store_url_override %}
+                            <a href="{{ item.nintendo_store_url_override }}" target="_blank">Visit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
