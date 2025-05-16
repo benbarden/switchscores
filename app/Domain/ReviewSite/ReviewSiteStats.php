@@ -40,7 +40,7 @@ class ReviewSiteStats
 
         $reviewCount = $this->statsReviewLink->totalBySite($siteId);
         $reviewLatest = $this->repoReviewLink->bySiteLatest($siteId, 1);
-        if ($reviewLatest) {
+        if (count($reviewLatest) > 0) {
             $reviewLatestItem = $reviewLatest[0];
             $latestReviewDate = $reviewLatestItem->review_date;
         } else {
