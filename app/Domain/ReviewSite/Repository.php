@@ -52,6 +52,7 @@ class Repository
     public function getActiveWithContactDetails()
     {
         return ReviewSite::where('status', '<>', ReviewSite::STATUS_ARCHIVED)
+            ->whereNotIn('id', [18, 604, 2110, 2593])
             ->whereNotNull('contact_email')->orWhereNotNull('contact_form_link')
             ->orderBy('name', 'asc')
             ->get();
