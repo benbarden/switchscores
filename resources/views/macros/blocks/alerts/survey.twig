@@ -1,0 +1,17 @@
+{% macro siteSurvey(page = '') %}
+    {% if page == 'welcome' %}
+        {% set customLinkStyle = ' style="color: #fff; font-weight: bold; text-decoration: underline;"' %}
+    {% else %}
+        {% set customLinkStyle = '' %}
+    {% endif %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="alert alert-info">
+                We'd like to hear what you think about Switch Scores. Please
+                <a href="https://forms.gle/ajwsPfEMRNKFsQSEA" target="_blank"{{ customLinkStyle|raw }}>
+                    fill in our member survey
+                </a> - it will only take 2 minutes.
+            </div>
+        </div>
+    </div>
+{% endmacro %}

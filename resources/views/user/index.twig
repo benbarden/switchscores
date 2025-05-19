@@ -1,6 +1,7 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
 {% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
 {% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import 'macros/blocks/alerts/survey.twig' as alerts %}
 
 {% block page_inner %}
 
@@ -13,15 +14,7 @@
         Follow us for the latest updates.
     </p>
 #}
-{#
-    <div class="row">
-        <div class="col-xs-12 col-sm-4 col-md-4">
-            <div class="alert alert-info">
-                Check out our <a href="{{ route('lists.buyersGuideHoliday2024US') }}">Buyer's Guide - Holiday 2024 Edition</a>.
-            </div>
-        </div>
-    </div>
-#}
+    {{ alerts.siteSurvey() }}
 
     <div class="row">
 

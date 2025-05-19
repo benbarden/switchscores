@@ -1,10 +1,13 @@
 {% extends 'theme/wos/base.twig' %}
 {% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 {% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import 'macros/blocks/alerts/survey.twig' as alerts %}
 
 {% set hideHeader = true %}
 
 {% block page_body %}
+
+{{ alerts.siteSurvey('welcome') }}
 
 <div class="row">
 

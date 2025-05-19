@@ -1,6 +1,9 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
+{% import 'macros/blocks/alerts/survey.twig' as alerts %}
 
 {% block page_inner %}
+
+    {{ alerts.siteSurvey() }}
 
     <div class="row member-dashboard">
 
