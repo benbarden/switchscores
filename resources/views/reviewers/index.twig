@@ -234,17 +234,20 @@
                 <h3>Awaiting import</h3>
                 <p>
                     These reviews can't be added to the site until some missing information is filled in.
-                    We'll add this when we can, but you can get your reviews up faster if you add it yourself.
+                    We'll add this when we can.
                 </p>
                 <p>
+                    If you do not publish scores on your reviews then you will need to add them manually.
                     You can only edit entries that are linked to a game. If the Edit link is missing,
                     please try again tomorrow.
                 </p>
+                {#
                 <p>
                     When you have filled in the missing details for some reviews, click "Import
                     completed reviews" to get them added to the site.
                 </p>
                 <a href="{{ route('reviewers.tools.import-reviews') }}" class="btn btn-primary btn-sm">Import completed reviews</a>
+                #}
                 {% include 'reviewers/reviews/review-draft/table-pending.twig' with {'ReviewDrafts': ReviewDraftsPending} %}
             {% endif %}
 
