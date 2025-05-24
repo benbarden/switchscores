@@ -40,6 +40,7 @@ class BulkUpdate
         }
 
         $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck($consoleId);
+        $bindings['ConsoleId'] = $consoleId;
         $outputHtml = view('components.staff.games.bulk-edit.table', $bindings);
         return $outputHtml;
     }
