@@ -49,14 +49,15 @@ class BulkEditorController extends Controller
     {
     }
 
-    public function eshopUpcomingCrosscheck()
+    public function eshopUpcomingCrosscheck($consoleId)
     {
         $pageTitle = 'Bulk edit games';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $gameList = $this->repoGameLists->upcomingEshopCrosscheck();
+        $gameList = $this->repoGameLists->upcomingEshopCrosscheck($consoleId);
         $bindings['GameList'] = $gameList;
+        $bindings['ConsoleId'] = $consoleId;
 
         return view('staff.games.bulk-edit.eshop-upcoming-crosscheck', $bindings);
 
@@ -373,9 +374,9 @@ class BulkEditorController extends Controller
             $bindings = $this->getEditModeBindings($editMode, $bindings);
 
             switch ($editMode) {
-                case 'eshop_upcoming_crosscheck':
-                    $gameList = $this->repoGameLists->upcomingEshopCrosscheck();
-                    break;
+                //case 'eshop_upcoming_crosscheck':
+                    //$gameList = $this->repoGameLists->upcomingEshopCrosscheck();
+                    //break;
                 case 'category_sim':
                     $gameList = $this->repoGameListMissingCategory->simulation();
                     break;

@@ -81,7 +81,7 @@ class GamesListController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
+        //$bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
         $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
 
         return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);

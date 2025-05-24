@@ -20,22 +20,26 @@ class BulkUpdate
         $request = request();
         $postData = $request->post();
 
+        $consoleId = $postData['console_id'];
+
         $fieldToUpdate = 'eshop_europe_order';
 
         foreach ($postData as $pdk => $pdv) {
 
-            if ($pdk == '_token') continue;
+            if (in_array($pdk, ['_token', 'console_id'])) continue;
 
             $gameId = str_replace($fieldToUpdate.'_', '', $pdk);
             $game = $this->repoGame->find($gameId);
-            if (!$game) abort(400);
+            if (!$game) {
+                throw new \Exception('Game not found: game_id ['.$gameId.']');
+            }
 
             $game->{$fieldToUpdate} = $pdv;
             $game->save();
 
         }
 
-        $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
+        $bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck($consoleId);
         $outputHtml = view('components.staff.games.bulk-edit.table', $bindings);
         return $outputHtml;
     }
