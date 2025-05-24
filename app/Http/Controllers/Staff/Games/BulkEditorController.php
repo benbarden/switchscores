@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff\Games;
 
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -261,12 +262,13 @@ class BulkEditorController extends Controller
 
                 $gameRow = explode("\t", $gameRowRaw);
 
-                $title = $gameRow[0];
-                $storeUrl = $gameRow[1];
-                $releaseDate = $gameRow[2];
-                $price = $gameRow[3];
-                $imageUrl = trim($gameRow[4]);
+                if (count($gameRow) < 6) abort(500);
 
+                list($console, $title, $storeUrl, $releaseDate, $price, $imageUrl) = $gameRow;
+
+                $imageUrl = trim($imageUrl);
+
+                if (!$console) continue;
                 if (!$title) continue;
 
                 // Check title hash is unique
@@ -286,6 +288,11 @@ class BulkEditorController extends Controller
                 $gameBuilder = new GameBuilder();
                 $gameBuilder->setTitle($title);
                 $gameBuilder->setLinkTitle($linkTitle);
+                if ($console == Console::DESC_SWITCH_2) {
+                    $gameBuilder->setConsoleId(Console::ID_SWITCH_2);
+                } else {
+                    $gameBuilder->setConsoleId(Console::ID_SWITCH_1);
+                }
                 $gameBuilder->setReviewCount(0);
                 if ($releaseDate) {
                     $carbonDate = Carbon::createFromFormat('d/m/Y', $releaseDate);
