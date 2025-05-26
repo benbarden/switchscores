@@ -6,7 +6,9 @@
     {# Concatenate an empty string to force conversion to plain string #}
     {% set batchItemCountStr = "" ~ rowbreak.batchItemCount(batchOverride) %}
     {% set batchItemCount = batchItemCountStr|trim + 0 %}
-
+    {% if mode == 'show-date-icons' %}
+    <link type="text/css" rel="stylesheet" href="/css/cal.css">
+    {% endif %}
     {% set colBreakStr = "" ~ rowbreak.colBreak(batchItemCount) %}
     {% set colBreak = colBreakStr|trim %}
 
@@ -45,7 +47,7 @@
                 <div class="row">
                     {% for batchItem in item %}
                         <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                            {{ _self.layoutItem(batchItem, mode) }}
+                            {{ _self.layoutItem(batchItem, mode, 'with-hero') }}
                         </div>
                     {% endfor %}
                 </div>
@@ -82,22 +84,31 @@
         <span class="{{ titleSize }}">
             <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
         </span>
+            {% if mode != 'show-date-icons' %}
             <br>
             {{ gamereleasedate.standard(item, subSize) }}
+            {% endif %}
             {% if item.ExtraDetailLine != '' %}
                 <br>
                 <span class="{{ subSize }}">
                 {{ item.ExtraDetailLine }}
-            </span>
+                </span>
             {% endif %}
-            {% if mode != 'no-price' %}
+            {% if mode != 'show-date-icons' %}
                 {{ gameprice.standard(item) }}
             {% endif %}
         </div>
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-            <div class="pull-right">
-                {{ gamerating.standard(item) }}
-            </div>
+            {% if mode == 'show-date-icons' %}
+                <div class="cal" style="width: 100%;">
+                    <div class="month">{{ item.eu_release_date|date('M') }}</div>
+                    <div class="date">{{ item.eu_release_date|date('j') }}</div>
+                </div>
+            {% else %}
+                <div class="pull-right">
+                    {{ gamerating.standard(item) }}
+                </div>
+            {% endif %}
         </div>
 
     </div>

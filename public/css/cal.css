@@ -1,0 +1,27 @@
+/*
+  Calendar icons from https://github.com/TheCoolBlackCat/cal-icon
+ */
+
+.cal {
+  display: inline-block;
+  border: .1px solid #CCCAC5;
+  background-color: #FFF;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  width: 100%;
+}
+
+.cal .month {
+  height: 20px;
+  line-height: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #E75951;
+  color: #FFF;
+}
+
+.cal .date {
+  font-size: 2.5rem;
+  color: #585858;
+  line-height: 30px;
+}
