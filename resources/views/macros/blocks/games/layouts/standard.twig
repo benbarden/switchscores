@@ -84,6 +84,10 @@
         <span class="{{ titleSize }}">
             <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
         </span>
+            {% if item.is_low_quality == 1 %}
+                <br>
+                <span class="label label-danger" style="font-size: 10px;">Low quality</span>
+            {% endif %}
             {% if mode != 'show-date-icons' %}
             <br>
             {{ gamereleasedate.standard(item, subSize) }}
