@@ -49,6 +49,11 @@
                 <tr>
                     <td class="text-right">{{ item.id }}</td>
                     <td>
+                        {% if item.console.name == 'Switch 1' %}
+                            <label class="label label-info">{{ item.console.name }}</label>
+                        {% elseif item.console.name == 'Switch 2' %}
+                            <label class="label label-success">{{ item.console.name }}</label>
+                        {% endif %}
                         {{ gamelinks.gameLink(item) }}
                         {% if item.is_low_quality == 1 %}
                             <label class="label label-danger">Low quality</label>
