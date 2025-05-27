@@ -6,6 +6,7 @@
 {% endif %}
 
 {% include 'common/form-errors.twig' %}
+{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
 
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
@@ -330,7 +331,7 @@
         </div>
 
         <div class="col-md-2">
-
+            {{ gamepackshots.square(GameData) }}
         </div>
 
     </div>

@@ -170,14 +170,14 @@ class GamesEditorController extends Controller
 
     public function edit($gameId)
     {
+        $gameData = $this->repoGame->find($gameId);
+        if (!$gameData) abort(404);
+
         $pageTitle = 'Edit game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $gameData);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $request = request();
-
-        $gameData = $this->repoGame->find($gameId);
-        if (!$gameData) abort(404);
 
         if ($request->isMethod('post')) {
 
