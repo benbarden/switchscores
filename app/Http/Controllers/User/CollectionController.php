@@ -239,6 +239,7 @@ class CollectionController extends Controller
         }
 
         $gameData = $this->repoGame->find($urlGameId);
+        $bindings['CollectionGame'] = $gameData;
         $bindings['SelectedGameTitle'] = $gameData->title;
 
         return view('user.collection.add', $bindings);
@@ -279,6 +280,7 @@ class CollectionController extends Controller
 
         }
 
+        $bindings['CollectionGame'] = $collectionData->game;
         $bindings['CollectionData'] = $collectionData;
         $bindings['ItemId'] = $itemId;
 

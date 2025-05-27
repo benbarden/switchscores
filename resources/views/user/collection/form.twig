@@ -1,4 +1,5 @@
 {% include 'common/form-errors.twig' %}
+{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
 {% if FormMode != 'add' %}
 <p>
     If you don't own this game anymore, or you added it in error, you can delete it.
@@ -16,11 +17,7 @@
         <div class="form-group">
             <label for="game_id" class="col-md-4 control-label">Game</label>
             <div class="col-md-6">
-                {% if FormMode == 'add' %}
-                    {{ SelectedGameTitle }}
-                {% else %}
-                    {{ CollectionData.game.title }}
-                {% endif %}
+                {{ CollectionGame.title }}
             </div>
         </div>
 
@@ -35,6 +32,9 @@
                     </label>
                     <br>
                 {% endfor %}
+            </div>
+            <div class="col-md-2">
+                {{ gamepackshots.square(CollectionGame) }}
             </div>
         </div>
     </fieldset>

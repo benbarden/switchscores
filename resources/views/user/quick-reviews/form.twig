@@ -12,12 +12,13 @@
     {% endif %}
 </div>
 {% include 'common/form-errors.twig' %}
+{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="row mb-3">
-        <label for="review_score" class="col-sm-2 col-form-label">Your score</label>
-        <div class="col-sm-4">
+        <label for="review_score" class="col-md-2 col-form-label">Your score</label>
+        <div class="col-md-4">
             <input id="review_score" type="text" class="form-control" name="review_score">
             <div class="form-text">
                 Enter the score out of 10 here. Decimals are allowed (e.g. 7.5). Scores will
@@ -27,8 +28,8 @@
     </div>
 
     <div class="row mb-3">
-        <label for="review_body" class="col-sm-2 col-form-label">Your comments</label>
-        <div class="col-sm-4">
+        <label for="review_body" class="col-md-2 col-form-label">Your comments</label>
+        <div class="col-md-4">
             <textarea id="review_body" name="review_body" cols="50" rows="10"></textarea>
             <p>
                 <small>
@@ -38,6 +39,11 @@
                     <br><strong>Maximum 800 characters.</strong> Keep it short and sweet :)
                 </small>
             </p>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+            {{ gamepackshots.square(GameData) }}
         </div>
     </div>
 

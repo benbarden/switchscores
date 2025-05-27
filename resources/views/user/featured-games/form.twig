@@ -3,11 +3,12 @@
     The game is: <strong>{{ GameData.title }}</strong>.
 </div>
 {% include 'common/form-errors.twig' %}
+{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="form-group">
-        <label class="col-md-4 control-label">Featured type</label>
+        <label class="col-md-2 control-label">Featured type</label>
         <div class="col-md-6">
             <p>
                 What do you think makes this game worth being featured?
@@ -31,6 +32,9 @@
             <label for="featured_type_needs_more_reviews">
                 Needs more reviews <em>- note: currently, it has {{ GameData.review_count }} review(s).</em>
             </label>
+        </div>
+        <div class="col-md-2">
+            {{ gamepackshots.square(GameData) }}
         </div>
     </div>
 
