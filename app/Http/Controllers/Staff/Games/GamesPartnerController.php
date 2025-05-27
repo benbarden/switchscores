@@ -33,10 +33,9 @@ class GamesPartnerController extends Controller
 
         $gameTitle = $game->title;
 
-        $bindings = [];
-
-        $bindings['TopTitle'] = 'Staff - Partners for game: '.$gameTitle;
-        $bindings['PageTitle'] = 'Partners for game: '.$gameTitle;
+        $pageTitle = 'Game partners';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;

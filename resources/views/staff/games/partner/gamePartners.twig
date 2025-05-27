@@ -1,10 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
-
-{% set crumbNav = [
-    {'url': route('staff.games.dashboard'), 'text': 'Games'},
-    {'url': route('staff.games.detail', {'gameId': GameId}), 'text': 'Detail'},
-    {'text': PageTitle}
-] %}
+{% import "macros/blocks/games/components/low-quality.twig" as gamelowquality %}
 
 {% block page_inner %}
 
@@ -50,6 +45,7 @@
                             <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
                                 {{ item.developer.name }}
                             </a>
+                            {{ gamelowquality.standard(GameData) }}
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-developer-{{ item.id }}" class="lnk-remove-developer">Unassign</a>
@@ -146,6 +142,7 @@
                             <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
                                 {{ item.publisher.name }}
                             </a>
+                            {{ gamelowquality.standard(GameData) }}
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-publisher-{{ item.id }}" class="lnk-remove-publisher">Unassign</a>
