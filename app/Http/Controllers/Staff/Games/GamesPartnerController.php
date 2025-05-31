@@ -33,7 +33,7 @@ class GamesPartnerController extends Controller
 
         $gameTitle = $game->title;
 
-        $pageTitle = 'Game partners';
+        $pageTitle = $gameTitle.' - Game partners';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
