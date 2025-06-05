@@ -45,31 +45,24 @@
         {{ headings.roundedBlue('h4', 'Browse all games') }}
         {% include 'public/console/nav-right-browse-all.twig' %}
 
-        {% if Console.name == 'Switch 1' %}
+        {{ headings.roundedBlue('h4', 'More lists') }}
+        <ul>
 
-            {{ headings.roundedBlue('h4', 'More lists') }}
-            <ul>
-                <li><a href="{{ route('games.recentReleases') }}">Newest games</a></li>
-                <li><a href="{{ route('games.upcomingReleases') }}">Upcoming games</a></li>
+        <li><a href="{{ route('console.newReleases', {'console': Console}) }}">New releases</a></li>
+        <li><a href="{{ route('console.upcomingReleases', {'console': Console}) }}">Upcoming releases</a></li>
+            {% if Console.name == 'Switch 1' %}
                 <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
                 <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
                 <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
-            </ul>
+            {% endif %}
+        </ul>
 
+        {% if Console.name == 'Switch 1' %}
             {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
             {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
 
             {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
             {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
-
-        {% else %}
-
-            {{ headings.roundedBlue('h4', 'Coming soon') }}
-            <p>
-                As we approach the launch of the Switch 2, we'll be adding more links here.
-                Stay tuned!
-            </p>
-
         {% endif %}
 
     </div>
