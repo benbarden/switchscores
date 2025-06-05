@@ -43,6 +43,11 @@
                     <tr>
                         <td class="text-center">{{ item.id }}</td>
                         <td>
+                            {% if item.console.name == 'Switch 1' %}
+                                <label class="label label-info">{{ item.console.name }}</label>
+                            {% elseif item.console.name == 'Switch 2' %}
+                                <label class="label label-success">{{ item.console.name }}</label>
+                            {% endif %}
                             {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
                         </td>
                         <td class="text-center">
