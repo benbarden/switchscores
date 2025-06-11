@@ -98,7 +98,7 @@
                 {{ item.ExtraDetailLine }}
                 </span>
             {% endif %}
-            {% if mode != 'show-date-icons' %}
+            {% if mode != 'show-date-icons' and mode != 'no-price' %}
                 {{ gameprice.standard(item) }}
             {% endif %}
         </div>

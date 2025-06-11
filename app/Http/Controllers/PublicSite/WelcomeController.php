@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -34,14 +35,27 @@ class WelcomeController extends Controller
 
         $bindings['ReviewList'] = $this->repoReviewLink->recentNaturalOrder(30);
 
-        $thisYear = date('Y');
-        $topRatedThisYear = $this->dbTopRated->byYear($thisYear, 10);
-        if (count($topRatedThisYear) < 4) {
-            $thisYear--;
-            $topRatedThisYear = $this->dbTopRated->byYear($thisYear, 10);
+        // Switch 1
+        $thisYearSwitch1 = date('Y');
+        $topRatedThisYearSwitch1 = $this->dbTopRated->byConsoleAndYear(Console::ID_SWITCH_1, $thisYearSwitch1, 8);
+        if (count($topRatedThisYearSwitch1) < 4) {
+            $thisYearSwitch1--;
+            $topRatedThisYearSwitch1 = $this->dbTopRated->byConsoleAndYear(Console::ID_SWITCH_1, $thisYearSwitch1, 8);
         }
-        $bindings['TopRatedThisYear'] = $topRatedThisYear;
-        $bindings['Year'] = $thisYear;
+        $bindings['TopRatedThisYearSwitch1'] = $topRatedThisYearSwitch1;
+        $bindings['YearSwitch1'] = $thisYearSwitch1;
+
+        // Switch 2
+        $thisYearSwitch2 = date('Y');
+        $topRatedThisYearSwitch2 = $this->dbTopRated->byConsoleAndYear(Console::ID_SWITCH_2, $thisYearSwitch2, 8);
+        if (count($topRatedThisYearSwitch2) < 4) {
+            if ($thisYearSwitch2 > 2025) {
+                $thisYearSwitch2--;
+                $topRatedThisYearSwitch2 = $this->dbTopRated->byConsoleAndYear(Console::ID_SWITCH_2, $thisYearSwitch2, 8);
+            }
+        }
+        $bindings['TopRatedThisYearSwitch2'] = $topRatedThisYearSwitch2;
+        $bindings['YearSwitch2'] = $thisYearSwitch2;
 
         $bindings['TopTitle'] = 'Welcome';
         $bindings['PageTitle'] = 'Switch Scores - Homepage';

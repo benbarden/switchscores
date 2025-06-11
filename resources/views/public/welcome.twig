@@ -64,10 +64,16 @@
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
 
-        {{ headings.roundedBlue('h2', 'Best of '~Year) }}
-        {% include 'public/games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYear} %}
+        {{ headings.roundedBlue('h2', 'Best of '~YearSwitch1~' (Switch 1)') }}
+        {% include 'public/games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYearSwitch1} %}
         <h3 class="text-center">
-            <a href="{{ route('topRated.landing') }}">View all Top Rated &gt;</a>
+            <a href="{{ route('console.topRated.landing', {'console': consoleSwitch1}) }}">View all Top Rated (Switch 1) &gt;</a>
+        </h3>
+
+        {{ headings.roundedBlue('h2', 'Best of '~YearSwitch2~' (Switch 2)') }}
+        {% include 'public/games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYearSwitch2} %}
+        <h3 class="text-center">
+            <a href="{{ route('console.topRated.landing', {'console': consoleSwitch2}) }}">View all Top Rated (Switch 2) &gt;</a>
         </h3>
 
     </div>
