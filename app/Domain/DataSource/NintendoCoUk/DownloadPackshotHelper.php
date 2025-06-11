@@ -75,6 +75,8 @@ class DownloadPackshotHelper
         if ($this->hasValidDataSourceItem($game)) {
 
             // use DS item data
+            $dsItem = $game->dspNintendoCoUk()->first();
+            /*
             if ($this->logger) {
                 $this->logger->info('Downloading using data source item...');
             }
@@ -82,8 +84,18 @@ class DownloadPackshotHelper
             $dsItem = $game->dspNintendoCoUk()->first();
             $downloadByDataSource = new DownloadByDataSource($game, $dsItem);
             $downloadByDataSource->download();
+            */
 
-        } elseif ($game->nintendo_store_url_override) {
+            $storeUrl = 'https://www.nintendo.com/'.$dsItem->url;
+
+        } else {
+
+            $dsItem = null;
+            $storeUrl = $game->nintendo_store_url_override;
+
+        }
+
+        if ($storeUrl) {
 
             // use scraper
             if ($this->logger) {
@@ -91,12 +103,16 @@ class DownloadPackshotHelper
             }
 
             $scraper = new NintendoCoUkPackshot();
-            $storeUrl = $game->nintendo_store_url_override;
+            //$storeUrl = $game->nintendo_store_url_override;
             $squareUrlOverride = $game->packshot_square_url_override;
 
             try {
                 $scraper->crawlPage($storeUrl);
-                $squareUrl = $scraper->getSquareUrl();
+                if ($dsItem) {
+                    $squareUrl = $dsItem->image_square;
+                } else {
+                    $squareUrl = $scraper->getSquareUrl();
+                }
                 $headerUrl = $scraper->getHeaderUrl();
                 // If we have an override, the generated URL probably errored.
                 // In which case, let's just use that straight away.
