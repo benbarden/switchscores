@@ -1,46 +1,6 @@
 
 RewriteEngine On
 
-RewriteRule ^admin$ /staff [R=301,NC,L]
-
-RewriteRule ^games/released/(.*)$ /games/by-title/$1 [R=301,NC,L]
-RewriteRule ^games/released$      /games/by-title    [R=301,NC,L]
-
-RewriteRule ^tags/(.*)$ /games/by-tag/$1 [R=301,NC,L]
-RewriteRule ^tags$      /games/by-tag    [R=301,NC,L]
-
-RewriteRule ^games/calendar/(.*)$ /games/by-date/$1 [R=301,NC,L]
-RewriteRule ^games/calendar$      /games/by-date    [R=301,NC,L]
-
-RewriteRule ^games/genres/(.*)$ /games [R=301,NC,L]
-RewriteRule ^games/genres$      /games [R=301,NC,L]
-
-Redirect 301 /games/top-rated /top-rated
-Redirect 301 /games/reviews-needed /reviews
-Redirect 301 /games/games-needing-reviews /reviews
-Redirect 301 /games/unreleased /games
-
-Redirect 301 /partners/developers-publishers /partners/games-companies
-
-Redirect 301 /reviews/top-rated /top-rated
-
-Redirect 301 /eshop-charts-updates /charts
-Redirect 301 /about-world-of-switch /about
-
-Redirect 301 /switch-games-index /games/released
-#Redirect 301 /upcoming-nintendo-switch-games-index /games/upcoming
-#Redirect 301 /lists/released-nintendo-switch-games /games
-#Redirect 301 /lists/upcoming-nintendo-switch-games /games/upcoming
-
-Redirect 301 /news/top-rated-new-releases/171012 /news/171012/top-rated-new-releases-12th-october-2017
-Redirect 301 /news/site-updates/171015 /news/171015/site-update-15th-october-2017
-
-Redirect 301 /games/57/battle-sports-mekuru /games/184/flip-wars
-
-# Redirect tags
-Redirect 301 /tag/overcooked /games/82/overcooked-special-edition
-Redirect 301 /tag/tumbleseed /games/41/tumbleseed
-
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
@@ -48,8 +8,9 @@ Redirect 301 /tag/tumbleseed /games/41/tumbleseed
 
     # Redirect non-www to www
     RewriteCond %{HTTP_HOST} !switchscores.local
-    RewriteCond %{HTTP_HOST} !^(.+)\.(.+)\.(.+)
-    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
+    #RewriteCond %{HTTP_HOST} !^(.+)\.(.+)\.(.+)
+    RewriteCond %{HTTP_HOST} ^switchscores\.com [NC]
+    RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
 
     # Redirect index.html
     RewriteRule ^index\.html$ / [NC,R=301,L]
