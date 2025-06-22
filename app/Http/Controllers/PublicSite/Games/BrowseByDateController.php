@@ -129,7 +129,7 @@ class BrowseByDateController extends Controller
 
         // Top Rated by month
         $yearMonth = $calendarYear.$calendarMonth;
-        $bindings['GamesRatingsWithRanks'] = $this->dbTopRated->byYearMonth($yearMonth, 50);
+        $bindings['GamesRatingsWithRanks'] = $this->dbTopRated->byYearMonth(1, $yearMonth, 50);
 
         return view('public.games.browse.date.page', $bindings);
     }
