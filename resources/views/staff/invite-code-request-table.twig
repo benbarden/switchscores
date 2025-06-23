@@ -26,6 +26,8 @@
                 <td class="text-center">
                     {% if item.status == 'Spam' %}
                         <badge class="badge bg-danger">{{ item.status }}</badge>
+                    {% elseif item.status == 'Registered' %}
+                        <badge class="badge bg-success">{{ item.status }}</badge>
                     {% else %}
                         <badge class="badge bg-info">{{ item.status }}</badge>
                     {% endif %}
