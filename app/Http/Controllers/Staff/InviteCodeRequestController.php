@@ -20,7 +20,8 @@ class InviteCodeRequestController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['InviteCodeRequestList'] = $this->repoInviteCodeRequest->getAll();
+        $bindings['InviteCodeRequestListActive'] = $this->repoInviteCodeRequest->getActive();
+        $bindings['InviteCodeRequestListSpam'] = $this->repoInviteCodeRequest->getSpam();
 
         return view('staff.invite-code-request-list', $bindings);
     }

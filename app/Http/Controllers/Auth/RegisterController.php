@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\InviteCodeRequest\SpamScore;
 use App\Domain\User\RequestInviteCode;
 use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
@@ -169,7 +170,16 @@ class RegisterController extends Controller
         // Check if it exists
         $inviteCodeRequest = $this->repoInviteCodeRequest->getByEmail($email);
         if ($inviteCodeRequest) {
+
             $this->repoInviteCodeRequest->incrementTimesRequested($inviteCodeRequest);
+            $inviteCodeRequest = $this->repoInviteCodeRequest->getByEmail($email);
+
+            $spamScore = new SpamScore($inviteCodeRequest);
+            $spamScore->updateAll();
+            if ($spamScore->isSpam()) {
+                $this->repoInviteCodeRequest->markAsSpam($inviteCodeRequest);
+            }
+
             return redirect(route('about.invite-request-failure'));
         } else {
 
@@ -184,8 +194,23 @@ class RegisterController extends Controller
                 $status = InviteCodeRequest::STATUS_SPAM;
                 $sendEmail = false;
             } else {
-                $status = InviteCodeRequest::STATUS_PENDING;
-                $sendEmail = true;
+
+                $dummyRequest = new InviteCodeRequest([
+                    'waitlist_email' => $email,
+                    'waitlist_bio' => $bio,
+                    'times_requested' => 0,
+                    'status' => InviteCodeRequest::STATUS_PENDING,
+                ]);
+                $spamScore = new SpamScore($dummyRequest);
+                $spamScore->updateAll();
+                if ($spamScore->isSpam()) {
+                    $status = InviteCodeRequest::STATUS_SPAM;
+                    $sendEmail = false;
+                } else {
+                    $status = InviteCodeRequest::STATUS_PENDING;
+                    $sendEmail = true;
+                }
+
             }
 
             $this->repoInviteCodeRequest->create($email, $bio, $status);

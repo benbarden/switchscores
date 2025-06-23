@@ -1,0 +1,47 @@
+{% if ItemList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+        <tr>
+            <th class="text-end">#</th>
+            <th class="text-left">Email</th>
+            <th class="text-left">Bio</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Times requested</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-end">
+                    {{ item.id }}
+                </td>
+                <td class="text-left">
+                    {{ item.waitlist_email }}
+                </td>
+                <td class="text-left">
+                    {{ item.waitlist_bio }}
+                </td>
+                <td class="text-center">
+                    {% if item.status == 'Spam' %}
+                        <badge class="badge bg-danger">{{ item.status }}</badge>
+                    {% else %}
+                        <badge class="badge bg-info">{{ item.status }}</badge>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {{ item.times_requested }}
+                </td>
+                <td class="text-center">
+                    {{ item.created_at|date('Y-m-d') }}
+                </td>
+                <td class="text-center">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No invite code requests found!</p>
+{% endif %}

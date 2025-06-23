@@ -18,6 +18,9 @@ test-page:
 test-unit:
 	./vendor/bin/phpunit --testsuite Unit
 
+test-invite:
+	./vendor/bin/phpunit --testsuite DomainInviteCodeRequest
+
 test-gametitlematch:
 	./vendor/bin/phpunit --testsuite GameTitleMatch
 

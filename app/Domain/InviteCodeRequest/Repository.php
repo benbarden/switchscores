@@ -28,8 +28,24 @@ class Repository
         $inviteCodeRequest->save();
     }
 
+    public function markAsSpam(InviteCodeRequest $inviteCodeRequest)
+    {
+        $inviteCodeRequest->status = InviteCodeRequest::STATUS_SPAM;
+        $inviteCodeRequest->save();
+    }
+
     public function getAll()
     {
         return InviteCodeRequest::orderBy('id', 'desc')->get();
+    }
+
+    public function getActive()
+    {
+        return InviteCodeRequest::where('status', '<>', InviteCodeRequest::STATUS_SPAM)->orderBy('id', 'desc')->get();
+    }
+
+    public function getSpam()
+    {
+        return InviteCodeRequest::where('status', InviteCodeRequest::STATUS_SPAM)->orderBy('id', 'desc')->get();
     }
 }

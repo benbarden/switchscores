@@ -20,6 +20,9 @@
     <testsuite name="DomainScraperScore">
       <directory suffix="Test.php">./tests/Unit/Domain/Scraper</directory>
     </testsuite>
+    <testsuite name="DomainInviteCodeRequest">
+      <directory suffix="Test.php">./tests/Unit/Domain/InviteCodeRequest</directory>
+    </testsuite>
     <testsuite name="DomainAll">
       <directory suffix="Test.php">./tests/Unit/Domain</directory>
     </testsuite>
