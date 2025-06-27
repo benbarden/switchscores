@@ -331,7 +331,9 @@
         </div>
 
         <div class="col-md-2">
-            {{ gamepackshots.square(GameData) }}
+            {% if FormMode == 'edit' %}
+                {{ gamepackshots.square(GameData) }}
+            {% endif %}
         </div>
 
     </div>
