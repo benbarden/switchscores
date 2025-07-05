@@ -18,7 +18,7 @@ class LinkHelper
 
         switch ($region) {
             case 'eu':
-                $eshopUrl = 'https://www.nintendo.co.uk'.$url;
+                $eshopUrl = 'https://www.nintendo.com'.$url;
                 break;
             default:
                 $eshopUrl = $url;
