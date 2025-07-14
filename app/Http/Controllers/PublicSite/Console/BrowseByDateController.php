@@ -24,6 +24,26 @@ class BrowseByDateController extends Controller
     {
     }
 
+    public function byDate(Console $console)
+    {
+        $consoleName = $console->name;
+        $consoleId = $console->id;
+
+        $pageTitle = 'Nintendo '.$consoleName.': browse by date';
+        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubpage($pageTitle, $console);
+        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+
+        $bindings['Console'] = $console;
+
+        $allowedYears = $this->allowedDates->releaseYearsByConsole($consoleId);
+
+        // General bindings
+        $bindings['AllowedYears'] = $allowedYears;
+        $bindings['ConsoleName'] = $consoleName;
+
+        return view('public.console.by-date.landing', $bindings);
+    }
+
     public function byYear(Console $console, $year)
     {
         $consoleName = $console->name;

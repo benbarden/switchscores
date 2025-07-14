@@ -69,6 +69,7 @@ Route::controller('PublicSite\Console\BrowseByTagController')->group(function ()
 });
 // These must appear after the other console links
 Route::controller('PublicSite\Console\BrowseByDateController')->group(function () {
+    Route::get('/c/{console:slug?}/date', 'byDate')->name('console.byDate');
     Route::get('/c/{console:slug?}/{year}', 'byYear')->name('console.byYear');
     Route::get('/c/{console:slug?}/{year}/{month}', 'byMonth')->name('console.byMonth');
 });

@@ -1,0 +1,48 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'macros/blocks/headings/chunky.twig' as headings %}
+
+{% block page_body %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h2', 'Browse') }}
+        <ul>
+            {% for Year in AllowedYears %}
+                <li><a href="{{ route('console.byYear', {'console': Console, 'year': Year}) }}">{{ Year }}</a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+        {{ headings.roundedBlue('h4', 'Search games') }}
+        {% include 'modules/game/search/form-mini.twig' %}
+
+        {{ headings.roundedBlue('h4', 'Browse all games') }}
+        {% include 'public/console/nav-right-browse-all.twig' %}
+
+        {{ headings.roundedBlue('h4', 'More lists') }}
+        <ul>
+
+        <li><a href="{{ route('console.newReleases', {'console': Console}) }}">New releases</a></li>
+        <li><a href="{{ route('console.upcomingReleases', {'console': Console}) }}">Upcoming releases</a></li>
+            {% if Console.name == 'Switch 1' %}
+                <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+                <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+                <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+            {% endif %}
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock page_body %}
