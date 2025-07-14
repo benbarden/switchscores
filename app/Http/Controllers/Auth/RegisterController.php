@@ -217,8 +217,8 @@ class RegisterController extends Controller
 
             if ($sendEmail) {
                 // Send the email
-                $email = new RequestInviteCode($email, $bio);
-                Mail::to(env('ADMIN_EMAIL'))->send($email);
+                //$email = new RequestInviteCode($email, $bio);
+                //Mail::to(env('ADMIN_EMAIL'))->send($email);
             }
 
         }
