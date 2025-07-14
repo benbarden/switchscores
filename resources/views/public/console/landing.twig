@@ -57,12 +57,14 @@
             {% endif %}
         </ul>
 
-        {% if Console.name == 'Switch 1' %}
-            {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
-            {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+        {% if RandomTop100Game|length %}
+        {{ headings.roundedBlue('h4', 'From the all-time Top 100') }}
+        {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+        {% endif %}
 
-            {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
-            {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
+        {% if RecentWithGoodRanks|length %}
+        {{ headings.roundedBlue('h4', 'Recent Top Rated') }}
+        {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
         {% endif %}
 
     </div>

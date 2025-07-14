@@ -35,12 +35,12 @@ class ConsoleController extends Controller
         $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality($consoleId, 20);
         $bindings['UpcomingReleases'] = $this->repoGameLists->upcoming($consoleId, 20);
 
-        $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanks(7, 35, 15);
+        $bindings['RecentWithGoodRanks'] = $this->repoGameLists->recentWithGoodRanksByConsole($consoleId, 7, 35, 15);
 
         $bindings['CalendarThisMonth'] = date('Y-m');
 
         // Get random game from Top 100
-        $randomTop100Game = $this->dbTopRated->getRandomFromTop100();
+        $randomTop100Game = $this->dbTopRated->getRandomFromTop100ByConsole($consoleId);
         // Make it into a usable collection
         if ($randomTop100Game) {
             $topGameList = new Collection();

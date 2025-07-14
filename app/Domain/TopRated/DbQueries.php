@@ -70,9 +70,17 @@ class DbQueries
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function getRandomFromTop100()
     {
         return $this->getList(1, 100, 'random-one'); //->inRandomOrder()->first();
+    }
+
+    public function getRandomFromTop100ByConsole($consoleId)
+    {
+        return $this->getListByConsole($consoleId, 1, 100, 'random-one'); //->inRandomOrder()->first();
     }
 
     public function byConsoleAndYear($consoleId, $year, $limit = null)
