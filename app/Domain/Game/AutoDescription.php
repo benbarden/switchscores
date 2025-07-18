@@ -115,14 +115,22 @@ class AutoDescription
     {
         $this->game = $game;
 
-        $category = $this->category();
-        $delisted = $this->delisted();
-        $ranking = $this->ranking();
-        $reviews = $this->reviews();
-        $series = $this->series();
-        $collection = $this->collection();
+        if ($this->game->is_low_quality == 1) {
 
-        $blurb = $category.$delisted.$ranking.$reviews.$series.$collection;
+            $blurb = 'As of July 2025, we have stopped categorising low quality titles.';
+
+        } else {
+
+            $category = $this->category();
+            $delisted = $this->delisted();
+            $ranking = $this->ranking();
+            $reviews = $this->reviews();
+            $series = $this->series();
+            $collection = $this->collection();
+
+            $blurb = $category.$delisted.$ranking.$reviews.$series.$collection;
+
+        }
 
         return $blurb;
 
