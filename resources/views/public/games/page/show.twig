@@ -1,5 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
 {% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
+{% import "macros/blocks/games/components/console-banner.twig" as gameconsolebanner %}
 {% import 'macros/blocks/headings/chunky.twig' as headings %}
 
 {% set hideHeader = true %}
@@ -24,9 +25,8 @@
                 <h1 style="margin: 10px 0;">
                     {{ GameData.title }}
                 </h1>
-                {% if GameData.console_id %}
-                    <span class="h4 label label-info">{{ GameData.console.name }}</span>
-                {% endif %}
+
+                {{ gameconsolebanner.show(GameData) }}
 
                 {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
                 {% if boxartUrl %}

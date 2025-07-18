@@ -63,6 +63,7 @@
     {% import "macros/blocks/games/components/release-date.twig" as gamereleasedate %}
     {% import "macros/blocks/games/components/price.twig" as gameprice %}
     {% import "macros/blocks/games/components/rating.twig" as gamerating %}
+    {% import "macros/blocks/games/components/console-banner.twig" as gameconsolebanner %}
 
     {% if hero == 'hero' %}
         {% set titleSize = 'h4' %}
@@ -73,20 +74,7 @@
     {% endif %}
 
     {% if withConsole == 1 %}
-        <div class="row" style="margin-top: 12px;">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                {% if item.console.id == 2 %}
-                    {% set consoleClassBg = '#c9302c' %}
-                {% else %}
-                    {% set consoleClassBg = '#008cba' %}
-                {% endif %}
-                <div style="background: {{ consoleClassBg }}; color: #fff; padding: 4px 8px;">
-                    <span class="h5">
-                        {{ item.console.name }}
-                    </span>
-                </div>
-            </div>
-        </div>
+        {{ gameconsolebanner.show(item) }}
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
                 {{ gamepackshots.header(item) }}
