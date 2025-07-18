@@ -27,7 +27,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro withHero(GameList, batchOverride = 0, mode = 'default') %}
+{% macro withHero(GameList, batchOverride = 0, mode = 'default', withConsole = 0) %}
     {#
         modes: no-price
     #}
@@ -41,13 +41,13 @@
 
     {% if GameList|length %}
         {% set firstItem = GameList.first() %}
-        {{ _self.layoutItem(firstItem, mode, 'hero') }}
+        {{ _self.layoutItem(firstItem, mode, withConsole, 'hero') }}
         {% if GameList|length > 1 %}
             {% for item in GameList|slice(1)|batch(batchItemCount, null) %}
                 <div class="row">
                     {% for batchItem in item %}
                         <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                            {{ _self.layoutItem(batchItem, mode, 'with-hero') }}
+                            {{ _self.layoutItem(batchItem, mode, withConsole, 'with-hero') }}
                         </div>
                     {% endfor %}
                 </div>
@@ -58,7 +58,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro layoutItem(item, mode, hero = '') %}
+{% macro layoutItem(item, mode, withConsole, hero = '') %}
     {% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
     {% import "macros/blocks/games/components/release-date.twig" as gamereleasedate %}
     {% import "macros/blocks/games/components/price.twig" as gameprice %}
@@ -72,11 +72,33 @@
         {% set subSize = 'h6' %}
     {% endif %}
 
-    <div class="row" style="margin-top: 16px;">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            {{ gamepackshots.header(item) }}
+    {% if withConsole == 1 %}
+        <div class="row" style="margin-top: 12px;">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                {% if item.console.id == 2 %}
+                    {% set consoleClassBg = '#c9302c' %}
+                {% else %}
+                    {% set consoleClassBg = '#008cba' %}
+                {% endif %}
+                <div style="background: {{ consoleClassBg }}; color: #fff; padding: 4px 8px;">
+                    <span class="h5">
+                        {{ item.console.name }}
+                    </span>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                {{ gamepackshots.header(item) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="row" style="margin-top: 16px;">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                {{ gamepackshots.header(item) }}
+            </div>
+        </div>
+    {% endif %}
 
     <div class="row" style="margin-top: 8px;">
 
