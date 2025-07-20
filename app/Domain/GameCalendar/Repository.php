@@ -13,7 +13,7 @@ class Repository
         $monthName = $year.'-'.$month;
 
         // cache for 24 hours
-        $gameCalendarStat = Cache::remember("gamecalendar-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
+        $gameCalendarStat = Cache::remember("gamecalendar-c$consoleId-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
             return GameCalendarStat::where('console_id', $consoleId)->where('month_name', $monthName)->first();
         });
         return $gameCalendarStat;
