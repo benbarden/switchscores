@@ -4,19 +4,19 @@ namespace App\Domain\GameCalendar;
 
 use App\Models\GameCalendarStat;
 use App\Models\Game;
+use Illuminate\Support\Facades\Cache;
 
 class Repository
 {
     public function getStat($consoleId, $year, $month)
     {
         $monthName = $year.'-'.$month;
-        $gameCalendarStat = GameCalendarStat::where('console_id', $consoleId, )->where('month_name', $monthName)->get();
 
-        if ($gameCalendarStat) {
-            return $gameCalendarStat->first();
-        } else {
-            return null;
-        }
+        // cache for 24 hours
+        $gameCalendarStat = Cache::remember("gamecalendar-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
+            return GameCalendarStat::where('console_id', $consoleId)->where('month_name', $monthName)->first();
+        });
+        return $gameCalendarStat;
     }
 
     public function getListByConsole($consoleId, $year, $month)
