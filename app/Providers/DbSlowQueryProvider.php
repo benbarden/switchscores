@@ -27,7 +27,8 @@ class DbSlowQueryProvider extends ServiceProvider
         }
 
         DB::listen(function ($query) {
-            if ($query->time > 100) {
+            $queryTrigger = env('LOG_SLOW_QUERY_TRIGGER');
+            if ($query->time > $queryTrigger) {
                 // Grab route info
                 $route = \Route::current();
                 $controllerAction = optional($route)->getActionName(); // e.g., App\Http\Controllers\GameController@index
