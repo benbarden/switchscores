@@ -24,7 +24,7 @@ class Repository
 
     public function find($id)
     {
-        $game = Cache::remember("game-$id-core-data", 3600, function() use ($id) {
+        $game = Cache::remember("game-$id-core-data", 86400, function() use ($id) {
             return Game::find($id);
         });
         return $game;
