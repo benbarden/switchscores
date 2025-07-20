@@ -4,7 +4,7 @@
 namespace App\Domain\Game;
 
 use App\Models\Game;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class Repository
 {
@@ -24,7 +24,10 @@ class Repository
 
     public function find($id)
     {
-        return Game::find($id);
+        $game = Cache::remember("game-$id-core-data", 3600, function() use ($id) {
+            return Game::find($id);
+        });
+        return $game;
     }
 
     public function searchByTitle($keywords)
