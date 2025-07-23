@@ -34,12 +34,6 @@ class Repository
             return Game::find($id);
         });
         return $game;
-        /*
-        $game = Cache::remember("game-$id-core-data", 86400, function() use ($id) {
-            return Game::find($id);
-        });
-        return $game;
-        */
     }
 
     public function searchByTitle($keywords)

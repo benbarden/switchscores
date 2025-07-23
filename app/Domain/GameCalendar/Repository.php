@@ -2,18 +2,24 @@
 
 namespace App\Domain\GameCalendar;
 
+use App\Domain\Cache\CacheManager;
 use App\Models\GameCalendarStat;
 use App\Models\Game;
 use Illuminate\Support\Facades\Cache;
 
 class Repository
 {
+    public function __construct(
+        private CacheManager $cache
+    ){
+
+    }
     public function getStat($consoleId, $year, $month)
     {
         $monthName = $year.'-'.$month;
 
         // cache for 24 hours
-        $gameCalendarStat = Cache::remember("gamecalendar-c$consoleId-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
+        $gameCalendarStat = $this->cache->remember("gamecalendar-c$consoleId-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
             return GameCalendarStat::where('console_id', $consoleId)->where('month_name', $monthName)->first();
         });
         return $gameCalendarStat;
