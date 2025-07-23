@@ -68,7 +68,7 @@ Route::controller('PublicSite\Console\BrowseByTagController')->group(function ()
     Route::get('/c/{console:slug?}/tag/{tag}', 'page')->name('console.byTag.page');
 });
 // These must appear after the other console links
-Route::controller('PublicSite\Console\BrowseByDateController')->group(function () {
+Route::middleware('throttle:60,1')->controller('PublicSite\Console\BrowseByDateController')->group(function () {
     Route::get('/c/{console:slug?}/date', 'byDate')->name('console.byDate');
     Route::get('/c/{console:slug?}/{year}', 'byYear')->name('console.byYear');
     Route::get('/c/{console:slug?}/{year}/{month}', 'byMonth')->name('console.byMonth');
@@ -103,8 +103,10 @@ Route::redirect('/games/by-date/{date}', '/c/switch-1/2025', 301)->name('games.b
 Route::get('/games/random', 'PublicSite\Games\RandomController@getRandom')->name('game.random');
 
 // These must be after the game redirects
-Route::get('/games/{id}', 'PublicSite\Games\GameShowController@showId')->name('game.showId');
-Route::get('/games/{id}/{linkTitle}', 'PublicSite\Games\GameShowController@show')->name('game.show');
+Route::middleware('throttle:60,1')->controller('PublicSite\Games\GameShowController')->group(function () {
+    Route::get('/games/{id}', 'showId')->name('game.showId');
+    Route::get('/games/{id}/{linkTitle}', 'show')->name('game.show');
+});
 
 /* Top Rated */
 Route::redirect('/top-rated', '/c/switch-1/top-rated', 301)->name('topRated.landing');
