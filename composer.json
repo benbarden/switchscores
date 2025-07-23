@@ -18,6 +18,7 @@
         "owen-it/laravel-auditing": "^13.0.0",
         "php-http/message": "^1.16",
         "php-http/message-factory": "^1.1",
+        "predis/predis": "^3.1",
         "psr/http-factory": "*",
         "rcrowe/twigbridge": "^0.14.1",
         "sentry/sentry-laravel": "^3.7.3",

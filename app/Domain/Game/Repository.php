@@ -4,10 +4,16 @@
 namespace App\Domain\Game;
 
 use App\Models\Game;
+use App\Domain\Cache\CacheManager;
 use Illuminate\Support\Facades\Cache;
 
 class Repository
 {
+    public function __construct(
+        private CacheManager $cache
+    ){
+
+    }
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -24,10 +30,16 @@ class Repository
 
     public function find($id)
     {
+        $game = $this->cache->remember("game-$id-core-data", 86400, function() use ($id) {
+            return Game::find($id);
+        });
+        return $game;
+        /*
         $game = Cache::remember("game-$id-core-data", 86400, function() use ($id) {
             return Game::find($id);
         });
         return $game;
+        */
     }
 
     public function searchByTitle($keywords)

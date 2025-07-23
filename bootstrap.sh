@@ -39,6 +39,9 @@ sudo apt-get install php8.1-fpm -y
 sudo apt-get install php8.1-xml -y
 sudo apt-get install libapache2-mod-php8.1 -y
 
+# Redis
+sudo apt-get install redis-server
+
 # Web scraping
 sudo apt-get install chromium-chromedriver
 sudo apt-get install -y chromium-browser
