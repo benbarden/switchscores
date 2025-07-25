@@ -31,7 +31,9 @@ class UpdateGames extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private GameRepository $repoGame
+    )
     {
         parent::__construct();
     }
@@ -43,8 +45,6 @@ class UpdateGames extends Command
      */
     public function handle()
     {
-        $repoGame = new GameRepository();
-
         $repoDataSourceParsed = new DataSourceParsedRepository();
         $repoGameImportRuleEshop = new GameImportRuleEshopRepository;
 
@@ -62,7 +62,7 @@ class UpdateGames extends Command
 
             $itemTitle = $dsItem->title;
             $gameId = $dsItem->game_id;
-            $game = $repoGame->find($gameId);
+            $game = $this->repoGame->find($gameId);
 
             if (!$game) {
                 $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');

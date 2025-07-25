@@ -30,7 +30,9 @@ class DownloadImages extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private GameRepository $repoGame
+    )
     {
         parent::__construct();
     }
@@ -42,8 +44,6 @@ class DownloadImages extends Command
      */
     public function handle()
     {
-        $repoGame = new GameRepository();
-
         $repoDataSourceParsed = new DataSourceParsedRepository();
 
         $argGameId = $this->argument('gameId');
@@ -70,7 +70,7 @@ class DownloadImages extends Command
                 $logger->info('Processing item...');
                 $itemTitle = $dsItem->title;
                 $gameId = $dsItem->game_id;
-                $game = $repoGame->find($gameId);
+                $game = $this->repoGame->find($gameId);
 
                 if ($game) {
                     $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
@@ -92,7 +92,7 @@ class DownloadImages extends Command
 
                 $itemTitle = $dsItem->title;
                 $gameId = $dsItem->game_id;
-                $game = $repoGame->find($gameId);
+                $game = $this->repoGame->find($gameId);
 
                 if (!$game) {
                     $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');
