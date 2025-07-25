@@ -34,7 +34,9 @@ class GameUpdateQualityScores extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private GameRepository $repoGame
+    )
     {
         parent::__construct();
     }
@@ -52,20 +54,19 @@ class GameUpdateQualityScores extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $repoGame = new GameRepository();
         $dbGame = new DbGame();
         $repoDataSourceParsed = new DataSourceParsedRepository();
         $repoGameImportRuleEshop = new GameImportRuleEshopRepository;
 
         if ($argGameId) {
-            $gameIds = $repoGame->getByIdList($argGameId);
+            $gameIds = $this->repoGame->getByIdList($argGameId);
         } else {
             $gameIds = $dbGame->getAll();
         }
 
         foreach ($gameIds as $gameRow) {
 
-            $game = $repoGame->find($gameRow->id);
+            $game = $this->repoGame->find($gameRow->id);
             $gameId = $game->id;
 
             //$logger->info('Processing game: '.$game->id.' - '.$game->title);
