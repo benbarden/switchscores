@@ -33,7 +33,9 @@ class DownloadPackshots extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private RepoGame $repoGame
+    )
     {
         parent::__construct();
     }
@@ -51,13 +53,11 @@ class DownloadPackshots extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $repoGame = new RepoGame();
-
         $downloadPackshotHelper = new DownloadPackshotHelper($logger);
 
         if ($argGameId) {
 
-            $gameItem = $repoGame->find($argGameId);
+            $gameItem = $this->repoGame->find($argGameId);
             if (!$gameItem) {
                 $logger->error('Cannot find game: '.$argGameId);
                 exit;
