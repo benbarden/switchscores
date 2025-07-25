@@ -19,7 +19,11 @@ class ConvertToReviewLink
 {
     private $logger;
 
-    public function __construct($logger)
+    public function __construct(private GameRepository $repoGame)
+    {
+    }
+
+    public function setLogger($logger)
     {
         $this->logger = $logger;
     }
@@ -28,7 +32,6 @@ class ConvertToReviewLink
     {
         $repoReviewLink = new ReviewLinkRepository();
         $calcReviewLink = new ReviewLinkCalculations();
-        $repoGame = new GameRepository();
         $repoReviewSite = new ReviewSiteRepository();
 
         $itemId = $draftItem->id;
@@ -80,7 +83,7 @@ class ConvertToReviewLink
         $reviewLinkId = $reviewLink->id;
 
         // Update game review stats
-        $game = $repoGame->find($gameId);
+        $game = $this->repoGame->find($gameId);
         $this->updateGameReviewStats($game);
 
         $this->logger->info("Item $itemId: Successfully created review with id: $reviewLinkId; date: $itemDate");

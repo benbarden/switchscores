@@ -6,13 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
-use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
-use App\Domain\ReviewLink\Builder as ReviewLinkBuilder;
-use App\Domain\ReviewLink\Director as ReviewLinkDirector;
-use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
-use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewDraft\ConvertToReviewLink;
 
 class ConvertDraftsToReviews extends Command
@@ -36,7 +29,9 @@ class ConvertDraftsToReviews extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private ConvertToReviewLink $convertToReviewLink
+    )
     {
         parent::__construct();
     }
@@ -51,11 +46,11 @@ class ConvertDraftsToReviews extends Command
         $argSiteId = $this->argument('siteId');
 
         $logger = Log::channel('cron');
+        $this->convertToReviewLink->setLogger($logger);
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
         $repoReviewDraft = new ReviewDraftRepository();
-        $convertToReviewLink = new ConvertToReviewLink($logger);
 
         if ($argSiteId) {
             $draftsForProcessing = $repoReviewDraft->getReadyForProcessingBySite($argSiteId);
@@ -75,7 +70,7 @@ class ConvertDraftsToReviews extends Command
         foreach ($draftsForProcessing as $draftItem) {
 
             try {
-                $convertToReviewLink->processItem($draftItem);
+                $this->convertToReviewLink->processItem($draftItem);
             } catch (\Exception $e) {
                 $logger->error('Got error: '.$e->getMessage().'; skipping');
             }

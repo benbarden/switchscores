@@ -27,21 +27,16 @@ use App\Exceptions\Review\TitleRuleNotMatched;
 class ImportByFeed
 {
     /**
-     * @var PartnerFeedLink
-     */
-    private $partnerFeedLink;
-
-    /**
      * @var ReviewSite
      */
     private $reviewSite;
 
-    private $logger;
-
     /**
-     * @var \App\Domain\Game\Repository
+     * @var PartnerFeedLink
      */
-    private $repoGame;
+    private $partnerFeedLink;
+
+    private $logger;
 
     /**
      * @var \App\Domain\ReviewSite\Repository
@@ -58,16 +53,23 @@ class ImportByFeed
      */
     private $urlStripUtm;
 
-    public function __construct(PartnerFeedLink $partnerFeedLink, $logger)
+    public function __construct(
+        private RepoGame $repoGame
+    )
     {
-        $this->partnerFeedLink = $partnerFeedLink;
-        $this->logger = $logger;
-
-        $this->repoGame = new RepoGame();
         $this->repoReviewSite = new ReviewSiteRepository();
         $this->repoReviewDraft = new RepoReviewDraft();
         $this->urlStripUtm = new StripUtm();
+    }
 
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function setPartnerDetails(PartnerFeedLink $partnerFeedLink)
+    {
+        $this->partnerFeedLink = $partnerFeedLink;
         $siteId = $this->partnerFeedLink->site_id;
         $this->reviewSite = $this->repoReviewSite->find($siteId);
     }

@@ -13,11 +13,6 @@ use App\Models\ReviewDraft;
 class ImportScraper
 {
     /**
-     * @var \App\Models\Game
-     */
-    private $repoGame;
-
-    /**
      * @var RepoReviewDraft
      */
     private $repoReviewDraft;
@@ -32,9 +27,10 @@ class ImportScraper
      */
     private $reviewDraftDirector;
 
-    public function __construct()
+    public function __construct(
+        private RepoGame $repoGame
+    )
     {
-        $this->repoGame = new RepoGame();
         $this->reviewDraftBuilder = new ReviewDraftBuilder();
         $this->reviewDraftDirector = new ReviewDraftDirector($this->reviewDraftBuilder);
         $this->repoReviewDraft = new RepoReviewDraft();

@@ -32,7 +32,9 @@ class ImportByScraper extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private ImportScraper $importScraper
+    )
     {
         parent::__construct();
     }
@@ -86,8 +88,7 @@ class ImportByScraper extends Command
 
                 foreach ($tableData as $item) {
                     try {
-                        $importScraper = new ImportScraper;
-                        $importScraper->processItemNWR($item, $reviewSite);
+                        $this->importScraper->processItemNWR($item, $reviewSite);
                     } catch (\Exception $e) {
                         $logger->error($e->getMessage());
                     }
@@ -107,8 +108,7 @@ class ImportByScraper extends Command
 
                 foreach ($tableData as $item) {
                     try {
-                        $importScraper = new ImportScraper;
-                        $importScraper->processItemPocketTactics($item, $reviewSite, $reviewYear);
+                        $this->importScraper->processItemPocketTactics($item, $reviewSite, $reviewYear);
                     } catch (\Exception $e) {
                         $logger->error($e->getMessage());
                     }

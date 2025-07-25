@@ -29,7 +29,9 @@ class ImportActiveFeeds extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private ImportByFeed $importByFeed
+    )
     {
         parent::__construct();
     }
@@ -54,9 +56,10 @@ class ImportActiveFeeds extends Command
         }
 
         foreach ($partnerFeedLinks as $partnerFeedLink) {
-            $importer = new ImportByFeed($partnerFeedLink, $logger);
+            $this->importByFeed->setLogger($logger);
             try {
-                $importer->runImport();
+                $this->importByFeed->setPartnerDetails($partnerFeedLink);
+                $this->importByFeed->runImport();
             } catch (\Exception $e) {
                 $logger->error($e->getMessage());
             }

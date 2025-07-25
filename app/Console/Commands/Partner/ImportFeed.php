@@ -29,7 +29,9 @@ class ImportFeed extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private ImportByFeed $importByFeed
+    )
     {
         parent::__construct();
     }
@@ -56,7 +58,8 @@ class ImportFeed extends Command
             return 0;
         }
 
-        $importer = new ImportByFeed($partnerFeedLink, $logger);
-        $importer->runImport();
+        $this->importByFeed->setLogger($logger);
+        $this->importByFeed->setPartnerDetails($partnerFeedLink);
+        $this->importByFeed->runImport();
     }
 }
