@@ -29,6 +29,13 @@ class Generator
     const SITEMAP_SERIES = 'sitemap-series.xml';
     const SITEMAP_TAG = 'sitemap-tag.xml';
 
+    public function __construct(
+        private GameCalendarRepository $repoGameCalendar
+    )
+    {
+
+    }
+
     public function getTimestampNow(): string
     {
         $now = new \DateTime('now');
@@ -117,7 +124,6 @@ class Generator
 
     public function generateGames(): void
     {
-        $repoGameCalendar = new GameCalendarRepository();
         $allowedDates = new AllowedDates();
 
         $yearListS1 = $allowedDates->releaseYearsByConsole(Console::ID_SWITCH_1);
@@ -125,7 +131,7 @@ class Generator
 
         foreach ($yearListS1 as $year) {
 
-            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_1, $year, false);
+            $gameList = $this->repoGameCalendar->byYear(Console::ID_SWITCH_1, $year, false);
             $bindings = $this->getBindings();
             $bindings['GameList'] = $gameList;
             $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);
@@ -136,7 +142,7 @@ class Generator
 
         foreach ($yearListS2 as $year) {
 
-            $gameList = $repoGameCalendar->byYear(Console::ID_SWITCH_2, $year, false);
+            $gameList = $this->repoGameCalendar->byYear(Console::ID_SWITCH_2, $year, false);
             $bindings = $this->getBindings();
             $bindings['GameList'] = $gameList;
             $xmlFile = str_replace('[YEAR]', $year, self::SITEMAP_GAMES);

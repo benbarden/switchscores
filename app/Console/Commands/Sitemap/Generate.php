@@ -29,6 +29,7 @@ class Generate extends Command
      * @return void
      */
     public function __construct(
+        private Generator $sitemapGenerator
     )
     {
         parent::__construct();
@@ -46,24 +47,23 @@ class Generate extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $generator = new Generator();
         $logger->info('Generating: Sitemap index');
-        $generator->generateIndex();
+        $this->sitemapGenerator->generateIndex();
         $logger->info('Generating: Site pages');
-        $generator->generateSite();
+        $this->sitemapGenerator->generateSite();
         $logger->info('Generating: Top Rated');
-        $generator->generateTopRated();
+        $this->sitemapGenerator->generateTopRated();
         $logger->info('Generating: Review partners');
-        $generator->generateReviewPartners();
+        $this->sitemapGenerator->generateReviewPartners();
         $logger->info('Generating: Browse by date, category, collection, series, tag');
-        $generator->generateCalendar();
-        $generator->generateCategory();
-        $generator->generateCollection();
-        $generator->generateSeries();
-        $generator->generateTag();
+        $this->sitemapGenerator->generateCalendar();
+        $this->sitemapGenerator->generateCategory();
+        $this->sitemapGenerator->generateCollection();
+        $this->sitemapGenerator->generateSeries();
+        $this->sitemapGenerator->generateTag();
 
         $logger->info('Generating: Games');
-        $generator->generateGames();
+        $this->sitemapGenerator->generateGames();
 
         $logger->info('Complete');
     }
