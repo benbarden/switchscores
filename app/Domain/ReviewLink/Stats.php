@@ -2,6 +2,8 @@
 
 namespace App\Domain\ReviewLink;
 
+use App\Domain\Repository\AbstractRepository;
+use App\Enums\CacheDuration;
 use App\Models\Game;
 use App\Models\QuickReview;
 use App\Models\ReviewLink;
@@ -9,8 +11,13 @@ use App\Models\ReviewLink;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class Stats
+class Stats extends AbstractRepository
 {
+    protected function getCachePrefix(): string
+    {
+        return 'reviewlinkstats';
+    }
+
     public function totalOverall()
     {
         return ReviewLink::count();
@@ -28,15 +35,22 @@ class Stats
 
     public function totalActiveByConsoleYearMonth($consoleId, $year, $month)
     {
-        $result = DB::select("
-            SELECT count(*) AS count
-            FROM review_links rl
-            JOIN games g on rl.game_id = g.id
-            WHERE g.console_id = ?
-            AND YEAR(rl.review_date) = ?
-            AND MONTH(rl.review_date) = ?
+        $cacheKey = $this->buildCacheKey("c$consoleId-$year-$month-total");
+        return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($consoleId, $year, $month) {
+            $result = DB::select("
+                SELECT count(*) AS count
+                FROM review_links rl
+                JOIN games g on rl.game_id = g.id
+                WHERE g.console_id = ?
+                AND YEAR(rl.review_date) = ?
+                AND MONTH(rl.review_date) = ?
         ", [$consoleId, $year, $month]);
-        if ($result) return $result[0]->count;
+            if ($result) {
+                return $result[0]->count;
+            } else {
+                return 0;
+            }
+        });
     }
 
     /**
