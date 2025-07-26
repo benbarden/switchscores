@@ -130,7 +130,8 @@ class DownloadPackshotHelper
                 // Download away!
                 if ($squareUrl || $headerUrl) {
                     //DownloadImageFactory::downloadFromStoreUrl($game, $squareUrl, $headerUrl, $this->logger);
-                    $downloadByOverrideUrl = new DownloadByOverrideUrl($game);
+                    $downloadByOverrideUrl = app(DownloadByOverrideUrl::class); // will inject dependencies
+                    $downloadByOverrideUrl->setGame($game);
                     $downloadByOverrideUrl->download($squareUrl, $headerUrl);
                 }
             } catch (\Exception $e) {

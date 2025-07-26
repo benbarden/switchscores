@@ -4,15 +4,19 @@ namespace App\Domain\DataSource\NintendoCoUk;
 
 use App\Services\DataSources\NintendoCoUk\Images;
 use App\Domain\Game\Repository as GameRepository;
+use App\Models\Game;
 
 class DownloadByOverrideUrl
 {
     private $game;
 
     public function __construct(
-        $game,
         private GameRepository $repoGame
     )
+    {
+    }
+
+    public function setGame(Game $game)
     {
         $this->game = $game;
     }
