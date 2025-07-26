@@ -9,11 +9,32 @@ use Illuminate\Support\Facades\Cache;
 
 class Repository
 {
+    const CACHE_CORE_DATA = 'core-data';
+
     public function __construct(
         private CacheManager $cache
     ){
-
     }
+
+    private function buildCacheKey($gameId, $key)
+    {
+        switch ($key) {
+            case self::CACHE_CORE_DATA:
+                $cacheKey = "game-$gameId-".self::CACHE_CORE_DATA;
+                break;
+            default:
+                throw new \Exception('Cannot build cache key for key: '.$key);
+        }
+
+        return $cacheKey;
+    }
+
+    public function clearCacheCoreData($id)
+    {
+        $cacheKey = $this->buildCacheKey($id, self::CACHE_CORE_DATA);
+        $this->cache->forget($cacheKey);
+    }
+
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -30,7 +51,8 @@ class Repository
 
     public function find($id)
     {
-        $game = $this->cache->remember("game-$id-core-data", 86400, function() use ($id) {
+        $cacheKey = $this->buildCacheKey($id, self::CACHE_CORE_DATA);
+        $game = $this->cache->remember($cacheKey, 86400, function() use ($id) {
             return Game::find($id);
         });
         return $game;

@@ -194,6 +194,9 @@ class GamesEditorController extends Controller
 
             GameDirectorFactory::updateExisting($gameData, $request->post());
 
+            // Clear cache
+            $this->repoGame->clearCacheCoreData($gameId);
+
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);
 
@@ -301,6 +304,9 @@ class GamesEditorController extends Controller
                 $game->save();
 
             }
+
+            // Clear cache
+            $this->repoGame->clearCacheCoreData($gameId);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);

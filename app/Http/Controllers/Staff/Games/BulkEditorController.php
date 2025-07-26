@@ -454,6 +454,9 @@ class BulkEditorController extends Controller
                 $game->{$fieldToUpdate} = $pdv;
                 $game->save();
 
+                // Clear cache
+                $this->repoGame->clearCacheCoreData($gameId);
+
             }
 
             // Done
