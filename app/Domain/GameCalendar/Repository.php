@@ -2,27 +2,26 @@
 
 namespace App\Domain\GameCalendar;
 
-use App\Domain\Cache\CacheManager;
+use App\Domain\Repository\AbstractRepository;
+use App\Enums\CacheDuration;
 use App\Models\GameCalendarStat;
 use App\Models\Game;
-use Illuminate\Support\Facades\Cache;
 
-class Repository
+class Repository extends AbstractRepository
 {
-    public function __construct(
-        private CacheManager $cache
-    ){
-
+    protected function getCachePrefix(): string
+    {
+        return "gamecalendar";
     }
+
     public function getStat($consoleId, $year, $month)
     {
         $monthName = $year.'-'.$month;
 
-        // cache for 24 hours
-        $gameCalendarStat = $this->cache->remember("gamecalendar-c$consoleId-$monthName-stat", 86400, function() use ($consoleId, $monthName) {
+        $cacheKey = $this->buildCacheKey("c$consoleId-$monthName-stat");
+        return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($consoleId, $monthName) {
             return GameCalendarStat::where('console_id', $consoleId)->where('month_name', $monthName)->first();
         });
-        return $gameCalendarStat;
     }
 
     public function getListByConsole($consoleId, $year, $month)
