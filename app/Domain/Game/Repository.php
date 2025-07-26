@@ -3,36 +3,21 @@
 
 namespace App\Domain\Game;
 
+use App\Domain\Repository\AbstractRepository;
 use App\Models\Game;
-use App\Domain\Cache\CacheManager;
-use Illuminate\Support\Facades\Cache;
+use App\Enums\CacheDuration;
 
-class Repository
+class Repository extends AbstractRepository
 {
-    const CACHE_CORE_DATA = 'core-data';
-
-    public function __construct(
-        private CacheManager $cache
-    ){
+    protected function getCachePrefix(): string
+    {
+        return "game";
     }
 
-    private function buildCacheKey($gameId, $key)
+    public function clearCacheCoreData($gameId)
     {
-        switch ($key) {
-            case self::CACHE_CORE_DATA:
-                $cacheKey = "game-$gameId-".self::CACHE_CORE_DATA;
-                break;
-            default:
-                throw new \Exception('Cannot build cache key for key: '.$key);
-        }
-
-        return $cacheKey;
-    }
-
-    public function clearCacheCoreData($id)
-    {
-        $cacheKey = $this->buildCacheKey($id, self::CACHE_CORE_DATA);
-        $this->cache->forget($cacheKey);
+        $cacheKey = $this->buildCacheKey("$gameId-core-data");
+        $this->clearCache($cacheKey);
     }
 
     public function markAsReleased(Game $game)
@@ -51,11 +36,10 @@ class Repository
 
     public function find($id)
     {
-        $cacheKey = $this->buildCacheKey($id, self::CACHE_CORE_DATA);
-        $game = $this->cache->remember($cacheKey, 86400, function() use ($id) {
+        $cacheKey = $this->buildCacheKey("$id-core-data");
+        return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($id) {
             return Game::find($id);
         });
-        return $game;
     }
 
     public function searchByTitle($keywords)

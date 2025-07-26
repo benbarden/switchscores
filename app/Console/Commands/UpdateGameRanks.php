@@ -10,6 +10,7 @@ use App\Domain\GameRank\RankAllTime;
 use App\Domain\GameRank\RankYear;
 use App\Domain\GameRank\RankYearMonth;
 use App\Domain\Console\Repository as ConsoleRepository;
+use App\Domain\GameStats\Repository as GameStatsRepository;
 
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
@@ -34,7 +35,9 @@ class UpdateGameRanks extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private GameStatsRepository $repoGameStats
+    )
     {
         parent::__construct();
     }
@@ -108,6 +111,13 @@ class UpdateGameRanks extends Command
             foreach ($dateList as $date) {
                 $domainRankYearMonth->process($date);
             }
+
+            // Clear cache
+            $logger->info('Clearing cache for console ['.$consoleId.']');
+            $this->repoGameStats->clearCacheTotalRanked($consoleId);
+            // Repopulate
+            $totalRanked = $this->repoGameStats->totalRankedByConsole($consoleId);
+            $logger->info('Total ranked: '.$totalRanked);
 
         }
 
