@@ -85,6 +85,8 @@ class GamesPartnerController extends Controller
 
         $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
+        $this->repoGame->clearCacheCoreData($gameId);
+
         $data = array(
             'status' => 'OK'
         );
@@ -116,6 +118,8 @@ class GamesPartnerController extends Controller
         }
 
         $this->repoGameDeveloper->delete($gameDeveloperId);
+
+        $this->repoGame->clearCacheCoreData($gameId);
 
         $data = array(
             'status' => 'OK'
@@ -161,6 +165,8 @@ class GamesPartnerController extends Controller
 
         $this->gameQualityFilter->updateGame($game, $gamesCompany);
 
+        $this->repoGame->clearCacheCoreData($gameId);
+
         $data = array(
             'status' => 'OK'
         );
@@ -190,6 +196,8 @@ class GamesPartnerController extends Controller
         if ($gamePublisherData->game_id != $gameId) {
             return response()->json(['error' => 'Game id mismatch on game publisher record!'], 400);
         }
+
+        $this->repoGame->clearCacheCoreData($gameId);
 
         $this->repoGamePublisher->delete($gamePublisherId);
 
