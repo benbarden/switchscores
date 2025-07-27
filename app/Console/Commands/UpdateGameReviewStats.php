@@ -73,14 +73,14 @@ class UpdateGameReviewStats extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(
+        GameListsRepository $repoGameLists,
+        ReviewLinkStats $statsReviewLink
+    )
     {
         $logger = Log::channel('cron');
 
         $logger->info(' *************** '.$this->signature.' *************** ');
-
-        $repoGameLists = new GameListsRepository();
-        $statsReviewLink = new ReviewLinkStats();
 
         $gameList = $repoGameLists->allGames();
 
