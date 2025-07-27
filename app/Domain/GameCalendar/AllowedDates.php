@@ -101,6 +101,8 @@ class AllowedDates
         $startYear = $this->getConsoleStartYear($consoleId);
         $startMonth = $this->getConsoleStartMonth($consoleId);
 
+        if ($year < $startYear) return [];
+
         $dates = [];
 
         foreach ($years as $year) {
