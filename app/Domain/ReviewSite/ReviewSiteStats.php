@@ -18,9 +18,9 @@ class ReviewSiteStats
         $logger
     )
     {
-        $this->repoReviewSite = new ReviewSiteRepository;
-        $this->repoReviewLink = new ReviewLinkRepository;
-        $this->statsReviewLink = new ReviewLinkStats;
+        $this->repoReviewSite = app(ReviewSiteRepository::class);
+        $this->repoReviewLink = app(ReviewLinkRepository::class);
+        $this->statsReviewLink = app(ReviewLinkStats::class);
         $this->logger = $logger;
     }
 
