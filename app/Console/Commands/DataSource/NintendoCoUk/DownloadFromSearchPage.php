@@ -28,7 +28,9 @@ class DownloadFromSearchPage extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private ImportSearchPage $importSearchPage
+    )
     {
         parent::__construct();
     }
@@ -44,13 +46,11 @@ class DownloadFromSearchPage extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $scraper = new ImportSearchPage();
-
         $logger->info('');
         $logger->info('========== IMPORT SEARCH PAGE ==========');
 
         for ($page = 1; $page < 4; $page++) {
-            $items = $scraper->loadHtml($page);
+            $items = $this->importSearchPage->loadHtml($page);
             $logger->info('PAGE '.$page);
             $logger->info(var_export($items, true));
         }

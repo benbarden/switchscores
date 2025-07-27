@@ -34,6 +34,11 @@ class ImportParseLink extends Command
      * @return void
      */
     public function __construct(
+        private DataSourceRepository $repoDataSource,
+        private DataSourceRawRepository $repoDataSourceRaw,
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private Importer $importer,
+        private Parser $parser
     )
     {
         parent::__construct();
@@ -51,13 +56,7 @@ class ImportParseLink extends Command
         $logger = Log::channel('cron');
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $importer = new Importer();
-
-        $repoDataSource = new DataSourceRepository();
-        $repoDataSourceRaw = new DataSourceRawRepository();
-        $repoDataSourceParsed = new DataSourceParsedRepository();
-
-        $sourceId = $repoDataSource->getSourceNintendoCoUk()->id;
+        $sourceId = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
         try {
 
@@ -70,9 +69,9 @@ class ImportParseLink extends Command
 
                 // Do cleanup first
                 $logger->info('Clearing previous raw data...');
-                $repoDataSourceRaw->deleteBySourceId($sourceId);
+                $this->repoDataSourceRaw->deleteBySourceId($sourceId);
                 $logger->info('Clearing previous parsed data...');
-                $repoDataSourceParsed->deleteBySourceId($sourceId);
+                $this->repoDataSourceParsed->deleteBySourceId($sourceId);
 
                 //
                 //if (\App::environment() == 'localx') {
@@ -93,9 +92,9 @@ class ImportParseLink extends Command
                 foreach ($loadOffsets as $offset) {
 
                     $logger->info(sprintf('Loading %s items; offset %s', $loadLimit, $offset));
-                    $importer->loadGames($loadLimit, $offset);
+                    $this->importer->loadGames($loadLimit, $offset);
 
-                    $responseArray = $importer->getResponseData();
+                    $responseArray = $this->importer->getResponseData();
 
                     $gameData = $responseArray['response']['docs'];
                     if (!is_array($gameData)) {
@@ -106,17 +105,17 @@ class ImportParseLink extends Command
 
                     // Raw data
                     $logger->info('Importing raw data...');
-                    $importer->importToDb($sourceId);
-                    $importedItemCount = $importer->getImportedCount();
+                    $this->importer->importToDb($sourceId);
+                    $importedItemCount = $this->importer->getImportedCount();
                     $logger->info('Imported '.$importedItemCount.' item(s)');
 
                 }
 
                 // Switch 2
                 $logger->info('Loading Switch 2 data... ');
-                $importer->loadGamesSwitch2($loadLimit, 0);
+                $this->importer->loadGamesSwitch2($loadLimit, 0);
 
-                $responseArray = $importer->getResponseData();
+                $responseArray = $this->importer->getResponseData();
 
                 $gameData = $responseArray['response']['docs'];
                 if (!is_array($gameData)) {
@@ -126,8 +125,8 @@ class ImportParseLink extends Command
 
                     // Raw data
                     $logger->info('Importing raw data...');
-                    $importer->importToDb($sourceId);
-                    $importedItemCount = $importer->getImportedCount();
+                    $this->importer->importToDb($sourceId);
+                    $importedItemCount = $this->importer->getImportedCount();
                     $logger->info('Imported '.$importedItemCount.' item(s)');
                 }
 
@@ -135,15 +134,16 @@ class ImportParseLink extends Command
 
             // Parsed data
             $logger->info('Parsing data...');
+            $this->parser->setLogger($logger);
             $parsedItemCount = 0;
-            $rawSourceData = $repoDataSourceRaw->getBySourceId($sourceId);
+            $rawSourceData = $this->repoDataSourceRaw->getBySourceId($sourceId);
             $totalItemCount = count($rawSourceData);
             foreach ($rawSourceData as $rawItem) {
                 if (($parsedItemCount % 1000) == 0) {
                     $logger->info(sprintf('Parsed %s/%s items', $parsedItemCount, $totalItemCount));
                 }
-                $parser = new Parser($rawItem, $logger);
-                $parsedItem = $parser->parseItem();
+                $this->parser->setDataSourceRaw($rawItem);
+                $parsedItem = $this->parser->parseItem();
                 $parsedItem->save();
                 $parsedItemCount++;
             }
@@ -151,7 +151,7 @@ class ImportParseLink extends Command
 
             // Link games
             $logger->info('Updating game links...');
-            $repoDataSourceParsed->updateNintendoCoUkGameIds();
+            $this->repoDataSourceParsed->updateNintendoCoUkGameIds();
             $logger->info('Linking complete');
 
         } catch (\Exception $e) {

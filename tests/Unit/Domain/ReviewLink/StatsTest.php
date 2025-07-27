@@ -11,7 +11,7 @@ class StatsTest extends TestCase
 {
     public function testNoReviews()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -24,7 +24,7 @@ class StatsTest extends TestCase
 
     public function testReviewLinkSimple()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -42,7 +42,7 @@ class StatsTest extends TestCase
 
     public function testReviewCountThree()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -61,7 +61,7 @@ class StatsTest extends TestCase
 
     public function testReviewAverageThreeItems()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -88,7 +88,7 @@ class StatsTest extends TestCase
 
     public function testReviewAverageFourItems()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -119,7 +119,7 @@ class StatsTest extends TestCase
 
     public function testReviewAverageFiveItems()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();
@@ -154,7 +154,7 @@ class StatsTest extends TestCase
 
     public function testReviewAverageTwoDecimalPlaces()
     {
-        $reviewLinkStats = new Stats();
+        $reviewLinkStats = app(Stats::class);
 
         $reviewLinks = new Collection();
         $quickReviews = new Collection();

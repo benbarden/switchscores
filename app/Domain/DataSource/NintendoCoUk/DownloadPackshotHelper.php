@@ -9,21 +9,19 @@ use App\Models\Game;
 
 class DownloadPackshotHelper
 {
-    private $repoGameLists;
-
     private $gameList;
 
     private $logger;
 
-    public function __construct($logger = null)
+    public function __construct(
+        private RepoGameLists $repoGameLists
+    )
     {
-        $this->repoGameLists = new RepoGameLists();
+    }
 
-        if ($logger) {
-            $this->logger = $logger;
-        } else {
-            $this->logger = null;
-        }
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     public function downloadAllWithDataSourceId()

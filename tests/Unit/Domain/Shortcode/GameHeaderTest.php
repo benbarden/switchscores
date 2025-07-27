@@ -29,7 +29,7 @@ class GameHeaderTest extends TestCase
 
     public function testSimpleTable()
     {
-        $repoGame = new GameRepository();
+        $repoGame = app(GameRepository::class);
 
         $seedGames = new Collection();
         $seedGames->push($repoGame->find(1));

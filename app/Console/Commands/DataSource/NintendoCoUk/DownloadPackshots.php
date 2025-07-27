@@ -34,7 +34,8 @@ class DownloadPackshots extends Command
      * @return void
      */
     public function __construct(
-        private RepoGame $repoGame
+        private RepoGame $repoGame,
+        private DownloadPackshotHelper $downloadPackshotHelper
     )
     {
         parent::__construct();
@@ -53,7 +54,7 @@ class DownloadPackshots extends Command
 
         $logger->info(' *************** '.$this->signature.' *************** ');
 
-        $downloadPackshotHelper = new DownloadPackshotHelper($logger);
+        $this->downloadPackshotHelper->setLogger($logger);
 
         if ($argGameId) {
 
@@ -65,17 +66,17 @@ class DownloadPackshots extends Command
 
             $logger->info('Using override game id');
 
-            $downloadPackshotHelper->downloadForGame($gameItem);
+            $this->downloadPackshotHelper->downloadForGame($gameItem);
 
         } else {
 
             $logger->info('');
             $logger->info('========== PACKSHOTS BY DATA SOURCE ==========');
-            $downloadPackshotHelper->downloadAllWithDataSourceId();
+            $this->downloadPackshotHelper->downloadAllWithDataSourceId();
 
             $logger->info('');
             $logger->info('========== PACKSHOTS BY OVERRIDE URL ==========');
-            $downloadPackshotHelper->downloadAllWithOverrideUrl();
+            $this->downloadPackshotHelper->downloadAllWithOverrideUrl();
 
         }
 

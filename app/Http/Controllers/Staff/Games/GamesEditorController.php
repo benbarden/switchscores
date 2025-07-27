@@ -73,6 +73,7 @@ class GamesEditorController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private NewsRepository $repoNews,
         private ReviewLinkRepository $repoReviewLink,
+        private DownloadPackshotHelper $downloadPackshotHelper
     )
     {
     }
@@ -292,8 +293,7 @@ class GamesEditorController extends Controller
                 UpdateGameFactory::doUpdate($game, $dsNewParsedItem);
 
                 // Download packshots
-                $downloadPackshotHelper = new DownloadPackshotHelper();
-                $downloadPackshotHelper->downloadForGame($game);
+                $this->downloadPackshotHelper->downloadForGame($game);
 
             } else {
 

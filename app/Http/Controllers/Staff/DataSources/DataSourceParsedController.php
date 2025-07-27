@@ -30,7 +30,8 @@ class DataSourceParsedController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private GameTitleHashRepository $repoGameTitleHash,
-        private HashGeneratorRepository $gameTitleHashGenerator
+        private HashGeneratorRepository $gameTitleHashGenerator,
+        private DownloadPackshotHelper $downloadPackshotHelper
     ){
     }
 
@@ -160,8 +161,7 @@ class DataSourceParsedController extends Controller
                 $dsParsedItem->save();
 
                 // Download packshots
-                $downloadPackshotHelper = new DownloadPackshotHelper();
-                $downloadPackshotHelper->downloadForGame($game);
+                $this->downloadPackshotHelper->downloadForGame($game);
 
                 // Set digital format
                 $game->format_digital = Game::FORMAT_AVAILABLE;

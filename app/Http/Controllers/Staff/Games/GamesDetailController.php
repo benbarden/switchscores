@@ -39,6 +39,7 @@ class GamesDetailController extends Controller
         private GameTagRepository $repoGameTag,
         private GameTitleHashRepository $repoGameTitleHash,
         private QuickReviewRepository $repoQuickReview,
+        private DownloadPackshotHelper $downloadPackshotHelper
     )
     {
     }
@@ -177,8 +178,7 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
         }
 
-        $downloadPackshotHelper = new DownloadPackshotHelper();
-        $downloadPackshotHelper->downloadForGame($game);
+        $this->downloadPackshotHelper->downloadForGame($game);
 
         $data = array(
             'status' => 'OK'

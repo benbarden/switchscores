@@ -31,7 +31,8 @@ class DownloadImages extends Command
      * @return void
      */
     public function __construct(
-        private GameRepository $repoGame
+        private GameRepository $repoGame,
+        private DataSourceParsedRepository $repoDataSourceParsed
     )
     {
         parent::__construct();
@@ -44,8 +45,6 @@ class DownloadImages extends Command
      */
     public function handle()
     {
-        $repoDataSourceParsed = new DataSourceParsedRepository();
-
         $argGameId = $this->argument('gameId');
 
         $logger = Log::channel('cron');
@@ -64,7 +63,7 @@ class DownloadImages extends Command
 
             $logger->info('Importing for game id: '.$importGameId);
 
-            $dsItem = $repoDataSourceParsed->getSourceNintendoCoUkForGame($importGameId);
+            $dsItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($importGameId);
 
             if ($dsItem) {
                 $logger->info('Processing item...');
@@ -84,7 +83,7 @@ class DownloadImages extends Command
 
         } else {
 
-            $dsParsedList = $repoDataSourceParsed->getAllNintendoCoUkWithGameId();
+            $dsParsedList = $this->repoDataSourceParsed->getAllNintendoCoUkWithGameId();
 
             $logger->info('Found '.count($dsParsedList).' item(s); processing');
 

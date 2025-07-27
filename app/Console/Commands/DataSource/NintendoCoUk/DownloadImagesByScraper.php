@@ -33,7 +33,11 @@ class DownloadImagesByScraper extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        private RepoGame $repoGame,
+        private PackshotUrlBuilder $packshotUrlBuilder,
+        private NintendoCoUkPackshot $scraperNintendoCoUk
+    )
     {
         parent::__construct();
     }
@@ -53,8 +57,7 @@ class DownloadImagesByScraper extends Command
 
         if ($argGameId) {
 
-            $repoGame = new RepoGame();
-            $gameItem = $repoGame->find($argGameId);
+            $gameItem = $this->repoGame->find($argGameId);
             if (!$gameItem) {
                 $logger->error('Cannot find game: '.$argGameId);
                 exit;
@@ -75,8 +78,6 @@ class DownloadImagesByScraper extends Command
 
         $logger->info('Loading data...');
 
-        $packshotBuilder = new PackshotUrlBuilder();
-
         foreach ($gameList as $game) {
 
             $gameId = $game->id;
@@ -91,12 +92,10 @@ class DownloadImagesByScraper extends Command
 
                 $logger->info('Processing item: '.$gameTitle.' [ID: '.$gameId.']');
 
-                $scraper = new NintendoCoUkPackshot();
-
                 try {
-                    $scraper->crawlPage($storeUrl);
-                    $squareUrl = $scraper->getSquareUrl();
-                    $headerUrl = $scraper->getHeaderUrl();
+                    $this->scraperNintendoCoUk->crawlPage($storeUrl);
+                    $squareUrl = $this->scraperNintendoCoUk->getSquareUrl();
+                    $headerUrl = $this->scraperNintendoCoUk->getHeaderUrl();
                     // If we have an override, the generated URL probably errored.
                     // In which case, let's just use that straight away.
                     if ($squareUrlOverride) {
@@ -106,7 +105,7 @@ class DownloadImagesByScraper extends Command
                     // Fallback for missing square images
                     // We want to do this AFTER the square URL override, to avoid regex failures
                     if ($headerUrl && !$squareUrl) {
-                        $squareUrl = $packshotBuilder->getSquareUrl($headerUrl);
+                        $squareUrl = $this->packshotUrlBuilder->getSquareUrl($headerUrl);
                     }
                     // Download away!
                     if ($squareUrl || $headerUrl) {
@@ -120,24 +119,6 @@ class DownloadImagesByScraper extends Command
             }
 
         }
-
-        /*
-        foreach ($dsParsedList as $dsItem) {
-
-            $itemTitle = $dsItem->title;
-            $gameId = $dsItem->game_id;
-            $game = $this->getServiceGame()->find($gameId);
-
-            if (!$game) {
-                $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');
-                continue;
-            }
-
-            $logger->info('Download images for game: '.$itemTitle.' ['.$gameId.']');
-            DownloadImageFactory::downloadImages($game, $dsItem);
-
-        }
-        */
 
         $logger->info('Complete');
     }

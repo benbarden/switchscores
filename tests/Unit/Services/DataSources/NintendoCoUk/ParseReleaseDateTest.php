@@ -12,7 +12,8 @@ class ParseReleaseDateTest extends TestCase
     {
         $jsonData = json_encode($data);
         $dsRaw = new DataSourceRaw(['source_id' => 1, 'title' => 'Test', 'source_data_json' => $jsonData]);
-        $parser = new Parser($dsRaw);
+        $parser = new Parser();
+        $parser->setDataSourceRaw($dsRaw);
         return $parser;
     }
 
