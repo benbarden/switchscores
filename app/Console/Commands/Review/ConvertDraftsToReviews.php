@@ -30,7 +30,6 @@ class ConvertDraftsToReviews extends Command
      * @return void
      */
     public function __construct(
-        private ConvertToReviewLink $convertToReviewLink
     )
     {
         parent::__construct();
@@ -41,16 +40,18 @@ class ConvertDraftsToReviews extends Command
      * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handle()
+    public function handle(
+        ConvertToReviewLink $convertToReviewLink,
+        ReviewDraftRepository $repoReviewDraft
+    )
     {
         $argSiteId = $this->argument('siteId');
 
         $logger = Log::channel('cron');
-        $this->convertToReviewLink->setLogger($logger);
+
+        $convertToReviewLink->setLogger($logger);
 
         $logger->info(' *************** '.$this->signature.' *************** ');
-
-        $repoReviewDraft = new ReviewDraftRepository();
 
         if ($argSiteId) {
             $draftsForProcessing = $repoReviewDraft->getReadyForProcessingBySite($argSiteId);
@@ -70,7 +71,7 @@ class ConvertDraftsToReviews extends Command
         foreach ($draftsForProcessing as $draftItem) {
 
             try {
-                $this->convertToReviewLink->processItem($draftItem);
+                $convertToReviewLink->processItem($draftItem);
             } catch (\Exception $e) {
                 $logger->error('Got error: '.$e->getMessage().'; skipping');
             }

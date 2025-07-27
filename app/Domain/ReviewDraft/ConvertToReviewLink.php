@@ -100,9 +100,9 @@ class ConvertToReviewLink
     {
         $gameId = $game->id;
 
-        $repoReviewLink = new ReviewLinkRepository();
-        $repoQuickReview = new QuickReviewRepository();
-        $statsReviewLink = new ReviewLinkStats();
+        $repoReviewLink = app(ReviewLinkRepository::class);
+        $repoQuickReview = app(QuickReviewRepository::class);
+        $statsReviewLink = app(ReviewLinkStats::class);
 
         $gameReviewLinks = $repoReviewLink->byGame($gameId);
         $gameQuickReviews = $repoQuickReview->byGameActive($gameId);
