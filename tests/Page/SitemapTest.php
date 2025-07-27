@@ -6,35 +6,34 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Enums\HttpStatus;
 
 class SitemapTest extends TestCase
 {
+    public function doPageTest($url, $status = HttpStatus::STATUS_OK)
+    {
+        $response = $this->get($url);
+        $response->assertStatus($status->value);
+    }
+
     public function testSitemap()
     {
-        $response = $this->get('/sitemap');
-
-        $response->assertStatus(302);
+        $this->doPageTest('/sitemap', HttpStatus::REDIR_PERM);
     }
 
     public function testSitemapSite()
     {
-        $response = $this->get('/sitemap/site');
-
-        $response->assertStatus(302);
+        $this->doPageTest('/sitemap/site', HttpStatus::REDIR_PERM);
     }
 
     public function testSitemapTags()
     {
-        $response = $this->get('/sitemap/tags');
-
-        $response->assertStatus(302);
+        $this->doPageTest('/sitemap/tags', HttpStatus::REDIR_PERM);
     }
 
     public function testSitemapGames()
     {
-        $response = $this->get('/sitemap/games');
-
-        $response->assertStatus(302);
+        $this->doPageTest('/sitemap/games', HttpStatus::REDIR_PERM);
     }
 
 }

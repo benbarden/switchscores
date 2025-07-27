@@ -58,6 +58,7 @@ class BrowseByDateController extends Controller
         // Month by month links
         $dateList = $this->allowedDates->allowedDatesByConsoleAndYear($consoleId, $year);
         $dateListArray = [];
+        if (count($dateList) == 0) abort(404);
 
         $allowedYears = [$year];
 

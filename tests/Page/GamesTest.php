@@ -6,43 +6,83 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Enums\HttpStatus;
 
 class GamesTest extends TestCase
 {
+    public function doPageTest($url, $status = HttpStatus::STATUS_OK)
+    {
+        $response = $this->get($url);
+        $response->assertStatus($status->value);
+    }
+
     public function testGamesDetailPage()
     {
-        $response = $this->get('/games/2');
-        $response->assertStatus(301);
+        $this->doPageTest('/games/1/the-legend-of-zelda-breath-of-the-wild');
+        $this->doPageTest("/games/1", HttpStatus::REDIR_PERM);
 
-        $response = $this->get('/games/2/abc');
-        $response->assertStatus(301);
-
-        $response = $this->get('/games/2/1-2-switch');
-        $response->assertStatus(200);
+        $this->doPageTest("/games/2/1-2-switch");
+        $this->doPageTest("/games/2", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/2/abc", HttpStatus::REDIR_PERM);
     }
 
     public function testGamesBrowseByDatePage()
     {
-        $response = $this->get('/games/by-date/2020-01');
-        $response->assertStatus(200);
+        $this->doPageTest("/games/by-date", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-date/2020-01", HttpStatus::REDIR_PERM);
 
-        $response = $this->get('/games/by-date/2019-12');
-        $response->assertStatus(200);
+        $this->doPageTest("/c/switch-1/2016", HttpStatus::NOT_FOUND);
+        $this->doPageTest("/c/switch-1/2016/12", HttpStatus::NOT_FOUND);
 
-        $response = $this->get('/games/by-date/2018-05');
-        $response->assertStatus(200);
+        $this->doPageTest("/c/switch-2/2024", HttpStatus::NOT_FOUND);
+        $this->doPageTest("/c/switch-2/2024/12", HttpStatus::NOT_FOUND);
 
-        $response = $this->get('/games/by-date/2018-01');
-        $response->assertStatus(200);
+        $this->doPageTest("/c/switch-1/date");
+        $this->doPageTest("/c/switch-1/2025/01");
+        $this->doPageTest("/c/switch-1/2020/01");
+        $this->doPageTest("/c/switch-1/2019/12");
+        $this->doPageTest("/c/switch-1/2018/05");
+        $this->doPageTest("/c/switch-1/2018/01");
+        $this->doPageTest("/c/switch-1/2017/03");
 
-        $response = $this->get('/games/by-date/2017-03');
-        $response->assertStatus(200);
+        $this->doPageTest("/c/switch-1/2017/02", HttpStatus::NOT_FOUND);
+        $this->doPageTest("/c/switch-1/2016/01", HttpStatus::NOT_FOUND);
 
-        $response = $this->get('/games/by-date/2017-02');
-        $response->assertStatus(404);
+        $this->doPageTest("/c/switch-2/date");
+        $this->doPageTest("/c/switch-2/2025/06");
+        $this->doPageTest("/c/switch-2/2025/07");
+    }
 
-        $response = $this->get('/games/by-date/2016-01');
-        $response->assertStatus(404);
+    public function testGamesGeneralPages()
+    {
+        $this->doPageTest("/games", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/search");
+    }
 
+    public function testGamesBrowsePages()
+    {
+        $this->doPageTest("/games/by-category", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-category/adventure", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-series/pokemon", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-tag", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-tag/board-game", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-collection", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/games/by-collection/lego", HttpStatus::REDIR_PERM);
+
+        $this->doPageTest("/c/switch-1/category");
+        $this->doPageTest("/c/switch-1/category/adventure");
+        $this->doPageTest("/c/switch-1/series/pokemon");
+        $this->doPageTest("/c/switch-1/tag");
+        $this->doPageTest("/c/switch-1/tag/board-game");
+        $this->doPageTest("/c/switch-1/collection");
+        $this->doPageTest("/c/switch-1/collection/lego");
+
+        $this->doPageTest("/c/switch-2/category");
+        $this->doPageTest("/c/switch-2/category/adventure");
+        $this->doPageTest("/c/switch-2/series/pokemon");
+        $this->doPageTest("/c/switch-2/tag");
+        $this->doPageTest("/c/switch-2/tag/board-game");
+        $this->doPageTest("/c/switch-2/collection");
+        $this->doPageTest("/c/switch-2/collection/lego");
     }
 }
