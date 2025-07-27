@@ -27,7 +27,7 @@ class DynamicShortcode
     {
         $this->html = $html;
 
-        $this->repoGame = new GameRepository();
+        $this->repoGame = app(GameRepository::class);
     }
 
     public function setSeedGames(Collection $seedGames)
