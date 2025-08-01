@@ -25,6 +25,10 @@ class DownloadByOverrideUrl
     {
         $gameId = $this->game->id;
 
+        // Remove leading/trailing spaces, CRLF etc
+        $squareUrl = trim($squareUrl);
+        $headerUrl = trim($headerUrl);
+
         $serviceImages = new Images($this->game);
         if ($squareUrl) {
             $imageSquare = $serviceImages->downloadRemoteSquare($squareUrl, $gameId);

@@ -218,7 +218,8 @@ class Images
 
             // Add protocol if needed
             $protocolMatch = 'https:';
-            if (substr($remoteUrl, 0, strlen($protocolMatch)) != $protocolMatch) {
+            $origRemoteUrl = $remoteUrl;
+            if (!str_starts_with($remoteUrl, $protocolMatch)) {
                 $remoteUrl = $protocolMatch.$remoteUrl;
             }
 
@@ -230,8 +231,16 @@ class Images
             rename($storagePath.$destFilename, $destPath.$destFilename);
 
         } catch (\ErrorException $e) {
-            throw new \Exception('Error saving file: '.$e->getMessage());
-            return false;
+            $errorData = [
+                'origRemoteUrl' => $origRemoteUrl,
+                'remoteUrl' => $remoteUrl,
+                'storagePath' => $storagePath,
+                'destPath' => $destPath,
+                'destFilename' => $destFilename,
+                'moveFrom' => $storagePath.$destFilename,
+                'moveTo' => $destPath.$destFilename,
+            ];
+            throw new \Exception('Error saving file: '.$e->getMessage().'; Error data: '.var_export($errorData, true));
         }
 
         // Success!
