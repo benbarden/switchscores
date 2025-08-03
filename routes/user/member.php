@@ -22,6 +22,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/user/collection/category-breakdown', 'User\CollectionController@categoryBreakdown')->name('user.collection.category-breakdown');
     Route::get('/user/collection/top-rated-by-category/{categoryId}', 'User\CollectionController@topRatedByCategory')->name('user.collection.top-rated-by-category');
 
+    // Collection v2 - POC
+    Route::controller('User\CollectionController')->group(function () {
+        Route::get('/user/collection/quick-add', 'quickAdd')->name('user.collection.quickAdd');
+    });
+
+
     // User profile
     Route::get('/user/region/update', 'User\UserProfileController@updateRegion')->name('user.profile.updateRegion');
 

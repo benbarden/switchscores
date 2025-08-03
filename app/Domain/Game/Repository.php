@@ -57,9 +57,23 @@ class Repository extends AbstractRepository
             ->first();
     }
 
-    public function partialTitleSearch($title)
+    public function partialTitleSearch($title, $includeLowQuality = true, $includeDeListed = true, $sortBy = null, $limit = null)
     {
-        return Game::where('title', 'LIKE', '%'.$title.'%')->orderBy('title', 'asc')->get();
+        $games = Game::where('title', 'LIKE', '%'.$title.'%');
+        if (!$includeLowQuality) {
+            $games = $games->where('is_low_quality', 0);
+        }
+        if (!$includeDeListed) {
+            $games = $games->where('format_digital', '<>', Game::FORMAT_DELISTED);
+        }
+        match ($sortBy) {
+            'newest' => $games = $games->orderBy('eu_release_date', 'desc')->orderBy('title', 'asc'),
+            default => $games = $games->orderBy('title', 'asc'),
+        };
+        if ($limit) {
+            $games = $games->limit($limit);
+        }
+        return $games->get();
     }
 
     /**

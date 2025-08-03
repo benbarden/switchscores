@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Api\V2\Game\SearchController;
+
+use App\Http\Controllers\Api\V2\User\CollectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +26,16 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::get('/v2/games/list-all', 'Api\V2\GameController@getList')->name('api.v2.game.list');
 
+    Route::get('/v2/games/search', [SearchController::class, 'findByTitle'])->name('api.v2.game.search');
+
+    // This must be last
     Route::get('/v2/game/{id}', 'Api\V2\GameController@getGameDetails')->name('api.v2.game.get');
     Route::get('/v2/game/linkid/{id}', 'Api\V2\GameController@getDetailsByLinkId')->name('api.v2.game.linkid.get');
 
+    Route::get('/v2/user/collection/findGamesForAdding', [CollectionController::class, 'findGamesForAdding']);
+
 });
+//Route::get('/v2/game/search', 'Api\V2\Game\SearchController@findByTitle')->name('api.v2.game.search');
 
 // Game
 Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');

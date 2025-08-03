@@ -45,6 +45,19 @@ class CollectionController extends Controller
     {
     }
 
+    public function quickAdd()
+    {
+        $pageTitle = 'Quick add to collection';
+        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
+        $bindings['UserId'] = $userId;
+
+        return view('user.collection.quickAdd', $bindings);
+    }
+
     public function landing()
     {
         $pageTitle = 'Games collection';
