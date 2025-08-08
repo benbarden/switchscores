@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use Carbon\Carbon;
 
 use App\Construction\Game\GameBuilder;
+use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Url\LinkTitle as LinkTitleGenerator;
@@ -23,15 +24,16 @@ class ReleaseHubController extends Controller
         private HashGeneratorRepository $gameTitleHashGenerator,
         private GameTitleHashRepository $repoGameTitleHash,
         private LinkTitleGenerator $linkTitleGenerator,
+        private DownloadPackshotHelper $downloadPackshotHelper
     )
     {
     }
 
     private function smartSortDir(string $from, string $to): string
     {
-        $today = \Carbon\Carbon::today();
-        $start = \Carbon\Carbon::parse($from);
-        $end   = \Carbon\Carbon::parse($to);
+        $today = Carbon::today();
+        $start = Carbon::parse($from);
+        $end   = Carbon::parse($to);
 
         if ($start->gt($today)) return 'asc';  // future only
         return 'desc';                          // everything else -> newest first
@@ -182,6 +184,9 @@ class ReleaseHubController extends Controller
             }
         }
         */
+
+        // Download image
+        $this->downloadPackshotHelper->downloadForGame($game);
 
         // Return HTML for the new table row
         return response()->json([
