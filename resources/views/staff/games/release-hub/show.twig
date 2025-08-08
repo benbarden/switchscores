@@ -216,6 +216,9 @@
             this.form.submit();
         });
         document.getElementById('week').addEventListener('change', function() {
+            // Clear sort so the backend can pick default based on date range
+            document.getElementById('sort').value = '';
+
             if (this.value === 'custom') {
                 document.getElementById('custom-dates').style.display = 'block';
             } else {

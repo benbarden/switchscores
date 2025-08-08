@@ -29,13 +29,12 @@ class ReleaseHubController extends Controller
 
     private function smartSortDir(string $from, string $to): string
     {
-        $today = Carbon::today();
-        $start = Carbon::parse($from);
-        $end   = Carbon::parse($to);
+        $today = \Carbon\Carbon::today();
+        $start = \Carbon\Carbon::parse($from);
+        $end   = \Carbon\Carbon::parse($to);
 
-        if ($end->lt($today))  return 'desc'; // past-only -> newest first
-        if ($start->gt($today)) return 'asc'; // future-only -> oldest first
-        return 'asc'; // spans today -> Nintendo style
+        if ($start->gt($today)) return 'asc';  // future only
+        return 'desc';                          // everything else -> newest first
     }
 
     public function show(Request $request)
