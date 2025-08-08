@@ -343,7 +343,7 @@ class Repository
             ->whereBetween('games.eu_release_date', [$startDate, $endDate])
             ->orderBy('eu_release_date', $sortDir)
             ->orderBy('eshop_europe_order', 'asc')
-            ->orderBy('title', 'asc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return $games;
