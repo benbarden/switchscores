@@ -336,6 +336,19 @@ class Repository
         return $games;
     }
 
+    public function gamesForReleaseHub($consoleId, $startDate, $endDate, $sortDir)
+    {
+        if (!in_array($sortDir, ['asc', 'desc'])) $sortDir = 'asc';
+        $games = Game::where('console_id', $consoleId)
+            ->whereBetween('games.eu_release_date', [$startDate, $endDate])
+            ->orderBy('eu_release_date', $sortDir)
+            ->orderBy('eshop_europe_order', 'asc')
+            ->orderBy('title', 'asc')
+            ->get();
+
+        return $games;
+    }
+
     public function gamesForRelease()
     {
         $games = Game::where('eu_is_released', 0)

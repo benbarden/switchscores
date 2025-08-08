@@ -29,6 +29,13 @@ class Repository extends AbstractRepository
         $game->save();
     }
 
+    public function unmarkAsReleased(Game $game)
+    {
+        $game->eu_is_released = 0;
+        $game->eu_released_on = null;
+        $game->save();
+    }
+
     public function delete($gameId)
     {
         Game::where('id', $gameId)->delete();

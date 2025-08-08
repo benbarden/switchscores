@@ -1,0 +1,356 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addGameModal">
+                + Add game
+            </button>
+        </div>
+    </div>
+
+    <h2 class="mb-3">Games list</h2>
+
+    <form method="get" id="console-filter-form">
+
+        <div class="row">
+
+            {# Console filter #}
+            <div class="col">
+                <label for="consoleId" class="form-label">Console:</label>
+            </div>
+            <div class="col">
+                <select name="consoleId" id="consoleId" class="form-select form-select-sm">
+                    <option value="" {% if not ConsoleId %}selected{% endif %}>-- Select console --</option>
+                    {% for console in ConsoleList %}
+                        <option value="{{ console.id }}" {% if ConsoleId == console.id %}selected{% endif %}>
+                            {{ console.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Week picker #}
+            <div class="col">
+                <label for="week" class="form-label">Week:</label>
+            </div>
+            <div class="col">
+                <select id="week" class="form-select form-select-sm">
+                    <option value="">-- Select date range --</option>
+                    {% set matchedWeek = false %}
+                    {% for week in WeekList %}
+                        {% set weekSelected = (StartDate == week.start and EndDate == week.end) %}
+                        {% if weekSelected %}
+                            {% set matchedWeek = true %}
+                        {% endif %}
+                        <option value="{{ week.start }}|{{ week.end }}" {% if weekSelected %}selected{% endif %}>
+                            {{ week.label }}
+                        </option>
+                    {% endfor %}
+                    <option value="custom" {% if CustomStart and CustomEnd and not matchedWeek %}selected{% endif %}>
+                        Custom...
+                    </option>
+                </select>
+
+                {# Hidden date fields for backend #}
+                <input type="hidden" name="startDate" id="startDate" value="{{ StartDate }}">
+                <input type="hidden" name="endDate" id="endDate" value="{{ EndDate }}">
+
+                {# Custom date range #}
+                <div id="custom-dates"
+                     class="row g-2 align-items-end"
+                     style="{% if CustomStart and CustomEnd and not matchedWeek %}display:flex{% else %}display:none{% endif %}">
+
+                    <div class="col-auto">
+                        <label for="customStart" class="form-label mb-0">Start date</label>
+                        <input type="date" id="customStart" name="customStart"
+                               class="form-control form-control-sm"
+                               value="{{ CustomStart ?? StartDate }}">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="customEnd" class="form-label mb-0">End date</label>
+                        <input type="date" id="customEnd" name="customEnd"
+                               class="form-control form-control-sm"
+                               value="{{ CustomEnd ?? EndDate }}">
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="submit" id="applyCustom" class="btn btn-primary btn-sm">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col">
+                <label for="sort" class="form-label">Sort:</label>
+            </div>
+            <div class="col">
+                <select name="sort" id="sort" class="form-select form-select-sm">
+                    <option value="asc"  {% if SortDir == 'asc'  %}selected{% endif %}>Oldest first (Nintendo style)</option>
+                    <option value="desc" {% if SortDir == 'desc' %}selected{% endif %}>Newest first (catch-up)</option>
+                </select>
+            </div>
+
+            <div class="col">
+
+                {# Reset #}
+                <div class="col-auto">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            onclick="window.location.href='{{ route('staff.games.release-hub.show') }}'">
+                        Reset
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+    {# Add game modal #}
+    <!-- Add Game Modal -->
+    <div class="modal fade" id="addGameModal" tabindex="-1" aria-labelledby="addGameModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="addGameError" class="alert alert-danger d-none"></div>
+                <form id="addGameForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addGameModalLabel">Add game</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+
+                            <!-- Console -->
+                            <div class="col-md-4">
+                                <label for="console_id" class="form-label">Console</label>
+                                <select class="form-select form-select-sm" id="console_id" name="console_id" required>
+                                    {% for console in ConsoleList %}
+                                        <option value="{{ console.id }}" {% if console.id == ConsoleId %}selected{% endif %}>
+                                            {{ console.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Title -->
+                            <div class="col-md-8">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control form-control-sm" id="title" name="title" required>
+                            </div>
+
+                            <!-- Release date -->
+                            <div class="col-md-4">
+                                <label for="release_date" class="form-label">Release date</label>
+                                <input type="date" class="form-control form-control-sm" id="release_date" name="release_date" required>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="col-md-4">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="text" class="form-control form-control-sm" id="price" name="price" placeholder="e.g. £9.99">
+                            </div>
+
+                            <!-- Nintendo URL -->
+                            <div class="col-md-12">
+                                <label for="nintendo_url" class="form-label">Nintendo URL</label>
+                                <input type="url" class="form-control form-control-sm" id="nintendo_url" name="nintendo_url" placeholder="https://www.nintendo.co.uk/...">
+                            </div>
+
+                            <!-- Image URL -->
+                            <div class="col-md-12">
+                                <label for="image_url" class="form-label">Image URL</label>
+                                <input type="url" class="form-control form-control-sm" id="image_url" name="image_url" placeholder="https://...">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save game</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if GameList|length > 0 %}
+        <table id="gameTable" class="table data-sortable">
+            <thead>
+            <tr>
+                <th style="width: 36px;"></th> {# drag handle #}
+                <th class="text-center">Image</th>
+                <th>Game</th>
+                <th>Publishers</th>
+                <th>Category</th>
+                <th class="text-center">Store</th>
+                <th class="text-center">Release date (EU)</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for game in GameList %}
+                {% include 'staff/games/release-hub/_game-row.twig' with {'game': game} %}
+            {% endfor %}
+            </tbody>
+
+        </table>
+    {% else %}
+        <p>No games found!</p>
+    {% endif %}
+
+</div>
+
+    <script>
+        document.getElementById('consoleId').addEventListener('change', function() {
+            this.form.submit();
+        });
+        document.getElementById('sort').addEventListener('change', function() {
+            this.form.submit();
+        });
+        document.getElementById('week').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('custom-dates').style.display = 'block';
+            } else {
+                const [start, end] = this.value.split('|');
+                document.getElementById('startDate').value = start;
+                document.getElementById('endDate').value = end;
+                this.form.submit();
+            }
+        });
+
+        // Show add game modal
+        const addGameModal = document.getElementById('addGameModal');
+        addGameModal.addEventListener('shown.bs.modal', function () {
+            document.getElementById('title').focus();
+        });
+
+        // Handle modal submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const addGameForm = document.getElementById('addGameForm');
+            const errorBox = document.getElementById('addGameError');
+
+            addGameForm.addEventListener('submit', function (e) {
+                e.preventDefault(); // stop the default form POST
+
+                errorBox.classList.add('d-none');
+                errorBox.textContent = '';
+
+                fetch('{{ route("staff.games.release-hub.add") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: new FormData(addGameForm)
+                })
+                    .then(async res => {
+                        const data = await res.json();
+
+                        if (!res.ok) {
+                            if (res.status === 422) {
+                                if (data.errors) {
+                                    errorBox.textContent = Object.values(data.errors).flat().join(' ');
+                                } else if (data.message) {
+                                    errorBox.textContent = data.message;
+                                }
+                                errorBox.classList.remove('d-none');
+                            }
+                            return;
+                        }
+
+                        // success - append new row and close modal
+                        document.querySelector('table tbody').insertAdjacentHTML('beforeend', data.html);
+                        bootstrap.Modal.getInstance(document.getElementById('addGameModal')).hide();
+                        addGameForm.reset();
+                    })
+                    .catch(err => console.error(err));
+            });
+        });
+
+        // Release/un-release
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.js-toggle-release')) {
+                const btn = e.target;
+                const url = btn.dataset.url;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.querySelector(`#game-row-${data.id}`).outerHTML = data.html;
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+
+    </script>
+
+    {# Row ordering #}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tableBody = document.querySelector('#gameTable tbody');
+
+            new Sortable(tableBody, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+
+                onStart: function (evt) {
+                    const draggedDate = evt.item.dataset.date;
+                    // Highlight all rows with the same date
+                    tableBody.querySelectorAll(`tr[data-date="${draggedDate}"]`)
+                        .forEach(row => row.classList.add('same-date-highlight'));
+                },
+
+                onEnd: function (evt) {
+                    const movedDate = evt.item.dataset.date;
+
+                    // Remove highlights
+                    tableBody.querySelectorAll('.same-date-highlight')
+                        .forEach(row => row.classList.remove('same-date-highlight'));
+
+                    // Get IDs of all rows with the same date
+                    const rows = Array.from(tableBody.querySelectorAll(`tr[data-date="${movedDate}"]`));
+                    const ids = rows.map(row => row.dataset.id);
+
+                    // Send to backend
+                    fetch('{{ route("staff.games.release-hub.reorder") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            date: movedDate,
+                            order: ids
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!data.success) {
+                                alert('Failed to save new order');
+                            }
+                        });
+                }
+            });
+
+        });
+    </script>
+
+{% endblock page_inner %}

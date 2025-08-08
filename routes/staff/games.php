@@ -2,10 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Models\UserRole;
+
+use App\Http\Controllers\Staff\Games\ReleaseHubController;
+
 // *************** Staff: GAMES *************** //
-Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_GAMES_MANAGER]], function() {
+Route::group(['middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_GAMES_MANAGER]], function() {
 
     Route::get('/staff/games/dashboard', 'Staff\Games\DashboardController@show')->name('staff.games.dashboard');
+
+    // Release hub
+    Route::get('/staff/games/release-hub', [ReleaseHubController::class, 'show'])->name('staff.games.release-hub.show');
+    Route::post('/staff/games/release-hub/add', [ReleaseHubController::class, 'store'])->name('staff.games.release-hub.add');
+    Route::post('/staff/games/release-hub/toggle/{id}', [ReleaseHubController::class, 'toggleRelease'])->name('staff.games.release-hub.toggle');
+    Route::post('/staff/games/release-hub/reorder', [ReleaseHubController::class, 'reorder'])->name('staff.games.release-hub.reorder');
 
     // Search
     Route::match(['get', 'post'], '/staff/games/search', 'Staff\Games\SearchController@show')->name('staff.games.search');

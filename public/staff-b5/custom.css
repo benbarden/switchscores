@@ -104,3 +104,13 @@ nav ol.breadcrumb {
     color: #999;
     font-size: 16px;
 }
+
+/* Release hub */
+.sortable-ghost {
+    background-color: #f8f9fa !important;
+    opacity: 0.8;
+}
+
+.same-date-highlight {
+    background-color: #fff3cd !important; /* Bootstrap warning background */
+}

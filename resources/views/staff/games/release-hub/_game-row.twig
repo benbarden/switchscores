@@ -1,0 +1,98 @@
+{% import "macros/links/game/staff.twig" as gamelinks %}
+{% import "macros/blocks/games/components/low-quality.twig" as gamelowquality %}
+{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
+
+<tr id="game-row-{{ game.id }}"
+    data-id="{{ game.id }}"
+    data-date="{{ game.eu_release_date }}">
+
+    {# Drag handle #}
+    <td class="text-center drag-handle" style="cursor: grab; width: 36px;">
+        <i class="fas fa-grip-vertical"></i>
+    </td>
+
+    {# Game cell: thumb + console badge + title #}
+    <td>
+        {{ gamepackshots.squareReleaseHub(game) }}
+    </td>
+
+    <td>
+        {% if game.console_id == 1 %}
+            <span class="badge bg-info text-dark me-2 align-middle">{{ game.console.name ?? 'Switch 1' }}</span>
+        {% elseif game.console_id == 2 %}
+            <span class="badge bg-success me-2 align-middle">{{ game.console.name ?? 'Switch 2' }}</span>
+        {% else %}
+            <span class="badge bg-secondary me-2 align-middle">{{ game.console.name ?? 'Unknown' }}</span>
+        {% endif %}
+
+        <span class="align-middle">
+            {{ gamelinks.gameLink(game) }}
+            {{ gamelowquality.b5(game) }}
+        </span>
+    </td>
+
+    {# Publishers #}
+    <td>
+        {% if game.gamePublishers|length > 0 %}
+            {% for gp in game.gamePublishers %}
+                <a href="{{ route('staff.games-companies.show', {'gamesCompany': gp.publisher}) }}">
+                    {{ gp.publisher.name }}
+                </a><br>
+            {% endfor %}
+        {% endif %}
+    </td>
+
+    {# Category #}
+    <td>{{ game.category.name }}</td>
+
+    {# Store/link icons #}
+    <td class="text-center">
+        {% if game.dspNintendoCoUk %}
+            {% if game.dspNintendoCoUk|length %}
+                <i class="fas fa-link" title="Linked"></i>
+            {% elseif game.eshop_europe_fs_id %}
+                <i class="fas fa-unlink" title="Unlinked (has FS ID)"></i>
+            {% endif %}
+        {% else %}
+            {% if game.eshop_europe_fs_id %}
+                <i class="fas fa-link" title="Linked (legacy)"></i>
+            {% endif %}
+        {% endif %}
+        {% if game.nintendo_store_url_override %}
+            <i class="fas fa-globe" title="Store URL override"></i>
+        {% endif %}
+    </td>
+
+    {# Release date #}
+    <td class="text-center">{{ game.eu_release_date }}</td>
+
+    {# Actions #}
+    {% set isFuture = game.eu_release_date > "now"|date("Y-m-d") %}
+
+    <td class="text-center">
+        {% if isFuture %}
+            <button type="button"
+                    class="btn btn-secondary btn-sm"
+                    disabled
+                    title="Cannot release before release date">
+                Release
+            </button>
+        {% elseif game.eu_is_released %}
+            <button type="button"
+                    class="btn btn-warning btn-sm js-toggle-release"
+                    data-id="{{ game.id }}"
+                    data-url="{{ route('staff.games.release-hub.toggle', {'id': game.id}) }}">
+                Unrelease
+            </button>
+        {% else %}
+            <button type="button"
+                    class="btn btn-success btn-sm js-toggle-release"
+                    data-id="{{ game.id }}"
+                    data-url="{{ route('staff.games.release-hub.toggle', {'id': game.id}) }}">
+                Release
+            </button>
+        {% endif %}
+        <br>
+        <a href="{{ route('staff.games.edit', {'gameId': game.id}) }}" class="small d-inline-block mt-1">Edit</a>
+    </td>
+</tr>
