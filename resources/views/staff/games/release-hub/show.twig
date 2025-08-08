@@ -181,30 +181,26 @@
         </div>
     </div>
 
-    {% if GameList|length > 0 %}
-        <table id="gameTable" class="table data-sortable">
-            <thead>
-            <tr>
-                <th style="width: 36px;"></th> {# drag handle #}
-                <th class="text-center">Image</th>
-                <th>Game</th>
-                <th>Publishers</th>
-                <th>Category</th>
-                <th class="text-center">Store</th>
-                <th class="text-center">Release date (EU)</th>
-                <th class="text-center">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for game in GameList %}
-                {% include 'staff/games/release-hub/_game-row.twig' with {'game': game} %}
-            {% endfor %}
-            </tbody>
+    <table id="gameTable" class="table data-sortable">
+        <thead>
+        <tr>
+            <th style="width: 36px;"></th> {# drag handle #}
+            <th class="text-center">Image</th>
+            <th>Game</th>
+            <th>Publishers</th>
+            <th>Category</th>
+            <th class="text-center">Store</th>
+            <th class="text-center">Release date (EU)</th>
+            <th class="text-center">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in GameList %}
+            {% include 'staff/games/release-hub/_game-row.twig' with {'game': game} %}
+        {% endfor %}
+        </tbody>
 
-        </table>
-    {% else %}
-        <p>No games found!</p>
-    {% endif %}
+    </table>
 
 </div>
 
