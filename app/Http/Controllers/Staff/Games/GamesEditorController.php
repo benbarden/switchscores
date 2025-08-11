@@ -395,31 +395,4 @@ class GamesEditorController extends Controller
 
         return view('staff.games.editor.delete', $bindings);
     }
-
-    public function releaseGame()
-    {
-        $currentUser = resolve('User/Repository')->currentUser();
-        if (!$currentUser) {
-            return response()->json(['error' => 'Cannot find user!'], 400);
-        }
-
-        $request = request();
-
-        $gameId = $request->gameId;
-        if (!$gameId) {
-            return response()->json(['error' => 'Missing data: gameId'], 400);
-        }
-
-        $game = $this->repoGame->find($gameId);
-        if (!$gameId) {
-            return response()->json(['error' => 'Game not found: '.$gameId], 400);
-        }
-
-        $this->repoGame->markAsReleased($game);
-
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
-    }
 }

@@ -13,7 +13,7 @@
                 <tbody>
                 <tr>
                     <td>
-                        <a href="{{ route('staff.games.list.no-category-all') }}">
+                        <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-all'}) }}">
                             No category (All games)
                         </a>
                     </td>
@@ -23,7 +23,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a href="{{ route('staff.games.list.no-category-with-collection') }}">
+                        <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-with-collection'}) }}">
                             No category with collection
                         </a>
                     </td>
@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a href="{{ route('staff.games.list.no-category-with-reviews') }}">
+                        <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-with-reviews'}) }}">
                             No category with reviews
                         </a>
                     </td>

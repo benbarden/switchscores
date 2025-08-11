@@ -36,7 +36,7 @@
                         {{ item.games().count }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.games.list.by-category', {'category': item}) }}">View games</a>
+                        <a href="{{ route('staff.games.list.showList', { 'listType': 'by-category', 'param1': item }) }}">View games</a>
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.category.edit', {'categoryId': item.id}) }}">Edit</a>

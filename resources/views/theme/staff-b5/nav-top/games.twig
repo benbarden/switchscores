@@ -11,18 +11,17 @@
         <li><a class="dropdown-item" href="{{ route('staff.games.search') }}">Search games</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.release-hub.show')}}">Release hub</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.games-to-release')}}">Games to release</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'upcoming-eshop-crosscheck'}) }}">Upcoming (eShop crosscheck)</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-eshop-price') }}">No price</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-video-type') }}">No video type</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}">Broken Nintendo.co.uk link</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-eu-release-date'}) }}">No EU release date</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-eshop-price'}) }}">No price</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}">No video type</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}">No Amazon UK link</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.recently-added') }}">Recently added</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.recently-released') }}">Recently released</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">Recently added</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'recently-released'}) }}">Recently released</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'upcoming-games'}) }}">Upcoming games</a></li>
     </ul>
 </li>

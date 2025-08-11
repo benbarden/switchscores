@@ -26,15 +26,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.upcoming-eshop-crosscheck') }}">Upcoming (eShop crosscheck)</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'upcoming-eshop-crosscheck'}) }}">Upcoming (eShop crosscheck)</a>
                 </td>
                 <td>
 
@@ -49,57 +41,57 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}">Broken Nintendo.co.uk link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-eu-release-date') }}">No EU release date</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-eu-release-date'}) }}">No EU release date</a>
                 </td>
                 <td>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-eshop-price') }}">No price</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-eshop-price'}) }}">No price</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-eshop-price') }}" class="h4">{{ NoPriceCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-eshop-price'}) }}" class="h4">{{ NoPriceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-video-type') }}">No video type</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}">No video type</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-video-type') }}" class="h4">{{ MissingVideoTypeCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}" class="h4">{{ MissingVideoTypeCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-amazon-uk-link') }}">No Amazon UK link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}">No Amazon UK link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-amazon-uk-link') }}" class="h4">{{ MissingAmazonUkLink }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}" class="h4">{{ MissingAmazonUkLink }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-amazon-us-link') }}">No Amazon US link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-us-link'}) }}">No Amazon US link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-amazon-us-link') }}" class="h4">{{ MissingAmazonUsLink }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-us-link'}) }}" class="h4">{{ MissingAmazonUsLink }}</a>
                 </td>
             </tr>
             </tbody>
@@ -145,17 +137,17 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.recently-added') }}">Recently added</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">Recently added</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.recently-released') }}">Recently released</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'recently-released'}) }}">Recently released</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.upcoming-games') }}">Upcoming games</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'upcoming-games'}) }}">Upcoming games</a>
                 </td>
             </tr>
             </tbody>

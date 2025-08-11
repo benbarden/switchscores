@@ -52,6 +52,11 @@ class Repository
         return GameCollection::where('link_title', $linkTitle)->first();
     }
 
+    public function gamesByCollection($collectionId)
+    {
+        return Game::where('collection_id', $collectionId)->orderBy('title', 'asc')->get();
+    }
+
     public function rankedByCollection($consoleId, $collectionId, $limit = null)
     {
         $games = Game::where('console_id', $consoleId)

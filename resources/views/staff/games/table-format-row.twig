@@ -17,7 +17,7 @@
             </td>
             <td class="text-end">
                 <span class="h4">
-                    <a href="{{ route('staff.games.list.format-option', {'format': Format, 'option': item.format_desc}) }}">
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'format-option', 'param1': Format, 'param2': item.format_desc}) }}">
                     {{ item.count }}
                     </a>
                 </span>

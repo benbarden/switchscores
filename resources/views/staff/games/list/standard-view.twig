@@ -39,7 +39,15 @@
                 <th>Title</th>
                 <th>Publishers</th>
                 <th>Category</th>
-                <th>{{ CustomHeader }}</th>
+                <th>
+                    {% if ListMode == 'by-series' %}
+                        Series
+                    {% elseif ListMode == 'category-migration' %}
+                        Genres
+                    {% elseif ListMode == 'broken-nintendo-co-uk-link' %}
+                        Review count
+                    {% endif %}
+                </th>
                 <th class="text-center">Store<br>links</th>
                 <th>Release date (EU)</th>
                 <th class="text-center">Options</th>
@@ -82,8 +90,6 @@
                             {{ item.series.series }}
                         {% elseif ListMode == 'category-migration' %}
                             {{ item.genres_json }}
-                        {% elseif ListMode == 'games-to-release' %}
-                            <a href="javascript:void(0);" id="lnk-release-game-{{ item.id }}" class="lnk-release-game">Release</a>
                         {% elseif ListMode == 'broken-nintendo-co-uk-link' %}
                             {{ item.review_count }}
                         {% endif %}
@@ -136,37 +142,6 @@
                 null,
                 { "orderable": false }
             ]
-        });
-    });
-    $('.lnk-release-game').on('click', function() {
-
-        $('#js-admin-notify').hide();
-
-        elemId = $(this).attr('id');
-        gameId = elemId.replace('lnk-release-game-', '');
-
-        if (gameId == '') {
-            $('#js-admin-notify').text('Missing gameId');
-            $('#js-admin-notify').show();
-            return false;
-        }
-
-        if (!window.confirm('Release this game?')) {
-            return false;
-        }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.getJSON('{{ route('staff.games.release') }}', {'gameId': gameId}, function(data) {
-            $('#lnk-release-game-' + gameId).parent().html('<em>Released</em>');
-        })
-        .fail(function(data) {
-            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
-            $('#js-admin-notify').show();
         });
     });
 </script>

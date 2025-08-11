@@ -72,14 +72,6 @@
                         <a href="{{ route('staff.games.release-hub.show')}}" class="h4"></a>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.list.games-to-release')}}">Games to release</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.games.list.games-to-release')}}" class="h4">{{ GamesForReleaseCount }}</a>
-                    </td>
-                </tr>
             {% endif %}
             {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
                 <tr>
@@ -100,18 +92,18 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}">No Nintendo.co.uk link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.no-nintendo-co-uk-link') }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}" class="h4">{{ NoNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}">Broken Nintendo.co.uk link</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}">Broken Nintendo.co.uk link</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.games.list.broken-nintendo-co-uk-link') }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}" class="h4">{{ BrokenNintendoCoUkLinkCount }}</a>
                 </td>
             </tr>
             </tbody>
@@ -123,7 +115,7 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-category-excluding-low-quality') }}">
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-excluding-low-quality'}) }}">
                         No category (Excluding low quality)
                     </a>
                 </td>
@@ -133,7 +125,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-category-all') }}">
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-all'}) }}">
                         No category (All)
                     </a>
                 </td>
@@ -143,7 +135,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.no-category-with-collection') }}">
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-with-collection'}) }}">
                         No category with collection
                     </a>
                 </td>
@@ -246,7 +238,7 @@
             {% else %}
                 <p>No items found!</p>
             {% endif %}
-            <p><a href="{{ route('staff.games.list.recently-released') }}">View all recently released games</a>.</p>
+            <p><a href="{{ route('staff.games.list.showList', {'listType': 'recently-released'}) }}">View all recently released games</a>.</p>
         {% endif %}
 
     </div>
@@ -279,7 +271,7 @@
             {% else %}
                 <p>No items found!</p>
             {% endif %}
-            <p><a href="{{ route('staff.games.list.recently-added') }}">View all recently added games</a>.</p>
+            <p><a href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">View all recently added games</a>.</p>
         {% endif %}
 
     </div>

@@ -3,15 +3,20 @@
 namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
+use Illuminate\Http\Request;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\Tag\Repository as TagRepository;
+use App\Domain\GameCollection\Repository as CollectionRepository;
 
 use App\Models\Category;
 use App\Models\GameSeries;
 use App\Models\Tag;
+use App\Models\GameCollection;
+
+use App\Enums\GameListType;
 
 class GamesListController extends Controller
 {
@@ -19,266 +24,220 @@ class GamesListController extends Controller
         private GameListsRepository $repoGameLists,
         private CategoryRepository $repoCategory,
         private GameSeriesRepository $repoGameSeries,
-        private TagRepository $repoTag
+        private TagRepository $repoTag,
+        private CollectionRepository $repoCollection,
     )
     {
     }
 
-    public function gamesToRelease()
+    private function listConfig(): array
     {
-        $pageTitle = 'Games to release';
-        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        return [
+            'recently-added' => [
+                'title' => 'Recently added',
+                'fetch' => fn() => $this->repoGameLists->recentlyAdded(100)
+            ],
+            'recently-released' => [
+                'title' => 'Recently released',
+                'sort' => "[ 6, 'desc'], [ 1, 'asc']",
+                'fetch' => fn() => $this->repoGameLists->recentlyReleasedAll(1, 100)
+            ],
+            'upcoming-games' => [
+                'title' => 'Upcoming and unreleased',
+                'sort' => "[ 6, 'desc'], [ 1, 'asc']",
+                'fetch' => fn() => $this->repoGameLists->upcomingAll()
+            ],
+            'no-category-excluding-low-quality' => [
+                'title' => 'No category (Excluding low quality)',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noCategoryExcludingLowQuality(),
+            ],
+            'no-category-all' => [
+                'title' => 'No category (All)',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noCategoryAll(),
+            ],
+            'no-category-with-collection' => [
+                'title' => 'No category with collection',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noCategoryWithCollection(),
+            ],
+            'no-category-with-reviews' => [
+                'title' => 'No category with reviews',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noCategoryWithReviews(),
+            ],
+            'no-eu-release-date' => [
+                'title' => 'No EU release date',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noEuReleaseDate(),
+            ],
+            'no-eshop-price' => [
+                'title' => 'No eShop price',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noPrice(),
+            ],
+            'no-video-type' => [
+                'title' => 'No video type',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noVideoType(),
+                'limit' => 200,
+            ],
+            'no-amazon-uk-link' => [
+                'title' => 'No Amazon UK link',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noAmazonUkLink(1000),
+                'limit' => 1000,
+            ],
+            'no-amazon-us-link' => [
+                'title' => 'No Amazon US link',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noAmazonUsLink(1000),
+                'limit' => 1000,
+            ],
+            'no-nintendo-co-uk-link' => [
+                'title' => 'No Nintendo.co.uk link, and no override URL',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->noNintendoCoUkLink(),
+            ],
+            'broken-nintendo-co-uk-link' => [
+                'title' => 'Broken Nintendo.co.uk link',
+                'sort'  => "[4, 'desc']",
+                'fetch' => fn() => $this->repoGameLists->brokenNintendoCoUkLink(),
+            ],
+            'upcoming-eshop-crosscheck' => [
+                'title' => 'Upcoming (eShop crosscheck)',
+                'sort'  => "[ 6, 'asc'], [ 1, 'asc']",
+                'fetch' => fn() => $this->repoGameLists->upcomingEshopCrosscheckNoDate(),
+                'view'  => 'staff.games.list.upcoming-eshop-crosscheck', // custom view path
+            ],
+            'format-option' => [
+                'title' => null,
+                'fetch' => function ($format, $value = null) {
+                    return $this->repoGameLists->formatOption($format, $value);
+                },
+                'dynamicTitle' => true,
+            ],
+            'by-category' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($category) {
+                    if (!$category instanceof Category) {
+                        $category = $this->repoCategory->find($category);
+                    }
+                    return $this->repoCategory->gamesByCategory($category->id);
+                },
+                'dynamicTitle' => true,
+            ],
+            'by-series' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($gameSeries) {
+                    if (!$gameSeries instanceof GameSeries) {
+                        $gameSeries = $this->repoGameSeries->find($gameSeries);
+                    }
+                    return $this->repoGameSeries->gamesBySeries(null, $gameSeries->id);
+                },
+                'dynamicTitle' => true,
+            ],
+            'by-tag' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($tag) {
+                    if (!$tag instanceof Tag) {
+                        $tag = $this->repoTag->find($tag);
+                    }
+                    return $this->repoTag->gamesByTag($tag->id);
+                },
+                'dynamicTitle' => true,
+            ],
+            'by-collection' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($collection) {
+                    if (!$collection instanceof GameCollection) {
+                        $collection = $this->repoCollection->find($collection);
+                    }
+                    return $this->repoCollection->gamesByCollection($collection->id);
+                },
+                'dynamicTitle' => true,
+            ],
 
-        $bindings['GameList'] = $this->repoGameLists->gamesForRelease();
-
-        $bindings['CustomHeader'] = 'Action';
-        $bindings['ListMode'] = 'games-to-release';
-
-        return view('staff.games.list.standard-view', $bindings);
+        ];
     }
 
-    public function recentlyAdded()
+    private function getDynamicTitle(string $listType, array $args): string
     {
-        $pageTitle = 'Recently added';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        switch ($listType) {
+            case 'format-option':
+                [$format, $value] = array_pad($args, 2, null);
+                $valueDesc = $value ?? '(Not set)';
+                return 'By format option: ' . $format . ' - ' . $valueDesc;
 
-        $bindings['GameList'] = $this->repoGameLists->recentlyAdded(100);
+            case 'by-category':
+                [$category] = $args + [null];
+                if (!$category instanceof Category) {
+                    $category = $this->repoCategory->find($category);
+                }
+                return 'By category: ' . $category->name;
 
-        return view('staff.games.list.standard-view', $bindings);
-    }
+            case 'by-series':
+                [$series] = $args + [null];
+                if (!$series instanceof GameSeries) {
+                    $series = $this->repoGameSeries->find($series);
+                }
+                return 'By series: ' . $series->series;
 
-    public function recentlyReleased()
-    {
-        $pageTitle = 'Recently released';
-        $tableSort = "[ 6, 'desc'], [ 1, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+            case 'by-tag':
+                [$tag] = $args + [null];
+                if (!$tag instanceof Tag) {
+                    $tag = $this->repoTag->find($tag);
+                }
+                return 'By tag: ' . $tag->tag_name;
 
-        $bindings['GameList'] = $this->repoGameLists->recentlyReleasedAll(1, 100);
+            case 'by-collection':
+                [$collectionId] = array_pad($args, 1, null);
+                $collectionName = $this->repoCollection->find($collectionId)?->name ?? '(Unknown collection)';
+                return 'By collection: ' . $collectionName;
 
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function upcomingGames()
-    {
-        $pageTitle = 'Upcoming and unreleased';
-        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->upcomingAll();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function upcomingEshopCrosscheck()
-    {
-        $pageTitle = 'Upcoming (eShop crosscheck)';
-        $tableSort = "[ 6, 'asc'], [ 1, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        //$bindings['GameList'] = $this->repoGameLists->upcomingEshopCrosscheck();
-        $bindings['GameListNoDate'] = $this->repoGameLists->upcomingEshopCrosscheckNoDate();
-
-        return view('staff.games.list.upcoming-eshop-crosscheck', $bindings);
-    }
-
-    public function noCategoryExcludingLowQuality()
-    {
-        $pageTitle = 'No category (Excluding low quality)';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noCategoryExcludingLowQuality();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noCategoryAll()
-    {
-        $pageTitle = 'No category (All)';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noCategoryAll();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noCategoryWithCollection()
-    {
-        $pageTitle = 'No category with collection';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noCategoryWithCollection();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noCategoryWithReviews()
-    {
-        $pageTitle = 'No category with reviews';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noCategoryWithReviews();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noEuReleaseDate()
-    {
-        $pageTitle = 'No EU release date';
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noEuReleaseDate();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noEshopPrice()
-    {
-        $pageTitle = 'No eShop price';
-        $tableSort = "[ 6, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noPrice();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noVideoType()
-    {
-        $pageTitle = 'No video type';
-        $tableSort = "[ 0, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noVideoType();
-        $bindings['ListLimit'] = "200";
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noAmazonUkLink()
-    {
-        $pageTitle = 'No Amazon UK link';
-        $tableSort = "[ 6, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $listLimit = 1000;
-        $bindings['GameList'] = $this->repoGameLists->noAmazonUkLink($listLimit);
-        $bindings['ListLimit'] = $listLimit;
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noAmazonUsLink()
-    {
-        $pageTitle = 'No Amazon US link';
-        $tableSort = "[ 6, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $listLimit = 1000;
-        $bindings['GameList'] = $this->repoGameLists->noAmazonUsLink($listLimit);
-        $bindings['ListLimit'] = $listLimit;
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function noNintendoCoUkLink()
-    {
-        $pageTitle = 'No Nintendo.co.uk link, and no override URL';
-        $tableSort = "[ 6, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->noNintendoCoUkLink();
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function brokenNintendoCoUkLink()
-    {
-        $pageTitle = 'Broken Nintendo.co.uk link';
-        $tableSort = "[ 4, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->brokenNintendoCoUkLink();
-
-        $bindings['CustomHeader'] = 'Review count';
-        $bindings['ListMode'] = 'broken-nintendo-co-uk-link';
-
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function formatOptionList($format, $value = null)
-    {
-        if ($value == null) {
-            $valueDesc = '(Not set)';
-        } else {
-            $valueDesc = $value;
+            default:
+                return '(Untitled list)';
         }
-        $pageTitle = 'By format option: '.$format.' - '.$valueDesc;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoGameLists->formatOption($format, $value);
-
-        return view('staff.games.list.standard-view', $bindings);
     }
 
-    public function byCategory(Category $category)
+    public function showList(
+        Request $request, $listType, ...$args,
+    )
     {
-        $pageTitle = 'By category: '.$category->name;
-        $tableSort = "[ 1, 'asc']";
+        $config = $this->listConfig()[$listType] ?? abort(404);
+
+        if (!empty($config['dynamicTitle'])) {
+            $pageTitle = $this->getDynamicTitle($listType, $args);
+        } else {
+            $pageTitle = $config['title'];
+        }
+
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $viewBindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs);
 
-        $bindings['GameList'] = $this->repoCategory->gamesByCategory($category->id);
+        $sort = $config['sort'] ?? null;
+        if ($sort !== null) {
+            $viewBindings->setTableSort($config['sort']);
+        }
 
-        return view('staff.games.list.standard-view', $bindings);
-    }
+        $bindings = $viewBindings->generateStaff($pageTitle);
+        $bindings['ListMode'] = $listType;
 
-    public function bySeries(GameSeries $gameSeries)
-    {
-        $pageTitle = 'By series: '.$gameSeries->series;
-        $tableSort = "[ 1, 'asc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings['GameList'] = ($config['fetch'])(...$args);
 
-        $bindings['GameList'] = $this->repoGameSeries->gamesBySeries(null, $gameSeries->id);
+        // Optional: List limit message
+        if (array_key_exists('limit', $config)) {
+            $bindings['ListLimit'] = (string) $config['limit'];
+        }
 
-        $bindings['CustomHeader'] = 'Series';
-        $bindings['ListMode'] = 'by-series';
+        // Pick view: custom or default
+        $viewName = $config['view'] ?? 'staff.games.list.standard-view';
 
-        return view('staff.games.list.standard-view', $bindings);
-    }
-
-    public function byTag(Tag $tag)
-    {
-        $pageTitle = 'By tag: '.$tag->tag_name;
-        $tableSort = "[ 0, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $bindings['GameList'] = $this->repoTag->gamesByTag($tag->id);
-
-        return view('staff.games.list.standard-view', $bindings);
+        return view($viewName, $bindings);
     }
 }
