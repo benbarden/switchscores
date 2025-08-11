@@ -26,7 +26,7 @@ class DownloadPackshots extends Command
      *
      * @var string
      */
-    protected $description = 'Downloads packshots for games. (Will replace the 2 DownloadImages scripts)';
+    protected $description = 'Downloads packshots for games.';
 
     /**
      * Create a new command instance.
