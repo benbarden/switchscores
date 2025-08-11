@@ -1,0 +1,85 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    <div class="container py-3">
+
+        {% if session('status') %}
+            <div class="alert alert-success my-3">{{ session('status') }}</div>
+        {% endif %}
+
+        {# Nav #}
+        <ul class="nav nav-tabs" role="tablist">
+            {% for key, group in groups %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ key == activeTab ? 'active' : '' }}"
+                       data-bs-toggle="tab"
+                       href="#tab-{{ key }}"
+                       role="tab"
+                       aria-controls="tab-{{ key }}"
+                       aria-selected="{{ key == activeTab ? 'true' : 'false' }}">
+                        {{ group.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content border border-top-0 p-3 bg-white">
+            {% for key, group in groups %}
+                <div id="tab-{{ key }}"
+                     class="tab-pane fade {{ key == activeTab ? 'show active' : '' }}"
+                     role="tabpanel"
+                     aria-labelledby="tab-{{ key }}-link">
+                    <form method="post" action="{{ route('staff.tools.runGroup', { groupKey: key }) }}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-sm btn-primary mb-3">Run group</button>
+                    </form>
+                    <table class="table table-sm align-middle">
+                        <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Last run</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for job in group.jobs %}
+                            {% set lr = last[job.cmd] ?? null %}
+                            <tr>
+                                <td><code>{{ job.cmd }}</code></td>
+                                <td>{{ job.desc }}</td>
+                                {# Last run cell (status + time + duration) #}
+                                <td>
+                                    {% if lr %}
+                                        {# Optional badge (status) #}
+                                        <span class="badge bg-{% if lr.status == 'success' %}success{% elseif lr.status == 'running' %}warning{% elseif lr.status == 'queued' %}secondary{% else %}danger{% endif %}">
+                                            {{ lr.status }}
+                                        </span>
+                                        {# Timestamp + duration #}
+                                        <span class="small text-muted ms-1">
+                                            {% if lr.finished_at %}{{ lr.finished_at|date('Y-m-d H:i') }}{% else %}—{% endif %}
+                                            {% if lr.duration_ms %} · {{ (lr.duration_ms / 1000)|number_format(1) }}s{% endif %}
+                                      </span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                {# Actions cell #}
+                                <td>
+                                    <form method="post" action="{{ route('staff.tools.run', { cmd: job.cmd }) }}">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="tab" value="{{ activeTab }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Run</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock page_inner %}

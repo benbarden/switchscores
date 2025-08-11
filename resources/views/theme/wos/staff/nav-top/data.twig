@@ -8,9 +8,6 @@
             <li role="separator" class="divider"></li>
             <li><a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API - Unlinked items</a></li>
             <li><a href="{{ route('staff.data-sources.nintendo-co-uk.ignored') }}">Nintendo.co.uk API - Ignored items</a></li>
-            <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.importParseLink') }}">DSNintendoCoUkImportParseLink</a></li>
-            <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.updateGames') }}">DSNintendoCoUkUpdateGames</a></li>
-            <li><a href="{{ route('staff.data-sources.tools.nintendo-co-uk.downloadImages') }}">DSNintendoCoUkDownloadImages</a></li>
             <li role="separator" class="divider"></li>
         {% endif %}
         {% if auth_user().isOwner() %}

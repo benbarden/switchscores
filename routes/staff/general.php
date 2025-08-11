@@ -9,6 +9,13 @@ Route::group(['middleware' => ['auth.staff']], function() {
 
 });
 
+// *************** Staff: Tools *************** //
+Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(function () {
+    Route::get('/tools', 'Staff\ToolsController@index')->name('tools.index');
+    Route::post('/tools/run/{cmd}', 'Staff\ToolsController@run')->name('tools.run');
+    Route::post('/tools/run-group/{groupKey}', 'Staff\ToolsController@runGroup')->name('tools.runGroup');
+});
+
 // *************** Staff: INVITE CODES *************** //
 Route::group(['middleware' => ['auth.staff']], function() {
 

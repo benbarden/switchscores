@@ -51,9 +51,6 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_G
     // Game lists v2
     Route::get('/staff/games/list/{listType}/{param1?}/{param2?}', 'Staff\Games\GamesListController@showList')->name('staff.games.list.showList');
 
-    // Games: Tools
-    Route::match(['get', 'post'], '/staff/games/tools/update-game-calendar-stats', 'Staff\Games\ToolsController@updateGameCalendarStats')->name('staff.games.tools.updateGameCalendarStats');
-
     // Featured games
     Route::get('/staff/games/featured-games/list', 'Staff\Games\FeaturedGameController@showList')->name('staff.games.featured-games.list');
     Route::get('/staff/games/featured-games/accept-item', 'Staff\Games\FeaturedGameController@acceptItem')->name('staff.games.featured-games.acceptItem');

@@ -39,13 +39,10 @@ sudo apt-get install php8.1-fpm -y
 sudo apt-get install php8.1-xml -y
 sudo apt-get install libapache2-mod-php8.1 -y
 
-# Redis
-sudo apt-get install redis-server
-
 # Web scraping
-sudo apt-get install chromium-chromedriver
-sudo apt-get install -y chromium-browser
-sudo apt-get install -y xdg-utils
+#sudo apt-get install chromium-chromedriver
+#sudo apt-get install -y chromium-browser
+#sudo apt-get install -y xdg-utils
 
 # Additional dependencies
 sudo phpenmod mbstring
@@ -78,6 +75,12 @@ mysql -u root -ppass -e "grant all privileges on wos.* to 'wos'@'localhost';"
 mysql -u root -ppass -e "flush privileges;"
 
 mysql -u root -ppass wos < /vagrant/db.sql
+
+# Redis
+sudo apt-get install redis-server
+
+# Supervisor
+sudo apt-get install supervisor
 
 # Composer
 cd /home/vagrant/
