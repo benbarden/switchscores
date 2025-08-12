@@ -2,14 +2,6 @@
 
 {% block page_inner %}
 
-<div class="row">
-    <div class="col-xs-12 col-sm-3">
-        <a href="{{ route('staff.reviews.tools.importDraftReviews') }}" class="btn btn-primary">Import draft reviews</a>
-    </div>
-</div>
-
-<br>
-
 {% if ReviewDraftItems.count > 0 %}
 
 <table class="table data-sortable table-sm table-responsive">
