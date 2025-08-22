@@ -23,9 +23,8 @@
 <hr>
 {% if ReviewLinks.count > 0 %}
     <div class="alert alert-warning" role="alert">
-        If you've added any reviews or edited the ratings, don't forget to run
-        <a href="{{ route('staff.reviews.tools.updateGameRanks') }}">Update Game Ranks</a>
-        when you're done.
+        If you've added any reviews or edited the ratings, don't forget to run the Review pipeline in the
+        Tools Hub when you're done.
     </div>
     {% if TableLimit is defined %}
         <div class="alert alert-warning" role="alert">
