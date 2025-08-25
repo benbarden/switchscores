@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision :shell, path: "bootstrap.sh"
     config.vm.network :forwarded_port, guest: 80, host: 4567
+    config.vm.network :forwarded_port, guest: 3306, host: 3307, auto_correct: false
     #config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777,fmode=777"]
 
     #config.vm.provider :virtualbox do |vb|
