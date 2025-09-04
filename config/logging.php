@@ -124,6 +124,14 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'slow_queries' => [
+            'driver' => 'daily', // or 'single'
+            'path' => storage_path('logs/slow-queries.log'),
+            'level' => 'debug',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];

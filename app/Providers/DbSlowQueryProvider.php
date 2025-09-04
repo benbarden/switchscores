@@ -46,7 +46,7 @@ class DbSlowQueryProvider extends ServiceProvider
                     $action = '';
                 }
 
-                Log::debug('[Slow DB Query]', [
+                Log::channel('slow_queries')->debug('[Slow DB Query]', [
                     'time_ms'     => $query->time,
                     'sql'         => $query->sql,
                     'bindings'    => $query->bindings,
