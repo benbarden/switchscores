@@ -3,15 +3,20 @@
 
 namespace App\Domain\GameLists;
 
-use App\Models\DataSourceParsed;
+use App\Domain\Repository\AbstractRepository;
+use App\Enums\CacheDuration;
 use App\Models\Game;
 use App\Models\GameSeries;
-use App\Models\DataSource;
 
 use Illuminate\Support\Facades\DB;
 
-class Repository
+class Repository extends AbstractRepository
 {
+    protected function getCachePrefix(): string
+    {
+        return "gamelists";
+    }
+
     /**
      * @deprecated
      * @return \Illuminate\Support\Collection
@@ -537,22 +542,26 @@ class Repository
         if ($week < 10) {
             $week = str_pad($week, 2, '0', STR_PAD_LEFT);
         }
-        $gameList = Game::where('eu_is_released', 1);
-        $gameList = $gameList->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week);
 
-        if ($isLowQuality == true) {
-            $gameList = $gameList->where('is_low_quality', 1);
-        } elseif ($isLowQuality == false) {
-            $gameList = $gameList->where('is_low_quality', 0);
-        }
+        $cacheKey = $this->buildCacheKey("by-year-week-$year-$week-low-quality-$isLowQuality");
+        return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($year, $week, $isLowQuality) {
+            $gameList = Game::where('eu_is_released', 1);
+            $gameList = $gameList->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week);
 
-        $gameList = $gameList
-            ->orderBy('games.eu_release_date')
-            ->orderBy('games.title')
-            ->limit(100)
-            ->get();
+            if ($isLowQuality == true) {
+                $gameList = $gameList->where('is_low_quality', 1);
+            } elseif ($isLowQuality == false) {
+                $gameList = $gameList->where('is_low_quality', 0);
+            }
 
-        return $gameList;
+            $gameList = $gameList
+                ->orderBy('games.eu_release_date')
+                ->orderBy('games.title')
+                ->limit(100)
+                ->get();
+
+            return $gameList;
+        });
     }
 
     public function upcomingSwitchWeekly($consoleId, $daysLimit)
