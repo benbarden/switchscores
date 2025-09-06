@@ -49,9 +49,7 @@ class Kernel extends HttpKernel
         'public' => [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            // Switch Scores custom
-            \App\Http\Middleware\ViewGlobals::class,
-            \App\Http\Middleware\UserLastAccessDate::class,
+            \App\Http\Middleware\CacheAnonymousPages::class,
         ],
     ];
 
