@@ -12,9 +12,13 @@ class CacheAnonymousPages
 
         if ($request->isMethodSafe()) {
             // Public cache headers
+            /*
+             * s-maxage=3600: CF edge caching for 1 hour
+             * max-age=300: Browser caching for 5 minutes
+             */
             $response->headers->set(
                 'Cache-Control',
-                'public, s-maxage=600, max-age=60, stale-while-revalidate=120, stale-if-error=600'
+                'public, s-maxage=3600, max-age=300, stale-while-revalidate=120, stale-if-error=600'
             );
 
             // Strip cookies if no session cookie in request
