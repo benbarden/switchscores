@@ -45,6 +45,14 @@ class Kernel extends HttpKernel
             'throttle:api',
             'bindings',
         ],
+
+        'public' => [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // Switch Scores custom
+            \App\Http\Middleware\ViewGlobals::class,
+            \App\Http\Middleware\UserLastAccessDate::class,
+        ],
     ];
 
     /**

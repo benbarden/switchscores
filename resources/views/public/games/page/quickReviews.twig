@@ -3,23 +3,8 @@
     {% for item in ReviewList %}
         {% include 'modules/quick-review/item.twig' with {'QuickReview': item} %}
     {% endfor %}
-    <p>
-    {% if auth_user() %}
-        Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write a quick review</a>?
-    {% else %}
-        <a href="{{ route('register') }}">Register</a> to add a quick review.
-    {% endif %}
-    </p>
-
 {% else %}
-
     <p>
         None yet.
-        {% if auth_user() %}
-            Why not <a href="{{ route('user.quick-reviews.add', {'gameId': GameId}) }}">write the first quick review</a>?
-        {% else %}
-            Why not <a href="{{ route('register') }}">register</a> and submit a quick review?
-        {% endif %}
     </p>
-
 {% endif %}

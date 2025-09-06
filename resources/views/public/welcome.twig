@@ -15,9 +15,6 @@
         <h4 class="rating-title">
             <span class="rating-v2">
                 Ranking the Nintendo Switch library.
-                {% if auth_user() is null %}
-                    <a href="{{ route('login') }}">Join us!</a>
-                {% endif %}
             </span>
         </h4>
     </div>
@@ -43,12 +40,6 @@
     </div>
 
 </div>
-
-{% if auth_user() is null %}
-    <a href="{{ route('auth.login.twitter') }}">
-        <img src="/img/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" style="border: 0;">
-    </a>
-{% endif %}
 
 <div class="row">
 

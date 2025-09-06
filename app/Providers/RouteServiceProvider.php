@@ -63,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapPublicRoutes()
     {
-        Route::middleware('web')
+        Route::middleware('public')
             ->namespace($this->namespace)
             ->group(base_path('routes/public.php'));
     }

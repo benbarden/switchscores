@@ -110,40 +110,7 @@
             <!-- Right side of navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                {% if auth_guest() %}
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                {% else %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Member links <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ route('user.index') }}">Members dashboard</a></li>
-                            <li><a href="{{ route('user.developers.index') }}">Developers</a></li>
-                            {% if auth_user().isReviewer() %}
-                                <li><a href="{{ route('reviewers.index') }}">Reviewers dashboard</a></li>
-                            {% endif %}
-                            {% if auth_user().isGamesCompany() %}
-                                <li><a href="{{ route('games-companies.index') }}">Games company dashboard</a></li>
-                            {% endif %}
-                            {% if auth_user().isStaff() %}
-                                <li><a href="{{ route('staff.index') }}">Staff index</a></li>
-                            {% endif %}
-                            <li>
-                                <a href="{{ route('logout') }}"
-                                   onclick="
-                                     event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                {% endif %}
+                <li><a href="{{ route('user.index') }}">Members area</a></li>
             </ul>
 
         </div>
