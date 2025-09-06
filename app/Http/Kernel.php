@@ -50,6 +50,7 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\CacheAnonymousPages::class,
+            \App\Http\Middleware\ViewGlobals::class,
         ],
     ];
 
