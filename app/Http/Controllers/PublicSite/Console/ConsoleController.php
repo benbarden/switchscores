@@ -30,6 +30,8 @@ class ConsoleController extends Controller
         $consoleName = $console->name;
         $consoleId = $console->id;
 
+        if (!$consoleId) abort(404);
+
         $bindings = [];
 
         $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality($consoleId, 20);
