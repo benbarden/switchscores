@@ -14,4 +14,6 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         //
     ];
+
+    protected $addHttpCookie = false;
 }
