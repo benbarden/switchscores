@@ -15,17 +15,29 @@ class AutoDescription
         $blurbCategory = new CategoryBlurb();
         $default = $blurbCategory->default();
 
-        $blurb = '<strong>'.$this->game->title.'</strong> is ';
+        $blurb = '';
 
         if ($this->game->category) {
+            $blurb = '<strong>' . $this->game->title . '</strong> is ';
             if ($this->game->category->blurb_option) {
-                $blurb .= $blurbCategory->parse($this->game->category, $this->game->console).'. ';
+                $blurb .= $blurbCategory->parse($this->game->category, $this->game->console) . '. ';
             } else {
                 $blurb .= $default;
             }
+        } elseif ($this->game->is_low_quality == 1) {
+            $blurb = '<strong>'.$this->game->title.'</strong> is a game';
+            if ($this->game->console->id == Console::ID_SWITCH_1) {
+                $blurb .= ' for the Nintendo Switch 1. ';
+            } elseif ($this->game->console->id == Console::ID_SWITCH_2) {
+                $blurb .= ' for the Nintendo Switch 2. ';
+            } else {
+                $blurb .= '.';
+            }
         } elseif ($this->game->eu_is_released == 1) {
+            $blurb = '<strong>'.$this->game->title.'</strong> is ';
             $blurb .= ' currently uncategorised. (Help us out!) ';
         } else {
+            $blurb = '<strong>'.$this->game->title.'</strong> is ';
             $blurb .= ' an upcoming game';
             if ($this->game->console->id == Console::ID_SWITCH_1) {
                 $blurb .= ' for the Nintendo Switch 1. ';
@@ -67,7 +79,7 @@ class AutoDescription
     public function reviews()
     {
         $blurb = '';
-        if (!$this->game->isDigitalDelisted() && (!$this->game->game_rank) && ($this->game->eu_is_released == 1)) {
+        if (!$this->game->isDigitalDelisted() && (!$this->game->game_rank) && ($this->game->eu_is_released == 1) && ($this->game->is_low_quality == 0)) {
             switch ($this->game->review_count) {
                 case 0:
                     $blurb = 'As it has no reviews, it is currently unranked. We need 3 reviews to give the game a rank. ';
@@ -115,22 +127,14 @@ class AutoDescription
     {
         $this->game = $game;
 
-        if ($this->game->is_low_quality == 1) {
+        $category = $this->category();
+        $delisted = $this->delisted();
+        $ranking = $this->ranking();
+        $reviews = $this->reviews();
+        $series = $this->series();
+        $collection = $this->collection();
 
-            $blurb = 'As of July 2025, we have stopped categorising low quality titles.';
-
-        } else {
-
-            $category = $this->category();
-            $delisted = $this->delisted();
-            $ranking = $this->ranking();
-            $reviews = $this->reviews();
-            $series = $this->series();
-            $collection = $this->collection();
-
-            $blurb = $category.$delisted.$ranking.$reviews.$series.$collection;
-
-        }
+        $blurb = $category.$delisted.$ranking.$reviews.$series.$collection;
 
         return $blurb;
 

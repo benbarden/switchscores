@@ -41,7 +41,9 @@
                 {% if GameData.is_low_quality == 1 %}
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle"></i>
-                        This game has been flagged with our low quality filter.
+                        This game has been flagged with our quality filter.
+                        <br>This is normally due to the quality of other games from this publisher.
+                        <br>If you are the developer of this game, you can request an exemption.
                         <a href="{{ route('help.low-quality-filter') }}" style="color: #fff; font-weight: bold;">Learn more</a>.
                     </div>
                 {% endif %}
