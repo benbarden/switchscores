@@ -246,4 +246,16 @@ class GameBuilder
         $this->game->packshot_square_url_override = $squareUrlOverride;
         return $this;
     }
+
+    public function setGameDescription($gameDescription): GameBuilder
+    {
+        $this->game->game_description = $gameDescription;
+        return $this;
+    }
+
+    public function setOneToWatch($oneToWatch): GameBuilder
+    {
+        $this->game->one_to_watch = $oneToWatch;
+        return $this;
+    }
 }

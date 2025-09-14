@@ -135,6 +135,15 @@ class GameDirector
         if (array_key_exists('packshot_square_url_override', $params)) {
             $this->builder->setPackshotSquareUrlOverride($params['packshot_square_url_override']);
         }
+        if (array_key_exists('one_to_watch', $params)) {
+            $oneToWatch = $params['one_to_watch'] == 'on' ? 1 : 0;
+            $this->builder->setOneToWatch($oneToWatch);
+        } else {
+            $this->builder->setOneToWatch(0);
+        }
+        if (array_key_exists('game_description', $params)) {
+            $this->builder->setGameDescription($params['game_description']);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

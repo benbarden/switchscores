@@ -46,11 +46,22 @@
                         <br>If you are the developer of this game, you can request an exemption.
                         <a href="{{ route('help.low-quality-filter') }}" style="color: #fff; font-weight: bold;">Learn more</a>.
                     </div>
+                {% elseif GameData.one_to_watch == 1 %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>One to watch</strong>: We've highlight this as a title we think you should check out.
+                    </div>
                 {% endif %}
 
                 {% if GameBlurb %}
                     <p style="margin-top: 15px;">
                         {{ GameBlurb|raw }}
+                    </p>
+                {% endif %}
+
+                {% if GameData.game_description %}
+                    <p style="margin-top: 15px;">
+                        {{ GameData.game_description|raw }}
                     </p>
                 {% endif %}
 

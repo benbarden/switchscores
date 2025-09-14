@@ -25,30 +25,26 @@
             {% endif %}
         </td>
     </tr>
-    <tr>
-        <td>
-            <span style="font-weight: bold;">US release</span>
-        </td>
-        <td>
-            {% if GameData.us_release_date %}
+    {% if GameData.us_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">US release</span>
+            </td>
+            <td>
                 {{ GameData.us_release_date|date('jS M Y') }}
-            {% else %}
-                -
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span style="font-weight: bold;">Japan release</span>
-        </td>
-        <td>
-            {% if GameData.jp_release_date %}
+            </td>
+        </tr>
+    {% endif %}
+    {% if GameData.jp_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Japan release</span>
+            </td>
+            <td>
                 {{ GameData.jp_release_date|date('jS M Y') }}
-            {% else %}
-                -
-            {% endif %}
-        </td>
-    </tr>
+            </td>
+        </tr>
+    {% endif %}
     <tr>
         <td>
             <span style="font-weight: bold;">Released (in EU)?</span>
@@ -68,6 +64,30 @@
         <td class="text-left">
             {% if GameData.video_url != '' %}
                 <em>OK</em>
+            {% else %}
+                <em>None set.</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <strong>One to watch</strong>
+        </td>
+        <td class="text-left">
+            {% if GameData.one_to_watch == 1 %}
+                Yes
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <strong>Game description</strong>
+        </td>
+        <td class="text-left">
+            {% if GameData.game_description != '' %}
+                <em>Included</em>
             {% else %}
                 <em>None set.</em>
             {% endif %}

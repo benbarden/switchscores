@@ -171,8 +171,13 @@ class GameShowController extends Controller
 
         // Game blurb
         $autoDescription = $this->autoDescription->generate($gameData);
+        if ($gameData->game_description) {
+            $metaDescription = trim($autoDescription).' '.$gameData->game_description;
+        } else {
+            $metaDescription = trim($autoDescription);
+        }
         $bindings['GameBlurb'] = $autoDescription;
-        $bindings['MetaDescription'] = strip_tags($autoDescription);
+        $bindings['MetaDescription'] = strip_tags($metaDescription);
 
         return view('public.games.page.show', $bindings);
     }

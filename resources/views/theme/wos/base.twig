@@ -30,7 +30,7 @@
     <script src="/js/select2/js/select2.min.js"></script>
 
     {% if MetaDescription %}
-        <meta name="description" content="{{ MetaDescription }}" />
+        <meta name="description" content="{{ MetaDescription|raw }}" />
     {% endif %}
     {% if GameData.boxart_header_image %}
         <meta name="twitter:card" content="summary_large_image" />
@@ -42,7 +42,7 @@
     <meta property="og:url" content="{{ url().current() }}" />
     <meta property="og:title" content="{{ PageTitle }}" />
     {% if MetaDescription %}
-        <meta property="og:description" content="{{ MetaDescription }}" />
+        <meta property="og:description" content="{{ MetaDescription|raw }}" />
     {% endif %}
     {% if GameData %}
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}

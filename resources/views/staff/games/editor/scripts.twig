@@ -18,6 +18,9 @@
         formVals['price_eshop_discounted'] = "{{ GameData.price_eshop_discounted }}";
         formVals['price_eshop_discount_pc'] = "{{ GameData.price_eshop_discount_pc }}";
         formVals['players'] = "{{ GameData.players }}";
+        // *** Editorial *** //
+        formVals['one_to_watch'] = "{{ GameData.one_to_watch }}";
+        formVals['game_description'] = "{{ GameData.game_description|raw }}";
         // *** Dates *** //
         formVals['eu_release_date'] = "{{ GameData.eu_release_date }}";
         formVals['us_release_date'] = "{{ GameData.us_release_date }}";
@@ -58,6 +61,9 @@
         formVals['price_eshop_discounted'] = "{{ old('price_eshop_discounted') }}";
         formVals['price_eshop_discount_pc'] = "{{ old('price_eshop_discount_pc') }}";
         formVals['players'] = "{{ old('players') }}";
+        // *** Editorial *** //
+        formVals['one_to_watch'] = "{{ old('one_to_watch') }}";
+        formVals['game_description'] = "{{ old('game_description') }}";
         // *** Dates *** //
         formVals['eu_release_date'] = "{{ old('eu_release_date') }}";
         formVals['us_release_date'] = "{{ old('us_release_date') }}";
@@ -99,6 +105,11 @@
     $('#price_eshop_discounted').val(formVals['price_eshop_discounted']);
     $('#price_eshop_discount_pc').val(formVals['price_eshop_discount_pc']);
     $('#players').val(formVals['players']);
+    // *** Editorial *** //
+    if (formVals['one_to_watch'] == 1) {
+        $('#one_to_watch').attr('checked', true);
+    }
+    $('#game_description').val(formVals['game_description']);
     // *** Dates *** //
     $('#eu_release_date').val(formVals['eu_release_date']);
     $('#us_release_date').val(formVals['us_release_date']);
@@ -164,6 +175,9 @@
         $('#grp_amazon_us_link').hide();
         //$('#grp_packshot_square_url_override').hide();
         $('#grp_is_low_quality').hide();
+
+        // hide all editorial fields
+        $('#fs_editorial').hide();
 
         // hide all format options
         $('#fs_format_options').hide();

@@ -37,11 +37,11 @@ class Blurb
 
         // Get console text
         if ($console->id == Console::ID_SWITCH_1) {
-            $consoleText = ' for the Nintendo Switch 1';
+            $consoleText = 'for the Nintendo Switch 1';
         } elseif ($console->id == Console::ID_SWITCH_2) {
-            $consoleText = ' for the Nintendo Switch 2';
+            $consoleText = 'for the Nintendo Switch 2';
         } else {
-            $consoleText = ' for an unknown console';
+            $consoleText = 'for an unknown console';
         }
 
         switch ($category->blurb_option) {
