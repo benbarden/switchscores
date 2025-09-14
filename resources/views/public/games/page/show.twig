@@ -49,7 +49,7 @@
                 {% elseif GameData.one_to_watch == 1 %}
                     <div class="alert alert-success">
                         <i class="fas fa-lightbulb"></i>
-                        <strong>One to watch</strong>: We've highlight this as a title we think you should check out.
+                        <strong>One to watch</strong>: We've highlighted this as a title we think you should check out.
                     </div>
                 {% endif %}
 
@@ -61,7 +61,7 @@
 
                 {% if GameData.game_description %}
                     <p style="margin-top: 15px;">
-                        {{ GameData.game_description|raw }}
+                        <strong>About this game</strong>: {{ GameData.game_description|raw }}
                     </p>
                 {% endif %}
 
