@@ -7,7 +7,7 @@
 
 {% block page_body %}
 
-<div class="row wos-content-page">
+<div class="row wos-content-page" itemscope itemtype="https://schema.org/VideoGame">
 
     <div class="col-xs-12 col-sm-8 col-md-8">
 
@@ -22,7 +22,7 @@
                         {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
                     {% endif %}
                 </div>
-                <h1 style="margin: 10px 0;">
+                <h1 style="margin: 10px 0;" itemprop="name">
                     {{ GameData.title }}
                 </h1>
 
@@ -30,7 +30,7 @@
 
                 {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
                 {% if boxartUrl %}
-                    <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
+                    <img src="{{ boxartUrl }}" itemprop="image" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
                 {% endif %}
 
                 {% if CleanVideoUrl %}
@@ -60,7 +60,7 @@
                 {% endif %}
 
                 {% if GameData.game_description %}
-                    <p style="margin-top: 15px;">
+                    <p style="margin-top: 15px;" itemprop="description">
                         <strong>About this game</strong>: {{ GameData.game_description|raw }}
                     </p>
                 {% endif %}

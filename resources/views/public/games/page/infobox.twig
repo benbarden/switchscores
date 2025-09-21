@@ -6,12 +6,25 @@
         </td>
         <td>
             {% if GameData.console_id %}
-                {{ GameData.console.name }}
+                <span itemprop="gamePlatform">{{ GameData.console.name }}</span>
             {% else %}
                 -
             {% endif %}
         </td>
     </tr>
+
+    {% if GameData.game_rank %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Rating</span>
+            </td>
+            <td>
+                <span itemscope itemtype="https://schema.org/AggregateRating" itemprop="aggregateRating">
+                    <strong itemprop="ratingValue">{{ GameData.rating_avg }}</strong>
+                </span>
+            </td>
+        </tr>
+    {% endif %}
 
     {% if GameData.category_id %}
         <tr>
@@ -19,10 +32,12 @@
                 <span style="font-weight: bold;">Category</span>
             </td>
             <td>
-                {% if GameData.category.parent.id %}
-                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
-                {% endif %}
-                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                <span itemprop="genre">
+                    {% if GameData.category.parent.id %}
+                        <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                    {% endif %}
+                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                </span>
             </td>
         </tr>
     {% endif %}
@@ -99,7 +114,9 @@
             </td>
             <td>
                 {% for item in GamePublishers %}
-                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    <span itemprop="publisher">
+                        <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    </span>
                     <br>
                 {% endfor %}
             </td>
