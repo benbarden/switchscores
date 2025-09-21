@@ -19,19 +19,12 @@
                 <span style="font-weight: bold;">Rating</span>
             </td>
             <td>
-                <span itemscope itemtype="https://schema.org/AggregateRating" itemprop="aggregateRating">
-                    <strong itemprop="ratingValue">{{ GameData.rating_avg }}</strong>
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Review count</span>
-            </td>
-            <td>
-                <span itemprop="reviewCount">
-                    {{ GameData.review_count }}
-                </span>
+                <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                    <span itemprop="ratingValue">{{ GameData.rating_avg }}</span>
+                    (<span itemprop="reviewCount">{{ GameData.review_count }}</span> reviews)
+                    <meta itemprop="bestRating" content="10" />
+                    <meta itemprop="worstRating" content="0" />
+                </div>
             </td>
         </tr>
     {% endif %}
@@ -141,6 +134,7 @@
             </td>
             <td>
                 {{ GameData.eu_release_date|date('jS M Y') }}
+                <meta itemprop="datePublished" content="{{ GameData.eu_release_date|date('Y-m-d') }}" />
             </td>
         </tr>
     {% endif %}
