@@ -64,7 +64,9 @@ class GameShowController extends Controller
         $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage($gameData->title);
 
         // Main data
-        $bindings['TopTitle'] = $gameData->title.' Nintendo Switch reviews';
+        $consoleName = $gameData->console->name;
+        $topTitle = sprintf('%s reviews | Nintendo %s', $gameData->title, $consoleName);
+        $bindings['TopTitle'] = $topTitle;
         $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
