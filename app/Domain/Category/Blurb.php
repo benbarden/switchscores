@@ -23,7 +23,7 @@ class Blurb
 
     public function default()
     {
-        return 'a game for the Nintendo Switch';
+        return 'a game for Nintendo Switch';
     }
 
     public function parse(Category $category, Console $console)
@@ -37,9 +37,9 @@ class Blurb
 
         // Get console text
         if ($console->id == Console::ID_SWITCH_1) {
-            $consoleText = 'for the Nintendo Switch 1';
+            $consoleText = 'for Nintendo Switch 1';
         } elseif ($console->id == Console::ID_SWITCH_2) {
-            $consoleText = 'for the Nintendo Switch 2';
+            $consoleText = 'for Nintendo Switch 2';
         } else {
             $consoleText = 'for an unknown console';
         }

@@ -27,22 +27,22 @@ class AutoDescription
         } elseif ($this->game->is_low_quality == 1) {
             $blurb = '<strong>'.$this->game->title.'</strong> is a game';
             if ($this->game->console->id == Console::ID_SWITCH_1) {
-                $blurb .= ' for the Nintendo Switch 1. ';
+                $blurb .= ' for Nintendo Switch 1. ';
             } elseif ($this->game->console->id == Console::ID_SWITCH_2) {
-                $blurb .= ' for the Nintendo Switch 2. ';
+                $blurb .= ' for Nintendo Switch 2. ';
             } else {
                 $blurb .= '.';
             }
         } elseif ($this->game->eu_is_released == 1) {
             $blurb = '<strong>'.$this->game->title.'</strong> is ';
-            $blurb .= ' currently uncategorised. (Help us out!) ';
+            $blurb .= 'currently uncategorised. (Help us out!) ';
         } else {
             $blurb = '<strong>'.$this->game->title.'</strong> is ';
-            $blurb .= ' an upcoming game';
+            $blurb .= 'an upcoming game';
             if ($this->game->console->id == Console::ID_SWITCH_1) {
-                $blurb .= ' for the Nintendo Switch 1. ';
+                $blurb .= ' for Nintendo Switch 1. ';
             } elseif ($this->game->console->id == Console::ID_SWITCH_2) {
-                $blurb .= ' for the Nintendo Switch 2. ';
+                $blurb .= ' for Nintendo Switch 2. ';
             } else {
                 $blurb .= '.';
             }
@@ -70,8 +70,8 @@ class AutoDescription
         }
         if (!$this->game->isDigitalDelisted() && ($this->game->game_rank)) {
             $blurb = 'It is ranked #'.$this->game->game_rank.' on the all-time Top Rated '.$consoleDesc.' games, '.
-                ' with a total of '.$this->game->review_count.' reviews '.
-                ' and an average score of '.$this->game->rating_avg.'. ';
+                'with '.$this->game->review_count.' reviews '.
+                'and an average score of '.$this->game->rating_avg.'. ';
         }
         return $blurb;
     }
@@ -102,9 +102,9 @@ class AutoDescription
         if ($this->game->series_id) {
             $series = $this->game->series->series;
             if (str_starts_with($series, 'The')) {
-                $blurb = 'It is part of '.$series.' series. ';
+                $blurb = 'Part of '.$series.' series. ';
             } else {
-                $blurb = 'It is part of the '.$series.' series. ';
+                $blurb = 'Part of the '.$series.' series. ';
             }
             return $blurb;
         }
@@ -115,9 +115,9 @@ class AutoDescription
         if ($this->game->collection_id) {
             $collection = $this->game->gameCollection->name;
             if (str_starts_with($collection, 'The')) {
-                $blurb = 'It is part of '.$collection.' collection. ';
+                $blurb = 'Part of '.$collection.' collection. ';
             } else {
-                $blurb = 'It is part of the '.$collection.' collection. ';
+                $blurb = 'Part of the '.$collection.' collection. ';
             }
             return $blurb;
         }
