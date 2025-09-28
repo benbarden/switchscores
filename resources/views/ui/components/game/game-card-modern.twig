@@ -1,0 +1,58 @@
+{% macro render(item, mode, hero=false, withConsole=false) %}
+    {% import "ui/components/game/packshots.twig" as gamepackshots %}
+    {% import "ui/components/game/release-date.twig" as gamereleasedate %}
+    {% import "ui/components/game/price.twig" as gameprice %}
+    {% import "ui/components/game/rating.twig" as gamerating %}
+    <div class="row" style="margin-top: 8px;">
+
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-right: 0;">
+            {{ gamepackshots.square(item) }}
+            {% if item.ExtraDetailLine %}
+                <div class="label label-info theme-colour-1" style="display: block; margin-top: 1px;">
+                    {{ item.ExtraDetailLine }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+            <div class="row">
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <span class="h6">
+                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+                            {{ item.title }}
+                        </a>
+                    </span>
+                    <br>
+                    <small>
+                        {{ gamereleasedate.standard(item) }}
+                    </small>
+                    {% if mode != 'no-price' and item.format_digital != 'De-listed' %}
+                        {{ gameprice.standard(item, 'small') }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding: 0;">
+                    {{ gamerating.circular(item) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    {% if item.format_digital == 'De-listed' %}
+                        <span class="label label-warning" style="font-size: 10px;">De-listed</span>
+                    {% elseif item.is_low_quality == 1 %}
+                        <span class="label label-danger" style="font-size: 10px;">Low quality</span>
+                    {% elseif item.rating_avg %}
+                        {% if item.game_rank %}
+                            <!-- Do nothing -->
+                        {% elseif item.eu_is_released == 1 %}
+                            <small>{{ item.review_count }}/3 reviews</small>
+                        {% endif %}
+                    {% elseif item.eu_is_released == 1 %}
+                        <small>{{ item.review_count }}/3 reviews</small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endmacro %}

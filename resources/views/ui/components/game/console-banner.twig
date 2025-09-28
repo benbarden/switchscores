@@ -1,0 +1,16 @@
+{% macro show(item) %}
+    <div class="row" style="margin-top: 12px;">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            {% if item.console.id == 2 %}
+                {% set consoleClassBg = '#c9302c' %}
+            {% else %}
+                {% set consoleClassBg = '#008cba' %}
+            {% endif %}
+            <div style="background: {{ consoleClassBg }}; color: #fff; padding: 4px 8px;">
+                <span class="h5">
+                    {{ item.console.name }}
+                </span>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

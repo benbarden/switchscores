@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% block page_body %}
 
@@ -22,7 +22,7 @@
 <div class="row">
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        {{ headings.roundedBlue('h4', ConsoleName~': Best of '~Year) }}
+        {{ heading.renderChunky(ConsoleName~': Best of '~Year, 'h4') }}
         <span class="h5">(<a href="{{ route('console.topRated.byYear', {'console': Console, 'year': Year}) }}">view all</a>)</span>
         {% if TopRatedThisYear|length %}
             {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedThisYear, 'batchOverride': 1} %}
@@ -33,7 +33,7 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border-left: 1px solid #cecece;">
-        {{ headings.roundedBlue('h4', ConsoleName~': All-time') }}
+        {{ heading.renderChunky(ConsoleName~': All-time', 'h4') }}
         <span class="h5">(<a href="{{ route('console.topRated.allTime', {'console': Console}) }}">view all</a>)</span>
         {% if TopRatedAllTime|length %}
             {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedAllTime, 'batchOverride': 1} %}
@@ -44,7 +44,7 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border-left: 1px solid #cecece;">
-        {{ headings.roundedBlue('h4', 'All Top Rated links') }}
+        {{ heading.renderChunky('All Top Rated links', 'h4') }}
         <h4>Switch 1</h4>
         <ul>
             <li><a href="{{ route('console.topRated.allTime', {'console': consoleSwitch1}) }}">All-time</a></li>

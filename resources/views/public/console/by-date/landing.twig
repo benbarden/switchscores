@@ -1,6 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% block page_body %}
 
@@ -8,7 +7,7 @@
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-        {{ headings.roundedBlue('h2', 'Browse') }}
+        {{ heading.renderChunky('Browse', 'h2') }}
         <ul>
             {% for Year in AllowedYears %}
                 <li><a href="{{ route('console.byYear', {'console': Console, 'year': Year}) }}">{{ Year }}</a></li>
@@ -23,13 +22,13 @@
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-        {{ headings.roundedBlue('h4', 'Search games') }}
-        {% include 'modules/game/search/form-mini.twig' %}
+        {{ heading.renderChunky('Search games', 'h4') }}
+        {% include 'ui/components/search/form-mini.twig' %}
 
-        {{ headings.roundedBlue('h4', 'Browse all games') }}
-        {% include 'public/console/nav-right-browse-all.twig' %}
+        {{ heading.renderChunky('Browse all games', 'h4') }}
+        {% include 'ui/components/navigation/nav-right-browse-all.twig' %}
 
-        {{ headings.roundedBlue('h4', 'More lists') }}
+        {{ heading.renderChunky('More lists', 'h4') }}
         <ul>
 
         <li><a href="{{ route('console.newReleases', {'console': Console}) }}">New releases</a></li>

@@ -1,0 +1,23 @@
+{% macro standard(item, headerSize) %}
+    {% if item.eu_is_released == 1 %}
+        <span class="{{ headerSize }}">
+            Released: {{ _self.showDate(item) }}
+        </span>
+    {% elseif item.eu_release_date %}
+        <span class="{{ headerSize }}">
+            Release date: {{ _self.showDate(item) }}
+        </span>
+    {% else %}
+        <span class="{{ headerSize }}">
+            Unreleased
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{% macro showDate(item) %}
+    {% if item.eu_release_date is not null %}
+        {{ item.eu_release_date|date('jS M Y') }}
+    {% else %}
+        -
+    {% endif %}
+{% endmacro %}

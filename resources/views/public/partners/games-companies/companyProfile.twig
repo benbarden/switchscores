@@ -1,6 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import "ui/blocks/game-grid.twig" as gamegrid %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% block page_body %}
 
@@ -133,15 +133,15 @@
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div id="list-ranked">
                 <h2>Ranked</h2>
-                {{ gameslayouts.noHero(RankedGameList, 3) }}
+                {{ gamegrid.render(RankedGameList, 3, 'modern') }}
             </div>
             <div id="list-unranked" style="display: none;">
                 <h2>Unranked</h2>
-                {{ gameslayouts.noHero(UnrankedGameList, 3) }}
+                {{ gamegrid.render(UnrankedGameList, 3, 'modern') }}
             </div>
             <div id="list-delisted" style="display: none;">
                 <h2>De-listed</h2>
-                {{ gameslayouts.noHero(DelistedGameList, 3) }}
+                {{ gamegrid.render(DelistedGameList, 3, 'modern') }}
             </div>
         </div>
     </div>

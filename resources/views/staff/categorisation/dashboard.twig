@@ -1,5 +1,5 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
-{% import "macros/blocks/headings/slick.twig" as headings %}
+{% import "ui/components/headings/heading.twig" as heading %}
 {% import "macros/blocks/tables/rowStat.twig" as tableRowStat %}
 
 {% block page_inner %}
@@ -8,7 +8,7 @@
 
         <div class="col-md-4">
 
-            {{ headings.slickHeadingTitle('Action lists') }}
+            {{ heading.renderSlick('Action lists') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -48,7 +48,7 @@
 
         <div class="col-md-4">
 
-            {{ headings.slickHeadingTitle('Navigation') }}
+            {{ heading.renderSlick('Navigation') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -78,7 +78,7 @@
 
         <div class="col-md-4">
 
-            {{ headings.slickHeadingTitle('Tools') }}
+            {{ heading.renderSlick('Tools') }}
             <table class="table">
                 <tbody>
                 <tr>

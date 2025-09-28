@@ -1,7 +1,7 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
-{% import "macros/blocks/games/components/console-banner.twig" as gameconsolebanner %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import 'ui/components/game/console-banner.twig' as gameconsolebanner %}
+{% import "ui/blocks/game-grid.twig" as gamegrid %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% set hideHeader = true %}
 
@@ -109,21 +109,21 @@
 
         {% if RelatedByCategory %}
             <h2>More in this category: {{ CategoryName }}</h2>
-            {{ gameslayouts.noHero(RelatedByCategory, 2) }}
+            {{ gamegrid.render(RelatedByCategory, 2, 'modern') }}
             <p>
                 <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">View all in this category</a>.
             </p>
         {% endif %}
         {% if RelatedByCollection %}
             <h2>More in this collection: {{ CollectionName }}</h2>
-            {{ gameslayouts.noHero(RelatedByCollection, 2) }}
+            {{ gamegrid.render(RelatedByCollection, 2, 'modern') }}
             <p>
                 <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
             </p>
         {% endif %}
         {% if RelatedBySeries %}
             <h2>More in this series: {{ SeriesName }}</h2>
-            {{ gameslayouts.noHero(RelatedBySeries, 2) }}
+            {{ gamegrid.render(RelatedBySeries, 2, 'modern') }}
             <p>
                 <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}">View all in this series</a>.
             </p>
@@ -134,18 +134,18 @@
     <div class="col-xs-12 col-sm-4 col-md-4">
 
         {% if GameData.console_id %}
-            {{ headings.roundedBlue('h2', 'Rank ('~GameData.console.name~')') }}
+            {{ heading.renderChunky('Rank ('~GameData.console.name~')', 'h2') }}
         {% else %}
-            {{ headings.roundedBlue('h2', 'Rank') }}
+            {{ heading.renderChunky('Rank', 'h2') }}
         {% endif %}
         {% include 'modules/game/rank/all-time.twig' %}
         {% include 'modules/game/rank/year.twig' %}
         {% include 'modules/game/rank/year-month.twig' %}
 
-        {{ headings.roundedBlue('h2', 'Buy this game') }}
+        {{ heading.renderChunky('Buy this game', 'h2') }}
         {% include 'public/games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
 
-        {{ headings.roundedBlue('h2', 'Infobox') }}
+        {{ heading.renderChunky('Infobox', 'h2') }}
         {% include 'public/games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
         {#

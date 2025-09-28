@@ -1,5 +1,5 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
-{% import "macros/blocks/headings/slick.twig" as headings %}
+{% import "ui/components/headings/heading.twig" as heading %}
 {% import "macros/blocks/tables/rowStat.twig" as tableRowStat %}
 
 {% block page_inner %}
@@ -8,7 +8,7 @@
 
     <div class="col-md-4">
 
-        {{ headings.slickHeadingTitle('Submissions') }}
+        {{ heading.renderSlick('Submissions') }}
 
         <table class="table">
             <tbody>
@@ -59,7 +59,7 @@
             </tbody>
         </table>
 
-        {{ headings.slickHeadingTitle('Games to add') }}
+        {{ heading.renderSlick('Games to add') }}
 
         <table class="table">
             <tbody>
@@ -86,7 +86,7 @@
             </tbody>
         </table>
 
-        {{ headings.slickHeadingTitle('Nintendo links') }}
+        {{ heading.renderSlick('Nintendo links') }}
 
         <table class="table">
             <tbody>
@@ -109,7 +109,7 @@
             </tbody>
         </table>
 
-        {{ headings.slickHeadingTitle('Missing data') }}
+        {{ heading.renderSlick('Missing data') }}
 
         <table class="table">
             <tbody>
@@ -162,7 +162,7 @@
             </tbody>
         </table>
 
-        {{ headings.slickHeadingTitle('Invite codes') }}
+        {{ heading.renderSlick('Invite codes') }}
         <table class="table">
             <tbody>
             <tr>
@@ -175,7 +175,7 @@
         </table>
 
         {% if auth_user().isOwner() %}
-            {{ headings.slickHeadingTitle('Owner links') }}
+            {{ heading.renderSlick('Owner links') }}
             <table class="table">
                 <tbody>
                 <tr>
@@ -213,7 +213,7 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {{ headings.slickHeadingTitle('Recently released') }}
+            {{ heading.renderSlick('Recently released') }}
             {% if RecentlyReleasedGames.count > 0 %}
                 <div class="col-md-12">
                     {% for item in RecentlyReleasedGames %}
@@ -246,7 +246,7 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {{ headings.slickHeadingTitle('Recently added') }}
+            {{ heading.renderSlick('Recently added') }}
             {% if RecentlyAddedGames.count > 0 %}
                 <div class="col-md-12">
                     {% for item in RecentlyAddedGames %}

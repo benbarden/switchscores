@@ -1,7 +1,7 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
 {% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
-{% import 'macros/blocks/alerts/survey.twig' as alerts %}
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/alerts/survey.twig' as alerts %}
 
 {% block page_inner %}
 
@@ -19,7 +19,7 @@
     <div class="row">
 
         <div class="col-xs-12 col-sm-4 col-md-4">
-            {{ headings.roundedBlue('h4', 'Your details') }}
+            {{ heading.renderChunky('Your details', 'h4') }}
             <table class="table table-condensed">
                 <tr>
                     <td>Display name</td>
@@ -56,7 +56,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {{ headings.roundedBlue('h4', 'Quick links') }}
+            {{ heading.renderChunky('Quick links', 'h4') }}
             <table class="table">
                 <tr>
                     <td>
@@ -95,7 +95,7 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
 
             {% if NextToReviewFromCollection %}
-                {{ headings.roundedBlue('h4', 'Add a review') }}
+                {{ heading.renderChunky('Add a review', 'h4') }}
                 <p>
                     Why not review this game from your collection?
                 </p>
@@ -104,7 +104,7 @@
                 <a class="btn btn-primary btn-lg" href="{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}">Add your review</a>
                 <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Review a different game</a>
             {% elseif NextToReviewFromUnranked %}
-                {{ headings.roundedBlue('h4', 'Add your review') }}
+                {{ heading.renderChunky('Add your review', 'h4') }}
                 <p>
                     This game only needs 1 review to be ranked. Why not check it out?
                 </p>
@@ -124,7 +124,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {{ headings.roundedBlue('h4', 'Featured games') }}
+            {{ heading.renderChunky('Featured games', 'h4') }}
             <p>
                 Games that are interesting, unusual, or need more reviews.
             </p>
@@ -154,7 +154,7 @@
 
         <div class="col-xs-12 col-sm-8 col-md-8">
 
-            {{ headings.roundedBlue('h4', 'Recent member reviews') }}
+            {{ heading.renderChunky('Recent member reviews', 'h4') }}
             <div class="row homepage-quick-reviews">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <p>
@@ -169,7 +169,7 @@
 
             {#
             {% if SiteRole == 'review-partner' %}
-                {{ headings.roundedBlue('h4', 'Reviewers') }}
+                {{ heading.renderChunky('Reviewers', 'h4) }}
                 <p>
                     Find all the tools and stats for reviewers here.
                 </p>
@@ -193,7 +193,7 @@
         {#
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {{ headings.roundedBlue('h4', 'Recent updates') }}
+            {{ heading.renderChunky('Recent updates', 'h4) }}
             <table class="table">
                 <tr>
                     <td>

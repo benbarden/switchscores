@@ -1,6 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
-{% import 'macros/blocks/headings/chunky.twig' as headings %}
+{% import "ui/blocks/game-grid.twig" as gamegrid %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% block page_body %}
 
@@ -41,44 +41,31 @@
             </h5>
 
             <div id="list-ranked">
-                {{ headings.roundedBlue('h2', 'Ranked') }}
-                {{ gameslayouts.noHero(RankedGameList, 2) }}
+                {{ heading.renderChunky('Ranked', 'h2') }}
+                {{ gamegrid.render(RankedGameList, 2, 'modern') }}
             </div>
             <div id="list-unranked" style="display: none;">
-                {{ headings.roundedBlue('h2', 'Unranked') }}
-                {{ gameslayouts.noHero(UnrankedGameList, 2) }}
+                {{ heading.renderChunky('Unranked', 'h2') }}
+                {{ gamegrid.render(UnrankedGameList, 2, 'modern') }}
             </div>
             <div id="list-delisted" style="display: none;">
-                {{ headings.roundedBlue('h2', 'De-listed') }}
-                {{ gameslayouts.noHero(DelistedGameList, 2) }}
+                {{ heading.renderChunky('De-listed', 'h2') }}
+                {{ gamegrid.render(DelistedGameList, 2, 'modern') }}
             </div>
             <div id="list-lowquality" style="display: none;">
-                {{ headings.roundedBlue('h2', 'De-listed') }}
-                {{ gameslayouts.noHero(LowQualityGameList, 2) }}
+                {{ heading.renderChunky('Low quality', 'h2') }}
+                {{ gamegrid.render(LowQualityGameList, 2, 'modern') }}
             </div>
 
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-            {{ headings.roundedBlue('h4', 'Search games') }}
-            {% include 'modules/game/search/form-mini.twig' %}
+            {{ heading.renderChunky('Search games', 'h4') }}
+            {% include 'ui/components/search/form-mini.twig' %}
 
-            {% if Category.children.count() > 0 %}
-                {{ headings.roundedBlue('h4', 'Subcategories') }}
-                <ul>
-                    {% for item in Category.children %}
-                        <li>
-                            <a href="{{ route('console.byCategory.page', {'console': Console, 'category': item.link_title}) }}">
-                                {{ item.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {{ headings.roundedBlue('h4', 'Browse all games') }}
-            {% include 'public/console/nav-right-browse-all.twig' %}
+            {{ heading.renderChunky('Browse all games', 'h4') }}
+            {% include 'ui/components/navigation/nav-right-browse-all.twig' %}
 
         </div>
 

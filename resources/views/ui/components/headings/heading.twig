@@ -1,0 +1,15 @@
+{% macro renderSlick(text, mode='default') %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="slick-header-container{% if mode == 'spaced' %} slick-header-spaced{% endif %}">
+            <span class="slick-header-text">
+                {{ text }}
+            </span>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro renderChunky(text, size) %}
+    <{{ size}} class="theme-header theme-rounded theme-padding-10 theme-colour-15">{{ text }}</{{ size }}>
+{% endmacro %}

@@ -1,5 +1,5 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
-{% import "macros/blocks/headings/slick.twig" as headings %}
+{% import "ui/components/headings/heading.twig" as heading %}
 {% import "macros/blocks/tables/rowStat.twig" as tableRowStat %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
@@ -10,7 +10,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Action lists'} %}
+        {{ heading.renderSlick('Action lists') }}
 
         <table class="table">
             <tbody>
@@ -87,7 +87,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Navigation'} %}
+        {{ heading.renderSlick('Navigation') }}
 
         <table class="table">
             <tbody>
@@ -114,7 +114,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Outreach targets'} %}
+        {{ heading.renderSlick('Outreach targets') }}
 
         <table class="table">
             <tbody>
@@ -147,7 +147,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Low quality filter'} %}
+        {{ heading.renderSlick('Low quality filter') }}
 
         <table class="table">
             <tbody>
