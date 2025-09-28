@@ -2,45 +2,147 @@
 
 {% block page_body %}
 
-<p>
-    A list of all Nintendo {{ ConsoleName}} games released in {{ CalendarDateDesc }}.
-</p>
+<!-- jQuery UI -->
+<script src="/js/jquery-ui-1.12.1.min.js"></script>
+<link href="/css/jquery-ui-1.12.1.min.css" rel="stylesheet" />
 
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-12">
 
-        <h2>Games</h2>
+        <h2>Snapshot</h2>
 
-        {% if CalendarGamesList %}
-            <table class="table">
-                {% for key,item in CalendarGamesList %}
-                    <tr>
-                        <td class="text-center" style="max-width: 150px; min-width: 75px;">
-                            <span id="calendar-date-{{ key|date('jS') }}" class="h3">{{ key|date('jS') }}</span>
-                        </td>
-                        <td>
-                            {% include 'public/games/layouts/tiledGrid/layoutCalendar.twig' with {'GameList': item.games, 'batchOverride': 3} %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+        <ul>
+            <li>
+                <strong>Total releases</strong>:
+                In {{ CalendarDateDesc }}, there were {{ TotalReleaseCount }} releases for the
+                {{ ConsoleName }}.
+            </li>
+            {% if MostCommonCategoryName %}
+                <li>
+                    <strong>Common category</strong>:
+                    The most common category in {{ CalendarDateDesc }} was {{ MostCommonCategoryName }}, with
+                    {{ MostCommonCategoryCount }} releases.
+                </li>
+            {% endif %}
+            <li>
+                <strong>% of year to date</strong>:
+                {{ CalendarDateDesc }} includes {{ MonthToYearRatio }}% of the total {{ ConsoleName }}
+                releases in {{ Year }}.
+            </li>
+            <li>
+                <strong>Low quality</strong>:
+                In {{ CalendarDateDesc }}, there were {{ LowQualityCount }} low quality releases -
+                {{ LowQualityPercent }}% of the total releases this month.
+            </li>
+        </ul>
 
-    </div>
+        <div id="tabs">
 
-    <div class="col-md-4">
+            <ul>
+                <li><a href="#tabs-highlights">Highlights</a></li>
+                <li><a href="#tabs-all-releases">All releases</a></li>
+            </ul>
 
-        <h2>Top 50 this month</h2>
+            <div id="tabs-highlights">
 
-        {% if GamesRatingsWithRanks|length %}
-            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': GamesRatingsWithRanks, 'batchOverride': 1} %}
-        {% else %}
-            <p>No Top Rated games this month... yet. Come back soon for more!</p>
-        {% endif %}
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <h2>Top rated: {{ CalendarDateDesc }}</h2>
+                        {% if GamesRatingsWithRanks|length %}
+                            <p>
+                                The highest rated releases this month, with 3 reviews or more.
+                            </p>
+                            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': GamesRatingsWithRanks, 'batchOverride': 1} %}
+                        {% else %}
+                            <p>No Top Rated games this month... yet. Come back soon for more!</p>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <h2>Hidden gems: {{ CalendarDateDesc }}</h2>
+                        {% if HiddenGemsByMonth|length %}
+                            <p>
+                                These games have 1 or 2 ratings, so don't yet have ranks. We strongly recommend
+                                reading the reviews before buying!
+                            </p>
+                            {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': HiddenGemsByMonth, 'batchOverride': 1, 'ShowScoreOverride': 'Y'} %}
+                        {% else %}
+                            <p>No hidden gems found.</p>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <h2>Who's publishing?</h2>
+                        {% if TopPublishers|length %}
+                            <p>
+                                These companies published 1 or more games for the {{ ConsoleName }}
+                                in {{ CalendarDateDesc }}.
+                            </p>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Publisher</th>
+                                        <th class="text-center">Games this month</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in TopPublishers %}
+                                        <tr>
+                                            <td class="text-left">
+                                                <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}">
+                                                    {{ item.name }}
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                {{ item.count }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No top publishers found.</p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="tabs-all-releases">
+
+                <h2>Games</h2>
+                <p>
+                    There were {{ GamesByMonthStandard|length }} games released in {{ CalendarDateDesc }} for {{ ConsoleName }}.
+                    A full list is below.
+                </p>
+                {% include 'public/console/by-month/release-list.twig' with {'GamesList': GamesByMonthStandard} %}
+
+                <h2>Games (Low quality)</h2>
+                <p>
+                    There were {{ GamesByMonthLowQuality|length }} low quality games released in {{ CalendarDateDesc }} for {{ ConsoleName }}.
+                    A full list is below.
+                </p>
+                {% include 'public/console/by-month/release-list.twig' with {'GamesList': GamesByMonthLowQuality} %}
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<script>
+    $('#tabs').tabs();
+</script>
 
 {% endblock page_body %}

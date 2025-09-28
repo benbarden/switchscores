@@ -45,6 +45,22 @@ class MainSite extends Base
 
     }
 
+    public function consoleYearSubpage($pageTitle, Console $console, $year)
+    {
+        $crumb1 = [
+            'url' => route('console.landing', ['console' => $console]),
+            'text' => $console->name
+        ];
+        $crumb2 = [
+            'url' => route('console.byYear', ['console' => $console, 'year' => $year]),
+            'text' => 'By year: '.$year
+        ];
+        return $this->addCrumb($crumb1)
+            ->addCrumb($crumb2)
+            ->addTitleAndReturn($pageTitle);
+
+    }
+
     public function consoleCategorySubpage($pageTitle, Console $console)
     {
         $crumb1 = [

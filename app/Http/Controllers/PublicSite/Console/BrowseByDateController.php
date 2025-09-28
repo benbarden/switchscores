@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PublicSite\Console;
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\GameCalendar\Repository as GameCalendarRepository;
+use App\Domain\GameCalendar\Stats as GameCalendarStats;
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 use App\Models\Console;
@@ -18,6 +19,7 @@ class BrowseByDateController extends Controller
     public function __construct(
         private TopRatedDbQueries $dbTopRated,
         private GameCalendarRepository $repoGameCalendar,
+        private GameCalendarStats $statsGameCalendar,
         private GameCalendarAllowedDates $allowedDates,
         private ReviewLinkStatsRepository $repoReviewLinkStats,
     )
@@ -162,7 +164,7 @@ class BrowseByDateController extends Controller
         $dtDateDesc = $dtDate->format('M Y');
 
         $pageTitle = 'Nintendo '.$consoleName.' games released in '.$dtDateDesc;
-        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubpage($pageTitle, $console);
+        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleYearSubpage($pageTitle, $console, $year);
         $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
         $bindings['Console'] = $console;
@@ -175,6 +177,38 @@ class BrowseByDateController extends Controller
         $calendarMonth = $dtDate->format('m');
         $gamesByMonthList = $this->repoGameCalendar->getListByConsole($consoleId, $calendarYear, $calendarMonth);
         $bindings['GamesByMonthList'] = $gamesByMonthList;
+
+        // Full games list
+        $gamesByMonthStandard = $this->repoGameCalendar->getListByConsoleAndQualityFilter($consoleId, $calendarYear, $calendarMonth, 0);
+        $gamesByMonthLowQuality = $this->repoGameCalendar->getListByConsoleAndQualityFilter($consoleId, $calendarYear, $calendarMonth, 1);
+        $bindings['GamesByMonthStandard'] = $gamesByMonthStandard;
+        $bindings['GamesByMonthLowQuality'] = $gamesByMonthLowQuality;
+
+        // Snapshot stats
+        $totalReleaseCount = count($gamesByMonthList);
+        $bindings['TotalReleaseCount'] = $totalReleaseCount;
+        $lowQualityCount = $this->statsGameCalendar->lowQualityCount($consoleId, $calendarYear, $calendarMonth);
+        $bindings['LowQualityCount'] = $lowQualityCount;
+        $lowQualityPercent = round($lowQualityCount / $totalReleaseCount * 100, 2);
+        $bindings['LowQualityPercent'] = $lowQualityPercent;
+        $yearCount = $this->statsGameCalendar->yearCount($consoleId, $calendarYear);
+        $bindings['YearCount'] = $yearCount;
+        $monthToYearRatio = round($totalReleaseCount / $yearCount * 100, 2);
+        $bindings['MonthToYearRatio'] = $monthToYearRatio;
+
+        $mostCommonCategoryData = $this->repoGameCalendar->getMostCommonCategoryByMonth($consoleId, $calendarYear, $calendarMonth);
+        if ($mostCommonCategoryData) {
+            $bindings['MostCommonCategoryName'] = $mostCommonCategoryData[0]->name;
+            $bindings['MostCommonCategoryCount'] = $mostCommonCategoryData[0]->count;
+        }
+
+        // Hidden gems
+        $hiddenGemsByMonth = $this->repoGameCalendar->getMonthlyHiddenGems($consoleId, $calendarYear, $calendarMonth);
+        $bindings['HiddenGemsByMonth'] = $hiddenGemsByMonth;
+
+        // Top publishers
+        $topPublishers = $this->repoGameCalendar->getTopPublishersByMonth($consoleId, $calendarYear, $calendarMonth);
+        $bindings['TopPublishers'] = $topPublishers;
 
         // Get all dates
         $daysInMonth = $dtDate->format('t');
