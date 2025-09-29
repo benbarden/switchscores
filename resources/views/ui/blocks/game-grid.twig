@@ -1,19 +1,27 @@
-{% macro render(games, batchSize=3, cardType='standard', hero=false, withConsole=false) %}
-    {% import "ui/components/game/game-card-standard.twig" as cardStandard %}
-    {% import "ui/components/game/game-card-modern.twig" as cardModern %}
-
+{% macro render(games, batchSize=3, cardType='standard', hero=false, withConsole=false, mode='default') %}
+    {% if mode == 'show-date-icons' %}
+        <link type="text/css" rel="stylesheet" href="/css/cal.css">
+    {% endif %}
     {% if games|length %}
         {% set colClass = 'col-sm-12 col-md-' ~ (12 // batchSize) ~ ' col-lg-' ~ (12 // batchSize) %}
+
+        {# Render hero separately #}
+        {% if hero %}
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    {{ _self.renderCard(cardType, games|first, mode, true, withConsole) }}
+                </div>
+            </div>
+            {% set games = games|slice(1) %}
+        {% endif %}
+
+        {# Render the rest in batches #}
         {% for batch in games|batch(batchSize, null) %}
             <div class="row">
                 {% for game in batch %}
                     {% if game %}
-                        <div class="{% if hero and loop.first and loop.parent.loop.first %}col-sm-12 col-md-12 col-lg-12{% else %}{{ colClass }}{% endif %}">
-                            {% if cardType == 'modern' %}
-                                {{ cardModern.render(game, 'default', hero and loop.first and loop.parent.loop.first, withConsole) }}
-                            {% else %}
-                                {{ cardStandard.render(game, 'default', hero and loop.first and loop.parent.loop.first, withConsole) }}
-                            {% endif %}
+                        <div class="{{ colClass }}">
+                            {{ _self.renderCard(cardType, game, mode, false, withConsole) }}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -24,3 +32,13 @@
     {% endif %}
 {% endmacro %}
 
+{% macro renderCard(cardType, game, mode, heroFlag, withConsole) %}
+    {% import 'ui/components/game/game-card-standard.twig' as cardStandard %}
+    {% import 'ui/components/game/game-card-modern.twig' as cardModern %}
+
+    {% if cardType == 'modern' %}
+        {{ cardModern.render(game, mode, heroFlag, withConsole) }}
+    {% else %}
+        {{ cardStandard.render(game, mode, heroFlag, withConsole) }}
+    {% endif %}
+{% endmacro %}

@@ -1,5 +1,5 @@
 {% include 'common/form-errors.twig' %}
-{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
 {% if FormMode != 'add' %}
 <p>
     If you don't own this game anymore, or you added it in error, you can delete it.
@@ -34,7 +34,7 @@
                 {% endfor %}
             </div>
             <div class="col-md-2">
-                {{ gamepackshots.square(CollectionGame) }}
+                {{ packshots.square(CollectionGame) }}
             </div>
         </div>
     </fieldset>

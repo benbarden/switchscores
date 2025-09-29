@@ -1,6 +1,6 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
 {% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% block page_body %}
 
@@ -11,7 +11,7 @@
         {{ heading.renderChunky('Newest', 'h2') }}
         {% if NewReleases|length %}
             <p>Updated weekly. <a href="{{ route('console.newReleases', {'console': Console}) }}">View all new games</a>.</p>
-            {{ gameslayouts.noHero(NewReleases, 1, 'show-date-icons') }}
+            {{ gamegrid.render(NewReleases, 1, 'standard', false, false, 'show-date-icons') }}
         {% else %}
             <p>There are currently no new releases to show.</p>
         {% endif %}
@@ -23,7 +23,7 @@
         {{ heading.renderChunky('Upcoming', 'h2') }}
         {% if UpcomingReleases|length %}
             <p>Updated weekly. <a href="{{ route('console.upcomingReleases', {'console': Console}) }}">View all upcoming games</a>.</p>
-            {{ gameslayouts.noHero(UpcomingReleases, 1, 'show-date-icons') }}
+            {{ gamegrid.render(UpcomingReleases, 1, 'standard', false, false, 'show-date-icons') }}
         {% else %}
             <p>There are currently no upcoming titles to show.</p>
         {% endif %}
@@ -58,13 +58,13 @@
         </ul>
 
         {% if RandomTop100Game|length %}
-        {{ heading.renderChunky('From the all-time Top 100', 'h4') }}
-        {{ gameslayouts.noHero(RandomTop100Game, 1, 'no-price') }}
+            {{ heading.renderChunky('From the all-time Top 100', 'h4') }}
+            {{ gamegrid.render(RandomTop100Game, 1, 'standard', false, false, 'no-price') }}
         {% endif %}
 
         {% if RecentWithGoodRanks|length %}
-        {{ heading.renderChunky('Recent Top Rated', 'h4') }}
-        {{ gameslayouts.noHero(RecentWithGoodRanks, 1, 'no-price') }}
+            {{ heading.renderChunky('Recent Top Rated', 'h4') }}
+            {{ gamegrid.render(RecentWithGoodRanks, 1, 'standard', false, false, 'no-price') }}
         {% endif %}
 
     </div>

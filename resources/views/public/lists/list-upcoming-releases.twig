@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% block page_body %}
 
@@ -18,7 +18,7 @@
             <h2>Upcoming: next 7 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gameslayouts.noHero(UpcomingNext7Days, 4, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext7Days, 4, 'standard', false, false, 'show-date-icons') }}
                 </div>
             </div>
         {% endif %}
@@ -26,7 +26,7 @@
             <h2>Upcoming: next 14 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gameslayouts.noHero(UpcomingNext14Days, 4, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext14Days, 4, 'standard', false, false, 'show-date-icons') }}
                 </div>
             </div>
         {% endif %}
@@ -34,7 +34,7 @@
             <h2>Upcoming: next 28 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gameslayouts.noHero(UpcomingNext28Days, 4, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext28Days, 4, 'standard', false, false, 'show-date-icons') }}
                 </div>
             </div>
         {% endif %}
@@ -42,7 +42,7 @@
             <h2>Upcoming: beyond 28 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gameslayouts.noHero(UpcomingBeyond28Days, 4, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingBeyond28Days, 4, 'standard', false, false, 'show-date-icons') }}
                 </div>
             </div>
         {% endif %}

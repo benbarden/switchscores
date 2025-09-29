@@ -1,6 +1,6 @@
 {% import 'ui/components/staff/game/link.twig' as gamelink %}
-{% import "macros/blocks/games/components/low-quality.twig" as gamelowquality %}
-{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/low-quality.twig' as gamelowquality %}
 
 <tr id="game-row-{{ game.id }}"
     data-id="{{ game.id }}"
@@ -13,7 +13,7 @@
 
     {# Game cell: thumb + console badge + title #}
     <td>
-        {{ gamepackshots.squareReleaseHub(game) }}
+        {{ packshots.squareReleaseHub(game) }}
     </td>
 
     <td>

@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% block page_body %}
 
@@ -37,7 +37,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <h2>Browse all</h2>
-        {{ gameslayouts.noHero(GameList, 4) }}
+        {{ gamegrid.render(GameList, 4, 'standard') }}
     </div>
 </div>
 

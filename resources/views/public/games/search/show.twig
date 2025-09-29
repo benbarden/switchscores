@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% set crumbNav = [
     {'url': route('games.landing'), 'text': 'Games'},
@@ -29,7 +29,7 @@
                         We're only showing 200 results. Try narrowing your criteria a bit.
                     </p>
                 {% endif %}
-                {{ gameslayouts.noHero(SearchResults, 3) }}
+                {{ gamegrid.render(SearchResults, 3, 'standard') }}
             {% else %}
                 <p>No results. Try expanding your search criteria.</p>
             {% endif %}

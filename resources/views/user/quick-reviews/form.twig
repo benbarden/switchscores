@@ -12,7 +12,7 @@
     {% endif %}
 </div>
 {% include 'common/form-errors.twig' %}
-{% import "macros/blocks/games/components/packshots.twig" as gamepackshots %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
@@ -43,7 +43,7 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-2">
-            {{ gamepackshots.square(GameData) }}
+            {{ packshots.square(GameData) }}
         </div>
     </div>
 

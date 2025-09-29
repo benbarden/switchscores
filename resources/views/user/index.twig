@@ -1,7 +1,7 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
-{% import "macros/blocks/games/layouts/modernDebut.twig" as gameslayouts %}
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/alerts/survey.twig' as alerts %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% block page_inner %}
 
@@ -99,7 +99,7 @@
                 <p>
                     Why not review this game from your collection?
                 </p>
-                {{ gameslayouts.noHero(NextToReviewFromCollection, 1) }}
+                {{ gamegrid.render(NextToReviewFromCollection, 1, 'standard', false, true, 'no-price') }}
                 <br>
                 <a class="btn btn-primary btn-lg" href="{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromCollection[0].id}) }}">Add your review</a>
                 <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Review a different game</a>
@@ -108,7 +108,7 @@
                 <p>
                     This game only needs 1 review to be ranked. Why not check it out?
                 </p>
-                {{ gameslayouts.noHero(NextToReviewFromUnranked, 1) }}
+                {{ gamegrid.render(NextToReviewFromUnranked, 1, 'standard', false, true, 'no-price') }}
                 <br>
                 <a class="btn btn-primary btn-lg" href="{{ route('user.quick-reviews.add', {'gameId': NextToReviewFromUnranked[0].id}) }}">Add your review</a>
                 <a class="btn btn-primary btn-lg" href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Review a different game</a>
@@ -129,7 +129,7 @@
                 Games that are interesting, unusual, or need more reviews.
             </p>
             {% if FeaturedGameData %}
-                {{ gameslayouts.noHero(FeaturedGameData, 1) }}
+                {{ gamegrid.render(FeaturedGameData, 1, 'modern') }}
                 {#
                 <p>
                     <small>

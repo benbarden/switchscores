@@ -1,5 +1,5 @@
 {% extends 'theme/wos/base.twig' %}
-{% import "macros/blocks/games/layouts/standard.twig" as gameslayouts %}
+{% import 'ui/blocks/game-grid.twig' as gamegrid %}
 
 {% block page_body %}
 
@@ -10,7 +10,7 @@
         <p>
             These games have only recently been ranked. Thanks to everyone who's reviewed these games!
         </p>
-        {{ gameslayouts.noHero(HighlightsRecentlyRanked, 4) }}
+        {{ gamegrid.render(HighlightsRecentlyRanked, 4, 'standard', false, false, 'no-price') }}
 
     </div>
 
