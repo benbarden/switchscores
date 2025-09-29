@@ -1,6 +1,6 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
 {% import "ui/components/headings/heading.twig" as heading %}
-{% import "macros/blocks/tables/rowStat.twig" as tableRowStat %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 
 {% block page_inner %}
 
@@ -13,10 +13,8 @@
         <table class="table">
             <tbody>
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                {{ tableRowStat.rowStat(
-                    route('staff.reviews.review-drafts.showPending'),
-                    'Review drafts',
-                    ReviewDraftUnprocessedCount
+                {{ rowstat.renderB5(
+                    'Review drafts', route('staff.reviews.review-drafts.showPending'), ReviewDraftUnprocessedCount
                 ) }}
             {% endif %}
             {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}

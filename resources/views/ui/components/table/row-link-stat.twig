@@ -1,0 +1,31 @@
+{% macro render(linkTitle, linkUrl, linkStat=null, version='b5') %}
+    {% set alignClass = version == 'b3' ? 'text-right' : 'text-end' %}
+    {% if linkUrl and linkTitle %}
+        <tr>
+            <td>
+                <a href="{{ linkUrl }}">{{ linkTitle }}</a>
+            </td>
+            <td class="{{ alignClass }}">
+                {% if linkStat is not null %}
+                    <a href="{{ linkUrl }}" class="h4">{{ linkStat }}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                ERROR - No link found
+            </td>
+            <td>
+            </td>
+        </tr>
+    {% endif %}
+{% endmacro %}
+
+{% macro renderB3(linkTitle, linkUrl, linkStat=null) %}
+    {{ _self.render(linkTitle, linkUrl, linkStat, 'b3') }}
+{% endmacro %}
+
+{% macro renderB5(linkTitle, linkUrl, linkStat=null) %}
+    {{ _self.render(linkTitle, linkUrl, linkStat, 'b5') }}
+{% endmacro %}
