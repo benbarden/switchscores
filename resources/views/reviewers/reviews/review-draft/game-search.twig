@@ -1,3 +1,5 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
 {% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -16,7 +18,7 @@
             <input id="search_keywords" name="search_keywords" type="text" class="form-control">
         </div>
         <div class="col-md-4">
-            {% include 'common/forms/submit.twig' with {'buttonText': 'Search'} %}
+            {{ formsubmit.renderB5('Search') }}
         </div>
     </div>
 

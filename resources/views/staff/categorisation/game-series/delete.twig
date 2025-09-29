@@ -1,3 +1,5 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -10,7 +12,7 @@
 <form role="form" method="post" action="{{ route('staff.categorisation.game-series.delete', {'seriesId': SeriesId}) }}">
     {{ csrf_field() }}
 
-    {% include 'common/forms/submit-delete.twig' %}
+    {{ formsubmit.renderB5('Confirm deletion', 'danger') }}
 </form>
 
 {% endblock page_inner %}

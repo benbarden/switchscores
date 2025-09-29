@@ -1,0 +1,26 @@
+{% macro render(text='Save changes', variant='primary', version='b5') %}
+    {% if version == 'b3' %}
+        {% set wrapperClass = 'form-group' %}
+        {% set colClass = (variant == 'danger') ? 'col-sm-4' : 'col-md-8 col-md-offset-4' %}
+    {% else %}
+        {% set wrapperClass = 'row mb-3' %}
+        {% set colClass = (variant == 'danger') ? 'col-sm-4' : 'col-md-8 col-md-offset-4' %}
+    {% endif %}
+
+    <div class="{{ wrapperClass }}">
+        <div class="{{ colClass }}">
+            <button type="submit" class="btn outline btn-{{ variant }}">
+                {{ text }}
+            </button>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro renderB5(text='Save changes', variant='primary') %}
+    {{ _self.render(text, variant, 'b5') }}
+{% endmacro %}
+
+{% macro renderB3(text='Save changes', variant='primary') %}
+    {{ _self.render(text, variant, 'b3') }}
+{% endmacro %}
+

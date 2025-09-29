@@ -50,6 +50,6 @@ Tips:
 * Replace `control-label` with `col-form-label`
 * Wrap form text in `<div class="form-text">`
 * Change the columns on labels and form fields
-* Replace the submit button with `{% include 'common/forms/submit.twig' %}`. The button is wrapped in `<div class="row mb-3">`
+* Replace the submit button with the macro under `ui/components/form/submit.twig`
 
 

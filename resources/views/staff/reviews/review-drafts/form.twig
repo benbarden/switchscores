@@ -1,3 +1,5 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
 {% include 'common/form-errors.twig' %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
@@ -106,5 +108,5 @@
 
     <hr>
 
-    {% include 'common/forms/submit.twig' %}
+    {{ formsubmit.renderB5() }}
 </form>

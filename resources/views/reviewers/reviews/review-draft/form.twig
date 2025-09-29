@@ -1,3 +1,5 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
 <div class="alert alert-info">
     You're submitting a review of: <strong>{{ GameData.title }}</strong>.
 {% if GameData.review_count < 3 %}
@@ -55,5 +57,5 @@
         </div>
     </div>
 
-    {% include 'common/forms/submit.twig' %}
+    {{ formsubmit.renderB5() }}
 </form>
