@@ -5,7 +5,7 @@
 {% block page_inner %}
 
 {% set formSubmitAction = route('reviewers.profile.edit') %}
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 

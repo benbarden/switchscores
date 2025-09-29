@@ -17,7 +17,7 @@
         </ul>
         Duplicate titles will be skipped.
     </div>
-    {% include 'common/form-errors.twig' %}
+    {% include 'ui/components/alerts/form-errors.twig' %}
     <form role="form" method="post" action="{{ route('staff.games.import-from-csv.import') }}">
         {{ csrf_field() }}
 

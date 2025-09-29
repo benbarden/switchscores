@@ -13,7 +13,7 @@
     {% endif %}
 {% endif %}
 </div>
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 

@@ -18,7 +18,7 @@
         Duplicate reviews - that is, reviews of games that have already been reviewed by the specified site id -
         will be silently ignored.
     </div>
-    {% include 'common/form-errors.twig' %}
+    {% include 'ui/components/alerts/form-errors.twig' %}
     <form role="form" method="post" action="{{ route('staff.reviews.link.import') }}">
         {{ csrf_field() }}
 

@@ -2,7 +2,7 @@
     You're suggesting a game to be featured at Switch Scores.
     The game is: <strong>{{ GameData.title }}</strong>.
 </div>
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}

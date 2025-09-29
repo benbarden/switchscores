@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 <form class="form-horizontal" role="form" method="post" action="{{ route('staff.games.search') }}">
     {{ csrf_field() }}
 
@@ -66,7 +66,7 @@
     {% endif %}
 {% endif %}
 
-{% include 'common/table-sorting.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
 <script>
 
     $(document).ready(function() {

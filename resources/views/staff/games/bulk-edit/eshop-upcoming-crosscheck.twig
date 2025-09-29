@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 <form class="form-horizontal" role="form" hx-post="{{ route('api.game.bulk-update.eshop-upcoming-crosscheck') }}">
 {% include 'ui/components/staff/game/bulk-edit-table.twig' %}
 </form>

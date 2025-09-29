@@ -1,5 +1,5 @@
 {% import 'ui/components/form/submit.twig' as formsubmit %}
-{% include 'common/form-errors.twig' %}
+{% include 'ui/components/alerts/form-errors.twig' %}
 
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
