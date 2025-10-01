@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -6,7 +8,7 @@
 
     <div class="col-md-12">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Integrity checks'} %}
+        {{ heading.renderSlick('Integrity checks') }}
 
         {% if IntegrityChecks %}
             <table class="table">
@@ -47,7 +49,7 @@
             <p>No integrity checks found.</p>
         {% endif %}
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Data integrity'} %}
+        {{ heading.renderSlick('Data integrity') }}
 
         <table class="table">
             <tbody>
@@ -70,7 +72,7 @@
 
     <div class="col-md-12">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Categories'} %}
+        {{ heading.renderSlick('Categories') }}
 
         <table class="table">
             <tbody>

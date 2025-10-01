@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -8,7 +10,7 @@
 
             <h2>{{ GameData.title }}</h2>
 
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Reviewed'} %}
+            {{ heading.renderSlick('Reviewed', 'spaced') }}
             {% if ReviewLinkList|length %}
                 <p>
                     Below is a list of the review partners who have already reviewed this game.
@@ -43,7 +45,7 @@
                 </p>
             {% endif %}
 
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Not reviewed'} %}
+            {{ heading.renderSlick('Not reviewed', 'spaced') }}
             {% if NotReviewedPartnerList %}
                 <p>
                     Below is a list of the review partners who have not yet reviewed this game.

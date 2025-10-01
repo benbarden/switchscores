@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -8,7 +10,7 @@
 
         <h2>Nintendo.co.uk API</h2>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Stats'} %}
+        {{ heading.renderSlick('Stats') }}
 
         <table class="table">
             <tbody>
@@ -31,7 +33,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Differences'} %}
+        {{ heading.renderSlick('Differences') }}
 
         <table class="table">
             <tbody>

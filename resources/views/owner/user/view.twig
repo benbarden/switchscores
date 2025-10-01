@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -16,7 +18,7 @@
 
     <div class="col-md-8">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Main details'} %}
+        {{ heading.renderSlick('Main details') }}
 
         <table class="table">
             <tbody>
@@ -122,7 +124,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Approved contributions'} %}
+        {{ heading.renderSlick('Approved contributions') }}
 
         <table class="table">
             <tr>

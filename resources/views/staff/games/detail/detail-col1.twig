@@ -1,4 +1,7 @@
-{% include 'modules/tables/slick-header-title.twig' with {'titleText': 'General info'} %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{{ heading.renderSlick('General info') }}
+
 <table class="table table-condensed table-responsive">
 
     <tr>

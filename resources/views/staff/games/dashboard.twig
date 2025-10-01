@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
@@ -12,7 +14,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Weekly updates'} %}
+        {{ heading.renderSlick('Weekly updates') }}
 
         <table class="table">
             <tbody>
@@ -35,7 +37,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Watchlists'} %}
+        {{ heading.renderSlick('Watchlists') }}
 
         <table class="table">
             <tbody>
@@ -97,7 +99,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Game stats'} %}
+        {{ heading.renderSlick('Game stats') }}
 
         <table class="table">
             <tbody>
@@ -132,7 +134,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Lists'} %}
+        {{ heading.renderSlick('Lists') }}
         <table class="table">
             <tbody>
             <tr>
@@ -153,7 +155,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Admin tools'} %}
+        {{ heading.renderSlick('Admin tools') }}
         <table class="table">
             <tbody>
             <tr>
@@ -169,7 +171,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Archive'} %}
+        {{ heading.renderSlick('Archive') }}
         <table class="table">
             <tbody>
             <tr>
@@ -183,7 +185,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Formats'} %}
+        {{ heading.renderSlick('Formats') }}
 
         <table class="table">
             <tbody>

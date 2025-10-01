@@ -1,4 +1,6 @@
-{% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Format options'} %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{{ heading.renderSlick('Format options') }}
 
 <table class="table table-condensed table-responsive">
     <tr>
@@ -35,7 +37,7 @@
     </tr>
 </table>
 
-{% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Nintendo.co.uk API'} %}
+{{ heading.renderSlick('Nintendo.co.uk API') }}
 
 <table class="table table-condensed table-responsive">
 

@@ -1,3 +1,5 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -6,7 +8,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Action lists'} %}
+        {{ heading.renderSlick('Action lists') }}
 
         <table class="table">
             <tbody>
@@ -29,7 +31,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Unranked games'} %}
+        {{ heading.renderSlick('Unranked games') }}
         <p>
             Except where stated, low quality games are excluded.
         </p>
@@ -102,7 +104,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Navigation'} %}
+        {{ heading.renderSlick('Navigation') }}
         <table class="table">
             <tbody>
             <tr>
@@ -132,7 +134,7 @@
 
     <div class="col-md-4">
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Review stats'} %}
+        {{ heading.renderSlick('Review stats') }}
         <table class="table">
             <tbody>
                 <tr>
@@ -162,7 +164,7 @@
             </tbody>
         </table>
 
-        {% include 'modules/tables/slick-header-title.twig' with {'titleText': 'Review drafts: Process status'} %}
+        {{ heading.renderSlick('Review drafts: Process status') }}
         <table class="table">
             <tbody>
             {% for item in ProcessStatusStats %}

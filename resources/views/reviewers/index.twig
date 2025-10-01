@@ -1,5 +1,7 @@
-{% extends 'theme/member-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/alerts/survey.twig' as alerts %}
+
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -119,7 +121,7 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Your details'} %}
+            {{ heading.renderSlick('Your details', 'spaced') }}
             <p>
                 Fill out your details so publishers and developers can contact you with review codes.
                 Only publishers and developers will be able to view your contact details.
@@ -185,7 +187,7 @@
             <br>
             <br>
 
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Your stats'} %}
+            {{ heading.renderSlick('Your stats', 'spaced') }}
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-4 text-center">
                     <h2>
@@ -301,7 +303,7 @@
         <div class="col-xs-12 col-sm-4 col-md-4">
 
             <br>
-            {% include 'modules/tables/slick-header-spaced.twig' with {'titleText': 'Feed status'} %}
+            {{ heading.renderSlick('Feed status', 'spaced') }}
             {% if IsYoutubeChannel %}
                 <div class="alert alert-info">
                     <strong>As you're submitting Youtube videos, you don't need to worry about this section</strong>.
