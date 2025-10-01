@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
 {% block page_inner %}
@@ -60,7 +62,7 @@
                     </td>
                     <td class="text-center">
                         {% if item.rating_avg %}
-                        {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                            {{ rating.score(item.rating_avg, 'h6', 'b3') }}
                         {% endif %}
                     </td>
                     <td class="text-center">

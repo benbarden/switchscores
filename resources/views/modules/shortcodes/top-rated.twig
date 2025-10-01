@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% if GameList %}
     <table class="table">
         <thead>
@@ -25,9 +27,9 @@
                     <td class="text-center">
                         {% if item.rating_avg %}
                             {% if item.game_rank %}
-                                {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h4'} %}
+                                {{ rating.score(item.rating_avg, 'h5', 'b3') }}
                             {% else %}
-                                {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+                                {{ rating.tbc(null, 'h5', 'b3', true) }}
                             {% endif %}
                         {% endif %}
                     </td>

@@ -2,6 +2,7 @@
 {% import 'ui/components/game/console-banner.twig' as gameconsolebanner %}
 {% import 'ui/blocks/game-grid.twig' as gamegrid %}
 {% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/rating/badge.twig' as rating %}
 
 {% set hideHeader = true %}
 
@@ -17,9 +18,9 @@
 
                 <div class="pull-right" style="margin: 15px 0;">
                     {% if GameData.game_rank %}
-                        {% include 'modules/rating/badge.twig' with {'score': GameData.rating_avg, 'scoreSize': 'h4'} %}
+                        {{ rating.score(GameData.rating_avg, 'h4', 'b3') }}
                     {% elseif GameData.rating_avg %}
-                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h4'} %}
+                        {{ rating.tbc(null, 'h4', 'b3', true) }}
                     {% endif %}
                 </div>
                 <h1 style="margin: 10px 0;" itemprop="name">

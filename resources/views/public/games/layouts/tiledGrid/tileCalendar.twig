@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {# PACKSHOTS #}
 {% if item.boxart_header_image or item.image_header %}
     {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
@@ -19,9 +21,9 @@
 <p style="margin: 8px 0;">
     {% if item.rating_avg %}
         {% if item.game_rank %}
-            {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+            {{ rating.score(item.rating_avg, 'h6', 'b3') }}
         {% else %}
-            {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+            {{ rating.tbc(null, 'h6', 'b3', true) }}
         {% endif %}
     {% endif %}
 </p>

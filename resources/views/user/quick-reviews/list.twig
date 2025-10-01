@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% extends 'theme/member-b5/layout-default.twig' %}
 
 {% set crumbNav = [{'text': 'Index'}] %}
@@ -54,7 +56,7 @@
                         {{ item.created_at }}
                     </td>
                     <td class="text-center">
-                        {% include 'modules/rating/badge-b5.twig' with {'score': item.review_score, 'scoreSize': 'h6'} %}
+                        {{ rating.score(item.review_score, 'h6') }}
                     </td>
                     <td class="text-center">
                         {{ item.getStatusDesc() }}

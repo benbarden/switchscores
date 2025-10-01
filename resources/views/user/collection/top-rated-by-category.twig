@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% extends 'theme/wos/member/clean-wide.twig' %}
 
 {% block page_inner %}
@@ -31,9 +33,9 @@
                             </td>
                             <td class="text-center">
                                 {% if item.review_count > 2 %}
-                                    {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                                    {{ rating.score(item.rating_avg, 'h6', 'b3') }}
                                 {% else %}
-                                    {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+                                    {{ rating.tbc(item.review_count, 'h6', 'b3') }}
                                 {% endif %}
                             </td>
                             <td class="text-center">{{ item.game_rank }}</td>

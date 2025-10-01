@@ -29,8 +29,6 @@ They can mostly be swapped as follows:
 
 `label label-primary` becomes `badge bg-primary`
 
-A new version of `modules/rating/badge.twig` can be found under `modules/rating/badge-b5.twig`.
-
 # Text alignment
 
 Replace instances of `class="text-right` with `class="text-end"`.
@@ -51,5 +49,4 @@ Tips:
 * Wrap form text in `<div class="form-text">`
 * Change the columns on labels and form fields
 * Replace the submit button with the macro under `ui/components/form/submit.twig`
-
-
+* Make sure to use the badges under `ui/components/rating/badge.twig`

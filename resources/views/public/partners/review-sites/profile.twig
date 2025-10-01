@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% extends 'theme/wos/base.twig' %}
 
 {% block page_body %}
@@ -48,7 +50,7 @@
                         </td>
                         <td class="text-center">{{ item.review_date }}</td>
                         <td class="text-center">
-                            {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
+                            {{ rating.score(item.rating_normalised, 'h6', 'b3') }}
                         </td>
                         <td class="text-center">
                             {% if item.game.review_count >= 3 %}

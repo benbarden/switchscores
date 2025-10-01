@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% set boxartUrl = ImageHelper.imageHeaderUrl(item.game) %}
 
 <div class="row">
@@ -22,7 +24,7 @@
     </div>
     <div class="col-sm-12 col-md-2 col-lg-2">
         <br>
-        {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h5'} %}
+        {{ rating.score(item.rating_normalised, 'h5', 'b3') }}
     </div>
 </div>
 <div class="row">

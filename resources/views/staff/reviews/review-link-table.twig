@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 <table class="table data-sortable">
     <thead>
     <tr>
@@ -35,7 +37,7 @@
                 <a href="{{ item.url }}" target="_blank">View</a>
             </td>
             <td class="text-center">
-                {% include 'modules/rating/badge.twig' with {'score': item.rating_normalised, 'scoreSize': 'h5'} %}
+                {{ rating.score(item.rating_normalised, 'h5', 'b3') }}
             </td>
             <td class="text-center">
                 {% if item.rating_original != item.rating_normalised %}

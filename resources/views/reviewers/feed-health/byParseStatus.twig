@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
@@ -67,7 +69,7 @@
                                     {% else %}
                                         {% set badgeRating = item.item_rating %}
                                     {% endif %}
-                                    {% include 'modules/rating/badge.twig' with {'score': badgeRating, 'scoreSize': 'h5'} %}
+                                    {{ rating.score(badgeRating, 'h5') }}
                                 {% endif %}
                                 {% if origRating %}
                                     <br><p style="margin-top: 10px;"><small>({{ origRating }}/5)</small></p>

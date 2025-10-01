@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% if GameReviews %}
     <h2>
         Partner reviews
@@ -21,7 +23,7 @@
                         </td>
                         <td class="text-center">
                             {% if Review.rating_normalised %}
-                                {% include 'modules/rating/badge.twig' with {'score': Review.rating_normalised, 'scoreSize': 'h6'} %}
+                                {{ rating.score(Review.rating_normalised, 'h6', 'b3') }}
                             {% else %}
                                 N/A
                             {% endif %}
@@ -56,7 +58,7 @@
                         <a href="{{ route('partners.review-sites.landing') }}">Help us out!</a>
                     </td>
                     <td class="text-center">
-                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+                        {{ rating.tbc(null, 'h6', 'b3', true) }}
                     </td>
                 </tr>
             </tbody>

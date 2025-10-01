@@ -1,0 +1,78 @@
+{% macro score(score, scoreSize='h4', version='b5') %}
+    {% if version == 'b3' %}
+        {% set successClass = 'label label-success' %}
+        {% set warningClass = 'label label-warning' %}
+        {% set dangerClass  = 'label label-danger' %}
+    {% else %}
+        {% set successClass = 'badge bg-success' %}
+        {% set warningClass = 'badge bg-warning' %}
+        {% set dangerClass  = 'badge bg-danger' %}
+    {% endif %}
+
+    {% if score > 7.9 %}
+        <span class="{{ scoreSize }} {{ successClass }} switch-rating-badge">{{ score }}</span>
+    {% elseif score > 5.9 %}
+        <span class="{{ scoreSize }} {{ warningClass }} switch-rating-badge">{{ score }}</span>
+    {% else %}
+        <span class="{{ scoreSize }} {{ dangerClass }} switch-rating-badge">{{ score }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro circle(score, scoreSize='h4', version='b5') %}
+    {% if version == 'b3' %}
+        {% set successClass = 'label-success' %}
+        {% set warningClass = 'label-warning' %}
+        {% set dangerClass  = 'label-danger' %}
+    {% else %}
+        {% set successClass = 'badge bg-success' %}
+        {% set warningClass = 'badge bg-warning' %}
+        {% set dangerClass  = 'badge bg-danger' %}
+    {% endif %}
+
+    {% if score > 7.9 %}
+        <span class="{{ scoreSize }} {{ successClass }} switch-rating-circle">{{ score }}</span>
+    {% elseif score > 5.9 %}
+        <span class="{{ scoreSize }} {{ warningClass }} switch-rating-circle">{{ score }}</span>
+    {% else %}
+        <span class="{{ scoreSize }} {{ dangerClass }} switch-rating-circle">{{ score }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro delisted(scoreSize='h4', version='b5') %}
+    {% if version == 'b3' %}
+        {% set defaultClass = 'label label-default' %}
+    {% else %}
+        {% set defaultClass = 'badge bg-secondary' %}
+    {% endif %}
+    <span class="{{ scoreSize }} {{ defaultClass }} switch-rating-badge">De-listed</span>
+{% endmacro %}
+
+{% macro tbc(reviewCount=null, scoreSize='h4', version='b5', hideReviewText=false) %}
+    {% if reviewCount is not null %}
+        {% set badgeText = reviewCount ~ '/3' %}
+    {% else %}
+        {% set badgeText = 'TBC' %}
+    {% endif %}
+
+    {% if version == 'b3' %}
+        {% set infoClass    = 'label label-info' %}
+        {% set defaultClass = 'label label-default' %}
+    {% else %}
+        {% set infoClass    = 'badge bg-info' %}
+        {% set defaultClass = 'badge bg-secondary' %}
+    {% endif %}
+
+    {% if reviewCount is not null and reviewCount > 0 and reviewCount < 3 %}
+        {% set badgeClass = infoClass %}
+    {% else %}
+        {% set badgeClass = defaultClass %}
+    {% endif %}
+
+    <span class="{{ scoreSize }} {{ badgeClass }} switch-rating-badge">
+        {{ badgeText }}
+    </span>
+    {% if reviewCount is not null and not hideReviewText %}
+        <br>
+        <span class="text-center center-block"><small>reviews</small></span>
+    {% endif %}
+{% endmacro %}

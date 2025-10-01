@@ -1,3 +1,4 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
 {% import 'ui/components/review/status-badge.twig' as reviewstatus %}
 
 {% if ReviewDrafts %}
@@ -30,9 +31,9 @@
                         {% else %}
                             {% set ItemRating = item.item_rating %}
                         {% endif %}
-                        {% include 'modules/rating/badge-b5.twig' with {'score': ItemRating, 'scoreSize': 'h6'} %}
+                        {{ rating.score(ItemRating, 'h6') }}
                     {% else %}
-                        {% include 'modules/rating/badge-tbc.twig' with {'scoreSize': 'h6'} %}
+                        {{ rating.tbc(null, 'h6') }}
                     {% endif %}
                 </td>
                 <td class="text-center">

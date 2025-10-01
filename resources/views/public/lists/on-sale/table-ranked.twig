@@ -1,3 +1,5 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
 {% if GameList.count > 0 %}
     <table id="{{ TableId }}" class="table data-sortable">
         <thead>
@@ -34,7 +36,7 @@
                 </td>
                 <td class="text-center">
                     {% if item.game_rank %}
-                        {% include 'modules/rating/badge.twig' with {'score': item.rating_avg, 'scoreSize': 'h6'} %}
+                        {{ rating.score(item.rating_avg, 'h6', 'b3') }}
                     {% endif %}
                 </td>
                 <td class="text-center">

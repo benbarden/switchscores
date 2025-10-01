@@ -1,4 +1,5 @@
 {% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/rating/badge.twig' as rating %}
 
 {% extends 'theme/member-b5/layout-default.twig' %}
 
@@ -30,7 +31,7 @@
                                 <td>{{ item.site.name }}</td>
                                 <td class="text-center">{{ item.review_date }}</td>
                                 <td class="text-center">
-                                    {% include 'modules/rating/badge-b5.twig' with {'score': item.rating_normalised, 'scoreSize': 'h6'} %}
+                                    {{ rating.score(item.rating_normalised, 'h6') }}
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ item.url }}" target="_blank" title="Opens in a new tab">Read review</a>
