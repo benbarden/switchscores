@@ -1,9 +1,11 @@
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
 <div class="row">
 
     {% set playStatusItem = item.getPlayStatus(item.play_status) %}
 
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-        {% include 'modules/game/packshot/square.twig' with {'item': game} %}
+        {{ packshots.square(game) }}
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <table class="table">
