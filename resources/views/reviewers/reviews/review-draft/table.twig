@@ -1,3 +1,5 @@
+{% import 'ui/components/review/status-badge.twig' as reviewstatus %}
+
 {% if ReviewDrafts %}
     <table class="table table-sm table-responsive">
         <thead>
@@ -34,10 +36,8 @@
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    {% if item.processed == 1 %}
-                        {% include 'modules/review-feed-item/process-status.twig' with {'status': item.process_status, 'textSize': 'h6'} %}
-                    {% else %}
-                        -
+                    {% if item.process_status %}
+                        {{ reviewstatus.render(item.process_status, 'h6') }}
                     {% endif %}
                 </td>
             </tr>

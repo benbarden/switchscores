@@ -1,0 +1,19 @@
+{% macro render(status, textSize='h4', version='b5') %}
+    {% if version == 'b3' %}
+        {% set successClass = 'label label-success' %}
+        {% set dangerClass  = 'label label-danger' %}
+        {% set defaultClass = 'label label-default' %}
+    {% else %}
+        {% set successClass = 'badge bg-success' %}
+        {% set dangerClass  = 'badge bg-danger' %}
+        {% set defaultClass = 'badge bg-secondary' %}
+    {% endif %}
+
+    {% if status == 'Review created' %}
+        <span class="{{ textSize }} {{ successClass }}">{{ status }}</span>
+    {% elseif status in ['Duplicate', 'Historic review'] %}
+        <span class="{{ textSize }} {{ dangerClass }}">{{ status }}</span>
+    {% else %}
+        <span class="{{ textSize }} {{ defaultClass }}">{{ status }}</span>
+    {% endif %}
+{% endmacro %}
