@@ -72,6 +72,6 @@ class ReviewSitesController extends Controller
         $bindings['ReviewScoreDistribution'] = $reviewScoreDistribution;
         $bindings['MostUsedScore'] = $mostUsedScore;
 
-        return view('public.partners.review-sites.siteProfile', $bindings);
+        return view('public.partners.review-sites.profile', $bindings);
     }
 }

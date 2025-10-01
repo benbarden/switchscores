@@ -1,6 +1,3 @@
-{% if SourcePage == 'member-dashboard' %}
-    <h2>Infobox</h2>
-{% endif %}
 <table class="table table-condensed table-responsive">
     <tr>
         <td>
@@ -26,14 +23,4 @@
         </td>
         <td>{{ PartnerData.review_count }}</td>
     </tr>
-    {% if SourcePage == 'member-dashboard' %}
-        <tr>
-            <td>
-                <span style="font-weight: bold;">Site profile page</span>
-            </td>
-            <td>
-                <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': PartnerData.link_title}) }}" target="_blank">Click to view</a>
-            </td>
-        </tr>
-    {% endif %}
 </table>

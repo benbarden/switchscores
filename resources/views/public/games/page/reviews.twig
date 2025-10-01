@@ -15,7 +15,7 @@
                             {{ Review.review_date|date('jS M Y') }}
                         </td>
                         <td>
-                            <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': Review.site.link_title}) }}" target="_blank">
+                            <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': Review.site.link_title}) }}">
                                 {{ Review.site.name }}
                             </a>
                         </td>
