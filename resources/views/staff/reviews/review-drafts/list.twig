@@ -36,10 +36,10 @@
                     </small>
                 </td>
                 <td class="text-center">
-                    {% if item.game.title is null %}
-                        {% include 'modules/icons/red-cross.twig' %}
+                    {% if item.game.title is not null %}
+                        {% include 'ui/components/icons/icon-check-green.twig' %}
                     {% else %}
-                        {% include 'modules/icons/green-tick.twig' %}
+                        {% include 'ui/components/icons/icon-cross-red.twig' %}
                     {% endif %}
                 </td>
                 <td class="text-center">
