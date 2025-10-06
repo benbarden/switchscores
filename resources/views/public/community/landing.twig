@@ -1,4 +1,5 @@
 {% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/review/quick-review.twig' as quickReview %}
 
 {% extends 'theme/wos/base.twig' %}
 
@@ -23,7 +24,7 @@
                     </em>
                 </p>
                 {% for item in QuickReviews %}
-                    {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
+                    {{ quickReview.render(item, true, 'b3') }}
                 {% endfor %}
             </div>
         </div>

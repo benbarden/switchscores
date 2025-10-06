@@ -2,6 +2,7 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/alerts/survey.twig' as alerts %}
 {% import 'ui/blocks/game-grid.twig' as gamegrid %}
+{% import 'ui/components/review/quick-review.twig' as quickReview %}
 
 {% block page_inner %}
 
@@ -162,7 +163,7 @@
                         <a href="{{ route('user.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>.
                     </p>
                     {% for item in QuickReviews %}
-                        {% include 'modules/quick-review/item.twig' with {'QuickReview': item, 'moduleMode': 'with-titles'} %}
+                        {{ quickReview.render(item, true) }}
                     {% endfor %}
                 </div>
             </div>
