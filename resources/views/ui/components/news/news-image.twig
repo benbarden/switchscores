@@ -1,0 +1,33 @@
+{# Shared resolver for header / custom image #}
+{% macro resolveImage(item) %}
+    {% import 'ui/components/image/resolve.twig' as image %}
+    {% if item.custom_image_url %}
+        {{ item.custom_image_url }}
+    {% elseif item.game is defined and item.game_id %}
+        {{ image.header(item.game) }}
+    {% else %}
+        ''
+    {% endif %}
+{% endmacro %}
+
+{# Renders clickable news image #}
+{% macro render(item, showBlankImage=false) %}
+    {% import _self as self %}
+    {% set boxartUrl = self.resolveImage(item)|trim %}
+    <a href="{{ item.url }}">
+        {% if boxartUrl %}
+            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+        {% elseif showBlankImage %}
+            <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" style="border:0;" alt="{{ item.title }}">
+        {% endif %}
+    </a>
+{% endmacro %}
+
+{# Renders Open Graph metadata #}
+{% macro meta(item) %}
+    {% import _self as self %}
+    {% set boxartUrl = self.resolveImage(item)|trim %}
+    {% if boxartUrl %}
+        <meta property="og:image" content="{{ (url('/') ~ boxartUrl)|trim }}">
+    {% endif %}
+{% endmacro %}

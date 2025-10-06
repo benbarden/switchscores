@@ -1,0 +1,19 @@
+{% macro header(game) %}
+    {% if game.image_header %}
+        {{ '/img/ps-header/' ~ game.image_header }}
+    {% elseif game.boxart_header_image %}
+        {{ '/img/games/header/' ~ game.boxart_header_image }}
+    {% else %}
+        ''
+    {% endif %}
+{% endmacro %}
+
+{% macro square(game) %}
+    {% if game.image_square %}
+        {{ '/img/ps-square/' ~ game.image_square }}
+    {% elseif game.boxart_square_url %}
+        {{ '/img/games/square/' ~ game.boxart_square_url }}
+    {% else %}
+        ''
+    {% endif %}
+{% endmacro %}

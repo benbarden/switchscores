@@ -1,3 +1,5 @@
+{% import 'ui/components/news/news-image.twig' as newsimg %}
+
 {% if batchOverride is defined %}
     {% set batchItemCount = batchOverride %}
 {% else %}
@@ -12,7 +14,7 @@
 {% endif %}
 
 <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-    {% include 'modules/news/news-image.twig' with {'item': item, 'showBlankImage': 'Y'} %}
+    {{ newsimg.render(item, true) }}
     <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
     <p>
         <small>
