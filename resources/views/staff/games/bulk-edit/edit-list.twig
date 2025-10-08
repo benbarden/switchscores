@@ -1,3 +1,5 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
 {% block page_inner %}
@@ -35,7 +37,7 @@
                 {% for item in GameList %}
                     <tr>
                         <td>
-                            {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                            {{ gamelink.title(item, 'staff') }}
                             {% if item.is_low_quality == 1 %}
                                 <label class="label label-danger">Low quality</label>
                             {% endif %}

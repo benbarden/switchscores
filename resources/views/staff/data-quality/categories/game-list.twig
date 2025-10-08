@@ -1,4 +1,5 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'ui/components/links/game.twig' as gamelink %}
 
 {% block page_inner %}
 
@@ -20,7 +21,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                        {{ gamelink.title(item, 'staff') }}
                     </td>
                     <td>
                         {{ item.category.name }}

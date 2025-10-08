@@ -1,3 +1,5 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
 {% block page_inner %}
@@ -24,7 +26,7 @@
                         {{ item.id }}
                     </td>
                     <td>
-                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                        {{ gamelink.title(item.game, 'staff') }}
                     </td>
                     <td>
                         {{ item.game.category.name }}

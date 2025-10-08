@@ -1,4 +1,5 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/links/game.twig' as gamelink %}
 
 <table class="table data-sortable">
     <thead>
@@ -20,10 +21,10 @@
                 {{ item.id }}
             </td>
             <td class="text-left">
-                {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                {{ gamelink.title(item.game, 'staff') }}
                 <div class="pull-right">
                     <small>
-                        {% include 'modules/game/table/staff-game-edit.twig' with {'item': item.game, 'LinkDesc': 'edit game'} %}
+                        {{ gamelink.edit(item.game, 'edit game') }}
                     </small>
                 </div>
             </td>

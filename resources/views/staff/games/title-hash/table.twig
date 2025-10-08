@@ -1,3 +1,5 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
 <div class="row">
     <div class="col-xs-12 col-sm-3">
         <a class="btn outline btn-primary" href="{{ route('staff.games-title-hash.add', {'gameId': GameId}) }}" style="color: #fff;">Add</a>
@@ -23,7 +25,7 @@
                 {{ item.title }}
             </td>
             <td>
-                {% include 'modules/game/table/staff-game-title.twig' with {'item': item.game} %}
+                {{ gamelink.title(item.game, 'staff') }}
             </td>
             <td class="text-center">
                 {{ item.created_at }}

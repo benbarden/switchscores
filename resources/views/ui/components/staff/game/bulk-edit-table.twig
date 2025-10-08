@@ -1,3 +1,5 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
 {{ csrf_field() }}
 <input type="hidden" id="console_id" name="console_id" value="{{ ConsoleId }}">
 
@@ -26,7 +28,7 @@
                         {% elseif item.console.name == 'Switch 2' %}
                             <label class="label label-success">{{ item.console.name }}</label>
                         {% endif %}
-                        {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                        {{ gamelink.title(item, 'staff') }}
                         {% if item.is_low_quality == 1 %}
                             <label class="label label-danger">Low quality</label>
                         {% endif %}

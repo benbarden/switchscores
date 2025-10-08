@@ -1,0 +1,17 @@
+{% macro edit(item, text='Edit') %}
+    <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">{{ text }}</a>
+{% endmacro %}
+
+{% macro title(item, context='public', text='') %}
+    {% set linkText = text ?: item.title %}
+
+    {% if context == 'staff' %}
+        <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}" tabindex="-1">{{ linkText }}</a>
+    {% else %}
+        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ linkText }}</a>
+    {% endif %}
+
+    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank" title="Open game page in a new tab" tabindex="-1">
+        <i class="fas fa-external-link-alt"></i>
+    </a>
+{% endmacro %}

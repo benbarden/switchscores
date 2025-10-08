@@ -1,3 +1,5 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
 {% if ItemList %}
 
     <table class="table data-sortable">
@@ -17,7 +19,7 @@
                     {{ item.id }}
                 </td>
                 <td class="text-left">
-                    {% include 'modules/game/table/staff-game-title.twig' with {'item': item} %}
+                    {{ gamelink.title(item, 'staff') }}
                 </td>
                 <td class="text-left">
                     {{ item.gamePublishers.length }}

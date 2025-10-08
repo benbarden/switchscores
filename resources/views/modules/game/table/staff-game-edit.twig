@@ -1,4 +1,0 @@
-{% if LinkDesc is not defined %}
-    {% set LinkDesc = 'Edit' %}
-{% endif %}
-<a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">{{ LinkDesc }}</a>
