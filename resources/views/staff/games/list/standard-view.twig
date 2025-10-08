@@ -1,5 +1,5 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
-{% import 'ui/components/staff/game/link.twig' as gamelink %}
+{% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/low-quality.twig' as gamelowquality %}
 
 {% block page_inner %}
@@ -63,7 +63,7 @@
                         {% elseif item.console.name == 'Switch 2' %}
                             <label class="label label-success">{{ item.console.name }}</label>
                         {% endif %}
-                        {{ gamelink.render(item) }}
+                        {{ gamelink.title(item, 'staff') }}
                         {{ gamelowquality.standard(item) }}
                         {% if item.review_count > 0 %}
                             <br>

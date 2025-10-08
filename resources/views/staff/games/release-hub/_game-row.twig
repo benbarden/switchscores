@@ -1,4 +1,4 @@
-{% import 'ui/components/staff/game/link.twig' as gamelink %}
+{% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/game/low-quality.twig' as gamelowquality %}
 
@@ -26,7 +26,7 @@
         {% endif %}
 
         <span class="align-middle">
-            {{ gamelink.render(game) }}
+            {{ gamelink.title(game, 'staff') }}
             {{ gamelowquality.b5(game) }}
         </span>
     </td>
