@@ -1,5 +1,6 @@
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/game/price.twig' as gameprice %}
+{% import 'ui/components/game/release-date.twig' as gamereleasedate %}
 
 <div class="row" style="margin-top: 16px;">
 
@@ -18,7 +19,7 @@
         </span>
         <br>
         <span class="h6">
-            Release date: {% include 'modules/game/release-date.twig' with {'item': item} %}
+            {{ gamereleasedate.standard(item) }}
         </span>
         {% if item.price_eshop %}
             {{ gameprice.standard(item) }}

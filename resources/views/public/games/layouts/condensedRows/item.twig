@@ -1,5 +1,6 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/release-date.twig' as gamereleasedate %}
 
 <div class="row" style="margin-top: 8px;">
 
@@ -18,7 +19,7 @@
         {% endif %}
         <br>
         <span class="h6">
-            Released: {% include 'modules/game/release-date.twig' with {'item': item} %}
+            {{ gamereleasedate.standard(item) }}
         </span>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
