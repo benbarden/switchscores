@@ -1,7 +1,9 @@
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
 <div class="row" style="margin-top: 16px;">
 
     <div class="col-sm-12 col-md-12 col-lg-12">
-        {% include 'modules/game/packshot/header.twig' with {'item': item} %}
+        {{ packshots.header(item) }}
     </div>
 
 </div>

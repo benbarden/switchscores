@@ -1,9 +1,10 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
 
 <div class="row" style="margin-top: 8px;">
 
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        {% include 'modules/game/packshot/square.twig' with {'item': item} %}
+        {{ packshots.square(item) }}
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <span class="h4">

@@ -1,5 +1,6 @@
 {% macro header(item) %}
-    {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
+    {% import 'ui/components/image/resolve.twig' as image %}
+    {% set boxartUrl = image.header(item)|trim %}
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
         {% if boxartUrl %}
             <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
@@ -10,7 +11,8 @@
 {% endmacro %}
 
 {% macro square(item) %}
-    {% set boxartUrl = ImageHelper.imageSquareUrl(item) %}
+    {% import 'ui/components/image/resolve.twig' as image %}
+    {% set boxartUrl = image.square(item)|trim %}
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
         {% if boxartUrl %}
             <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
@@ -21,7 +23,8 @@
 {% endmacro %}
 
 {% macro squareReleaseHub(item) %}
-    {% set boxartUrl = ImageHelper.imageSquareUrl(item) %}
+    {% import 'ui/components/image/resolve.twig' as image %}
+    {% set boxartUrl = image.square(item)|trim %}
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
         {% if boxartUrl %}
             <img src="{{ boxartUrl }}" class="img-thumbnail me-2 align-middle" style="border: 0; width: 75px; height: auto;" alt="{{ item.title }}">

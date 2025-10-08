@@ -1,4 +1,5 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
 
 {% if GameList.count > 0 %}
     <table id="{{ TableId }}" class="table data-sortable">
@@ -20,7 +21,7 @@
             <tr>
                 <td class="text-center">
                     <div style="width: 75px;">
-                        {% include 'modules/game/packshot/square.twig' %}
+                        {{ packshots.square(item) }}
                     </div>
                 </td>
                 <td>

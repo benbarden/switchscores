@@ -1,3 +1,5 @@
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
 <table class="table table-condensed">
     <thead>
     <tr>
@@ -12,7 +14,7 @@
     {% for item in GameList %}
         <tr>
             <td style="width: 150px; vertical-align: middle;">
-                {% include 'modules/game/packshot/header.twig' with {'item': item} %}
+                {{ packshots.header(item) }}
             </td>
             <td class="text-center" style="vertical-align: middle;">
                 <span class="h5">
