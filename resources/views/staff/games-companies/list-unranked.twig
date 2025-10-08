@@ -27,7 +27,7 @@
                     <td>
                         <a href="{{ route('staff.games-companies.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
                         <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
-                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            <i class="fas fa-external-link-alt"></i>
                         </a>
                         {% if item.website_url %}
                             <br>
@@ -51,7 +51,7 @@
                     <td class="text-left">
                         <a href="{{ route('staff.games.detail', {'gameId': item.game_id}) }}">{{ item.game_title }}</a>
                         <a href="{{ route('game.show', {'id': item.game_id, 'linkTitle': item.game_link_title}) }}" target="_blank" title="Open game page in a new tab">
-                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                            <i class="fas fa-external-link-alt"></i>
                         </a>
                     </td>
                     <td class="text-center">

@@ -29,7 +29,7 @@
         {% if SiteReviewsLatest %}
             <h2>Latest reviews from {{ PartnerData.name }}</h2>
             <p>
-                Click the <span class="glyphicon glyphicon-share" aria-hidden="true"></span> icon
+                Click the <i class="fas fa-external-link-alt"></i> icon
                 to read the review. This will open in a new tab.
             </p>
             <table class="table table-condensed table-responsive">
@@ -77,7 +77,7 @@
                         <td class="text-center">
                             {% if PartnerData.disable_links != "1" %}
                                 <a href="{{ item.url }}" target="_blank" title="Open review in a new tab">
-                                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                    <i class="fas fa-external-link-alt"></i>
                                 </a>
                             {% endif %}
                         </td>
