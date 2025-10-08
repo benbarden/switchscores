@@ -12,12 +12,12 @@
 
         {% if GameListStandard|length %}
             <h2>Games</h2>
-            {% include 'modules/game/table/news-db-update-list.twig' with {'GameList': GameListStandard} %}
+            {% include 'public/news/database-updates-table.twig' with {'GameList': GameListStandard} %}
         {% endif %}
 
         {% if GameListLowQuality|length %}
             <h2>Low quality titles</h2>
-            {% include 'modules/game/table/news-db-update-list.twig' with {'GameList': GameListLowQuality} %}
+            {% include 'public/news/database-updates-table.twig' with {'GameList': GameListLowQuality} %}
         {% endif %}
 
     </div>
