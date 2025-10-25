@@ -112,6 +112,42 @@ class GamesDetailController extends Controller
         // Import rules
         $bindings['ImportRulesEshop'] = $this->repoGameImportRuleEshop->getByGameId($gameId);
 
+        // Checks
+        $checks = [
+            [
+                'label' => 'Category',
+                'status' => $game->category ? 'ok' : 'fail',
+                //'note' => $game->category ? '' : 'None',
+                'href' => route('staff.games.edit', ['gameId' => $game->id])
+            ],
+            [
+                'label' => 'Publishers',
+                'status' => $game->gamePublishers->count() > 0 ? 'ok' : 'fail',
+                //'note' => $game->gamePublishers ? '' : 'None',
+                'href' => route('staff.game.partner.list', ['gameId' => $game->id])
+            ],
+            [
+                'label' => 'Release date',
+                'status' => $game->eu_release_date ? 'ok' : 'fail',
+                //'note' => $game->category ? '' : 'None',
+                'href' => route('staff.games.edit', ['gameId' => $game->id])
+            ],
+            [
+                'label' => 'Players',
+                'status' => $game->players ? 'ok' : 'fail',
+                //'note' => $game->category ? '' : 'None',
+                'href' => route('staff.games.edit', ['gameId' => $game->id])
+            ],
+            [
+                'label' => 'Price',
+                'status' => $game->price_eshop ? 'ok' : 'fail',
+                //'note' => $game->category ? '' : 'None',
+                'href' => route('staff.games.edit', ['gameId' => $game->id])
+            ],
+        ];
+
+        $bindings['Checks'] = $checks;
+
         return view('staff.games.detail.show', $bindings);
     }
 

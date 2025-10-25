@@ -1,0 +1,18 @@
+{% macro render(checks) %}
+    {% import 'ui/components/checks/row.twig' as cr %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for c in checks %}
+                {{ cr.status_row(
+                    c.label,
+                    c.status,
+                    c.note|default(null),
+                    c.href|default(null),
+                    c.action_text|default(null)
+                ) }}
+            {% else %}
+                <p class="text-muted">No checks to display.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
