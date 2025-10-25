@@ -1,0 +1,36 @@
+{% macro metric_row(title, href, value, max=null, empty_text='TBC') %}
+    {% set hasValue = (value is not same as(null)) and (value is not same as('')) %}
+
+    <div class="row metric-row">
+        <div class="col-md-4 col-sm-6 col-xs-6">
+            <h4 class="rating-title">
+                {% if href %}
+                    <a href="{{ href }}">{{ title }}</a>
+                {% else %}
+                    {{ title }}
+                {% endif %}
+            </h4>
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <h4 style="margin: 5px 0;">
+                <span class="rating-v2">
+                  {% if hasValue %}
+                      <span class="rank">{{ value }}</span>
+                    {% if max %}
+                      <span class="separator">/</span>
+                      <span class="suffix">{{ max }}</span>
+                    {% endif %}
+                  {% else %}
+                      <span class="rank"></span>
+                      <span class="separator"></span>
+                      <span class="suffix">{{ empty_text }}</span>
+                  {% endif %}
+                </span>
+            </h4>
+        </div>
+
+        <div class="col-md-2"></div>
+    </div>
+    <hr style="margin: 4px 0; width: 80%;">
+{% endmacro %}

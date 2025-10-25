@@ -139,9 +139,13 @@
         {% else %}
             {{ heading.renderChunky('Rank', 'h2') }}
         {% endif %}
-        {% include 'modules/game/rank/all-time.twig' %}
-        {% include 'modules/game/rank/year.twig' %}
-        {% include 'modules/game/rank/year-month.twig' %}
+
+        {% include 'ui/components/game/rank.twig' with {
+            GameData: GameData,
+            RankMaximum: RankMaximum,
+            TopPercent: TopPercent,
+            TopRatedItem: TopRatedItem
+        } only %}
 
         {{ heading.renderChunky('Buy this game', 'h2') }}
         {% include 'public/games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}

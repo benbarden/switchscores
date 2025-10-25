@@ -1,0 +1,51 @@
+{% macro rank_group(GameData, RankMaximum, show_year=true, show_year_month=true, TopPercent=null, TopRatedItem=null) %}
+    {% import 'ui/components/rank/row.twig' as rr %}
+    {% from 'ui/components/rating/badge.twig' import badge as badge_macro %}
+
+    {% set _console = GameData.console %}
+    {% set _rel     = GameData.eu_release_date %}
+    {% set year         = _rel ? _rel|date('Y') : null %}
+    {% set monthNum     = _rel ? _rel|date('m') : null %}
+    {% set yearMonthLbl = _rel ? _rel|date('M Y') : null %}
+
+    {# --- Topline (optional) --- #}
+    {% if TopPercent or TopRatedItem %}
+        <div class="rank-topline" style="margin-bottom: 6px;">
+            {% if badge_macro is defined %}
+                {% if TopPercent %}{{ badge_macro('Top ' ~ TopPercent ~ ' %', 'info') }}{% endif %}
+                {% if TopRatedItem %}{{ badge_macro(TopRatedItem, 'success') }}{% endif %}
+            {% else %}
+                {% if TopPercent %}<span class="label label-info">Top {{ TopPercent }} %</span>{% endif %}
+                {% if TopRatedItem %}<span class="label label-success">{{ TopRatedItem }}</span>{% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# 1) All-time #}
+    {{ rr.metric_row(
+        'All-time',
+        route('console.topRated.allTime', { console: _console }),
+        GameData.game_rank ?? null,
+        RankMaximum ?? null,
+        GameData.isDigitalDelisted() ? 'N/A (De-listed)' : 'TBC'
+    ) }}
+
+    {# 2) Year (optional) #}
+    {% if show_year and GameData.gameRankYear and (GameData.gameRankYear.game_rank is not same as('')) and year %}
+        {{ rr.metric_row(
+            year,
+            route('console.topRated.byYear', { console: _console, year: year }),
+            GameData.gameRankYear.game_rank,
+            100
+        ) }}
+    {% endif %}
+
+    {# 3) Year-Month (optional) #}
+    {% if show_year_month and GameData.gameRankYearMonth and (GameData.gameRankYearMonth.game_rank is not same as('')) and year and monthNum %}
+        {{ rr.metric_row(
+            yearMonthLbl,
+            route('console.byMonth', { console: _console, year: year, month: monthNum }),
+            GameData.gameRankYearMonth.game_rank
+        ) }}
+    {% endif %}
+{% endmacro %}

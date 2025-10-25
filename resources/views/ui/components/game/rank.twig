@@ -1,0 +1,10 @@
+{% import 'ui/components/rank/group.twig' as rg %}
+
+{{ rg.rank_group(
+    GameData,
+    RankMaximum,
+    show_year is defined ? show_year : true,
+    show_year_month is defined ? show_year_month : true,
+    TopPercent ?? null,
+    TopRatedItem ?? null
+) }}
