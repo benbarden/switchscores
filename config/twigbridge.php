@@ -162,11 +162,6 @@ return [
                     'gameShow'
                 ]
             ],
-            'JsonHelper' => [
-                'is_safe' => [
-                    'jsonDecode'
-                ]
-            ]
         ],
 
         /*

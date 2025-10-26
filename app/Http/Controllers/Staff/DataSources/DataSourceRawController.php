@@ -41,7 +41,10 @@ class DataSourceRawController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesListRawSubpage($pageTitle, $dataSource);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['DSRawItem'] = $dsRawItem;
+        if ($dsRawItem) {
+            $sourceDataRaw = json_decode($dsRawItem->source_data_json, true);
+            $bindings['SourceDataRaw'] = $sourceDataRaw;
+        }
 
         return view('staff.data-sources.raw.view', $bindings);
 
