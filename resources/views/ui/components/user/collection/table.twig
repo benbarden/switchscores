@@ -43,7 +43,7 @@
                 <tr id="js-collection-row-{{ item.id }}">
                     <td class="text-center">{{ item.id }}</td>
                     <td class="text-left">
-                        <a href="{{ LinkHelper.gameShow(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                        <a href="{{ game_url(item.game) }}" target="_blank">{{ item.game.title }}</a>
                     </td>
                     {% if PlayStatus is not defined %}
                         <td class="text-left" style="vertical-align: middle;">

@@ -14,7 +14,7 @@
                 {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
                 <tr>
                     <td class="text-center">
-                        <a href="{{ LinkHelper.gameShow(item) }}">
+                        <a href="{{ game_url(item) }}">
                             {% if boxartUrl %}
                                 <img src="{{ boxartUrl }}" style="border: 0; height: 70px; width: 160px; margin-bottom: 0;" alt="{{ item.title }}">
                             {% else %}

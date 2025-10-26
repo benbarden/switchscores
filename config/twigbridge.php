@@ -157,11 +157,6 @@ return [
                     'packshotHtml', 'packshotHtmlBuilder'
                 ]
             ],
-            'LinkHelper' => [
-                'is_safe' => [
-                    'gameShow'
-                ]
-            ],
         ],
 
         /*

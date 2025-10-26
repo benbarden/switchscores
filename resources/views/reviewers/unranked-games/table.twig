@@ -24,9 +24,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ LinkHelper.gameShow(item) }}">
-                            {{ item.title }}
-                        </a>
+                        <a href="{{ game_url(item) }}">{{ item.title }}</a>
                     </td>
                     <td>
                         {% if item.category.id %}

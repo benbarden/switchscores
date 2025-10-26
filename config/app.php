@@ -160,6 +160,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TwigViewServiceProvider::class,
 
         // Domain providers
         App\Providers\Domain\User\RepositoryProvider::class,
@@ -228,7 +229,6 @@ return [
 
         'DateHelper' => App\Helpers\DateHelper::class,
         'ImageHelper' => App\Helpers\ImageHelper::class,
-        'LinkHelper' => App\Helpers\LinkHelper::class,
 
     ],
 

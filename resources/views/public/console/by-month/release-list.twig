@@ -19,9 +19,7 @@
                     {{ item.eu_release_date|date('jS M') }}
                 </td>
                 <td>
-                    <a href="{{ LinkHelper.gameShow(item) }}">
-                        {{ item.title }}
-                    </a>
+                    <a href="{{ game_url(item) }}">{{ item.title }}</a>
                 </td>
                 <td class="text-center">
                     {% if item.is_low_quality == 1 %}

@@ -29,7 +29,7 @@
                         <tr>
                             <td class="text-center">{{ item.id }}</td>
                             <td>
-                                <a href="{{ LinkHelper.gameShow(item) }}" target="_blank">{{ item.title }}</a>
+                                <a href="{{ game_url(item) }}" target="_blank">{{ item.title }}</a>
                             </td>
                             <td class="text-center">
                                 {% if item.review_count > 2 %}
