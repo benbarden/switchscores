@@ -162,11 +162,6 @@ return [
                     'gameShow'
                 ]
             ],
-            'SerialHelper' => [
-                'is_safe' => [
-                    'unserialize'
-                ]
-            ],
             'JsonHelper' => [
                 'is_safe' => [
                     'jsonDecode'
