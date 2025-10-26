@@ -11,7 +11,7 @@
             <a href="{{ route('staff.reviews.unranked.review-count-list', {'reviewCount': 2}) }}">View all with 2 reviews</a>.
         </p>
 
-        {% include 'modules/shortcodes/unranked-game-table-staff.twig' with {'GameList': UnrankedReviews2List} %}
+        {% include 'staff/reviews/unranked/table-unranked.twig' with {'GameList': UnrankedReviews2List} %}
 
     </div>
 
@@ -22,7 +22,7 @@
             <a href="{{ route('staff.reviews.unranked.review-count-list', {'reviewCount': 1}) }}">View all with 1 review</a>.
         </p>
 
-        {% include 'modules/shortcodes/unranked-game-table-staff.twig' with {'GameList': UnrankedReviews1List} %}
+        {% include 'staff/reviews/unranked/table-unranked.twig' with {'GameList': UnrankedReviews1List} %}
 
     </div>
 
@@ -33,7 +33,7 @@
             <a href="{{ route('staff.reviews.unranked.review-count-list', {'reviewCount': 0}) }}">View all with 0 reviews</a>.
         </p>
 
-        {% include 'modules/shortcodes/unranked-game-table-staff.twig' with {'GameList': UnrankedReviews0List} %}
+        {% include 'staff/reviews/unranked/table-unranked.twig' with {'GameList': UnrankedReviews0List} %}
 
     </div>
 

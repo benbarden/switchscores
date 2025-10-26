@@ -56,7 +56,7 @@ class GameHeader
                 }
 
                 $bindings['GameList'] = $gameList;
-                $shortcodeHtml = view('modules.shortcodes.game-header', $bindings);
+                $shortcodeHtml = view('ui.blocks.shortcodes.game-header', $bindings);
                 return $shortcodeHtml;
                 break;
         }

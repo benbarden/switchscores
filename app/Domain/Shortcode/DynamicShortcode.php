@@ -56,7 +56,7 @@ class DynamicShortcode
                 }
 
                 $bindings['GameList'] = $gameList;
-                $shortcodeHtml = view('modules.shortcodes.game-table', $bindings);
+                $shortcodeHtml = view('ui.blocks.shortcodes.game-table', $bindings);
                 break;
             case "gamegrid":
                 $idList = $params['ids'];
@@ -67,7 +67,7 @@ class DynamicShortcode
                 }
 
                 $bindings['GameList'] = $gameList;
-                $shortcodeHtml = view('modules.shortcodes.game-grid', $bindings);
+                $shortcodeHtml = view('ui.blocks.shortcodes.game-grid', $bindings);
                 break;
             case "gameheader":
                 $idList = $params['ids'];
@@ -78,7 +78,7 @@ class DynamicShortcode
                 }
 
                 $bindings['GameList'] = $gameList;
-                $shortcodeHtml = view('modules.shortcodes.game-header', $bindings);
+                $shortcodeHtml = view('ui.blocks.shortcodes.game-header', $bindings);
                 break;
         }
         return $shortcodeHtml;

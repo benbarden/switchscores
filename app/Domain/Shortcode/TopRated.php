@@ -54,7 +54,7 @@ class TopRated
             if (strpos($parsedHtml, $key)) {
                 // @todo either replace the console with a variable, or remove this shortcode
                 $gameList = $this->dbTopRated->byMonthWithRanks(1, $year, $month, 10);
-                $shortcodeHtml = view('modules.shortcodes.top-rated', ['GameList' => $gameList]);
+                $shortcodeHtml = view('ui.blocks.shortcodes.top-rated', ['GameList' => $gameList]);
                 $parsedHtml = str_replace($key, $shortcodeHtml, $parsedHtml);
             }
 
