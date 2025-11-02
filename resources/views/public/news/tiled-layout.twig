@@ -2,6 +2,14 @@
 
 {% block page_body %}
 
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            Database updates have moved: <a href="{{ route('news.databaseUpdates.landing') }}">find them here</a>.
+        </p>
+    </div>
+</div>
+
 {% for newsItem in NewsList|batch(3, null) %}
     <div class="row">
         {% for item in newsItem %}

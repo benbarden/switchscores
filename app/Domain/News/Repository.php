@@ -38,6 +38,11 @@ class Repository
         $news->save();
     }
 
+    public function delete($id)
+    {
+        News::where('id', $id)->delete();
+    }
+
     public function find($id)
     {
         return News::find($id);

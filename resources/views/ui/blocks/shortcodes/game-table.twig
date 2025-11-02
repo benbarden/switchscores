@@ -1,9 +1,11 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
 
 {% if GameList %}
     <table class="table table-responsive table-striped">
         <thead>
             <tr>
+                <th style="width: 75px;"></th>
                 <th>
                     <span class="h5">
                         Title
@@ -25,12 +27,10 @@
             {% for item in GameList %}
                 <tr>
                     <td>
-                        ID: {{ item.id }}
-                        <br>Title: {{ item.title }}
-                        <br>Link title: {{ item.link_title }}
-                        {#
-                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" class="h6">{{ item.title }}</a>
-                        #}
+                        {{ packshots.square(item) }}
+                    </td>
+                    <td>
+                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" class="h5">{{ item.title }}</a>
                     </td>
                     <td class="text-center">
                         <span class="h5">{{ item.game_rank }}</span>

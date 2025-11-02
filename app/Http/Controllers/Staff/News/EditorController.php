@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
+use Illuminate\Support\Facades\DB;
+
 class EditorController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -96,5 +98,49 @@ class EditorController extends Controller
         $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
         return view('staff.news.editor.edit', $bindings);
+    }
+
+    public function delete($newsId)
+    {
+        $pageTitle = 'Delete news';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $newsData = $this->repoNews->find($newsId);
+        if (!$newsData) abort(404);
+
+        $request = request();
+
+        if ($request->isMethod('post')) {
+
+            $bindings['FormMode'] = 'edit-post';
+
+            // Delete the post
+            $this->repoNews->delete($newsId);
+
+            // Also delete any featured items
+            $queueIds = DB::table('news_post_games')
+                ->where('news_post_id', $newsId)
+                ->pluck('feature_queue_id')
+                ->filter(); // remove nulls
+
+            if ($queueIds->isNotEmpty()) {
+                DB::table('feature_queue')->whereIn('id', $queueIds)->update(['used_at' => null]);
+            }
+
+            DB::table('news_post_games')->where('news_post_id', $newsId)->delete();
+
+            return redirect(route('staff.news.list'));
+
+        } else {
+
+            $bindings['FormMode'] = 'edit';
+
+        }
+
+        $bindings['NewsData'] = $newsData;
+        $bindings['NewsId'] = $newsId;
+
+        return view('staff.news.editor.delete', $bindings);
     }
 }

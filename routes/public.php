@@ -119,7 +119,8 @@ Route::get('/partners/games-company/{linkTitle}', 'PublicSite\GamesCompaniesCont
 /* News */
 Route::get('/news', 'PublicSite\NewsController@landing')->name('news.landing');
 Route::get('/news/database-updates/{year}/{week}', 'PublicSite\NewsController@databaseUpdates')->name('news.databaseUpdates');
-Route::get('/news/archive', 'PublicSite\NewsController@landingArchive')->name('news.archive');
+Route::get('/news/database-updates', 'PublicSite\NewsController@databaseUpdatesLanding')->name('news.databaseUpdates.landing');
+//Route::get('/news/archive', 'PublicSite\NewsController@landingArchive')->name('news.archive');
 Route::get('/news/category/{linkName}', 'PublicSite\NewsController@categoryLanding')->name('news.category.landing');
 Route::get('/news/{date}/{title}', 'PublicSite\NewsController@displayContent')->name('news.content');
 

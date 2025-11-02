@@ -1,0 +1,104 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% block page_inner %}
+
+    {% set title = bucket == 'almost_ranked' ? 'Games that need 1 more review'
+        : (bucket == 'newly_ranked' ? 'Newly ranked games' : 'Forgotten gems') %}
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ bucket_label }}</h5>
+
+            {% if bucket == 'needs-2-reviews' %}
+                <form method="post" action="{{ route('staff.news.enqueue', { bucket: bucket }) }}" class="mb-3">
+                    {{ csrf_field()|raw }}
+                    <div class="row g-2 align-items-end">
+                        <div class="col-auto">
+                            <label class="form-label mb-0">Min score</label>
+                            <input type="number" step="0.1" name="min_score" value="7.5" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-auto">
+                            <label class="form-label mb-0">Cooldown (days)</label>
+                            <input type="number" name="cooldown_days" value="120" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary btn-sm" type="submit">Enqueue candidates</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-ready">Ready</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-used">Previously featured</a></li>
+            </ul>
+
+            <div class="tab-content border-start border-end border-bottom p-3">
+                <div class="tab-pane fade show active" id="tab-ready">
+                    {% if ready.count %}
+                        <table class="table table-sm align-middle">
+                            <thead>
+                            <tr>
+                                <th>Game</th>
+                                <th class="text-center">Avg</th>
+                                <th class="text-center">Reviews</th>
+                                <th>Notes</th>
+                                <th class="text-center">Release date</th>
+                                <th class="text-center">Queued</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in ready %}
+                                {% set g = row.game %}
+                                <tr>
+                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td class="text-center">{{ g.rating_avg is not null ? g.rating_avg|number_format(1) : '—' }}</td>
+                                    <td class="text-center">{{ g.review_count }}</td>
+                                    <td>{{ row.notes }}</td>
+                                    <td class="text-center">{{ g.eu_release_date ? g.eu_release_date|format('Y-m-d') : '' }}</td>
+                                    <td class="text-center">{{ row.queued_at ? row.queued_at.format('Y-m-d') : '' }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ ready.links('pagination::bootstrap-5')|raw }}
+                    {% else %}
+                        <p class="text-muted mb-0">No candidates yet. Click “Enqueue candidates”.</p>
+                    {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="tab-used">
+                    {% if used.count %}
+                        <table class="table table-sm align-middle">
+                            <thead>
+                            <tr>
+                                <th>Game</th>
+                                <th>Used at</th>
+                                <th>Notes</th></tr>
+                            </thead>
+                            <tbody>
+                            {% for row in used %}
+                                {% set g = row.game %}
+                                <tr>
+                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td>{{ row.used_at ? row.used_at.format('Y-m-d H:i') : '' }}</td>
+                                    <td>{{ row.notes }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ used.links('pagination::bootstrap-5')|raw }}
+                    {% else %}
+                        <p class="text-muted mb-0">None featured yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock page_inner %}

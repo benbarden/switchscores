@@ -56,7 +56,8 @@
                         {{ item.created_at }}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.news.edit', {'newsId': item.id}) }}">Edit</a>
+                        <a href="{{ route('staff.news.edit', {'newsId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.news.delete', {'newsId': item.id}) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

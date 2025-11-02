@@ -1,15 +1,26 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 
 {% block page_inner %}
-
-<a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>
-<hr>
 
 <div class="row">
 
     <div class="col-md-4">
 
-        <h2>Navigation</h2>
+        {{ heading.renderSlick('Tools') }}
+        <br>
+        <a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>
+        <br>
+        <br>
+        <a href="{{ route('staff.news.bucket', {bucket: 'needs-2-reviews'}) }}" class="btn outline btn-primary">Buckets: Needs 2 reviews</a>
+        <br>
+        <br>
+        <a href="{{ route('staff.news.generate', { bucket: 'needs-2-reviews', limit: 6 }) }}" class="btn outline btn-primary">Generate draft: Needs 2 reviews</a>
+        <br>
+        <br>
+
+        {{ heading.renderSlick('Navigation') }}
 
         <table class="table">
             <tbody>

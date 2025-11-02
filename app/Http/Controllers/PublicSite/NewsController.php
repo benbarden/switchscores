@@ -40,7 +40,26 @@ class NewsController extends Controller
     {
         $bindings = [];
 
-        $pageTitle = 'News';
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('News');
+
+        $newsList = $this->repoNews->getPaginated(12);
+
+        $bindings['NewsList'] = $newsList;
+        $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
+        $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
+
+        $bindings['DisplayMode'] = 'home';
+
+        return view('public.news.tiled-layout', $bindings);
+    }
+
+    public function databaseUpdatesLanding()
+    {
+        $bindings = [];
+
+        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('Database updates');
+
+        $pageTitle = 'Database updates';
 
         $bindings['TopTitle'] = $pageTitle;
         $bindings['PageTitle'] = $pageTitle;
@@ -54,7 +73,7 @@ class NewsController extends Controller
             }
         }
 
-        return view('public.news.landing', $bindings);
+        return view('public.news.database-updates-landing', $bindings);
     }
 
     public function databaseUpdates($year, $week)
@@ -91,23 +110,6 @@ class NewsController extends Controller
         $bindings['GameListLowQuality'] = $gameListLowQuality;
 
         return view('public.news.database-updates', $bindings);
-    }
-
-    public function landingArchive()
-    {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('Archive');
-
-        $newsList = $this->repoNews->getPaginated(12);
-
-        $bindings['NewsList'] = $newsList;
-        $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
-        $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
-
-        $bindings['DisplayMode'] = 'home';
-
-        return view('public.news.tiled-layout', $bindings);
     }
 
     public function categoryLanding($linkName)

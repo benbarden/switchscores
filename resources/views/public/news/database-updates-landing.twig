@@ -6,15 +6,9 @@
 
     <div class="col-xs-12 col-sm-12 col-md-12">
 
-        <p>
-            Older news articles can be found in the <a href="{{ route('news.archive') }}">News archive</a>.
-        </p>
-
         <div class="row">
 
             <div class="col-xs-12 col-sm-6 col-md-6">
-
-                <h2>Database updates</h2>
 
                 {% for thisYear in AllowedYears %}
                     {% set yearList = attribute(_context, 'NewsDbUpdateList'~thisYear) %}

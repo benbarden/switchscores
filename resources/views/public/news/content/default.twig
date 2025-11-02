@@ -6,11 +6,15 @@
 
 <div class="row wos-content-page">
     <div class="col-xs-12 col-sm-8 col-md-8">
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                {{ newsimg.render(NewsItem, false) }}
+        {#
+        {% if NewsItem.game_id %}
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    {{ newsimg.render(NewsItem, false) }}
+                </div>
             </div>
-        </div>
+        {% endif %}
+        #}
         <div class="row">
             <div class="blog-post-body col-sm-12 col-md-12 col-lg-12">
                 {{ NewsContentParsed|raw }}

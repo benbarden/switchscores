@@ -51,6 +51,26 @@ class AutoDescription
         return $blurb;
     }
 
+    public function releaseDateAndPublishers()
+    {
+        if (!$this->game->eu_release_date) {
+            return '';
+        }
+        if (count($this->game->gamePublishers) > 0) {
+            $blurb = 'Released on '.date('jS F Y', strtotime($this->game->eu_release_date)).', ';
+            $blurb .= 'it was published by ';
+            foreach ($this->game->gamePublishers as $gamePublisher) {
+                $pubName = $gamePublisher->publisher->name;
+                $blurb .= $pubName;
+                break;
+            }
+            $blurb .= '. ';
+            return $blurb;
+        } else {
+            return 'It was released on '.date('jS F Y', strtotime($this->game->eu_release_date)).'. ';
+        }
+    }
+
     public function delisted()
     {
         if ($this->game->isDigitalDelisted()) {
@@ -128,13 +148,14 @@ class AutoDescription
         $this->game = $game;
 
         $category = $this->category();
+        $releaseDateAndPubs = $this->releaseDateAndPublishers();
         $delisted = $this->delisted();
         $ranking = $this->ranking();
         $reviews = $this->reviews();
         $series = $this->series();
         $collection = $this->collection();
 
-        $blurb = $category.$delisted.$ranking.$reviews.$series.$collection;
+        $blurb = $category.$releaseDateAndPubs.$delisted.$ranking.$reviews.$series.$collection;
 
         return $blurb;
 
