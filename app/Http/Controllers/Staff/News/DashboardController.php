@@ -142,7 +142,7 @@ class DashboardController extends Controller
         // 3. Compose body text
         $body = <<<MD
 <p>
-These picks have strong averages but only 1–2 reviews. If you’ve played them, add your review and help them enter the rankings.
+These picks have strong averages but only 2 reviews. If you’ve played them, add your review and help them enter the rankings.
 </p>
 <p>
 <strong>We skip low quality and de-listed titles.</strong>
