@@ -95,6 +95,7 @@ class DashboardController extends Controller
             '--bucket' => $request->input('bucket', 'has-2-reviews'),
             '--min-score' => $request->input('min_score', 7.5),
             '--cooldown-days' => $request->input('cooldown_days', 120),
+            '--refresh' => true,
         ]);
 
         return back()->with('success', 'Enqueued has-2-reviews candidates.');

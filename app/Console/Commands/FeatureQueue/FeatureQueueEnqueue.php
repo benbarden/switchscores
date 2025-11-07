@@ -15,8 +15,8 @@ class FeatureQueueEnqueue extends Command
      */
     protected $signature = 'features:enqueue
         {--bucket= : Bucket slug}
-        {--min-score=}
-        {--cooldown-days=}
+        {--min-score=7.5}
+        {--cooldown-days=120}
         {--refresh : Clear unused entries in this bucket before enqueueing}';
 
     /**

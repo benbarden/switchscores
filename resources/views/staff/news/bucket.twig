@@ -12,24 +12,22 @@
         <div class="card-body">
             <h5 class="card-title">{{ bucket_label }}</h5>
 
-            {% if bucket == 'has-2-reviews' %}
-                <form method="post" action="{{ route('staff.news.enqueue', { bucket: bucket }) }}" class="mb-3">
-                    {{ csrf_field()|raw }}
-                    <div class="row g-2 align-items-end">
-                        <div class="col-auto">
-                            <label class="form-label mb-0">Min score</label>
-                            <input type="number" step="0.1" name="min_score" value="7.5" class="form-control form-control-sm">
-                        </div>
-                        <div class="col-auto">
-                            <label class="form-label mb-0">Cooldown (days)</label>
-                            <input type="number" name="cooldown_days" value="120" class="form-control form-control-sm">
-                        </div>
-                        <div class="col-auto">
-                            <button class="btn btn-primary btn-sm" type="submit">Enqueue candidates</button>
-                        </div>
+            <form method="post" action="{{ route('staff.news.enqueue', { bucket: bucket }) }}" class="mb-3">
+                {{ csrf_field()|raw }}
+                <div class="row g-2 align-items-end">
+                    <div class="col-auto">
+                        <label class="form-label mb-0">Min score</label>
+                        <input type="number" step="0.1" name="min_score" value="7.5" class="form-control form-control-sm">
                     </div>
-                </form>
-            {% endif %}
+                    <div class="col-auto">
+                        <label class="form-label mb-0">Cooldown (days)</label>
+                        <input type="number" name="cooldown_days" value="120" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary btn-sm" type="submit">Enqueue candidates</button>
+                    </div>
+                </div>
+            </form>
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-ready">Ready</a></li>
