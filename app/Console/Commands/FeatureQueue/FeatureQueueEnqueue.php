@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Enums\FeatureQueueBucket;
 
-class EnqueueAlmostRanked extends Command
+class FeatureQueueEnqueue extends Command
 {
     /**
      * The name and signature of the console command.
@@ -15,8 +15,8 @@ class EnqueueAlmostRanked extends Command
      */
     protected $signature = 'features:enqueue
         {--bucket= : Bucket slug}
-        {--min-score=7.5}
-        {--cooldown-days=120}
+        {--min-score=}
+        {--cooldown-days=}
         {--refresh : Clear unused entries in this bucket before enqueueing}';
 
     /**
@@ -53,14 +53,14 @@ class EnqueueAlmostRanked extends Command
 
         // derive conditions per bucket
         [$reviewWhere, $notes] = match ($bucketSlug) {
-            FeatureQueueBucket::NEEDS_2_REVIEWS->value => ["g.review_count = 2", 'needs one more review'],
-            FeatureQueueBucket::NEEDS_1_REVIEW->value  => ["g.review_count = 1", 'has 1 review'],
-            FeatureQueueBucket::NEEDS_0_REVIEWS->value => ["(g.review_count IS NULL OR g.review_count = 0)", 'no reviews yet'],
+            FeatureQueueBucket::HAS_2_REVIEWS->value => ["g.review_count = 2", 'has 2 reviews'],
+            FeatureQueueBucket::HAS_1_REVIEW->value  => ["g.review_count = 1", 'has 1 review'],
+            FeatureQueueBucket::HAS_0_REVIEWS->value => ["(g.review_count IS NULL OR g.review_count = 0)", 'no reviews yet'],
             default => [null, null],
         };
 
         if ($reviewWhere === null) {
-            $this->error('This command currently supports only needs-* buckets.');
+            $this->error('Unsupported bucket.');
             return self::FAILURE;
         }
 

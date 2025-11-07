@@ -6,14 +6,13 @@
 
 {% block page_inner %}
 
-    {% set title = bucket == 'almost_ranked' ? 'Games that need 1 more review'
-        : (bucket == 'newly_ranked' ? 'Newly ranked games' : 'Forgotten gems') %}
+    {% set title = bucket_label %}
 
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">{{ bucket_label }}</h5>
 
-            {% if bucket == 'needs-2-reviews' %}
+            {% if bucket == 'has-2-reviews' %}
                 <form method="post" action="{{ route('staff.news.enqueue', { bucket: bucket }) }}" class="mb-3">
                     {{ csrf_field()|raw }}
                     <div class="row g-2 align-items-end">

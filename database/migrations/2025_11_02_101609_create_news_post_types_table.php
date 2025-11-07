@@ -23,9 +23,9 @@ return new class extends Migration
         });
 
         DB::table('news_post_types')->upsert([
-            ['slug' => 'needs-2-reviews', 'title' => 'Games that need one more review', 'cadence_days' => 14, 'is_enabled' => true],
-            ['slug' => 'needs-1-review', 'title' => 'Promising games (only 1 review so far)', 'cadence_days' => 14, 'is_enabled' => true],
-            ['slug' => 'needs-0-reviews', 'title' => 'New/overlooked games (no reviews yet)', 'cadence_days' => 14, 'is_enabled' => true],
+            ['slug' => 'has-2-reviews', 'title' => 'Games that need one more review', 'cadence_days' => 14, 'is_enabled' => true],
+            ['slug' => 'has-1-review', 'title' => 'Promising games with one review', 'cadence_days' => 14, 'is_enabled' => true],
+            ['slug' => 'has-0-reviews', 'title' => 'Games with no reviews yet', 'cadence_days' => 14, 'is_enabled' => true],
             ['slug' => 'newly-ranked', 'title' => 'Newly ranked games', 'cadence_days' => 30, 'is_enabled' => true],
             ['slug' => 'forgotten-gem', 'title' => 'Forgotten gems worth a look', 'cadence_days' => 21, 'is_enabled' => true],
         ], ['slug'], ['title', 'cadence_days', 'is_enabled']);

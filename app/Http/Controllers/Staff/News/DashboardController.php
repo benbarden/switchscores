@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Staff\News;
 
 use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\FeatureQueue;
 use App\Models\News;
@@ -29,18 +29,18 @@ class DashboardController extends Controller
 
     public function cleanupBucket($bucket)
     {
-        if ($bucket == 'needs-2-reviews') {
+        if ($bucket == 'has-2-reviews') {
             DB::statement("
                 DELETE fq FROM feature_queue fq
                 JOIN games g ON g.id = fq.game_id
-                WHERE fq.bucket = 'needs-2-reviews'
+                WHERE fq.bucket = ?
                 AND fq.used_at IS NULL
                 AND (
                 g.review_count <> 2
                 OR g.is_low_quality = 1
                 OR g.format_digital = 'De-listed'
                 )
-            ");
+            ", [$bucket]);
         }
     }
 
@@ -86,17 +86,18 @@ class DashboardController extends Controller
         $this->cleanupBucket($bucket);
 
         // For now only "almost_ranked". Later we’ll branch to other enqueue commands.
-        if ($bucket !== 'needs-2-reviews') {
+        if ($bucket !== 'has-2-reviews') {
             return back()->with('error', 'Enqueue not implemented for this bucket yet.');
         }
 
         // Call the command you created (or inline the SQL if you prefer)
-        \Artisan::call('features:enqueue-needs-2-reviews', [
+        \Artisan::call('features:enqueue', [
+            '--bucket' => $request->input('bucket', 'has-2-reviews'),
             '--min-score' => $request->input('min_score', 7.5),
             '--cooldown-days' => $request->input('cooldown_days', 120),
         ]);
 
-        return back()->with('success', 'Enqueued needs-2-reviews candidates.');
+        return back()->with('success', 'Enqueued has-2-reviews candidates.');
     }
 
     public function generateDraft(string $bucket)
