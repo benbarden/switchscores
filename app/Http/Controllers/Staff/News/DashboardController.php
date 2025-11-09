@@ -101,12 +101,12 @@ class DashboardController extends Controller
         return back()->with('success', 'Enqueued has-2-reviews candidates.');
     }
 
-    public function generateDraft(string $bucket)
+    public function generateDraft(Request $request, string $bucket)
     {
         $bucketEnum = FeatureQueueBucket::tryFromSlug($bucket);
         abort_unless($bucketEnum != null, 404);
 
-        $limit = 6; // how many games per post
+        $limit = $request->input('limit', 6);
 
         // 1. Pick top N ready items
         $picks = FeatureQueue::with('game')
