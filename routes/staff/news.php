@@ -28,7 +28,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
             ->name('staff.news.bucket');
         Route::post('/bucket/{bucket}/enqueue', [DashboardController::class, 'enqueue'])
             ->name('staff.news.enqueue');
-        Route::get('/generate/{bucket}', [DashboardController::class, 'generateDraft'])
-            ->name('staff.news.generate');
+        Route::get('/generate-bucket-draft/{bucket}', [DashboardController::class, 'generateBucketDraft'])
+            ->name('staff.news.generateBucketDraft');
+        Route::get('/generate-custom-draft/{bucket}', [DashboardController::class, 'generateCustomDraft'])
+            ->name('staff.news.generateCustomDraft');
     });
 });

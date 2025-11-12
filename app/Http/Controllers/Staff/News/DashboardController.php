@@ -101,7 +101,12 @@ class DashboardController extends Controller
         return back()->with('success', 'Enqueued has-2-reviews candidates.');
     }
 
-    public function generateDraft(Request $request, string $bucket)
+    public function generateCustomDraft(Request $request)
+    {
+
+    }
+
+    public function generateBucketDraft(Request $request, string $bucket)
     {
         $bucketEnum = FeatureQueueBucket::tryFromSlug($bucket);
         abort_unless($bucketEnum != null, 404);

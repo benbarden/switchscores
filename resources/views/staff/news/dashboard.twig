@@ -8,17 +8,21 @@
 
     <div class="col-md-4">
 
-        {{ heading.renderSlick('Tools') }}
+        {{ heading.renderSlick('Write') }}
         <br>
-        <a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">Add news</a>
-        <br>
-        <br>
-        <a href="{{ route('staff.news.bucket', {bucket: 'has-2-reviews'}) }}" class="btn outline btn-primary">Buckets: Has 2 reviews</a>
+        <a href="{{ route('staff.news.add') }}" class="btn outline btn-primary">+ Add news</a>
         <br>
         <br>
-        <a href="{{ route('staff.news.generate', { bucket: 'has-2-reviews', limit: 10 }) }}" class="btn outline btn-primary">Generate draft: Has 2 reviews</a>
+
+        {{ heading.renderSlick('Generate news content') }}
+        <br>
+        <a href="{{ route('staff.news.generateBucketDraft', { bucket: 'has-2-reviews', limit: 10 }) }}" class="btn outline btn-primary">Generate bucket draft: Has 2 reviews</a>
         <br>
         <br>
+
+    </div>
+
+    <div class="col-md-4">
 
         {{ heading.renderSlick('Navigation') }}
 
@@ -37,9 +41,17 @@
             </tbody>
         </table>
 
-    </div>
+        {{ heading.renderSlick('Buckets') }}
 
-    <div class="col-md-4">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.bucket', {bucket: 'has-2-reviews'}) }}">Buckets: Has 2 reviews</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 
