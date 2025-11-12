@@ -52,11 +52,27 @@ class ConsoleController extends Controller
             $bindings['RandomTop100Game'] = $topGameList;
         }
 
+        // Meta!
+        $consoleDesc = '';
+        if ($consoleId == Console::ID_SWITCH_1) {
+            $consoleDesc = Console::DESC_SWITCH_1;
+            $launchDesc = 'the console launched in 2017';
+        } elseif ($consoleId = Console::ID_SWITCH_2) {
+            $consoleDesc = Console::DESC_SWITCH_2;
+            $launchDesc = 'the console launched in 2025';
+        }
+        if ($consoleDesc) {
+            $onPageDesc = sprintf('Browse every Nintendo %s title released since %s. This hub includes full review scores, rankings, release details, and expert/community reviews — helping you quickly find the best games to play next.', $consoleDesc, $launchDesc);
+            $metaDesc = sprintf('Explore the full list of Nintendo %s games, complete with reviews, scores, and rankings. Filter by rating, release date, category, or popularity.', $consoleDesc, $launchDesc);
+            $bindings['OnPageDesc'] = $onPageDesc;
+            $bindings['MetaDescription'] = $metaDesc;
+        }
+
         // List of years
         $bindings['AllowedYears'] = $this->allowedDates->releaseYearsByConsole($consoleId);
 
-        $bindings['TopTitle'] = 'Nintendo '.$consoleName.' games';
-        $bindings['PageTitle'] = 'Nintendo '.$consoleName.' games';
+        $bindings['TopTitle'] = 'Nintendo '.$consoleName.' games library';
+        $bindings['PageTitle'] = 'Nintendo '.$consoleName.' games library';
         $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage($consoleName);
 
         $bindings['Console'] = $console;

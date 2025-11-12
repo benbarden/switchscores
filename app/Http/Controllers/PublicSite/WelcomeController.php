@@ -59,6 +59,7 @@ class WelcomeController extends Controller
 
         $bindings['TopTitle'] = 'Welcome';
         $bindings['PageTitle'] = 'Switch Scores - Homepage';
+        $bindings['MetaDescription'] = 'Explore thousands of Nintendo Switch game reviews and rankings. Find the best games, top-rated releases, and hidden gems.';
 
         return view('public.welcome', $bindings);
     }

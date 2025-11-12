@@ -7,16 +7,26 @@
 
 {% block page_body %}
 
-{{ alerts.siteSurvey('welcome') }}
-
 <div class="row">
 
     <div class="col-xs-12 col-sm-12 col-md-12 text-left">
-        <h4 class="rating-title">
+        <h1 class="rating-title">
             <span class="rating-v2">
                 Ranking the Nintendo Switch library.
             </span>
-        </h4>
+        </h1>
+        <p>
+            Switch Scores helps players find the best Nintendo Switch games through community reviews, ratings, and rankings.
+            Explore thousands of titles, discover the highest-rated games, track new releases, and see what the Switch community is playing right now.
+        </p>
+        <p>
+            <strong>Explore:</strong>
+            <a href="{{ route('console.topRated.landing', {'console': consoleSwitch1}) }}">Best Switch 1 games</a> |
+            <a href="{{ route('console.topRated.landing', {'console': consoleSwitch2}) }}">Best Switch 2 games</a> |
+            <a href="{{ route('console.landing', {'console': consoleSwitch1}) }}">Switch 1 library</a> |
+            <a href="{{ route('console.landing', {'console': consoleSwitch2}) }}">Switch 2 library</a> |
+            <a href="{{ route('news.landing') }}">Latest news</a>
+        </p>
     </div>
 
 </div>
@@ -69,7 +79,9 @@
 
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc;">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="border-left: 2px solid #cccccc; padding-top: 10px;">
+
+        {{ alerts.siteSurvey('welcome') }}
 
         {{ heading.renderChunky('Recent reviews', 'h2') }}
         {% include 'public/reviews/layouts/standard/layout.twig' with {'ReviewList': ReviewList, 'batchOverride': '1'} %}
