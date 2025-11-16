@@ -48,6 +48,8 @@ class NewsController extends Controller
         $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
         $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
 
+        $bindings['MetaDescription'] = 'The latest from Switch Scores — weekly roundups, top-rated lists, and feature updates from the Nintendo Switch community.';
+
         $bindings['DisplayMode'] = 'home';
 
         return view('public.news.tiled-layout', $bindings);
