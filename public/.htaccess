@@ -29,14 +29,14 @@ RewriteEngine On
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Page redirects
-    Redirect 301 /news/20200504/animal-crossing-new-horizons-fossil-and-recipe-trading-lists /news
-    Redirect 301 /news/20200503/animal-crossing-new-horizons-lets-buy-turnips-week-4 /news
-    Redirect 301 /news/20200426/animal-crossing-new-horizons-lets-buy-turnips-week-3 /news
-    Redirect 301 /news/20200419/animal-crossing-new-horizons-lets-buy-turnips-week-2 /news
+    Redirect 301 /news/20200504/animal-crossing-new-horizons-fossil-and-recipe-trading-lists /games/2583/animal-crossing-new-horizons
+    Redirect 301 /news/20200503/animal-crossing-new-horizons-lets-buy-turnips-week-4 /games/2583/animal-crossing-new-horizons
+    Redirect 301 /news/20200426/animal-crossing-new-horizons-lets-buy-turnips-week-3 /games/2583/animal-crossing-new-horizons
+    Redirect 301 /news/20200419/animal-crossing-new-horizons-lets-buy-turnips-week-2 /games/2583/animal-crossing-new-horizons
     Redirect 301 /news/20200413/tarantulas-animal-crossing-leaving-in-april /news
     Redirect 301 /news/20200411/a-new-look-news-page /news
-    Redirect 301 /news/20200216/feedback-wanted-on-switch-scores-categorisation /news
-    Redirect 301 /news/20200120/revamped-games-on-sale-page-improved-site-navigation /news
-    Redirect 301 /news/20190831/join-the-team-at-wos /news
+    Redirect 301 /news/20200216/feedback-wanted-on-switch-scores-categorisation /about
+    Redirect 301 /news/20200120/revamped-games-on-sale-page-improved-site-navigation /about
+    Redirect 301 /news/20190831/join-the-team-at-wos /about
 
 </IfModule>
