@@ -39,4 +39,12 @@ RewriteEngine On
     Redirect 301 /news/20200120/revamped-games-on-sale-page-improved-site-navigation /about
     Redirect 301 /news/20190831/join-the-team-at-wos /about
 
+    Redirect 301 /news/20190622/site-update-major-reorganisation-of-games-section /news
+    Redirect 301 /news/20190201/wos-updates-january-2019 /news
+    Redirect 301 /news/20190128/help-guide-how-to-use-the-games-collection /news
+    Redirect 301 /news/20190124/octahedron-latest-2019-release-to-break-the-top-100 /games/1939/octahedron-transfixed-edition
+    Redirect 301 /news/20181210/homepage-stats-changes-and-tidying-up-upcoming-games /news
+    Redirect 301 /news/20180807/removing-the-tba-titles /news
+    Redirect 301 /news/20180204/you-can-now-register-at-world-of-switch /news
+
 </IfModule>
