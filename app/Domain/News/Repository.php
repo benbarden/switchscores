@@ -8,7 +8,7 @@ use App\Models\News;
 class Repository
 {
     public function create(
-        $title, $categoryId, $url, $contentHtml, $gameId, $customImageUrl
+        $title, $categoryId, $url, $contentHtml, $gameId, $customImageUrl = null
     )
     {
         return News::create([

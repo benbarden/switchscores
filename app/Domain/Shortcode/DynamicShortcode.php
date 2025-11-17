@@ -5,7 +5,10 @@ namespace App\Domain\Shortcode;
 
 use Illuminate\Support\Collection;
 
+use App\Models\Game;
+
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Game\AutoDescription;
 
 class DynamicShortcode
 {
@@ -21,6 +24,11 @@ class DynamicShortcode
      */
     private $seedGamesCollection;
 
+    /**
+     * @var Game
+     */
+    private $seedGame;
+
     private $html;
 
     public function __construct($html)
@@ -28,11 +36,17 @@ class DynamicShortcode
         $this->html = $html;
 
         $this->repoGame = app(GameRepository::class);
+        $this->autoDescription = app(AutoDescription::class);
     }
 
     public function setSeedGames(Collection $seedGames)
     {
         $this->seedGamesCollection = $seedGames;
+    }
+
+    public function setSeedGame(Game $seedGame)
+    {
+        $this->seedGame = $seedGame;
     }
 
     public function parseCode($matches)
@@ -79,6 +93,18 @@ class DynamicShortcode
 
                 $bindings['GameList'] = $gameList;
                 $shortcodeHtml = view('ui.blocks.shortcodes.game-header', $bindings);
+                break;
+            case "gameblurb":
+                $idList = $params['ids'];
+                if ($this->seedGame) {
+                    $game = $this->seedGame;
+                } else {
+                    $game = $this->repoGame->getByIdList($idList, ['id', 'asc'])->first();
+                }
+                $gameBlurb = $this->autoDescription->generate($game);
+
+                $bindings['GameBlurb'] = $gameBlurb;
+                $shortcodeHtml = view('ui.blocks.shortcodes.game-blurb', $bindings);
                 break;
         }
         return $shortcodeHtml;

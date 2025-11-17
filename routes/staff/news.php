@@ -30,7 +30,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
             ->name('staff.news.enqueue');
         Route::get('/generate-bucket-draft/{bucket}', [DashboardController::class, 'generateBucketDraft'])
             ->name('staff.news.generateBucketDraft');
-        Route::get('/generate-custom-draft/{bucket}', [DashboardController::class, 'generateCustomDraft'])
+        Route::get('/generate-custom-draft/{contentType}', [DashboardController::class, 'generateCustomDraft'])
             ->name('staff.news.generateCustomDraft');
     });
 });

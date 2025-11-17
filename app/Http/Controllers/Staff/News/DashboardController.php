@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\News;
 
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,11 +10,17 @@ use App\Models\FeatureQueue;
 use App\Models\News;
 use App\Enums\FeatureQueueBucket;
 use App\Domain\Game\AutoDescription;
+use App\Domain\TopRated\DbQueries as DbTopRated;
+use App\Domain\News\Repository as RepoNews;
+use App\Domain\Game\Repository as RepoGame;
 
 class DashboardController extends Controller
 {
     public function __construct(
         private AutoDescription $autoDescription,
+        private DbTopRated $dbTopRated,
+        private RepoNews $repoNews,
+        private RepoGame $repoGame,
     )
     {
     }
@@ -101,9 +108,98 @@ class DashboardController extends Controller
         return back()->with('success', 'Enqueued has-2-reviews candidates.');
     }
 
-    public function generateCustomDraft(Request $request)
+    public function buildCustomDraftData($consoleId, $year, $limit)
     {
+        return [
+            'gameList' => $this->dbTopRated->byConsoleAndYear($consoleId, $year, $limit),
+            'postTitle' => sprintf('Top Rated Nintendo Switch %s games released in %s', $consoleId, $year),
+            'postSlug' => sprintf('top-rated-nintendo-switch-%s-games-%s', $consoleId, $year),
+            'postIntro' => sprintf('Here are the highest-rated Nintendo Switch %s games released in %s, '.
+                'based on aggregated critic and player reviews on Switch Scores. '.
+                'These are the top titles from the year that stood out above the rest.', $consoleId, $year),
+        ];
+    }
 
+    public function generateCustomDraft(Request $request, $contentType)
+    {
+        $postData = [];
+
+        switch ($contentType) {
+            case 'top-rated-switch-1-2018':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2018, 12);
+                break;
+            case 'top-rated-switch-1-2019':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2019, 12);
+                break;
+            case 'top-rated-switch-1-2020':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2020, 12);
+                break;
+            case 'top-rated-switch-1-2021':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2021, 12);
+                break;
+            case 'top-rated-switch-1-2022':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2022, 12);
+                break;
+            case 'top-rated-switch-1-2023':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2023, 12);
+                break;
+            case 'top-rated-switch-1-2024':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2024, 12);
+                break;
+            case 'top-rated-switch-1-2025':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_1, 2025, 12);
+                break;
+            case 'top-rated-switch-2-2025':
+                $postData = $this->buildCustomDraftData(Console::ID_SWITCH_2, 2025, 12);
+                break;
+            default:
+                abort(404);
+        }
+        $gameList = $postData['gameList'];
+        $postTitle = $postData['postTitle'];
+        $postSlug = $postData['postSlug'];
+        $postIntro = $postData['postIntro'];
+
+        if (count($gameList) == 0) abort(404);
+
+        // Build post HTML
+        $firstGameId = null;
+        $gameHtml = '';
+        foreach ($gameList as $gameItem) {
+            $gameId = $gameItem->id;
+            $game = $this->repoGame->find($gameId);
+            if ($firstGameId == null) $firstGameId = $gameId;
+            $gameHtml .= '<h3>'.$game->title.'</h3>'."\n";
+            $gameHtml .= '[gameheader ids="'.$gameId.'"]'."\n";
+            $gameHtml .= '[gameblurb ids="'.$gameId.'"]'."\n";
+            //$autoDescription = $this->autoDescription->generate($game);
+            //$gameHtml .= '<p>'.$autoDescription.'</p>';
+        }
+
+        // Compose body text
+        $contentHtml = <<<MD
+<p>
+{$postIntro}
+</p>
+{$gameHtml}
+MD;
+
+        // Check if it exists
+        $url = '/news/'.now()->format('Y-m-d').'/'.$postSlug;
+        $existingPost = $this->repoNews->getByUrl($url);
+        if ($existingPost) {
+            return redirect()->route('staff.news.edit', $existingPost->id);
+        }
+
+        // Create the draft post
+        $categoryId = 2; // Top Rated
+        $gameId = $firstGameId == null ? null : $firstGameId;
+        $news = $this->repoNews->create(
+            $postTitle, $categoryId, $url, $contentHtml, $gameId
+        );
+        return redirect()
+            ->route('staff.news.edit', $news->id)
+            ->with('success', "Draft created with {$gameList->count()} games.");
     }
 
     public function generateBucketDraft(Request $request, string $bucket)
@@ -137,8 +233,7 @@ class DashboardController extends Controller
             if ($firstGameId == null) $firstGameId = $gameId;
             $gameHtml .= '<h3>'.$pickItem->game->title.'</h3>'."\n";
             $gameHtml .= '[gameheader ids="'.$gameId.'"]'."\n";
-            $autoDescription = $this->autoDescription->generate($pickItem->game);
-            $gameHtml .= '<p>'.$autoDescription.'</p>';
+            $gameHtml .= '[gameblurb ids="'.$gameId.'"]'."\n";
             /*
             $gameHtml .= '<p>'.$pickItem->game->title.' has '.$pickItem->game->review_count.' review(s), '.
                 'with an average rating of '.round($pickItem->game->rating_avg, 2).'.'.

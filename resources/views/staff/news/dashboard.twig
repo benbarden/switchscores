@@ -15,10 +15,60 @@
         <br>
 
         {{ heading.renderSlick('Generate news content') }}
-        <br>
-        <a href="{{ route('staff.news.generateBucketDraft', { bucket: 'has-2-reviews', limit: 10 }) }}" class="btn outline btn-primary">Generate bucket draft: Has 2 reviews</a>
-        <br>
-        <br>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateBucketDraft', { bucket: 'has-2-reviews', limit: 10 }) }}">Generate bucket draft: Has 2 reviews</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2018' }) }}">Generate custom draft: Top Rated, Switch 1, 2018</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2019' }) }}">Generate custom draft: Top Rated, Switch 1, 2019</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2020' }) }}">Generate custom draft: Top Rated, Switch 1, 2020</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2021' }) }}">Generate custom draft: Top Rated, Switch 1, 2021</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2022' }) }}">Generate custom draft: Top Rated, Switch 1, 2022</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2023' }) }}">Generate custom draft: Top Rated, Switch 1, 2023</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2024' }) }}">Generate custom draft: Top Rated, Switch 1, 2024</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-1-2025' }) }}">Generate custom draft: Top Rated, Switch 1, 2025</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.news.generateCustomDraft', { contentType: 'top-rated-switch-2-2025' }) }}">Generate custom draft: Top Rated, Switch 2, 2025</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 
