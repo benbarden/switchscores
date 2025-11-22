@@ -29,7 +29,7 @@ class TagCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'link_title', 'category_order'
+        'name', 'link_title', 'category_order', 'taxonomy_reviewed'
     ];
 
     public function tags()

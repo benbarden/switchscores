@@ -8,23 +8,25 @@ use App\Models\Game;
 
 class Repository
 {
-    public function create($name, $linkTitle, $blurbOption, $parentId = null)
+    public function create($name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0)
     {
         Category::create([
             'name' => $name,
             'link_title' => $linkTitle,
             'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
+            'taxonomy_reviewed' => $taxonomyReviewed,
         ]);
     }
 
-    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null)
+    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0)
     {
         $values = [
             'name' => $name,
             'link_title' => $linkTitle,
             'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
+            'taxonomy_reviewed' => $taxonomyReviewed,
         ];
 
         $category->fill($values);

@@ -57,8 +57,9 @@ class TagController extends Controller
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
             $tagCategoryId = $request->tag_category_id;
+            $taxonomyReviewed = $request->taxonomy_reviewed;
 
-            $this->repoTag->create($tagName, $linkTitle, $tagCategoryId);
+            $this->repoTag->create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -93,8 +94,9 @@ class TagController extends Controller
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
             $tagCategoryId = $request->tag_category_id;
+            $taxonomyReviewed = $request->taxonomy_reviewed;
 
-            $this->repoTag->edit($tagData, $tagName, $linkTitle, $tagCategoryId);
+            $this->repoTag->edit($tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed);
 
             return redirect(route('staff.categorisation.tag.list'));
 

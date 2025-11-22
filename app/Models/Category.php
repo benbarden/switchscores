@@ -22,7 +22,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'link_title', 'parent_id', 'blurb_option'
+        'name', 'link_title', 'parent_id', 'blurb_option', 'taxonomy_reviewed'
     ];
 
     public function games()

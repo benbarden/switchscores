@@ -14,6 +14,7 @@
                 <th>Category</th>
                 <th class="text-center">Game count</th>
                 <th class="text-center">View</th>
+                <th class="text-center">Taxonomy reviewed</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -37,6 +38,15 @@
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.games.list.showList', { 'listType': 'by-category', 'param1': item }) }}">View games</a>
+                    </td>
+                    <td class="text-center">
+                        {% if item.taxonomy_reviewed == 0 %}
+                            <span class="badge bg-info">Not reviewed</span>
+                        {% elseif item.taxonomy_reviewed == 1 %}
+                            <span class="badge bg-success">Reviewed</span>
+                        {% elseif item.taxonomy_reviewed == 2 %}
+                            <span class="badge bg-danger">Deprecated</span>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.category.edit', {'categoryId': item.id}) }}">Edit</a>

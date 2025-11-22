@@ -88,7 +88,10 @@ class CategoryController extends Controller
             }
 
             // All ok
-            $this->repoCategory->create($request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->repoCategory->create(
+                $request->name, $request->link_title, $request->blurb_option, $request->parent_id,
+                $request->taxonomy_reviewed
+            );
 
             return redirect(route('staff.categorisation.category.list'));
 
@@ -123,7 +126,10 @@ class CategoryController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->repoCategory->edit($categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id);
+            $this->repoCategory->edit(
+                $categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id,
+                $request->taxonomy_reviewed
+            );
 
             return redirect(route('staff.categorisation.category.list'));
 

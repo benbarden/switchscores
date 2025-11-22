@@ -10,6 +10,7 @@
         formVals['link_title'] = "{{ CategoryData.link_title }}";
         formVals['blurb_option'] = "{{ CategoryData.blurb_option }}";
         formVals['parent_id'] = "{{ CategoryData.parent_id }}";
+        formVals['taxonomy_reviewed'] = "{{ CategoryData.taxonomy_reviewed }}";
 
     } else {
 
@@ -19,6 +20,7 @@
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['blurb_option'] = "{{ old('blurb_option') }}";
         formVals['parent_id'] = "{{ old('parent_id') }}";
+        formVals['taxonomy_reviewed'] = "{{ old('taxonomy_reviewed') }}";
 
     }
 
@@ -26,6 +28,7 @@
     $('#link_title').val(formVals['link_title']);
     $('#blurb_option').val(formVals['blurb_option']);
     $('#parent_id').val(formVals['parent_id']);
+    $('#taxonomy_reviewed').val(formVals['taxonomy_reviewed']);
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

@@ -10,21 +10,23 @@ use App\Models\Game;
 
 class Repository
 {
-    public function create($tagName, $linkTitle, $tagCategoryId)
+    public function create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0)
     {
         Tag::create([
             'tag_name' => $tagName,
             'link_title' => $linkTitle,
             'tag_category_id' => $tagCategoryId,
+            'taxonomy_reviewed' => $taxonomyReviewed,
         ]);
     }
 
-    public function edit(Tag $tagData, $tagName, $linkTitle, $tagCategoryId)
+    public function edit(Tag $tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0)
     {
         $values = [
             'tag_name' => $tagName,
             'link_title' => $linkTitle,
             'tag_category_id' => $tagCategoryId,
+            'taxonomy_reviewed' => $taxonomyReviewed,
         ];
 
         $tagData->fill($values);

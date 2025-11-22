@@ -9,6 +9,7 @@
         formVals['tag_category_id'] = "{{ TagData.tag_category_id }}";
         formVals['tag_name'] = "{{ TagData.tag_name|e('js') }}";
         formVals['link_title'] = "{{ TagData.link_title }}";
+        formVals['taxonomy_reviewed'] = "{{ TagData.taxonomy_reviewed }}";
 
     } else {
 
@@ -17,12 +18,14 @@
         formVals['tag_category_id'] = "{{ old('tag_category_id') }}";
         formVals['tag_name'] = "{{ old('tag_name')|e('js') }}";
         formVals['link_title'] = "{{ old('link_title') }}";
+        formVals['taxonomy_reviewed'] = "{{ old('taxonomy_reviewed') }}";
 
     }
 
     $('#tag_category_id').val(formVals['tag_category_id']);
     $('#tag_name').val(formVals['tag_name']);
     $('#link_title').val(formVals['link_title']);
+    $('#taxonomy_reviewed').val(formVals['taxonomy_reviewed']);
 
     $('#tag_name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('tag_name', 'link_title');

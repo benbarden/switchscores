@@ -15,6 +15,7 @@
                 <th class="text-left">Tag name</th>
                 <th class="text-left">Tag category</th>
                 <th class="text-center">Games with tag</th>
+                <th class="text-center">Taxonomy reviewed</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -34,6 +35,15 @@
                     </td>
                     <td class="text-center">
                         {{ item.gameTags().count }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.taxonomy_reviewed == 0 %}
+                            <span class="badge bg-info">Not reviewed</span>
+                        {% elseif item.taxonomy_reviewed == 1 %}
+                            <span class="badge bg-success">Reviewed</span>
+                        {% elseif item.taxonomy_reviewed == 2 %}
+                            <span class="badge bg-danger">Deprecated</span>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.tag.edit', {'tagId': item.id}) }}">Edit</a> :

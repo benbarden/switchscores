@@ -47,6 +47,17 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+        <label for="taxonomy_reviewed" class="col-sm-2 col-form-label">Taxonomy reviewed</label>
+        <div class="col-sm-4">
+            <select id="taxonomy_reviewed" class="form-select" name="taxonomy_reviewed">
+                <option value="0">Not reviewed</option>
+                <option value="1">Reviewed</option>
+                <option value="2">Deprecated</option>
+            </select>
+        </div>
+    </div>
+
     {{ formsubmit.renderB5() }}
 
 </form>
