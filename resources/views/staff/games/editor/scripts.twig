@@ -41,6 +41,7 @@
         formVals['packshot_square_url_override'] = "{{ GameData.packshot_square_url_override }}";
         formVals['eshop_europe_order'] = "{{ GameData.eshop_europe_order }}";
         formVals['is_low_quality'] = "{{ GameData.is_low_quality }}";
+        formVals['taxonomy_needs_review'] = "{{ GameData.taxonomy_needs_review }}";
         formVals['image_square'] = "{{ GameData.image_square }}";
         formVals['image_header'] = "{{ GameData.image_header }}";
         formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
@@ -84,6 +85,7 @@
         formVals['packshot_square_url_override'] = "{{ old('packshot_square_url_override') }}";
         formVals['eshop_europe_order'] = "{{ old('eshop_europe_order') }}";
         formVals['is_low_quality'] = "{{ old('is_low_quality') }}";
+        formVals['taxonomy_needs_review'] = "{{ old('taxonomy_needs_review') }}";
         formVals['image_square'] = "{{ old('image_square') }}";
         formVals['image_header'] = "{{ old('image_header') }}";
         formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
@@ -134,6 +136,7 @@
     if (formVals['is_low_quality'] == 1) {
         $('#is_low_quality').attr('checked', true);
     }
+    $('#taxonomy_needs_review').val(formVals['taxonomy_needs_review']);
     $('#image_square').val(formVals['image_square']);
     $('#image_header').val(formVals['image_header']);
     $('#boxart_square_url').val(formVals['boxart_square_url']);
@@ -175,6 +178,7 @@
         $('#grp_amazon_us_link').hide();
         //$('#grp_packshot_square_url_override').hide();
         $('#grp_is_low_quality').hide();
+        $('#grp_taxonomy_needs_review').hide();
 
         // hide all editorial fields
         $('#fs_editorial').hide();

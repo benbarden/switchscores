@@ -241,6 +241,12 @@ class GameBuilder
         return $this;
     }
 
+    public function setTaxonomyNeedsReview($taxonomyNeedsReview): GameBuilder
+    {
+        $this->game->taxonomy_needs_review = $taxonomyNeedsReview;
+        return $this;
+    }
+
     public function setPackshotSquareUrlOverride($squareUrlOverride): GameBuilder
     {
         $this->game->packshot_square_url_override = $squareUrlOverride;

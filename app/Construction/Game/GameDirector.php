@@ -132,6 +132,9 @@ class GameDirector
         } else {
             $this->builder->setIsLowQuality(0);
         }
+        if (array_key_exists('taxonomy_needs_review', $params)) {
+            $this->builder->setTaxonomyNeedsReview($params['taxonomy_needs_review']);
+        }
         if (array_key_exists('packshot_square_url_override', $params)) {
             $this->builder->setPackshotSquareUrlOverride($params['packshot_square_url_override']);
         }
