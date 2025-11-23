@@ -262,4 +262,61 @@ class BulkToolsController extends Controller
 
         return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
     }
+
+    public function untagGamesWithCategoryAndTag()
+    {
+        $pageTitle = 'Bulk untag games with category and tag';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+        $bindings['TagList'] = $this->repoTag->getAllCategorised();
+
+        return view('staff.categorisation.bulk-tools.untag-games-with-category-and-tag', $bindings);
+    }
+
+    public function untagGamesWithCategoryAndTagPreview(Request $request)
+    {
+        $pageTitle = 'Bulk untag games with category and tag - Preview';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $categoryId = $request->input('category_id');
+        $tagId = $request->input('tag_id');
+
+        $games = $this->repoTag->gamesByCategoryAndTag($categoryId, $tagId);
+
+        $bindings['title'] = $pageTitle;
+        $bindings['affectedCount'] = $games->count();
+        $bindings['sample'] = $games->take(10);
+        $bindings['runRoute'] = route('staff.categorisation.bulk-tools.untag-games-with-category-and-tag.run');
+        $bindings['hiddenInputs'] = [
+            'category_id' => $categoryId,
+            'tag_id' => $tagId,
+        ];
+
+        return view('staff.categorisation.bulk-tools.tool-preview', $bindings);
+    }
+
+    public function untagGamesWithCategoryAndTagRun(Request $request)
+    {
+        $pageTitle = 'Bulk untag games with category and tag - Run';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $categoryId = $request->input('category_id');
+        $tagId = $request->input('tag_id');
+
+        $games = $this->repoTag->gamesByTag($tagId);
+        foreach ($games as $game) {
+            $gameId = $game->id;
+            $this->repoGameTag->deleteGameTag($gameId, $tagId);
+        }
+
+        $bindings['message'] = 'Untagged games with category and tag';
+        $bindings['count'] = $games->count();
+        $bindings['backUrl'] = route('staff.categorisation.dashboard');
+
+        return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
+    }
 }

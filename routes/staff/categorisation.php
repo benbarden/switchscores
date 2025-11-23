@@ -88,5 +88,18 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
             [BulkToolsController::class, 'untagGamesWithTagRun'])
             ->name('staff.categorisation.bulk-tools.untag-games-with-tag.run');
 
+        // 5. Bulk untag all games with category X and tag Y
+        Route::get('/untag-games-with-category-and-tag',
+            [BulkToolsController::class, 'untagGamesWithCategoryAndTag'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-category-and-tag');
+
+        Route::post('/untag-games-with-category-and-tag/preview',
+            [BulkToolsController::class, 'untagGamesWithCategoryAndTagPreview'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-category-and-tag.preview');
+
+        Route::post('/untag-games-with-category-and-tag/run',
+            [BulkToolsController::class, 'untagGamesWithCategoryAndTagRun'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-category-and-tag.run');
+
     });
 });

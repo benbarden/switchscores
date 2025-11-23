@@ -75,6 +75,14 @@ class Repository
         })->get();
     }
 
+    public function gamesByCategoryAndTag($categoryId, $tagId)
+    {
+        return Game::where('category_id', $categoryId)
+            ->whereHas('gameTags', function($query) use ($tagId) {
+                $query->where('tag_id', $tagId);
+            })->get();
+    }
+
     public function rankedByTag($consoleId, $tagId, $limit = null)
     {
         $games = DB::table('games')

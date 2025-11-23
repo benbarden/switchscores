@@ -7,24 +7,24 @@
 {% block page_inner %}
 
     {% include 'ui/components/alerts/form-errors.twig' %}
-    <form role="form" method="post" action="{{ route('staff.categorisation.bulk-tools.move-games-with-tag-to-category.preview') }}">
+    <form role="form" method="post" action="{{ route('staff.categorisation.bulk-tools.untag-games-with-category-and-tag.preview') }}">
         {{ csrf_field() }}
 
         <div class="row">
             <div class="col-md-6 col-lg-5">
 
-                {{ tagSelect.render(
-                    'tag_id',
-                    'Tag',
-                    TagList,
+                {{ categorySelect.render(
+                    'category_id',
+                    'Category',
+                    CategoryList,
                     null,
                     true
                 ) }}
 
-                {{ categorySelect.render(
-                    'category_id',
-                    'Move to category',
-                    CategoryList,
+                {{ tagSelect.render(
+                    'tag_id',
+                    'Tag',
+                    TagList,
                     null,
                     true
                 ) }}
@@ -35,5 +35,7 @@
         </div>
 
     </form>
+
+    {% include 'staff/categorisation/category/scripts.twig' %}
 
 {% endblock page_inner %}
