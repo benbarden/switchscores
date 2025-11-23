@@ -307,7 +307,8 @@ class BulkToolsController extends Controller
         $categoryId = $request->input('category_id');
         $tagId = $request->input('tag_id');
 
-        $games = $this->repoTag->gamesByTag($tagId);
+        $games = $this->repoTag->gamesByCategoryAndTag($categoryId, $tagId);
+
         foreach ($games as $game) {
             $gameId = $game->id;
             $this->repoGameTag->deleteGameTag($gameId, $tagId);
