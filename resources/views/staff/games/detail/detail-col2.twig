@@ -9,7 +9,7 @@
             <span style="font-weight: bold;">Category</span>
         </td>
         <td>
-            {% if GameData.category_id %}
+            {% if GameData.category %}
                 <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
             {% endif %}
         </td>
