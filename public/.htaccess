@@ -55,6 +55,8 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/mahjong-solitaire/?$ /c/$1/tag/mahjong
     RedirectMatch 301 ^/c/([^/]+)/category/picross/?$ /c/$1/tag/picross
     RedirectMatch 301 ^/c/([^/]+)/category/sudoku/?$ /c/$1/tag/sudoku
+    RedirectMatch 301 ^/c/([^/]+)/category/coloring-book/?$ /c/$1/tag/coloring
+    RedirectMatch 301 ^/c/([^/]+)/category/drawing-and-painting/?$ /c/$1/tag/drawing
 
     # Page redirects: Category to category
     RedirectMatch 301 ^/c/([^/]+)/category/first-person-shooter/?$ /c/$1/category/shooting
@@ -62,6 +64,8 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/top-down-shooter/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/category/snooker-pool-and-billiards/?$ /c/$1/category/cue-sports
     RedirectMatch 301 ^/c/([^/]+)/category/defence/?$ /c/$1/category/tower-defense
+    RedirectMatch 301 ^/c/([^/]+)/category/nintendo-labo/?$ /c/$1/category/educational
+    RedirectMatch 301 ^/c/([^/]+)/category/creative-sandbox/?$ /c/$1/category/lifestyle
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
