@@ -54,6 +54,11 @@ class Repository
         return Tag::orderBy('tag_name', 'asc')->get();
     }
 
+    public function getByTagCategory($tagCategoryId)
+    {
+        return Tag::where('tag_category_id', $tagCategoryId)->orderBy('tag_name')->get();
+    }
+
     public function getAllCategorised()
     {
         return TagCategory::with(['tags' => function ($q) {

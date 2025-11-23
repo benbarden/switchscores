@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,7 +36,16 @@ class TagController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $bindings['TagList'] = $this->repoTag->getAll();
+        $tagCategoryList = $this->repoTagCategory->getAll();
+        $tagList = new Collection();
+        foreach ($tagCategoryList as $tagCategory) {
+            $tagCategoryId = $tagCategory->id;
+            $tagsInCategory = $this->repoTag->getByTagCategory($tagCategoryId);
+            foreach ($tagsInCategory as $tempItem) {
+                $tagList->add($tempItem);
+            }
+        }
+        $bindings['TagList'] = $tagList;
 
         return view('staff.categorisation.tag.list', $bindings);
     }
