@@ -61,9 +61,11 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/third-person-shooter/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/category/top-down-shooter/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/category/snooker-pool-and-billiards/?$ /c/$1/category/cue-sports
+    RedirectMatch 301 ^/c/([^/]+)/category/defence/?$ /c/$1/category/tower-defense
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
     RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
+    RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
 
 </IfModule>
