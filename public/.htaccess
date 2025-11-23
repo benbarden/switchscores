@@ -64,6 +64,6 @@ RewriteEngine On
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
-    RedirectMatch 301 ^/c/([^/]+)/tag/pool-billiard/?$ /c/$1/category/cue-sports
+    RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
 
 </IfModule>
