@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
+use App\Domain\Game\Repository as GameRepository;
 
 class BulkToolsController extends Controller
 {
@@ -15,6 +16,7 @@ class BulkToolsController extends Controller
         private CategoryRepository $repoCategory,
         private TagRepository $repoTag,
         private GameTagRepository $repoGameTag,
+        private GameRepository $repoGame,
     )
     {
     }
@@ -67,6 +69,7 @@ class BulkToolsController extends Controller
             $game->category_id = $categoryTo;
             $game->taxonomy_needs_review = 1;
             $game->save();
+            $this->repoGame->clearCacheCoreData($game->id);
         }
 
         $bindings['message'] = 'Moved games in category A to category B';
@@ -132,6 +135,7 @@ class BulkToolsController extends Controller
                 $game->taxonomy_needs_review = 1;
                 $game->save();
                 $updatedCount++;
+                $this->repoGame->clearCacheCoreData($game->id);
             }
         }
 
@@ -199,6 +203,7 @@ class BulkToolsController extends Controller
                 $game->taxonomy_needs_review = 1;
                 $game->save();
                 $updatedCount++;
+                $this->repoGame->clearCacheCoreData($game->id);
             }
         }
 
