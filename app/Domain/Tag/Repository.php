@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Tag;
 use App\Models\Game;
+use App\Models\TagCategory;
 
 class Repository
 {
@@ -51,6 +52,15 @@ class Repository
     public function getAll()
     {
         return Tag::orderBy('tag_name', 'asc')->get();
+    }
+
+    public function getAllCategorised()
+    {
+        return TagCategory::with(['tags' => function ($q) {
+                $q->orderBy('tag_name');
+        }])
+        ->orderBy('category_order')
+        ->get();
     }
 
     public function gamesByTag($tagId)

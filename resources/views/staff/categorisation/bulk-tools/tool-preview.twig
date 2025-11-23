@@ -1,0 +1,23 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    {% include 'ui/components/bulk-tools/alert.twig' with {
+        type: 'warning',
+        message: 'This will affect ' ~ affectedCount ~ ' games.'
+    } %}
+
+    {% include 'ui/components/bulk-tools/sample-list.twig' with {
+        sample: sample
+    } %}
+
+    <form method="post" action="{{ runRoute }}">
+        {{ csrf_field() }}
+
+        {% include 'ui/components/bulk-tools/hidden-fields.twig' with {
+            fields: hiddenInputs
+        } %}
+
+        <button class="btn btn-danger">Confirm and Run</button>
+    </form>
+{% endblock %}

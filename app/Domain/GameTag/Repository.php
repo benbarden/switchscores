@@ -15,6 +15,17 @@ class Repository
         ]);
     }
 
+    public function gameHasTag($gameId, $tagId)
+    {
+        $gameTagCount = GameTag::where('game_id', $gameId)->where('tag_id', $tagId)->count();
+        return $gameTagCount > 0;
+    }
+
+    public function deleteGameTag($gameId, $tagId)
+    {
+        GameTag::where('game_id', $gameId)->where('tag_id', $tagId)->delete();
+    }
+
     public function deleteByGameId($gameId)
     {
         GameTag::where('game_id', $gameId)->delete();

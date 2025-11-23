@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Staff\Categorisation\BulkToolsController;
+
 // *************** Staff: CATEGORISATION *************** //
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_CATEGORY_MANAGER]], function() {
 
@@ -31,4 +33,60 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/categorisation/tag/edit/{tagId}', 'Staff\Categorisation\TagController@editTag')->name('staff.categorisation.tag.edit');
     Route::get('/staff/categorisation/tag/delete/{tagId}', 'Staff\Categorisation\TagController@deleteTag')->name('staff.categorisation.tag.delete');
 
+    // Bulk tools
+    Route::prefix('staff/categorisation/bulk-tools')->group(function () {
+
+        // 1. Bulk move from category A → category B
+        Route::get('/move-category-to-category',
+            [BulkToolsController::class, 'moveCategoryToCategory'])
+            ->name('staff.categorisation.bulk-tools.move-category-to-category');
+
+        Route::post('/move-category-to-category/preview',
+            [BulkToolsController::class, 'moveCategoryToCategoryPreview'])
+            ->name('staff.categorisation.bulk-tools.move-category-to-category.preview');
+
+        Route::post('/move-category-to-category/run',
+            [BulkToolsController::class, 'moveCategoryToCategoryRun'])
+            ->name('staff.categorisation.bulk-tools.move-category-to-category.run');
+
+        // 2. Bulk add tag to all games in category A
+        Route::get('/add-tag-to-games-in-category',
+            [BulkToolsController::class, 'addTagToGamesInCategory'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-in-category');
+
+        Route::post('/add-tag-to-games-in-category/preview',
+            [BulkToolsController::class, 'addTagToGamesInCategoryPreview'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-in-category.preview');
+
+        Route::post('/add-tag-to-games-in-category/run',
+            [BulkToolsController::class, 'addTagToGamesInCategoryRun'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-in-category.run');
+
+        // 3. Bulk move games with tag X → category B
+        Route::get('/move-games-with-tag-to-category',
+            [BulkToolsController::class, 'moveGamesWithTagToCategory'])
+            ->name('staff.categorisation.bulk-tools.move-games-with-tag-to-category');
+
+        Route::post('/move-games-with-tag-to-category/preview',
+            [BulkToolsController::class, 'moveGamesWithTagToCategoryPreview'])
+            ->name('staff.categorisation.bulk-tools.move-games-with-tag-to-category.preview');
+
+        Route::post('/move-games-with-tag-to-category/run',
+            [BulkToolsController::class, 'moveGamesWithTagToCategoryRun'])
+            ->name('staff.categorisation.bulk-tools.move-games-with-tag-to-category.run');
+
+        // 4. Bulk untag all games with tag X
+        Route::get('/untag-games-with-tag',
+            [BulkToolsController::class, 'untagGamesWithTag'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-tag');
+
+        Route::post('/untag-games-with-tag/preview',
+            [BulkToolsController::class, 'untagGamesWithTagPreview'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-tag.preview');
+
+        Route::post('/untag-games-with-tag/run',
+            [BulkToolsController::class, 'untagGamesWithTagRun'])
+            ->name('staff.categorisation.bulk-tools.untag-games-with-tag.run');
+
+    });
 });

@@ -44,6 +44,24 @@
                 </tbody>
             </table>
 
+            {{ heading.renderSlick('Bulk tools') }}
+            <table class="table">
+                <tbody>
+                    {{ rowstat.renderB5(
+                        'Bulk move from category A to category B', route('staff.categorisation.bulk-tools.move-category-to-category')
+                    ) }}
+                    {{ rowstat.renderB5(
+                        'Bulk add tag to games in category', route('staff.categorisation.bulk-tools.add-tag-to-games-in-category')
+                    ) }}
+                    {{ rowstat.renderB5(
+                        'Bulk move games with tag A to category B', route('staff.categorisation.bulk-tools.move-games-with-tag-to-category')
+                    ) }}
+                    {{ rowstat.renderB5(
+                        'Bulk untag games with tag', route('staff.categorisation.bulk-tools.untag-games-with-tag')
+                    ) }}
+                </tbody>
+            </table>
+
         </div>
 
         <div class="col-md-4">

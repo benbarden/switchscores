@@ -1,0 +1,6 @@
+{% set type = type ?? 'info' %}
+{% set message = message ?? '' %}
+
+<div class="alert alert-{{ type }}">
+    {{ message|raw }}
+</div>

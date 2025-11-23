@@ -1,0 +1,12 @@
+{% set sample = sample ?? [] %}
+
+{% if sample is empty %}
+    <p>No games will be affected.</p>
+{% else %}
+    <h4>Sample of affected games:</h4>
+    <ul>
+        {% for game in sample %}
+            <li>{{ game.title }} (ID: {{ game.id }})</li>
+        {% endfor %}
+    </ul>
+{% endif %}

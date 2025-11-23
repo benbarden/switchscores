@@ -7,6 +7,7 @@
 
 {% include 'ui/components/alerts/form-errors.twig' %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/taxonomy/category-dropdown.twig' as categorySelect %}
 
 <form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
@@ -54,22 +55,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="category_id" class="col-md-3 control-label">Category</label>
-                    <div class="col-md-6">
-                        <select id="category_id" class="form-control" name="category_id">
-                            <option value="">&nbsp;</option>
-                            {% for item in CategoryList %}
-                                <option value="{{ item.id }}">{{ item.name }}</option>
-                                {% if item.children %}
-                                    {% for child in item.children %}
-                                        <option value="{{ child.id }}">&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+                {{ categorySelect.renderB3(
+                    'category_id',
+                    'Category',
+                    CategoryList,
+                    null,
+                    false
+                ) }}
                 <div class="form-group">
                     <label for="series_id" class="col-md-3 control-label">Series</label>
                     <div class="col-md-6">

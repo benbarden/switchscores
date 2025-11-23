@@ -1,0 +1,17 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    <h2 class="mb-4">Bulk Action completed</h2>
+
+    <div class="alert alert-success">
+        <p>{{ message }}</p>
+        <p><strong>{{ count }}</strong> games were updated.</p>
+        {% if ignoredCount is defined %}
+        <p><strong>{{ ignoredCount }}</strong> games were ignored, as no changes were required.</p>
+        {% endif %}
+    </div>
+
+    <a href="{{ backUrl }}" class="btn btn-primary">Back to Categorisation dashboard</a>
+
+{% endblock %}

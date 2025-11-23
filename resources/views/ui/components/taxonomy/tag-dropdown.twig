@@ -1,0 +1,25 @@
+{% macro render(name, label, tagCategories, selected, required=false) %}
+    {# --------------------
+       BOOTSTRAP 5 VERSION
+       -------------------- #}
+
+    <div class="mb-3">
+        {% if label %}
+            <label for="{{ name }}" class="form-label">
+                {{ label }}{% if required %} *{% endif %}
+            </label>
+        {% endif %}
+
+        <select id="{{ name }}" name="{{ name }}" class="form-select" {% if required %}required{% endif %}>
+            <option value=""></option>
+
+            {% for cat in tagCategories %}
+                <optgroup label="{{ cat.name }}">
+                    {% for tag in cat.tags %}
+                        <option value="{{ tag.id }}">{{ tag.tag_name }}</option>
+                    {% endfor %}
+                </optgroup>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
