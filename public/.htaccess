@@ -28,7 +28,7 @@ RewriteEngine On
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Page redirects
+    # Page redirects: News
     Redirect 301 /news/20200504/animal-crossing-new-horizons-fossil-and-recipe-trading-lists /games/2583/animal-crossing-new-horizons
     Redirect 301 /news/20200503/animal-crossing-new-horizons-lets-buy-turnips-week-4 /games/2583/animal-crossing-new-horizons
     Redirect 301 /news/20200426/animal-crossing-new-horizons-lets-buy-turnips-week-3 /games/2583/animal-crossing-new-horizons
@@ -46,5 +46,22 @@ RewriteEngine On
     Redirect 301 /news/20181210/homepage-stats-changes-and-tidying-up-upcoming-games /news
     Redirect 301 /news/20180807/removing-the-tba-titles /news
     Redirect 301 /news/20180204/you-can-now-register-at-world-of-switch /news
+
+    # Page redirects: Category to tag
+    RedirectMatch 301 ^/c/([^/]+)/category/metroidvania/?$ /c/$1/tag/metroidvania
+    RedirectMatch 301 ^/c/([^/]+)/category/music-adventure/?$ /c/$1/tag/rhythm-based
+    RedirectMatch 301 ^/c/([^/]+)/category/escape-room/?$ /c/$1/tag/escape-room
+    RedirectMatch 301 ^/c/([^/]+)/category/jigsaw/?$ /c/$1/tag/jigsaw
+    RedirectMatch 301 ^/c/([^/]+)/category/mahjong-solitaire/?$ /c/$1/tag/mahjong
+    RedirectMatch 301 ^/c/([^/]+)/category/picross/?$ /c/$1/tag/picross
+    RedirectMatch 301 ^/c/([^/]+)/category/sudoku/?$ /c/$1/tag/sudoku
+
+    # Page redirects: Category to category
+    RedirectMatch 301 ^/c/([^/]+)/category/first-person-shooter/?$ /c/$1/category/shooting
+    RedirectMatch 301 ^/c/([^/]+)/category/third-person-shooter/?$ /c/$1/category/shooting
+    RedirectMatch 301 ^/c/([^/]+)/category/top-down-shooter/?$ /c/$1/category/shooting
+
+    # Page redirects: Tag to category
+    RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
 
 </IfModule>
