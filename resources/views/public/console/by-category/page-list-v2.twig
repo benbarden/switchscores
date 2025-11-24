@@ -1,0 +1,108 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'ui/components/headings/heading.twig' as heading %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
+{% block page_body %}
+
+    <div class="category-list-page">
+
+        {# Optional intro text #}
+        {% if Category.intro_description %}
+            <p class="category-intro">
+                {{ Category.intro_description }}
+            </p>
+        {% endif %}
+
+        {# --------------------------------------------------------------- #}
+        {# Sorting + count row                                             #}
+        {# --------------------------------------------------------------- #}
+        <div class="list-controls">
+            <div class="game-count">
+                {{ Games.total }} games found
+            </div>
+
+            <div class="sort-control">
+                <form method="get">
+                    <label for="sort" class="sr-only">Sort</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()">
+                        <option value="title_asc"  {{ sort == 'title_asc'  ? 'selected' }}>Title (A–Z)</option>
+                        <option value="title_desc" {{ sort == 'title_desc' ? 'selected' }}>Title (Z–A)</option>
+                        <option value="rating_desc" {{ sort == 'rating_desc' ? 'selected' }}>Rating (High → Low)</option>
+                        <option value="rating_asc" {{ sort == 'rating_asc' ? 'selected' }}>Rating (Low → High)</option>
+                        <option value="release_desc" {{ sort == 'release_desc' ? 'selected' }}>Newest first</option>
+                        <option value="release_asc" {{ sort == 'release_asc' ? 'selected' }}>Oldest first</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <a class="filter-pill {{ filter == 'ranked' ? 'active' }}"
+               href="{{ route('console.byCategory.list', {'console': Console, 'category': Category.link_title, filter: 'ranked', sort: sort }) }}">
+                Ranked only
+            </a>
+
+            <a class="filter-pill {{ filter == 'hidden' ? 'active' }}"
+               href="{{ route('console.byCategory.list', {'console': Console, 'category': Category.link_title, filter: 'hidden', sort: sort }) }}">
+                Hidden gems
+            </a>
+
+            <a class="filter-pill {{ filter == 'noreviews' ? 'active' }}"
+               href="{{ route('console.byCategory.list', {'console': Console, 'category': Category.link_title, filter: 'noreviews', sort: sort }) }}">
+                No reviews
+            </a>
+        </div>
+
+        {# --------------------------------------------------------------- #}
+        {# Game Grid                                                       #}
+        {# --------------------------------------------------------------- #}
+
+        <div class="game-grid">
+            {% for game in Games.items %}
+                <div class="game-card">
+                    <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+
+                        <div class="game-card-image">
+                            {{ packshots.squareImageOnly(game) }}
+                        </div>
+
+                        <div class="game-card-title">{{ game.title }}</div>
+
+                        {% if game.rating_avg %}
+                            <div class="game-card-rating">{{ game.rating_avg }}</div>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# --------------------------------------------------------------- #}
+        {# Pagination                                                      #}
+        {# --------------------------------------------------------------- #}
+
+        {% if Games.pages > 1 %}
+            <div class="pagination">
+                {% if Games.page > 1 %}
+                    <a class="page-link" href="?page={{ Games.page - 1 }}&filter={{ filter }}&sort={{ sort }}">← Previous</a>
+                {% endif %}
+
+                <span class="page-info">
+                Page {{ Games.page }} of {{ Games.pages }}
+            </span>
+
+                {% if Games.page < Games.pages %}
+                    <a class="page-link" href="?page={{ Games.page + 1 }}&filter={{ filter }}&sort={{ sort }}">Next →</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="view-all-container">
+            <a href="{{ route('console.byCategory.page', {'console': Console, 'category': Category.link_title }) }}"
+               class="view-all-link">
+                ← Back to the {{ Category.name }} homepage
+            </a>
+        </div>
+
+    </div>
+
+{% endblock page_body %}

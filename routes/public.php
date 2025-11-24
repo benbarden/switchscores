@@ -41,6 +41,7 @@ Route::controller('PublicSite\Console\TopRatedController')->group(function () {
 Route::controller('PublicSite\Console\BrowseByCategoryController')->group(function () {
     Route::get('/c/{console:slug?}/category', 'landing')->name('console.byCategory.landing');
     Route::get('/c/{console:slug?}/category/{category}', 'page')->name('console.byCategory.page');
+    Route::get('/c/{console:slug?}/category/{category}/list', 'list')->name('console.byCategory.list');
 });
 Route::controller('PublicSite\Console\BrowseBySeriesController')->group(function () {
     Route::get('/c/{console:slug?}/series', 'landing')->name('console.bySeries.landing');

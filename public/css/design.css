@@ -14,6 +14,11 @@ body {background: url('../img/background3.jpg') #ec414d fixed top right repeat;}
     .navbar-right {margin-right: 0;}
 }
 
+/* Sections */
+section + section {
+    margin-top: 3rem;
+}
+
 /* Typography */
 body {
     font-family: 'Noto Sans KR', sans-serif;
@@ -34,6 +39,18 @@ h3, .h3 {font-size: 24px;}
 h4, .h4 {font-size: 20px;}
 h5, .h5 {font-size: 16px;}
 h6, .h6 {font-size: 14px;}
+
+h2 {
+    font-size: 2rem;
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.6rem;
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 600;
+}
 
 .breadcrumb {
     font-family: 'Open Sans', sans-serif;
@@ -277,4 +294,279 @@ blockquote {
 }
 #tabs .ui-tabs-nav .ui-state-active a {
     color: #C92C75;
+}
+
+/* Category page sections */
+.top-rated,
+.hidden-gems {
+    margin-top: 3rem; /* big enough to clearly separate the blocks */
+}
+.top-rated h3,
+.hidden-gems h3 {
+    font-size: 1.8rem;
+    margin: 0 0 0.8rem 0;  /* bottom space only */
+    font-weight: 700;
+}
+
+/* Category page: Snapshot */
+.snapshot-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 1.5rem 0;
+    font-size: 1.4rem;
+}
+
+.snapshot-table th,
+.snapshot-table td {
+    padding: 6px 10px;
+    vertical-align: top;
+}
+
+.snapshot-table th {
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    width: 40%;
+}
+
+.snapshot-table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.snapshot-note {
+    font-size: 1.2rem;
+    color: #777;
+    margin-left: 4px;
+}
+
+/* GRID */
+.top-rated-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 24px;
+    margin: 2rem 0;
+}
+
+
+/* CARD OUTER */
+.game-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 0;               /* important! */
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+
+/* MAKE WHOLE CARD CLICKABLE */
+.card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 12px;            /* internal spacing moved here */
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* IMAGE (square enforced) */
+.game-card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.game-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* TITLE */
+.game-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 6px 0 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* RATING */
+.game-card-rating {
+    display: inline-block;
+    background: #43ac6a; /* your real green */
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 4px 12px;
+    border-radius: 8px;
+    align-self: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}
+
+.hidden-gems-note {
+    font-size: 1.2rem;
+    margin: -2px 0 1.2rem;  /* cleaner spacing under heading */
+    color: #555;
+}
+
+/* Subcategories */
+
+.related-categories {
+    margin-top: 3rem;
+}
+
+.related-categories h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.subcategory-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.subcategory-pill {
+    background: #f3f5f7;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    color: #222;
+    text-decoration: none;
+    transition: background .2s ease;
+}
+
+.subcategory-pill:hover {
+    background: #e1e4e7;
+}
+
+/* View all */
+
+.view-all-container {
+    margin: 2.5rem 0 3rem;
+    text-align: left;
+}
+
+.view-all-link {
+    display: inline-block;
+    background: #f3f5f7;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #222;
+    text-decoration: none;
+    transition: background .2s ease, transform .15s ease;
+    border: 1px solid #e3e6e8;
+}
+
+.view-all-link:hover {
+    background: #e8eaed;
+    transform: translateX(-2px);
+}
+
+/* Category list view */
+
+.category-list-page {
+    margin-bottom: 4rem;
+}
+
+.category-list-page h1 {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+}
+
+.category-intro {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+/* Controls */
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.list-controls select {
+    padding: 6px 10px;
+    font-size: 1.2rem;
+}
+
+/* Game Grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 24px;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.page-link {
+    margin: 0 1.2rem;
+    padding: 8px 14px;
+    background: #f3f5f7;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #222;
+    border: 1px solid #e3e6e8;
+}
+
+.page-link:hover {
+    background: #e8eaed;
+}
+
+.page-info {
+    display: inline-block;
+    margin: 0 1rem;
+}
+
+/* Filters */
+
+.filter-bar {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.filter-pill {
+    padding: 8px 14px;
+    background: #e9ecef;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    border: 1px solid #d0d0d0;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.filter-pill:hover {
+    background: #d7dfe7;
+}
+
+.filter-pill.active {
+    background: #43ac6a;     /* your Switch Scores green */
+    color: #fff;
+    border-color: #43ac6a;
 }

@@ -33,3 +33,13 @@
         {% endif %}
     </a>
 {% endmacro %}
+
+{% macro squareImageOnly(item) %}
+    {% import 'ui/components/image/resolve.twig' as image %}
+    {% set boxartUrl = image.square(item)|trim %}
+    {% if boxartUrl %}
+        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+    {% else %}
+        <img src="/img/placeholder/no-image-found-square.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,130 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "ui/blocks/game-grid.twig" as gamegrid %}
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
+{% block page_body %}
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            {% if Category.intro_description %}
+                <div class="category-intro">
+                    <p>
+                        {{ Category.intro_description }}
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="snapshot">
+                <h2>Snapshot</h2>
+
+                <table class="snapshot-table">
+                    <tbody>
+                    <tr>
+                        <th>Total games</th>
+                        <td>{{ Stats.total }} <span class="snapshot-note">– excluding low quality and de-listed</span></td>
+                    </tr>
+                    <tr>
+                        <th>Ranked games</th>
+                        <td>{{ Stats.ranked }}</td>
+                    </tr>
+                    <tr>
+                        <th>Reviewed but unranked</th>
+                        <td>{{ Stats.reviewedButUnranked }}</td>
+                    </tr>
+                    <tr>
+                        <th>No reviews</th>
+                        <td>{{ Stats.noReviews }}</td>
+                    </tr>
+                    <tr>
+                        <th>Low quality</th>
+                        <td>{{ Stats.lowQuality }}</td>
+                    </tr>
+                    <tr>
+                        <th>De-listed</th>
+                        <td>{{ Stats.delisted }}</td>
+                    </tr>
+                    {% if Stats.newest %}
+                        <tr>
+                            <th>Newest release</th>
+                            <td>{{ Stats.newest|date("jS M Y") }}</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if TopRated|length %}
+                <section class="top-rated">
+                    <h3>Top rated {{ category.name }} games</h3>
+
+                    <div class="top-rated-grid">
+                        {% for game in TopRated %}
+                            <div class="game-card">
+                                <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+                                    <div class="game-card-image">
+                                        {{ packshots.squareImageOnly(game) }}
+                                    </div>
+
+                                    <div class="game-card-title">{{ game.title }}</div>
+                                    <div class="game-card-rating">{{ game.rating_avg }}</div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if HiddenGems|length %}
+                <section class="hidden-gems">
+                    <h3>Hidden gems</h3>
+                    <p class="hidden-gems-note">
+                        These games have 1 or 2 ratings, so don’t have ranks yet —
+                        but they’re highly rated!
+                    </p>
+                    <div class="top-rated-grid">
+                        {% for game in HiddenGems %}
+                            <div class="game-card">
+                                <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+                                    <div class="game-card-image">
+                                        {{ packshots.squareImageOnly(game) }}
+                                    </div>
+
+                                    <div class="game-card-title">{{ game.title }}</div>
+                                    <div class="game-card-rating">{{ game.rating_avg }}</div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if Category.children.count() > 0 %}
+                <section class="related-categories">
+                    <h3>More in {{ Category.name }}</h3>
+
+                    <div class="subcategory-pills">
+                        {% for sub in Category.children %}
+                            <a href="{{ route('console.byCategory.page', {'console': Console, 'category': sub.link_title}) }}"
+                               class="subcategory-pill">
+                                {{ sub.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            <div class="view-all-container">
+                <a href="{{ route('console.byCategory.list', {'console': Console, 'category': Category.link_title }) }}"
+                   class="view-all-link">
+                    View all {{ Category.name }} games →
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock page_body %}
