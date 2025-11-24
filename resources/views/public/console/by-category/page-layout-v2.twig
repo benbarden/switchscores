@@ -2,6 +2,7 @@
 {% import "ui/blocks/game-grid.twig" as gamegrid %}
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/rating.twig' as gamerating %}
 
 {% block page_body %}
 
@@ -69,7 +70,9 @@
                                     </div>
 
                                     <div class="game-card-title">{{ game.title }}</div>
-                                    <div class="game-card-rating">{{ game.rating_avg }}</div>
+                                    <div class="game-card-rating">
+                                        {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                                    </div>
                                 </a>
                             </div>
                         {% endfor %}
@@ -93,7 +96,9 @@
                                     </div>
 
                                     <div class="game-card-title">{{ game.title }}</div>
-                                    <div class="game-card-rating">{{ game.rating_avg }}</div>
+                                    <div class="game-card-rating">
+                                        {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                                    </div>
                                 </a>
                             </div>
                         {% endfor %}
@@ -119,7 +124,7 @@
             <div class="view-all-container">
                 <a href="{{ route('console.byCategory.list', {'console': Console, 'category': Category.link_title }) }}"
                    class="view-all-link">
-                    View all {{ Category.name }} games →
+                    View all in {{ Category.name }} →
                 </a>
             </div>
 

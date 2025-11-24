@@ -405,15 +405,8 @@ blockquote {
 
 /* RATING */
 .game-card-rating {
-    display: inline-block;
-    background: #43ac6a; /* your real green */
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 4px 12px;
-    border-radius: 8px;
-    align-self: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    text-align: center;
+    margin-top: 6px;
 }
 
 .hidden-gems-note {

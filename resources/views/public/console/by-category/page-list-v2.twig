@@ -1,15 +1,15 @@
 {% extends 'theme/wos/base.twig' %}
 {% import 'ui/components/headings/heading.twig' as heading %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/rating.twig' as gamerating %}
 
 {% block page_body %}
 
     <div class="category-list-page">
 
-        {# Optional intro text #}
-        {% if Category.intro_description %}
+        {% if IntroDescription %}
             <p class="category-intro">
-                {{ Category.intro_description }}
+                {{ IntroDescription }}
             </p>
         {% endif %}
 
@@ -69,7 +69,9 @@
                         <div class="game-card-title">{{ game.title }}</div>
 
                         {% if game.rating_avg %}
-                            <div class="game-card-rating">{{ game.rating_avg }}</div>
+                            <div class="game-card-rating">
+                                {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                            </div>
                         {% endif %}
                     </a>
                 </div>

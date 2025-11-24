@@ -72,6 +72,11 @@ class BrowseByCategoryController extends Controller
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
+        // Meta
+        if ($category->meta_description) {
+            $bindings['MetaDescription'] = $category['meta_description'];
+        }
+
         // V2: Snapshot
         $stats = $this->repoCategory->getSnapshotStats($category, $consoleId);
         $bindings['Stats'] = $stats;
@@ -100,10 +105,21 @@ class BrowseByCategoryController extends Controller
 
         $pageTitle = 'List of Nintendo '.$console->name.' '.$categoryName;
         if (str_ends_with($categoryName, 'game')) {
-            $pageTitle .= 's';
+            $gamesSuffix = 's';
+            $gamesSuffixSingular = '';
         } else {
-            $pageTitle .= ' games';
+            $gamesSuffix = ' games';
+            $gamesSuffixSingular = ' game';
         }
+        $pageTitle .= $gamesSuffix;
+
+        $metaDescription = sprintf("Browse the complete list of Nintendo %s %s%s. View ratings, reviews, ".
+            "release dates, and filter by ranked titles, hidden gems, or games with no reviews.",
+            $console->name, $categoryName, $gamesSuffix);
+
+        $introDescription = sprintf("Browse every Nintendo %s %s%s. ".
+            "Use the filters above to view ranked titles, hidden gems, or games with no reviews.",
+            $console->name, $categoryName, $gamesSuffixSingular);
 
         if ($category->parent_id) {
             $categoryParent = $this->repoCategory->find($category->parent_id);
@@ -114,6 +130,9 @@ class BrowseByCategoryController extends Controller
         }
 
         $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+
+        $bindings['MetaDescription'] = $metaDescription;
+        $bindings['IntroDescription'] = $introDescription;
 
         // Filters
         $allowedFilters = ['ranked', 'hidden', 'noreviews'];
