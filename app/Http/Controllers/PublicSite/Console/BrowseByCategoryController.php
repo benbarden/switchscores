@@ -98,7 +98,7 @@ class BrowseByCategoryController extends Controller
         $categoryId = $category->id;
         $categoryName = $category->name;
 
-        $pageTitle = 'Nintendo '.$console->name.' '.$categoryName;
+        $pageTitle = 'List of Nintendo '.$console->name.' '.$categoryName;
         if (str_ends_with($categoryName, 'game')) {
             $pageTitle .= 's';
         } else {
