@@ -11,23 +11,31 @@ use App\Models\TagCategory;
 
 class Repository
 {
-    public function create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0)
+    public function create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0,
+        $layoutVersion = null, $metaDescription = "", $introDescription = "")
     {
         Tag::create([
             'tag_name' => $tagName,
             'link_title' => $linkTitle,
             'tag_category_id' => $tagCategoryId,
             'taxonomy_reviewed' => $taxonomyReviewed,
+            'layout_version' => $layoutVersion,
+            'meta_description' => $metaDescription,
+            'intro_description' => $introDescription,
         ]);
     }
 
-    public function edit(Tag $tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0)
+    public function edit(Tag $tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed = 0,
+        $layoutVersion = null, $metaDescription = "", $introDescription = "")
     {
         $values = [
             'tag_name' => $tagName,
             'link_title' => $linkTitle,
             'tag_category_id' => $tagCategoryId,
             'taxonomy_reviewed' => $taxonomyReviewed,
+            'layout_version' => $layoutVersion,
+            'meta_description' => $metaDescription,
+            'intro_description' => $introDescription,
         ];
 
         $tagData->fill($values);

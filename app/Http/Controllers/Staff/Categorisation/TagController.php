@@ -7,9 +7,11 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
+use App\Domain\LayoutVersion\Helper as LayoutVersionHelper;
 
 class TagController extends Controller
 {
@@ -25,7 +27,8 @@ class TagController extends Controller
 
     public function __construct(
         private TagRepository $repoTag,
-        private TagCategoryRepository $repoTagCategory
+        private TagCategoryRepository $repoTagCategory,
+        private LayoutVersionHelper $helperLayoutVersion,
     )
     {
     }
@@ -50,13 +53,11 @@ class TagController extends Controller
         return view('staff.categorisation.tag.list', $bindings);
     }
 
-    public function addTag()
+    public function addTag(Request $request)
     {
         $pageTitle = 'Add tag';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -68,8 +69,12 @@ class TagController extends Controller
             $linkTitle = $request->link_title;
             $tagCategoryId = $request->tag_category_id;
             $taxonomyReviewed = $request->taxonomy_reviewed;
+            $layoutVersion = $request->layout_version;
+            $metaDescription = $request->meta_description;
+            $introDescription = $request->intro_description;
 
-            $this->repoTag->create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed);
+            $this->repoTag->create($tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed,
+                $layoutVersion, $metaDescription, $introDescription);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -80,11 +85,12 @@ class TagController extends Controller
         }
 
         $bindings['CategoryList'] = $this->repoTagCategory->getAll();
+        $bindings['LayoutVersionList'] = $this->helperLayoutVersion->buildList();
 
         return view('staff.categorisation.tag.add', $bindings);
     }
 
-    public function editTag($tagId)
+    public function editTag(Request $request, $tagId)
     {
         $pageTitle = 'Edit tag';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
@@ -92,8 +98,6 @@ class TagController extends Controller
 
         $tagData = $this->repoTag->find($tagId);
         if (!$tagData) abort(404);
-
-        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -105,8 +109,12 @@ class TagController extends Controller
             $linkTitle = $request->link_title;
             $tagCategoryId = $request->tag_category_id;
             $taxonomyReviewed = $request->taxonomy_reviewed;
+            $layoutVersion = $request->layout_version;
+            $metaDescription = $request->meta_description;
+            $introDescription = $request->intro_description;
 
-            $this->repoTag->edit($tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed);
+            $this->repoTag->edit($tagData, $tagName, $linkTitle, $tagCategoryId, $taxonomyReviewed,
+                $layoutVersion, $metaDescription, $introDescription);
 
             return redirect(route('staff.categorisation.tag.list'));
 
@@ -120,6 +128,7 @@ class TagController extends Controller
         $bindings['TagId'] = $tagId;
 
         $bindings['CategoryList'] = $this->repoTagCategory->getAll();
+        $bindings['LayoutVersionList'] = $this->helperLayoutVersion->buildList();
 
         return view('staff.categorisation.tag.edit', $bindings);
     }

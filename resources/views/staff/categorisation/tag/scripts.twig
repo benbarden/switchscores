@@ -10,6 +10,9 @@
         formVals['tag_name'] = "{{ TagData.tag_name|e('js') }}";
         formVals['link_title'] = "{{ TagData.link_title }}";
         formVals['taxonomy_reviewed'] = "{{ TagData.taxonomy_reviewed }}";
+        formVals['layout_version'] = "{{ TagData.layout_version }}";
+        formVals['meta_description'] = "{{ TagData.meta_description }}";
+        formVals['intro_description'] = "{{ TagData.intro_description }}";
 
     } else {
 
@@ -19,6 +22,9 @@
         formVals['tag_name'] = "{{ old('tag_name')|e('js') }}";
         formVals['link_title'] = "{{ old('link_title') }}";
         formVals['taxonomy_reviewed'] = "{{ old('taxonomy_reviewed') }}";
+        formVals['layout_version'] = "{{ old('layout_version') }}";
+        formVals['meta_description'] = "{{ old('meta_description') }}";
+        formVals['intro_description'] = "{{ old('intro_description') }}";
 
     }
 
@@ -26,6 +32,9 @@
     $('#tag_name').val(formVals['tag_name']);
     $('#link_title').val(formVals['link_title']);
     $('#taxonomy_reviewed').val(formVals['taxonomy_reviewed']);
+    $('#layout_version').val(formVals['layout_version']);
+    $('#meta_description').val(formVals['meta_description']);
+    $('#intro_description').val(formVals['intro_description']);
 
     $('#tag_name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('tag_name', 'link_title');

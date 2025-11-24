@@ -1,3 +1,4 @@
+{% import 'ui/components/taxonomy/layout-version-dropdown.twig' as layoutVersion %}
 {% import 'ui/components/form/submit.twig' as formsubmit %}
 
 {% include 'ui/components/alerts/form-errors.twig' %}
@@ -55,6 +56,22 @@
                 <option value="1">Reviewed</option>
                 <option value="2">Deprecated</option>
             </select>
+        </div>
+    </div>
+
+    {{ layoutVersion.render('layout_version', 'Layout version', LayoutVersionList, CategoryData.layout_version) }}
+
+    <div class="row mb-3">
+        <label for="intro_description" class="col-sm-2 col-form-label">Intro description</label>
+        <div class="col-sm-4">
+            <textarea id="intro_description" name="intro_description" type="text" class="form-control"></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="meta_description" class="col-sm-2 col-form-label">Meta description</label>
+        <div class="col-sm-4">
+            <textarea id="meta_description" name="meta_description" type="text" class="form-control"></textarea>
         </div>
     </div>
 

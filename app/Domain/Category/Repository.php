@@ -8,7 +8,8 @@ use App\Models\Game;
 
 class Repository
 {
-    public function create($name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0)
+    public function create($name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0,
+       $layoutVersion = null, $metaDescription = "", $introDescription = "")
     {
         Category::create([
             'name' => $name,
@@ -16,10 +17,14 @@ class Repository
             'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
             'taxonomy_reviewed' => $taxonomyReviewed,
+            'layout_version' => $layoutVersion,
+            'meta_description' => $metaDescription,
+            'intro_description' => $introDescription,
         ]);
     }
 
-    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0)
+    public function edit(Category $category, $name, $linkTitle, $blurbOption, $parentId = null, $taxonomyReviewed = 0,
+        $layoutVersion = null, $metaDescription = "", $introDescription = "")
     {
         $values = [
             'name' => $name,
@@ -27,6 +32,9 @@ class Repository
             'blurb_option' => $blurbOption,
             'parent_id' => $parentId,
             'taxonomy_reviewed' => $taxonomyReviewed,
+            'layout_version' => $layoutVersion,
+            'meta_description' => $metaDescription,
+            'intro_description' => $introDescription,
         ];
 
         $category->fill($values);

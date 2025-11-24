@@ -15,7 +15,8 @@ class Tag extends Model
      * @var array
      */
     protected $fillable = [
-        'tag_name', 'link_title', 'tag_category_id', 'taxonomy_reviewed'
+        'tag_name', 'link_title', 'tag_category_id', 'taxonomy_reviewed', 'layout_version',
+        'meta_description', 'intro_description'
     ];
 
     public function gameTags()

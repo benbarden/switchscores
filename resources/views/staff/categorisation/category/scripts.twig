@@ -11,6 +11,9 @@
         formVals['blurb_option'] = "{{ CategoryData.blurb_option }}";
         formVals['parent_id'] = "{{ CategoryData.parent_id }}";
         formVals['taxonomy_reviewed'] = "{{ CategoryData.taxonomy_reviewed }}";
+        formVals['layout_version'] = "{{ CategoryData.layout_version }}";
+        formVals['meta_description'] = "{{ CategoryData.meta_description }}";
+        formVals['intro_description'] = "{{ CategoryData.intro_description }}";
 
     } else {
 
@@ -21,6 +24,9 @@
         formVals['blurb_option'] = "{{ old('blurb_option') }}";
         formVals['parent_id'] = "{{ old('parent_id') }}";
         formVals['taxonomy_reviewed'] = "{{ old('taxonomy_reviewed') }}";
+        formVals['layout_version'] = "{{ old('layout_version') }}";
+        formVals['meta_description'] = "{{ old('meta_description') }}";
+        formVals['intro_description'] = "{{ old('intro_description') }}";
 
     }
 
@@ -29,6 +35,9 @@
     $('#blurb_option').val(formVals['blurb_option']);
     $('#parent_id').val(formVals['parent_id']);
     $('#taxonomy_reviewed').val(formVals['taxonomy_reviewed']);
+    $('#layout_version').val(formVals['layout_version']);
+    $('#meta_description').val(formVals['meta_description']);
+    $('#intro_description').val(formVals['intro_description']);
 
     $('#name').on('blur', function() {
         ssAdminTools.convertToLinkTitle('name', 'link_title');

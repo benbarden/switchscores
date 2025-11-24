@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Category\Blurb as CategoryBlurb;
+use App\Domain\LayoutVersion\Helper as LayoutVersionHelper;
 
 class CategoryController extends Controller
 {
@@ -26,7 +28,8 @@ class CategoryController extends Controller
 
     public function __construct(
         private CategoryRepository $repoCategory,
-        private CategoryBlurb $blurbCategory
+        private CategoryBlurb $blurbCategory,
+        private LayoutVersionHelper $helperLayoutVersion,
     )
     {
 
@@ -52,13 +55,11 @@ class CategoryController extends Controller
         return view('staff.categorisation.category.list', $bindings);
     }
 
-    public function addCategory()
+    public function addCategory(Request $request)
     {
         $pageTitle = 'Add category';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -90,7 +91,8 @@ class CategoryController extends Controller
             // All ok
             $this->repoCategory->create(
                 $request->name, $request->link_title, $request->blurb_option, $request->parent_id,
-                $request->taxonomy_reviewed
+                $request->taxonomy_reviewed, $request->layout_version, $request->meta_description,
+                $request->intro_description,
             );
 
             return redirect(route('staff.categorisation.category.list'));
@@ -105,11 +107,12 @@ class CategoryController extends Controller
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['BlurbOptionList'] = $this->blurbCategory->getOptions();
+        $bindings['LayoutVersionList'] = $this->helperLayoutVersion->buildList();
 
         return view('staff.categorisation.category.add', $bindings);
     }
 
-    public function editCategory($categoryId)
+    public function editCategory(Request $request, $categoryId)
     {
         $pageTitle = 'Edit category';
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
@@ -117,8 +120,6 @@ class CategoryController extends Controller
 
         $categoryData = $this->repoCategory->find($categoryId);
         if (!$categoryData) abort(404);
-
-        $request = request();
 
         if ($request->isMethod('post')) {
 
@@ -128,7 +129,8 @@ class CategoryController extends Controller
 
             $this->repoCategory->edit(
                 $categoryData, $request->name, $request->link_title, $request->blurb_option, $request->parent_id,
-                $request->taxonomy_reviewed
+                $request->taxonomy_reviewed, $request->layout_version, $request->meta_description,
+                $request->intro_description,
             );
 
             return redirect(route('staff.categorisation.category.list'));
@@ -144,6 +146,7 @@ class CategoryController extends Controller
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['BlurbOptionList'] = $this->blurbCategory->getOptions();
+        $bindings['LayoutVersionList'] = $this->helperLayoutVersion->buildList();
 
         return view('staff.categorisation.category.edit', $bindings);
     }
