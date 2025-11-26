@@ -82,6 +82,11 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/kids-friendly/?$ /c/$1/category/educational
     RedirectMatch 301 ^/c/([^/]+)/tag/for-young-girls/?$ /c/$1/category/educational
     RedirectMatch 301 ^/c/([^/]+)/tag/mature-adults/?$ /c/$1/category/horror
+    RedirectMatch 301 ^/c/([^/]+)/tag/coming-of-age-story/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/family-story/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/love-story/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/political/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/travel-story/?$ /c/$1/category/adventure
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
