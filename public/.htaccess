@@ -105,12 +105,12 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/world-war-i/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/world-war-ii/?$ /c/$1/category/adventure
     # Difficulty
-    RedirectMatch 301 ^/c/([^/]+)/tag/assists-accessibility-options/?$ /c/$1/category/action
-    RedirectMatch 301 ^/c/([^/]+)/tag/casual/?$ /c/$1/category/action
-    RedirectMatch 301 ^/c/([^/]+)/tag/die-and-retry/?$ /c/$1/category/action
-    RedirectMatch 301 ^/c/([^/]+)/tag/hardcore/?$ /c/$1/category/action
-    RedirectMatch 301 ^/c/([^/]+)/tag/no-fail-state/?$ /c/$1/category/action
-    RedirectMatch 301 ^/c/([^/]+)/tag/old-school-difficulty/?$ /c/$1/category/action
+    RedirectMatch 301 ^/c/([^/]+)/tag/assists-accessibility-options/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/casual/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/die-and-retry/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/hardcore/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/no-fail-state/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/old-school-difficulty/?$ /c/$1/category/adventure
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
