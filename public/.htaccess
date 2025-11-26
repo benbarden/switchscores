@@ -57,6 +57,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/sudoku/?$ /c/$1/tag/sudoku
     RedirectMatch 301 ^/c/([^/]+)/category/coloring-book/?$ /c/$1/tag/coloring
     RedirectMatch 301 ^/c/([^/]+)/category/drawing-and-painting/?$ /c/$1/tag/drawing
+    RedirectMatch 301 ^/c/([^/]+)/category/puzzle-adventure/?$ /c/$1/tag/puzzle-adventure
 
     # Page redirects: Category to category
     RedirectMatch 301 ^/c/([^/]+)/category/first-person-shooter/?$ /c/$1/category/shooting
