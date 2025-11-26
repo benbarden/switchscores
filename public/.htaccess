@@ -72,4 +72,9 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
     RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
 
+    # Page redirects: Tag to tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
+    RedirectMatch 301 ^/c/([^/]+)/tag/90s-retrogaming/?$ /c/$1/tag/16-bit-snes-style
+    RedirectMatch 301 ^/c/([^/]+)/tag/retro-inspired/?$ /c/$1/tag/retro-inspired-visuals
+
 </IfModule>
