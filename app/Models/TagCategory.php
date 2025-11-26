@@ -16,7 +16,6 @@ class TagCategory extends Model
     const CATEGORY_TIME_MECHANIC = 8;
     const CATEGORY_DIFFICULTY = 9;
     const CATEGORY_AUDIENCE = 10;
-    const CATEGORY_RETROGAMING_ERA = 11;
     const CATEGORY_SCORING = 12;
     const CATEGORY_VIEWPOINT = 13;
 
