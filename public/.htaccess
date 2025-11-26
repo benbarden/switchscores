@@ -87,6 +87,22 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/love-story/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/political/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/travel-story/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/asia/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/cyberpunk/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/dystopian/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/early-xxth-century/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/fantastic/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/fantasy/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/medieval-japan/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/nordic/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/post-apocalyptic/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/science-fiction/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/space/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/underwater/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/western/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/world-war-i/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/world-war-ii/?$ /c/$1/category/adventure
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
