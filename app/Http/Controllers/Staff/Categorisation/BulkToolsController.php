@@ -325,4 +325,71 @@ class BulkToolsController extends Controller
 
         return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
     }
+
+    public function addTagToGamesWithTag()
+    {
+        $pageTitle = 'Bulk add tag A to games with tag B';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['TagList'] = $this->repoTag->getAllCategorised();
+
+        return view('staff.categorisation.bulk-tools.add-tag-to-games-with-tag', $bindings);
+    }
+
+    public function addTagToGamesWithTagPreview(Request $request)
+    {
+        $pageTitle = 'Bulk add tag A to games with tag B - Preview';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $tagFromId = (int) $request->input('tag_from');
+        $tagToId = (int) $request->input('tag_to');
+
+        $games = $this->repoTag->gamesByTag($tagFromId);
+
+        $bindings['title'] = $pageTitle;
+        $bindings['affectedCount'] = $games->count();
+        $bindings['sample'] = $games->take(10);
+        $bindings['runRoute'] = route('staff.categorisation.bulk-tools.add-tag-to-games-with-tag.run');
+        $bindings['hiddenInputs'] = [
+            'tag_from' => $tagFromId,
+            'tag_to' => $tagToId,
+        ];
+        return view('staff.categorisation.bulk-tools.tool-preview', $bindings);
+    }
+
+    public function addTagToGamesWithTagRun(Request $request)
+    {
+        $pageTitle = 'Bulk add tag A to games with tag B - Run';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $tagFromId = (int) $request->input('tag_from');
+        $tagToId = (int) $request->input('tag_to');
+
+        $games = $this->repoTag->gamesByTag($tagFromId);
+        $ignoredCount = 0;
+        $updatedCount = 0;
+        foreach ($games as $game) {
+            $gameId = $game->id;
+            if ($this->repoGameTag->gameHasTag($gameId, $tagToId)) {
+                $ignoredCount++;
+            } else {
+                $this->repoGameTag->create($gameId, $tagToId);
+                $game->taxonomy_needs_review = 1;
+                $game->save();
+                $updatedCount++;
+                $this->repoGame->clearCacheCoreData($game->id);
+            }
+        }
+
+        $bindings['message'] = 'Added tags to games with tag';
+        $bindings['count'] = $updatedCount;
+        $bindings['ignoredCount'] = $ignoredCount;
+        $bindings['backUrl'] = route('staff.categorisation.dashboard');
+
+        return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
+    }
+
 }

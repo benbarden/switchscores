@@ -1,0 +1,39 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/taxonomy/category-dropdown.twig' as categorySelect %}
+{% import 'ui/components/taxonomy/tag-dropdown.twig' as tagSelect %}
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% block page_inner %}
+
+    {% include 'ui/components/alerts/form-errors.twig' %}
+    <form role="form" method="post" action="{{ route('staff.categorisation.bulk-tools.add-tag-to-games-with-tag.preview') }}">
+        {{ csrf_field() }}
+
+        <div class="row">
+            <div class="col-md-6 col-lg-5">
+
+                {{ tagSelect.render(
+                    'tag_from',
+                    'Tag to select from',
+                    TagList,
+                    null,
+                    true
+                ) }}
+
+                {{ tagSelect.render(
+                    'tag_to',
+                    'Tag to add',
+                    TagList,
+                    null,
+                    true
+                ) }}
+
+                {{ formsubmit.renderB5() }}
+
+            </div>
+        </div>
+
+    </form>
+
+{% endblock page_inner %}

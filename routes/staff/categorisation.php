@@ -101,5 +101,14 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
             [BulkToolsController::class, 'untagGamesWithCategoryAndTagRun'])
             ->name('staff.categorisation.bulk-tools.untag-games-with-category-and-tag.run');
 
+        // 6. Bulk add tag A to games with tag B
+        Route::get('/add-tag-to-games-with-tag', [BulkToolsController::class, 'addTagToGamesWithTag'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-with-tag');
+
+        Route::post('/add-tag-to-games-with-tag/preview', [BulkToolsController::class, 'addTagToGamesWithTagPreview'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-with-tag.preview');
+
+        Route::post('/add-tag-to-games-with-tag/run', [BulkToolsController::class, 'addTagToGamesWithTagRun'])
+            ->name('staff.categorisation.bulk-tools.add-tag-to-games-with-tag.run');
     });
 });
