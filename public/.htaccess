@@ -73,6 +73,8 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
     RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
     RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
+    RedirectMatch 301 ^/c/([^/]+)/tag/score-based/?$ /c/$1/category/arcade
+    RedirectMatch 301 ^/c/([^/]+)/tag/speedrunner-friendly/?$ /c/$1/category/arcade
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
