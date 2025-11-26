@@ -75,6 +75,13 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
     RedirectMatch 301 ^/c/([^/]+)/tag/score-based/?$ /c/$1/category/arcade
     RedirectMatch 301 ^/c/([^/]+)/tag/speedrunner-friendly/?$ /c/$1/category/arcade
+    RedirectMatch 301 ^/c/([^/]+)/tag/real-time/?$ /c/$1/category/strategy
+    RedirectMatch 301 ^/c/([^/]+)/tag/real-time-with-pause/?$ /c/$1/category/strategy
+    RedirectMatch 301 ^/c/([^/]+)/tag/turn-based/?$ /c/$1/category/strategy
+    RedirectMatch 301 ^/c/([^/]+)/tag/family-friendly/?$ /c/$1/category/educational
+    RedirectMatch 301 ^/c/([^/]+)/tag/kids-friendly/?$ /c/$1/category/educational
+    RedirectMatch 301 ^/c/([^/]+)/tag/for-young-girls/?$ /c/$1/category/educational
+    RedirectMatch 301 ^/c/([^/]+)/tag/mature-adults/?$ /c/$1/category/horror
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
