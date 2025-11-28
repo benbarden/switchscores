@@ -55,7 +55,7 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-        {{ heading.renderChunky('Recent top rated', 'h2') }}
+        {{ heading.renderChunkyRectangle('Recent top rated', 'h2') }}
         <p>
             Top rated Nintendo Switch games released in the last {{ RecentTopRatedLimit }} days.
         </p>
@@ -65,13 +65,13 @@
             <a href="{{ route('reviews.landing') }}">View more reviews &gt;</a>
         </h3>
 
-        {{ heading.renderChunky('Best of '~YearSwitch1~' (Switch 1)', 'h2') }}
+        {{ heading.renderChunkyRectangle('Best of '~YearSwitch1~' (Switch 1)', 'h2') }}
         {% include 'public/games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYearSwitch1} %}
         <h3 class="text-center">
             <a href="{{ route('console.topRated.landing', {'console': consoleSwitch1}) }}">View all Top Rated (Switch 1) &gt;</a>
         </h3>
 
-        {{ heading.renderChunky('Best of '~YearSwitch1~' (Switch 2)', 'h2') }}
+        {{ heading.renderChunkyRectangle('Best of '~YearSwitch1~' (Switch 2)', 'h2') }}
         {% include 'public/games/layouts/condensedRows/layout.twig' with {'GameList': TopRatedThisYearSwitch2} %}
         <h3 class="text-center">
             <a href="{{ route('console.topRated.landing', {'console': consoleSwitch2}) }}">View all Top Rated (Switch 2) &gt;</a>
@@ -83,7 +83,7 @@
 
         {{ alerts.siteSurvey('welcome') }}
 
-        {{ heading.renderChunky('Recent reviews', 'h2') }}
+        {{ heading.renderChunkyRectangle('Recent reviews', 'h2') }}
         {% include 'public/reviews/layouts/standard/layout.twig' with {'ReviewList': ReviewList, 'batchOverride': '1'} %}
 
     </div>

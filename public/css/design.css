@@ -96,6 +96,46 @@ blockquote {
 
 .theme-header {font-family: 'Noto Serif', serif;}
 
+.theme-header {
+    position: relative;
+    padding: 12px 16px;
+    color: #fff;
+    border-radius: 0;      /* remove rounding */
+}
+
+/* Left Joy-Con cap */
+.theme-header::before {
+    content: "";
+    position: absolute;
+    left: -6px;            /* width of cap */
+    top: 0;
+    bottom: 0;
+    width: 6px;
+
+    background: #00b0dd;   /* Switch cyan */
+    border-radius: 6px 0 0 6px;
+
+    /* white separator */
+    box-shadow: 2px 0 0 0 #fff;
+}
+
+/* Right Joy-Con cap */
+.theme-header::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+
+    background: #ff3c28;   /* Switch red */
+    border-radius: 0 8px 8px 0;
+
+    /* white separator */
+    box-shadow: -2px 0 0 0 #fff;
+}
+
+
 .theme-rounded {border-radius: 8px;}
 
 .theme-padding-10 {padding: 10px;}
