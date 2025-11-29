@@ -68,6 +68,8 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/defence/?$ /c/$1/category/tower-defense
     RedirectMatch 301 ^/c/([^/]+)/category/nintendo-labo/?$ /c/$1/category/educational
     RedirectMatch 301 ^/c/([^/]+)/category/creative-sandbox/?$ /c/$1/category/lifestyle
+    RedirectMatch 301 ^/c/([^/]+)/category/deck-building/?$ /c/$1/category/roguelike
+    RedirectMatch 301 ^/c/([^/]+)/category/deck-building-roguelike/?$ /c/$1/category/roguelike
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
@@ -87,6 +89,19 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/love-story/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/political/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/travel-story/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/board-game/?$ /c/$1/category/board-and-tabletop
+    RedirectMatch 301 ^/c/([^/]+)/tag/cards/?$ /c/$1/category/roguelike
+    RedirectMatch 301 ^/c/([^/]+)/tag/casino/?$ /c/$1/category/board-and-tabletop
+    RedirectMatch 301 ^/c/([^/]+)/tag/puzzle/?$ /c/$1/category/puzzle
+    RedirectMatch 301 ^/c/([^/]+)/tag/coloring-book/?$ /c/$1/category/puzzle
+    RedirectMatch 301 ^/c/([^/]+)/tag/drawing-painting/?$ /c/$1/category/puzzle
+
+    # Page redirects: Tag to tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
+    RedirectMatch 301 ^/c/([^/]+)/tag/90s-retrogaming/?$ /c/$1/tag/16-bit-snes-style
+    RedirectMatch 301 ^/c/([^/]+)/tag/00s-retrogaming/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/retro-inspired/?$ /c/$1/tag/retro-inspired-visuals
+
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/asia/?$ /c/$1/category/adventure
@@ -104,6 +119,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/western/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/world-war-i/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/world-war-ii/?$ /c/$1/category/adventure
+
     # Difficulty
     RedirectMatch 301 ^/c/([^/]+)/tag/assists-accessibility-options/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/casual/?$ /c/$1/category/adventure
@@ -111,11 +127,5 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/hardcore/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/no-fail-state/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/old-school-difficulty/?$ /c/$1/category/adventure
-
-    # Page redirects: Tag to tag
-    RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
-    RedirectMatch 301 ^/c/([^/]+)/tag/90s-retrogaming/?$ /c/$1/tag/16-bit-snes-style
-    RedirectMatch 301 ^/c/([^/]+)/tag/00s-retrogaming/?$ /c/$1/tag
-    RedirectMatch 301 ^/c/([^/]+)/tag/retro-inspired/?$ /c/$1/tag/retro-inspired-visuals
 
 </IfModule>
