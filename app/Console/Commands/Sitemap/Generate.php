@@ -51,6 +51,8 @@ class Generate extends Command
         $this->sitemapGenerator->generateIndex();
         $logger->info('Generating: Site pages');
         $this->sitemapGenerator->generateSite();
+        $logger->info('Generating: News pages');
+        $this->sitemapGenerator->generateNews();
         $logger->info('Generating: Top Rated');
         $this->sitemapGenerator->generateTopRated();
         $logger->info('Generating: Review partners');

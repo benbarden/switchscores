@@ -11,6 +11,7 @@ use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameCalendar\AllowedDates;
 use App\Models\Console;
 use App\Domain\Console\Repository as ConsoleRepository;
+use App\Domain\News\Repository as NewsRepository;
 
 class Generator
 {
@@ -20,6 +21,7 @@ class Generator
 
     const SITEMAP_INDEX = 'index.xml';
     const SITEMAP_SITE = 'sitemap-site.xml';
+    const SITEMAP_NEWS = 'sitemap-news.xml';
     const SITEMAP_GAMES = 'sitemap-games-[CONSOLE]-[YEAR].xml';
     const SITEMAP_CALENDAR = 'sitemap-calendar.xml';
     const SITEMAP_TOP_RATED = 'sitemap-top-rated.xml';
@@ -112,14 +114,38 @@ class Generator
         }
 
         //$sitemapPages[] = array('url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-        $sitemapPages[] = array('url' => route('games.onSale'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.recentReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitemapPages[] = array('url' => route('games.upcomingReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
-        $sitemapPages[] = array('url' => route('news.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+        $sitemapPages[] = array('url' => route('games.upcomingReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7');
+        $sitemapPages[] = array('url' => route('games.onSale'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.5');
 
         $bindings['SitemapPages'] = $sitemapPages;
 
         $this->saveToXml(self::VIEW_STANDARD, $bindings, self::SITEMAP_SITE);
+    }
+
+    public function generateNews(): void
+    {
+        $bindings = $this->getBindings();
+        $timestamp = $this->getTimestampNow();
+
+        $sitemapPages = [];
+        $sitemapPages[] = array('url' => route('news.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
+
+        $repoNews = new NewsRepository();
+        $newsList = $repoNews->getAll();
+        foreach ($newsList as $newsItem) {
+            $lastMod = new \DateTime($newsItem->updated_at);
+            $lastModTimestamp = $lastMod->format('c');
+            $sitemapPages[] = array(
+                'url' => url($newsItem->url),
+                'lastmod' => $lastModTimestamp,
+                'changefreq' => 'monthly',
+                'priority' => '0.7');
+        }
+
+        $bindings['SitemapPages'] = $sitemapPages;
+
+        $this->saveToXml(self::VIEW_STANDARD, $bindings, self::SITEMAP_NEWS);
     }
 
     public function generateGames(): void
