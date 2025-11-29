@@ -36,6 +36,7 @@
         ajax: {
             url: "/api/game/find-by-title",
             dataType: 'json',
+            delay: 500,
             data: function (params) {
                 var query = {
                     title: params.term,
