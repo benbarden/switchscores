@@ -70,6 +70,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/creative-sandbox/?$ /c/$1/category/lifestyle
     RedirectMatch 301 ^/c/([^/]+)/category/deck-building/?$ /c/$1/category/roguelike
     RedirectMatch 301 ^/c/([^/]+)/category/deck-building-roguelike/?$ /c/$1/category/roguelike
+    RedirectMatch 301 ^/c/([^/]+)/category/space-simulation/?$ /c/$1/category/space-simulator
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
@@ -98,6 +99,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/racing/?$ /c/$1/category/racing
     RedirectMatch 301 ^/c/([^/]+)/tag/rail-shooter/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/tag/flight-simulator/?$ /c/$1/category/flight-simulator
+    RedirectMatch 301 ^/c/([^/]+)/tag/space-simulator/?$ /c/$1/category/space-simulator
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
