@@ -95,6 +95,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/puzzle/?$ /c/$1/category/puzzle
     RedirectMatch 301 ^/c/([^/]+)/tag/coloring-book/?$ /c/$1/category/puzzle
     RedirectMatch 301 ^/c/([^/]+)/tag/drawing-painting/?$ /c/$1/category/puzzle
+    RedirectMatch 301 ^/c/([^/]+)/tag/racing/?$ /c/$1/category/racing
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
