@@ -105,6 +105,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/arena-shooter/?$ /c/$1/category/arena-shooter
     RedirectMatch 301 ^/c/([^/]+)/tag/fmv/?$ /c/$1/category/interactive-story
     RedirectMatch 301 ^/c/([^/]+)/tag/battle-royale/?$ /c/$1/category/shooting
+    RedirectMatch 301 ^/c/([^/]+)/tag/city-building/?$ /c/$1/category/management
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
