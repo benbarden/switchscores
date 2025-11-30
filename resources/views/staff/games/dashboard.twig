@@ -1,6 +1,7 @@
-{% import "ui/components/headings/heading.twig" as heading %}
-
 {% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 
 {% set crumbNav = [{'text': PageTitle}] %}
 
@@ -99,34 +100,28 @@
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Game stats') }}
+        {{ heading.renderSlick('Verification') }}
 
         <table class="table">
             <tbody>
-            <tr>
-                <td>
-                    Total games
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ TotalGameCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Released games
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ ReleasedGameCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Upcoming games
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ UpcomingGameCount }}</span>
-                </td>
-            </tr>
+                {{ rowstat.renderB5(
+                    'Category: Unverified', null, CategoryUnverified
+                ) }}
+                {{ rowstat.renderB5(
+                    'Category: Verified', null, CategoryVerified
+                ) }}
+                {{ rowstat.renderB5(
+                    'Category: Needs review', null, CategoryNeedsReview
+                ) }}
+                {{ rowstat.renderB5(
+                    'Tags: Unverified', null, TagsUnverified
+                ) }}
+                {{ rowstat.renderB5(
+                    'Tags: Verified', null, TagsVerified
+                ) }}
+                {{ rowstat.renderB5(
+                    'Tags: Needs review', null, TagsNeedsReview
+                ) }}
             </tbody>
         </table>
 
@@ -184,6 +179,22 @@
     </div>
 
     <div class="col-md-4">
+
+        {{ heading.renderSlick('Game stats') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Total games', null, TotalGameCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Released games', null, ReleasedGameCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Upcoming games', null, UpcomingGameCount
+            ) }}
+            </tbody>
+        </table>
 
         {{ heading.renderSlick('Formats') }}
 

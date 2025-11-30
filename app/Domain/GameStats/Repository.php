@@ -257,4 +257,34 @@ class Repository extends AbstractRepository
             ->orderBy('games.title')
             ->count();
     }
+
+    public function totalCategoryUnverified()
+    {
+        return Game::where('category_verification', Game::VERIF_UNVERIFIED)->count();
+    }
+
+    public function totalCategoryVerified()
+    {
+        return Game::where('category_verification', Game::VERIF_VERIFIED)->count();
+    }
+
+    public function totalCategoryNeedsReview()
+    {
+        return Game::where('category_verification', Game::VERIF_NEEDS_REVIEW)->count();
+    }
+
+    public function totalTagsUnverified()
+    {
+        return Game::where('tags_verification', Game::VERIF_UNVERIFIED)->count();
+    }
+
+    public function totalTagsVerified()
+    {
+        return Game::where('tags_verification', Game::VERIF_VERIFIED)->count();
+    }
+
+    public function totalTagsNeedsReview()
+    {
+        return Game::where('tags_verification', Game::VERIF_NEEDS_REVIEW)->count();
+    }
 }

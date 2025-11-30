@@ -38,6 +38,14 @@ class DashboardController extends Controller
         $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
         $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
 
+        // Verification
+        $bindings['CategoryUnverified'] = $this->repoGameStats->totalCategoryVerified();
+        $bindings['CategoryVerified'] = $this->repoGameStats->totalCategoryUnverified();
+        $bindings['CategoryNeedsReview'] = $this->repoGameStats->totalCategoryNeedsReview();
+        $bindings['TagsUnverified'] = $this->repoGameStats->totalTagsVerified();
+        $bindings['TagsVerified'] = $this->repoGameStats->totalTagsUnverified();
+        $bindings['TagsNeedsReview'] = $this->repoGameStats->totalTagsNeedsReview();
+
         // Format stats
         $bindings['FormatDigital'] = $this->repoGameStats->getFormatDigital();
         $bindings['FormatPhysical'] = $this->repoGameStats->getFormatPhysical();

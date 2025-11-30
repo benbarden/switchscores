@@ -1,4 +1,4 @@
-{% macro render(linkTitle, linkUrl, linkStat=null, version='b5') %}
+{% macro render(linkTitle, linkUrl=null, linkStat=null, version='b5') %}
     {% set alignClass = version == 'b3' ? 'text-right' : 'text-end' %}
     {% if linkUrl and linkTitle %}
         <tr>
@@ -14,9 +14,12 @@
     {% else %}
         <tr>
             <td>
-                ERROR - No link found
+                {{ linkTitle }}
             </td>
-            <td>
+            <td class="{{ alignClass }}">
+                {% if linkStat is not null %}
+                    <span class="h4">{{ linkStat }}</span>
+                {% endif %}
             </td>
         </tr>
     {% endif %}
