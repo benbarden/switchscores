@@ -34,7 +34,9 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {{ item.gameTags().count }}
+                        <a href="{{ route('staff.games.list.showList', { 'listType': 'by-tag', 'param1': item }) }}">
+                            {{ item.gameTags().count }}
+                        </a>
                     </td>
                     <td class="text-center">
                         {% if item.taxonomy_reviewed == 0 %}
@@ -46,11 +48,9 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.categorisation.tag.edit', {'tagId': item.id}) }}">Edit</a> :
+                        <a href="{{ route('staff.categorisation.tag.edit', {'tagId': item.id}) }}">Edit</a>
                         {% if item.gameTags().count == 0 %}
-                            <a href="javascript:void(0);" id="lnk-delete-tag-{{ item.id }}" class="lnk-delete-tag">Delete</a>
-                        {% else %}
-                            <a href="{{ route('staff.games.list.showList', { 'listType': 'by-tag', 'param1': item }) }}">View games</a>
+                            : <a href="javascript:void(0);" id="lnk-delete-tag-{{ item.id }}" class="lnk-delete-tag">Delete</a>
                         {% endif %}
                     </td>
                 </tr>

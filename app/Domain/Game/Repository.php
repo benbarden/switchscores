@@ -132,4 +132,23 @@ class Repository extends AbstractRepository
     {
         return Game::where('eshop_europe_fs_id', $linkId)->first();
     }
+
+    public function getConditionalByCategoryAndOrTag($categoryId = null, $tagId = null)
+    {
+        $query = Game::query();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($tagId) {
+            $query->whereHas('gameTags', function ($q) use ($tagId) {
+                $q->where('tag_id', $tagId);
+            });
+        }
+
+        $games = $query->orderBy('title')->get();
+
+        return $games;
+    }
 }

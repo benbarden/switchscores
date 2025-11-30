@@ -400,6 +400,7 @@ class BulkToolsController extends Controller
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+        $bindings['TagList'] = $this->repoTag->getAllCategorised();
 
         return view('staff.categorisation.bulk-tools.set-category-verification', $bindings);
     }
@@ -410,18 +411,29 @@ class BulkToolsController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $categoryId = $request->input('category_id');
         $categoryVerification = $request->input('category_verification');
+        $categoryId = $request->input('category_id');
+        $tagId = $request->input('tag_id');
 
-        $games = $this->repoCategory->gamesByCategory($categoryId);
+        if (!$categoryId && !$tagId) {
+            return back()->withErrors(['You must select at least a category or a tag.']);
+        }
+
+        $games = $this->repoGame->getConditionalByCategoryAndOrTag($categoryId, $tagId);
+
+        $category = $this->repoCategory->find($categoryId);
+        $tag = $this->repoTag->find($tagId);
 
         $bindings['title'] = $pageTitle;
         $bindings['affectedCount'] = $games->count();
         $bindings['sample'] = $games->take(10);
         $bindings['runRoute'] = route('staff.categorisation.bulk-tools.set-category-verification.run');
         $bindings['hiddenInputs'] = [
-            'category_id' => $categoryId,
             'category_verification' => $categoryVerification,
+            'category_id' => $categoryId,
+            'tag_id' => $tagId,
+            'category' => $category,
+            'tag' => $tag,
         ];
 
         return view('staff.categorisation.bulk-tools.tool-preview', $bindings);
@@ -433,10 +445,15 @@ class BulkToolsController extends Controller
         $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
         $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
-        $categoryId = $request->input('category_id');
         $categoryVerification = $request->input('category_verification');
+        $categoryId = $request->input('category_id');
+        $tagId = $request->input('tag_id');
 
-        $games = $this->repoCategory->gamesByCategory($categoryId);
+        if (!$categoryId && !$tagId) {
+            return back()->withErrors(['You must select at least a category or a tag.']);
+        }
+
+        $games = $this->repoGame->getConditionalByCategoryAndOrTag($categoryId, $tagId);
         foreach ($games as $game) {
             $game->category_verification = $categoryVerification;
             $game->save();

@@ -2,6 +2,14 @@
 
 {% block page_inner %}
 
+    {% if category %}
+        <li><strong>Category filter:</strong> {{ category.name }}</li>
+    {% endif %}
+
+    {% if tag %}
+        <li><strong>Tag filter:</strong> {{ tag.name }}</li>
+    {% endif %}
+
     {% include 'ui/components/bulk-tools/alert.twig' with {
         type: 'warning',
         message: 'This will affect ' ~ affectedCount ~ ' games.'

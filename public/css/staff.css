@@ -87,3 +87,15 @@ h6, .h6 {font-size: 14px;}
     color: #999;
     font-size: 16px;
 }
+
+/* Category verification icons */
+.cat-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;   /* space between icon + text */
+    white-space: nowrap; /* keeps icon with the start of the text */
+}
+
+.cat-with-icon i {
+    flex-shrink: 0; /* prevents icon from being squeezed or wrapped */
+}

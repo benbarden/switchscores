@@ -1,6 +1,7 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% import 'ui/components/taxonomy/category-dropdown.twig' as categorySelect %}
+{% import 'ui/components/taxonomy/tag-dropdown.twig' as tagSelect %}
 {% import 'ui/components/form/submit.twig' as formsubmit %}
 
 {% block page_inner %}
@@ -12,14 +13,6 @@
         <div class="row">
             <div class="col-md-6 col-lg-5">
 
-                {{ categorySelect.render(
-                    'category_id',
-                    'Category',
-                    CategoryList,
-                    null,
-                    true
-                ) }}
-
                 <div class="mb-3">
                     <label for="category_verification" class="form-label">Category verification *</label>
                     <select id="category_verification" class="form-select" name="category_verification" required>
@@ -28,6 +21,27 @@
                         <option value="2">Needs review</option>
                     </select>
                 </div>
+
+                {{ categorySelect.render(
+                    'category_id',
+                    'Category (optional)',
+                    CategoryList,
+                    null,
+                    false
+                ) }}
+
+                {{ tagSelect.render(
+                    'tag_id',
+                    'Tag (optional)',
+                    TagList,
+                    null,
+                    false
+                ) }}
+
+                <p class="text-muted small mt-2">
+                    Choose a category, a tag, or both.<br>
+                    If you choose both, only games matching <strong>both filters</strong> will be included.
+                </p>
 
                 {{ formsubmit.renderB5() }}
 
