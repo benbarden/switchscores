@@ -379,6 +379,9 @@ class GamesEditorController extends Controller
             // Ready to delete the game
             $this->repoGame->delete($gameId);
 
+            // Clear cache
+            $this->repoGame->clearCacheCoreData($gameId);
+
             // Done
 
             return redirect(route('staff.games.dashboard'));
