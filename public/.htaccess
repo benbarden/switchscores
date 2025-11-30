@@ -109,6 +109,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/cooperative-organization/?$ /c/$1/category/party
     RedirectMatch 301 ^/c/([^/]+)/tag/versus-fighting/?$ /c/$1/category/fighting
     RedirectMatch 301 ^/c/([^/]+)/tag/pinball/?$ /c/$1/category/pinball
+    RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
