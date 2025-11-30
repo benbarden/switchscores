@@ -13,7 +13,8 @@
                 <th class="text-end">#</th>
                 <th>Category</th>
                 <th class="text-center">Game count</th>
-                <th class="text-center">View</th>
+                <th class="text-center">Verified #</th>
+                <th class="text-center">Verified %</th>
                 <th class="text-center">Taxonomy reviewed</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -34,10 +35,19 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        {{ item.games().count }}
+                        <a href="{{ route('staff.games.list.showList', { 'listType': 'by-category', 'param1': item }) }}">
+                            {{ item.games().count }}
+                        </a>
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('staff.games.list.showList', { 'listType': 'by-category', 'param1': item }) }}">View games</a>
+                        {{ item.gamesVerified().count }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.games().count > 0 %}
+                            {{ ((item.gamesVerified().count / item.games().count) * 100)|round(2)~'%' }}
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.taxonomy_reviewed == 0 %}

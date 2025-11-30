@@ -31,6 +31,12 @@ class Category extends Model
         return $this->hasMany('App\Models\Game', 'category_id', 'id');
     }
 
+    public function gamesVerified()
+    {
+        return $this->hasMany('App\Models\Game', 'category_id', 'id')
+            ->where('category_verification', Game::VERIF_VERIFIED);
+    }
+
     public function gamesSwitch1()
     {
         return $this->hasMany('App\Models\Game', 'category_id', 'id')
