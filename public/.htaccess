@@ -102,6 +102,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/space-simulator/?$ /c/$1/category/space-simulator
     RedirectMatch 301 ^/c/([^/]+)/tag/rpg/?$ /c/$1/category/rpg
     RedirectMatch 301 ^/c/([^/]+)/tag/arena-fighting/?$ /c/$1/category/arena-fighting
+    RedirectMatch 301 ^/c/([^/]+)/tag/arena-shooter/?$ /c/$1/category/arena-shooter
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
