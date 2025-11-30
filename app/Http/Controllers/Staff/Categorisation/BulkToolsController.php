@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
+use App\Models\Game;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 
@@ -67,7 +68,7 @@ class BulkToolsController extends Controller
         $games = $this->repoCategory->gamesByCategory($categoryFrom);
         foreach ($games as $game) {
             $game->category_id = $categoryTo;
-            $game->taxonomy_needs_review = 1;
+            $game->category_verification = Game::VERIF_VERIFIED;
             $game->save();
             $this->repoGame->clearCacheCoreData($game->id);
         }
