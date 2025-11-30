@@ -58,49 +58,56 @@
             {% endif %}
         </td>
     </tr>
+</table>
+
+{{ heading.renderSlick('Taxonomy verification') }}
+
+<table class="table table-condensed table-responsive">
 
     <tr>
         <td>
-            {% if mode == 'reviewers' %}
-                <strong>Developers</strong>
-            {% else %}
-                <a href="{{ route('staff.game.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
-            {% endif %}
+            <strong>Category</strong>
         </td>
         <td>
-            {% if GameDevelopers|length > 0 %}
-                {% for item in GameDevelopers %}
-                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
-                        {{ item.developer.name }}
-                    </a>
-                    <br>
-                {% endfor %}
+            {% if GameData.category_verification == 0 %}
+                Unverified
+            {% elseif GameData.category_verification == 1 %}
+                Verified
+            {% elseif GameData.category_verification == 2 %}
+                Needs review
             {% else %}
-                {{ GameData.developer }}
+                -
             {% endif %}
         </td>
     </tr>
 
     <tr>
         <td>
-            {% if mode == 'reviewers' %}
-                <strong>Publishers</strong>
-            {% else %}
-                <a href="{{ route('staff.game.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
-            {% endif %}
+            <strong>Tags</strong>
         </td>
         <td>
-            {% if GamePublishers|length > 0 %}
-                {% for item in GamePublishers %}
-                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
-                        {{ item.publisher.name }}
-                    </a>
-                    <br>
-                {% endfor %}
+            {% if GameData.tags_verification == 0 %}
+                Unverified
+            {% elseif GameData.tags_verification == 1 %}
+                Verified
+            {% elseif GameData.tags_verification == 2 %}
+                Needs review
             {% else %}
-                {{ GameData.publisher }}
+                -
             {% endif %}
         </td>
     </tr>
 
+    <tr>
+        <td>
+            <strong>Taxonomy</strong>
+        </td>
+        <td>
+            {% if GameData.taxonomy_needs_review == 1 %}
+                Needs review
+            {% else %}
+                Normal
+            {% endif %}
+        </td>
+    </tr>
 </table>

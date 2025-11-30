@@ -241,6 +241,18 @@ class GameBuilder
         return $this;
     }
 
+    public function setCategoryVerification($categoryVerification): GameBuilder
+    {
+        $this->game->category_verification = $categoryVerification;
+        return $this;
+    }
+
+    public function setTagsVerification($tagsVerification): GameBuilder
+    {
+        $this->game->tags_verification = $tagsVerification;
+        return $this;
+    }
+
     public function setTaxonomyNeedsReview($taxonomyNeedsReview): GameBuilder
     {
         $this->game->taxonomy_needs_review = $taxonomyNeedsReview;

@@ -132,6 +132,12 @@ class GameDirector
         } else {
             $this->builder->setIsLowQuality(0);
         }
+        if (array_key_exists('category_verification', $params)) {
+            $this->builder->setCategoryVerification($params['category_verification']);
+        }
+        if (array_key_exists('tags_verification', $params)) {
+            $this->builder->setTagsVerification($params['tags_verification']);
+        }
         if (array_key_exists('taxonomy_needs_review', $params)) {
             $this->builder->setTaxonomyNeedsReview($params['taxonomy_needs_review']);
         }

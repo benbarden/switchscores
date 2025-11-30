@@ -19,6 +19,10 @@ class Game extends Model implements Auditable
     const VIDEO_TYPE_TRAILER = 1;
     const VIDEO_TYPE_GAMEPLAY = 2;
 
+    const VERIF_UNVERIFIED = 0;
+    const VERIF_VERIFIED = 1;
+    const VERIF_NEEDS_REVIEW = 2;
+
     /**
      * @var string
      */
@@ -33,11 +37,17 @@ class Game extends Model implements Auditable
         'boxart_square_url', 'eshop_europe_fs_id',
         'boxart_header_image', 'eshop_us_nsuid',
         'series_id', 'category_id', 'collection_id',
+        'category_verification', 'tags_verification',
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
         'format_digital', 'format_physical', 'format_dlc', 'format_demo',
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
         'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch'
+    ];
+
+    protected $casts = [
+        'category_verification' => 'integer',
+        'tags_verification' => 'integer',
     ];
 
     public function console()

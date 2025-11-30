@@ -12,7 +12,7 @@
     {% set btn_text = action_text is not null ? action_text : (status in ['fail','warn'] ? 'Add' : 'Edit') %}
 
     <div class="row data-check-row" style="align-items:center; margin:2px 0;">
-        <div class="col-md-4 col-sm-6 col-xs-12" style="line-height:1.2;">
+        <div class="col-md-5 col-sm-6 col-xs-12" style="line-height:1.2;">
             <strong>{{ label }}</strong>
         </div>
         <div class="col-md-3 col-sm-3 col-xs-6" style="line-height:1.2;">
@@ -20,7 +20,7 @@
         {{ icon }} {{ status|capitalize }}
       </span>
         </div>
-        <div class="col-md-5 col-sm-3 col-xs-6" style="line-height:1.2;">
+        <div class="col-md-4 col-sm-3 col-xs-6" style="line-height:1.2;">
             {% if note %}<span class="text-muted">{{ note }}</span>{% endif %}
             {% if href %}
                 <a href="{{ href }}" class="btn btn-xs btn-default" style="margin-left:6px;">{{ btn_text }}</a>
