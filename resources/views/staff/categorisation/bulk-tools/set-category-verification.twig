@@ -1,0 +1,39 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/taxonomy/category-dropdown.twig' as categorySelect %}
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% block page_inner %}
+
+    {% include 'ui/components/alerts/form-errors.twig' %}
+    <form role="form" method="post" action="{{ route('staff.categorisation.bulk-tools.set-category-verification.preview') }}">
+        {{ csrf_field() }}
+
+        <div class="row">
+            <div class="col-md-6 col-lg-5">
+
+                {{ categorySelect.render(
+                    'category_id',
+                    'Category',
+                    CategoryList,
+                    null,
+                    true
+                ) }}
+
+                <div class="mb-3">
+                    <label for="category_verification" class="form-label">Category verification *</label>
+                    <select id="category_verification" class="form-select" name="category_verification" required>
+                        <option value="0">Unverified</option>
+                        <option value="1">Verified</option>
+                        <option value="2">Needs review</option>
+                    </select>
+                </div>
+
+                {{ formsubmit.renderB5() }}
+
+            </div>
+        </div>
+
+    </form>
+
+{% endblock page_inner %}

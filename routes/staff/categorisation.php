@@ -110,5 +110,19 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
         Route::post('/add-tag-to-games-with-tag/run', [BulkToolsController::class, 'addTagToGamesWithTagRun'])
             ->name('staff.categorisation.bulk-tools.add-tag-to-games-with-tag.run');
+
+        // 7. Bulk set category verification
+        Route::get('/set-category-verification',
+            [BulkToolsController::class, 'setCategoryVerification'])
+            ->name('staff.categorisation.bulk-tools.set-category-verification');
+
+        Route::post('/set-category-verification/preview',
+            [BulkToolsController::class, 'setCategoryVerificationPreview'])
+            ->name('staff.categorisation.bulk-tools.set-category-verification.preview');
+
+        Route::post('/set-category-verification/run',
+            [BulkToolsController::class, 'setCategoryVerificationRun'])
+            ->name('staff.categorisation.bulk-tools.set-category-verification.run');
+
     });
 });

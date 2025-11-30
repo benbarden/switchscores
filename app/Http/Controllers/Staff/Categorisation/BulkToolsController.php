@@ -393,4 +393,61 @@ class BulkToolsController extends Controller
         return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
     }
 
+    public function setCategoryVerification()
+    {
+        $pageTitle = 'Bulk set category verification';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+
+        return view('staff.categorisation.bulk-tools.set-category-verification', $bindings);
+    }
+
+    public function setCategoryVerificationPreview(Request $request)
+    {
+        $pageTitle = 'Bulk set category verification - Preview';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $categoryId = $request->input('category_id');
+        $categoryVerification = $request->input('category_verification');
+
+        $games = $this->repoCategory->gamesByCategory($categoryId);
+
+        $bindings['title'] = $pageTitle;
+        $bindings['affectedCount'] = $games->count();
+        $bindings['sample'] = $games->take(10);
+        $bindings['runRoute'] = route('staff.categorisation.bulk-tools.set-category-verification.run');
+        $bindings['hiddenInputs'] = [
+            'category_id' => $categoryId,
+            'category_verification' => $categoryVerification,
+        ];
+
+        return view('staff.categorisation.bulk-tools.tool-preview', $bindings);
+    }
+
+    public function setCategoryVerificationRun(Request $request)
+    {
+        $pageTitle = 'Bulk set category verification - Run';
+        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
+        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+
+        $categoryId = $request->input('category_id');
+        $categoryVerification = $request->input('category_verification');
+
+        $games = $this->repoCategory->gamesByCategory($categoryId);
+        foreach ($games as $game) {
+            $game->category_verification = $categoryVerification;
+            $game->save();
+            $this->repoGame->clearCacheCoreData($game->id);
+        }
+
+        $bindings['message'] = 'Bulk updated category verification';
+        $bindings['count'] = $games->count();
+        $bindings['backUrl'] = route('staff.categorisation.dashboard');
+
+        return view('staff.categorisation.bulk-tools.tool-completed', $bindings);
+    }
+
 }
