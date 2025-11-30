@@ -116,6 +116,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/stealth/?$ /c/$1/category/stealth
     RedirectMatch 301 ^/c/([^/]+)/tag/survival/?$ /c/$1/category/survival
     RedirectMatch 301 ^/c/([^/]+)/tag/first-third-person-shooter/?$ /c/$1/category/shooting
+    RedirectMatch 301 ^/c/([^/]+)/tag/educational/?$ /c/$1/category/educational
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
