@@ -117,6 +117,10 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/survival/?$ /c/$1/category/survival
     RedirectMatch 301 ^/c/([^/]+)/tag/first-third-person-shooter/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/tag/educational/?$ /c/$1/category/educational
+    RedirectMatch 301 ^/c/([^/]+)/tag/action-adventure/?$ /c/$1/category/action-adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/action-platformer/?$ /c/$1/category/platformer
+    RedirectMatch 301 ^/c/([^/]+)/tag/adventure/?$ /c/$1/category/adventure
+    RedirectMatch 301 ^/c/([^/]+)/tag/arcade/?$ /c/$1/category/arcade
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
