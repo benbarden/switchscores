@@ -121,6 +121,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/action-platformer/?$ /c/$1/category/platformer
     RedirectMatch 301 ^/c/([^/]+)/tag/adventure/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/arcade/?$ /c/$1/category/arcade
+    RedirectMatch 301 ^/c/([^/]+)/tag/shmup/?$ /c/$1/category/shoot-em-up
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
