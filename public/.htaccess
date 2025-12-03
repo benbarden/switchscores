@@ -126,6 +126,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/dating/?$ /c/$1/category/dating
     RedirectMatch 301 ^/c/([^/]+)/tag/dungeon-crawler/?$ /c/$1/category/dungeon-crawler
     RedirectMatch 301 ^/c/([^/]+)/tag/horror/?$ /c/$1/category/horror
+    RedirectMatch 301 ^/c/([^/]+)/tag/interactive-story/?$ /c/$1/category/interactive-story
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
