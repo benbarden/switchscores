@@ -123,6 +123,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/arcade/?$ /c/$1/category/arcade
     RedirectMatch 301 ^/c/([^/]+)/tag/shmup/?$ /c/$1/category/shoot-em-up
     RedirectMatch 301 ^/c/([^/]+)/tag/creative-sandbox/?$ /c/$1/category/simulation
+    RedirectMatch 301 ^/c/([^/]+)/tag/dating/?$ /c/$1/category/dating
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
