@@ -133,6 +133,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/run-and-gun/?$ /c/$1/category/run-and-gun
     RedirectMatch 301 ^/c/([^/]+)/tag/strategy/?$ /c/$1/category/strategy
     RedirectMatch 301 ^/c/([^/]+)/tag/point-and-click/?$ /c/$1/category/point-and-click
+    RedirectMatch 301 ^/c/([^/]+)/tag/visual-novel/?$ /c/$1/category/visual-novel
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
