@@ -71,6 +71,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/deck-building/?$ /c/$1/category/roguelike
     RedirectMatch 301 ^/c/([^/]+)/category/deck-building-roguelike/?$ /c/$1/category/roguelike
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulation/?$ /c/$1/category/space-simulator
+    RedirectMatch 301 ^/c/([^/]+)/category/side-scrolling-fighting/?$ /c/$1/category/beat-em-up
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
@@ -139,6 +140,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/twin-stick-shooter/?$ /c/$1/category/twin-stick-shooter
     RedirectMatch 301 ^/c/([^/]+)/tag/roguelike/?$ /c/$1/category/roguelike
     RedirectMatch 301 ^/c/([^/]+)/tag/text-based-adventure/?$ /c/$1/category/interactive-story
+    RedirectMatch 301 ^/c/([^/]+)/tag/beat-em-up/?$ /c/$1/category/beat-em-up
 
     # Page redirects: Tag to tag
     RedirectMatch 301 ^/c/([^/]+)/tag/80s-retrogaming/?$ /c/$1/tag/8-bit-nes-style
