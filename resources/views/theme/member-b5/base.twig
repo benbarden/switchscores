@@ -28,7 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
 
     <!-- Switch Scores custom code -->
-    <link href="{{ asset('member-b5/custom.css') }}?v=250505" rel="stylesheet">
+    <link href="{{ asset('member-b5/custom.css') }}?v=251205" rel="stylesheet">
     <script src="{{ asset('js/ssAdminTools.js') }}?v=240505a"></script>
 
     <!-- Font Awesome -->
@@ -88,6 +88,7 @@
                                 <li><a class="dropdown-item" href="{{ route('user.developers.api.tokens') }}">API tokens</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ route('user.developers.switch-weekly') }}">Upcoming games (Switch Weekly)</a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.developers.hanafuda-report') }}">Hanafuda Report: Database updates</a></li>
                             </ul>
                         </li>
                         {% if auth_user().isReviewer() %}
