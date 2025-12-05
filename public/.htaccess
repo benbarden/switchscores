@@ -148,6 +148,9 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/00s-retrogaming/?$ /c/$1/tag
     RedirectMatch 301 ^/c/([^/]+)/tag/retro-inspired/?$ /c/$1/tag/retro-inspired-visuals
 
+    # Gameplay
+    RedirectMatch 301 ^/c/([^/]+)/tag/american-football/?$ /c/$1/category/sports
+
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/asia/?$ /c/$1/category/adventure
