@@ -152,6 +152,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/american-football/?$ /c/$1/category/sports
     RedirectMatch 301 ^/c/([^/]+)/tag/boxing/?$ /c/$1/category/boxing
     RedirectMatch 301 ^/c/([^/]+)/tag/dodgeball/?$ /c/$1/category/sports
+    RedirectMatch 301 ^/c/([^/]+)/tag/hidden-objects/?$ /c/$1/category/hidden-objects
 
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
