@@ -1,0 +1,40 @@
+{% if GameList is empty %}
+    <p class="text-muted">No games in this list.</p>
+{% else %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Publisher</th>
+            <th>Release date</th>
+            <th>Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in GameList %}
+            <tr>
+                <td>
+                    <a href="{{ route('game.show', {'id': game.id, 'linkTitle': game.link_title}) }}" target="_blank">
+                        {{ game.title }}
+                    </a>
+                    {% if game.is_low_quality == 1 %}
+                        <label class="badge bg-danger">Low quality</label>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if game.gamePublishers|length > 0 %}
+                        {% for item in game.gamePublishers %}
+                            <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
+                                {{ item.publisher.name }}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                <td>{{ game.eu_release_date }}</td>
+                <td>{{ game.category.name ?? '—' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

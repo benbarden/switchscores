@@ -151,4 +151,14 @@ class Repository extends AbstractRepository
 
         return $games;
     }
+
+    public function getBatchDates($limit = 12)
+    {
+        return Game::query()
+            ->selectRaw('DISTINCT added_batch_date')
+            ->whereNotNull('added_batch_date')
+            ->orderByDesc('added_batch_date')
+            ->limit(12)
+            ->pluck('added_batch_date');
+    }
 }

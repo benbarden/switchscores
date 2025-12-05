@@ -276,4 +276,10 @@ class GameBuilder
         $this->game->one_to_watch = $oneToWatch;
         return $this;
     }
+
+    public function setAddedBatchDateToToday(): GameBuilder
+    {
+        $this->game->added_batch_date = today();
+        return $this;
+    }
 }

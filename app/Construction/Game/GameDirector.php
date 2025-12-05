@@ -21,6 +21,7 @@ class GameDirector
     {
         $this->buildGame($params);
         $this->builder->setReviewCount(0);
+        $this->builder->setAddedBatchDateToToday();
     }
 
     public function buildExistingGame(Game $game, $params): void

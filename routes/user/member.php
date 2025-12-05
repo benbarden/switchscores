@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     // Custom tools
     Route::get('/user/developers/switch-weekly', 'User\DevelopersController@switchWeekly')->name('user.developers.switch-weekly');
+    Route::get('/user/developers/hanafuda-report', 'User\DevelopersController@hanafudaReport')->name('user.developers.hanafuda-report');
 
     // API
     Route::get('/user/developers/api/guide', 'User\DevelopersApiController@guide')->name('user.developers.api.guide');

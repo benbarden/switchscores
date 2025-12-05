@@ -150,6 +150,7 @@ class ReleaseHubController extends Controller
         $gameBuilder->setTitle($title);
         $gameBuilder->setLinkTitle($linkTitle);
         $gameBuilder->setReviewCount(0);
+        $gameBuilder->setAddedBatchDateToToday();
         if ($consoleId) {
             $gameBuilder->setConsoleId($consoleId);
         }

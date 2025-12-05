@@ -574,4 +574,24 @@ class Repository extends AbstractRepository
             ->orderBy('games.title', 'asc')
             ->get();
     }
+
+    public function upcomingByBatch($consoleId, $batchDate)
+    {
+        return Game::query()
+            ->where('console_id', $consoleId)
+            ->whereDate('added_batch_date', $batchDate)
+            ->whereDate('eu_release_date', '>', $batchDate)
+            ->orderBy('eu_release_date')
+            ->get();
+    }
+
+    public function releasedByBatch($consoleId, $batchDate)
+    {
+        return Game::query()
+            ->where('console_id', $consoleId)
+            ->whereDate('added_batch_date', $batchDate)
+            ->whereDate('eu_release_date', '<=', $batchDate)
+            ->orderBy('eu_release_date')
+            ->get();
+    }
 }

@@ -1,0 +1,70 @@
+<div class="row">
+
+    {% if GameList %}
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+            <h3>Raw code: {{ ConsoleName }}</h3>
+
+            {#
+            Expected output:
+<block name="upcoming">
+<component locals='{"date":"2022-XX-XX"}' src="upcoming.html">
+<component src="upcoming-item.html">
+<a href="URL">TITLE</a> — DESCRIPTION.
+</component>
+<component src="upcoming-item.html">
+<a href="URL">TITLE</a> — DESCRIPTION.
+</component>
+</component>
+<component locals='{"date":"2022-XX-XX"}' src="upcoming.html">
+<component src="upcoming-item.html">
+<a href="URL">TITLE</a> — DESCRIPTION.
+</component>
+<component src="upcoming-item.html">
+<a href="URL">TITLE</a> — DESCRIPTION.
+</component>
+</component>
+</block>
+            #}
+
+            {% set lastDate = '' %}
+            {% set upcomingGamesHtml = '<block name="upcoming">' ~ "\n" %}
+            {% for item in GameList %}
+                {% if lastDate != item.eu_release_date %}
+                    {% if not loop.first %}
+                        {% set upcomingGamesHtml = upcomingGamesHtml ~ '  </component>' ~ "\n" %}
+                    {% endif %}
+                    {% set upcomingGamesHtml = upcomingGamesHtml ~
+                        '  <component locals=\'{"date":"' ~
+                        item.eu_release_date|date('Y-m-d') ~
+                        '"}\' src="upcoming.html">' ~
+                        "\n"
+                    %}
+                {% endif %}
+                {% set lastDate = item.eu_release_date %}
+
+                {% set upcomingGamesHtml = upcomingGamesHtml ~
+                    '    <component src="upcoming-item.html">' ~ "\n" ~
+                    '        <a href="URL">' ~ item.title ~ '</a> — DESCRIPTION.' ~ "\n" ~
+                    '    </component>' ~ "\n"
+                %}
+            {% endfor %}
+            {% set upcomingGamesHtml = upcomingGamesHtml ~ '</block>' ~ "\n" %}
+            <textarea rows="20" readonly="true" style="background: #dedede; color: #000; font-family: 'Courier New', 'Courier', monospace; font-size: 14px; font-weight: normal; width: 100%;">
+{{ upcomingGamesHtml }}
+                </textarea>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+            <h3>Preview: {{ ConsoleName }}</h3>
+            {{ upcomingGamesHtml|raw }}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
