@@ -158,6 +158,7 @@ class GamesListController extends Controller
                     if (!$collection instanceof GameCollection) {
                         $collection = $this->repoCollection->find($collection);
                     }
+                    if (!$collection) abort(404);
                     return $this->repoCollection->gamesByCollection($collection->id);
                 },
                 'dynamicTitle' => true,
@@ -179,6 +180,7 @@ class GamesListController extends Controller
                 if (!$category instanceof Category) {
                     $category = $this->repoCategory->find($category);
                 }
+                if (!$category) abort(404);
                 return 'By category: ' . $category->name;
 
             case 'by-series':
@@ -186,6 +188,7 @@ class GamesListController extends Controller
                 if (!$series instanceof GameSeries) {
                     $series = $this->repoGameSeries->find($series);
                 }
+                if (!$series) abort(404);
                 return 'By series: ' . $series->series;
 
             case 'by-tag':
@@ -193,6 +196,7 @@ class GamesListController extends Controller
                 if (!$tag instanceof Tag) {
                     $tag = $this->repoTag->find($tag);
                 }
+                if (!$tag) abort(404);
                 return 'By tag: ' . $tag->tag_name;
 
             case 'by-collection':
