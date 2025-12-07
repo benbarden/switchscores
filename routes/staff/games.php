@@ -49,7 +49,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_G
     Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
 
     // Game lists v2
-    Route::get('/staff/games/list/{listType}/{param1?}/{param2?}', 'Staff\Games\GamesListController@showList')->name('staff.games.list.showList');
+    Route::get('/staff/games/list/{listType}/{param1?}/{param2?}',
+        'Staff\Games\GamesListController@showList')->name('staff.games.list.showList');
+    Route::get('/staff/games/export/{listType}/{param1?}/{param2?}',
+        'Staff\Games\GamesListController@exportCsv')->name('staff.games.list.export');
 
     // Featured games
     Route::get('/staff/games/featured-games/list', 'Staff\Games\FeaturedGameController@showList')->name('staff.games.featured-games.list');

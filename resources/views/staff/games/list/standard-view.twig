@@ -4,9 +4,27 @@
 
 {% block page_inner %}
 
-<a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
-<br>
-<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
+        </div>
+        <div class="pull-right">
+            {% if GameList.count > 0 %}
+                <a href="{{ route('staff.games.list.export', {
+                    listType: ListMode,
+                    param1: Args[0] ?? null,
+                    param2: Args[1] ?? null
+                }) }}"
+                   class="btn btn-sm btn-primary">
+                    Export CSV
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<hr>
 
 {% if ListLimit %}
     <div class="alert alert-warning" role="alert">

@@ -238,6 +238,61 @@ class GamesListController extends Controller
         // Pick view: custom or default
         $viewName = $config['view'] ?? 'staff.games.list.standard-view';
 
+        $bindings['Args'] = $args;
+
         return view($viewName, $bindings);
     }
+
+    public function exportCsv(Request $request, $listType, ...$args)
+    {
+        $config = $this->listConfig()[$listType] ?? abort(404);
+
+        // Reuse the existing fetch callback — may return a Builder or a Collection
+        $result = ($config['fetch'])(...$args);
+
+        // If it's a query builder, force a get()
+        if ($result instanceof \Illuminate\Database\Eloquent\Builder ||
+            $result instanceof \Illuminate\Database\Query\Builder) {
+            $games = $result->get();
+        } else {
+            // It's already a collection
+            $games = $result;
+        }
+
+        // Choose export filename
+        $filename = "export-{$listType}.csv";
+        if (!empty($args)) {
+            $filename = "export-{$listType}-" . implode('-', $args) . ".csv";
+        }
+
+        // CSV headers
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename={$filename}",
+        ];
+
+        // Stream output
+        $callback = function () use ($games) {
+            $out = fopen('php://output', 'w');
+
+            // Decide what columns to export — can expand later
+            fputcsv($out, ['ID', 'Title', 'Category', 'Format Digital', 'Is low quality', 'Category verification']);
+
+            foreach ($games as $g) {
+                fputcsv($out, [
+                    $g->id,
+                    $g->title,
+                    $g->category->name,
+                    $g->format_digital,
+                    $g->is_low_quality,
+                    $g->category_verification,
+                ]);
+            }
+
+            fclose($out);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 }
