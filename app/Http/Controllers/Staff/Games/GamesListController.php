@@ -276,7 +276,10 @@ class GamesListController extends Controller
             $out = fopen('php://output', 'w');
 
             // Decide what columns to export — can expand later
-            fputcsv($out, ['ID', 'Title', 'Category', 'Format Digital', 'Is low quality', 'Category verification']);
+            fputcsv(
+                $out,
+                ['ID', 'Title', 'Category', 'Format Digital', 'Is low quality', 'Category verification'],
+                "\t");
 
             foreach ($games as $g) {
                 fputcsv($out, [
@@ -286,7 +289,7 @@ class GamesListController extends Controller
                     $g->format_digital,
                     $g->is_low_quality,
                     $g->category_verification,
-                ]);
+                ], "\t");
             }
 
             fclose($out);
