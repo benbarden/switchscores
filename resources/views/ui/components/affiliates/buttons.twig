@@ -1,0 +1,101 @@
+{% macro amazonButton(url, text) %}
+    <a href="{{ url }}"
+       class="btn btn-primary btn-md"
+       target="_blank"
+       rel="nofollow sponsored">
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{% macro amazonTinyButton(url, text) %}
+    <a href="{{ url }}"
+       class="btn-cta-tiny"
+       target="_blank"
+       rel="nofollow sponsored">
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{% macro buyButtons(game, amazon, size = 'standard') %}
+    {% import _self as affiliate %}
+
+    {% set hasLinks = amazon.urlUk or amazon.urlUs or game.DSNintendoCoUk or game.nintendo_store_url_override %}
+
+    {% if hasLinks and not game.isDelisted %}
+
+        {% set useTiny = (size == 'tiny') %}
+
+        {% if size != 'tiny' %}
+            <h2>Buy this game</h2>
+        {% endif %}
+
+        {% if useTiny %}
+            <div class="buy-buttons-row--tiny buy-buttons--grid">
+            <span class="buy-prefix">Buy:</span>
+        {% endif %}
+
+        {# Amazon UK #}
+        {% if amazon.urlUk %}
+            {% set labelUk = useTiny ? 'Amazon UK' : 'Buy at Amazon UK' %}
+            {% if useTiny %}
+                {{ affiliate.amazonTinyButton(amazon.urlUk, labelUk) }}
+            {% else %}
+                {{ affiliate.amazonButton(amazon.urlUk, labelUk) }}
+            {% endif %}
+        {% endif %}
+
+        {# Amazon US #}
+        {% if amazon.urlUs %}
+            {% if amazon.usType == 'product' %}
+                {% set labelUs = useTiny ? 'Amazon US' : 'Buy at Amazon US' %}
+            {% else %}
+                {% set labelUs = useTiny ? 'Amazon US (search)' : 'Find at Amazon US' %}
+            {% endif %}
+
+            {% if useTiny %}
+                {{ affiliate.amazonTinyButton(amazon.urlUs, labelUs) }}
+            {% else %}
+                {{ affiliate.amazonButton(amazon.urlUs, labelUs) }}
+            {% endif %}
+        {% endif %}
+
+        {# Nintendo eShop EU (DS) #}
+        {% if game.dspNintendoCoUk %}
+            {% set ds = game.dspNintendoCoUk[0] %}
+            {% if ds %}
+                {% set labelNin = useTiny ? 'Nintendo.co.uk' : 'Buy at Nintendo.co.uk' %}
+                {% if useTiny %}
+                    {{ affiliate.amazonTinyButton(
+                        eshop_url('eu', ds.url),
+                        labelNin
+                    ) }}
+                {% else %}
+                    {{ affiliate.amazonButton(
+                        eshop_url('eu', ds.url),
+                        labelNin
+                    ) }}
+                {% endif %}
+            {% endif %}
+
+        {# Manual override URL #}
+        {% elseif game.nintendo_store_url_override %}
+            {% set labelNinStore = useTiny ? 'Nintendo Store' : 'Buy at Nintendo Store' %}
+            {% if useTiny %}
+                {{ affiliate.amazonTinyButton(
+                    game.nintendo_store_url_override,
+                    labelNinStore
+                ) }}
+            {% else %}
+                {{ affiliate.amazonButton(
+                    game.nintendo_store_url_override,
+                    labelNinStore
+                ) }}
+            {% endif %}
+        {% endif %}
+
+        {% if useTiny %}
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endmacro %}

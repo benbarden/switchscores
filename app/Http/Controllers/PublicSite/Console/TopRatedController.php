@@ -4,19 +4,21 @@ namespace App\Http\Controllers\PublicSite\Console;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
+use App\Domain\TopRated\Repository as TopRatedRepository;
 use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 use App\Models\Console;
 use App\Domain\Console\Repository as ConsoleRepository;
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 
 class TopRatedController extends Controller
 {
     public function __construct(
-        private TopRatedDbQueries $dbTopRated,
+        private TopRatedRepository $repoTopRated,
         private Breadcrumbs $viewBreadcrumbs,
         private GameCalendarAllowedDates $allowedDates,
         private ConsoleRepository $repoConsole,
+        private AmazonAffiliate $affiliateAmazon,
     )
     {
     }
@@ -37,9 +39,20 @@ class TopRatedController extends Controller
         $lastYear = $thisYear - 1;
         $bindings['Year'] = $thisYear;
         $bindings['LastYear'] = $lastYear;
-        $bindings['TopRatedThisYear'] = $this->dbTopRated->byConsoleAndYear($consoleId, $thisYear, 15);
-        //$bindings['TopRatedLastYear'] = $this->dbTopRated->byConsoleAndYear($consoleId, $lastYear, 15);
-        $bindings['TopRatedAllTime'] = $this->dbTopRated->getListByConsole($consoleId, 1, 15);
+        // Affiliates
+        $topRatedThisYear = $this->repoTopRated->byConsoleAndYear($consoleId, $thisYear, 15);
+        foreach ($topRatedThisYear as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
+        $bindings['TopRatedThisYear'] = $topRatedThisYear;
+        // Affiliates
+        $topRatedAllTime = $this->repoTopRated->getListByConsole($consoleId, 1, 15);
+        foreach ($topRatedAllTime as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
+        $bindings['TopRatedAllTime'] = $topRatedAllTime;
 
         $bindings['ConsoleSwitch1'] = $this->repoConsole->find(Console::ID_SWITCH_1);
         $bindings['ConsoleSwitch2'] = $this->repoConsole->find(Console::ID_SWITCH_2);
@@ -64,8 +77,14 @@ class TopRatedController extends Controller
         $bindings['ConsoleId'] = $consoleId;
         $bindings['Console'] = $console;
         $bindings['ConsoleList'] = $consoleList;
+        $bindings['CurrentPage'] = 1; // default
 
-        $gamesList = $this->dbTopRated->getListByConsole($consoleId, 1, 100);
+        $gamesList = $this->repoTopRated->getListByConsole($consoleId, 1, 100);
+        // Affiliates
+        foreach ($gamesList as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
@@ -95,13 +114,19 @@ class TopRatedController extends Controller
             $maxRank = 100;
         }
 
-        $gamesList = $this->dbTopRated->getListByConsole($consoleId, $minRank, $maxRank);
+        $gamesList = $this->repoTopRated->getListByConsole($consoleId, $minRank, $maxRank);
+        // Affiliates
+        foreach ($gamesList as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
 
         $bindings = [];
         $bindings['ConsoleName'] = $consoleName;
         $bindings['ConsoleId'] = $consoleId;
         $bindings['Console'] = $console;
         $bindings['ConsoleList'] = $consoleList;
+        $bindings['CurrentPage'] = $page;
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
@@ -129,7 +154,12 @@ class TopRatedController extends Controller
         $bindings['Console'] = $console;
         $bindings['ConsoleList'] = $consoleList;
 
-        $gamesList = $this->dbTopRated->byConsoleAndYear($consoleId, $year, 100);
+        $gamesList = $this->repoTopRated->byConsoleAndYear($consoleId, $year, 100);
+        // Affiliates
+        foreach ($gamesList as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
 
         $bindings['TopRatedByYear'] = $gamesList;
         $bindings['GamesTableSort'] = "[5, 'desc']";

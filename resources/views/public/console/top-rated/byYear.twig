@@ -2,11 +2,15 @@
 
 {% block page_body %}
 
-{% include 'public/console/top-rated/navTopLinks.twig' with {'currentNav': 'btn-nav-console-top-rated-landing-'~ConsoleId} %}
+{% include "ui/components/top-rated/nav.twig" with {
+    consoleId: 1,
+    activePage: 'home'
+} %}
 
 <p>
-    <strong>The best Nintendo Switch games of {{ Year }}</strong>.
-    Games need to have at least 3 ratings to be ranked.
+    These are the best Nintendo {{ ConsoleName}} games released in {{ Year }}, based on review scores from our partner sites.
+    <br>
+    Games must have at least 3 ratings to be included in the list.
 </p>
 
 <div class="row">

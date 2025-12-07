@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class DbQueries
 {
     /**
+     * @deprecated
      * @param $minRank
      * @param $maxRank
      * @param $mode
@@ -83,6 +84,13 @@ class DbQueries
         return $this->getListByConsole($consoleId, 1, 100, 'random-one'); //->inRandomOrder()->first();
     }
 
+    /**
+     * @deprecated
+     * @param $consoleId
+     * @param $year
+     * @param $limit
+     * @return \Illuminate\Support\Collection
+     */
     public function byConsoleAndYear($consoleId, $year, $limit = null)
     {
         $games = DB::table('game_rank_year')

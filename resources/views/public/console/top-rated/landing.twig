@@ -3,17 +3,20 @@
 
 {% block page_body %}
 
-{% include 'public/console/top-rated/navTopLinks.twig' with {'currentNav': 'btn-nav-console-top-rated-landing-'~ConsoleId} %}
+{% include "ui/components/top-rated/nav.twig" with {
+    consoleId: 1,
+    activePage: 'home'
+} %}
 
 <div class="row">
 
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <p>
-            This page lists the <strong>best Nintendo {{ ConsoleName }} games</strong>, split by all-time and by release year (in Europe).
-        </p>
-        <p>
-            Ratings are calculated from the reviews we store from our carefully selected review partners.
-            Games need to have at least 3 ratings to be included in these lists.
+            This page lists the best Nintendo Switch 1 games, based on review scores from our selected review partners.
+            <br>
+            Games must have at least 3 ratings to be included in these lists.
+            <br>
+            Use the tabs to browse all-time rankings or the best games from each year.
         </p>
     </div>
 

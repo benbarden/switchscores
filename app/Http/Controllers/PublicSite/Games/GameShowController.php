@@ -76,6 +76,12 @@ class GameShowController extends Controller
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
 
+        // Affiliates
+        $amazon = $this->affiliateAmazon->buildLinksForGame($gameData);
+
+        $bindings['Amazon'] = $amazon;
+
+        /*
         // Amazon
         $tempAmazonUkLink = $gameData['amazon_uk_link'];
         if ($tempAmazonUkLink) {
@@ -101,6 +107,7 @@ class GameShowController extends Controller
             $bindings['FullAmazonUsLink'] = 'https://www.amazon.com/s?k=nintendo+switch+games+'.$urlTitle.'&tag='.$amazonUSId;
             $bindings['AmazonUSLinkType'] = 'search';
         }
+        */
 
         // Video
         $videoUrl = $gameData->video_url;

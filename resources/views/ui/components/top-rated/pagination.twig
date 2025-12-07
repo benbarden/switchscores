@@ -1,0 +1,22 @@
+{#
+Required variables:
+- console: the Console object or slug string
+- currentPage: integer
+- totalPages: integer (5 for Switch 1 currently)
+#}
+
+{% set consoleSlug = ConsoleId == 1 ? 'switch-1' : 'switch-2' %}
+
+<div class="toprated-pagination">
+
+    {% for page in 1..totalPages %}
+        <a href="{{ route('console.topRated.allTime.page', {
+            console: consoleSlug,
+            page: page
+        }) }}"
+           class="pagination-tab {{ currentPage == page ? 'active' : '' }}">
+            Page {{ page }}
+        </a>
+    {% endfor %}
+
+</div>

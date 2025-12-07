@@ -1,0 +1,32 @@
+{#
+Inputs:
+- consoleId: 1 or 2
+- activePage: 'home' or 'alltime'
+#}
+
+{# Build slugs dynamically #}
+{% set consoleSlug = ConsoleId == 1 ? 'switch-1' : 'switch-2' %}
+{% set otherConsoleSlug = ConsoleId == 1 ? 'switch-2' : 'switch-1' %}
+
+{# Labels for display #}
+{% set consoleLabel = ConsoleId == 1 ? 'Switch 1' : 'Switch 2' %}
+{% set otherConsoleLabel = ConsoleId == 1 ? 'Switch 2' : 'Switch 1' %}
+
+<div class="toprated-tabs">
+
+    <a href="{{ route('console.topRated.landing', { console: consoleSlug }) }}"
+       class="toprated-tab {{ activePage == 'home' ? 'active' : '' }}">
+        Top Rated – {{ consoleLabel }}
+    </a>
+
+    <a href="{{ route('console.topRated.allTime', { console: consoleSlug }) }}"
+       class="toprated-tab {{ activePage == 'alltime' ? 'active' : '' }}">
+        All-Time – {{ consoleLabel }}
+    </a>
+
+    <a href="{{ route('console.topRated.landing', { console: otherConsoleSlug }) }}"
+       class="toprated-tab">
+        Top Rated – {{ otherConsoleLabel }}
+    </a>
+
+</div>

@@ -3,6 +3,7 @@
 {% import 'ui/blocks/game-grid.twig' as gamegrid %}
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/affiliates/buttons.twig' as affiliate %}
 
 {% set hideHeader = true %}
 
@@ -81,7 +82,10 @@
 
                 {% endif %}
 
-                {% if GameData.format_digital != 'De-listed' and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
+                {{ affiliate.buyButtons(GameData, Amazon) }}
+
+                {#
+                {% if not GameData.isDigitalDelisted() and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
                     <h2>Buy this game</h2>
                     {% if FullAmazonUkLink %}
                         <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
@@ -99,6 +103,7 @@
                         <a href="{{ GameData.nintendo_store_url_override }}" class="btn btn-primary btn-md" target="_blank">Buy at Nintendo store</a>
                     {% endif %}
                 {% endif %}
+                #}
 
                 {% include 'public/games/page/reviews.twig' with {'GameReviews': GameReviews} %}
                 {% include 'public/games/page/quickReviews.twig' with {'ReviewList': GameQuickReviewList} %}

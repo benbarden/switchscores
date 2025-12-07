@@ -603,3 +603,146 @@ blockquote {
     color: #fff;
     border-color: #43ac6a;
 }
+
+/* Top rated */
+/* Container for the tab bar */
+.toprated-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0 20px;
+}
+
+/* Base tab style */
+.toprated-tab {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover state */
+.toprated-tab:hover {
+    background: #e8e8e8;
+    border-color: #bdbdbd;
+    text-decoration: none;
+}
+
+/* Active tab (the current page) */
+.toprated-tab.active {
+    background: #0074d9;        /* Replace with your theme blue if needed */
+    color: #fff;
+    border-color: #0074d9;
+}
+
+/* Hover on the active tab keeps it stable */
+.toprated-tab.active:hover {
+    background: #0068c5;
+    border-color: #0068c5;
+}
+
+/* Mobile refinement */
+@media (max-width: 600px) {
+    .toprated-tab {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+/* Background wrapper for tiny mode on grid layouts */
+.buy-buttons--grid {
+    background: #f5f5f5;      /* light grey — adjust to match theme */
+    padding: 8px 6px;
+    border-radius: 0 0 4px 4px;
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Container for the row of tiny buy buttons */
+.buy-buttons-row--tiny {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.buy-buttons-row--tiny .buy-prefix {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+/* Tiny CTA variant */
+.btn-cta-tiny {
+    display: inline-block;
+    padding: 3px 6px;
+    font-size: 12px;
+    line-height: 1.2;
+    border-radius: 3px;
+    background-color: #2C75C9;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-cta-tiny:hover,
+.btn-cta-tiny:focus {
+    color: #ffffff;
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+/* Pagination container */
+.toprated-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 20px;
+}
+
+/* Pagination link style */
+.pagination-tab {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hover */
+.pagination-tab:hover {
+    background: #e8e8e8;
+    border-color: #bdbdbd;
+}
+
+/* Active page */
+.pagination-tab.active {
+    background: #0074d9;
+    border-color: #0074d9;
+    color: #fff;
+}
+
+/* Mobile tweaks */
+@media (max-width: 600px) {
+    .pagination-tab {
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+}

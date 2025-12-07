@@ -1,4 +1,5 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/affiliates/buttons.twig' as affiliate %}
 
 {# PACKSHOTS #}
 {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
@@ -43,3 +44,9 @@
         </div>
     </div>
 </div>
+<div class="row" style="margin-top: 8px;">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {{ affiliate.buyButtons(item, item.Amazon, 'tiny') }}
+    </div>
+</div>
+
