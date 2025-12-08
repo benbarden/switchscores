@@ -161,6 +161,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/collect-a-thon/?$ /c/$1/category/platformer-3d
     RedirectMatch 301 ^/c/([^/]+)/tag/combat-racing/?$ /c/$1/category/racing
     RedirectMatch 301 ^/c/([^/]+)/tag/dodging/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/hack-and-slash/?$ /c/$1/tag
 
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
