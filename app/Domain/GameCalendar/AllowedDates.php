@@ -96,6 +96,9 @@ class AllowedDates
 
     public function allowedDatesByConsoleAndYear($consoleId, $year)
     {
+        $year = (int) $year;
+        if (!$year) return [];
+
         $years = [$year];
 
         $startYear = $this->getConsoleStartYear($consoleId);
