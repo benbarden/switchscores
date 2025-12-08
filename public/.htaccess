@@ -165,6 +165,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/investigation/?$ /c/$1/tag
     RedirectMatch 301 ^/c/([^/]+)/tag/minimalistic-gameplay/?$ /c/$1/tag
     RedirectMatch 301 ^/c/([^/]+)/tag/online-only/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/story-choices/?$ /c/$1/interactive-story
 
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
