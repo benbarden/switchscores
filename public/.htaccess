@@ -158,6 +158,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/shooting/?$ /c/$1/category/shooting
     RedirectMatch 301 ^/c/([^/]+)/tag/block-pushing/?$ /c/$1/category/block-pushing
     RedirectMatch 301 ^/c/([^/]+)/tag/bomb-laying/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/collect-a-thon/?$ /c/$1/category/platformer-3d
 
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
