@@ -166,6 +166,25 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/minimalistic-gameplay/?$ /c/$1/tag
     RedirectMatch 301 ^/c/([^/]+)/tag/online-only/?$ /c/$1/tag
     RedirectMatch 301 ^/c/([^/]+)/tag/story-choices/?$ /c/$1/category/interactive-story
+    RedirectMatch 301 ^/c/([^/]+)/tag/cooking/?$ /c/$1/category/restaurant-cooking
+    RedirectMatch 301 ^/c/([^/]+)/tag/dice-based/?$ /c/$1/category/board-and-tabletop
+    RedirectMatch 301 ^/c/([^/]+)/tag/digging/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/dodging-racing/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/drifting/?$ /c/$1/category/stunt-driving
+    RedirectMatch 301 ^/c/([^/]+)/tag/falling-blocks/?$ /c/$1/category/falling-blocks-puzzle
+    RedirectMatch 301 ^/c/([^/]+)/tag/fighting/?$ /c/$1/category/fighting
+    RedirectMatch 301 ^/c/([^/]+)/tag/matching-puzzle/?$ /c/$1/category/matching-puzzle
+    RedirectMatch 301 ^/c/([^/]+)/tag/numbers-heavy/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/photography/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/poker/?$ /c/$1/category/card-game
+    RedirectMatch 301 ^/c/([^/]+)/tag/repair/?$ /c/$1/category/job-simulator
+    RedirectMatch 301 ^/c/([^/]+)/tag/skateboard/?$ /c/$1/category/skateboarding
+    RedirectMatch 301 ^/c/([^/]+)/tag/ski-snowboard/?$ /c/$1/category/skiing-and-snowboarding
+    RedirectMatch 301 ^/c/([^/]+)/tag/sniping/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/stunts/?$ /c/$1/category/stunt-driving
+    RedirectMatch 301 ^/c/([^/]+)/tag/traffic-management/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/walking-simulator/?$ /c/$1/tag
+    RedirectMatch 301 ^/c/([^/]+)/tag/word-puzzle/?$ /c/$1/category/word-game
 
     # Setting
     RedirectMatch 301 ^/c/([^/]+)/tag/antiquity/?$ /c/$1/category/adventure
