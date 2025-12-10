@@ -73,6 +73,9 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulation/?$ /c/$1/category/space-simulator
     RedirectMatch 301 ^/c/([^/]+)/category/side-scrolling-fighting/?$ /c/$1/category/beat-em-up
     RedirectMatch 301 ^/c/([^/]+)/category/single-screen/?$ /c/$1/category/platformer-2d
+    RedirectMatch 301 ^/c/([^/]+)/category/box-fitting-puzzle/?$ /c/$1/category/logic-puzzle
+    RedirectMatch 301 ^/c/([^/]+)/category/numbers-game/?$ /c/$1/category/logic-puzzle
+    RedirectMatch 301 ^/c/([^/]+)/category/sliding-block/?$ /c/$1/category/logic-puzzle
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
