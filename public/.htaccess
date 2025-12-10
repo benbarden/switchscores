@@ -48,7 +48,6 @@ RewriteEngine On
     Redirect 301 /news/20180204/you-can-now-register-at-world-of-switch /news
 
     # Page redirects: Category to tag
-    RedirectMatch 301 ^/c/([^/]+)/category/metroidvania/?$ /c/$1/tag/metroidvania
     RedirectMatch 301 ^/c/([^/]+)/category/music-adventure/?$ /c/$1/tag/rhythm-based
     RedirectMatch 301 ^/c/([^/]+)/category/escape-room/?$ /c/$1/tag/escape-room
     RedirectMatch 301 ^/c/([^/]+)/category/jigsaw/?$ /c/$1/tag/jigsaw
@@ -80,6 +79,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulator/?$ /c/$1/category/simulation
 
     # Page redirects: Tag to category
+    RedirectMatch 301 ^/c/([^/]+)/tag/metroidvania/?$ /c/$1/category/metroidvania
     RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
     RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
     RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
