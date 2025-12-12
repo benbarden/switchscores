@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Staff\InsightsController;
+
 // *************** Staff: General pages *************** //
 Route::group(['middleware' => ['auth.staff']], function() {
 
@@ -14,6 +16,13 @@ Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(functi
     Route::get('/tools', 'Staff\ToolsController@index')->name('tools.index');
     Route::post('/tools/run/{cmd}', 'Staff\ToolsController@run')->name('tools.run');
     Route::post('/tools/run-group/{groupKey}', 'Staff\ToolsController@runGroup')->name('tools.runGroup');
+});
+
+// *************** Staff: Insights *************** //
+Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(function () {
+
+        Route::get('/insights', [InsightsController::class, 'index'])->name('insights.index');
+
 });
 
 // *************** Staff: INVITE CODES *************** //

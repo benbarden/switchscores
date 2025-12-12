@@ -25,3 +25,6 @@
 # Quality and integrity
 30 5 * * * www-data cd /var/www/switchscores.com && php artisan GameUpdateQualityScores >/dev/null 2>&1
 35 5 * * * www-data cd /var/www/switchscores.com && php artisan IntegrityCheckChecker >/dev/null 2>&1
+
+# GSC
+0 6 * * * www-data cd /var/www/switchscores.com && php artisan app:fetch-gsc-page-snapshots >/dev/null 2>&1

@@ -1,0 +1,153 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+        <p class="text-muted">
+            Performance and visibility insights based on Google Search Console data.
+        </p>
+        <p class="text-muted">
+            Snapshot taken on <strong>{{ SnapshotDate|date('j M Y') }}</strong>
+            (last {{ WindowDays }} days).
+        </p>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+
+    <div class="col-md-12">
+        {# -------------------------------------------------- #}
+        {# Categories #}
+        {# -------------------------------------------------- #}
+
+        <h2>Category pages</h2>
+
+        {% if CategoryList is empty %}
+            <p class="text-muted">No category data available.</p>
+        {% else %}
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th class="text-end">Impressions</th>
+                    <th class="text-end">Clicks</th>
+                    <th class="text-end">Avg position</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in CategoryList %}
+                    <tr>
+                        <td>
+                            <a href="{{ row.page_url }}" target="_blank" rel="noopener">
+                                {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
+                            </a>
+                        </td>
+                        <td class="text-end">{{ row.impressions|number_format }}</td>
+                        <td class="text-end">{{ row.clicks|number_format }}</td>
+                        <td class="text-end">
+                            {{ row.avg_position is not null ? row.avg_position : '–' }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <hr>
+
+        {# -------------------------------------------------- #}
+        {# Top rated #}
+        {# -------------------------------------------------- #}
+
+        <h2>Top rated pages</h2>
+
+        {% if TopRatedList is empty %}
+            <p class="text-muted">No top rated data available.</p>
+        {% else %}
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th class="text-end">Impressions</th>
+                    <th class="text-end">Clicks</th>
+                    <th class="text-end">Avg position</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in TopRatedList %}
+                    <tr>
+                        <td>
+                            <a href="{{ row.page_url }}" target="_blank" rel="noopener">
+                                {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
+                            </a>
+                        </td>
+                        <td class="text-end">{{ row.impressions|number_format }}</td>
+                        <td class="text-end">{{ row.clicks|number_format }}</td>
+                        <td class="text-end">
+                            {{ row.avg_position is not null ? row.avg_position : '–' }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <hr>
+
+        {# -------------------------------------------------- #}
+        {# Games #}
+        {# -------------------------------------------------- #}
+
+        <h2>Games</h2>
+
+        <p class="text-muted">
+            Only games with meaningful visibility are shown.
+        </p>
+
+        {% if GamesList is empty %}
+            <p class="text-muted">No game data available.</p>
+        {% else %}
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Game</th>
+                    <th class="text-end">Impressions</th>
+                    <th class="text-end">Clicks</th>
+                    <th class="text-end">Avg position</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in GamesList %}
+                    <tr>
+                        <td>
+                            {% if row.game_id %}
+                                <a href="/staff/games/detail/{{ row.game_id }}">
+                                    {{ row.page_url|split('/')|last }}
+                                </a>
+                            {% else %}
+                                {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
+                            {% endif %}
+                        </td>
+                        <td class="text-end">{{ row.impressions|number_format }}</td>
+                        <td class="text-end">{{ row.clicks|number_format }}</td>
+                        <td class="text-end">
+                            {{ row.avg_position is not null ? row.avg_position : '–' }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock page_inner %}
