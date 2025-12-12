@@ -2,6 +2,18 @@
 
 {% block page_body %}
 
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            Nintendo Switch games are often released as part of a series, from long-running franchises to smaller trilogies.
+            Some series include just a few games, while others span dozens of releases.
+            This page groups {{ Console.name }} games by series, making it easier to explore related titles and discover
+            complete collections.
+        </p>
+    </div>
+</div>
+<h2>Browse {{ Console.name }} games by series</h2>
+
 {% if SeriesList %}
     <div class="row">
         {% for item in SeriesList %}

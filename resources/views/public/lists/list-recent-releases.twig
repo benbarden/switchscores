@@ -3,12 +3,19 @@
 
 {% block page_body %}
 
-<p>
-    This page lists recently released Nintendo Switch games.
-</p>
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            This page lists recently released Nintendo {{ Console.name }} games, ordered by release date.
+            New games are added regularly as they launch on the eShop.
+        </p>
+
+    </div>
+</div>
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
+        <h2>Recently released {{ Console.name }} games</h2>
         {{ gamegrid.render(NewReleases, 4, 'standard', false, false, 'show-date-icons') }}
     </div>
 </div>

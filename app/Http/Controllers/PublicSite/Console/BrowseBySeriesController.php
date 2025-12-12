@@ -22,7 +22,7 @@ class BrowseBySeriesController extends Controller
     {
         $bindings = [];
 
-        $bindings['SeriesList'] = $this->repoGameSeries->getAll();
+        $bindings['SeriesList'] = $this->repoGameSeries->getAllWithGames($console);
 
         $bindings['Console'] = $console;
 

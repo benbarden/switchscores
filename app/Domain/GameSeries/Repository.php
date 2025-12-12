@@ -5,6 +5,7 @@ namespace App\Domain\GameSeries;
 
 use App\Models\GameSeries;
 use App\Models\Game;
+use App\Models\Console;
 
 class Repository
 {
@@ -40,6 +41,15 @@ class Repository
     public function getAll()
     {
         return GameSeries::orderBy('series', 'asc')->get();
+    }
+
+    public function getAllWithGames(Console $console)
+    {
+        if ($console->id == Console::ID_SWITCH_2) {
+            return GameSeries::whereHas('gamesSwitch2')->orderBy('series', 'asc')->get();
+        } else {
+            return GameSeries::whereHas('gamesSwitch1')->orderBy('series', 'asc')->get();
+        }
     }
 
     public function getByName($name)
