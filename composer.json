@@ -8,6 +8,7 @@
         "php": "^8.1",
         "ext-gd": "^8.1.2",
         "doctrine/dbal": "^3.0",
+        "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.7",
         "intervention/image": "^2.5",
         "laravel/framework": "^10.0",
