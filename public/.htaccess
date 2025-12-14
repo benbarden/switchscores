@@ -79,10 +79,11 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulator/?$ /c/$1/category/simulation
     RedirectMatch 301 ^/c/([^/]+)/category/dirt-bikes-and-quad-bikes/?$ /c/$1/category/bike-racing
     RedirectMatch 301 ^/c/([^/]+)/category/casino/?$ /c/$1/category/arcade
+    RedirectMatch 301 ^/c/([^/]+)/category/health-and-fitness/?$ /c/$1/category/lifestyle
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/metroidvania/?$ /c/$1/category/metroidvania
-    RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/health-and-fitness
+    RedirectMatch 301 ^/c/([^/]+)/tag/health-fitness/?$ /c/$1/category/lifestyle
     RedirectMatch 301 ^/c/([^/]+)/tag/pool-billard/?$ /c/$1/category/cue-sports
     RedirectMatch 301 ^/c/([^/]+)/tag/tower-defense/?$ /c/$1/category/tower-defense
     RedirectMatch 301 ^/c/([^/]+)/tag/score-based/?$ /c/$1/category/arcade
