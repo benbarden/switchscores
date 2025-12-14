@@ -82,6 +82,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/health-and-fitness/?$ /c/$1/category/lifestyle
     RedirectMatch 301 ^/c/([^/]+)/category/spot-the-difference/?$ /c/$1/category/hidden-objects
     RedirectMatch 301 ^/c/([^/]+)/category/store-management/?$ /c/$1/category/management
+    RedirectMatch 301 ^/c/([^/]+)/category/job-simulator/?$ /c/$1/category/simulation
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/metroidvania/?$ /c/$1/category/metroidvania
