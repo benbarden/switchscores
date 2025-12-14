@@ -16,6 +16,7 @@
                 <th class="text-center">Verified #</th>
                 <th class="text-center">Verified %</th>
                 <th class="text-center">Taxonomy reviewed</th>
+                <th class="text-center">Layout</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -57,6 +58,9 @@
                         {% elseif item.taxonomy_reviewed == 2 %}
                             <span class="badge bg-danger">Deprecated</span>
                         {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.layout_version }}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.category.edit', {'categoryId': item.id}) }}">Edit</a>
