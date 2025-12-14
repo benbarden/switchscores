@@ -78,6 +78,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/game-show/?$ /c/$1/category/quiz
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulator/?$ /c/$1/category/simulation
     RedirectMatch 301 ^/c/([^/]+)/category/dirt-bikes-and-quad-bikes/?$ /c/$1/category/bike-racing
+    RedirectMatch 301 ^/c/([^/]+)/category/casino/?$ /c/$1/category/arcade
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/metroidvania/?$ /c/$1/category/metroidvania
@@ -100,7 +101,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/tag/travel-story/?$ /c/$1/category/adventure
     RedirectMatch 301 ^/c/([^/]+)/tag/board-game/?$ /c/$1/category/board-and-tabletop
     RedirectMatch 301 ^/c/([^/]+)/tag/cards/?$ /c/$1/category/roguelike
-    RedirectMatch 301 ^/c/([^/]+)/tag/casino/?$ /c/$1/category/board-and-tabletop
+    RedirectMatch 301 ^/c/([^/]+)/tag/casino/?$ /c/$1/category/arcade
     RedirectMatch 301 ^/c/([^/]+)/tag/puzzle/?$ /c/$1/category/puzzle
     RedirectMatch 301 ^/c/([^/]+)/tag/coloring-book/?$ /c/$1/category/puzzle
     RedirectMatch 301 ^/c/([^/]+)/tag/drawing-painting/?$ /c/$1/category/puzzle
