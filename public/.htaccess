@@ -77,6 +77,7 @@ RewriteEngine On
     RedirectMatch 301 ^/c/([^/]+)/category/sliding-block/?$ /c/$1/category/logic-puzzle
     RedirectMatch 301 ^/c/([^/]+)/category/game-show/?$ /c/$1/category/quiz
     RedirectMatch 301 ^/c/([^/]+)/category/space-simulator/?$ /c/$1/category/simulation
+    RedirectMatch 301 ^/c/([^/]+)/category/dirt-bikes-and-quad-bikes/?$ /c/$1/category/bike-racing
 
     # Page redirects: Tag to category
     RedirectMatch 301 ^/c/([^/]+)/tag/metroidvania/?$ /c/$1/category/metroidvania
