@@ -162,9 +162,19 @@
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Invite codes') }}
+        {{ heading.renderSlick('Registration') }}
         <table class="table">
             <tbody>
+            {% if auth_user().isOwner() %}
+                <tr>
+                    <td>
+                        <a href="{{ route('owner.user.list') }}">Registered users</a>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
+                    </td>
+                </tr>
+            {% endif %}
             <tr>
                 <td>
                     <a href="{{ route('staff.invite-code.list') }}">Invite codes</a>
@@ -174,55 +184,25 @@
             </tbody>
         </table>
 
-        {% if auth_user().isOwner() %}
-            {{ heading.renderSlick('Owner links') }}
-            <table class="table">
-                <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.user.list') }}">Registered users</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('owner.user.list') }}" class="h4">{{ RegisteredUserCount }}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.activityLog') }}">Activity log</a>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('owner.audit.index') }}">Audit</a>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.stats.dashboard') }}">Stats</a>
-                    </td>
-                    <td></td>
-                </tr>
-                </tbody>
-            </table>
-        {% endif %}
-
     </div>
 
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {{ heading.renderSlick('Recently released') }}
-            {% if RecentlyReleasedGames.count > 0 %}
+            {{ heading.renderSlick('Category: Unverified') }}
+            {% if CategoryUnverifiedList.count > 0 %}
                 <div class="col-md-12">
-                    {% for item in RecentlyReleasedGames %}
+                    {% for item in CategoryUnverifiedList %}
                         <div class="row" style="margin-top: 6px;">
                             <div class="col-md-3 col-sm-3 col-xs-3">
                                 {{ packshots.square(item) }}
                             </div>
                             <div class="col-md-9 col-sm-9 col-xs-9">
                                 {{ gamelink.title(item, 'staff') }}
+                                <br>
+                                <small>
+                                    Category: {{ item.category.name }}
+                                </small>
                                 <br>
                                 <small>
                                     Released: {{ item.eu_release_date|date('d F Y') }}
@@ -238,7 +218,6 @@
             {% else %}
                 <p>No items found!</p>
             {% endif %}
-            <p><a href="{{ route('staff.games.list.showList', {'listType': 'recently-released'}) }}">View all recently released games</a>.</p>
         {% endif %}
 
     </div>

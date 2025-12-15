@@ -14,6 +14,7 @@ use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\Game\Repository\CategoryVerificationRepository;
 
 use App\Models\QuickReview;
 use App\Services\DataQuality\QualityStats;
@@ -30,7 +31,8 @@ class IndexController extends Controller
         private GamePublisherDbQueries $dbGamePublisher,
         private GamesCompanyRepository $repoGamesCompany,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
-        private DataSourceParsedRepository $repoDataSourceParsed
+        private DataSourceParsedRepository $repoDataSourceParsed,
+        private CategoryVerificationRepository $repoCategoryVerification,
     )
     {
     }
@@ -66,6 +68,9 @@ class IndexController extends Controller
         $bindings['NoCategoryWithCollectionCount'] = $this->repoGameStats->totalNoCategoryWithCollectionId();
         $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
         $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
+
+        // Visual action lists
+        $bindings['CategoryUnverifiedList'] = $this->repoCategoryVerification->getOldestUnverifiedGames();
 
         // New games
         $bindings['RecentlyReleasedGames'] = $this->repoGameLists->recentlyReleasedAll(1, 15);

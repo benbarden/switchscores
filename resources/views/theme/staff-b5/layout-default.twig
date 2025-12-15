@@ -1,10 +1,25 @@
 {% extends 'theme/staff-b5/base.twig' %}
 
 {% block page_body %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            {% include 'theme/staff-b5/breadcrumbs.twig' %}
+            <div class="row align-items-center mb-2">
+                <div class="col align-items-center">
+                    {% include 'theme/staff-b5/breadcrumbs.twig' %}
+                </div>
+
+                <div class="col-auto text-end">
+                    <a href="{{ url('/') }}"
+                            class="text-muted small text-decoration-none"
+                            style="white-space: nowrap;"
+                            target="_blank"
+                            rel="noopener">
+                        View public site &gt;&gt;
+                    </a>
+                </div>
+            </div>
             <h1>{{ PageTitle }}</h1>
         </div>
     </div>

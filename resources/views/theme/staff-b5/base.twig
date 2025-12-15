@@ -46,8 +46,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a class="navbar-brand" href="{{ url('/') }}">
-                            {{ config('app.name', 'Laravel') }}
+                        <a class="navbar-brand" href="{{ route('staff.index') }}">
+                            Staff
                         </a>
                     </li>
                 </ul>
@@ -61,10 +61,6 @@
                                 <a class="nav-link" href="{{ route('staff.games.add') }}">+ Add game</a>
                             </li>
                         {% endif %}
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('staff.index') }}">Staff index</a>
-                        </li>
 
                         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
                             {% include 'theme/staff-b5/nav-top/games.twig' %}

@@ -51,8 +51,8 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                    <a class="navbar-brand" href="{{ route('staff.index') }}">
+                        Staff
                     </a>
                 </div>
 
@@ -63,8 +63,6 @@
 
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
-
-                        <li><a href="{{ route('staff.index') }}">Staff index</a></li>
 
                         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
                             {% include 'theme/wos/staff/nav-top/games.twig' %}
