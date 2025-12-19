@@ -119,6 +119,8 @@
                 <thead>
                 <tr>
                     <th>Game</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Release date</th>
                     <th class="text-end">Impressions</th>
                     <th class="text-end">Clicks</th>
                     <th class="text-end">Avg position</th>
@@ -129,12 +131,28 @@
                     <tr>
                         <td>
                             {% if row.game_id %}
-                                <a href="/staff/games/detail/{{ row.game_id }}">
+                                {% if row.game.title %}
+                                    <a href="/staff/games/detail/{{ row.game_id }}">
+                                        {{ row.game.title }}
+                                    </a>
+                                {% else %}
                                     {{ row.page_url|split('/')|last }}
-                                </a>
+                                {% endif %}
                             {% else %}
                                 {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
                             {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if row.game.title %}
+                                {% if row.game.is_low_quality == 1 %}
+                                    Low quality
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">Deleted</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ row.game.eu_release_date }}
                         </td>
                         <td class="text-end">{{ row.impressions|number_format }}</td>
                         <td class="text-end">{{ row.clicks|number_format }}</td>

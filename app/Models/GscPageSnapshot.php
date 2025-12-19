@@ -29,6 +29,11 @@ class GscPageSnapshot extends Model
         'top_queries'   => 'array',
     ];
 
+    public function game()
+    {
+        return $this->hasOne('App\Models\Game', 'id', 'game_id');
+    }
+
     /**
      * Scope for a given snapshot date & window
      */
