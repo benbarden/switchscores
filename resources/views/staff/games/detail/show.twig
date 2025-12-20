@@ -1,5 +1,7 @@
 {% extends 'theme/wos/staff/clean-wide.twig' %}
 
+{% import 'ui/components/gsc/insights-games-table.twig' as gscgames %}
+
 {% block page_inner %}
 
 {% if LastAction == 'add' and LastGame is not null %}
@@ -118,12 +120,21 @@
         <div id="tabs">
 
             <ul>
+                <li><a href="#tabs-gsc-snapshot">GSC snapshot</a></li>
                 <li><a href="#tabs-data-sources">Data sources</a></li>
                 <li><a href="#tabs-import-rules">Import rules</a></li>
                 <li><a href="#tabs-audit">Audit</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
             </ul>
+
+            <div id="tabs-gsc-snapshot">
+
+                <h2>GSC snapshot</h2>
+
+                {{ gscgames.insightsTable(GscSnapshotData) }}
+
+            </div>
 
             <div id="tabs-data-sources">
 

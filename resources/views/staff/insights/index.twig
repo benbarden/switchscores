@@ -3,6 +3,7 @@
 {% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/links/game.twig' as gamelink %}
+{% import 'ui/components/gsc/insights-games-table.twig' as gscgames %}
 
 {% block page_inner %}
 
@@ -111,59 +112,8 @@
         <p class="text-muted">
             Only games with meaningful visibility are shown.
         </p>
+        {{ gscgames.insightsTable(GamesList) }}
 
-        {% if GamesList is empty %}
-            <p class="text-muted">No game data available.</p>
-        {% else %}
-            <table class="table table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>Game</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Release date</th>
-                    <th class="text-end">Impressions</th>
-                    <th class="text-end">Clicks</th>
-                    <th class="text-end">Avg position</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for row in GamesList %}
-                    <tr>
-                        <td>
-                            {% if row.game_id %}
-                                {% if row.game.title %}
-                                    <a href="/staff/games/detail/{{ row.game_id }}">
-                                        {{ row.game.title }}
-                                    </a>
-                                {% else %}
-                                    {{ row.page_url|split('/')|last }}
-                                {% endif %}
-                            {% else %}
-                                {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if row.game.title %}
-                                {% if row.game.is_low_quality == 1 %}
-                                    Low quality
-                                {% endif %}
-                            {% else %}
-                                <span class="text-muted">Deleted</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {{ row.game.eu_release_date }}
-                        </td>
-                        <td class="text-end">{{ row.impressions|number_format }}</td>
-                        <td class="text-end">{{ row.clicks|number_format }}</td>
-                        <td class="text-end">
-                            {{ row.avg_position is not null ? row.avg_position : '–' }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
     </div>
 
 </div>

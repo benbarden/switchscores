@@ -17,6 +17,7 @@ use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
+use App\Domain\Gsc\Snapshot\Repository\GscPageSnapshotRepository;
 
 use App\Models\Game;
 
@@ -39,7 +40,8 @@ class GamesDetailController extends Controller
         private GameTagRepository $repoGameTag,
         private GameTitleHashRepository $repoGameTitleHash,
         private QuickReviewRepository $repoQuickReview,
-        private DownloadPackshotHelper $downloadPackshotHelper
+        private DownloadPackshotHelper $downloadPackshotHelper,
+        private GscPageSnapshotRepository $repoGscPageSnapshot,
     )
     {
     }
@@ -89,6 +91,9 @@ class GamesDetailController extends Controller
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);
         $bindings['GameTitleHashes'] = $this->repoGameTitleHash->getByGameId($gameId);
+
+        // Snapshot
+        $bindings['GscSnapshotData'] = $this->repoGscPageSnapshot->getSnapshotsByGame($gameId);
 
         // Differences
         $dsDifferences = new Differences();

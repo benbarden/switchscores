@@ -3,6 +3,7 @@
 namespace App\Domain\Gsc\Snapshot\Repository;
 
 use App\Models\GscPageSnapshot;
+use Illuminate\Database\Eloquent\Collection;
 
 class GscPageSnapshotRepository
 {
@@ -59,6 +60,20 @@ class GscPageSnapshotRepository
                 ->orderByDesc('impressions')
                 ->get(),
         ];
+    }
+
+    public function getSnapshotsByGame(int $gameId, int $limit = null): Collection
+    {
+        $data = GscPageSnapshot::query();
+
+        $data = $data->where('game_id', $gameId)
+            ->orderBy('id', 'desc');
+
+        if ($limit) {
+            $data = $data->limit($limit);
+        }
+
+        return $data->get();
     }
 
 }
