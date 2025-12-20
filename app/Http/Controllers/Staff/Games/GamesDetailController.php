@@ -93,7 +93,7 @@ class GamesDetailController extends Controller
         $bindings['GameTitleHashes'] = $this->repoGameTitleHash->getByGameId($gameId);
 
         // Snapshot
-        $bindings['GscSnapshotData'] = $this->repoGscPageSnapshot->getSnapshotsByGame($gameId);
+        $bindings['GscSnapshotData'] = $this->repoGscPageSnapshot->getSnapshotsByGame($gameId, 20);
 
         // Differences
         $dsDifferences = new Differences();
