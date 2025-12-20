@@ -3,8 +3,6 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 
-{% set crumbNav = [{'text': PageTitle}] %}
-
 {% block page_inner %}
 
 <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
@@ -129,6 +127,15 @@
 
     <div class="col-md-4">
 
+        {{ heading.renderSlick('Subpages') }}
+        <table class="table">
+            <tbody>
+                {{ rowstat.renderB5(
+                    'Games stats', route('staff.games.stats')
+                ) }}
+            </tbody>
+        </table>
+
         {{ heading.renderSlick('Lists') }}
         <table class="table">
             <tbody>
@@ -171,7 +178,7 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games-title-hash.list') }}">All title hashes</a>
+                    <a href="{{ route('staff.games.title-hash.list') }}">All title hashes</a>
                 </td>
             </tr>
             </tbody>
@@ -193,17 +200,6 @@
             {{ rowstat.renderB5(
                 'Upcoming games', null, UpcomingGameCount
             ) }}
-            </tbody>
-        </table>
-
-        {{ heading.renderSlick('Formats') }}
-
-        <table class="table">
-            <tbody>
-                {% include 'staff/games/table-format-row.twig' with {'Format': 'Digital', 'RowData': FormatDigital} %}
-                {% include 'staff/games/table-format-row.twig' with {'Format': 'Physical', 'RowData': FormatPhysical} %}
-                {% include 'staff/games/table-format-row.twig' with {'Format': 'DLC', 'RowData': FormatDLC} %}
-                {% include 'staff/games/table-format-row.twig' with {'Format': 'Demo', 'RowData': FormatDemo} %}
             </tbody>
         </table>
 

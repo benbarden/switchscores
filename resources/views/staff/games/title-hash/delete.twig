@@ -16,7 +16,7 @@
     to the game listed above.
 </div>
 
-<form class="form-horizontal" role="form" method="post" action="{{ route('staff.games-title-hash.delete', {'itemId': GameTitleHashId}) }}">
+<form class="form-horizontal" role="form" method="post" action="{{ route('staff.games.title-hash.delete', {'itemId': GameTitleHashId}) }}">
     {{ csrf_field() }}
 
     <div class="form-group">

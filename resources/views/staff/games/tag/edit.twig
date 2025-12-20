@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-{% set formSubmitAction = route('staff.game.tag.edit', {'gameId': GameId}) %}
+{% set formSubmitAction = route('staff.games.tag.edit', {'gameId': GameId}) %}
 {% include 'staff/games/tag/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
 {% include 'staff/games/tag/scripts.twig' %}

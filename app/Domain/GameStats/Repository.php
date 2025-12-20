@@ -130,62 +130,6 @@ class Repository extends AbstractRepository
      * @deprecated
      * @return integer
      */
-    public function getFormatDigital()
-    {
-        return DB::select("
-            SELECT format_digital AS format_desc, count(*) AS count
-            FROM games
-            GROUP BY format_digital
-            ORDER BY format_digital
-        ");
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
-    public function getFormatPhysical()
-    {
-        return DB::select("
-            SELECT format_physical AS format_desc, count(*) AS count
-            FROM games
-            GROUP BY format_physical
-            ORDER BY format_physical
-        ");
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
-    public function getFormatDLC()
-    {
-        return DB::select("
-            SELECT format_dlc AS format_desc, count(*) AS count
-            FROM games
-            GROUP BY format_dlc
-            ORDER BY format_dlc
-        ");
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
-    public function getFormatDemo()
-    {
-        return DB::select("
-            SELECT format_demo AS format_desc, count(*) AS count
-            FROM games
-            GROUP BY format_demo
-            ORDER BY format_demo
-        ");
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
     public function totalNoVideoType()
     {
         return Game::whereNull('video_type')->count();

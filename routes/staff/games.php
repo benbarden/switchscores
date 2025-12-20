@@ -4,77 +4,118 @@ use Illuminate\Support\Facades\Route;
 
 use App\Models\UserRole;
 
+use App\Http\Controllers\Staff\Games\DashboardController;
 use App\Http\Controllers\Staff\Games\ReleaseHubController;
+use App\Http\Controllers\Staff\Games\SearchController;
+use App\Http\Controllers\Staff\Games\GamesDetailController;
+use App\Http\Controllers\Staff\Games\GamesEditorController;
+use App\Http\Controllers\Staff\Games\BulkEditorController;
+use App\Http\Controllers\Staff\Games\ImportRuleEshopController;
+use App\Http\Controllers\Staff\Games\GamesListController;
+use App\Http\Controllers\Staff\Games\FeaturedGameController;
+use App\Http\Controllers\Staff\Games\GamesTitleHashController;
+use App\Http\Controllers\Staff\Games\GamesPartnerController;
+use App\Http\Controllers\Staff\Games\GamesTagController;
 
 // *************** Staff: GAMES *************** //
-Route::group(['middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_GAMES_MANAGER]], function() {
+Route::group([
+    'middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_GAMES_MANAGER],
+    'prefix' => 'staff/games',
+    'as' => 'staff.games.',
+], function () {
 
-    Route::get('/staff/games/dashboard', 'Staff\Games\DashboardController@show')->name('staff.games.dashboard');
+    // ---- Dashboard and overview ----
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('dashboard', 'show')->name('dashboard');
+        Route::get('stats', 'stats')->name('stats');
+    });
 
-    // Release hub
-    Route::get('/staff/games/release-hub', [ReleaseHubController::class, 'show'])->name('staff.games.release-hub.show');
-    Route::post('/staff/games/release-hub/add', [ReleaseHubController::class, 'store'])->name('staff.games.release-hub.add');
-    Route::post('/staff/games/release-hub/toggle/{id}', [ReleaseHubController::class, 'toggleRelease'])->name('staff.games.release-hub.toggle');
-    Route::post('/staff/games/release-hub/reorder', [ReleaseHubController::class, 'reorder'])->name('staff.games.release-hub.reorder');
+    // ---- Release hub ----
+    Route::controller(ReleaseHubController::class)->group(function () {
+        Route::get('release-hub', 'show')->name('release-hub.show');
+        Route::post('release-hub/add', 'store')->name('release-hub.add');
+        Route::post('release-hub/toggle/{id}', 'toggleRelease')->name('release-hub.toggle');
+        Route::post('release-hub/reorder', 'reorder')->name('release-hub.reorder');
+    });
 
-    // Search
-    Route::match(['get', 'post'], '/staff/games/search', 'Staff\Games\SearchController@show')->name('staff.games.search');
+    // ---- Search ----
+    Route::match(['get', 'post'], 'search', [SearchController::class, 'show'])
+        ->name('search');
 
-    // Games: Detail
-    Route::get('/staff/games/detail/{gameId}', 'Staff\Games\GamesDetailController@show')->name('staff.games.detail');
-    Route::get('/staff/games/detail/full-audit/{game}', 'Staff\Games\GamesDetailController@showFullAudit')->name('staff.games.detail.fullAudit');
-    Route::get('/staff/games/detail/{gameId}/update-eshop-data', 'Staff\Games\GamesDetailController@updateEshopData')->name('staff.games.detail.updateEshopData');
-    Route::get('/staff/games/detail/{gameId}/redownload-packshots', 'Staff\Games\GamesDetailController@redownloadPackshots')->name('staff.games.detail.redownloadPackshots');
+    // ---- Game detail and audit ----
+    Route::controller(GamesDetailController::class)->group(function () {
+        Route::get('detail/{gameId}', 'show')->name('detail');
+        Route::get('detail/full-audit/{game}', 'showFullAudit')->name('detail.fullAudit');
+        Route::get('detail/{gameId}/update-eshop-data', 'updateEshopData')->name('detail.updateEshopData');
+        Route::get('detail/{gameId}/redownload-packshots', 'redownloadPackshots')->name('detail.redownloadPackshots');
+    });
 
-    // Games: Add, edit, delete
-    Route::match(['get', 'post'], '/staff/games/add', 'Staff\Games\GamesEditorController@add')->name('staff.games.add');
-    Route::match(['get', 'post'], '/staff/games/edit/{gameId}', 'Staff\Games\GamesEditorController@edit')->name('staff.games.edit');
-    Route::match(['get', 'post'], '/staff/games/edit-nintendo-co-uk/{gameId}', 'Staff\Games\GamesEditorController@editNintendoCoUk')->name('staff.games.editNintendoCoUk');
-    Route::match(['get', 'post'], '/staff/games/delete/{gameId}', 'Staff\Games\GamesEditorController@delete')->name('staff.games.delete');
+    // ---- Game add / edit / delete ----
+    Route::controller(GamesEditorController::class)->group(function () {
+        Route::match(['get', 'post'], 'add', 'add')->name('add');
+        Route::match(['get', 'post'], 'edit/{gameId}', 'edit')->name('edit');
+        Route::match(['get', 'post'], 'edit-nintendo-co-uk/{gameId}', 'editNintendoCoUk')->name('editNintendoCoUk');
+        Route::match(['get', 'post'], 'delete/{gameId}', 'delete')->name('delete');
+    });
 
-    // Games: Bulk add
-    Route::match(['get', 'post'], '/staff/games/bulk-add', 'Staff\Games\BulkEditorController@bulkAdd')->name('staff.games.bulk-add.add');
-    Route::match(['get', 'post'], '/staff/games/bulk-add-complete/{errors?}', 'Staff\Games\BulkEditorController@bulkAddComplete')->name('staff.games.bulk-add.complete');
+    // ---- Bulk add and import ----
+    Route::controller(BulkEditorController::class)->group(function () {
+        Route::match(['get', 'post'], 'bulk-add', 'bulkAdd')->name('bulk-add.add');
+        Route::match(['get', 'post'], 'bulk-add-complete/{errors?}', 'bulkAddComplete')->name('bulk-add.complete');
 
-    // Games: Bulk add
-    Route::match(['get', 'post'], '/staff/games/import-from-csv', 'Staff\Games\BulkEditorController@importFromCsv')->name('staff.games.import-from-csv.import');
-    Route::match(['get', 'post'], '/staff/games/import-from-csv/{errors?}', 'Staff\Games\BulkEditorController@importFromCsvComplete')->name('staff.games.import-from-csv.complete');
+        Route::match(['get', 'post'], 'import-from-csv', 'importFromCsv')->name('import-from-csv.import');
+        Route::match(['get', 'post'], 'import-from-csv/{errors?}', 'importFromCsvComplete')->name('import-from-csv.complete');
 
-    // Games: Bulk editing
-    Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-predefined-list/{editMode}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editPredefinedList');
-    Route::match(['get', 'post'], '/staff/games/bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'Staff\Games\BulkEditorController@editList')->name('staff.games.bulk-edit.editGameIdList');
-    Route::match(['get', 'post'], '/staff/games/bulk-edit/eshop-upcoming-crosscheck/{consoleId}', 'Staff\Games\BulkEditorController@eshopUpcomingCrosscheck')->name('staff.games.bulk-edit.eshopUpcomingCrosscheck');
+        Route::match(['get', 'post'], 'bulk-edit/edit-predefined-list/{editMode}', 'editList')
+            ->name('bulk-edit.editPredefinedList');
+        Route::match(['get', 'post'], 'bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'editList')
+            ->name('bulk-edit.editGameIdList');
+        Route::match(['get', 'post'], 'bulk-edit/eshop-upcoming-crosscheck/{consoleId}', 'eshopUpcomingCrosscheck')
+            ->name('bulk-edit.eshopUpcomingCrosscheck');
+    });
 
-    // Game import rules
-    Route::match(['get', 'post'], '/staff/games/{gameId}/import-rule-eshop/edit', 'Staff\Games\ImportRuleEshopController@edit')->name('staff.games.import-rule-eshop.edit');
+    // ---- Import rules ----
+    Route::match(['get', 'post'], '{gameId}/import-rule-eshop/edit',
+        [ImportRuleEshopController::class, 'edit']
+    )->name('import-rule-eshop.edit');
 
-    // Game lists v2
-    Route::get('/staff/games/list/{listType}/{param1?}/{param2?}',
-        'Staff\Games\GamesListController@showList')->name('staff.games.list.showList');
-    Route::get('/staff/games/export/{listType}/{param1?}/{param2?}',
-        'Staff\Games\GamesListController@exportCsv')->name('staff.games.list.export');
+    // ---- Game lists ----
+    Route::controller(GamesListController::class)->group(function () {
+        Route::get('list/{listType}/{param1?}/{param2?}', 'showList')->name('list.showList');
+        Route::get('export/{listType}/{param1?}/{param2?}', 'exportCsv')->name('list.export');
+    });
 
-    // Featured games
-    Route::get('/staff/games/featured-games/list', 'Staff\Games\FeaturedGameController@showList')->name('staff.games.featured-games.list');
-    Route::get('/staff/games/featured-games/accept-item', 'Staff\Games\FeaturedGameController@acceptItem')->name('staff.games.featured-games.acceptItem');
-    Route::get('/staff/games/featured-games/reject-item', 'Staff\Games\FeaturedGameController@rejectItem')->name('staff.games.featured-games.rejectItem');
-    Route::get('/staff/games/featured-games/archive-item', 'Staff\Games\FeaturedGameController@archiveItem')->name('staff.games.featured-games.archiveItem');
+    // ---- Featured games ----
+    Route::controller(FeaturedGameController::class)->group(function () {
+        Route::get('featured-games/list', 'showList')->name('featured-games.list');
+        Route::get('featured-games/accept-item', 'acceptItem')->name('featured-games.acceptItem');
+        Route::get('featured-games/reject-item', 'rejectItem')->name('featured-games.rejectItem');
+        Route::get('featured-games/archive-item', 'archiveItem')->name('featured-games.archiveItem');
+    });
 
-    // Games: Title hashes
-    Route::get('/staff/games/title-hash/list/{gameId?}', 'Staff\Games\GamesTitleHashController@showList')->name('staff.games-title-hash.list');
-    Route::match(['get', 'post'], '/staff/games/title-hash/add', 'Staff\Games\GamesTitleHashController@add')->name('staff.games-title-hash.add');
-    Route::match(['get', 'post'], '/staff/games/title-hash/edit/{itemId}', 'Staff\Games\GamesTitleHashController@edit')->name('staff.games-title-hash.edit');
-    Route::match(['get', 'post'], '/staff/games/title-hash/delete/{itemId}', 'Staff\Games\GamesTitleHashController@delete')->name('staff.games-title-hash.delete');
+    // ---- Title hashes ----
+    Route::controller(GamesTitleHashController::class)->group(function () {
+        Route::get('title-hash/list/{gameId?}', 'showList')->name('title-hash.list');
+        Route::match(['get', 'post'], 'title-hash/add', 'add')->name('title-hash.add');
+        Route::match(['get', 'post'], 'title-hash/edit/{itemId}', 'edit')->name('title-hash.edit');
+        Route::match(['get', 'post'], 'title-hash/delete/{itemId}', 'delete')->name('title-hash.delete');
+    });
 
-    // Games partner links
-    Route::get('/staff/games/partner/{gameId}/list', 'Staff\Games\GamesPartnerController@showGamePartners')->name('staff.game.partner.list');
-    Route::get('/staff/games/partner/create-new-company', 'Staff\Games\GamesPartnerController@createNewCompany')->name('staff.game.partner.createNewCompany');
-    Route::get('/staff/games/developer/{gameId}/add', 'Staff\Games\GamesPartnerController@addGameDeveloper')->name('staff.game.developer.add');
-    Route::get('/staff/games/developer/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGameDeveloper')->name('staff.game.developer.remove');
-    Route::get('/staff/games/publisher/{gameId}/add', 'Staff\Games\GamesPartnerController@addGamePublisher')->name('staff.game.publisher.add');
-    Route::get('/staff/games/publisher/{gameId}/remove', 'Staff\Games\GamesPartnerController@removeGamePublisher')->name('staff.game.publisher.remove');
+    // ---- Partners and companies ----
+    Route::controller(GamesPartnerController::class)->group(function () {
+        Route::get('partner/{gameId}/list', 'showGamePartners')->name('partner.list');
+        Route::get('partner/create-new-company', 'createNewCompany')->name('partner.createNewCompany');
 
-    // Games: Tags
-    Route::match(['get', 'post'], '/staff/games/tag/{gameId}/edit', 'Staff\Games\GamesTagController@edit')->name('staff.game.tag.edit');
+        Route::get('developer/{gameId}/add', 'addGameDeveloper')->name('developer.add');
+        Route::get('developer/{gameId}/remove', 'removeGameDeveloper')->name('developer.remove');
+
+        Route::get('publisher/{gameId}/add', 'addGamePublisher')->name('publisher.add');
+        Route::get('publisher/{gameId}/remove', 'removeGamePublisher')->name('publisher.remove');
+    });
+
+    // ---- Tags ----
+    Route::match(['get', 'post'], 'tag/{gameId}/edit',
+        [GamesTagController::class, 'edit']
+    )->name('tag.edit');
 
 });

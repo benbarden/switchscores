@@ -74,7 +74,7 @@
             }
         });
 
-        $.getJSON('{{ route('staff.game.developer.add', {'gameId': GameId}) }}', {gameId: gameId, developerId: developerId}, function(data) {
+        $.getJSON('{{ route('staff.games.developer.add', {'gameId': GameId}) }}', {gameId: gameId, developerId: developerId}, function(data) {
             $('#js-developer-notify').text('Developer added!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
@@ -108,7 +108,7 @@
             }
         });
 
-        $.getJSON('{{ route('staff.game.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
+        $.getJSON('{{ route('staff.games.developer.remove', {'gameId': GameId}) }}', {gameDeveloperId: gameDeveloperId}, function(data) {
             $('#js-developer-notify').text('Developer removed!');
             $('#js-developer-notify').show();
             $('#developer-list option:selected').val('');
@@ -137,7 +137,7 @@
             }
         });
 
-        $.getJSON('{{ route('staff.game.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
+        $.getJSON('{{ route('staff.games.publisher.add', {'gameId': GameId}) }}', {publisherId: publisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher added!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');
@@ -171,7 +171,7 @@
             }
         });
 
-        $.getJSON('{{ route('staff.game.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
+        $.getJSON('{{ route('staff.games.publisher.remove', {'gameId': GameId}) }}', {gamePublisherId: gamePublisherId}, function(data) {
             $('#js-publisher-notify').text('Publisher removed!');
             $('#js-publisher-notify').show();
             $('#publisher-list option:selected').val('');
@@ -203,7 +203,7 @@
             }
         });
 
-        $.getJSON('{{ route('staff.game.partner.createNewCompany') }}', {
+        $.getJSON('{{ route('staff.games.partner.createNewCompany') }}', {
             name: newName, linkTitle: newLinkTitle, gameId: gameId,
             addToGameAsPublisherVal: addToGameAsPublisherVal
         }, function(data) {

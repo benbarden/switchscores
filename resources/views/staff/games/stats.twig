@@ -1,0 +1,51 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        {{ heading.renderSlick('Game stats') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Total games', null, TotalGameCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Released games', null, ReleasedGameCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Upcoming games', null, UpcomingGameCount
+            ) }}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        {{ heading.renderSlick('Formats') }}
+
+        <table class="table">
+            <tbody>
+            {% include 'staff/games/table-format-row.twig' with {'Format': 'Digital', 'RowData': FormatDigital} %}
+            {% include 'staff/games/table-format-row.twig' with {'Format': 'Physical', 'RowData': FormatPhysical} %}
+            {% include 'staff/games/table-format-row.twig' with {'Format': 'DLC', 'RowData': FormatDLC} %}
+            {% include 'staff/games/table-format-row.twig' with {'Format': 'Demo', 'RowData': FormatDemo} %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

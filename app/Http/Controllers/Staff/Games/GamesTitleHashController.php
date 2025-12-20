@@ -67,7 +67,7 @@ class GamesTitleHashController extends Controller
             $validator = Validator::make($request->all(), $this->validationRules);
 
             if ($validator->fails()) {
-                return redirect(route('staff.games-title-hash.add'))
+                return redirect(route('staff.games.title-hash.add'))
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -85,7 +85,7 @@ class GamesTitleHashController extends Controller
             });
 
             if ($validator->fails()) {
-                return redirect(route('staff.games-title-hash.add'))
+                return redirect(route('staff.games.title-hash.add'))
                     ->withErrors($validator)
                     ->withInput();
             }

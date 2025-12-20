@@ -2,7 +2,7 @@
 
 {% block page_inner %}
 
-{% set formSubmitAction = route('staff.games-title-hash.add') %}
+{% set formSubmitAction = route('staff.games.title-hash.add') %}
 {% include 'staff/games/title-hash/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
 {% include 'staff/games/title-hash/scripts.twig' %}

@@ -129,7 +129,7 @@ class GamesDetailController extends Controller
                 'label' => 'Publishers',
                 'status' => $game->gamePublishers->count() > 0 ? 'ok' : 'fail',
                 //'note' => $game->gamePublishers ? '' : 'None',
-                'href' => route('staff.game.partner.list', ['gameId' => $game->id])
+                'href' => route('staff.games.partner.list', ['gameId' => $game->id])
             ],
             [
                 'label' => 'Release date',
