@@ -1,5 +1,7 @@
 {% macro insightsTable(rows, options) %}
 
+    {% set isGameDetail = options.view == 'game-detail' %}
+
     {% if rows is empty %}
         <p class="text-muted">No game data available.</p>
     {% else %}
@@ -8,7 +10,11 @@
             <tr>
                 <th>Game</th>
                 <th class="text-center">Status</th>
-                <th class="text-center">Release date</th>
+                {% if isGameDetail %}
+                    <th class="text-center">Snapshot date</th>
+                {% else %}
+                    <th class="text-center">Release date</th>
+                {% endif %}
                 <th class="text-end">Impressions</th>
                 <th class="text-end">Clicks</th>
                 <th class="text-end">Avg position</th>
@@ -40,7 +46,11 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {{ row.game.eu_release_date }}
+                        {% if isGameDetail %}
+                            {{ row.snapshot_date|date('Y-m-d') }}
+                        {% else %}
+                            {{ row.game.eu_release_date }}
+                        {% endif %}
                     </td>
                     <td class="text-end">{{ row.impressions|number_format }}</td>
                     <td class="text-end">{{ row.clicks|number_format }}</td>
