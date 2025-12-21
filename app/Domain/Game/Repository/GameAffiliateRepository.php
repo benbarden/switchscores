@@ -33,7 +33,8 @@ class GameAffiliateRepository
                 $this->statusFieldForRegion($region),
                 $status->value
             )
-            ->orderBy('game_rank', 'asc')
+            ->orderBy('review_count', 'desc')
+            ->orderBy('rating_avg', 'desc')
             ->orderBy('eu_release_date', 'asc')
             ->limit($limit)
             ->get();
