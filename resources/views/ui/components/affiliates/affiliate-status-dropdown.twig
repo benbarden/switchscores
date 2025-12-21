@@ -1,0 +1,52 @@
+{% macro render(name, label, statuses, selected, required=true) %}
+    {# --------------------
+       BOOTSTRAP 5 VERSION
+       -------------------- #}
+
+    <div class="row mb-3">
+        {% if label %}
+            <label for="{{ name }}" class="col-sm-2 col-form-label">
+                {{ label }}{% if required %} *{% endif %}
+            </label>
+        {% endif %}
+        <div class="col-sm-4">
+        <select id="{{ name }}" name="{{ name }}" class="form-select" {% if required %}required{% endif %}>
+            <option value=""></option>
+
+            {% for value, label in statuses %}
+                <option value="{{ value }}"
+                    {% if selected == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro renderB3(name, label, statuses, selected, required=false) %}
+    {# --------------------
+       BOOTSTRAP 3 VERSION
+       -------------------- #}
+
+    <div class="form-group">
+        {% if label %}
+            <label for="{{ name }}" class="col-md-3 control-label">
+                {{ label }}{% if required %} *{% endif %}
+            </label>
+        {% endif %}
+
+        <div class="col-md-6">
+            <select id="{{ name }}" class="form-control" name="{{ name }}" {% if required %}required{% endif %}>
+                <option value=""></option>
+
+                {% for value, label in statuses %}
+                    <option value="{{ value }}"
+                        {% if selected == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endmacro %}

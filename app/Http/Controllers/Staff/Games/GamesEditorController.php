@@ -31,6 +31,8 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
+use App\Enums\AmazonAffiliateStatus;
+
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
@@ -161,6 +163,8 @@ class GamesEditorController extends Controller
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
+        $bindings['AffiliateStatusList'] = AmazonAffiliateStatus::options();
+
         $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
         $bindings['FormatDLCList'] = $this->formatOptions->getOptionsDLC();
@@ -214,6 +218,8 @@ class GamesEditorController extends Controller
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['GameSeriesList'] = $this->repoGameSeries->getAll();
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
+
+        $bindings['AffiliateStatusList'] = AmazonAffiliateStatus::options();
 
         $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();

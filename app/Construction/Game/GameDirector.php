@@ -79,6 +79,12 @@ class GameDirector
         if (array_key_exists('amazon_us_link', $params)) {
             $this->builder->setAmazonUsLink($params['amazon_us_link']);
         }
+        if (array_key_exists('amazon_uk_status', $params)) {
+            $this->builder->setAmazonUkStatus($params['amazon_uk_status']);
+        }
+        if (array_key_exists('amazon_us_status', $params)) {
+            $this->builder->setAmazonUsStatus($params['amazon_us_status']);
+        }
         if (array_key_exists('nintendo_store_url_override', $params)) {
             $this->builder->setNintendoStoreUrlOverride($params['nintendo_store_url_override']);
         }

@@ -79,22 +79,6 @@
                     <a href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}" class="h4">{{ MissingVideoTypeCount }}</a>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}">No Amazon UK link</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}" class="h4">{{ MissingAmazonUkLink }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-us-link'}) }}">No Amazon US link</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-us-link'}) }}" class="h4">{{ MissingAmazonUsLink }}</a>
-                </td>
-            </tr>
             </tbody>
         </table>
 
@@ -199,6 +183,38 @@
             ) }}
             {{ rowstat.renderB5(
                 'Upcoming games', null, UpcomingGameCount
+            ) }}
+            </tbody>
+        </table>
+
+
+        {{ heading.renderSlick('Affiliates') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Amazon US: Unchecked', route('staff.games.list.showList', {'listType': 'amazon-us-unchecked'}), AmazonUSUncheckedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon US: Linked', route('staff.games.list.showList', {'listType': 'amazon-us-linked'}), AmazonUSLinkedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon US: No product', route('staff.games.list.showList', {'listType': 'amazon-us-noproduct'}), AmazonUSNoProductCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon US: Ignored', route('staff.games.list.showList', {'listType': 'amazon-us-ignored'}), AmazonUSIgnoredCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon UK: Unchecked', route('staff.games.list.showList', {'listType': 'amazon-uk-unchecked'}), AmazonUKUncheckedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon UK: Linked', route('staff.games.list.showList', {'listType': 'amazon-uk-linked'}), AmazonUKLinkedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon UK: No product', route('staff.games.list.showList', {'listType': 'amazon-uk-noproduct'}), AmazonUKNoProductCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Amazon UK: Ignored', route('staff.games.list.showList', {'listType': 'amazon-uk-ignored'}), AmazonUKIgnoredCount
             ) }}
             </tbody>
         </table>

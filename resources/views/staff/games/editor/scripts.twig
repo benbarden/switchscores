@@ -37,6 +37,8 @@
         formVals['video_type'] = "{{ GameData.video_type }}";
         formVals['amazon_uk_link'] = "{{ GameData.amazon_uk_link }}";
         formVals['amazon_us_link'] = "{{ GameData.amazon_us_link }}";
+        formVals['amazon_uk_status'] = "{{ GameData.amazon_uk_status }}";
+        formVals['amazon_us_status'] = "{{ GameData.amazon_us_status }}";
         formVals['nintendo_store_url_override'] = "{{ GameData.nintendo_store_url_override }}";
         formVals['packshot_square_url_override'] = "{{ GameData.packshot_square_url_override }}";
         formVals['eshop_europe_order'] = "{{ GameData.eshop_europe_order }}";
@@ -83,6 +85,8 @@
         formVals['video_type'] = "{{ old('video_type') }}";
         formVals['amazon_uk_link'] = "{{ old('amazon_uk_link') }}";
         formVals['amazon_us_link'] = "{{ old('amazon_us_link') }}";
+        formVals['amazon_uk_status'] = "{{ old('amazon_uk_status') }}";
+        formVals['amazon_us_status'] = "{{ old('amazon_us_status') }}";
         formVals['nintendo_store_url_override'] = "{{ old('nintendo_store_url_override') }}";
         formVals['packshot_square_url_override'] = "{{ old('packshot_square_url_override') }}";
         formVals['eshop_europe_order'] = "{{ old('eshop_europe_order') }}";
@@ -134,6 +138,8 @@
     $('#video_type').val(formVals['video_type']);
     $('#amazon_uk_link').val(formVals['amazon_uk_link']);
     $('#amazon_us_link').val(formVals['amazon_us_link']);
+    $('#amazon_uk_status').val(formVals['amazon_uk_status']);
+    $('#amazon_us_status').val(formVals['amazon_us_status']);
     $('#nintendo_store_url_override').val(formVals['nintendo_store_url_override']);
     $('#packshot_square_url_override').val(formVals['packshot_square_url_override']);
     $('#eshop_europe_order').val(formVals['eshop_europe_order']);
@@ -186,8 +192,6 @@
         $('#grp_eu_released_on').hide();
         $('#grp_video_url').hide();
         $('#grp_video_type').hide();
-        $('#grp_amazon_uk_link').hide();
-        $('#grp_amazon_us_link').hide();
         //$('#grp_packshot_square_url_override').hide();
         $('#grp_is_low_quality').hide();
         $('#grp_category_verification').hide();
@@ -199,6 +203,9 @@
 
         // hide all format options
         $('#fs_format_options').hide();
+
+        // hide all affiliate fields
+        $('#fs_affiliates').hide();
 
         // hide all eShop assets
         $('#fs_eshop_assets').hide();

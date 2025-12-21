@@ -127,6 +127,18 @@ class GameBuilder
         return $this;
     }
 
+    public function setAmazonUkStatus($amazonUkStatus): GameBuilder
+    {
+        $this->game->amazon_uk_status = $amazonUkStatus;
+        return $this;
+    }
+
+    public function setAmazonUsStatus($amazonUsStatus): GameBuilder
+    {
+        $this->game->amazon_us_status = $amazonUsStatus;
+        return $this;
+    }
+
     public function setNintendoStoreUrlOverride($storeUrl): GameBuilder
     {
         $this->game->nintendo_store_url_override = $storeUrl;

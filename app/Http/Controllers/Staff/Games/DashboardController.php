@@ -7,13 +7,15 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\Game\Repository\GameAffiliateRepository;
 
 class DashboardController extends Controller
 {
     public function __construct(
         private GameStatsRepository $repoGameStats,
         private GameStatsRepositoryLegacy $repoGameStatsLegacy,
-        private GameListsRepository $repoGameLists
+        private GameListsRepository $repoGameLists,
+        private GameAffiliateRepository $repoGameAffiliate,
     )
     {
     }
@@ -32,8 +34,6 @@ class DashboardController extends Controller
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->repoGameStatsLegacy->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStatsLegacy->totalNoVideoType();
-        $bindings['MissingAmazonUkLink'] = $this->repoGameStatsLegacy->totalNoAmazonUkLink();
-        $bindings['MissingAmazonUsLink'] = $this->repoGameStatsLegacy->totalNoAmazonUsLink();
 
         // Release date stats
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
@@ -47,6 +47,16 @@ class DashboardController extends Controller
         $bindings['TagsVerified'] = $this->repoGameStatsLegacy->totalTagsVerified();
         $bindings['TagsUnverified'] = $this->repoGameStatsLegacy->totalTagsUnverified();
         $bindings['TagsNeedsReview'] = $this->repoGameStatsLegacy->totalTagsNeedsReview();
+
+        // Affiliates
+        $bindings['AmazonUSUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('us');
+        $bindings['AmazonUSLinkedCount'] = $this->repoGameAffiliate->countLinked('us');
+        $bindings['AmazonUSNoProductCount'] = $this->repoGameAffiliate->countNoProduct('us');
+        $bindings['AmazonUSIgnoredCount'] = $this->repoGameAffiliate->countIgnored('us');
+        $bindings['AmazonUKUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('uk');
+        $bindings['AmazonUKLinkedCount'] = $this->repoGameAffiliate->countLinked('uk');
+        $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
+        $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
 
         return view('staff.games.dashboard', $bindings);
     }

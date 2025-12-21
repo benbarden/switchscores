@@ -148,24 +148,6 @@ class Repository extends AbstractRepository
      * @deprecated
      * @return integer
      */
-    public function totalNoAmazonUkLink()
-    {
-        return Game::where('format_physical', Game::FORMAT_AVAILABLE)->whereNull('amazon_uk_link')->count();
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
-    public function totalNoAmazonUsLink()
-    {
-        return Game::where('format_physical', Game::FORMAT_AVAILABLE)->whereNull('amazon_us_link')->count();
-    }
-
-    /**
-     * @deprecated
-     * @return integer
-     */
     public function totalYearWeekStandardQuality($year, $week)
     {
         // fix: week needs to be -1 as MySQL is zero-indexed?

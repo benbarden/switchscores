@@ -10,6 +10,7 @@ use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameCollection\Repository as CollectionRepository;
+use App\Domain\Game\Repository\GameAffiliateRepository;
 
 use App\Models\Category;
 use App\Models\GameSeries;
@@ -26,6 +27,7 @@ class GamesListController extends Controller
         private GameSeriesRepository $repoGameSeries,
         private TagRepository $repoTag,
         private CollectionRepository $repoCollection,
+        private GameAffiliateRepository $repoGameAffiliate,
     )
     {
     }
@@ -82,18 +84,6 @@ class GamesListController extends Controller
                 'sort'  => "[0, 'desc']",
                 'fetch' => fn() => $this->repoGameLists->noVideoType(),
                 'limit' => 200,
-            ],
-            'no-amazon-uk-link' => [
-                'title' => 'No Amazon UK link',
-                'sort'  => "[6, 'desc']",
-                'fetch' => fn() => $this->repoGameLists->noAmazonUkLink(1000),
-                'limit' => 1000,
-            ],
-            'no-amazon-us-link' => [
-                'title' => 'No Amazon US link',
-                'sort'  => "[6, 'desc']",
-                'fetch' => fn() => $this->repoGameLists->noAmazonUsLink(1000),
-                'limit' => 1000,
             ],
             'no-nintendo-co-uk-link' => [
                 'title' => 'No Nintendo.co.uk link, and no override URL',
@@ -162,6 +152,55 @@ class GamesListController extends Controller
                     return $this->repoCollection->gamesByCollection($collection->id);
                 },
                 'dynamicTitle' => true,
+            ],
+            // Affiliates
+            'amazon-us-unchecked' => [
+                'title' => 'Amazon US: Unchecked',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getUnchecked('us'),
+                'limit' => 1000,
+            ],
+            'amazon-us-linked' => [
+                'title' => 'Amazon US: Linked',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getLinked('us'),
+                'limit' => 1000,
+            ],
+            'amazon-us-noproduct' => [
+                'title' => 'Amazon US: No product',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getNoProduct('us'),
+                'limit' => 1000,
+            ],
+            'amazon-us-ignored' => [
+                'title' => 'Amazon US: Ignored',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getIgnored('us'),
+                'limit' => 1000,
+            ],
+            'amazon-uk-unchecked' => [
+                'title' => 'Amazon UK: Unchecked',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getUnchecked('uk'),
+                'limit' => 1000,
+            ],
+            'amazon-uk-linked' => [
+                'title' => 'Amazon UK: Linked',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getLinked('uk'),
+                'limit' => 1000,
+            ],
+            'amazon-uk-noproduct' => [
+                'title' => 'Amazon UK: No product',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getNoProduct('uk'),
+                'limit' => 1000,
+            ],
+            'amazon-uk-ignored' => [
+                'title' => 'Amazon UK: Ignored',
+                'sort'  => "[6, 'desc']",
+                'fetch' => fn() => $this->repoGameAffiliate->getIgnored('uk'),
+                'limit' => 1000,
             ],
 
         ];
