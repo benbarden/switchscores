@@ -72,6 +72,10 @@ class BrowseByCategoryController extends Controller
         $bindings['RankedListSort'] = "[4, 'desc']";
         $bindings['UnrankedListSort'] = "[3, 'desc'], [1, 'asc']";
 
+        // Canonical URL
+        $bindings['CanonicalUrl'] = route('console.byCategory.page',
+            ['console' => $console, 'category' => $category->link_title]);
+
         // Meta
         if ($category->meta_description) {
             $bindings['MetaDescription'] = $category['meta_description'];
@@ -146,6 +150,16 @@ class BrowseByCategoryController extends Controller
         } else {
             $defaultSort = 'rating_desc';
         }
+
+        // Canonical URL
+        if ($filter) {
+            $filterSuffix = '?filter='.$filter;
+        } else {
+            $filterSuffix = '';
+        }
+        $canonicalUrl = route('console.byCategory.list',
+            ['console' => $console, 'category' => $category->link_title]).$filterSuffix;
+        $bindings['CanonicalUrl'] = $canonicalUrl;
 
         // Sorting
         $allowedSorts = [
