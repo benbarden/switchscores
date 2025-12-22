@@ -63,7 +63,7 @@ class AffiliatesController extends Controller
             $amazonUKStatus = $request->amazon_uk_status;
             $amazonUSASIN = $request->amazon_us_asin;
             $amazonUSLink = $request->amazon_us_link;
-            $amazonUSStatus = $request->amazon_uk_status;
+            $amazonUSStatus = $request->amazon_us_status;
             $this->repoGameAffiliate->updateAffiliateData(
                 $gameData, $amazonUKASIN, $amazonUKLink, $amazonUKStatus, $amazonUSASIN, $amazonUSLink, $amazonUSStatus
             );
