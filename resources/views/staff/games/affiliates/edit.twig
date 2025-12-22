@@ -105,18 +105,28 @@
         $('#amazon_uk_asin').val(formVals.amazon_uk_asin);
         $('#amazon_us_asin').val(formVals.amazon_us_asin);
 
-        $('#js-btn-store-url-override').on('click', function() {
+        function updateUkStatusFromAsin() {
+            const asin = $('#amazon_uk_asin').val().trim();
 
-            gameTitle = $('#title').val();
-            //storeUrl = 'https://www.google.com/search?q=site%3Anintendo.co.uk+';
-            storeUrl = 'https://www.nintendo.com/en-gb/Search/Search-299117.html?f=147394-5-86&q=';
-            if (gameTitle != '') {
-                titleToSearch = gameTitle.replace(':', ' ');
-                urlToOpen = storeUrl + urlencode(titleToSearch);
-                window.open(urlToOpen);
+            if (asin === '') {
+                $('#amazon_uk_status').val('no_product');
+            } else {
+                $('#amazon_uk_status').val('linked');
             }
+        }
 
-        });
+        function updateUsStatusFromAsin() {
+            const asin = $('#amazon_us_asin').val().trim();
+
+            if (asin === '') {
+                $('#amazon_us_status').val('no_product');
+            } else {
+                $('#amazon_us_status').val('linked');
+            }
+        }
+
+        $('#amazon_uk_asin').on('change', updateUkStatusFromAsin);
+        $('#amazon_us_asin').on('change', updateUsStatusFromAsin);
 
         function urlencode(str) {
             str = (str + '').toString();
