@@ -17,6 +17,8 @@ use App\Http\Controllers\Staff\Games\GamesTitleHashController;
 use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
 
+use App\Http\Controllers\Staff\Games\AffiliatesController;
+
 // *************** Staff: GAMES *************** //
 Route::group([
     'middleware' => ['auth.staff', 'check.user.role:'.UserRole::ROLE_GAMES_MANAGER],
@@ -56,6 +58,12 @@ Route::group([
         Route::match(['get', 'post'], 'edit/{gameId}', 'edit')->name('edit');
         Route::match(['get', 'post'], 'edit-nintendo-co-uk/{gameId}', 'editNintendoCoUk')->name('editNintendoCoUk');
         Route::match(['get', 'post'], 'delete/{gameId}', 'delete')->name('delete');
+    });
+
+    // ----- Game affiliates -----
+    Route::controller(AffiliatesController::class)->group(function () {
+        Route::match(['get', 'post'], 'edit-affiliates/{gameId}', 'edit')
+            ->name('editAffiliates');
     });
 
     // ---- Bulk add and import ----

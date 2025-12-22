@@ -212,46 +212,6 @@
                 </div>
             </fieldset>
 
-            <fieldset id="fs_affiliates">
-                <legend>Affiliates</legend>
-                {{ affiliateStatusSelect.renderB3(
-                    'amazon_uk_status',
-                    'Amazon UK - Link status',
-                    AffiliateStatusList,
-                    null,
-                    false
-                ) }}
-                <div class="form-group">
-                    <label for="amazon_uk_link" class="col-md-3 control-label">Amazon UK link</label>
-                    <div class="col-md-6">
-                        <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
-                    </div>
-                    <div class="col-md-2">
-                        {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.amazon.co.uk/s?k={{ GameData.title|url_encode }}+nintendo+switch+games" target="_blank">Search Amazon UK</a>
-                        {% endif %}
-                    </div>
-                </div>
-                {{ affiliateStatusSelect.renderB3(
-                    'amazon_us_status',
-                    'Amazon US - Link status',
-                    AffiliateStatusList,
-                    null,
-                    false
-                ) }}
-                <div class="form-group">
-                    <label for="amazon_us_link" class="col-md-3 control-label">Amazon US link</label>
-                    <div class="col-md-6">
-                        <input id="amazon_us_link" type="text" class="form-control" name="amazon_us_link">
-                    </div>
-                    <div class="col-md-2">
-                        {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.amazon.com/s?k={{ GameData.title|url_encode }}+nintendo+switch+games" target="_blank">Search Amazon US</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </fieldset>
-
             <fieldset>
                 <legend>Additional</legend>
                 <div class="form-group" id="grp_video_url">

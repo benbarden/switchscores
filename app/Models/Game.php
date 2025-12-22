@@ -43,7 +43,7 @@ class Game extends Model implements Auditable
         'format_digital', 'format_physical', 'format_dlc', 'format_demo',
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
         'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch',
-        'added_batch_date', 'amazon_uk_status', 'amazon_us_status'
+        'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin'
     ];
 
     protected $casts = [

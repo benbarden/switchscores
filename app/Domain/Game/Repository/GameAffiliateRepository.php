@@ -8,6 +8,25 @@ use Illuminate\Database\Eloquent\Collection;
 
 class GameAffiliateRepository
 {
+    public function updateAffiliateData(
+        Game $game,
+        ?string $amazonUKAsin,
+        ?string $amazonUKLink,
+        ?string $amazonUKStatus,
+        ?string $amazonUSAsin,
+        ?string $amazonUSLink,
+        ?string $amazonUSStatus,
+    ): void {
+        $game->amazon_uk_asin = $amazonUKAsin;
+        $game->amazon_uk_link = $amazonUKLink;
+        $game->amazon_uk_status = $amazonUKStatus;
+        $game->amazon_us_asin = $amazonUSAsin;
+        $game->amazon_us_link = $amazonUSLink;
+        $game->amazon_us_status = $amazonUSStatus;
+
+        $game->save();
+    }
+
     private function statusFieldForRegion(string $region): string
     {
         return match ($region) {

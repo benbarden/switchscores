@@ -44,18 +44,38 @@ class Amazon
         );
     }
 
+    protected function buildUkLinkFromAsin(string $asin): string
+    {
+        return sprintf(
+            'https://www.amazon.co.uk/dp/%s/?tag=%s',
+            rawurlencode($asin),
+            $this->ukId
+        );
+    }
+
+    protected function buildUsLinkFromAsin(string $asin): string
+    {
+        return sprintf(
+            'https://www.amazon.com/dp/%s/?tag=%s',
+            rawurlencode($asin),
+            $this->usId
+        );
+    }
+
     /**
      * UK product link builder.
      */
     protected function buildUkLink(Game $game): ?string
     {
-        $url = $game->amazon_uk_link;
-
-        if (!$url) {
-            return null;
+        if ($game->amazon_uk_asin) {
+            return $this->buildUkLinkFromAsin($game->amazon_uk_asin);
         }
 
-        return $this->appendAffiliateTag($url, $this->ukId);
+        if ($game->amazon_uk_link) {
+            return $this->appendAffiliateTag($game->amazon_uk_link, $this->ukId);
+        }
+
+        return null;
     }
 
     /**
@@ -63,17 +83,24 @@ class Amazon
      */
     protected function buildUsLink(Game $game): array
     {
-        $productUrl = $game->amazon_us_link;
-
-        if ($productUrl) {
-            // Real product page
-            $url = $this->appendAffiliateTag($productUrl, $this->usId);
-            return [$url, 'product'];
+        if ($game->amazon_us_asin) {
+            return [
+                $this->buildUsLinkFromAsin($game->amazon_us_asin),
+                'product',
+            ];
         }
 
-        // Fallback to Amazon search
-        $searchUrl = $this->buildSearchLink($game->title);
-        return [$searchUrl, 'search'];
+        if ($game->amazon_us_link) {
+            return [
+                $this->appendAffiliateTag($game->amazon_us_link, $this->usId),
+                'product',
+            ];
+        }
+
+        return [
+            $this->buildSearchLink($game->title),
+            'search',
+        ];
     }
 
     /**

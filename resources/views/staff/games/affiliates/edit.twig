@@ -1,0 +1,137 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+{% import 'ui/components/affiliates/affiliate-status-dropdown.twig' as affiliateStatusSelect %}
+
+{% block page_inner %}
+
+    {% include 'ui/components/alerts/form-errors.twig' %}
+
+    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.games.editAffiliates', {'gameId': GameId}) }}">
+        {{ csrf_field() }}
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <fieldset>
+                    <legend>Amazon UK</legend>
+                    <div class="row mb-3">
+                        <label for="amazon_uk_asin" class="col-md-2 col-form-label">UK ASIN</label>
+                        <div class="col-sm-2">
+                            <input id="amazon_uk_asin" type="text" class="form-control" name="amazon_uk_asin">
+                            <div class="form-text">
+                                Amazon product identifier
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="amazon_uk_link" class="col-md-2 col-form-label">UK link</label>
+                        <div class="col-sm-6">
+                            <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
+                        </div>
+                        <div class="col-sm-2">
+                            {% if GameData %}
+                                <a class="btn btn-outline-secondary btn-sm" href="https://www.amazon.co.uk/s?k={{ GameData.title|url_encode }}+nintendo+switch+games" target="_blank">Search Amazon UK</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ affiliateStatusSelect.render(
+                        'amazon_uk_status',
+                        'UK link status',
+                        AffiliateStatusList,
+                        null,
+                        false
+                    ) }}
+                </fieldset>
+
+                <fieldset>
+                    <legend>Amazon US</legend>
+                    <div class="row mb-3">
+                        <label for="amazon_us_asin" class="col-md-2 col-form-label">US ASIN</label>
+                        <div class="col-sm-2">
+                            <input id="amazon_us_asin" type="text" class="form-control" name="amazon_us_asin">
+                            <div class="form-text">
+                                Amazon product identifier
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="amazon_us_link" class="col-md-2 col-form-label">US link</label>
+                        <div class="col-sm-6">
+                            <input id="amazon_us_link" type="text" class="form-control" name="amazon_us_link">
+                        </div>
+                        <div class="col-sm-2">
+                            {% if GameData %}
+                                <a class="btn btn-outline-secondary btn-sm" href="https://www.amazon.com/s?k={{ GameData.title|url_encode }}+nintendo+switch+games" target="_blank">Search Amazon US</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ affiliateStatusSelect.render(
+                        'amazon_us_status',
+                        'US link status',
+                        AffiliateStatusList,
+                        null,
+                        false
+                    ) }}
+                </fieldset>
+
+            </div>
+
+        </div>
+
+        {{ formsubmit.renderB5() }}
+
+    </form>
+
+    <script>
+        var formMode = '{{ FormMode }}';
+
+        var gameId = '{{ GameId }}';
+
+        window.formVals = {
+            amazon_uk_link: "{{ old('amazon_uk_link', GameData.amazon_uk_link ?? '') }}",
+            amazon_us_link: "{{ old('amazon_us_link', GameData.amazon_us_link ?? '') }}",
+            amazon_uk_status: "{{ old('amazon_uk_status', GameData.amazon_uk_status ?? '') }}",
+            amazon_us_status: "{{ old('amazon_us_status', GameData.amazon_us_status ?? '') }}",
+            amazon_uk_asin: "{{ old('amazon_uk_asin', GameData.amazon_uk_asin ?? '') }}",
+            amazon_us_asin: "{{ old('amazon_us_asin', GameData.amazon_us_asin ?? '') }}",
+        };
+
+        $('#amazon_uk_link').val(formVals.amazon_uk_link);
+        $('#amazon_us_link').val(formVals.amazon_us_link);
+        $('#amazon_uk_status').val(formVals.amazon_uk_status);
+        $('#amazon_us_status').val(formVals.amazon_us_status);
+        $('#amazon_uk_asin').val(formVals.amazon_uk_asin);
+        $('#amazon_us_asin').val(formVals.amazon_us_asin);
+
+        $('#js-btn-store-url-override').on('click', function() {
+
+            gameTitle = $('#title').val();
+            //storeUrl = 'https://www.google.com/search?q=site%3Anintendo.co.uk+';
+            storeUrl = 'https://www.nintendo.com/en-gb/Search/Search-299117.html?f=147394-5-86&q=';
+            if (gameTitle != '') {
+                titleToSearch = gameTitle.replace(':', ' ');
+                urlToOpen = storeUrl + urlencode(titleToSearch);
+                window.open(urlToOpen);
+            }
+
+        });
+
+        function urlencode(str) {
+            str = (str + '').toString();
+
+            // Tilde should be allowed unescaped in future versions of PHP (as reflected below), but if you want to reflect current
+            // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
+            return encodeURIComponent(str)
+                .replace('!', '%21')
+                .replace('\'', '%27')
+                .replace('(', '%28')
+                .replace(')', '%29')
+                .replace('*', '%2A')
+                .replace('%20', '+');
+        }
+
+    </script>
+
+{% endblock page_inner %}
