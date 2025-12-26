@@ -188,6 +188,8 @@ class GameShowController extends Controller
         $bindings['GameBlurb'] = $autoDescription;
         $bindings['MetaDescription'] = strip_tags($metaDescription);
 
+        $bindings['CanonicalUrl'] = route('game.show', ['id' => $gameId, 'linkTitle' => $gameData->link_title]);
+
         return view('public.games.page.show', $bindings);
     }
 
