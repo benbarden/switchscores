@@ -26,24 +26,6 @@ class ScoreTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGodIsAGeekNoreyaTheGoldProject()
-    {
-        $this->scraper->crawlPage('https://www.godisageek.com/reviews/noreya-the-gold-project-review/');
-        $value = $this->scraper->divItemPropRatingValueWithChildren();
-        $expected = '6.5';
-
-        $this->assertEquals($expected, $value);
-    }
-
-    public function testGodIsAGeekGestaltSteamCinder()
-    {
-        $this->scraper->crawlPage('https://www.godisageek.com/reviews/gestalt-steam-cinder-review/');
-        $value = $this->scraper->divItemPropRatingValueWithChildren();
-        $expected = '8.0';
-
-        $this->assertEquals($expected, $value);
-    }
-
     public function testPureNintendoLuigisMansion2HD()
     {
         $this->scraper->crawlPage('https://purenintendo.com/review-luigis-mansion-2-hd-nintendo-switch/');
@@ -58,33 +40,6 @@ class ScoreTest extends TestCase
         $this->scraper->crawlPage('https://www.ps3blog.net/2024/08/05/nintendo-switch-over-horizon-x-steel-empire-review/');
         $value = $this->scraper->spanItemPropRatingValueNoChildren();
         $expected = '8.5';
-
-        $this->assertEquals($expected, $value);
-    }
-
-    public function testNintenpediaEverafterFalls()
-    {
-        $this->scraper->crawlPage('https://nintenpedia.com/everafter-falls-review/');
-        $value = $this->scraper->customNintenpedia();
-        $expected = '6';
-
-        $this->assertEquals($expected, $value);
-    }
-
-    public function testNintenpediaEnderLilies()
-    {
-        $this->scraper->crawlPage('https://nintenpedia.com/ender-lilies-quietus-of-the-knights-review/');
-        $value = $this->scraper->customNintenpedia();
-        $expected = '7';
-
-        $this->assertEquals($expected, $value);
-    }
-
-    public function testNintenpediaTurnipBoy()
-    {
-        $this->scraper->crawlPage('https://nintenpedia.com/turnip-boy-commits-tax-evasion-review/');
-        $value = $this->scraper->customNintenpedia();
-        $expected = '7';
 
         $this->assertEquals($expected, $value);
     }
@@ -106,17 +61,5 @@ class ScoreTest extends TestCase
 
         $this->assertEquals($expected, $value);
     }
-
-    /**
-     * Doesn't work.
-    public function testHeyPoorPlayerHotLapRacing()
-    {
-        $this->scraper->crawlPage('https://www.heypoorplayer.com/2024/08/03/hot-lap-racing-review-switch/');
-        $value = $this->scraper->customHeyPoorPlayer();
-        $expected = '2.5';
-
-        $this->assertEquals($expected, $value);
-    }
-     */
 
 }

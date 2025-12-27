@@ -2,32 +2,17 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="bootstrap/autoload.php" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <coverage/>
   <testsuites>
-    <testsuite name="Feature">
+    <testsuite name="Fast">
+      <directory suffix="Test.php">./tests/Unit</directory>
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
+
     <testsuite name="Page">
       <directory suffix="Test.php">./tests/Page</directory>
     </testsuite>
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
-    </testsuite>
-    <testsuite name="ReviewLink">
-      <directory suffix="Test.php">./tests/Unit/Domain/ReviewLink</directory>
-    </testsuite>
-    <testsuite name="GameTitleMatch">
-      <directory suffix="Test.php">./tests/Unit/Domain/GameTitleMatch</directory>
-    </testsuite>
-    <testsuite name="DomainScraperScore">
-      <directory suffix="Test.php">./tests/Unit/Domain/Scraper</directory>
-    </testsuite>
-    <testsuite name="DomainInviteCodeRequest">
-      <directory suffix="Test.php">./tests/Unit/Domain/InviteCodeRequest</directory>
-    </testsuite>
-    <testsuite name="DomainAll">
-      <directory suffix="Test.php">./tests/Unit/Domain</directory>
-    </testsuite>
-    <testsuite name="DataSources">
-      <directory suffix="Test.php">./tests/Unit/Services/DataSources</directory>
+
+    <testsuite name="All">
+      <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
   <php>

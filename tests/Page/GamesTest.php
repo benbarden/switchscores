@@ -73,7 +73,7 @@ class GamesTest extends TestCase
         $this->doPageTest("/c/switch-1/category/adventure");
         $this->doPageTest("/c/switch-1/series/pokemon");
         $this->doPageTest("/c/switch-1/tag");
-        $this->doPageTest("/c/switch-1/tag/board-game");
+        $this->doPageTest("/c/switch-1/tag/mahjong");
         $this->doPageTest("/c/switch-1/collection");
         $this->doPageTest("/c/switch-1/collection/lego");
 
@@ -81,7 +81,7 @@ class GamesTest extends TestCase
         $this->doPageTest("/c/switch-2/category/adventure");
         $this->doPageTest("/c/switch-2/series/pokemon");
         $this->doPageTest("/c/switch-2/tag");
-        $this->doPageTest("/c/switch-2/tag/board-game");
+        $this->doPageTest("/c/switch-2/tag/mahjong");
         $this->doPageTest("/c/switch-2/collection");
         $this->doPageTest("/c/switch-2/collection/lego");
     }

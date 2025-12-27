@@ -9,6 +9,7 @@ class NintendoCoUkPackshot extends BaseScraper
     public function getHeaderUrl()
     {
         $headerUrl = $this->domCrawler->filterXPath('//meta[@property="og:image"]')->attr('content');
+        $headerUrl = str_replace("\n", "", $headerUrl);
         return $headerUrl;
     }
 
