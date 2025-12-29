@@ -1,0 +1,21 @@
+{% macro render(game) %}
+    {% import 'ui/components/game/packshots.twig' as packshots %}
+    {% import 'ui/components/game/rating.twig' as gamerating %}
+    <div class="game-card">
+        <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+            <div class="game-card-image">
+                {{ packshots.squareImageOnly(game) }}
+            </div>
+
+            <div class="game-card-title">
+                {{ game.title }}
+            </div>
+
+            {% if game.rating_avg %}
+                <div class="game-card-rating">
+                    {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                </div>
+            {% endif %}
+        </a>
+    </div>
+{% endmacro %}

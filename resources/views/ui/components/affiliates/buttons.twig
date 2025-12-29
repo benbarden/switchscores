@@ -26,7 +26,7 @@
         {% set useTiny = (size == 'tiny') %}
 
         {% if size != 'tiny' %}
-            <h2>Buy this game</h2>
+            <h2>Buy {{ game.title }}</h2>
         {% endif %}
 
         {% if useTiny %}
@@ -63,7 +63,7 @@
         {% if game.dspNintendoCoUk %}
             {% set ds = game.dspNintendoCoUk[0] %}
             {% if ds %}
-                {% set labelNin = useTiny ? 'Nintendo.co.uk' : 'Buy at Nintendo.co.uk' %}
+                {% set labelNin = useTiny ? 'Nintendo.co.uk' : 'Buy at Nintendo UK' %}
                 {% if useTiny %}
                     {{ affiliate.amazonTinyButton(
                         eshop_url('eu', ds.url),
@@ -75,11 +75,15 @@
                         labelNin
                     ) }}
                 {% endif %}
+                {% set nintendoStoreDisplayed = 'true' %}
+            {% else %}
+                {% set nintendoStoreDisplayed = 'false' %}
             {% endif %}
+        {% endif %}
 
         {# Manual override URL #}
-        {% elseif game.nintendo_store_url_override %}
-            {% set labelNinStore = useTiny ? 'Nintendo Store' : 'Buy at Nintendo Store' %}
+        {% if game.nintendo_store_url_override and nintendoStoreDisplayed == 'false' %}
+            {% set labelNinStore = useTiny ? 'Nintendo Store' : 'Buy at Nintendo UK' %}
             {% if useTiny %}
                 {{ affiliate.amazonTinyButton(
                     game.nintendo_store_url_override,

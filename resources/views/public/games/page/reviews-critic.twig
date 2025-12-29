@@ -2,13 +2,9 @@
 
 {% if GameReviews %}
     <h2>
-        Partner reviews
+        Critic reviews
     </h2>
     {% if GameReviews.count > 0 %}
-        <p>
-            Got a site with Switch reviews?
-            <a href="{{ route('partners.review-sites.landing') }}">Join as a partner</a> and see your reviews here.
-        </p>
         <table class="table table-condensed table-responsive game-page-review-table">
             <tbody>
                 {% for Review in GameReviews %}
@@ -55,7 +51,6 @@
                 <tr class="review-header">
                     <td class="text-left">
                         There are no reviews of {{ GameData.title }} yet.
-                        <a href="{{ route('partners.review-sites.landing') }}">Help us out!</a>
                     </td>
                     <td class="text-center">
                         {{ rating.tbc(null, 'h6', 'b3', true) }}

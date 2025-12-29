@@ -1,4 +1,5 @@
 <table class="table table-condensed table-responsive">
+    {#
     <tr>
         <td style="width: 150px;">
             <span style="font-weight: bold;">Availability (Digital)</span>
@@ -7,24 +8,7 @@
             {{ GameData.format_digital }}
         </td>
     </tr>
-    <tr>
-        <td>
-            <span style="font-weight: bold;">Price</span>
-        </td>
-        <td>
-            {% if GameData.price_eshop %}
-                {% if GameData.price_eshop_discount_pc == null %}
-                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
-                {% else %}
-                    <s><span class="h4">&pound;{{ GameData.price_eshop }}</span></s>
-                    &nbsp;&nbsp;&nbsp;
-                    <span class="h4" style="font-weight: bold;">&pound;{{ GameData.price_eshop_discounted }}</span>
-                    &nbsp;&nbsp;&nbsp;
-                    <span style="color: #f00;">{{ GameData.price_eshop_discount_pc }}% off</span>
-                {% endif %}
-            {% endif %}
-        </td>
-    </tr>
+    #}
     {% if DSNintendoCoUk is not null %}
         <tr>
             <td style="vertical-align: middle;">

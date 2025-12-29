@@ -417,40 +417,58 @@ class Repository extends AbstractRepository
         return Game::whereNull('eu_release_date')->orderBy('id', 'desc')->get();
     }
 
-    public function relatedByCategory($categoryId, $excludeGameId, $limit = 3)
+    public function relatedByCategory($consoleId, $categoryId, $excludeGameId, $limit = 3)
     {
+        $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
+
         return Game::where('category_id', $categoryId)
+            ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
-            ->where('rating_avg', '>=', '7.0')
+            ->where('rating_avg', '>=', 7.0)
             ->inRandomOrder()
-            ->limit($limit)
-            ->get();
+            ->limit($sampleSize)
+            ->get()
+            ->sortBy('game_rank')
+            ->take($limit)
+            ->values();
     }
 
-    public function relatedBySeries($seriesId, $excludeGameId, $limit = 3)
+    public function relatedBySeries($consoleId, $seriesId, $excludeGameId, $limit = 3)
     {
+        $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
+
         return Game::where('series_id', $seriesId)
+            ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->where('rating_avg', '>=', '7.0')
             ->inRandomOrder()
-            ->limit($limit)
-            ->get();
+            ->limit($sampleSize)
+            ->get()
+            ->sortBy('game_rank')
+            ->take($limit)
+            ->values();
     }
 
-    public function relatedByCollection($collectionId, $excludeGameId, $limit = 3)
+    public function relatedByCollection($consoleId, $collectionId, $excludeGameId, $limit = 3)
     {
+        $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
+
         return Game::where('collection_id', $collectionId)
+            ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->where('rating_avg', '>=', '7.0')
             ->inRandomOrder()
-            ->limit($limit)
-            ->get();
+            ->limit($sampleSize)
+            ->get()
+            ->sortBy('game_rank')
+            ->take($limit)
+            ->values();
     }
 
     public function anyWithNintendoCoUkId()

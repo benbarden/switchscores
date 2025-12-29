@@ -4,6 +4,7 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/rating/badge.twig' as rating %}
 {% import 'ui/components/affiliates/buttons.twig' as affiliate %}
+{% import 'ui/components/game/card-v2.twig' as gamecard %}
 
 {% set hideHeader = true %}
 
@@ -17,11 +18,24 @@
 
             <div class="col-sm-12 col-md-12 col-lg-12">
 
-                <div class="pull-right" style="margin: 15px 0;">
+                <div class="pull-right text-center" style="margin: 15px 0 0 0;">
                     {% if GameData.game_rank %}
-                        {{ rating.score(GameData.rating_avg, 'h4', 'b3') }}
+                        <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                            <span itemprop="ratingValue">{{ rating.score(GameData.rating_avg, 'h4', 'b3') }}</span>
+                            <br>
+                            <small>
+                                <span itemprop="reviewCount">{{ GameData.review_count }}</span>
+                                review{% if GameData.review_count != 1 %}s{% endif %}
+                            </small>
+                            <meta itemprop="bestRating" content="10" />
+                            <meta itemprop="worstRating" content="0" />
+                        </div>
                     {% elseif GameData.rating_avg %}
                         {{ rating.tbc(null, 'h4', 'b3', true) }}
+                        <br>
+                        <small>
+                            {{ GameData.review_count }} review{% if GameData.review_count != 1 %}s{% endif %}
+                        </small>
                     {% endif %}
                 </div>
                 <h1 style="margin: 10px 0;" itemprop="name">
@@ -105,8 +119,8 @@
                 {% endif %}
                 #}
 
-                {% include 'public/games/page/reviews.twig' with {'GameReviews': GameReviews} %}
-                {% include 'public/games/page/quickReviews.twig' with {'ReviewList': GameQuickReviewList} %}
+                {% include 'public/games/page/reviews-critic.twig' with {'GameReviews': GameReviews} %}
+                {% include 'public/games/page/reviews-member.twig' with {'ReviewList': GameQuickReviewList} %}
                 {% include 'public/games/page/news.twig' with {'NewsList': GameNews} %}
 
             </div>
@@ -114,78 +128,81 @@
         </div>
 
         {% if RelatedByCategory %}
-            <h2>More in this category: {{ CategoryName }}</h2>
-            {{ gamegrid.render(RelatedByCategory, 2, 'modern') }}
-            <p>
-                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">View all in this category</a>.
-            </p>
+            <section class="more-games">
+                <h2>More games in {{ GameData.category.name }}</h2>
+                <div class="game-card-grid">
+                    {% for game in RelatedByCategory %}
+                        {{ gamecard.render(game) }}
+                    {% endfor %}
+                </div>
+
+                <div class="view-all-container">
+                    <a href="{{ route('console.byCategory.list', {'console': GameData.console, 'category': GameData.category.link_title}) }}"
+                       class="view-all-link">
+                        View all in {{ GameData.category.name }} →
+                    </a>
+                </div>
+            </section>
         {% endif %}
+
         {% if RelatedByCollection %}
-            <h2>More in this collection: {{ CollectionName }}</h2>
-            {{ gamegrid.render(RelatedByCollection, 2, 'modern') }}
-            <p>
-                <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}">View all in this collection</a>.
-            </p>
+            <section class="more-games">
+                <h2>More games in {{ CollectionName }}</h2>
+                <div class="game-card-grid">
+                    {% for game in RelatedByCollection %}
+                        {{ gamecard.render(game) }}
+                    {% endfor %}
+                </div>
+
+                <div class="view-all-container">
+                    <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}"
+                       class="view-all-link">
+                        View all in {{ CollectionName }} →
+                    </a>
+                </div>
+            </section>
         {% endif %}
+
         {% if RelatedBySeries %}
-            <h2>More in this series: {{ SeriesName }}</h2>
-            {{ gamegrid.render(RelatedBySeries, 2, 'modern') }}
-            <p>
-                <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}">View all in this series</a>.
-            </p>
+            <section class="more-games">
+                <h2>More games in {{ SeriesName }}</h2>
+                <div class="game-card-grid">
+                    {% for game in RelatedBySeries %}
+                        {{ gamecard.render(game) }}
+                    {% endfor %}
+                </div>
+
+                <div class="view-all-container">
+                    <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}"
+                       class="view-all-link">
+                        View all in {{ SeriesName }} →
+                    </a>
+                </div>
+            </section>
         {% endif %}
 
     </div>
 
     <div class="col-xs-12 col-sm-4 col-md-4">
 
-        {% if GameData.console_id %}
-            {{ heading.renderChunky('Rank ('~GameData.console.name~')', 'h2') }}
-        {% else %}
-            {{ heading.renderChunky('Rank', 'h2') }}
+        {{ heading.renderChunky('Game details', 'h2') }}
+        {% include 'public/games/page/game-details.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+
+        {% if GameData.game_rank or GameData.gameRankYear.game_rank or GameData.gameRankYearMonth.game_rank %}
+            {% if GameData.console_id %}
+                {{ heading.renderChunky('Rank ('~GameData.console.name~')', 'h2') }}
+            {% else %}
+                {{ heading.renderChunky('Rank', 'h2') }}
+            {% endif %}
+            {% include 'ui/components/game/rank.twig' with {
+                GameData: GameData,
+                RankMaximum: RankMaximum,
+                TopPercent: TopPercent,
+                TopRatedItem: TopRatedItem
+            } only %}
         {% endif %}
-
-        {% include 'ui/components/game/rank.twig' with {
-            GameData: GameData,
-            RankMaximum: RankMaximum,
-            TopPercent: TopPercent,
-            TopRatedItem: TopRatedItem
-        } only %}
-
-        {{ heading.renderChunky('Buy this game', 'h2') }}
-        {% include 'public/games/page/infobox-stores.twig' with {'GameData': GameData, 'NewsInfoBox': 'N'} %}
-
-        {{ heading.renderChunky('Infobox', 'h2') }}
-        {% include 'public/games/page/infobox.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
-
-        {#
-        {% if GameReviews.count > 2 %}
-            {% include 'public/games/page/reviewsChart.twig' with {'GameReviews': GameReviews} %}
-        {% endif %}
-        #}
 
         {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
-
-        {% set boxartUrl = ImageHelper.imageSquareUrl(GameData) %}
-        {% if boxartUrl %}
-            <div class="row">
-                &nbsp;
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                </div>
-                <div class="col-md-8">
-                    <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ GameData.title }}">
-                </div>
-                <div class="col-md-2">
-                </div>
-            </div>
-        {% endif %}
-
-        {% if exception is null %}
-            <a class="twitter-share-button" data-size="large"
-               href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores">Tweet</a>
-        {% endif %}
 
     </div>
 

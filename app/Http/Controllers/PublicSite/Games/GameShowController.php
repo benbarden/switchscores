@@ -137,15 +137,18 @@ class GameShowController extends Controller
         // Related games
         if ($gameData->category_id) {
             $bindings['CategoryName'] = $gameData->category->name;
-            $bindings['RelatedByCategory'] = $this->repoGameLists->relatedByCategory($gameData->category_id, $gameId, 6);
+            $bindings['RelatedByCategory'] = $this->repoGameLists->relatedByCategory(
+                $gameData->console_id, $gameData->category_id, $gameId, 4);
         }
         if ($gameData->series_id) {
             $bindings['SeriesName'] = $gameData->series->series;
-            $bindings['RelatedBySeries'] = $this->repoGameLists->relatedBySeries($gameData->series_id, $gameId, 6);
+            $bindings['RelatedBySeries'] = $this->repoGameLists->relatedBySeries(
+                $gameData->console_id, $gameData->series_id, $gameId, 4);
         }
         if ($gameData->collection_id) {
             $bindings['CollectionName'] = $gameData->gameCollection->name;
-            $bindings['RelatedByCollection'] = $this->repoGameLists->relatedByCollection($gameData->collection_id, $gameId, 6);
+            $bindings['RelatedByCollection'] = $this->repoGameLists->relatedByCollection(
+                $gameData->console_id, $gameData->collection_id, $gameId, 4);
         }
 
         // Total rank count

@@ -1,0 +1,104 @@
+<table class="table table-condensed table-responsive">
+
+    {% if GameData.console_id %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Console</span>
+        </td>
+        <td>
+            <span itemprop="gamePlatform">{{ GameData.console.name }}</span>
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.category_id %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Category</span>
+            </td>
+            <td>
+                <span itemprop="genre">
+                    {% if GameData.category.parent.id %}
+                        <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                    {% endif %}
+                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                </span>
+            </td>
+        </tr>
+    {% endif %}
+
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Price</span>
+        </td>
+        <td>
+            {% if GameData.price_eshop %}
+                {% if GameData.price_eshop_discount_pc == null %}
+                    <span class="h5" style="font-weight: bold;">&pound;{{ GameData.price_eshop }}</span>
+                {% else %}
+                    <s><span class="h5">&pound;{{ GameData.price_eshop }}</span></s>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="h5" style="font-weight: bold;">&pound;{{ GameData.price_eshop_discounted }}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span style="color: #f00;">{{ GameData.price_eshop_discount_pc }}% off</span>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+
+    {% if GameData.players %}
+    <tr>
+        <td style="width: 150px;">
+            <span style="font-weight: bold;">Players</span>
+        </td>
+        <td>{{ GameData.players }}</td>
+    </tr>
+    {% endif %}
+
+    {% if GameDevelopers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Developed by</span>
+            </td>
+            <td>
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('partners.detail.games-company', {'linkTitle': item.developer.link_title}) }}">{{ item.developer.name }}</a>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% endif %}
+
+    {% if GamePublishers|length > 0 %}
+
+        <tr>
+            <td>
+                <span style="font-weight: bold;">Published by</span>
+            </td>
+            <td>
+                {% for item in GamePublishers %}
+                    <span itemprop="publisher">
+                        <a href="{{ route('partners.detail.games-company', {'linkTitle': item.publisher.link_title}) }}">{{ item.publisher.name }}</a>
+                    </span>
+                    <br>
+                {% endfor %}
+            </td>
+        </tr>
+
+    {% endif %}
+
+    {% if GameData.eu_release_date %}
+        <tr>
+            <td>
+                <span style="font-weight: bold;">UK/Europe release</span>
+            </td>
+            <td>
+                {{ GameData.eu_release_date|date('jS M Y') }}
+                <meta itemprop="datePublished" content="{{ GameData.eu_release_date|date('Y-m-d') }}" />
+            </td>
+        </tr>
+    {% endif %}
+
+</table>
