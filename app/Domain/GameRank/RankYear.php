@@ -83,7 +83,7 @@ class RankYear
             $lastRatingAvg = $ratingAvg;
             $lastRank = $actualRank;
 
-            if ($actualRank > 100) break;
+            //if ($actualRank > 100) break;
 
             $rowsToInsert[] = [
                 'console_id' => $this->consoleId,

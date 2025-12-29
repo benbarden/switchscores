@@ -35,8 +35,7 @@
         {{ rr.metric_row(
             year,
             route('console.topRated.byYear', { console: _console, year: year }),
-            GameData.gameRankYear.game_rank,
-            100
+            GameData.gameRankYear.game_rank
         ) }}
     {% endif %}
 
