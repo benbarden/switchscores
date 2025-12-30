@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Models\GamesCompany;
 use App\Models\PartnerOutreach;
 
@@ -18,6 +21,7 @@ class OutreachController extends Controller
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private PartnerOutreachRepository $repoPartnerOutreach,
         private GamesCompanyRepository $repoGamesCompany
     )
@@ -42,8 +46,7 @@ class OutreachController extends Controller
     public function showList(GamesCompany $gamesCompany = null)
     {
         $pageTitle = 'Partner outreach';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         if ($gamesCompany) {
             $outreachList = $this->repoPartnerOutreach->byPartnerId($gamesCompany->id);
@@ -59,8 +62,7 @@ class OutreachController extends Controller
     public function add(GamesCompany $gamesCompany = null)
     {
         $pageTitle = 'Add partner outreach';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesOutreachSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -108,8 +110,7 @@ class OutreachController extends Controller
     public function edit(PartnerOutreach $partnerOutreach)
     {
         $pageTitle = 'Edit partner outreach';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesOutreachSubpage($pageTitle))->bindings;
 
         $request = request();
 

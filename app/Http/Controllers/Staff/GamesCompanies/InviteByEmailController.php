@@ -8,6 +8,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Mail;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Models\GamesCompany;
 use App\Models\PartnerOutreach;
 
@@ -24,6 +27,7 @@ class InviteByEmailController extends Controller
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private PartnerOutreachRepository $repoPartnerOutreach,
         private GamesCompanyRepository $repoGamesCompany,
         private InviteCodeRepository $repoInviteCode
@@ -40,8 +44,7 @@ class InviteByEmailController extends Controller
     public function compose(GamesCompany $gamesCompany)
     {
         $pageTitle = 'Games companies: Invite by email';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->partnersOutreachSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesOutreachSubpage($pageTitle))->bindings;
 
         $request = request();
 

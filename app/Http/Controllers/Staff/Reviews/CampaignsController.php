@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\CampaignGame\Repository as CampaignGameRepository;
 
@@ -22,6 +25,7 @@ class CampaignsController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CampaignRepository $repoCampaign,
         private CampaignGameRepository $repoCampaignGame
     )
@@ -31,8 +35,7 @@ class CampaignsController extends Controller
     public function show()
     {
         $pageTitle = 'Review campaigns';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         $bindings['CampaignsList'] = $this->repoCampaign->getAll();
 
@@ -42,8 +45,7 @@ class CampaignsController extends Controller
     public function add()
     {
         $pageTitle = 'Add campaign';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsCampaignsSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -74,8 +76,7 @@ class CampaignsController extends Controller
     public function edit($campaignId)
     {
         $pageTitle = 'Edit campaign';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsCampaignsSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -112,8 +113,7 @@ class CampaignsController extends Controller
     public function editGames($campaignId)
     {
         $pageTitle = 'Edit campaign games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsCampaignsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsCampaignsSubpage($pageTitle))->bindings;
 
         $request = request();
 

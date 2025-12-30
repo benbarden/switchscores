@@ -6,11 +6,9 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Domain\ViewBreadcrumbs\MainSite as MainSiteBreadcrumbs;
 use App\Domain\ViewBreadcrumbs\Member as MemberBreadcrumbs;
-use App\Domain\ViewBreadcrumbs\Staff as StaffBreadcrumbs;
 
 use App\Domain\ViewBindings\MainSite as MainSiteBindings;
 use App\Domain\ViewBindings\Member as MemberBindings;
-use App\Domain\ViewBindings\Staff as StaffBindings;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -27,18 +25,12 @@ class ViewServiceProvider extends ServiceProvider
         $this->app->singleton('View/Breadcrumbs/Member', function($app) {
             return new MemberBreadcrumbs();
         });
-        $this->app->singleton('View/Breadcrumbs/Staff', function($app) {
-            return new StaffBreadcrumbs();
-        });
 
         $this->app->singleton('View/Bindings/MainSite', function($app) {
             return new MainSiteBindings();
         });
         $this->app->singleton('View/Bindings/Member', function($app) {
             return new MemberBindings();
-        });
-        $this->app->singleton('View/Bindings/Staff', function($app) {
-            return new StaffBindings();
         });
 
     }

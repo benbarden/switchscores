@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
@@ -13,6 +16,7 @@ use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 class ReviewSiteController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameStatsRepository $repoGameStats,
         private UnrankedRepository $repoUnranked,
         private ReviewSiteRepository $repoReviewSite,
@@ -25,8 +29,7 @@ class ReviewSiteController extends Controller
     public function show()
     {
         $pageTitle = 'Review site stats';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->statsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::statsSubpage($pageTitle))->bindings;
 
         $bindings['RankedGameCount'] = $this->repoGameStats->totalRanked();
         $bindings['UnrankedGameCount'] = $this->repoUnranked->totalUnranked();

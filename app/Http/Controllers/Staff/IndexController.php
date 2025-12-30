@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -22,6 +25,7 @@ use App\Services\DataQuality\QualityStats;
 class IndexController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private FeaturedGameRepository $repoFeaturedGames,
         private GameStatsRepository $repoGameStats,
         private GameListsRepository $repoGameLists,
@@ -40,8 +44,7 @@ class IndexController extends Controller
     public function index()
     {
         $pageTitle = 'Dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::staffDashboard())->bindings;
 
         $serviceQualityStats = new QualityStats();
 

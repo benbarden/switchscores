@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Staff\Stats;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\ReviewLink\Stats as ReviewSiteStats;
 
 class ReviewLinkController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite,
         private ReviewSiteStats $statsReviewSite,
     )
@@ -22,8 +26,7 @@ class ReviewLinkController extends Controller
         if (!$reviewSite) abort(404);
 
         $pageTitle = 'Review link stats: '.$reviewSite->name;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewSitesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewSitesSubpage($pageTitle))->bindings;
 
         $chartDataSet = $this->statsReviewSite->monthlyCountBySite($siteId);
         $bindings['ChartDataSet'] = $chartDataSet;

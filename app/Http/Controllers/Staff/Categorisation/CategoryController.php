@@ -10,6 +10,9 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Category\Blurb as CategoryBlurb;
 use App\Domain\LayoutVersion\Helper as LayoutVersionHelper;
@@ -27,6 +30,7 @@ class CategoryController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory,
         private CategoryBlurb $blurbCategory,
         private LayoutVersionHelper $helperLayoutVersion,
@@ -38,8 +42,7 @@ class CategoryController extends Controller
     public function showList()
     {
         $pageTitle = 'Categories';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $fullCategoryList = [];
         $topLevelCategories = $this->repoCategory->topLevelCategories();
@@ -58,8 +61,7 @@ class CategoryController extends Controller
     public function addCategory(Request $request)
     {
         $pageTitle = 'Add category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCategoriesSubpage($pageTitle))->bindings;
 
         if ($request->isMethod('post')) {
 
@@ -115,8 +117,7 @@ class CategoryController extends Controller
     public function editCategory(Request $request, $categoryId)
     {
         $pageTitle = 'Edit category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCategoriesSubpage($pageTitle))->bindings;
 
         $categoryData = $this->repoCategory->find($categoryId);
         if (!$categoryData) abort(404);
@@ -154,8 +155,7 @@ class CategoryController extends Controller
     public function deleteCategory($categoryId)
     {
         $pageTitle = 'Delete category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCategoriesSubpage($pageTitle))->bindings;
 
         $categoryData = $this->repoCategory->find($categoryId);
         if (!$categoryData) abort(404);

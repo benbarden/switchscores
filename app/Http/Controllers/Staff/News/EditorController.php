@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
@@ -28,6 +31,7 @@ class EditorController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private NewsRepository $repoNews,
         private NewsCategoryRepository $repoNewsCategory
     )
@@ -37,8 +41,7 @@ class EditorController extends Controller
     public function add()
     {
         $pageTitle = 'Add news';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsListSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -65,8 +68,7 @@ class EditorController extends Controller
     public function edit($newsId)
     {
         $pageTitle = 'Edit news';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsListSubpage($pageTitle))->bindings;
 
         $newsData = $this->repoNews->find($newsId);
         if (!$newsData) abort(404);
@@ -103,8 +105,7 @@ class EditorController extends Controller
     public function delete($newsId)
     {
         $pageTitle = 'Delete news';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsListSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsListSubpage($pageTitle))->bindings;
 
         $newsData = $this->repoNews->find($newsId);
         if (!$newsData) abort(404);

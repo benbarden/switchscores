@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Staff\GamesCompanies;
 
-use App\Domain\Game\QualityFilter as GameQualityFilter;
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
-use App\Domain\GamesCompany\Stats as GamesCompanyStats;
-use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
-
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
+use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Stats as GamesCompanyStats;
+use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 
 class ListController extends Controller
 {
@@ -25,6 +28,7 @@ class ListController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameQualityFilter $gameQualityFilter,
         private GamesCompanyRepository $repoGamesCompany,
         private GamesCompanyStats $statsGamesCompany,
@@ -35,9 +39,8 @@ class ListController extends Controller
 
     public function showList()
     {
-        $pageTitle = 'Games companies';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $pageTitle = 'Games company list';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
 
@@ -46,9 +49,8 @@ class ListController extends Controller
 
     public function normalQuality()
     {
-        $pageTitle = 'Games companies';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $pageTitle = 'Games company list';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->normalQuality();
 
@@ -57,9 +59,8 @@ class ListController extends Controller
 
     public function lowQuality()
     {
-        $pageTitle = 'Games companies';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $pageTitle = 'Games company list';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->lowQuality();
 
@@ -69,8 +70,7 @@ class ListController extends Controller
     public function withoutEmails()
     {
         $pageTitle = 'Games companies without Emails';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutEmails();
 
@@ -80,8 +80,7 @@ class ListController extends Controller
     public function withoutTwitterIds()
     {
         $pageTitle = 'Games companies without Twitter IDs';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutTwitterIds();
 
@@ -91,8 +90,7 @@ class ListController extends Controller
     public function withoutWebsiteUrls()
     {
         $pageTitle = 'Games companies without website URLs';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['GamesCompanyList'] = $this->statsGamesCompany->getWithoutWebsiteUrls();
 
@@ -102,8 +100,7 @@ class ListController extends Controller
     public function duplicateTwitterIds()
     {
         $pageTitle = 'Games companies with duplicate Twitter IDs';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $duplicateTwitterIdsList = $this->statsGamesCompany->getDuplicateTwitterIds();
         if ($duplicateTwitterIdsList) {
@@ -120,8 +117,7 @@ class ListController extends Controller
     public function duplicateWebsiteUrls()
     {
         $pageTitle = 'Games companies with duplicate website URLs';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $duplicateWebsiteUrlsList = $this->statsGamesCompany->getDuplicateWebsiteUrls();
         if ($duplicateWebsiteUrlsList) {
@@ -139,9 +135,7 @@ class ListController extends Controller
     {
         $tableSort = "[ 5, 'desc'], [ 6, 'desc']";
         $pageTitle = 'Outreach targets: Publishers with unranked games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $bindings['GamesCompanyList'] = $this->repoGamesCompany->getPublishersWithUnrankedGames($releaseYear);
         //$bindings['jsInitialSort'] = "[ 1, 'asc'], [ 3, 'asc']";

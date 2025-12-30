@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\IntegrityCheck\Repository as IntegrityCheckRepository;
 
 use App\Services\DataQuality\QualityStats;
@@ -11,6 +14,7 @@ use App\Services\DataQuality\QualityStats;
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private IntegrityCheckRepository $repoIntegrityCheck
     )
     {
@@ -19,8 +23,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Data quality dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataQualityDashboard())->bindings;
 
         $bindings['IntegrityChecks'] = $this->repoIntegrityCheck->getAll();
 
@@ -33,8 +36,7 @@ class DashboardController extends Controller
     public function duplicateReviews()
     {
         $pageTitle = 'Duplicate reviews';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualitySubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataQualitySubpage($pageTitle))->bindings;
 
         $serviceQualityStats = new QualityStats();
         $bindings['DuplicateReviews'] = $serviceQualityStats->getDuplicateReviews();

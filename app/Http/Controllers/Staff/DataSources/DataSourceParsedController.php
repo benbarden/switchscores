@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Models\Console;
 use App\Models\Game;
 use App\Events\GameCreated;
@@ -23,6 +26,7 @@ use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 class DataSourceParsedController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GamesCompanyRepository $repoGamesCompany,
         private GamePublisherRepository $repoGamePublisher,
         private LinkTitle $urlLinkTitle,
@@ -43,9 +47,7 @@ class DataSourceParsedController extends Controller
         $pageTitle = $dataSource->name.' - Unlinked items';
         $tableSort = "[ 2, 'asc' ]";
 
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -67,9 +69,7 @@ class DataSourceParsedController extends Controller
         $pageTitle = $dataSource->name.' - Ignored items';
         $tableSort = "[ 2, 'asc' ]";
 
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $bindings['SourceId'] = $dataSource->id;
         $bindings['DataSource'] = $dataSource;
@@ -88,8 +88,7 @@ class DataSourceParsedController extends Controller
         if (!$dsParsedItem) abort(404);
 
         $pageTitle = 'Add game from Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesNintendoCoUkUnlinkedSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesNintendoUnlinkedSubpage($pageTitle))->bindings;
 
         $bindings['DSParsedItem'] = $dsParsedItem;
         $customErrors = [];

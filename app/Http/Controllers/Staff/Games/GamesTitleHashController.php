@@ -10,6 +10,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
@@ -28,6 +31,7 @@ class GamesTitleHashController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator
@@ -41,13 +45,11 @@ class GamesTitleHashController extends Controller
         if ($gameId) {
             $game = $this->repoGame->find($gameId);
             if (!$game) abort(404);
-            $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-            $titleHashList = $this->repoGameTitleHash->getByGameId($gameId);
+            $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
         } else {
-            $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
+            $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
             $titleHashList = $this->repoGameTitleHash->getAll();
         }
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
         $bindings['TitleHashList'] = $titleHashList;
 
@@ -104,11 +106,10 @@ class GamesTitleHashController extends Controller
             if ($urlGameId) {
                 $game = $this->repoGame->find($urlGameId);
                 if (!$game) abort(404);
-                $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
+                $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
             } else {
                 abort(404);
             }
-            $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
 
             if ($urlGameId) {
                 $bindings['GameId'] = $urlGameId;
@@ -131,8 +132,7 @@ class GamesTitleHashController extends Controller
 
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
 
         $request = request();
 
@@ -176,8 +176,7 @@ class GamesTitleHashController extends Controller
 
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
 
         $request = request();
 

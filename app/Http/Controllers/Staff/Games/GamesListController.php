@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
@@ -22,6 +25,7 @@ use App\Enums\GameListType;
 class GamesListController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
         private CategoryRepository $repoCategory,
         private GameSeriesRepository $repoGameSeries,
@@ -260,15 +264,10 @@ class GamesListController extends Controller
             $pageTitle = $config['title'];
         }
 
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $viewBindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs);
-
         $sort = $config['sort'] ?? null;
-        if ($sort !== null) {
-            $viewBindings->setTableSort($config['sort']);
-        }
 
-        $bindings = $viewBindings->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle), jsInitialSort: $sort)->bindings;
+
         $bindings['ListMode'] = $listType;
 
         $bindings['GameList'] = ($config['fetch'])(...$args);

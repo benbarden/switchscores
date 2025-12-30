@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Calculations as ReviewLinkCalculations;
@@ -32,6 +35,7 @@ class ReviewLinkController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private QuickReviewRepository $repoQuickReview,
         private ReviewLinkCalculations $calcReviewLink,
@@ -46,9 +50,7 @@ class ReviewLinkController extends Controller
     {
         $pageTitle = 'Review links';
         $tableSort = "[ 3, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $siteId = request()->siteId;
 
@@ -73,8 +75,7 @@ class ReviewLinkController extends Controller
     public function import()
     {
         $pageTitle = 'Import review links';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewLinksSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -127,8 +128,7 @@ class ReviewLinkController extends Controller
     public function add()
     {
         $pageTitle = 'Add review link';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewLinksSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -171,8 +171,7 @@ class ReviewLinkController extends Controller
     public function edit($linkId)
     {
         $pageTitle = 'Edit review link';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewLinksSubpage($pageTitle))->bindings;
 
         $reviewLinkData = $this->repoReviewLink->find($linkId);
         if (!$reviewLinkData) abort(404);
@@ -226,8 +225,7 @@ class ReviewLinkController extends Controller
     public function delete($linkId)
     {
         $pageTitle = 'Delete review link';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewLinksSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewLinksSubpage($pageTitle))->bindings;
 
         $reviewLink = $this->repoReviewLink->find($linkId);
         if (!$reviewLink) abort(404);

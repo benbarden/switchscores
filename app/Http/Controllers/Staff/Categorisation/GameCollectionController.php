@@ -9,6 +9,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 
 class GameCollectionController extends Controller
@@ -24,6 +27,7 @@ class GameCollectionController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameCollectionRepository $repoGameCollection
     )
     {
@@ -32,8 +36,7 @@ class GameCollectionController extends Controller
     public function showList()
     {
         $pageTitle = 'Collections';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
@@ -43,8 +46,7 @@ class GameCollectionController extends Controller
     public function addCollection()
     {
         $pageTitle = 'Add collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCollectionsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCollectionsSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -94,8 +96,7 @@ class GameCollectionController extends Controller
     public function editCollection($collectionId)
     {
         $pageTitle = 'Edit collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCollectionsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCollectionsSubpage($pageTitle))->bindings;
 
         $collectionData = $this->repoGameCollection->find($collectionId);
         if (!$collectionData) abort(404);
@@ -127,8 +128,7 @@ class GameCollectionController extends Controller
     public function deleteCollection($collectionId)
     {
         $pageTitle = 'Delete collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationCollectionsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationCollectionsSubpage($pageTitle))->bindings;
 
         $collectionData = $this->repoGameCollection->find($collectionId);
         if (!$collectionData) abort(404);

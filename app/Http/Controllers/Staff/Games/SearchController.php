@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 
 class SearchController extends Controller
@@ -21,6 +24,7 @@ class SearchController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame
     )
     {
@@ -30,8 +34,7 @@ class SearchController extends Controller
     public function show()
     {
         $pageTitle = 'Search';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $request = request();
 

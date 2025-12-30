@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
@@ -24,6 +27,7 @@ class ReviewDraftsController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private ReviewDraftRepository $repoReviewDraft,
         private GameListsRepository $repoGameLists
     )
@@ -33,8 +37,7 @@ class ReviewDraftsController extends Controller
     public function showPending()
     {
         $pageTitle = 'Review drafts';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         $bindings['jsInitialSort'] = '[0, "asc"]';
 
@@ -46,8 +49,7 @@ class ReviewDraftsController extends Controller
     public function byProcessStatus($status)
     {
         $pageTitle = 'Review drafts';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         $bindings['ReviewDraftItems'] = $this->repoReviewDraft->getByProcessStatus($status);
 
@@ -59,8 +61,7 @@ class ReviewDraftsController extends Controller
     public function edit($itemId)
     {
         $pageTitle = 'Edit review draft';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewDraftsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewDraftsSubpage($pageTitle))->bindings;
 
         $reviewDraft = $this->repoReviewDraft->find($itemId);
         if (!$reviewDraft) abort(404);

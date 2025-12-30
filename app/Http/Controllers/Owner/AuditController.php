@@ -4,26 +4,24 @@ namespace App\Http\Controllers\Owner;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\Audit\Repository as AuditRepository;
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
 
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
-use App\Domain\ViewBindings\Staff as Bindings;
+use App\Domain\Audit\Repository as AuditRepository;
 
 class AuditController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private AuditRepository $repoAudit,
-        private Bindings $viewBindings,
-        private Breadcrumbs $viewBreadcrumbs
     )
     {
     }
 
     public function index()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Audit');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Audit');
+        $pageTitle = 'Audit';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::auditDashboard())->bindings;
 
         return view('owner.audit.index', $bindings);
     }
@@ -51,9 +49,7 @@ class AuditController extends Controller
                 abort(404);
         }
 
-        $breadcrumbs = $this->viewBreadcrumbs->auditSubpage($pageTitle);
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::auditSubpage($pageTitle))->bindings;
 
         $bindings['ItemList'] = $itemList;
 

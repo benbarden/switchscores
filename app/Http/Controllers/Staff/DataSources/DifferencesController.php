@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\Game\Repository as GameRepository;
@@ -18,6 +21,7 @@ use App\Services\DataSources\Queries\Differences;
 class DifferencesController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory,
         private GameRepository $repoGame,
         private DataSourceRepository $repoDataSource,
@@ -211,8 +215,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkEuReleaseDate()
     {
         $pageTitle = 'Differences: EU release date - Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getReleaseDateEUNintendoCoUk();
@@ -230,8 +233,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPrice()
     {
         $pageTitle = 'Differences: Price - Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPriceNintendoCoUk();
@@ -249,8 +251,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPlayers()
     {
         $pageTitle = 'Differences: Players - Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPlayersNintendoCoUk();
@@ -268,8 +269,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkPublishers()
     {
         $pageTitle = 'Differences: Publishers - Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getPublishersNintendoCoUk();
@@ -288,8 +288,7 @@ class DifferencesController extends Controller
     public function nintendoCoUkGenres()
     {
         $pageTitle = 'Differences: Genres - Nintendo.co.uk API';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $dsDifferences = new Differences();
         $bindings['DifferenceList'] = $dsDifferences->getGenresNintendoCoUk();

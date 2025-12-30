@@ -4,15 +4,23 @@ namespace App\Http\Controllers\Staff\DataQuality;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Services\DataQuality\QualityStats;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        private StaffPageBuilder $pageBuilder,
+    )
+    {
+    }
+
     public function dashboard()
     {
         $pageTitle = 'Category dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualitySubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataQualitySubpage($pageTitle))->bindings;
 
         $serviceQualityStats = new QualityStats();
         $bindings['StatsCategories'] = $serviceQualityStats->getCategoryStats();
@@ -23,8 +31,7 @@ class CategoryController extends Controller
     public function gamesWithCategories($year, $month)
     {
         $pageTitle = 'Games with categories';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualityCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataQualityCategoriesSubpage($pageTitle))->bindings;
 
         $serviceQualityStats = new QualityStats();
         $bindings['GameList'] = $serviceQualityStats->getGamesWithCategory($year, $month);
@@ -35,8 +42,7 @@ class CategoryController extends Controller
     public function gamesWithoutCategories($year, $month)
     {
         $pageTitle = 'Games without categories';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataQualityCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataQualityCategoriesSubpage($pageTitle))->bindings;
 
         $serviceQualityStats = new QualityStats();
         $bindings['GameList'] = $serviceQualityStats->getGamesWithoutCategory($year, $month);

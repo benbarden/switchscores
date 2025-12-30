@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
@@ -13,6 +16,7 @@ use App\Services\DataSources\Queries\Differences;
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private DataSourceRepository $repoDataSource,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed
@@ -22,8 +26,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Data sources dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesDashboard())->bindings;
 
         $bindings['DataSources'] = $this->repoDataSource->getAll();
 

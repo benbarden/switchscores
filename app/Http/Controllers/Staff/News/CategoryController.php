@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
 
 class CategoryController extends Controller
@@ -22,6 +25,7 @@ class CategoryController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private NewsCategoryRepository $repoNewsCategory
     )
     {
@@ -30,8 +34,7 @@ class CategoryController extends Controller
     public function showList()
     {
         $pageTitle = 'News categories';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
         $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
@@ -41,8 +44,7 @@ class CategoryController extends Controller
     public function add()
     {
         $pageTitle = 'Add news category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsCategoriesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -64,8 +66,7 @@ class CategoryController extends Controller
     public function edit($newsCategoryId)
     {
         $pageTitle = 'Edit news category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsCategoriesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsCategoriesSubpage($pageTitle))->bindings;
 
         $newsCategory = $this->repoNewsCategory->find($newsCategoryId);
         if (!$newsCategory) abort(404);

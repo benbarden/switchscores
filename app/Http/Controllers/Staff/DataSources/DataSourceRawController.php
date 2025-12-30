@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Staff\DataSources;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
 
 class DataSourceRawController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private DataSourceRepository $repoDataSource,
         private DataSourceRawRepository $repoDataSourceRaw
     ){
@@ -21,8 +25,7 @@ class DataSourceRawController extends Controller
         if (!$dataSource) abort(404);
 
         $pageTitle = $dataSource->name.' - Raw items';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
         $bindings['ItemList'] = $this->repoDataSourceRaw->getBySourceId($sourceId);
 
@@ -38,8 +41,7 @@ class DataSourceRawController extends Controller
         if (!$dsRawItem) abort(404);
 
         $pageTitle = $dsRawItem->title;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->dataSourcesListRawSubpage($pageTitle, $dataSource);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesListRawSubpage($pageTitle, $dataSource))->bindings;
 
         if ($dsRawItem) {
             $sourceDataRaw = json_decode($dsRawItem->source_data_json, true);

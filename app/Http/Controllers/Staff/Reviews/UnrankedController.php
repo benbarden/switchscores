@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Unranked\Repository as UnrankedRepository;
 
 class UnrankedController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private UnrankedRepository $repoUnranked
     )
     {
@@ -17,8 +21,7 @@ class UnrankedController extends Controller
     public function reviewCountLanding()
     {
         $pageTitle = 'Unranked games: By review count';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         // Unranked breakdown
         $bindings['UnrankedReviews2List'] = $this->repoUnranked->getByReviewCount(2, null, 15);
@@ -32,9 +35,7 @@ class UnrankedController extends Controller
     {
         $pageTitle = 'Unranked games: '.$reviewCount.' review(s)';
         $tableSort = "[ 4, 'desc'], [ 2, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsUnrankedByReviewCountSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsUnrankedByReviewCountSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $bindings['GameList'] = $this->repoUnranked->getByReviewCount($reviewCount);
 
@@ -44,8 +45,7 @@ class UnrankedController extends Controller
     public function releaseYearLanding()
     {
         $pageTitle = 'Unranked games: By release year';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         // Unranked breakdown
         $bindings['UnrankedYear2025List'] = $this->repoUnranked->getByYear(2025, null, 15,);
@@ -59,9 +59,7 @@ class UnrankedController extends Controller
     {
         $pageTitle = 'Unranked games: released '.$releaseYear;
         $tableSort = "[ 4, 'desc'], [ 2, 'desc']";
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsUnrankedByReleaseYearSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsUnrankedByReleaseYearSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
 
         $bindings['GameList'] = $this->repoUnranked->getByYear($releaseYear);
 

@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Staff\News;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\News\Repository as RepoNews;
 
 class ListController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private RepoNews $repoNews
     )
     {
@@ -17,8 +21,7 @@ class ListController extends Controller
     public function show()
     {
         $pageTitle = 'News list';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
         $bindings['NewsList'] = $this->repoNews->getAll();
 

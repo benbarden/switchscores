@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Factories\GamesCompanyFactory;
 
 use App\Domain\Game\Repository as GameRepository;
@@ -16,6 +19,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 class GamesPartnerController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private GameQualityFilter $gameQualityFilter,
         private GamesCompanyRepository $repoGamesCompany,
@@ -34,8 +38,7 @@ class GamesPartnerController extends Controller
         $gameTitle = $game->title;
 
         $pageTitle = $gameTitle.' - Game partners';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
 
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $game;

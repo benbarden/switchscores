@@ -1,12 +1,14 @@
 <?php
 
-
 namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Construction\GameImportRule\EshopDirector;
 use App\Construction\GameImportRule\EshopBuilder;
@@ -25,6 +27,7 @@ class ImportRuleEshopController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private GameImportRuleEshopRepository $repoGameImportRuleEshop
     )
@@ -37,8 +40,7 @@ class ImportRuleEshopController extends Controller
         if (!$game) abort(404);
 
         $pageTitle = 'Import rules: eShop - Edit';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
 
         $gameImportRuleEshop = $this->repoGameImportRuleEshop->getByGameId($gameId);
 

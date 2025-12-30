@@ -2,6 +2,9 @@
 
 namespace App\Domain\ViewBindings;
 
+/**
+ * @deprecated
+ */
 class Staff extends Base
 {
     public function generateStaff($pageTitle)

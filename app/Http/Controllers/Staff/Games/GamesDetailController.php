@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
@@ -28,6 +31,7 @@ use App\Services\DataSources\Queries\Differences;
 class GamesDetailController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private AuditRepository $repoAudit,
         private DataSourceRepository $repoDataSource,
         private DataSourceParsedRepository $repoDataSourceParsed,
@@ -52,8 +56,7 @@ class GamesDetailController extends Controller
         if (!$game) abort(404);
 
         $pageTitle = $game->title;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         // Total rank count
         $bindings['RankMaximum'] = $this->repoGameStats->totalRanked();
@@ -172,9 +175,8 @@ class GamesDetailController extends Controller
     {
         $gameId = $game->id;
 
-        $pageTitle = 'Full audit';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $game);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $pageTitle = 'Full audit history: '.$game->title;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
 
         $gameAudits = $this->repoAudit->getAggregatedGameAudits($gameId, 25);
         $bindings['GameAuditsCore'] = $gameAudits;

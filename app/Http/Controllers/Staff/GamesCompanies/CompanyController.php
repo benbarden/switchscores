@@ -2,6 +2,14 @@
 
 namespace App\Http\Controllers\Staff\GamesCompanies;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
@@ -12,11 +20,6 @@ use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Factories\GamesCompanyFactory;
 use App\Models\GamesCompany;
-
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
 
 class CompanyController extends Controller
 {
@@ -31,6 +34,7 @@ class CompanyController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameQualityFilter $gameQualityFilter,
         private GamesCompanyRepository $repoGamesCompany,
         private GamesCompanyStats $statsGamesCompany,
@@ -46,8 +50,7 @@ class CompanyController extends Controller
     public function show(GamesCompany $gamesCompany)
     {
         $pageTitle = $gamesCompany->name;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $gamesCompanyId = $gamesCompany->id;
 
@@ -69,8 +72,7 @@ class CompanyController extends Controller
     public function add()
     {
         $pageTitle = 'Add games company';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -102,8 +104,7 @@ class CompanyController extends Controller
     public function edit($gamesCompanyId)
     {
         $pageTitle = 'Edit games company';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
         if (!$gamesCompany) abort(404);
@@ -154,8 +155,7 @@ class CompanyController extends Controller
     public function delete($gamesCompanyId)
     {
         $pageTitle = 'Delete games company';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $gamesCompany = $this->repoGamesCompany->find($gamesCompanyId);
         if (!$gamesCompany) abort(404);
@@ -180,7 +180,7 @@ class CompanyController extends Controller
 
             $this->repoGamesCompany->deleteGamesCompany($gamesCompanyId);
 
-            return redirect(route('staff.games-companies.list'));
+            return redirect(route('staff.games-companies.dashboard'));
 
         } else {
 

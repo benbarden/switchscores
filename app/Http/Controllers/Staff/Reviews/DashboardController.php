@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
@@ -16,6 +19,7 @@ use App\Models\QuickReview;
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameStatsRepository $repoGameStats,
         private ReviewDraftRepository $repoReviewDraft,
         private QuickReviewRepository $repoQuickReview,
@@ -29,8 +33,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Reviews dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsDashboard())->bindings;
 
         $allowedYears = resolve('Domain\GameCalendar\AllowedDates')->releaseYears();
 

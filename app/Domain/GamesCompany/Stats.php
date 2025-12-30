@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class Stats
 {
-    public function getWithoutEmails()
+    public function getWithoutEmails($limit = 100)
     {
-        return GamesCompany::whereNull('email')->orderBy('id', 'desc')->get();
+        return GamesCompany::whereNull('email')->orderBy('id', 'desc')->limit($limit)->get();
     }
 
     public function countWithoutEmails()
@@ -19,9 +19,9 @@ class Stats
         return GamesCompany::whereNull('email')->orderBy('id', 'desc')->count();
     }
 
-    public function getWithoutWebsiteUrls()
+    public function getWithoutWebsiteUrls($limit = 100)
     {
-        return GamesCompany::whereNull('website_url')->orderBy('id', 'desc')->get();
+        return GamesCompany::whereNull('website_url')->orderBy('id', 'desc')->limit($limit)->get();
     }
 
     public function countWithoutWebsiteUrls()
@@ -29,9 +29,9 @@ class Stats
         return GamesCompany::whereNull('website_url')->orderBy('id', 'desc')->count();
     }
 
-    public function getWithoutTwitterIds()
+    public function getWithoutTwitterIds($limit = 100)
     {
-        return GamesCompany::whereNull('twitter_id')->orderBy('id', 'desc')->get();
+        return GamesCompany::whereNull('twitter_id')->orderBy('id', 'desc')->limit($limit)->get();
     }
 
     public function countWithoutTwitterIds()

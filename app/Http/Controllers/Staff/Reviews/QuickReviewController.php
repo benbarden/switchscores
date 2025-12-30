@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Reviews;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Factories\UserFactory;
 use App\Factories\UserPointTransactionDirectorFactory;
 use App\Models\QuickReview;
@@ -16,6 +19,7 @@ use App\Domain\User\Repository as UserRepository;
 class QuickReviewController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private QuickReviewRepository $repoQuickReview,
         private ReviewLinkStats $reviewLinkStats,
@@ -27,8 +31,7 @@ class QuickReviewController extends Controller
     public function showList()
     {
         $pageTitle = 'Quick reviews';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         $request = request();
         $filterStatus = $request->filterStatus;
@@ -50,8 +53,7 @@ class QuickReviewController extends Controller
     public function edit($reviewId)
     {
         $pageTitle = 'Edit quick review';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsQuickReviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsQuickReviewsSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -115,8 +117,7 @@ class QuickReviewController extends Controller
     public function delete($reviewId)
     {
         $pageTitle = 'Delete quick review';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsQuickReviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsQuickReviewsSubpage($pageTitle))->bindings;
 
         $reviewData = $this->repoQuickReview->find($reviewId);
         if (!$reviewData) abort(404);

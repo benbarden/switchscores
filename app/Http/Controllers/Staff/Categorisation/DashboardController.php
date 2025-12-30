@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
 
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameStatsRepository $repoGameStats,
         private GameListMissingCategoryRepository $repoGameListMissingCategory,
     )
@@ -19,8 +23,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Categorisation dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationDashboard())->bindings;
 
         // Action lists: Category
         $bindings['NoCategoryCount'] = $this->repoGameStats->totalNoCategoryAll();

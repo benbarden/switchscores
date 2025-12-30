@@ -1,17 +1,21 @@
-{% if crumbNav is defined %}
-    <ol class="breadcrumb">
-        <li><a href="{{ route('staff.index') }}">Staff</a></li>
-        {% for item in crumbNav %}
-            {% if loop.last %}
-                {% set crumbClass = ' class="active"' %}
-            {% else %}
-                {% set crumbClass = '' %}
-            {% endif %}
-            {% if item.url %}
-                <li{{ crumbClass|raw }}><a href="{{ item.url }}">{{ item.text }}</a></li>
-            {% else %}
-                <li{{ crumbClass|raw }}>{{ item.text }}</li>
-            {% endif %}
-        {% endfor %}
-    </ol>
+{% if BreadcrumbNav is defined and BreadcrumbNav is not empty %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% for item in BreadcrumbNav %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ item.text }}
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        {% if item.url %}
+                            <a href="{{ item.url }}">{{ item.text }}</a>
+                        {% else %}
+                            {{ item.text }}
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
 {% endif %}

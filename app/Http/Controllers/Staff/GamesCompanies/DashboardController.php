@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Staff\GamesCompanies;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 
-use Illuminate\Routing\Controller as Controller;
-
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GamesCompanyRepository $repoGamesCompany,
         private GamesCompanyStats $statsGamesCompany,
         private GameDeveloperDbQueries $dbGameDeveloper,
@@ -23,8 +27,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Games companies dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesDashboard())->bindings;
 
         // Action lists
         $bindings['DeveloperMissingCount'] = $this->dbGameDeveloper->countGamesWithNoDeveloper();

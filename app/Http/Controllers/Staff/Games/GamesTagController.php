@@ -9,6 +9,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\Tag\Repository as TagRepository;
@@ -25,6 +28,7 @@ class GamesTagController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private GameTagRepository $repoGameTag,
         private TagRepository $repoTag,
@@ -40,10 +44,8 @@ class GamesTagController extends Controller
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
 
-        $pageTitle = 'Game tags';
-
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage('Editing tags for game: '.$gameData->title, $gameData);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $pageTitle = 'Game tags: '.$gameData->title;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $gameData))->bindings;
 
         if ($request->isMethod('post')) {
 

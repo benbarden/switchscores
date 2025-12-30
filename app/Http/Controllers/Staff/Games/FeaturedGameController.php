@@ -1,12 +1,14 @@
 <?php
 
-
 namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 
@@ -22,6 +24,7 @@ class FeaturedGameController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private FeaturedGameRepository $repoFeaturedGames
     )
     {
@@ -30,8 +33,7 @@ class FeaturedGameController extends Controller
     public function showList()
     {
         $pageTitle = 'Featured games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $bindings['FeaturedGamesList'] = $this->repoFeaturedGames->getAll();
 

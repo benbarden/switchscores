@@ -6,6 +6,9 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Models\JobRun;
 use App\Jobs\RunArtisanCommand;
 use App\Domain\JobRun\Repository as JobRunRepository;
@@ -13,7 +16,8 @@ use App\Domain\JobRun\Repository as JobRunRepository;
 class ToolsController extends Controller
 {
     public function __construct(
-        private JobRunRepository $repoJobRun
+        private StaffPageBuilder $pageBuilder,
+        private JobRunRepository $repoJobRun,
     )
     {
 
@@ -22,8 +26,7 @@ class ToolsController extends Controller
     public function index(Request $req)
     {
         $pageTitle = 'Tools hub';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::toolsHub())->bindings;
 
         $groups = config('tools.groups');
         $requested = $req->query('tab');

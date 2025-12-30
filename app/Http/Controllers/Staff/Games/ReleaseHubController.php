@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
 use Carbon\Carbon;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Construction\Game\GameBuilder;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
@@ -19,6 +22,7 @@ use App\Domain\Game\Repository as GameRepository;
 class ReleaseHubController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
         private GameRepository $repoGame,
         private HashGeneratorRepository $gameTitleHashGenerator,
@@ -42,8 +46,7 @@ class ReleaseHubController extends Controller
     public function show(Request $request)
     {
         $pageTitle = 'Release hub';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $consoleId = $request->get('consoleId');
         $startDate = $request->get('startDate');

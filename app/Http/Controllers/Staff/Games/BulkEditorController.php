@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
-use App\Domain\Category\Repository as CategoryRepository;
-use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
+use App\Domain\Category\Repository as CategoryRepository;
+use App\Models\Console;
 use App\Construction\Game\GameBuilder;
 
 use App\Domain\Game\QualityFilter as GameQualityFilter;
@@ -35,6 +38,7 @@ class BulkEditorController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator,
@@ -52,8 +56,7 @@ class BulkEditorController extends Controller
     public function eshopUpcomingCrosscheck($consoleId)
     {
         $pageTitle = 'Bulk edit games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $gameList = $this->repoGameLists->upcomingEshopCrosscheck($consoleId);
         $bindings['GameList'] = $gameList;
@@ -131,8 +134,7 @@ class BulkEditorController extends Controller
     public function bulkAdd()
     {
         $pageTitle = 'Bulk add games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $bulkAddLimit = 20;
 
@@ -225,8 +227,7 @@ class BulkEditorController extends Controller
     public function bulkAddComplete()
     {
         $pageTitle = 'Bulk add games - Complete';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $errors = request()->errors;
         if ($errors) {
@@ -240,8 +241,7 @@ class BulkEditorController extends Controller
     public function importFromCsv()
     {
         $pageTitle = 'Import games from CSV';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -330,8 +330,7 @@ class BulkEditorController extends Controller
     public function importFromCsvComplete()
     {
         $pageTitle = 'Import games from CSV - Complete';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $errors = request()->errors;
         if ($errors) {
@@ -345,8 +344,7 @@ class BulkEditorController extends Controller
     public function editList()
     {
         $pageTitle = 'Bulk edit games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $request = request();
         $editMode = $request->editMode;

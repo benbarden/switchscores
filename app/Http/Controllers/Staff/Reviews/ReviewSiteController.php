@@ -7,6 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Models\ReviewSite;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
@@ -28,6 +31,7 @@ class ReviewSiteController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite
     )
     {
@@ -36,8 +40,7 @@ class ReviewSiteController extends Controller
     public function index()
     {
         $pageTitle = 'Review sites';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
         $bindings['ReviewSitesActive'] = $this->repoReviewSite->getActive();
         $bindings['ReviewSitesNoRecentReviews'] = $this->repoReviewSite->getNoRecentReviews();
@@ -49,8 +52,7 @@ class ReviewSiteController extends Controller
     public function add()
     {
         $pageTitle = 'Add review site';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewSitesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewSitesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -83,8 +85,7 @@ class ReviewSiteController extends Controller
     public function edit(ReviewSite $reviewSite)
     {
         $pageTitle = 'Edit review site';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->reviewsReviewSitesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsReviewSitesSubpage($pageTitle))->bindings;
 
         $request = request();
 

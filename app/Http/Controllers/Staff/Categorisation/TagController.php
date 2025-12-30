@@ -9,6 +9,9 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 use App\Domain\LayoutVersion\Helper as LayoutVersionHelper;
@@ -26,6 +29,7 @@ class TagController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private TagRepository $repoTag,
         private TagCategoryRepository $repoTagCategory,
         private LayoutVersionHelper $helperLayoutVersion,
@@ -36,8 +40,7 @@ class TagController extends Controller
     public function showList()
     {
         $pageTitle = 'Tags';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagCategoryList = $this->repoTagCategory->getAll();
         $tagList = new Collection();
@@ -56,8 +59,7 @@ class TagController extends Controller
     public function addTag(Request $request)
     {
         $pageTitle = 'Add tag';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationTagsSubpage($pageTitle))->bindings;
 
         if ($request->isMethod('post')) {
 
@@ -93,8 +95,7 @@ class TagController extends Controller
     public function editTag(Request $request, $tagId)
     {
         $pageTitle = 'Edit tag';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationTagsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationTagsSubpage($pageTitle))->bindings;
 
         $tagData = $this->repoTag->find($tagId);
         if (!$tagData) abort(404);

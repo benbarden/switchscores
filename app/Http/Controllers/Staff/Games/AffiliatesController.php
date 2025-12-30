@@ -9,6 +9,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
 
@@ -29,6 +32,7 @@ class AffiliatesController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private GameAffiliateRepository $repoGameAffiliate,
     )
@@ -41,8 +45,7 @@ class AffiliatesController extends Controller
         if (!$gameData) abort(404);
 
         $pageTitle = 'Edit game affiliates: '.$gameData->title;
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $gameData);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $gameData))->bindings;
 
         if ($request->isMethod('post')) {
 

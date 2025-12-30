@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
@@ -14,9 +17,6 @@ use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\QuickReview\Stats as QuickReviewStats;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
-
-use App\Domain\ViewBindings\Staff as Bindings;
-use App\Domain\ViewBreadcrumbs\Staff as Breadcrumbs;
 
 use App\Models\UserRole;
 
@@ -33,8 +33,7 @@ class UserController extends Controller
     ];
 
     public function __construct(
-        private Bindings $viewBindings,
-        private Breadcrumbs $viewBreadcrumbs,
+        private StaffPageBuilder $pageBuilder,
         private UserRepository $repoUser,
         private GamesCompanyRepository $repoGamesCompany,
         private ReviewSiteRepository $repoReviewSite,
@@ -48,9 +47,8 @@ class UserController extends Controller
 
     public function showList()
     {
-        $breadcrumbs = $this->viewBreadcrumbs->topLevelPage('Users');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Users');
+        $pageTitle = 'Users';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::usersList())->bindings;
 
         $bindings['UserList'] = $this->repoUser->getAll();
 
@@ -64,9 +62,8 @@ class UserController extends Controller
 
         $displayName = $userData->display_name;
 
-        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('View user: '.$displayName);
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('View user: '.$displayName);
+        $pageTitle = 'View user: '.$displayName;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::usersSubpage($pageTitle))->bindings;
 
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
@@ -79,12 +76,11 @@ class UserController extends Controller
 
     public function editUser($userId)
     {
-        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('Edit user');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Edit user');
-
         $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);
+
+        $pageTitle = 'Edit user';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::usersSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -151,12 +147,11 @@ class UserController extends Controller
 
     public function deleteUser($userId)
     {
-        $breadcrumbs = $this->viewBreadcrumbs->usersSubpage('Delete user');
-
-        $bindings = $this->viewBindings->setBreadcrumbs($breadcrumbs)->generateStaff('Delete user');
-
         $userData = $this->repoUser->find($userId);
         if (!$userData) abort(404);
+
+        $pageTitle = 'Delete user';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::usersSubpage($pageTitle))->bindings;
 
         $customErrors = [];
 

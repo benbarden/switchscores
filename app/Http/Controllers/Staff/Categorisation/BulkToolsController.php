@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Staff\Categorisation;
 
-use App\Models\Game;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\Game\Repository as GameRepository;
+use App\Models\Game;
 
 class BulkToolsController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory,
         private TagRepository $repoTag,
         private GameTagRepository $repoGameTag,
@@ -25,8 +29,7 @@ class BulkToolsController extends Controller
     public function moveCategoryToCategory()
     {
         $pageTitle = 'Bulk move from category A to category B';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
 
@@ -36,8 +39,7 @@ class BulkToolsController extends Controller
     public function moveCategoryToCategoryPreview(Request $request)
     {
         $pageTitle = 'Bulk move from category A to category B - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryFrom = $request->input('category_from');
         $categoryTo = $request->input('category_to');
@@ -59,8 +61,7 @@ class BulkToolsController extends Controller
     public function moveCategoryToCategoryRun(Request $request)
     {
         $pageTitle = 'Bulk move from category A to category B - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryFrom = $request->input('category_from');
         $categoryTo = $request->input('category_to');
@@ -83,8 +84,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesInCategory()
     {
         $pageTitle = 'Bulk add tag to games in category';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
@@ -95,8 +95,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesInCategoryPreview(Request $request)
     {
         $pageTitle = 'Bulk add tag to games in category - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryId = $request->input('category_id');
         $tagId = $request->input('tag_id');
@@ -118,8 +117,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesInCategoryRun(Request $request)
     {
         $pageTitle = 'Bulk add tag to games in category - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryId = $request->input('category_id');
         $tagId = $request->input('tag_id');
@@ -151,8 +149,7 @@ class BulkToolsController extends Controller
     public function moveGamesWithTagToCategory()
     {
         $pageTitle = 'Bulk move games with tag A to category B';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
@@ -163,8 +160,7 @@ class BulkToolsController extends Controller
     public function moveGamesWithTagToCategoryPreview(Request $request)
     {
         $pageTitle = 'Bulk move games with tag A to category B - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagId = $request->input('tag_id');
         $categoryId = $request->input('category_id');
@@ -186,8 +182,7 @@ class BulkToolsController extends Controller
     public function moveGamesWithTagToCategoryRun(Request $request)
     {
         $pageTitle = 'Bulk move games with tag A to category B - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagId = $request->input('tag_id');
         $categoryId = $request->input('category_id');
@@ -219,8 +214,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithTag()
     {
         $pageTitle = 'Bulk untag games with tag';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
 
@@ -230,8 +224,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithTagPreview(Request $request)
     {
         $pageTitle = 'Bulk untag games with tag - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagId = $request->input('tag_id');
 
@@ -251,8 +244,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithTagRun(Request $request)
     {
         $pageTitle = 'Bulk untag games with tag - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagId = $request->input('tag_id');
 
@@ -272,8 +264,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithCategoryAndTag()
     {
         $pageTitle = 'Bulk untag games with category and tag';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
@@ -284,8 +275,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithCategoryAndTagPreview(Request $request)
     {
         $pageTitle = 'Bulk untag games with category and tag - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryId = $request->input('category_id');
         $tagId = $request->input('tag_id');
@@ -307,8 +297,7 @@ class BulkToolsController extends Controller
     public function untagGamesWithCategoryAndTagRun(Request $request)
     {
         $pageTitle = 'Bulk untag games with category and tag - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryId = $request->input('category_id');
         $tagId = $request->input('tag_id');
@@ -330,8 +319,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesWithTag()
     {
         $pageTitle = 'Bulk add tag A to games with tag B';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
 
@@ -341,8 +329,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesWithTagPreview(Request $request)
     {
         $pageTitle = 'Bulk add tag A to games with tag B - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagFromId = (int) $request->input('tag_from');
         $tagToId = (int) $request->input('tag_to');
@@ -363,8 +350,7 @@ class BulkToolsController extends Controller
     public function addTagToGamesWithTagRun(Request $request)
     {
         $pageTitle = 'Bulk add tag A to games with tag B - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $tagFromId = (int) $request->input('tag_from');
         $tagToId = (int) $request->input('tag_to');
@@ -396,8 +382,7 @@ class BulkToolsController extends Controller
     public function setCategoryVerification()
     {
         $pageTitle = 'Bulk set category verification';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
         $bindings['TagList'] = $this->repoTag->getAllCategorised();
@@ -408,8 +393,7 @@ class BulkToolsController extends Controller
     public function setCategoryVerificationPreview(Request $request)
     {
         $pageTitle = 'Bulk set category verification - Preview';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryVerification = $request->input('category_verification');
         $categoryId = $request->input('category_id');
@@ -442,8 +426,7 @@ class BulkToolsController extends Controller
     public function setCategoryVerificationRun(Request $request)
     {
         $pageTitle = 'Bulk set category verification - Run';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->categorisationSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::categorisationSubpage($pageTitle))->bindings;
 
         $categoryVerification = $request->input('category_verification');
         $categoryId = $request->input('category_id');

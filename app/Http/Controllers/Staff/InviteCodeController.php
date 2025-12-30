@@ -9,6 +9,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\InviteCode\CodeGenerator;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
@@ -30,6 +33,7 @@ class InviteCodeController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private InviteCodeRepository $repoInviteCode,
         private GamesCompanyRepository $repoGamesCompany,
         private ReviewSiteRepository $repoReviewSite
@@ -40,8 +44,7 @@ class InviteCodeController extends Controller
     public function showList()
     {
         $pageTitle = 'Invite codes';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::inviteCodesDashboard())->bindings;
 
         $bindings['InviteCodeList'] = $this->repoInviteCode->getAll();
 
@@ -51,8 +54,7 @@ class InviteCodeController extends Controller
     public function generateCodes()
     {
         $pageTitle = 'Generate invite codes';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->inviteCodesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::inviteCodesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -97,8 +99,7 @@ class InviteCodeController extends Controller
     public function addInviteCode()
     {
         $pageTitle = 'Add invite code';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->inviteCodesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::inviteCodesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -162,8 +163,7 @@ class InviteCodeController extends Controller
     public function editInviteCode($inviteCodeId)
     {
         $pageTitle = 'Edit invite code';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->inviteCodesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::inviteCodesSubpage($pageTitle))->bindings;
 
         $inviteCodeData = $this->repoInviteCode->find($inviteCodeId);
         if (!$inviteCodeData) abort(404);
@@ -209,8 +209,7 @@ class InviteCodeController extends Controller
     public function deleteInviteCode($inviteCodeId)
     {
         $pageTitle = 'Delete invite code';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->inviteCodesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::inviteCodesSubpage($pageTitle))->bindings;
 
         $inviteCodeData = $this->repoInviteCode->find($inviteCodeId);
         if (!$inviteCodeData) abort(404);

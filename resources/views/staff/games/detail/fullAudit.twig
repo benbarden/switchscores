@@ -6,8 +6,6 @@
 
     <div class="col-md-12">
 
-        <h2>Full audit history</h2>
-
         {% if GameAuditsCore|length %}
             {% include 'staff/games/detail/table-audit.twig' with {'GameAuditsCore': GameAuditsCore} %}
         {% endif %}

@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Staff\Partners;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 
 class DataCleanupController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameDeveloperDbQueries $dbGameDeveloper,
         private GamePublisherDbQueries $dbGamePublisher
     )
@@ -19,8 +23,7 @@ class DataCleanupController extends Controller
     public function gamesWithMissingDeveloper()
     {
         $pageTitle = 'Games with missing developer';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['ItemList'] = $this->dbGameDeveloper->getGamesWithNoDeveloper();
 
@@ -30,8 +33,7 @@ class DataCleanupController extends Controller
     public function gamesWithMissingPublisher()
     {
         $pageTitle = 'Games with missing publisher';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $bindings['ItemList'] = $this->dbGamePublisher->getGamesWithNoPublisher();
 

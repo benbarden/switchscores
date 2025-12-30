@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Staff\News;
 
-use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
+use App\Models\Console;
 use App\Models\FeatureQueue;
 use App\Models\News;
 use App\Enums\FeatureQueueBucket;
@@ -17,6 +21,7 @@ use App\Domain\Game\Repository as RepoGame;
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private AutoDescription $autoDescription,
         private DbTopRated $dbTopRated,
         private RepoNews $repoNews,
@@ -28,8 +33,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'News dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsDashboard())->bindings;
 
         return view('staff.news.dashboard', $bindings);
     }
@@ -54,8 +58,7 @@ class DashboardController extends Controller
     public function bucket(Request $request, string $bucket)
     {
         $pageTitle = 'News buckets';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->newsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
         $bucketEnum = FeatureQueueBucket::tryFromSlug($bucket);
         abort_unless($bucketEnum != null, 404);

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -12,6 +15,7 @@ use App\Domain\Game\Repository\GameAffiliateRepository;
 class DashboardController extends Controller
 {
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private GameStatsRepository $repoGameStats,
         private GameStatsRepositoryLegacy $repoGameStatsLegacy,
         private GameListsRepository $repoGameLists,
@@ -23,8 +27,7 @@ class DashboardController extends Controller
     public function show()
     {
         $pageTitle = 'Games dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDashboard())->bindings;
 
         // Games to release
         $bindings['GamesForReleaseCount'] = $this->repoGameStatsLegacy->totalToBeReleased();
@@ -64,8 +67,7 @@ class DashboardController extends Controller
     public function stats()
     {
         $pageTitle = 'Games stats';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         // Release date stats
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();

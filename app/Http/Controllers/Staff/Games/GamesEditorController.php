@@ -8,6 +8,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
 
+use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Domain\View\PageBuilders\StaffPageBuilder;
+
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
 
@@ -57,6 +60,7 @@ class GamesEditorController extends Controller
     ];
 
     public function __construct(
+        private StaffPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory,
         private ConsoleRepository $repoConsole,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
@@ -83,8 +87,7 @@ class GamesEditorController extends Controller
     public function add()
     {
         $pageTitle = 'Add game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -179,8 +182,7 @@ class GamesEditorController extends Controller
         if (!$gameData) abort(404);
 
         $pageTitle = 'Edit game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesDetailSubpage($pageTitle, $gameData);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $gameData))->bindings;
 
         $request = request();
 
@@ -231,14 +233,13 @@ class GamesEditorController extends Controller
 
     public function editNintendoCoUk($gameId)
     {
-        $pageTitle = 'Edit Nintendo.co.uk link';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
-
-        $request = request();
-
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);
+
+        $pageTitle = 'Edit Nintendo.co.uk link';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesDetailSubpage($pageTitle, $game))->bindings;
+
+        $request = request();
 
         $dsCurrentParsedItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
 
@@ -344,8 +345,7 @@ class GamesEditorController extends Controller
     public function delete($gameId)
     {
         $pageTitle = 'Delete game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Staff')->gamesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Staff')->setBreadcrumbs($breadcrumbs)->generateStaff($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);
