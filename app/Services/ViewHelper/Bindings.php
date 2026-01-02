@@ -2,6 +2,9 @@
 
 namespace App\Services\ViewHelper;
 
+/**
+ * @deprecated
+ */
 class Bindings
 {
     private $bindings = [];
