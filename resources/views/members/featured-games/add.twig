@@ -1,0 +1,10 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('members.featured-games.add', {'gameId': GameId}) %}
+{% include 'members/featured-games/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'members/featured-games/scripts.twig' %}
+
+{% endblock page_inner %}

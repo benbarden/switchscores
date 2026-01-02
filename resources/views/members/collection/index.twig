@@ -1,0 +1,205 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% set hideHeader = 'Y' %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ PageTitle }}</h1>
+        <p>
+            Welcome to your Switch games collection. Get started by clicking "Add a game".
+        </p>
+        <p>
+            <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-collection-item'}) }}" class="btn outline btn-primary">+ Add a game</a>
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Breakdown</h2>
+        <table class="table">
+            <tr>
+                <td>Games in your collection</td>
+                <td>{{ TotalGames }}</td>
+            </tr>
+            <tr>
+                <td>Hours logged</td>
+                <td>{{ TotalHours }}</td>
+            </tr>
+            {% if TotalGames > 0 %}
+            <tr>
+                <td>
+                    <a href="{{ route('members.collection.category-breakdown') }}">
+                        Category breakdown
+                    </a>
+                </td>
+                <td></td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12">
+        <h2>
+            Recently added
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'recently-added'}) }}">view all</a></span>
+        </h2>
+        {% if ListRecentlyAdded %}
+            <div class="row">
+                {% for item in ListRecentlyAdded %}
+                    <div class="col-md-4">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>
+            Not started
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'not-started'}) }}">{{ TotalNotStarted }} total</a></span>
+        </h2>
+        {% if ListNotStarted %}
+            <div class="row">
+                {% for item in ListNotStarted %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>
+            Paused
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'paused'}) }}">{{ TotalPaused }} total</a></span>
+        </h2>
+        {% if ListPaused %}
+            <div class="row">
+                {% for item in ListPaused %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-sm-12 col-md-4">
+
+        <h2>
+            Active
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'active'}) }}">{{ TotalNowPlaying + TotalReplaying }} total</a></span>
+        </h2>
+        {% if ListNowPlaying %}
+            <div class="row">
+                {% for item in ListNowPlaying %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if ListReplaying %}
+            <div class="row">
+                {% for item in ListReplaying %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-4">
+        <h2>Completed
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'completed'}) }}">{{ TotalCompleted }} total</a></span>
+        </h2>
+        {% if ListCompleted %}
+            <div class="row">
+                {% for item in ListCompleted %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <h2>Abandoned
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'abandoned'}) }}">{{ TotalAbandoned }} total</a></span>
+        </h2>
+        {% if ListAbandoned %}
+            <div class="row">
+                {% for item in ListAbandoned %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <h2>Endless
+            <span class="h5">- <a href="{{ route('members.collection.list', {'listOption': 'endless'}) }}">{{ TotalEndless }} total</a></span>
+        </h2>
+        {% if ListEndless %}
+            <div class="row">
+                {% for item in ListEndless %}
+                    <div class="col-md-12">
+                        {% include 'ui/components/user/collection/grid-item.twig' with {'item': item, 'game': item.game} %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+
+    $('.js-remove-collection-item').on('click', function() {
+        itemId = $(this).data('content');
+
+        if (itemId == '') {
+            return false;
+        }
+
+        if (!window.confirm('Remove this game from your collection?')) {
+            return false;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.getJSON('/members/collection/delete', {itemId: itemId}, function(data) {
+            $('#js-collection-row-' + itemId).remove();
+            return false;
+        });
+    });
+
+</script>
+
+{% endblock page_inner %}

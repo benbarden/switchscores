@@ -29,7 +29,7 @@
             <tr>
                 <td colspan="2">
                     <span class="h6">
-                        <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a>
+                        <a href="{{ route('members.collection.edit', {'itemId': item.id}) }}">Edit</a>
                         {% if displayMode != 'hide-extra-links' %}
                             :
                             <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
@@ -38,7 +38,7 @@
                                 {% if game.id in QuickReviewGameIdList %}
                                     <em>Review added</em>
                                 {% else %}
-                                    <a href="{{ route('user.quick-reviews.add', {'gameId': game.id}) }}">Add review</a>
+                                    <a href="{{ route('members.quick-reviews.add', {'gameId': game.id}) }}">Add review</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}

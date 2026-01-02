@@ -1,0 +1,61 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% extends 'theme/member-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('reviewers.profile.edit') %}
+{% include 'ui/components/alerts/form-errors.twig' %}
+<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+    {{ csrf_field() }}
+
+    <div class="row mb-3">
+        <label for="website_url" class="col-sm-2 col-form-label">Site URL (include http://)</label>
+        <div class="col-sm-4">
+            {{ PartnerData.website_url }}
+            <div class="form-text">Please get in touch if you need to change this.</div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="contact_name" class="col-sm-2 col-form-label">
+            Contact name
+        </label>
+        <div class="col-sm-4">
+            <input id="contact_name" type="text" class="form-control" name="contact_name" maxlength="100">
+            <div class="form-text">The name that any queries should be addressed to.</div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="contact_email" class="col-sm-2 col-form-label">
+            Contact email
+        </label>
+        <div class="col-sm-4">
+            <input id="contact_email" type="text" class="form-control" name="contact_email">
+            <div class="form-text">The email address you want publishers and developers to use for getting in touch.</div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="contact_form_link" class="col-sm-2 col-form-label">
+            Contact form link
+        </label>
+        <div class="col-sm-4">
+            <input id="contact_form_link" type="text" class="form-control" name="contact_form_link">
+            <div class="form-text">Optional - if you'd prefer not to include your email, you can also use a contact form link.</div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="review_code_regions" class="col-sm-2 col-form-label">
+            Review code regions
+        </label>
+        <div class="col-sm-4">
+            <input id="review_code_regions" type="text" class="form-control" name="review_code_regions" maxlength="100">
+            <div class="form-text">List the regions you will accept codes for. Keep it brief - e.g. UK, Europe, US.</div>
+        </div>
+    </div>
+
+    {{ formsubmit.renderB5() }}
+</form>
+
+{% include 'members/reviewers/profile/scripts.twig' %}
+
+{% endblock page_inner %}

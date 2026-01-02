@@ -9,17 +9,17 @@ class Member extends Base
 
     public function __construct()
     {
-        $this->toastedCrumbs['member.dashboard'] = ['url' => route('user.index'), 'text' => 'Members'];
+        $this->toastedCrumbs['member.dashboard'] = ['url' => route('members.index'), 'text' => 'Members'];
 
-        $this->toastedCrumbs['member.collection.landing'] = ['url' => route('user.collection.landing'), 'text' => 'Games collection'];
+        $this->toastedCrumbs['member.collection.landing'] = ['url' => route('members.collection.landing'), 'text' => 'Games collection'];
 
-        $this->toastedCrumbs['member.quickReviews.list'] = ['url' => route('user.quick-reviews.list'), 'text' => 'Quick reviews'];
+        $this->toastedCrumbs['member.quickReviews.list'] = ['url' => route('members.quick-reviews.list'), 'text' => 'Quick reviews'];
 
         $this->toastedCrumbs['member.reviewers.index'] = ['url' => route('reviewers.index'), 'text' => 'Reviewers'];
 
         $this->toastedCrumbs['gamesCompanies.index'] = ['url' => route('games-companies.index'), 'text' => 'Games companies'];
 
-        $this->toastedCrumbs['member.developers.index'] = ['url' => route('user.developers.index'), 'text' => 'Developers'];
+        $this->toastedCrumbs['member.developers.index'] = ['url' => route('members.developers.index'), 'text' => 'Developers'];
     }
 
     public function topLevelPage($pageTitle)

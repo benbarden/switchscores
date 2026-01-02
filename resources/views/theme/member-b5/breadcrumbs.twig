@@ -1,7 +1,7 @@
 {% if crumbNav is defined %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Members</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('members.index') }}">Members</a></li>
             {% for item in crumbNav %}
                 {% if loop.last %}
                     {% set crumbAttributes = 'class="breadcrumb-item"' %}

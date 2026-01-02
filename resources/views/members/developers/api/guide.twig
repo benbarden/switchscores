@@ -1,0 +1,75 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+
+        <p>
+            Welcome to the Switch Scores API. This guide is for the v2 API, which will replace
+            the current (v1) API in the future.
+        </p>
+
+        <h2>Getting a token</h2>
+        <p>
+            To get started, you must get a token.
+            This can be found on the <a href="{{ route('members.developers.index') }}">Developers index</a>.
+        </p>
+        <p>
+            The rest of this guide assumes you have a token.
+        </p>
+
+        <h2>Setting up Postman</h2>
+        <p>
+            Before you write any code, we recommend using Postman to try out your API token.
+            <a href="https://www.postman.com/downloads/" target="_blank">You can download Postman here</a>.
+            If this link stops working, just search for "Postman API download" and you'll find it.
+        </p>
+
+        <p>
+            In Postman, start a new request and fill in the following details:
+        </p>
+        <table class="table-condensed table">
+            <tr>
+                <td>URL</td>
+                <td>
+                    https://www.switchscores.com/api/v2/game/1
+                </td>
+            </tr>
+            <tr>
+                <td>Authorization</td>
+                <td>
+                    Under Auth Type, select "Bearer Token". In the Token field, paste your API token -
+                    in place of the "XXX" in the screenshot.
+                </td>
+            </tr>
+            <tr>
+                <td>Headers</td>
+                <td>Enter a key of "Accept", and select "application/json" as the value.</td>
+            </tr>
+        </table>
+        <br>
+        <img src="/img/static/developer-hub/api-postman-1.png" style="width: 70%;">
+        <br>
+        <img src="/img/static/developer-hub/api-postman-2.png" style="width: 70%;">
+        <br>
+
+        <h2>Response</h2>
+        <p>
+            If all goes well, you should see something along the following lines:
+        </p>
+        <br>
+        <img src="/img/static/developer-hub/api-postman-3.png" style="width: 70%;">
+        <br>
+        <br>
+        <p>
+            If you get an error, check your API token and follow the guide again.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% endblock page_inner %}

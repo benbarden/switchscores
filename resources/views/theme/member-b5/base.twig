@@ -68,27 +68,27 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user.index') }}">Members</a>
+                            <a class="nav-link" href="{{ route('members.index') }}">Members</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user.collection.landing') }}">Games collection</a>
+                            <a class="nav-link" href="{{ route('members.collection.landing') }}">Games collection</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user.quick-reviews.list') }}">Quick reviews</a>
+                            <a class="nav-link" href="{{ route('members.quick-reviews.list') }}">Quick reviews</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDevelopers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Developers
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDevelopers">
-                                <li><a class="dropdown-item" href="{{ route('user.developers.index') }}">Developer index</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.index') }}">Developer index</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('user.developers.api.guide') }}">API guide</a></li>
-                                <li><a class="dropdown-item" href="{{ route('user.developers.api.methods') }}">API methods</a></li>
-                                <li><a class="dropdown-item" href="{{ route('user.developers.api.tokens') }}">API tokens</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.api.guide') }}">API guide</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.api.methods') }}">API methods</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.api.tokens') }}">API tokens</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('user.developers.switch-weekly') }}">Upcoming games (Switch Weekly)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('user.developers.hanafuda-report') }}">Hanafuda Report: Database updates</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.switch-weekly') }}">Upcoming games (Switch Weekly)</a></li>
+                                <li><a class="dropdown-item" href="{{ route('members.developers.hanafuda-report') }}">Hanafuda Report: Database updates</a></li>
                             </ul>
                         </li>
                         {% if auth_user().isReviewer() %}

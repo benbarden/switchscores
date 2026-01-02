@@ -1,0 +1,92 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Below is a list of the unranked games on the site. We've excluded any games you've already reviewed.
+    Also, low quality games are not included.
+</p>
+<p>
+    As a reviewer, you can help by reviewing some of these games.
+    Once a game has 3 reviews, it will disappear from this list.
+</p>
+
+<p>
+    Total games you have reviewed: {{ GamesReviewedCount }}
+</p>
+
+{% if PageMode == 'by-count' %}
+    <h2>Unranked games - {{ PageFilter }} review(s)</h2>
+{% elseif PageMode == 'by-year' %}
+    <h2>Unranked games - released in {{ PageFilter }}</h2>
+{% elseif PageMode == 'by-list' %}
+    {% if PageFilter == 'aca-neogeo' %}
+        <h2>Unranked games - ACA NeoGeo</h2>
+    {% elseif PageFilter == 'arcade-archives' %}
+        <h2>Unranked games - Arcade Archives</h2>
+    {% elseif PageFilter == 'all-others' %}
+        <h2>Unranked games - All others</h2>
+    {% endif %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4">
+        <select id="page-filter" name="page-filter" class="form-select">
+            <optgroup label="By review count">
+                <option value="by-count-2">2 reviews</option>
+                <option value="by-count-1">1 review</option>
+                <option value="by-count-0">0 reviews</option>
+            </optgroup>
+            <optgroup label="By year released">
+                {% for WhichYear in AllowedYears %}
+                    <option value="by-year-{{ WhichYear }}">{{ WhichYear }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
+    </div>
+</div>
+<br>
+
+{% include 'members/reviewers/unranked-games/table.twig' with {'GamesList': GamesList} %}
+
+<script>
+
+    var filterOnLoad = '{{ FilterOnLoad }}';
+
+    $(document).ready(function() {
+        if (filterOnLoad != '') {
+            $('#page-filter').val(filterOnLoad);
+        }
+    });
+
+    $('#page-filter').on('change', function() {
+
+        var filterVal = $(this).val();
+        var destUrl = '';
+
+        switch (filterVal) {
+            case 'by-count-2':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '2'}) }}';
+                break;
+            case 'by-count-1':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '1'}) }}';
+                break;
+            case 'by-count-0':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': '0'}) }}';
+                break;
+            {% for WhichYear in AllowedYears %}
+            case 'by-year-{{ WhichYear }}':
+                destUrl = '{{ route('reviewers.unranked-games.list', {'mode': 'by-year', 'filter': WhichYear}) }}';
+                break;
+            {% endfor %}
+        }
+
+        if (destUrl != '') {
+            top.location.href = destUrl;
+        }
+
+    });
+
+</script>
+
+{% endblock page_inner %}

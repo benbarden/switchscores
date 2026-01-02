@@ -40,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapPublicRoutes();
-        $this->mapUserRoutes();
+        $this->mapMembersRoutes();
         $this->mapStaffRoutes();
     }
 
@@ -71,16 +71,16 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-    protected function mapUserRoutes()
+    protected function mapMembersRoutes()
     {
         Route::middleware('web')->namespace($this->namespace)
-            ->group(base_path('routes/user/member.php'));
+            ->group(base_path('routes/members/general.php'));
 
         Route::middleware('web')->namespace($this->namespace)
-            ->group(base_path('routes/user/reviewer.php'));
+            ->group(base_path('routes/members/reviewers.php'));
 
         Route::middleware('web')->namespace($this->namespace)
-            ->group(base_path('routes/user/games-company.php'));
+            ->group(base_path('routes/members/games-companies.php'));
     }
 
     /**

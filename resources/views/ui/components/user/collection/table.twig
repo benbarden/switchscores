@@ -87,7 +87,7 @@
                             {% if RowGameId in QuickReviewGameIdList %}
                                 <em>Review added</em>
                             {% else %}
-                                <a href="{{ route('user.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
+                                <a href="{{ route('members.quick-reviews.add', {'gameId': RowGameId}) }}">Add review</a>
                             {% endif %}
                         {% else %}
                             -
@@ -95,7 +95,7 @@
                     </td>
                     <td class="text-center">
                         {% if AsRole == 'user' %}
-                            <a href="{{ route('user.collection.edit', {'itemId': item.id}) }}">Edit</a> :
+                            <a href="{{ route('members.collection.edit', {'itemId': item.id}) }}">Edit</a> :
                             <a href="javascript:void(0);" class="js-remove-collection-item" data-content="{{ item.id }}">Delete</a>
                         {% endif %}
                     </td>

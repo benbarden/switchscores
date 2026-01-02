@@ -50,7 +50,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('user.index');
+            return redirect()->route('members.index');
         }
 
         return view('auth.login');
@@ -90,6 +90,6 @@ class LoginController extends Controller
         if (!$siteUser) abort(400);
 
         auth()->login($siteUser);
-        return redirect(route('user.index'));
+        return redirect(route('members.index'));
     }
 }

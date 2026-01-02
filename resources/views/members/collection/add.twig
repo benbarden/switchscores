@@ -1,0 +1,10 @@
+{% extends 'theme/wos/member/clean-wide.twig' %}
+
+{% block page_inner %}
+
+{% set formSubmitAction = route('members.collection.add') %}
+{% include 'members/collection/form.twig' with {'formSubmitAction': formSubmitAction} %}
+
+{% include 'members/collection/scripts.twig' %}
+
+{% endblock page_inner %}

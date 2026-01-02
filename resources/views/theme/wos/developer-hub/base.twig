@@ -74,7 +74,7 @@
                     <!-- Right side -->
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ route('developer-hub.index') }}">Developer hub</a></li>
-                        <li><a href="{{ route('user.index') }}">Members dashboard</a></li>
+                        <li><a href="{{ route('members.index') }}">Members dashboard</a></li>
                         {% if auth_user().isStaff() %}
                         <li><a href="{{ route('staff.index') }}">Staff index</a></li>
                         {% endif %}

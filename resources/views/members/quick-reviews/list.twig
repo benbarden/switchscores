@@ -1,0 +1,89 @@
+{% import 'ui/components/rating/badge.twig' as rating %}
+
+{% extends 'theme/member-b5/layout-default.twig' %}
+
+{% set crumbNav = [{'text': 'Index'}] %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-3">
+        <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}" class="btn outline btn-primary">+ Add a review</a>
+    </div>
+</div>
+
+<hr>
+
+{% if MsgSuccess %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Thanks for submitting your review!</strong> All reviews are subject to admin approval.
+        We'll get to your review as soon as we can.
+    </div>
+    {% else %}
+    <p>
+        This is where you can submit your own reviews to the site.
+    </p>
+    <p>
+        <strong>Got a website with Switch reviews?</strong>
+        You might be better off with our partner reviews feature, as you can submit
+        a link and a score to be included in our site rankings.
+        Go to our <a href="{{ route('partners.landing') }}">Partners</a> page for
+        more details.
+    </p>
+{% endif %}
+
+{% if ReviewList.count > 0 %}
+    <table class="table table-sm data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th class="text-left">Game</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Score</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReviewList %}
+                <tr>
+                    <td class="text-end">
+                        {{ item.id }}
+                    </td>
+                    <td class="text-left">
+                        <a href="{{ game_url(item.game) }}" target="_blank">{{ item.game.title }}</a>
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at }}
+                    </td>
+                    <td class="text-center">
+                        {{ rating.score(item.review_score, 'h6') }}
+                    </td>
+                    <td class="text-center">
+                        {{ item.getStatusDesc() }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have not added any reviews yet.</p>
+{% endif %}
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+    });
+</script>
+
+{% endblock page_inner %}
