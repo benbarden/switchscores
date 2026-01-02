@@ -31,16 +31,16 @@
                     </td>
                     <td class="text-center">
                         {% if item.id in ReviewedGameIdList %}
-                            <div class="label label-success h6">Reviewed</div>
+                            <div class="badge bg-success h6">Reviewed</div>
                         {% else %}
-                            <div class="label label-warning h6">Not reviewed</div>
+                            <div class="badge bg-warning h6">Not reviewed</div>
                         {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.review_count < 3 %}
-                            <div class="label label-danger h6">Incomplete</div>
+                            <div class="badge bg-danger h6">Incomplete</div>
                         {% else %}
-                            <div class="label label-success h6">Success</div>
+                            <div class="badge bg-success h6">Success</div>
                         {% endif %}
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
     <p>No games found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({
