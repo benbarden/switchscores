@@ -5,16 +5,18 @@ namespace App\Http\Controllers\PublicSite\Console;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Http\Request;
 
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\Category\Repository as CategoryRepository;
 
 use App\Enums\LayoutVersion;
 use App\Models\Console;
-use App\Models\Category;
-use App\Models\Game;
 
 class BrowseByCategoryController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private CategoryRepository $repoCategory
     )
     {
@@ -23,8 +25,7 @@ class BrowseByCategoryController extends Controller
     public function landing(Console $console)
     {
         $pageTitle = 'Nintendo '.$console->name.' games list - By category';
-        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubpage('By category', $console);
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSubpage('By category', $console))->bindings;
 
         $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
 
@@ -51,13 +52,10 @@ class BrowseByCategoryController extends Controller
 
         if ($category->parent_id) {
             $categoryParent = $this->repoCategory->find($category->parent_id);
-            if (!$categoryParent) abort(500);
-            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubcategorySubpage($categoryParent, $categoryName, $console);
+            $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleCategoryPage($categoryName, $console, $categoryParent))->bindings;
         } else {
-            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleCategorySubpage($categoryName, $console);
+            $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleCategoryPage($categoryName, $console))->bindings;
         }
-
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
         $bindings['Console'] = $console;
         $bindings['Category'] = $category;
@@ -127,13 +125,10 @@ class BrowseByCategoryController extends Controller
 
         if ($category->parent_id) {
             $categoryParent = $this->repoCategory->find($category->parent_id);
-            if (!$categoryParent) abort(500);
-            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubcategorySubpage($categoryParent, $categoryName, $console);
+            $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleCategorySubpage('List', $console, $category, $categoryParent))->bindings;
         } else {
-            $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleCategorySubpage($categoryName, $console);
+            $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleCategorySubpage('List', $console, $category))->bindings;
         }
-
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
 
         $bindings['MetaDescription'] = $metaDescription;
         $bindings['IntroDescription'] = $introDescription;

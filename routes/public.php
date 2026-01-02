@@ -78,8 +78,6 @@ Route::redirect('/games/by-series/{series}', '/c/switch-1/series/{series}', 301)
 
 Route::redirect('/games/by-collection', '/c/switch-1/collection', 301)->name('games.browse.byCollection.landing');
 Route::redirect('/games/by-collection/{collection}', '/c/switch-1/collection/{collection}', 301)->name('games.browse.byCollection.page');
-//Route::get('/games/by-collection/{collection}/category/{category}', 'PublicSite\Games\BrowseByCollectionController@pageCategory')->name('games.browse.byCollection.pageCategory');
-//Route::get('/games/by-collection/{collection}/series/{series}', 'PublicSite\Games\BrowseByCollectionController@pageSeries')->name('games.browse.byCollection.pageSeries');
 
 Route::redirect('/games/by-tag', '/c/switch-1/tag', 301)->name('games.browse.byTag.landing');
 Route::redirect('/games/by-tag/{tag}', '/c/switch-1/tag/{tag}', 301)->name('games.browse.byTag.page');

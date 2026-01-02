@@ -1,7 +1,6 @@
-{% if crumbNav is defined %}
+{% if BreadcrumbNav is defined %}
     <ol class="breadcrumb" style="border: 0; margin-bottom: 5px !important;">
-        <li><a href="{{ route('welcome') }}">Home</a></li>
-        {% for item in crumbNav %}
+        {% for item in BreadcrumbNav %}
             {% if loop.last %}
                 {% set crumbClass = ' class="active"' %}
             {% else %}

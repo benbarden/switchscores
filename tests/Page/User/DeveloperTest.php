@@ -44,7 +44,7 @@ class DeveloperTest extends TestCase
     public function testUserPages()
     {
         $this->be($this->activeUser);
-        $this->doPageTest("/user/developers");
-        $this->doPageTest("/user/developers/switch-weekly");
+        $this->doPageTest("/members/developers");
+        $this->doPageTest("/members/developers/switch-weekly");
     }
 }

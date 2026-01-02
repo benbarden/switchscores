@@ -2,63 +2,38 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
+use App\Models\Console;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDb;
 use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
-use Illuminate\Routing\Controller as Controller;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 class ListsController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
         private GameListsDb $dbGameLists,
         private ReviewLinkDb $dbReviewLink,
-        private Breadcrumbs $viewBreadcrumbs,
-        private ReviewLinkRepository $repoReviewLink
+        private ReviewLinkRepository $repoReviewLink,
+        private ConsoleRepository $repoConsole,
     )
     {
     }
 
-    public function recentReleases()
-    {
-        $bindings = [];
-
-        $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality(1, 50);
-        $bindings['CalendarThisMonth'] = date('Y-m');
-
-        $bindings['TopTitle'] = 'Nintendo Switch recent releases';
-        $bindings['PageTitle'] = 'Nintendo Switch recent releases';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Recent releases');
-
-        return view('public.lists.list-recent-releases', $bindings);
-    }
-
-    public function upcomingReleases()
-    {
-        $bindings = [];
-
-        $bindings['UpcomingNext7Days'] = $this->repoGameLists->upcomingNextDays(7);
-        $bindings['UpcomingNext14Days'] = $this->repoGameLists->upcomingBetweenDays(7, 14);
-        $bindings['UpcomingNext28Days'] = $this->repoGameLists->upcomingBetweenDays(14, 28);
-        $bindings['UpcomingBeyond28Days'] = $this->repoGameLists->upcomingBeyondDays(28);
-
-        $bindings['TopTitle'] = 'Nintendo Switch upcoming games';
-        $bindings['PageTitle'] = 'Upcoming Nintendo Switch games';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Upcoming releases');
-
-        return view('public.lists.list-upcoming-releases', $bindings);
-    }
-
     public function gamesOnSale()
     {
-        $bindings = [];
+        $console = $this->repoConsole->find(Console::ID_SWITCH_1);
+        if (!$console) abort(404);
 
-        $bindings['TopTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['PageTitle'] = 'Nintendo Switch games currently on sale in Europe';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Games on sale');
+        $pageTitle = 'Nintendo Switch games currently on sale in Europe';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSubpage($pageTitle, $console))->bindings;
 
         $bindings['GoodRanks'] = $this->dbGameLists->onSaleGoodRanks(200);
         $bindings['HighestDiscounts'] = $this->dbGameLists->onSaleHighestDiscounts(200);
@@ -73,12 +48,8 @@ class ListsController extends Controller
 
     public function recentReviews()
     {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Recent reviews');
-
-        $bindings['TopTitle'] = 'Recent reviews of Nintendo Switch games';
-        $bindings['PageTitle'] = 'Recent reviews';
+        $pageTitle = 'Recent reviews';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
         $bindings['ReviewList'] = $this->repoReviewLink->recentNaturalOrder(35);
 
@@ -87,14 +58,10 @@ class ListsController extends Controller
 
     public function recentlyRanked()
     {
-        $bindings = [];
+        $pageTitle = 'Recently ranked';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage('Recently ranked');
-
-        $bindings['TopTitle'] = 'Recently ranked Nintendo Switch games';
-        $bindings['PageTitle'] = 'Recently ranked';
-
-        $highlightsRecentlyRanked = $this->dbReviewLink->recentlyRanked(28);
+        $highlightsRecentlyRanked = $this->dbReviewLink->recentlyRanked(45);
 
         $bindings['HighlightsRecentlyRanked'] = $highlightsRecentlyRanked;
 
@@ -104,7 +71,7 @@ class ListsController extends Controller
     public function buyersGuideHoliday2024US()
     {
         $pageTitle = 'Buyer\'s Guide Holiday 2024 (US)';
-        $bindings = [];
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
         $topRatedAllTime = [
             1, // Zelda: Breath of the Wild
@@ -150,11 +117,6 @@ class ListsController extends Controller
 
         $bindings['TopRatedAllTimeList'] = $this->repoGameLists->byIdList($topRatedAllTime);
         $bindings['AmazonBestsellersList'] = $this->repoGameLists->byIdList($amazonBestsellers);
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->listsSubpage($pageTitle);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('public.lists.buyers-guide-holiday-2024-us', $bindings);
     }

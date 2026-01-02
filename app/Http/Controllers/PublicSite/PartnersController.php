@@ -2,48 +2,39 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 class PartnersController extends Controller
 {
     public function __construct(
-        private Breadcrumbs $viewBreadcrumbs
+        private PublicPageBuilder $pageBuilder,
     )
     {
     }
 
     public function landing()
     {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Partners');
-
-        $bindings['TopTitle'] = 'Partners';
-        $bindings['PageTitle'] = 'Partners';
+        $pageTitle = 'Partners';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
         return view('public.partners.landing', $bindings);
     }
 
     public function guidesShow($guideTitle)
     {
-        $bindings = [];
-
-        $guide = [];
-        $guideView = '';
-
         switch ($guideTitle) {
             case 'new-review-site-welcome':
-                $guide['title'] = 'New review site welcome guide';
-                $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($guide['title']);
+                $pageTitle = 'New review site welcome guide';
                 $guideView = 'public.partners.guides.newReviewSiteWelcome';
                 break;
             default:
                 abort(404);
         }
 
-        $bindings['TopTitle'] = $guide['title'];
-        $bindings['PageTitle'] = $guide['title'];
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         return view($guideView, $bindings);
     }

@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
-use Illuminate\Routing\Controller as Controller;
-
 class ReviewSitesController extends Controller
 {
     public function __construct(
-        private Breadcrumbs $viewBreadcrumbs,
+        private PublicPageBuilder $pageBuilder,
         private ReviewLinkRepository $repoReviewLink,
         private ReviewLinkStatsRepository $repoReviewLinkStats,
         private ReviewSiteRepository $repoReviewSite,
@@ -23,15 +25,9 @@ class ReviewSitesController extends Controller
     public function landing()
     {
         $pageTitle = 'Review sites';
-
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         $bindings['ReviewPartnerList'] = $this->repoReviewSite->getActive();
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('public.partners.review-sites.landing', $bindings);
     }
@@ -47,12 +43,9 @@ class ReviewSitesController extends Controller
         }
 
         $pageTitle = $reviewSite->name.' - Profile';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         $siteId = $reviewSite->id;
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->reviewsSubpage($pageTitle);
 
         $bindings['PartnerData'] = $reviewSite;
 

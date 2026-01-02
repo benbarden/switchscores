@@ -164,7 +164,6 @@ return [
 
         // Domain providers
         App\Providers\Domain\User\RepositoryProvider::class,
-        App\Providers\Domain\ViewServiceProvider::class,
         App\Providers\Domain\GameCalendar\AllowedDatesProvider::class,
 
         // App providers
@@ -226,7 +225,6 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
 
         // Switch Scores
-
         'DateHelper' => App\Helpers\DateHelper::class,
         'ImageHelper' => App\Helpers\ImageHelper::class,
 

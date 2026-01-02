@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\PublicSite;
 
-use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Models\Console;
 
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;

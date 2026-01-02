@@ -25,8 +25,8 @@
 <div class="row">
 
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        {{ heading.renderChunky(ConsoleName~': Best of '~Year, 'h4') }}
-        <span class="h5">(<a href="{{ route('console.topRated.byYear', {'console': Console, 'year': Year}) }}">view all</a>)</span>
+        {{ heading.renderChunky(ConsoleName~': Best of '~WhichYearSnapshot, 'h4') }}
+        <span class="h5">(<a href="{{ route('console.topRated.byYear', {'console': Console, 'year': WhichYearSnapshot}) }}">view all</a>)</span>
         {% if TopRatedThisYear|length %}
             {% include 'public/games/layouts/tiledGrid/layoutTopRatedMonth.twig' with {'GameList': TopRatedThisYear, 'batchOverride': 1} %}
         {% else %}

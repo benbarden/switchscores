@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\PublicSite\Console;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
 use App\Domain\GameCalendar\Repository as GameCalendarRepository;
@@ -10,13 +15,10 @@ use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 
 use App\Models\Console;
 
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Collection;
-
-
 class BrowseByDateController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private TopRatedDbQueries $dbTopRated,
         private GameCalendarRepository $repoGameCalendar,
         private GameCalendarStats $statsGameCalendar,
@@ -32,8 +34,7 @@ class BrowseByDateController extends Controller
         $consoleId = $console->id;
 
         $pageTitle = 'Nintendo '.$consoleName.': browse by date';
-        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubpage($pageTitle, $console);
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSubpage('By date', $console))->bindings;
 
         $bindings['Console'] = $console;
 
@@ -52,8 +53,7 @@ class BrowseByDateController extends Controller
         $consoleId = $console->id;
 
         $pageTitle = 'Nintendo '.$consoleName.' games released in '.$year;
-        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleSubpage($pageTitle, $console);
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleYearPage($year, $console, $year))->bindings;
 
         $bindings['Console'] = $console;
 
@@ -164,8 +164,7 @@ class BrowseByDateController extends Controller
         $dtDateDesc = $dtDate->format('M Y');
 
         $pageTitle = 'Nintendo '.$consoleName.' games released in '.$dtDateDesc;
-        $breadcrumbs = resolve('View/Breadcrumbs/MainSite')->consoleYearSubpage($pageTitle, $console, $year);
-        $bindings = resolve('View/Bindings/MainSite')->setBreadcrumbs($breadcrumbs)->generateMain($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleYearMonthPage($dtDateDesc, $console, $year))->bindings;
 
         $bindings['Console'] = $console;
 

@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompanySignup\Builder;
 use App\Domain\GamesCompanySignup\Director;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-
-use App\Domain\GamesCompanySignup\Director as GamesCompanySignupDirector;
-use App\Domain\GamesCompanySignup\Builder as GamesCompanySignupBuilder;
-
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
 
 class GamesCompaniesController extends Controller
 {
@@ -33,7 +32,7 @@ class GamesCompaniesController extends Controller
     ];
 
     public function __construct(
-        private Breadcrumbs $viewBreadcrumbs,
+        private PublicPageBuilder $pageBuilder,
         private GamesCompanyRepository $repoGamesCompany,
         private GameDeveloperDbQueries $dbGameDeveloper,
         private GamePublisherDbQueries $dbGamePublisher
@@ -44,16 +43,10 @@ class GamesCompaniesController extends Controller
     public function landing()
     {
         $pageTitle = 'Games companies';
-
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         $bindings['NewestAdditions'] = $this->repoGamesCompany->newestNormalQuality();
         $bindings['MostPublishedGames'] = $this->repoGamesCompany->mostPublishedGames();
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
 
         return view('public.partners.games-companies.landing', $bindings);
     }
@@ -64,12 +57,9 @@ class GamesCompaniesController extends Controller
         if (!$gamesCompany) abort(404);
 
         $pageTitle = $gamesCompany->name.' - Profile';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         $gamesCompanyId = $gamesCompany->id;
-
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($pageTitle);
 
         // Ranked
         $rankedDev = $this->dbGameDeveloper->byDeveloperRanked($gamesCompanyId);
@@ -110,13 +100,7 @@ class GamesCompaniesController extends Controller
     public function signupPage()
     {
         $pageTitle = 'Games company signup';
-
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($pageTitle);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -138,13 +122,7 @@ class GamesCompaniesController extends Controller
     public function signupSuccess()
     {
         $pageTitle = 'Games company signup - Thank you';
-
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->partnersSubpage($pageTitle);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::partnersSubpage($pageTitle))->bindings;
 
         return view('public.partners.games-companies.signupSuccess', $bindings);
     }

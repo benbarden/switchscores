@@ -43,19 +43,17 @@ class StandardUserTest extends TestCase
     public function testUserPages()
     {
         $this->be($this->activeUser);
-        $this->doPageTest("/user");
-        $this->doPageTest("/user/search-modular/add-quick-review");
-        $this->doPageTest("/user/collection/index");
-        $this->doPageTest("/user/collection/list/not-started");
-        $this->doPageTest("/user/collection/add?gameId=6657");
-        //$this->doPageTest("/user/collection/edit/1");
-        $this->doPageTest("/user/collection/category-breakdown");
-        $this->doPageTest("/user/collection/top-rated-by-category/1");
-        $this->doPageTest("/user/quick-reviews/add/1");
-        $this->doPageTest("/user/quick-reviews");
-        $this->doPageTest("/user/featured-games/add/1");
-        $this->doPageTest("/user/campaigns/1");
-        //$this->doPageTest("/user/games-list/upcoming");
-        $this->doPageTest("/user/settings");
+        $this->doPageTest("/members");
+        $this->doPageTest("/members/search-modular/add-quick-review");
+        $this->doPageTest("/members/collection/index");
+        $this->doPageTest("/members/collection/list/not-started");
+        $this->doPageTest("/members/collection/add?gameId=6657");
+        //$this->doPageTest("/members/collection/edit/1");
+        $this->doPageTest("/members/collection/category-breakdown");
+        $this->doPageTest("/members/collection/top-rated-by-category/1");
+        $this->doPageTest("/members/quick-reviews/add/1");
+        $this->doPageTest("/members/quick-reviews");
+        $this->doPageTest("/members/featured-games/add/1");
+        $this->doPageTest("/members/campaigns/1");
     }
 }

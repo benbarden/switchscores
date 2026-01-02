@@ -4,18 +4,20 @@ namespace App\Http\Controllers\PublicSite\Console;
 
 use Illuminate\Routing\Controller as Controller;
 
-use App\Domain\TopRated\Repository as TopRatedRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
-use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Models\Console;
+use App\Domain\TopRated\Repository as TopRatedRepository;
+use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
 use App\Domain\Console\Repository as ConsoleRepository;
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 
 class TopRatedController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private TopRatedRepository $repoTopRated,
-        private Breadcrumbs $viewBreadcrumbs,
         private GameCalendarAllowedDates $allowedDates,
         private ConsoleRepository $repoConsole,
         private AmazonAffiliate $affiliateAmazon,
@@ -29,7 +31,9 @@ class TopRatedController extends Controller
         $consoleId = $console->id;
         $consoleList = $this->repoConsole->getAll();
 
-        $bindings = [];
+        $pageTitle = 'Best Nintendo '.$consoleName.' games';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topRated($console))->bindings;
+
         $bindings['ConsoleName'] = $consoleName;
         $bindings['ConsoleId'] = $consoleId;
         $bindings['Console'] = $console;
@@ -41,6 +45,12 @@ class TopRatedController extends Controller
         $bindings['LastYear'] = $lastYear;
         // Affiliates
         $topRatedThisYear = $this->repoTopRated->byConsoleAndYear($consoleId, $thisYear, 15);
+        if (count($topRatedThisYear) == 0) {
+            $topRatedThisYear = $this->repoTopRated->byConsoleAndYear($consoleId, $lastYear, 15);
+            $bindings['WhichYearSnapshot'] = $lastYear;
+        } else {
+            $bindings['WhichYearSnapshot'] = $thisYear;
+        }
         foreach ($topRatedThisYear as &$game) {
             $amazon = $this->affiliateAmazon->buildLinksForGame($game);
             $game['Amazon'] = $amazon;
@@ -59,12 +69,42 @@ class TopRatedController extends Controller
         $bindings['Switch1Years'] = $this->allowedDates->releaseYearsByConsole(Console::ID_SWITCH_1);
         $bindings['Switch2Years'] = $this->allowedDates->releaseYearsByConsole(Console::ID_SWITCH_2);
 
-        $bindings['TopTitle'] = 'Best Nintendo '.$consoleName.' games';
-        $bindings['PageTitle'] = 'Best Nintendo '.$consoleName.' games';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('Top Rated');
-
         return view('public.console.top-rated.landing', $bindings);
     }
+
+    public function byYear(Console $console, $year)
+    {
+        $consoleName = $console->name;
+        $consoleId = $console->id;
+        $consoleList = $this->repoConsole->getAll();
+
+        $allowedYears = $this->allowedDates->releaseYearsByConsole($consoleId, false);
+        if (!in_array($year, $allowedYears)) {
+            abort(404);
+        }
+
+        $pageTitle = 'Best Nintendo '.$consoleName.' games of '.$year;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topRatedYear($console, $year))->bindings;
+
+        $bindings['ConsoleName'] = $consoleName;
+        $bindings['ConsoleId'] = $consoleId;
+        $bindings['Console'] = $console;
+        $bindings['ConsoleList'] = $consoleList;
+
+        $gamesList = $this->repoTopRated->byConsoleAndYear($consoleId, $year, 100);
+        // Affiliates
+        foreach ($gamesList as &$game) {
+            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
+            $game['Amazon'] = $amazon;
+        }
+
+        $bindings['TopRatedByYear'] = $gamesList;
+        $bindings['GamesTableSort'] = "[5, 'desc']";
+        $bindings['Year'] = $year;
+
+        return view('public.console.top-rated.byYear', $bindings);
+    }
+
 
     public function allTime(Console $console)
     {
@@ -72,7 +112,9 @@ class TopRatedController extends Controller
         $consoleId = $console->id;
         $consoleList = $this->repoConsole->getAll();
 
-        $bindings = [];
+        $pageTitle = 'Best Nintendo '.$consoleName.' games of all time';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topRatedAllTime($console))->bindings;
+
         $bindings['ConsoleName'] = $consoleName;
         $bindings['ConsoleId'] = $consoleId;
         $bindings['Console'] = $console;
@@ -87,10 +129,6 @@ class TopRatedController extends Controller
         }
 
         $bindings['TopRatedAllTime'] = $gamesList;
-
-        $bindings['TopTitle'] = 'Best Nintendo '.$consoleName.' games of all time';
-        $bindings['PageTitle'] = 'Best Nintendo '.$consoleName.' games of all time';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
 
         return view('public.console.top-rated.allTime', $bindings);
     }
@@ -121,7 +159,9 @@ class TopRatedController extends Controller
             $game['Amazon'] = $amazon;
         }
 
-        $bindings = [];
+        $pageTitle = 'Best Nintendo '.$consoleName.' games of all time - Page '.$page;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topRatedAllTime($console))->bindings;
+
         $bindings['ConsoleName'] = $consoleName;
         $bindings['ConsoleId'] = $consoleId;
         $bindings['Console'] = $console;
@@ -130,46 +170,6 @@ class TopRatedController extends Controller
 
         $bindings['TopRatedAllTime'] = $gamesList;
 
-        $bindings['TopTitle'] = 'Best Nintendo '.$consoleName.' games of all time - Page '.$page;
-        $bindings['PageTitle'] = 'Best Nintendo '.$consoleName.' games of all time - Page '.$page;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage('All-time');
-
         return view('public.console.top-rated.allTime', $bindings);
     }
-
-    public function byYear(Console $console, $year)
-    {
-        $consoleName = $console->name;
-        $consoleId = $console->id;
-        $consoleList = $this->repoConsole->getAll();
-
-        $allowedYears = $this->allowedDates->releaseYearsByConsole($consoleId, false);
-        if (!in_array($year, $allowedYears)) {
-            abort(404);
-        }
-
-        $bindings = [];
-        $bindings['ConsoleName'] = $consoleName;
-        $bindings['ConsoleId'] = $consoleId;
-        $bindings['Console'] = $console;
-        $bindings['ConsoleList'] = $consoleList;
-
-        $gamesList = $this->repoTopRated->byConsoleAndYear($consoleId, $year, 100);
-        // Affiliates
-        foreach ($gamesList as &$game) {
-            $amazon = $this->affiliateAmazon->buildLinksForGame($game);
-            $game['Amazon'] = $amazon;
-        }
-
-        $bindings['TopRatedByYear'] = $gamesList;
-        $bindings['GamesTableSort'] = "[5, 'desc']";
-        $bindings['Year'] = $year;
-
-        $bindings['TopTitle'] = 'Best Nintendo '.$consoleName.' games of '.$year;
-        $bindings['PageTitle'] = 'Best Nintendo '.$consoleName.' games of '.$year;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topRatedSubpage($year);
-
-        return view('public.console.top-rated.byYear', $bindings);
-    }
-
 }

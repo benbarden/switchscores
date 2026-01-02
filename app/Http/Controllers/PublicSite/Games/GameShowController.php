@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\PublicSite\Games;
 
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
@@ -18,13 +21,10 @@ use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 
-use Illuminate\Routing\Controller as Controller;
-
 class GameShowController extends Controller
 {
     public function __construct(
-        private Breadcrumbs $viewBreadcrumbs,
-
+        private PublicPageBuilder $pageBuilder,
         private AmazonAffiliate $affiliateAmazon,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private AutoDescription $autoDescription,
@@ -61,13 +61,14 @@ class GameShowController extends Controller
             return redirect($redirUrl, 301);
         }
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->gamesSubpage($gameData->title);
+        $console = $gameData->console;
+        $consoleName = $gameData->console->name;
+
+        $pageTitle = $gameData->title;
+        $topTitle = sprintf('%s reviews | Nintendo %s', $gameData->title, $consoleName);
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSubpage($pageTitle, $console), topTitleOverride: $topTitle)->bindings;
 
         // Main data
-        $consoleName = $gameData->console->name;
-        $topTitle = sprintf('%s reviews | Nintendo %s', $gameData->title, $consoleName);
-        $bindings['TopTitle'] = $topTitle;
-        $bindings['PageTitle'] = $gameData->title;
         $bindings['GameId'] = $gameId;
         $bindings['GameData'] = $gameData;
         $bindings['GameReviews'] = $this->repoReviewLink->byGame($gameId);

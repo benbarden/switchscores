@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\GameCalendar\AllowedDates;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 use App\Domain\NewsDbUpdate\Repository as NewsDbUpdateRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\NewsCategory\Repository as NewsCategoryRepository;
@@ -17,15 +21,13 @@ use App\Domain\Shortcode\DynamicShortcode;
 use App\Domain\Shortcode\TopRated;
 use App\Domain\Shortcode\Unranked;
 
-use Illuminate\Routing\Controller as Controller;
-
 class NewsController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
         private GameStatsRepository $repoGameStats,
         private AllowedDates $allowedDates,
-        private Breadcrumbs $viewBreadcrumbs,
         private NewsDbUpdateRepository $repoNewsDbUpdate,
         private NewsRepository $repoNews,
         private NewsCategoryRepository $repoNewsCategory,
@@ -38,15 +40,12 @@ class NewsController extends Controller
 
     public function landing()
     {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->topLevelPage('News');
-
         $newsList = $this->repoNews->getPaginated(12);
 
+        $pageTitle = 'News - page '.$newsList->currentPage();
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
+
         $bindings['NewsList'] = $newsList;
-        $bindings['TopTitle'] = 'News - page '.$newsList->currentPage();
-        $bindings['PageTitle'] = 'News - page '.$newsList->currentPage();
 
         $bindings['MetaDescription'] = 'The latest from Switch Scores — weekly roundups, top-rated lists, and feature updates from the Nintendo Switch community.';
 
@@ -57,14 +56,8 @@ class NewsController extends Controller
 
     public function databaseUpdatesLanding()
     {
-        $bindings = [];
-
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage('Database updates');
-
         $pageTitle = 'Database updates';
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
         $allowedYears = $this->allowedDates->releaseYears();
         $bindings['AllowedYears'] = $allowedYears;
@@ -90,13 +83,8 @@ class NewsController extends Controller
         }
         */
 
-        $bindings = [];
-
         $pageTitle = 'Database updates: '.$year.', week '.$week;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($pageTitle);
-
-        $bindings['TopTitle'] = $pageTitle;
-        $bindings['PageTitle'] = $pageTitle;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
         $newsDbUpdate = $this->repoNewsDbUpdate->get($year, $week);
         if (!$newsDbUpdate) abort(404);
@@ -116,21 +104,18 @@ class NewsController extends Controller
 
     public function categoryLanding($linkName)
     {
-        $bindings = [];
-
         $category = $this->repoNewsCategory->byUrl($linkName);
         if (!$category) abort(404);
 
         $categoryId = $category->id;
         $categoryName = $category->name;
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($categoryName);
-
         $newsList = $this->repoNews->getPaginatedByCategory($categoryId, 12);
 
+        $pageTitle = $categoryName.' - page '.$newsList->currentPage();
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::newsSubpage($pageTitle))->bindings;
+
         $bindings['NewsList'] = $newsList;
-        $bindings['TopTitle'] = $categoryName.' - page '.$newsList->currentPage();
-        $bindings['PageTitle'] = $categoryName.' - page '.$newsList->currentPage();
 
         $bindings['DisplayMode'] = 'category';
 
@@ -147,12 +132,10 @@ class NewsController extends Controller
             abort(404);
         }
 
-        $bindings = [];
-        $bindings['PageTitle'] = $newsItem->title;
-        $bindings['TopTitle'] = $newsItem->title;
-        $bindings['NewsItem'] = $newsItem;
+        $pageTitle = $newsItem->title;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::newsSubpage($pageTitle))->bindings;
 
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->newsSubpage($newsItem->title);
+        $bindings['NewsItem'] = $newsItem;
 
         // Content
         $contentHtml = $newsItem->content_html;

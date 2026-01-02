@@ -2,41 +2,38 @@
 
 namespace App\Http\Controllers\PublicSite\Console;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
-use App\Domain\ViewBreadcrumbs\MainSite as Breadcrumbs;
 
 use App\Models\Console;
-
-use Illuminate\Routing\Controller as Controller;
 
 class BrowseBySeriesController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private GameSeriesRepository $repoGameSeries,
-        private Breadcrumbs $viewBreadcrumbs
     )
     {
     }
 
     public function landing(Console $console)
     {
-        $bindings = [];
+        $pageTitle = 'Nintendo '.$console->name.' games list - By series';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSubpage('By series', $console))->bindings;
 
         $bindings['SeriesList'] = $this->repoGameSeries->getAllWithGames($console);
 
         $bindings['Console'] = $console;
-
-        $bindings['PageTitle'] = 'Nintendo '.$console->name.' games list - By series';
-        $bindings['TopTitle'] = 'Nintendo '.$console->name.' games list - By series';
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->consoleSubpage('By series', $console);
 
         return view('public.console.by-series.landing', $bindings);
     }
 
     public function page(Console $console, $series)
     {
-        $bindings = [];
-
         $gameSeries = $this->repoGameSeries->getByLinkTitle($series);
         if (!$gameSeries) abort(404);
 
@@ -46,6 +43,9 @@ class BrowseBySeriesController extends Controller
 
         $gameList = $this->repoGameSeries->gamesBySeries($consoleId, $seriesId);
 
+        $pageTitle = 'Nintendo '.$console->name.' games list - By series: '.$seriesName;
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::consoleSeriesSubpage($seriesName, $console))->bindings;
+
         // Lists
         $bindings['RankedGameList'] = $this->repoGameSeries->rankedBySeries($consoleId, $seriesId);
         $bindings['UnrankedGameList'] = $this->repoGameSeries->unrankedBySeries($consoleId, $seriesId);
@@ -54,10 +54,6 @@ class BrowseBySeriesController extends Controller
 
         $bindings['GameList'] = $gameList;
         $bindings['Console'] = $console;
-
-        $bindings['PageTitle'] = 'Nintendo '.$console->name.' games list - By series: '.$seriesName;
-        $bindings['TopTitle'] = 'Nintendo '.$console->name.' games list - By series: '.$seriesName;
-        $bindings['crumbNav'] = $this->viewBreadcrumbs->consoleSeriesSubpage($seriesName, $console);
 
         return view('public.console.by-series.page', $bindings);
     }

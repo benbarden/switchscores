@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\PublicSite;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
+use App\Domain\View\PageBuilders\PublicPageBuilder;
+
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
 
-use Illuminate\Routing\Controller as Controller;
-
 class CommunityController extends Controller
 {
     public function __construct(
+        private PublicPageBuilder $pageBuilder,
         private QuickReviewRepository $repoQuickReview,
         private UserRepository $repoUser,
         private UserGamesCollectionStats $statsUserGamesCollection
@@ -20,7 +24,8 @@ class CommunityController extends Controller
 
     public function landing()
     {
-        $bindings = [];
+        $pageTitle = 'Community';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
         $bindings['QuickReviews'] = $this->repoQuickReview->getLatestActive(5);
         $bindings['HallOfFame'] = $this->repoUser->getMostPoints(5);
@@ -28,10 +33,6 @@ class CommunityController extends Controller
         // Stats
         $bindings['NewestUser'] = $this->repoUser->getNewest();
         $bindings['CollectionCount'] = $this->statsUserGamesCollection->countAllCollections();
-
-
-        $bindings['TopTitle'] = 'Community';
-        $bindings['PageTitle'] = 'Community';
 
         return view('public.community.landing', $bindings);
     }
