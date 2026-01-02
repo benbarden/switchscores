@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Members\Developers;
 
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Models\Console;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
         private GameRepository $repoGame,
     )
@@ -20,8 +25,7 @@ class IndexController extends Controller
     public function index()
     {
         $pageTitle = 'Developers';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersDashboard())->bindings;
 
         return view('members.developers.index', $bindings);
     }
@@ -29,8 +33,7 @@ class IndexController extends Controller
     public function switchWeekly()
     {
         $pageTitle = 'Upcoming games (Switch Weekly)';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         $daysS1 = 7;
         $daysS2 = 30;
@@ -49,8 +52,7 @@ class IndexController extends Controller
     public function hanafudaReport(Request $request)
     {
         $pageTitle = 'Hanufuda Report: Database updates';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         $batchDates = $this->repoGame->getBatchDates();
         // Determine the selected batch date

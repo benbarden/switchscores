@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Members;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
-use App\Domain\Game\Repository as GameRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\Game\Repository as GameRepository;
 
 class FeaturedGameController extends Controller
 {
@@ -23,6 +27,7 @@ class FeaturedGameController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private FeaturedGameRepository $repoFeaturedGame,
         private GameRepository $repoGame
     )
@@ -32,8 +37,7 @@ class FeaturedGameController extends Controller
     public function add($gameId)
     {
         $pageTitle = 'Add featured game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersGenericTopLevel($pageTitle))->bindings;
 
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) abort(404);

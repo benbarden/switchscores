@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class ReviewLinkController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite
     )
@@ -18,8 +23,7 @@ class ReviewLinkController extends Controller
     public function landing($report = '')
     {
         $pageTitle = 'Review links';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 

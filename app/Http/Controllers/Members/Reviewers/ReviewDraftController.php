@@ -2,6 +2,15 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\Validator;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
 use App\Domain\ReviewDraft\Director as ReviewDraftDirector;
@@ -9,11 +18,6 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Models\ReviewDraft;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Validator;
 
 class ReviewDraftController extends Controller
 {
@@ -33,6 +37,7 @@ class ReviewDraftController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private ReviewDraftRepository $repoReviewDraft,
         private ReviewSiteRepository $repoReviewSite,
         private ReviewLinkRepository $repoReviewLink,
@@ -44,8 +49,7 @@ class ReviewDraftController extends Controller
     public function findGame()
     {
         $pageTitle = 'Add manual review: Find game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;
@@ -139,8 +143,7 @@ class ReviewDraftController extends Controller
     public function add($gameId)
     {
         $pageTitle = 'Add manual review';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -210,8 +213,7 @@ class ReviewDraftController extends Controller
     public function edit(ReviewDraft $reviewDraft)
     {
         $pageTitle = 'Edit manual review';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $siteId = $currentUser->partner_id;

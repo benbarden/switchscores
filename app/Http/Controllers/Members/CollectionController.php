@@ -2,6 +2,15 @@
 
 namespace App\Http\Controllers\Members;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\Validator;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Category\DbQueries as CategoryDbQueries;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\Repository as GameRepository;
@@ -12,11 +21,6 @@ use App\Domain\UserGamesCollection\PlayStatus as UserGamesCollectionPlayStatus;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Validator;
 
 class CollectionController extends Controller
 {
@@ -30,6 +34,7 @@ class CollectionController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private QuickReviewRepository $repoQuickReview,
         private CategoryRepository $repoCategory,
@@ -42,24 +47,10 @@ class CollectionController extends Controller
     {
     }
 
-    public function quickAdd()
-    {
-        $pageTitle = 'Quick add to collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
-
-        $currentUser = resolve('User/Repository')->currentUser();
-        $userId = $currentUser->id;
-        $bindings['UserId'] = $userId;
-
-        return view('members.collection.quickAdd', $bindings);
-    }
-
     public function landing()
     {
         $pageTitle = 'Games collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersGenericTopLevel($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -108,11 +99,22 @@ class CollectionController extends Controller
         return view('members.collection.index', $bindings);
     }
 
+    public function quickAdd()
+    {
+        $pageTitle = 'Quick add to collection';
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
+
+        $currentUser = resolve('User/Repository')->currentUser();
+        $userId = $currentUser->id;
+        $bindings['UserId'] = $userId;
+
+        return view('members.collection.quickAdd', $bindings);
+    }
+
     public function categoryBreakdown()
     {
         $pageTitle = 'Category breakdown';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -131,8 +133,7 @@ class CollectionController extends Controller
         $userId = $currentUser->id;
 
         $pageTitle = 'Category breakdown: '.$category->name;
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $bindings['Category'] = $category;
         $bindings['RankedGameList'] = $this->dbCategory->getRankedByCategory($category->id);
@@ -182,9 +183,7 @@ class CollectionController extends Controller
                 abort(404);
         }
 
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')
-            ->setTableSort($tableSort)->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $bindings['CollectionList'] = $collectionList;
         $bindings['UserId'] = $userId;
@@ -198,8 +197,7 @@ class CollectionController extends Controller
     public function add()
     {
         $pageTitle = 'Add game to collection';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $request = request();
 
@@ -258,8 +256,7 @@ class CollectionController extends Controller
     public function edit($itemId)
     {
         $pageTitle = 'Edit games collection item';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->collectionSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $request = request();
 

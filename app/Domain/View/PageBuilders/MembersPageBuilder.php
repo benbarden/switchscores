@@ -2,15 +2,15 @@
 
 namespace App\Domain\View\PageBuilders;
 
-final class StaffPageBuilder extends AbstractPageBuilder
+final class MembersPageBuilder extends AbstractPageBuilder
 {
     protected function titleSuffix(): string
     {
-        return 'Staff';
+        return 'Members';
     }
 
     protected function contextBindings(): array
     {
-        return ['isStaff' => true];
+        return ['isMember' => true];
     }
 }

@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Members\GamesCompanies;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private GamesCompanyRepository $repoGamesCompany,
         private ReviewSiteRepository $repoReviewSite,
         private GamePublisherDbQueries $dbGamePublisher,
@@ -22,8 +27,7 @@ class IndexController extends Controller
     public function show()
     {
         $pageTitle = 'Games company dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::gamesCompaniesDashboard())->bindings;
 
         $bindings['ReviewSitesWithContactDetails'] = $this->repoReviewSite->getActiveWithContactDetails();
 

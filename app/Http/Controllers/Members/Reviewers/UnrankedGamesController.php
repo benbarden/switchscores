@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
 use App\Domain\Unranked\Repository as UnrankedRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class UnrankedGamesController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private ReviewLinkRepository $repoReviewLink,
         private ReviewLinkStats $statsReviewLink,
         private UnrankedRepository $repoUnranked
@@ -20,8 +25,7 @@ class UnrankedGamesController extends Controller
     public function showList($mode, $filter)
     {
         $pageTitle = 'Unranked games';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $partnerId = $currentUser->partner_id;

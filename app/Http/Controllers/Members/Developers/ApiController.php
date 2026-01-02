@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Members\Developers;
 
-use App\Domain\PersonalAccessToken\Repo as PersonalAccessTokenRepo;
-use App\Models\PersonalAccessToken;
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\PersonalAccessToken\Repo as PersonalAccessTokenRepo;
+use App\Models\PersonalAccessToken;
 
 class ApiController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private PersonalAccessTokenRepo $repoPersonalAccessToken
     )
     {
@@ -18,8 +22,7 @@ class ApiController extends Controller
     public function guide()
     {
         $pageTitle = 'API guide';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         return view('members.developers.api.guide', $bindings);
     }
@@ -27,8 +30,7 @@ class ApiController extends Controller
     public function methods()
     {
         $pageTitle = 'API methods';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         return view('members.developers.api.methods', $bindings);
     }
@@ -36,8 +38,7 @@ class ApiController extends Controller
     public function tokens()
     {
         $pageTitle = 'API tokens';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -50,8 +51,7 @@ class ApiController extends Controller
     public function createToken()
     {
         $pageTitle = 'Create API token';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 
@@ -64,8 +64,7 @@ class ApiController extends Controller
     public function deleteToken($tokenId)
     {
         $pageTitle = 'Delete API token';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->developersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::developersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 

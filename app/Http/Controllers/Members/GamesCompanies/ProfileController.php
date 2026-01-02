@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Members\GamesCompanies;
 
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Validator;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 class ProfileController extends Controller
 {
@@ -21,6 +25,7 @@ class ProfileController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private GamesCompanyRepository $repoGamesCompany
     )
     {
@@ -29,8 +34,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $pageTitle = 'Edit profile';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 

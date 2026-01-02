@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Members;
 
-use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
-use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
+use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 
 class SearchModularController extends Controller
 {
@@ -23,6 +27,7 @@ class SearchModularController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private FeaturedGameRepository $repoFeaturedGame,
         private QuickReviewRepository $repoQuickReview,
@@ -34,8 +39,7 @@ class SearchModularController extends Controller
     public function findGame($searchMode)
     {
         $pageTitle = 'Find game';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersGenericTopLevel($pageTitle))->bindings;
 
         $allowedSearchModes = [
             'add-quick-review',

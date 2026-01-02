@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Members\GamesCompanies;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class ReviewCoverageController extends Controller
 {
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private ReviewLinkRepository $repoReviewLink,
         private ReviewSiteRepository $repoReviewSite
@@ -21,8 +26,7 @@ class ReviewCoverageController extends Controller
     public function show($gameId)
     {
         $pageTitle = 'Review coverage';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->gamesCompaniesSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
         $game = $this->repoGame->find($gameId);
         if (!$game) abort(404);

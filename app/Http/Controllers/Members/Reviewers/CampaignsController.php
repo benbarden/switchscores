@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class CampaignsController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private CampaignRepository $repoCampaign,
         private GameRepository $repoGame,
         private ReviewLinkRepository $repoReviewLink,
@@ -19,12 +24,11 @@ class CampaignsController extends Controller
 
     public function show($campaignId)
     {
-        $bindings = [];
-
         $campaign = $this->repoCampaign->find($campaignId);
         if (!$campaign) abort(404);
 
         $pageTitle = 'View campaign: '.$campaign->name;
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersGenericTopLevel($pageTitle))->bindings;
 
         // Campaigns
         $bindings['CampaignData'] = $campaign;

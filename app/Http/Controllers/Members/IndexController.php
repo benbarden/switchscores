@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Members;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\FeaturedGame\Repository as FeaturedGameRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Domain\UserGamesCollection\DbQueries as CollectionDbQueries;
-use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private CollectionStatsRepository $repoCollectionStats,
         private CollectionDbQueries $dbCollection,
         private FeaturedGameRepository $repoFeaturedGame,
@@ -26,8 +31,7 @@ class IndexController extends Controller
     public function show()
     {
         $pageTitle = 'Members dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersDashboard())->bindings;
 
         $siteRole = 'member'; // default
 

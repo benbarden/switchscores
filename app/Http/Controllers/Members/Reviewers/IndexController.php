@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
+use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
 use App\Domain\Campaign\Repository as CampaignRepository;
 use App\Domain\CampaignGame\DbQueries as DbCampaignGame;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
-use Illuminate\Routing\Controller as Controller;
 
 class IndexController extends Controller
 {
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private PartnerFeedLinkRepository $repoPartnerFeedLink,
         private CampaignRepository $repoCampaign,
         private ReviewDraftRepository $repoReviewDraft,
@@ -26,8 +31,7 @@ class IndexController extends Controller
     public function show()
     {
         $pageTitle = 'Reviewers dashboard';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersDashboard())->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 

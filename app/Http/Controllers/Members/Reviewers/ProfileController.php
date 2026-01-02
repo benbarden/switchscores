@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Members\Reviewers;
 
-use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
 use Illuminate\Support\Facades\Validator;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 
 class ProfileController extends Controller
 {
@@ -22,6 +26,7 @@ class ProfileController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite
     )
     {
@@ -30,8 +35,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $pageTitle = 'Edit profile';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->reviewersSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::reviewersSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
 

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Members;
 
-use App\Domain\Game\Repository as GameRepository;
-use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as Controller;
+
+use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
+use App\Domain\View\PageBuilders\MembersPageBuilder;
+
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\QuickReview\Repository as QuickReviewRepository;
 
 class QuickReviewController extends Controller
 {
@@ -22,6 +26,7 @@ class QuickReviewController extends Controller
     ];
 
     public function __construct(
+        private MembersPageBuilder $pageBuilder,
         private QuickReviewRepository $repoQuickReview,
         private GameRepository $repoGame
     ){
@@ -31,8 +36,7 @@ class QuickReviewController extends Controller
     public function add($gameId)
     {
         $pageTitle = 'Add quick review';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->quickReviewsSubpage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::quickReviewsSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
@@ -74,8 +78,7 @@ class QuickReviewController extends Controller
     public function showList()
     {
         $pageTitle = 'Quick reviews';
-        $breadcrumbs = resolve('View/Breadcrumbs/Member')->topLevelPage($pageTitle);
-        $bindings = resolve('View/Bindings/Member')->setBreadcrumbs($breadcrumbs)->generateMember($pageTitle);
+        $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::membersGenericTopLevel($pageTitle))->bindings;
 
         $urlMsg = \Request::get('msg');
 

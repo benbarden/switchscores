@@ -4,10 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            {% if crumbNav is defined %}
+            {% if BreadcrumbNav is defined %}
             <ol class="breadcrumb">
-                <li><a href="{{ route('members.index') }}">Members</a></li>
-                {% for item in crumbNav %}
+                {% for item in BreadcrumbNav %}
                     {% if loop.last %}
                         {% set crumbClass = ' class="active"' %}
                     {% else %}
