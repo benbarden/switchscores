@@ -8,20 +8,25 @@
         {% if CollectionList %}
             <table class="table">
                 {% for item in CollectionList %}
-                    <tr>
-                        <td>
-                            <a href="{{ route('console.byCollection.page', {'console': Console, 'collection': item.link_title}) }}">{{ item.name }}</a>
-                        </td>
-                        <td class="text-right">
-                            <span class="h4">
-                                {% if Console.id == 1 %}
-                                    {{ item.gamesSwitch1.count }}
-                                {% elseif Console.id == 2 %}
-                                    {{ item.gamesSwitch2.count }}
-                                {% endif %}
-                            </span>
-                        </td>
-                    </tr>
+                    {% if Console.id == 1 %}
+                        {% set gamesCount = item.gamesSwitch1.count %}
+                    {% elseif Console.id == 2 %}
+                        {% set gamesCount = item.gamesSwitch2.count %}
+                    {% else %}
+                        {% set gamesCount = 0 %}
+                    {% endif %}
+                    {% if gamesCount > 0 %}
+                        <tr>
+                            <td>
+                                <a href="{{ route('console.byCollection.page', {'console': Console, 'collection': item.link_title}) }}">{{ item.name }}</a>
+                            </td>
+                            <td class="text-right">
+                                <span class="h4">
+                                    {{ gamesCount }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </table>
         {% else %}

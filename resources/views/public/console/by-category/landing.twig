@@ -37,21 +37,26 @@
                     </tr>
                     {% if item.children %}
                         {% for itemChild in item.children %}
-                            <tr>
-                                <td>
-                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                    <a href="{{ route('console.byCategory.page', {'console': Console, 'category': itemChild.link_title}) }}">
-                                        {{ itemChild.name }}
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    {% if Console.id == 1 %}
-                                        {{ itemChild.gamesSwitch1.count }}
-                                    {% elseif Console.id == 2 %}
-                                        {{ itemChild.gamesSwitch2.count }}
-                                    {% endif %}
-                                </td>
-                            </tr>
+                            {% if Console.id == 1 %}
+                                {% set gamesCount = itemChild.gamesSwitch1.count %}
+                            {% elseif Console.id == 2 %}
+                                {% set gamesCount = itemChild.gamesSwitch2.count %}
+                            {% else %}
+                                {% set gamesCount = 0 %}
+                            {% endif %}
+                            {% if gamesCount > 0 %}
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        <a href="{{ route('console.byCategory.page', {'console': Console, 'category': itemChild.link_title}) }}">
+                                            {{ itemChild.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ gamesCount }}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 {% endfor %}
