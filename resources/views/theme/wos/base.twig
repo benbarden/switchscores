@@ -30,7 +30,7 @@
     <script src="/js/select2/js/select2.min.js"></script>
 
     {% if CanonicalUrl %}
-        <link rel="canonical" href="{{ CanonicalUrl }}">
+        <link rel="canonical" href="{{ CanonicalUrl|raw }}">
     {% endif %}
     {% if MetaDescription %}
         <meta name="description" content="{{ MetaDescription|raw }}" />

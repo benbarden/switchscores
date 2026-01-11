@@ -146,16 +146,6 @@ class BrowseByCategoryController extends Controller
             $defaultSort = 'rating_desc';
         }
 
-        // Canonical URL
-        if ($filter) {
-            $filterSuffix = '?filter='.$filter;
-        } else {
-            $filterSuffix = '';
-        }
-        $canonicalUrl = route('console.byCategory.list',
-            ['console' => $console, 'category' => $category->link_title]).$filterSuffix;
-        $bindings['CanonicalUrl'] = $canonicalUrl;
-
         // Sorting
         $allowedSorts = [
             'title_asc',
@@ -184,6 +174,19 @@ class BrowseByCategoryController extends Controller
 
         $bindings['Console'] = $console;
         $bindings['Category'] = $category;
+
+        // Canonical URL
+        if ($filter) {
+            $filterSuffix = '?filter='.$filter;
+        } else {
+            $filterSuffix = '';
+        }
+        $canonicalUrl = route('console.byCategory.list',
+                ['console' => $console, 'category' => $category->link_title]).$filterSuffix;
+        if ($page > 1) {
+            $canonicalUrl .= '&page='.$page;
+        }
+        $bindings['CanonicalUrl'] = $canonicalUrl;
 
         return view('public.console.by-category.page-list-v2', $bindings);
     }
