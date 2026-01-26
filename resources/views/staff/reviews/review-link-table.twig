@@ -4,9 +4,9 @@
 <table class="table data-sortable">
     <thead>
     <tr>
-        <th class="text-right">#</th>
-        <th class="text-left">Game</th>
-        <th class="text-left">Site</th>
+        <th class="text-end">#</th>
+        <th class="text-start">Game</th>
+        <th class="text-start">Site</th>
         <th class="text-center">Date</th>
         <th class="text-center">Link</th>
         <th class="text-center">Rating</th>
@@ -17,18 +17,18 @@
     <tbody>
     {% for item in ReviewLinks %}
         <tr>
-            <td class="text-right">
+            <td class="text-end">
                 {{ item.id }}
             </td>
-            <td class="text-left">
+            <td class="text-start">
                 {{ gamelink.title(item.game, 'staff') }}
-                <div class="pull-right">
+                <div class="float-end">
                     <small>
                         {{ gamelink.edit(item.game, 'edit game') }}
                     </small>
                 </div>
             </td>
-            <td class="text-left">
+            <td class="text-start">
                 {{ item.site.name }}
             </td>
             <td class="text-center">
@@ -38,7 +38,7 @@
                 <a href="{{ item.url }}" target="_blank">View</a>
             </td>
             <td class="text-center">
-                {{ rating.score(item.rating_normalised, 'h5', 'b3') }}
+                {{ rating.score(item.rating_normalised, 'h5', 'b5') }}
             </td>
             <td class="text-center">
                 {% if item.rating_original != item.rating_normalised %}

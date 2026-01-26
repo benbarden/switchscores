@@ -1,14 +1,14 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-3">
+    <div class="col-12 col-sm-3">
         <a href="{{ route('staff.reviews.link.add') }}" class="btn outline btn-primary">+ Add review link</a>
         <a href="{{ route('staff.reviews.link.import') }}" class="btn outline btn-primary">Import...</a>
     </div>
-    <div class="col-xs-12 col-sm-9">
-        <div class="pull-right">
+    <div class="col-12 col-sm-9">
+        <div class="float-end">
             <label for="admin-nav-site-filter">Filter by site:</label>
             <select id="admin-nav-site-filter" name="admin-nav-site-filter" class="form-control">
                 <option value="">All reviews</option>
@@ -38,7 +38,7 @@
     <p>No review links found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $('#admin-nav-site-filter').on('change', function() {
         selectedSiteFilter = $(this).val();

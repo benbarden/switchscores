@@ -1,12 +1,12 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
 
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12">
-        <div class="pull-right">
+    <div class="col-12 col-sm-12">
+        <div class="float-end">
             <label for="admin-nav-status-filter">Filter by status:</label>
             <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
                 <option value="">All</option>
@@ -24,8 +24,8 @@
     <table class="table data-sortable">
         <thead>
         <tr>
-            <th class="text-right">#</th>
-            <th class="text-left">Game</th>
+            <th class="text-end">#</th>
+            <th class="text-start">Game</th>
             <th class="text-center">Date</th>
             <th class="text-center">Score</th>
             <th class="text-center">Status</th>
@@ -35,10 +35,10 @@
         <tbody>
         {% for item in QuickReviewList %}
             <tr>
-                <td class="text-right">
+                <td class="text-end">
                     {{ item.id }}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {{ gamelink.title(item.game, 'staff') }}
                     <br>
                     <small>
@@ -66,7 +66,7 @@
     <p>No reviews found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $('#admin-nav-status-filter').on('change', function() {
         selectedStatusFilter = $(this).val();

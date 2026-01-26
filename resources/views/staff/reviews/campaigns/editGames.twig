@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -10,18 +10,18 @@
 
 {% set formSubmitAction = route('staff.reviews.campaigns.editGames', {'campaignId': CampaignId}) %}
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="game_ids" class="col-md-4 control-label">Game IDs</label>
+    <div class="row mb-3">
+        <label for="game_ids" class="col-md-4 col-form-label">Game IDs</label>
         <div class="col-md-6">
             <textarea id="game_ids" name="game_ids" rows="20" class="form-control">{{ GameIds }}</textarea>
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
             </button>

@@ -1,34 +1,34 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     {% if FormMode == 'edit' %}
-    <div class="form-group">
-        <label for="url" class="col-md-4 control-label">Source (Review type)</label>
+    <div class="row mb-3">
+        <label for="url" class="col-md-4 col-form-label">Source (Review type)</label>
         <div class="col-md-6">
             <span class="form-control-static">{{ ReviewLinkData.review_type }}</span>
         </div>
     </div>
     {% endif %}
 
-    <div class="form-group">
-        <label for="game_id" class="col-md-4 control-label">Game</label>
+    <div class="row mb-3">
+        <label for="game_id" class="col-md-4 col-form-label">Game</label>
         <div class="col-md-6">
             <input id="game_id" type="text" class="form-control" name="game_id" maxlength="12" required autofocus>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="url" class="col-md-4 control-label">Url (include http://)</label>
+    <div class="row mb-3">
+        <label for="url" class="col-md-4 col-form-label">Url (include http://)</label>
         <div class="col-md-6">
             <input id="url" type="text" class="form-control" name="url" required>
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="site_id" class="col-md-4 control-label">Site</label>
+    <div class="row mb-3">
+        <label for="site_id" class="col-md-4 col-form-label">Site</label>
         <div class="col-md-6">
-            <select id="site_id" class="form-control" name="site_id" required>
+            <select id="site_id" class="form-select" name="site_id" required>
                 <option value="">&nbsp;</option>
                 {% for item in ReviewSites %}
                     <option value="{{ item.id }}">{{ item.name }}</option>
@@ -37,15 +37,15 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="review_date" class="col-md-4 control-label">Review date</label>
+    <div class="row mb-3">
+        <label for="review_date" class="col-md-4 col-form-label">Review date</label>
         <div class="col-md-6">
             <input id="review_date" type="date" class="form-control" name="review_date">
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="rating_original" class="col-md-4 control-label">Rating</label>
+    <div class="row mb-3">
+        <label for="rating_original" class="col-md-4 col-form-label">Rating</label>
         <div class="col-md-6">
             <input id="rating_original" type="text" class="form-control" name="rating_original" value="{{ old('rating_original') }}" required>
             <p>
@@ -58,15 +58,15 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="description" class="col-md-4 control-label">Description</label>
+    <div class="row mb-3">
+        <label for="description" class="col-md-4 col-form-label">Description</label>
         <div class="col-md-6">
             <textarea id="description" name="description" class="form-control" rows="10" cols="50"></textarea>
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
             </button>
