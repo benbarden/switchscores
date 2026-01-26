@@ -1,4 +1,41 @@
-# Dev Notes
+# Changelog
+
+Development history and completed work.
+
+---
+
+## 2026-01-26 — Staff Section Bootstrap 5 Migration
+
+**Summary:**
+Migrated all staff section templates from Bootstrap 3 to Bootstrap 5.
+
+**Sections migrated:**
+- News (8 files)
+- Stats (3 files)
+- Partners (8 files)
+- Games Companies (9 files)
+- Reviews (23 files)
+- Games (40+ files)
+
+**Key changes:**
+- Layout extends changed from `theme/wos/staff/` to `theme/staff-b5/`
+- Table sorting includes changed from `table-sorting-b3.twig` to `table-sorting-b5.twig`
+- Form classes updated (`form-group` → `row mb-3`, `control-label` → `col-form-label`, etc.)
+- Labels updated (`label label-*` → `badge bg-*`)
+- Buttons updated (`btn-xs` → `btn-sm`, `btn-default` → `btn-outline-secondary`)
+- Select elements updated (`form-control` → `form-select`)
+
+**Additional improvements:**
+- Added visual section styling to game editor form (fieldset backgrounds/borders)
+- Fixed Data checks component (`ui/components/checks/row.twig`)
+- Added `renderB5Horizontal` macro to category dropdown component
+
+**Files updated outside staff templates:**
+- `ui/components/checks/row.twig`
+- `ui/components/taxonomy/category-dropdown.twig`
+- `ui/components/staff/game/bulk-edit-table.twig`
+
+---
 
 ## 2025-08-11 — Staff Game Lists Refactor
 
