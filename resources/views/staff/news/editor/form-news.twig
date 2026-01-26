@@ -1,18 +1,18 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="form-group">
-        <label for="title" class="col-md-2 control-label">Title</label>
+    <div class="row mb-3">
+        <label for="title" class="col-md-2 col-form-label">Title</label>
         <div class="col-md-8">
             <input id="title" type="text" class="form-control" name="title" maxlength="100" required autofocus>
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="form-group">
-        <label for="category_id" class="col-md-2 control-label">Category</label>
+    <div class="row mb-3">
+        <label for="category_id" class="col-md-2 col-form-label">Category</label>
         <div class="col-md-8">
-            <select id="category_id" class="form-control" name="category_id" required>
+            <select id="category_id" class="form-select" name="category_id" required>
                 <option value="">&nbsp;</option>
                 {% for item in NewsCategoryList %}
                     <option value="{{ item.id }}">{{ item.name }}</option>
@@ -21,35 +21,33 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="form-group">
-        <label for="url" class="col-md-2 control-label">URL</label>
+    <div class="row mb-3">
+        <label for="url" class="col-md-2 col-form-label">URL</label>
         <div class="col-md-8">
             <input id="url" type="text" class="form-control" name="url" maxlength="150" required>
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="form-group">
-        <label for="game_id" class="col-md-2 control-label">Game id</label>
+    <div class="row mb-3">
+        <label for="game_id" class="col-md-2 col-form-label">Game id</label>
         <div class="col-md-8">
             <input id="game_id" type="text" class="form-control" name="game_id" maxlength="12">
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="form-group">
-        <label for="custom_image_url" class="col-md-2 control-label">Custom image URL</label>
+    <div class="row mb-3">
+        <label for="custom_image_url" class="col-md-2 col-form-label">Custom image URL</label>
         <div class="col-md-8">
             <input id="custom_image_url" type="text" class="form-control" name="custom_image_url">
-            <p>
-                <small>
-                    If this entry is linked to a game, the game image will be used. Otherwise, you can enter
-                    a custom image URL here.
-                </small>
-            </p>
+            <div class="form-text">
+                If this entry is linked to a game, the game image will be used. Otherwise, you can enter
+                a custom image URL here.
+            </div>
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="form-group">
-        <label for="content_html" class="col-md-2 control-label">Content</label>
+    <div class="row mb-3">
+        <label for="content_html" class="col-md-2 col-form-label">Content</label>
         <div class="col-md-10">
             {% if FormMode == 'edit' %}
             <textarea id="content_html" class="form-control" name="content_html" rows="20">{{ NewsData.content_html }}</textarea>
@@ -59,8 +57,8 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-12 text-right">
+    <div class="row mb-3">
+        <div class="col-md-12 text-end">
             <button type="submit" class="btn outline btn-primary btn-lg">
                 Submit
             </button>
