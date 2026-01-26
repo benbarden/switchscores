@@ -1,37 +1,37 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="row">
 
         <div class="col-md-12">
 
-            <div class="form-group">
-                <label for="name" class="col-md-4 control-label">Name</label>
+            <div class="row mb-3">
+                <label for="name" class="col-md-4 col-form-label">Name</label>
                 <div class="col-md-6">
                     <input id="name" type="text" class="form-control" name="name" maxlength="100" required autofocus>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="link_title" class="col-md-4 control-label">Link title</label>
+            <div class="row mb-3">
+                <label for="link_title" class="col-md-4 col-form-label">Link title</label>
                 <div class="col-md-6">
                     <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="website_url" class="col-md-4 control-label">Website URL</label>
+            <div class="row mb-3">
+                <label for="website_url" class="col-md-4 col-form-label">Website URL</label>
                 <div class="col-md-6">
                     <input id="website_url" type="text" class="form-control" name="website_url">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="email" class="col-md-4 control-label">Email</label>
+            <div class="row mb-3">
+                <label for="email" class="col-md-4 col-form-label">Email</label>
                 <div class="col-md-6">
                     <input id="email" type="text" class="form-control" name="email">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="twitter_id" class="col-md-4 control-label">
+            <div class="row mb-3">
+                <label for="twitter_id" class="col-md-4 col-form-label">
                     Twitter ID
                     <br><small>https://twitter.com/</small>
                 </label>
@@ -40,8 +40,8 @@
                     <small>Don't include full URL - just the username</small>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="threads_id" class="col-md-4 control-label">
+            <div class="row mb-3">
+                <label for="threads_id" class="col-md-4 col-form-label">
                     Threads ID
                     <br><small>https://www.threads.net/@</small>
                 </label>
@@ -50,8 +50,8 @@
                     <small>Don't include full URL - just the username</small>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="bluesky_id" class="col-md-4 control-label">
+            <div class="row mb-3">
+                <label for="bluesky_id" class="col-md-4 col-form-label">
                     Bluesky ID
                     <br><small>https://bsky.app/profile/</small>
                 </label>
@@ -60,8 +60,8 @@
                     <small>Don't include full URL - just the part after /profile/</small>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="is_low_quality" class="col-md-4 control-label">Is low quality?</label>
+            <div class="row mb-3">
+                <label for="is_low_quality" class="col-md-4 col-form-label">Is low quality?</label>
                 <div class="col-md-6">
                     <input id="is_low_quality" type="checkbox" name="is_low_quality">
                     <br>
@@ -75,8 +75,8 @@
                     </small>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="update_existing_games" class="col-md-4 control-label">Update existing games?</label>
+            <div class="row mb-3">
+                <label for="update_existing_games" class="col-md-4 col-form-label">Update existing games?</label>
                 <div class="col-md-6">
                     <input id="update_existing_games" type="checkbox" name="update_existing_games">
                     <br>
@@ -98,8 +98,8 @@
 
     <hr>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
             </button>

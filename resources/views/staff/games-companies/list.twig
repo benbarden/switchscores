@@ -1,12 +1,12 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-3">
+    <div class="col-12 col-sm-3">
         <a href="{{ route('staff.games-companies.add') }}" class="btn outline btn-primary">+ Add games company</a>
     </div>
-    <div class="col-xs-12 col-sm-9">
+    <div class="col-12 col-sm-9">
     </div>
 </div>
 
@@ -18,7 +18,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Name</th>
                 <th class="text-center">Website</th>
                 <th class="text-center">Twitter</th>
@@ -32,7 +32,7 @@
         <tbody>
             {% for item in GamesCompanyList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
@@ -70,7 +70,7 @@
                     </td>
                     <td class="text-center">
                         {% if item.is_low_quality == 1 %}
-                            <label class="label label-danger">Low quality</label>
+                            <label class="badge bg-danger">Low quality</label>
                         {% else %}
                             -
                         {% endif %}
@@ -87,7 +87,7 @@
     <p>No items found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

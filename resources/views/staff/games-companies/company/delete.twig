@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -13,11 +13,11 @@
         <br>Please ensure this is what you want to do before proceeding. There is no option to undo the deletion if you proceed!
     </div>
 
-    <form class="form-horizontal" role="form" method="post" action="{{ route('staff.games-companies.delete', {'gamesCompanyId': PartnerId}) }}">
+    <form role="form" method="post" action="{{ route('staff.games-companies.delete', {'gamesCompanyId': PartnerId}) }}">
         {{ csrf_field() }}
 
-        <div class="form-group">
-            <div class="col-md-8 col-md-offset-4">
+        <div class="row mb-3">
+            <div class="col-md-8 offset-md-4">
                 <button type="submit" class="btn outline btn-danger">
                     Confirm deletion
                 </button>

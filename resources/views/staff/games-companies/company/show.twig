@@ -1,6 +1,6 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
 
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -16,7 +16,7 @@
 
     <div class="col-md-4">
 
-    <span class="pull-right">
+    <span class="float-end">
         <a href="{{ route('staff.games-companies.delete', {'gamesCompanyId': GamesCompany.id}) }}" class="btn btn-danger btn-md">Delete games company</a>
     </span>
 
@@ -26,7 +26,7 @@
 <div class="row">
     <div class="col-sm-12 col-md-6 col-lg-6">
         <h2>Overview</h2>
-        <table class="table table-condensed table-responsive">
+        <table class="table table-sm table-responsive">
             <tr>
                 <td style="max-width: 150px;">
                     <span style="font-weight: bold;">Name</span>
@@ -99,7 +99,7 @@
                 </td>
                 <td>
                     {% if GamesCompany.is_low_quality == 1 %}
-                        <label class="label label-danger">Low quality</label>
+                        <label class="badge bg-danger">Low quality</label>
                     {% else %}
                         -
                     {% endif %}
@@ -258,7 +258,7 @@
                         </td>
                         <td class="text-center">
                             {% if item.is_low_quality == 1 %}
-                                <label class="label label-danger">Low quality</label>
+                                <label class="badge bg-danger">Low quality</label>
                             {% else %}
                                 -
                             {% endif %}
