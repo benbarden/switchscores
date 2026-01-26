@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -14,7 +14,7 @@
                 <td>
                     Released games
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <span class="h4">{{ ReleasedGameCount }}</span>
                 </td>
             </tr>
@@ -22,7 +22,7 @@
                 <td>
                     <a href="#">Ranked games</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="#" class="h4">{{ RankedGameCount }}</a>
                 </td>
             </tr>
@@ -30,7 +30,7 @@
                 <td>
                     <a href="#">Unranked games</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="#" class="h4">{{ UnrankedGameCount }}</a>
                 </td>
             </tr>
@@ -38,7 +38,7 @@
                 <td>
                     <a href="{{ route('staff.reviews.link.list') }}">Review links</a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ route('staff.reviews.link.list') }}" class="h4">{{ ReviewLinkCount }}</a>
                 </td>
             </tr>
