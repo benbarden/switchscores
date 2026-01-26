@@ -1,5 +1,5 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <input type="hidden" id="game_id" name="game_id" value="{{ GameId }}">
@@ -8,8 +8,8 @@
 
         <div class="col-md-12">
 
-            <div class="form-group">
-                <label for="title" class="col-md-4 control-label">Title</label>
+            <div class="row mb-3">
+                <label for="title" class="col-md-4 col-form-label">Title</label>
                 <div class="col-md-6">
                     <input id="title" type="text" class="form-control" name="title" maxlength="150" required autofocus>
                 </div>
@@ -19,8 +19,8 @@
 
     </div>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
             </button>

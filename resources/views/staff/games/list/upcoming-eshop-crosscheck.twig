@@ -1,14 +1,14 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
-    <div class="col-xs-9 col-sm-9 col-md-9">
+    <div class="col-9 col-sm-9 col-md-9">
         <h2>With release date</h2>
         <a class="btn btn-primary" href="{{ route('staff.games.bulk-edit.eshopUpcomingCrosscheck', {'consoleId': 1}) }}">Bulk update order (Switch 1)</a>
         <a class="btn btn-primary" href="{{ route('staff.games.bulk-edit.eshopUpcomingCrosscheck', {'consoleId': 2}) }}">Bulk update order (Switch 2)</a>
     </div>
-    <div class="col-xs-3 col-sm-3 col-md-3">
+    <div class="col-3 col-sm-3 col-md-3">
         <h2>No release date</h2>
         {% include 'public/games/layouts/gridStaffEshopOrder/layout.twig' with {'GameList': GameList, 'batchOverride': 1} %}
     </div>

@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% import 'ui/components/gsc/insights-games-table.twig' as gscgames %}
 
@@ -58,7 +58,7 @@
 
     <div class="col-md-4">
 
-    <span class="pull-right">
+    <span class="float-end">
         <a href="{{ route('staff.games.delete', {'gameId': GameId}) }}" class="btn btn-danger btn-sm">Delete game</a>
     </span>
 
@@ -74,9 +74,9 @@
 
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
         {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
+            <img src="{{ boxartUrl }}" class="img-fluid" style="border: 0; width: 100%;" alt="{{ GameData.title }}">
         {% else %}
-            <div style="background: #ccc; height: 300px; width: 100%;" class="img-responsive"></div>
+            <div style="background: #ccc; height: 300px; width: 100%;" class="img-fluid"></div>
         {% endif %}
 
     </div>

@@ -1,14 +1,14 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
 
 <div class="row">
-    <div class="col-xs-12 col-sm-3">
+    <div class="col-12 col-sm-3">
         <a class="btn outline btn-primary" href="{{ route('staff.games.title-hash.add', {'gameId': GameId}) }}" style="color: #fff;">Add</a>
     </div>
 </div>
 <table class="table data-sortable">
     <thead>
     <tr>
-        <th class="text-right">#</th>
+        <th class="text-end">#</th>
         <th>Title</th>
         <th>Game</th>
         <th class="text-center" style="width: 150px;">Added</th>
@@ -18,7 +18,7 @@
     <tbody>
     {% for item in TitleHashList %}
         <tr>
-            <td class="text-right">
+            <td class="text-end">
                 {{ item.id }}
             </td>
             <td>

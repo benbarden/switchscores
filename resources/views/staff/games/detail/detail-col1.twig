@@ -2,7 +2,7 @@
 
 {{ heading.renderSlick('General info') }}
 
-<table class="table table-condensed table-responsive">
+<table class="table table-sm table-responsive">
 
     <tr>
         <td>
@@ -102,7 +102,7 @@
         </td>
         <td>
             {% if GameData.is_low_quality == 1 %}
-                <label class="label label-danger">Low quality</label>
+                <span class="badge bg-danger">Low quality</span>
             {% else %}
                 -
             {% endif %}
@@ -142,7 +142,7 @@
 
 {{ heading.renderSlick('Games companies') }}
 
-<table class="table table-condensed table-responsive">
+<table class="table table-sm table-responsive">
 
     <tr>
         <td>

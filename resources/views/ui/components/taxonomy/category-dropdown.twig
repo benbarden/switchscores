@@ -33,20 +33,20 @@
 {% endmacro %}
 
 
-{% macro renderB3(name, label, categories, selected, required=false) %}
-    {# --------------------
-       BOOTSTRAP 3 VERSION
-       -------------------- #}
+{% macro renderB5Horizontal(name, label, categories, selected, required=false) %}
+    {# ---------------------------------
+       BOOTSTRAP 5 HORIZONTAL VERSION
+       --------------------------------- #}
 
-    <div class="form-group">
+    <div class="row mb-3">
         {% if label %}
-            <label for="{{ name }}" class="col-md-3 control-label">
+            <label for="{{ name }}" class="col-md-3 col-form-label">
                 {{ label }}{% if required %} *{% endif %}
             </label>
         {% endif %}
 
         <div class="col-md-6">
-            <select id="{{ name }}" class="form-control" name="{{ name }}" {% if required %}required{% endif %}>
+            <select id="{{ name }}" class="form-select" name="{{ name }}" {% if required %}required{% endif %}>
                 <option value=""></option>
 
                 {% for item in categories %}

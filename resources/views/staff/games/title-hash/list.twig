@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -6,7 +6,7 @@
     {% include 'staff/games/title-hash/table.twig' with {'TitleHashList': TitleHashList} %}
 {% else %}
     <div class="row">
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-12 col-sm-3">
             <a href="{{ route('staff.games.title-hash.add') }}" class="btn outline btn-primary">Add</a>
         </div>
     </div>
@@ -14,7 +14,7 @@
     <p>No records found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

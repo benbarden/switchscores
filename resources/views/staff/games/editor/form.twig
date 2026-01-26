@@ -10,28 +10,29 @@
 {% import 'ui/components/taxonomy/category-dropdown.twig' as categorySelect %}
 {% import 'ui/components/affiliates/affiliate-status-dropdown.twig' as affiliateStatusSelect %}
 
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="row">
 
         <div class="col-md-10">
 
-            <fieldset>
-                <div class="form-group">
-                    <label for="title" class="col-md-3 control-label">Title</label>
+            <fieldset class="rounded p-3 mb-4" style="background-color: #fffbeb;">
+                <legend class="fs-5 fw-semibold">Main</legend>
+                <div class="row mb-3">
+                    <label for="title" class="col-md-3 col-form-label">Title</label>
                     <div class="col-md-6">
                         <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
                     </div>
                     <div class="col-md-3">
                         <div id="js-game-title-pass" style="display: none;">
-                            <div class="pull-left" style="padding: 0 10px;">
+                            <div class="float-start" style="padding: 0 10px;">
                                 {% include 'ui/components/icons/icon-check-green.twig' %}
                             </div>
                             OK
                         </div>
                         <div id="js-game-title-fail" style="display: none;">
-                            <div class="pull-left" style="padding: 0 10px;">
+                            <div class="float-start" style="padding: 0 10px;">
                                 {% include 'ui/components/icons/icon-cross-red.twig' %}
                             </div>
                             <div id="js-game-title-fail-desc">
@@ -40,33 +41,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="link_title" class="col-md-3 control-label">Link title</label>
+                <div class="row mb-3">
+                    <label for="link_title" class="col-md-3 col-form-label">Link title</label>
                     <div class="col-md-6">
                         <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="console_id" class="col-md-3 control-label">Console</label>
+                <div class="row mb-3">
+                    <label for="console_id" class="col-md-3 col-form-label">Console</label>
                     <div class="col-md-6">
-                        <select id="console_id" class="form-control" name="console_id" size="2">
+                        <select id="console_id" class="form-select" name="console_id" size="2">
                             {% for item in ConsoleList %}
                                 <option value="{{ item.id }}">{{ item.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                {{ categorySelect.renderB3(
+                {{ categorySelect.renderB5Horizontal(
                     'category_id',
                     'Category',
                     CategoryList,
                     null,
                     false
                 ) }}
-                <div class="form-group">
-                    <label for="series_id" class="col-md-3 control-label">Series</label>
+                <div class="row mb-3">
+                    <label for="series_id" class="col-md-3 col-form-label">Series</label>
                     <div class="col-md-6">
-                        <select id="series_id" class="form-control" name="series_id">
+                        <select id="series_id" class="form-select" name="series_id">
                             <option value="">&nbsp;</option>
                             {% for item in GameSeriesList %}
                                 <option value="{{ item.id }}">{{ item.series }}</option>
@@ -74,10 +75,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="collection_id" class="col-md-3 control-label">Collection</label>
+                <div class="row mb-3">
+                    <label for="collection_id" class="col-md-3 col-form-label">Collection</label>
                     <div class="col-md-6">
-                        <select id="collection_id" class="form-control" name="collection_id">
+                        <select id="collection_id" class="form-select" name="collection_id">
                             <option value="">&nbsp;</option>
                             {% for item in CollectionList %}
                                 <option value="{{ item.id }}">{{ item.name }}</option>
@@ -85,42 +86,42 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group" id="grp_price_eshop">
-                    <label for="price_eshop" class="col-md-3 control-label">Price</label>
+                <div class="row mb-3" id="grp_price_eshop">
+                    <label for="price_eshop" class="col-md-3 col-form-label">Price</label>
                     <div class="col-md-6">
                         <input id="price_eshop" type="text" class="form-control" name="price_eshop" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group" id="grp_price_eshop_discounted">
-                    <label for="price_eshop_discounted" class="col-md-3 control-label">Price discounted</label>
+                <div class="row mb-3" id="grp_price_eshop_discounted">
+                    <label for="price_eshop_discounted" class="col-md-3 col-form-label">Price discounted</label>
                     <div class="col-md-6">
                         <input id="price_eshop_discounted" type="text" class="form-control" name="price_eshop_discounted" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group" id="grp_price_eshop_discount_pc">
-                    <label for="price_eshop_discount_pc" class="col-md-3 control-label">Price discount %</label>
+                <div class="row mb-3" id="grp_price_eshop_discount_pc">
+                    <label for="price_eshop_discount_pc" class="col-md-3 col-form-label">Price discount %</label>
                     <div class="col-md-6">
                         <input id="price_eshop_discount_pc" type="text" class="form-control" name="price_eshop_discount_pc" size="10" maxlength="6">
                     </div>
                 </div>
-                <div class="form-group" id="grp_players">
-                    <label for="players" class="col-md-3 control-label">No of players</label>
+                <div class="row mb-3" id="grp_players">
+                    <label for="players" class="col-md-3 col-form-label">No of players</label>
                     <div class="col-md-6">
                         <input id="players" type="text" class="form-control" name="players" size="15" maxlength="10">
                     </div>
                 </div>
             </fieldset>
 
-            <fieldset id="fs_editorial">
-                <legend>Editorial</legend>
-                <div class="form-group" id="grp_one_to_watch">
-                    <label for="one_to_watch" class="col-md-3 control-label">One to watch</label>
+            <fieldset id="fs_editorial" class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">Editorial</legend>
+                <div class="row mb-3" id="grp_one_to_watch">
+                    <label for="one_to_watch" class="col-md-3 col-form-label">One to watch</label>
                     <div class="col-md-6">
                         <input id="one_to_watch" type="checkbox" name="one_to_watch">
                     </div>
                 </div>
-                <div class="form-group" id="grp_game_description">
-                    <label for="game_description" class="col-md-3 control-label">Game description</label>
+                <div class="row mb-3" id="grp_game_description">
+                    <label for="game_description" class="col-md-3 col-form-label">Game description</label>
                     <div class="col-md-6">
                         <textarea id="game_description" class="form-control" name="game_description" rows="5" cols="40"></textarea>
                         <small>
@@ -130,46 +131,46 @@
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend>Dates</legend>
-                <div class="form-group" id="grp_eu_release_date">
-                    <label for="eu_release_date" class="col-md-3 control-label">EU release date</label>
+            <fieldset class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">Dates</legend>
+                <div class="row mb-3" id="grp_eu_release_date">
+                    <label for="eu_release_date" class="col-md-3 col-form-label">EU release date</label>
                     <div class="col-md-6">
                         <input id="eu_release_date" type="date" class="form-control" name="eu_release_date">
                     </div>
                 </div>
-                <div class="form-group" id="grp_us_release_date">
-                    <label for="us_release_date" class="col-md-3 control-label">US release date</label>
+                <div class="row mb-3" id="grp_us_release_date">
+                    <label for="us_release_date" class="col-md-3 col-form-label">US release date</label>
                     <div class="col-md-6">
                         <input id="us_release_date" type="date" class="form-control" name="us_release_date">
                     </div>
                 </div>
-                <div class="form-group" id="grp_jp_release_date">
-                    <label for="jp_release_date" class="col-md-3 control-label">JP release date</label>
+                <div class="row mb-3" id="grp_jp_release_date">
+                    <label for="jp_release_date" class="col-md-3 col-form-label">JP release date</label>
                     <div class="col-md-6">
                         <input id="jp_release_date" type="date" class="form-control" name="jp_release_date">
                     </div>
                 </div>
-                <div class="form-group" id="grp_eu_is_released">
-                    <label for="eu_is_released" class="col-md-3 control-label">Released (in EU)?</label>
+                <div class="row mb-3" id="grp_eu_is_released">
+                    <label for="eu_is_released" class="col-md-3 col-form-label">Released (in EU)?</label>
                     <div class="col-md-6">
                         <input id="eu_is_released" type="checkbox" name="eu_is_released">
                     </div>
                 </div>
-                <div class="form-group" id="grp_eu_released_on">
-                    <label for="eu_released_on" class="col-md-3 control-label">EU released on</label>
+                <div class="row mb-3" id="grp_eu_released_on">
+                    <label for="eu_released_on" class="col-md-3 col-form-label">EU released on</label>
                     <div class="col-md-6">
                         <input id="eu_released_on" type="text" class="form-control" name="eu_released_on" size="20" maxlength="24">
                     </div>
                 </div>
             </fieldset>
 
-            <fieldset id="fs_format_options">
-                <legend>Format options</legend>
-                <div class="form-group">
-                    <label for="format_digital" class="col-md-3 control-label">Digital</label>
+            <fieldset id="fs_format_options" class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">Format options</legend>
+                <div class="row mb-3">
+                    <label for="format_digital" class="col-md-3 col-form-label">Digital</label>
                     <div class="col-md-6">
-                        <select id="format_digital" class="form-control" name="format_digital">
+                        <select id="format_digital" class="form-select" name="format_digital">
                             <option value="">&nbsp;</option>
                             {% for item in FormatDigitalList %}
                                 <option value="{{ item }}">{{ item }}</option>
@@ -177,10 +178,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="format_physical" class="col-md-3 control-label">Physical</label>
+                <div class="row mb-3">
+                    <label for="format_physical" class="col-md-3 col-form-label">Physical</label>
                     <div class="col-md-6">
-                        <select id="format_physical" class="form-control" name="format_physical">
+                        <select id="format_physical" class="form-select" name="format_physical">
                             <option value="">&nbsp;</option>
                             {% for item in FormatPhysicalList %}
                                 <option value="{{ item }}">{{ item }}</option>
@@ -188,10 +189,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="format_dlc" class="col-md-3 control-label">DLC</label>
+                <div class="row mb-3">
+                    <label for="format_dlc" class="col-md-3 col-form-label">DLC</label>
                     <div class="col-md-6">
-                        <select id="format_dlc" class="form-control" name="format_dlc">
+                        <select id="format_dlc" class="form-select" name="format_dlc">
                             <option value="">&nbsp;</option>
                             {% for item in FormatDLCList %}
                                 <option value="{{ item }}">{{ item }}</option>
@@ -199,10 +200,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="format_demo" class="col-md-3 control-label">Demo</label>
+                <div class="row mb-3">
+                    <label for="format_demo" class="col-md-3 col-form-label">Demo</label>
                     <div class="col-md-6">
-                        <select id="format_demo" class="form-control" name="format_demo">
+                        <select id="format_demo" class="form-select" name="format_demo">
                             <option value="">&nbsp;</option>
                             {% for item in FormatDemoList %}
                                 <option value="{{ item }}">{{ item }}</option>
@@ -212,23 +213,23 @@
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend>Additional</legend>
-                <div class="form-group" id="grp_video_url">
-                    <label for="video_url" class="col-md-3 control-label">Video URL</label>
+            <fieldset class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">Additional</legend>
+                <div class="row mb-3" id="grp_video_url">
+                    <label for="video_url" class="col-md-3 col-form-label">Video URL</label>
                     <div class="col-md-6">
                         <input id="video_url" type="text" class="form-control" name="video_url">
                     </div>
                     <div class="col-md-2">
                         {% if GameData %}
-                            <a class="btn btn-default btn-sm" href="https://www.youtube.com/results?search_query={{ GameData.title|url_encode }}+switch+trailer" target="_blank">Search YouTube</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="https://www.youtube.com/results?search_query={{ GameData.title|url_encode }}+switch+trailer" target="_blank">Search YouTube</a>
                         {% endif %}
                     </div>
                 </div>
-                <div class="form-group" id="grp_video_type">
-                    <label for="video_type" class="col-md-3 control-label">Video type</label>
+                <div class="row mb-3" id="grp_video_type">
+                    <label for="video_type" class="col-md-3 col-form-label">Video type</label>
                     <div class="col-md-6">
-                        <select id="video_type" name="video_type" class="form-control">
+                        <select id="video_type" name="video_type" class="form-select">
                             <option value=""></option>
                             <option value="0">No video</option>
                             <option value="1">Trailer</option>
@@ -236,8 +237,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group" id="grp_nintendo_store_url_override">
-                    <label for="nintendo_store_url_override" class="col-md-3 control-label">Nintendo store URL override</label>
+                <div class="row mb-3" id="grp_nintendo_store_url_override">
+                    <label for="nintendo_store_url_override" class="col-md-3 col-form-label">Nintendo store URL override</label>
                     <div class="col-md-6">
                         <input id="nintendo_store_url_override" type="text" class="form-control" name="nintendo_store_url_override">
                         <small>
@@ -247,11 +248,11 @@
                         </small>
                     </div>
                     <div class="col-md-2">
-                        <a id="js-btn-store-url-override" class="btn btn-default btn-sm" href="javascript:void(0);">Search Nintendo</a>
+                        <a id="js-btn-store-url-override" class="btn btn-outline-secondary btn-sm" href="javascript:void(0);">Search Nintendo</a>
                     </div>
                 </div>
-                <div class="form-group" id="grp_packshot_square_url_override">
-                    <label for="packshot_square_url_override" class="col-md-3 control-label">Packshot square URL override</label>
+                <div class="row mb-3" id="grp_packshot_square_url_override">
+                    <label for="packshot_square_url_override" class="col-md-3 col-form-label">Packshot square URL override</label>
                     <div class="col-md-6">
                         <input id="packshot_square_url_override" type="text" class="form-control" name="packshot_square_url_override">
                         <small>
@@ -260,8 +261,8 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="grp_eshop_europe_order">
-                    <label for="eshop_europe_order" class="col-md-3 control-label">eShop order</label>
+                <div class="row mb-3" id="grp_eshop_europe_order">
+                    <label for="eshop_europe_order" class="col-md-3 col-form-label">eShop order</label>
                     <div class="col-md-6">
                         <input id="eshop_europe_order" type="text" class="form-control" name="eshop_europe_order">
                         <small>
@@ -269,8 +270,8 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group" id="grp_is_low_quality">
-                    <label for="is_low_quality" class="col-md-3 control-label">Is low quality?</label>
+                <div class="row mb-3" id="grp_is_low_quality">
+                    <label for="is_low_quality" class="col-md-3 col-form-label">Is low quality?</label>
                     <div class="col-md-6">
                         <input id="is_low_quality" type="checkbox" name="is_low_quality">
                         <br>
@@ -279,67 +280,68 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group" id="grp_category_verification">
-                    <label for="category_verification" class="col-md-3 control-label">Category verification</label>
+                <div class="row mb-3" id="grp_category_verification">
+                    <label for="category_verification" class="col-md-3 col-form-label">Category verification</label>
                     <div class="col-md-6">
-                        <select id="category_verification" class="form-control" name="category_verification">
+                        <select id="category_verification" class="form-select" name="category_verification">
                             <option value="0">Unverified</option>
                             <option value="1">Verified</option>
                             <option value="2">Needs review</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group" id="grp_tags_verification">
-                    <label for="tags_verification" class="col-md-3 control-label">Tags verification</label>
+                <div class="row mb-3" id="grp_tags_verification">
+                    <label for="tags_verification" class="col-md-3 col-form-label">Tags verification</label>
                     <div class="col-md-6">
-                        <select id="tags_verification" class="form-control" name="tags_verification">
+                        <select id="tags_verification" class="form-select" name="tags_verification">
                             <option value="0">Unverified</option>
                             <option value="1">Verified</option>
                             <option value="2">Needs review</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group" id="grp_taxonomy_needs_review">
-                    <label for="taxonomy_needs_review" class="col-md-3 control-label">Taxonomy needs review</label> - <em>deprecated</em>
+                <div class="row mb-3" id="grp_taxonomy_needs_review">
+                    <label for="taxonomy_needs_review" class="col-md-3 col-form-label">Taxonomy needs review</label>
                     <div class="col-md-6">
-                        <select id="taxonomy_needs_review" class="form-control" name="taxonomy_needs_review">
+                        <select id="taxonomy_needs_review" class="form-select" name="taxonomy_needs_review">
                             <option value="0">Normal</option>
                             <option value="1">Needs review</option>
                         </select>
+                        <div class="form-text">Deprecated</div>
                     </div>
                 </div>
             </fieldset>
-            <fieldset id="fs_eshop_assets">
-                <legend>eShop assets</legend>
-                <div class="form-group">
-                    <label for="image_square" class="col-md-3 control-label">Image square</label>
+            <fieldset id="fs_eshop_assets" class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">eShop assets</legend>
+                <div class="row mb-3">
+                    <label for="image_square" class="col-md-3 col-form-label">Image square</label>
                     <div class="col-md-6">
                         <input id="image_square" type="text" class="form-control" name="image_square">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="image_header" class="col-md-3 control-label">Image header</label>
+                <div class="row mb-3">
+                    <label for="image_header" class="col-md-3 col-form-label">Image header</label>
                     <div class="col-md-6">
                         <input id="image_header" type="text" class="form-control" name="image_header">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="boxart_square_url" class="col-md-3 control-label">Boxart square URL (Legacy)</label>
+                <div class="row mb-3">
+                    <label for="boxart_square_url" class="col-md-3 col-form-label">Boxart square URL (Legacy)</label>
                     <div class="col-md-6">
                         <input id="boxart_square_url" type="text" class="form-control" name="boxart_square_url">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="boxart_header_image" class="col-md-3 control-label">Boxart header image (Legacy)</label>
+                <div class="row mb-3">
+                    <label for="boxart_header_image" class="col-md-3 col-form-label">Boxart header image (Legacy)</label>
                     <div class="col-md-6">
                         <input id="boxart_header_image" type="text" class="form-control" name="boxart_header_image">
                     </div>
                 </div>
             </fieldset>
-            <fieldset id="fs_publisher">
-                <legend>Publisher</legend>
-                <div class="form-group">
-                    <label for="publisher_id" class="col-md-3 control-label">Select publisher</label>
+            <fieldset id="fs_publisher" class="border rounded p-3 mb-4">
+                <legend class="fs-5 fw-semibold">Publisher</legend>
+                <div class="row mb-3">
+                    <label for="publisher_id" class="col-md-3 col-form-label">Select publisher</label>
                     <div class="col-md-6">
                         <select id="publisher_id" name="publisher_id" style="width: 100%;">
                         </select>
@@ -359,9 +361,9 @@
 
     <hr>
 
-    <div class="form-group">
+    <div class="row mb-3">
         <div class="col-md-8">
-            <button id="btn-submit" class="btn outline btn-primary pull-right">
+            <button id="btn-submit" class="btn outline btn-primary float-end">
                 Save changes
             </button>
         </div>

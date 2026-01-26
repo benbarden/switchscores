@@ -1,4 +1,4 @@
-{% extends 'theme/wos/staff/clean-wide.twig' %}
+{% extends 'theme/staff-b5/layout-default.twig' %}
 {% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/low-quality.twig' as gamelowquality %}
 
@@ -6,10 +6,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="pull-left">
+        <div class="float-start">
             <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
         </div>
-        <div class="pull-right">
+        <div class="float-end">
             {% if GameList.count > 0 %}
                 <a href="{{ route('staff.games.list.export', {
                     listType: ListMode,
@@ -53,7 +53,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Title</th>
                 <th>Publishers</th>
                 <th>Category</th>
@@ -74,12 +74,12 @@
         <tbody>
             {% for item in GameList %}
                 <tr>
-                    <td class="text-right">{{ item.id }}</td>
+                    <td class="text-end">{{ item.id }}</td>
                     <td>
                         {% if item.console.name == 'Switch 1' %}
-                            <label class="label label-info">{{ item.console.name }}</label>
+                            <label class="badge bg-info">{{ item.console.name }}</label>
                         {% elseif item.console.name == 'Switch 2' %}
-                            <label class="label label-success">{{ item.console.name }}</label>
+                            <label class="badge bg-success">{{ item.console.name }}</label>
                         {% endif %}
                         {{ gamelink.title(item, 'staff') }}
                         {{ gamelowquality.standard(item) }}
@@ -153,7 +153,7 @@
     <p>No games found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

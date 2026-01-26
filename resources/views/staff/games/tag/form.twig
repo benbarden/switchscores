@@ -1,5 +1,5 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="row">
@@ -11,9 +11,9 @@
                 <fieldset>
                     <legend>{{ item.name }}</legend>
                     {% if item.tags %}
-                        <div class="form-group">
+                        <div class="row mb-3">
                             {% for categoryItem in item.tags %}
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-2">
                                     <input id="tag_item_{{ categoryItem.id }}" name="tag_item[]" value="{{ categoryItem.id }}" type="checkbox">
                                     <label for="tag_item_{{ categoryItem.id }}">{{ categoryItem.tag_name }}</label>
                                 </div>
@@ -34,9 +34,9 @@
 
     <hr>
 
-    <div class="form-group">
+    <div class="row mb-3">
         <div class="col-md-8">
-            <button id="btn-submit" class="btn outline btn-primary pull-right">
+            <button id="btn-submit" class="btn outline btn-primary float-end">
                 Save changes
             </button>
         </div>

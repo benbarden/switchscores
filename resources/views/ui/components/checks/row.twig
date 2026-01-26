@@ -2,28 +2,28 @@
     {# status: ok | warn | fail | unknown #}
     {% set icon = {'ok':'✓','fail':'✗','warn':'!','unknown':'?'}[status]|default('?') %}
     {% set klass = {
-        'ok':'label label-success',
-        'fail':'label label-danger',
-        'warn':'label label-warning',
-        'unknown':'label label-default'
-    }[status]|default('label label-default') %}
+        'ok':'badge bg-success',
+        'fail':'badge bg-danger',
+        'warn':'badge bg-warning',
+        'unknown':'badge bg-secondary'
+    }[status]|default('badge bg-secondary') %}
 
     {# default action text: Add for warn/fail, otherwise Edit #}
     {% set btn_text = action_text is not null ? action_text : (status in ['fail','warn'] ? 'Add' : 'Edit') %}
 
     <div class="row data-check-row" style="align-items:center; margin:2px 0;">
-        <div class="col-md-5 col-sm-6 col-xs-12" style="line-height:1.2;">
+        <div class="col-md-5 col-sm-6 col-12" style="line-height:1.2;">
             <strong>{{ label }}</strong>
         </div>
-        <div class="col-md-3 col-sm-3 col-xs-6" style="line-height:1.2;">
+        <div class="col-md-3 col-sm-3 col-6" style="line-height:1.2;">
       <span class="{{ klass }}" style="display:inline-block; min-width:72px; text-align:center;">
         {{ icon }} {{ status|capitalize }}
       </span>
         </div>
-        <div class="col-md-4 col-sm-3 col-xs-6" style="line-height:1.2;">
+        <div class="col-md-4 col-sm-3 col-6" style="line-height:1.2;">
             {% if note %}<span class="text-muted">{{ note }}</span>{% endif %}
             {% if href %}
-                <a href="{{ href }}" class="btn btn-xs btn-default" style="margin-left:6px;">{{ btn_text }}</a>
+                <a href="{{ href }}" class="btn btn-sm btn-outline-secondary" style="margin-left:6px;">{{ btn_text }}</a>
             {% endif %}
         </div>
     </div>
