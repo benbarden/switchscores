@@ -6,8 +6,8 @@
         <thead>
         <tr>
             <th class="text-center">#</th>
-            <th class="text-left">Title</th>
-            <th class="text-left">Game developers</th>
+            <th class="text-start">Title</th>
+            <th class="text-start">Game developers</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -17,10 +17,10 @@
                 <td class="text-center">
                     {{ item.id }}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {{ gamelink.title(item, 'staff') }}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {{ item.gameDevelopers.length }}
                     {% if item.gameDevelopers is defined %}
                         {% for gameDev in item.gameDevelopers %}
@@ -41,7 +41,7 @@
 
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

@@ -6,9 +6,9 @@
         <thead>
         <tr>
             <th class="text-center">#</th>
-            <th class="text-left">Title</th>
-            <th class="text-left">Game publishers</th>
-            <th class="text-left">N.co.uk</th>
+            <th class="text-start">Title</th>
+            <th class="text-start">Game publishers</th>
+            <th class="text-start">N.co.uk</th>
             <th class="text-center">Options</th>
         </tr>
         </thead>
@@ -18,10 +18,10 @@
                 <td class="text-center">
                     {{ item.id }}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {{ gamelink.title(item, 'staff') }}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {{ item.gamePublishers.length }}
                     {% if item.gamePublishers is defined %}
                         {% for gamePub in item.gamePublishers %}
@@ -31,7 +31,7 @@
                         -
                     {% endif %}
                 </td>
-                <td class="text-left">
+                <td class="text-start">
                     {% if item.nintendo_store_url_override %}
                     <a href="{{ item.nintendo_store_url_override }}#gameDetails" target="_blank">Details tab</a>
                     {% endif %}
@@ -47,7 +47,7 @@
 
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

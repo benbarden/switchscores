@@ -1,5 +1,5 @@
 {% include 'ui/components/alerts/form-errors.twig' %}
-<form class="form-horizontal" role="form" method="post" action="{{ formSubmitAction }}">
+<form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
     <div class="row">
@@ -7,10 +7,10 @@
         <div class="col-md-12">
 
             {% if FormMode == 'add' %}
-                <div class="form-group">
-                    <label for="partner_id" class="col-md-4 control-label">Partner</label> *
+                <div class="row mb-3">
+                    <label for="partner_id" class="col-md-4 col-form-label">Partner</label> *
                     <div class="col-md-6">
-                        <select id="partner_id" class="form-control" name="partner_id" required>
+                        <select id="partner_id" class="form-select" name="partner_id" required>
                             <option value="">&nbsp;</option>
                             {% for item in PartnerList %}
                                 <option value="{{ item.id }}">{{ item.name }}</option>
@@ -19,18 +19,18 @@
                     </div>
                 </div>
             {% else %}
-                <div class="form-group">
-                    <label for="partner_id" class="col-md-4 control-label">Partner</label>
+                <div class="row mb-3">
+                    <label for="partner_id" class="col-md-4 col-form-label">Partner</label>
                     <div class="col-md-6">
                         {{ OutreachData.gamesCompany.name }}
                     </div>
                 </div>
             {% endif %}
 
-            <div class="form-group">
-                <label for="new_status" class="col-md-4 control-label">New status</label> *
+            <div class="row mb-3">
+                <label for="new_status" class="col-md-4 col-form-label">New status</label> *
                 <div class="col-md-6">
-                    <select id="new_status" class="form-control" name="new_status" required>
+                    <select id="new_status" class="form-select" name="new_status" required>
                         <option value="">&nbsp;</option>
                         {% for item in StatusList %}
                             <option value="{{ item.id }}">{{ item.title }}</option>
@@ -39,10 +39,10 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="contact_method" class="col-md-4 control-label">Contact method</label>
+            <div class="row mb-3">
+                <label for="contact_method" class="col-md-4 col-form-label">Contact method</label>
                 <div class="col-md-6">
-                    <select id="contact_method" class="form-control" name="contact_method">
+                    <select id="contact_method" class="form-select" name="contact_method">
                         <option value="">&nbsp;</option>
                         {% for item in MethodList %}
                             <option value="{{ item.title }}">{{ item.title }}</option>
@@ -51,15 +51,15 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="contact_message" class="col-md-4 control-label">Contact message</label>
+            <div class="row mb-3">
+                <label for="contact_message" class="col-md-4 col-form-label">Contact message</label>
                 <div class="col-md-6">
                     <textarea id="contact_message" class="form-control" name="contact_message" rows="10"></textarea>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="internal_notes" class="col-md-4 control-label">Internal notes</label>
+            <div class="row mb-3">
+                <label for="internal_notes" class="col-md-4 col-form-label">Internal notes</label>
                 <div class="col-md-6">
                     <textarea id="internal_notes" class="form-control" name="internal_notes" rows="10"></textarea>
                 </div>
@@ -71,8 +71,8 @@
 
     <hr>
 
-    <div class="form-group">
-        <div class="col-md-8 col-md-offset-4">
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
             </button>
