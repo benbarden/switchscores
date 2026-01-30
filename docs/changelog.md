@@ -4,6 +4,41 @@ Development history and completed work.
 
 ---
 
+## 2026-01-30 — Staff JSON Game Import Tool
+
+**Summary:**
+Added a new staff tool to import games from a JSON file, designed for the weekly workflow of adding new/upcoming games extracted from Nintendo's website.
+
+**Features:**
+- Upload JSON file with batch of games
+- Validation with preview before import:
+  - Duplicate detection (by title hash)
+  - Category validation (must exist in DB)
+  - Console validation (switch-1 or switch-2)
+  - Publisher lookup with auto-creation for new publishers
+- Shows validation errors and new publishers to be created
+- Imports games with all mapped fields (title, release date, price, players, category, etc.)
+- Downloads packshot images:
+  - Square image from direct URL
+  - Header image scraped from Nintendo store page
+- Sets `category_verification = 1` for games imported with a category
+
+**Architecture improvements:**
+- Created dedicated `Domain/GameImport/` module with clean separation:
+  - `JsonImportService` - Main orchestration
+  - `ImportGameData` - Value object for parsed game data
+  - `ImportResult` - Validation results container
+  - `SquareImageDownloader` - Downloads square image from direct URL
+  - `HeaderImageScraper` - Scrapes store page for header image
+- Image downloaders are separate classes (not conflated like the older `DownloadPackshotHelper`), each handling one source type
+
+**Routes:**
+- `GET /staff/games/json-import` - Upload form
+- `POST /staff/games/json-import/preview` - Validate and preview
+- `POST /staff/games/json-import/confirm` - Execute import
+
+---
+
 ## 2026-01-26 — Staff Section Bootstrap 5 Migration
 
 **Summary:**
