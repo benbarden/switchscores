@@ -10,6 +10,7 @@ use App\Http\Controllers\Staff\Games\SearchController;
 use App\Http\Controllers\Staff\Games\GamesDetailController;
 use App\Http\Controllers\Staff\Games\GamesEditorController;
 use App\Http\Controllers\Staff\Games\BulkEditorController;
+use App\Http\Controllers\Staff\Games\JsonImportController;
 use App\Http\Controllers\Staff\Games\ImportRuleEshopController;
 use App\Http\Controllers\Staff\Games\GamesListController;
 use App\Http\Controllers\Staff\Games\FeaturedGameController;
@@ -80,6 +81,13 @@ Route::group([
             ->name('bulk-edit.editGameIdList');
         Route::match(['get', 'post'], 'bulk-edit/eshop-upcoming-crosscheck/{consoleId}', 'eshopUpcomingCrosscheck')
             ->name('bulk-edit.eshopUpcomingCrosscheck');
+    });
+
+    // ---- JSON import ----
+    Route::controller(JsonImportController::class)->group(function () {
+        Route::get('json-import', 'showUploadForm')->name('json-import.upload');
+        Route::post('json-import/preview', 'preview')->name('json-import.preview');
+        Route::post('json-import/confirm', 'confirm')->name('json-import.confirm');
     });
 
     // ---- Import rules ----

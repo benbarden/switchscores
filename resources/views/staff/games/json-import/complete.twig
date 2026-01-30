@@ -1,0 +1,93 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    <div class="alert alert-success">
+        <strong>Import complete!</strong>
+        <p class="mb-0">Successfully imported {{ CreatedGames|length }} game(s).</p>
+    </div>
+
+    {% if BatchDate %}
+    <div class="alert alert-secondary">
+        <strong>Batch date:</strong> {{ BatchDate }}
+    </div>
+    {% endif %}
+
+    {% if NewPublishers|length > 0 %}
+    <div class="alert alert-info">
+        <strong>New publishers created ({{ NewPublishers|length }})</strong>
+        <p class="mb-2">The following publishers were auto-created. You may want to review and edit them:</p>
+        <ul class="mb-0">
+            {% for publisher in NewPublishers %}
+            <li>{{ publisher }}</li>
+            {% endfor %}
+        </ul>
+        <p class="mt-2 mb-0">
+            <a href="{{ route('staff.games-companies.list') }}">Go to Games Companies list</a>
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Imported games
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Console</th>
+                        <th>Release Date</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for game in CreatedGames %}
+                    <tr>
+                        <td>{{ game.id }}</td>
+                        <td>{{ game.title }}</td>
+                        <td>
+                            {% if game.console_id == 1 %}
+                            Switch 1
+                            {% elseif game.console_id == 2 %}
+                            Switch 2
+                            {% else %}
+                            {{ game.console_id }}
+                            {% endif %}
+                        </td>
+                        <td>{{ game.eu_release_date ?: '-' }}</td>
+                        <td>
+                            {% if game.price_eshop %}
+                            &pound;{{ game.price_eshop }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ route('staff.games.detail', {'gameId': game.id}) }}" class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                            <a href="{{ route('staff.games.edit', {'gameId': game.id}) }}" class="btn btn-sm btn-outline-secondary">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="{{ route('staff.games.json-import.upload') }}" class="btn btn-primary">
+            Import more games
+        </a>
+        <a href="{{ route('staff.games.dashboard') }}" class="btn btn-secondary">
+            Back to Games dashboard
+        </a>
+    </div>
+
+{% endblock page_inner %}

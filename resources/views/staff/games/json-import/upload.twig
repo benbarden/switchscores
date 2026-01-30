@@ -1,0 +1,56 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    <div class="alert alert-info">
+        <strong>Import games from a JSON file</strong>
+        <p class="mb-0 mt-2">
+            Upload a JSON file exported from the Nintendo website scraper.
+            The file should contain a <code>batch_date</code> and an array of <code>games</code>.
+        </p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Expected JSON format
+        </div>
+        <div class="card-body">
+<pre class="mb-0"><code>{
+  "batch_date": "2026-01-30",
+  "games": [
+    {
+      "title": "Game Title",
+      "release_date": "2026-02-03",
+      "price_gbp": 49.99,
+      "url": "https://nintendo.com/...",
+      "packshot_url": "https://...",
+      "publisher": "Publisher Name",
+      "players": "1-4",
+      "category": "RPG",
+      "console_slug": "switch-1",
+      "source_file": "switch1-upcoming"
+    }
+  ]
+}</code></pre>
+        </div>
+    </div>
+
+    {% include 'ui/components/alerts/form-errors.twig' %}
+
+    <form role="form" method="post" action="{{ route('staff.games.json-import.preview') }}" enctype="multipart/form-data">
+        {{ csrf_field() }}
+
+        <div class="row mb-3">
+            <label for="json_file" class="col-sm-2 col-form-label">JSON file</label>
+            <div class="col-sm-6">
+                <input type="file" class="form-control" id="json_file" name="json_file" accept=".json,.txt" required>
+                <div class="form-text">Select the JSON file to import (max 5MB)</div>
+            </div>
+        </div>
+
+        {{ formsubmit.renderB5('Preview import') }}
+    </form>
+
+{% endblock page_inner %}

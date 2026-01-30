@@ -1,0 +1,136 @@
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+    {% if ImportResult.batchDate %}
+    <div class="alert alert-secondary">
+        <strong>Batch date:</strong> {{ ImportResult.batchDate }}
+    </div>
+    {% endif %}
+
+    {% if HasErrors %}
+    <div class="alert alert-danger">
+        <strong>Validation errors ({{ ImportResult.errors|length }})</strong>
+        <p class="mb-2">The following games cannot be imported:</p>
+        <ul class="mb-0">
+            {% for error in ImportResult.errors %}
+            <li>
+                {% if error.title %}
+                    <strong>{{ error.title }}</strong>:
+                {% endif %}
+                {{ error.error }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if HasNewPublishers %}
+    <div class="alert alert-warning">
+        <strong>New publishers to be created ({{ ImportResult.newPublishers|length }})</strong>
+        <p class="mb-2">The following publishers do not exist and will be auto-created:</p>
+        <ul class="mb-0">
+            {% for publisher in ImportResult.newPublishers %}
+            <li>{{ publisher }}</li>
+            {% endfor %}
+        </ul>
+        <p class="mt-2 mb-0">
+            <em>You can edit publisher names after import if needed.</em>
+        </p>
+    </div>
+    {% endif %}
+
+    {% if HasValidGames %}
+    <div class="alert alert-success">
+        <strong>{{ ImportResult.validGames|length }} game(s) ready to import</strong>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Games to import
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Console</th>
+                        <th>Release Date</th>
+                        <th>Price</th>
+                        <th>Publisher</th>
+                        <th>Category</th>
+                        <th>Players</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, game in ImportResult.validGames %}
+                    {% set validation = ImportResult.gameValidation[index] %}
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>
+                            {{ game.title }}
+                            {% if game.packshotUrl %}
+                            <span class="badge bg-info" title="Has packshot">IMG</span>
+                            {% endif %}
+                            {% if game.url %}
+                            <span class="badge bg-secondary" title="Has Nintendo URL">URL</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if game.consoleSlug == 'switch-1' %}
+                            Switch 1
+                            {% elseif game.consoleSlug == 'switch-2' %}
+                            Switch 2
+                            {% else %}
+                            {{ game.consoleSlug }}
+                            {% endif %}
+                        </td>
+                        <td>{{ game.releaseDate ?: '-' }}</td>
+                        <td>
+                            {% if game.priceGbp is not null %}
+                            &pound;{{ game.priceGbp|number_format(2) }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if game.publisher %}
+                                {{ game.publisher }}
+                                {% if validation.isNewPublisher %}
+                                <span class="badge bg-warning text-dark">NEW</span>
+                                {% endif %}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>{{ game.category ?: '-' }}</td>
+                        <td>{{ game.players ?: '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form role="form" method="post" action="{{ route('staff.games.json-import.confirm') }}">
+        {{ csrf_field() }}
+        {{ formsubmit.renderB5('Confirm and import ' ~ ImportResult.validGames|length ~ ' game(s)') }}
+    </form>
+
+    {% else %}
+
+    <div class="alert alert-warning">
+        <strong>No valid games to import</strong>
+        <p class="mb-0">All games in the file either have validation errors or are duplicates.</p>
+    </div>
+
+    <a href="{{ route('staff.games.json-import.upload') }}" class="btn btn-secondary">
+        Back to upload
+    </a>
+
+    {% endif %}
+
+{% endblock page_inner %}
