@@ -67,14 +67,8 @@ Route::group([
             ->name('editAffiliates');
     });
 
-    // ---- Bulk add and import ----
+    // ---- Bulk edit ----
     Route::controller(BulkEditorController::class)->group(function () {
-        Route::match(['get', 'post'], 'bulk-add', 'bulkAdd')->name('bulk-add.add');
-        Route::match(['get', 'post'], 'bulk-add-complete/{errors?}', 'bulkAddComplete')->name('bulk-add.complete');
-
-        Route::match(['get', 'post'], 'import-from-csv', 'importFromCsv')->name('import-from-csv.import');
-        Route::match(['get', 'post'], 'import-from-csv/{errors?}', 'importFromCsvComplete')->name('import-from-csv.complete');
-
         Route::match(['get', 'post'], 'bulk-edit/edit-predefined-list/{editMode}', 'editList')
             ->name('bulk-edit.editPredefinedList');
         Route::match(['get', 'post'], 'bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'editList')

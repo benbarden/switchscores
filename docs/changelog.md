@@ -4,6 +4,43 @@ Development history and completed work.
 
 ---
 
+## Planned: GameCreationService Refactor
+
+**Goal:** Consolidate game creation logic into a single service class.
+
+**Current state after removing bulk-add and CSV import:**
+- `GamesEditorController::add()` - Full form, single game
+- `ReleaseHubController::store()` - Quick AJAX add
+- `JsonImportService` - Bulk JSON import
+
+**Proposed service:**
+```php
+class GameCreationService
+{
+    public function create(GameCreationParams $params): Game
+    {
+        // 1. Check title hash uniqueness (throw if exists)
+        // 2. Generate link_title
+        // 3. Create game via GameDirectorFactory
+        // 4. Set optional fields (batch_date, category_verification, eu_released_on)
+        // 5. Create title hash
+        // 6. Link publisher + quality filter (if provided)
+        // 7. Download images (if URLs provided)
+        // 8. Fire GameCreated event
+        // 9. Return game
+    }
+}
+```
+
+**Migration order:**
+1. Write tests for the new service
+2. Migrate `JsonImportService` (already closest to pattern)
+3. Migrate `ReleaseHubController::store()`
+4. Migrate `GamesEditorController::add()`
+5. Remove unused builder/director code
+
+---
+
 ## 2026-01-30 — Staff JSON Game Import Tool
 
 **Summary:**
@@ -36,6 +73,11 @@ Added a new staff tool to import games from a JSON file, designed for the weekly
 - `GET /staff/games/json-import` - Upload form
 - `POST /staff/games/json-import/preview` - Validate and preview
 - `POST /staff/games/json-import/confirm` - Execute import
+
+**Removed (superseded by JSON import):**
+- `BulkEditorController::bulkAdd()` - 20-row form, no publisher support
+- `BulkEditorController::importFromCsv()` - TSV paste, fewer fields
+- Associated routes, templates, and nav links
 
 ---
 
