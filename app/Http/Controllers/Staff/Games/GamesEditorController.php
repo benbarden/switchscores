@@ -199,6 +199,28 @@ class GamesEditorController extends Controller
                     ->withInput();
             }
 
+            // Check if title has changed and update title hash if needed
+            $oldTitle = $gameData->title;
+            $newTitle = $request->title;
+            if (strtolower($oldTitle) !== strtolower($newTitle)) {
+                $newHashedTitle = $this->gameTitleHashGenerator->generateHash($newTitle);
+
+                // Check if this hash already exists for a different game
+                if ($this->repoGameTitleHash->hashExistsForOtherGame($newHashedTitle, $gameId)) {
+                    $validator->after(function ($validator) {
+                        $validator->errors()->add('title', 'This title already exists for another game!');
+                    });
+                    return redirect(route('staff.games.edit', ['gameId' => $gameId]))
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                // Add new title hash for this game (if it doesn't already exist)
+                if (!$this->repoGameTitleHash->hashExistsForGame($newHashedTitle, $gameId)) {
+                    $this->repoGameTitleHash->create(strtolower($newTitle), $newHashedTitle, $gameId);
+                }
+            }
+
             GameDirectorFactory::updateExisting($gameData, $request->post());
 
             // Clear cache

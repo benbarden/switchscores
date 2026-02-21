@@ -62,7 +62,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
 | 31 | Hold deleted URLs; send 410 status to Google | Medium | Need deleted_urls table + handler logic | For SEO. Games only - others via .htaccess. Consider alongside #22 (soft delete). |
-| 41 | Update the title hash when editing a game's title | Low | Hash system exists; hook into game edit save | Bug: old title hash blocks other games. Currently requires manual hash edit. |
 | 42 | Event/log when game hits 3 reviews | Medium | No event system for review milestones; needs dispatcher | 3 reviews = ranking threshold. Surface "newly ranked" across homepage, reviews, members, staff. |
 | 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. |
 | 49 | Games companies: create dashboard and missing data filters | Medium | Dashboard exists; add missing data filter queries | For outreach - find companies to contact. Some may exist already - needs review. |
@@ -152,6 +151,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 41 | Update the title hash when editing a game's title | Done | 2026-02-21 | Auto-creates new title hash when title changes; validates against other games; added repository methods |
 | 65 | Game list: by games company | Done | 2026-02-21 | Added by-company list type with CSV export, limited company show page to 10 recent games with total count, created reusable console-badge.twig macro |
 | 101 | Quick reviews: char count in content box | Done | 2026-02-21 | Added live character counter with maxlength and color warnings |
 | 1 | Staff dashboard: recently added is Switch 1 only | Done | 2026-02-21 | Added S1/S2 console badges to recently added games list |

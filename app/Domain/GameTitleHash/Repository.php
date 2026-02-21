@@ -59,6 +59,20 @@ class Repository
         return $titleHash != null;
     }
 
+    public function hashExistsForOtherGame($hash, $excludeGameId): bool
+    {
+        return GameTitleHash::where('title_hash', $hash)
+            ->where('game_id', '!=', $excludeGameId)
+            ->exists();
+    }
+
+    public function hashExistsForGame($hash, $gameId): bool
+    {
+        return GameTitleHash::where('title_hash', $hash)
+            ->where('game_id', $gameId)
+            ->exists();
+    }
+
     public function byTitleGroup(array $titles)
     {
         $hashGenerator = new HashGenerator();
