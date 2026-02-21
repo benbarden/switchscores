@@ -254,7 +254,7 @@ class ImportByFeed
         $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
         if ($feedUrlPrefix) {
             $fullPrefix = $this->reviewSite->website_url.$feedUrlPrefix;
-            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+            if (!str_starts_with($itemUrl, $fullPrefix)) {
                 throw new FeedUrlPrefixNotMatched('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
             }
         }

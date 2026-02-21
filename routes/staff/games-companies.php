@@ -14,7 +14,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     Route::get('/staff/games-companies/show/{gamesCompany}', 'Staff\GamesCompanies\CompanyController@show')->name('staff.games-companies.show');
 
-    Route::get('/staff/games-companies/list', 'Staff\GamesCompanies\ListController@showList')->name('staff.games-companies.list');
+    Route::match(['get', 'post'], '/staff/games-companies/search', 'Staff\GamesCompanies\ListController@search')->name('staff.games-companies.search');
 
     Route::get('/staff/games-companies/normal-quality', 'Staff\GamesCompanies\ListController@normalQuality')->name('staff.games-companies.normal-quality');
     Route::get('/staff/games-companies/low-quality', 'Staff\GamesCompanies\ListController@lowQuality')->name('staff.games-companies.low-quality');

@@ -76,7 +76,7 @@ class IndexController extends Controller
         $bindings['PageTitle'] = $pageTitle;
 
         $youtubeBaseLink = 'https://youtube.com/';
-        if (substr($partnerUrl, 0, strlen('https://youtube.com/')) == $youtubeBaseLink) {
+        if (str_starts_with($partnerUrl, $youtubeBaseLink)) {
             $isYoutubeChannel = true;
         } else {
             $isYoutubeChannel = false;

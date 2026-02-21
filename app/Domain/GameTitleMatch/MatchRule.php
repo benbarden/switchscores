@@ -20,10 +20,10 @@ class MatchRule
 
     public function prepareRule()
     {
-        if (substr($this->matchRulePattern, 0, 2) != "/^") {
+        if (!str_starts_with($this->matchRulePattern, "/^")) {
             $this->matchRulePattern = "/^".$this->matchRulePattern;
         }
-        if (substr($this->matchRulePattern, strlen($this->matchRulePattern) - 2, 2) != "$/") {
+        if (!str_ends_with($this->matchRulePattern, "$/")) {
             $this->matchRulePattern .= "$/";
         }
     }
@@ -66,7 +66,7 @@ class MatchRule
         // Check for curly quotes
         $titleMatches = [];
         $titleMatches[] = $parsedTitle;
-        if (strpos($parsedTitle, "’") !== false) {
+        if (str_contains($parsedTitle, "’")) {
             $titleMatches[] = str_replace("’", "'", $parsedTitle);
         }
 

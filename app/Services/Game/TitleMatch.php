@@ -20,10 +20,10 @@ class TitleMatch
 
     public function prepareMatchRule()
     {
-        if (substr($this->matchRule, 0, 2) != "/^") {
+        if (!str_starts_with($this->matchRule, "/^")) {
             $this->matchRule = "/^".$this->matchRule;
         }
-        if (substr($this->matchRule, strlen($this->matchRule) - 2, 2) != "$/") {
+        if (!str_ends_with($this->matchRule, "$/")) {
             $this->matchRule .= "$/";
         }
     }

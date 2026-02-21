@@ -99,7 +99,7 @@ class GameController
 
     public function getDetailsByLinkId($linkId)
     {
-        if (strpos($linkId, ",") !== false) {
+        if (str_contains($linkId, ",")) {
             $linkIdList = explode(",", $linkId);
         } else {
             $linkIdList = [$linkId];

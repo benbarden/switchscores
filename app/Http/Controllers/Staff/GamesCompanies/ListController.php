@@ -15,6 +15,8 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 
+use Illuminate\Http\Request;
+
 class ListController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -37,14 +39,29 @@ class ListController extends Controller
     {
     }
 
-    public function showList()
+    private $searchValidationRules = [
+        'search_keywords' => 'required|min:3',
+    ];
+
+    public function search(Request $request)
     {
-        $pageTitle = 'Games company list';
+        $pageTitle = 'Games company search';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesCompaniesSubpage($pageTitle))->bindings;
 
-        $bindings['GamesCompanyList'] = $this->repoGamesCompany->getAll();
+        if ($request->isMethod('post')) {
 
-        return view('staff.games-companies.list', $bindings);
+            $this->validate($request, $this->searchValidationRules);
+
+            $keywords = $request->search_keywords;
+
+            if ($keywords) {
+                $bindings['SearchKeywords'] = $keywords;
+                $bindings['SearchResults'] = $this->repoGamesCompany->searchGamesCompany($keywords);
+            }
+
+        }
+
+        return view('staff.games-companies.search', $bindings);
     }
 
     public function normalQuality()

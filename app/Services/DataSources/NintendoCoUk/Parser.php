@@ -276,7 +276,7 @@ class Parser
 
             if (is_array($parsedPublishers)) {
                 $publisherArray = $parsedPublishers;
-            } elseif (strpos($parsedPublishers, ",") !== false) {
+            } elseif (str_contains($parsedPublishers, ",")) {
                 $publisherArray = explode(",", $parsedPublishers);
             } else {
                 $publisherArray = [];

@@ -39,8 +39,6 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
-| 7 | Tags: don't allow two with the same URL | Low | Add unique constraint + validation | Actual bug - duplicate link_titles cause wrong tag to display. Games on 2 tags but only 1 shows. |
-| 8 | Games companies: search without needing to view all | Medium | Currently loads all - add search filtering | 3k companies - full list is slow. Performance issue. |
 | 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
 | 22 | Add game status for Delisted, (Soft) deleted | Medium | Add dedicated status enum field; migrate from format_digital | First-class field separate from API-driven format. Handle sync issues (API breaks, scripts fail). Soft delete for #31 (410 status). Hard delete still needed for accidents. De-listed hidden on v2 pages. |
 | 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
@@ -57,7 +55,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
 | 10 | Scrape publisher name, players, and other info from Nintendo URL | High | Needs new scraper class + DOM parsing | For backfilling - new games covered. Page structure fairly stable. Already doing this in another Claude Code project. |
-| 12 | ~~Table sorting is broken on one staff page~~ | Low | Need to identify which page | → Moved to Done |
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
@@ -102,8 +99,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 34 | Change PlayStatus to an Enum | Medium | 7 constants + factory methods; test coverage impact | IDE autocompletion benefit. Code cleanliness. |
 | 35 | Change FormatOptions to an Enum | Low | Only 5 format constants; simple extraction | IDE autocompletion benefit. |
 | 36 | Change VideoType to an Enum | Low | Only 3 constants in Game model | IDE autocompletion benefit. |
-| 37 | Replace sub_str with str_starts_with | Low | 14 usages; straightforward replacement | PHP 8 modernization. |
-| 38 | Replace strpos with str_contains | Low | 7 usages; straightforward replacement | PHP 8 modernization. |
 | 39 | GH123: Migrate staff pages to Bootstrap 5 | Medium | Staff B5 theme exists; ~20+ views to migrate | Mostly done already. Check for remaining files. |
 | 40 | Replace GameRepository->getAll with dropdown search | High | Unbounded query; needs API + dropdown UI | API might use it. API underused - could limit there. Not related to #8 (that's companies). |
 | 43 | Add Switch 2 to game search | Low | Console scoping exists; add filter parameter | Needs investigation - likely mixing all games without distinguishing. |
@@ -161,6 +156,10 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 8 | Games companies: search without needing to view all | Done | 2026-02-21 | Replaced full list with search page + quick filter links |
+| 37 | Replace substr with str_starts_with | Done | 2026-02-21 | PHP 8 modernization - 12 replacements across 7 files |
+| 38 | Replace strpos with str_contains | Done | 2026-02-21 | PHP 8 modernization - 7 replacements across 6 files |
+| 7 | Tags: don't allow two with the same URL | Done | 2026-02-21 | Added unique constraint + Laravel validation in TagController |
 | 12 | Table sorting is broken on one staff page | Done | 2026-02-21 | Fixed missing Console column in DataTables config (list-scripts.twig) |
 | 21 | Show "one to watch" on site | Merged | 2026-02-20 | → #16 |
 | 24 | Rework tag pages for v2 layout | Merged | 2026-02-20 | → #6 |

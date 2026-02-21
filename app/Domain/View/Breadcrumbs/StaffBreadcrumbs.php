@@ -272,7 +272,7 @@ final class StaffBreadcrumbs
         return new BreadcrumbNav([
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Games companies', route('staff.games-companies.dashboard')),
-            new BreadcrumbItem('Company list', route('staff.games-companies.list')),
+            new BreadcrumbItem('Company search', route('staff.games-companies.search')),
             new BreadcrumbItem($title),
         ]);
     }

@@ -113,7 +113,7 @@ class GameShowController extends Controller
         // Video
         $videoUrl = $gameData->video_url;
         if ($videoUrl) {
-            if (strpos($videoUrl, 'https://youtu.be/') === false) {
+            if (!str_contains($videoUrl, 'https://youtu.be/')) {
                 // Standard URL
                 $cleanVideoUrl = $videoUrl;
             } else {
