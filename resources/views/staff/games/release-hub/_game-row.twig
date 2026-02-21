@@ -1,6 +1,7 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/game/low-quality.twig' as gamelowquality %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 <tr id="game-row-{{ game.id }}"
     data-id="{{ game.id }}"
@@ -17,14 +18,7 @@
     </td>
 
     <td>
-        {% if game.console_id == 1 %}
-            <span class="badge bg-info text-dark me-2 align-middle">{{ game.console.name ?? 'Switch 1' }}</span>
-        {% elseif game.console_id == 2 %}
-            <span class="badge bg-success me-2 align-middle">{{ game.console.name ?? 'Switch 2' }}</span>
-        {% else %}
-            <span class="badge bg-secondary me-2 align-middle">{{ game.console.name ?? 'Unknown' }}</span>
-        {% endif %}
-
+        {{ consolebadge.standard(game) }}
         <span class="align-middle">
             {{ gamelink.title(game, 'staff') }}
             {{ gamelowquality.b5(game) }}

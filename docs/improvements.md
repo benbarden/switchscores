@@ -73,7 +73,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 59 | Set up eShopperReviews as a reviewer | Low | Add ReviewSite entry + feed config | Their data sucks but lots of reviews. Custom scraper needed. One-time scrape to JSON + review import tool. Could reuse for future reviewers! |
 | 61 | GH111: more names for games companies | Medium | Need UI for alternative names | Match name variations to one company. Doing some via Claude but UI would help. |
 | 62 | New process status: Content does not meet inclusion criteria | Medium | Add new status constant + update logic | Consolidates similar statuses. Needs data fix for existing records. |
-| 65 | Game list: by games company | Low | Add repository query + staff view | Surprised it doesn't exist. Quick win. |
 | 66 | Submit quick review without signing up | High | Auth system requires user; needs guest flow | Spam risk but need reviews. WordPress-style: Name/Email, cookie, optional auto-account. Low friction. Do even with good signup. |
 | 69 | Fix Digitally Downloaded Feedburner review links | Low | Update PartnerFeedLink URL | Older review URLs are dead. Need scraping to find actual URLs. Claude can help. |
 | 70 | Re-download hi-res images for N.co.uk linked games | Medium | Add re-download job with filtering | Old images are low quality. Bigger idea: unified crawl queue for images, 404s, missing data. One crawl per game, track last check, space out requests (50-100 every few hours). Manual or periodic re-queue. |
@@ -87,7 +86,6 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
-| 1 | Staff dashboard: recently added is Switch 1 only | Low | No filtering exists - add console param | Show both consoles together. Space is limited - consider condensed layout. Might show something more valuable instead. |
 | 2 | Bulk add tag to games with search string (e.g. Solitaire) | Medium | No bulk tag UI - needs new controller/view | Explore using Claude for mass tagging instead of building UI |
 | 13 | Slow queries: stats on Browse by date page | Medium | Heavy stats queries - needs caching/indexes | From pre-Cloudflare logging. May be less urgent now. Could add Redis caching for big queries. Review needed. |
 | 16 | Ones to watch: show a list in admin and public | Medium | `one_to_watch` field exists - need views | Manual flag on games. Placement TBD - Members, homepage, or /switch-1/ landing pages. Includes #21. |
@@ -130,7 +128,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 97 | Show recent quick reviews on homepage/Reviews homepage | Low | Already shown on Community page | Need more reviews first. Already on Members page. |
 | 99 | GH30: member profiles | High | No profile model; requires full implementation | Worth doing once more members. Can be lightweight initially. |
 | 100 | GH32: Games collection - quick status changes | Medium | Add quick status buttons/AJAX | Have new way but 2 tools exist. Need to consolidate. |
-| 101 | Quick reviews: char count in content box | Low | Simple JS addition | Block too many chars. For members page + future guest version. |
 | 102 | Onboarding: dismissable notice banner for logged in users | Medium | Need notification model + dismissal | Nice but low priority without new signups. |
 | 103 | Upload / edit avatar | High | No avatar field; requires full implementation | Useful as members grow. |
 | 105 | Record user id of submitted review links | Low | Add migration + populate records | Tiny, low value. Keep for now. |
@@ -155,6 +152,9 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 65 | Game list: by games company | Done | 2026-02-21 | Added by-company list type with CSV export, limited company show page to 10 recent games with total count, created reusable console-badge.twig macro |
+| 101 | Quick reviews: char count in content box | Done | 2026-02-21 | Added live character counter with maxlength and color warnings |
+| 1 | Staff dashboard: recently added is Switch 1 only | Done | 2026-02-21 | Added S1/S2 console badges to recently added games list |
 | 106 | BUG: Duplicate DataParsedItem records for same console | Done | 2026-02-21 | Switch 1 query wildcard was matching Switch 2 games; added exclusion filter |
 | 8 | Games companies: search without needing to view all | Done | 2026-02-21 | Replaced full list with search page + quick filter links |
 | 37 | Replace substr with str_starts_with | Done | 2026-02-21 | PHP 8 modernization - 12 replacements across 7 files |

@@ -1,6 +1,7 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
 {% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/low-quality.twig' as gamelowquality %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 {% block page_inner %}
 
@@ -76,11 +77,7 @@
                 <tr>
                     <td class="text-end">{{ item.id }}</td>
                     <td>
-                        {% if item.console.name == 'Switch 1' %}
-                            <label class="badge bg-info">{{ item.console.name }}</label>
-                        {% elseif item.console.name == 'Switch 2' %}
-                            <label class="badge bg-success">{{ item.console.name }}</label>
-                        {% endif %}
+                        {{ consolebadge.standard(item) }}
                         {{ gamelink.title(item, 'staff') }}
                         {{ gamelowquality.standard(item) }}
                         {% if item.review_count > 0 %}

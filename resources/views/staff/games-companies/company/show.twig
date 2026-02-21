@@ -1,4 +1,5 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
@@ -215,14 +216,19 @@
 {% if MergedGameList %}
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <h2>Nintendo Switch games by {{ GamesCompany.name }}</h2>
+            <h2>Nintendo Switch games by {{ GamesCompany.name }} ({{ TotalGameCount }} total)</h2>
+            <p>
+                {% if TotalGameCount > 10 %}
+                    Showing 10 most recently released.
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'by-company', 'param1': GamesCompany.id}) }}" class="btn btn-sm btn-outline-primary">View all {{ TotalGameCount }} games</a>
+                {% endif %}
+            </p>
             <table class="table table-responsive">
                 <tr>
                     <th>Game</th>
                     <th class="text-center">Category</th>
                     <th class="text-center">Involvement</th>
                     <th class="text-center">Release date</th>
-                    <th class="text-center">Released?</th>
                     <th class="text-center">Quality filter</th>
                     <th class="text-center">Options</th>
                 </tr>
@@ -238,6 +244,7 @@
                     {% endif %}
                     <tr>
                         <td>
+                            {{ consolebadge.standard(item) }}
                             {{ gamelink.title(item, 'staff') }}
                         </td>
                         <td class="text-center">
@@ -249,13 +256,6 @@
                         </td>
                         <td class="text-center">{{ ExtraDetailLine }}</td>
                         <td class="text-center">{{ item.eu_release_date }}</td>
-                        <td class="text-center">
-                            {% if item.eu_is_released == 1 %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                        </td>
                         <td class="text-center">
                             {% if item.is_low_quality == 1 %}
                                 <label class="badge bg-danger">Low quality</label>

@@ -32,13 +32,17 @@
     <div class="row mb-3">
         <label for="review_body" class="col-md-2 col-form-label">Your comments</label>
         <div class="col-md-4">
-            <textarea id="review_body" name="review_body" cols="50" rows="10"></textarea>
+            <textarea id="review_body" name="review_body" cols="50" rows="10" maxlength="800"></textarea>
+            <p>
+                <small>
+                    <span id="review_body_count">0</span> / 800 characters
+                </small>
+            </p>
             <p>
                 <small>
                     Write your review here.
                     Please don't include any special formatting - it will be stripped out.
                     Line breaks will be preserved.
-                    <br><strong>Maximum 800 characters.</strong> Keep it short and sweet :)
                 </small>
             </p>
         </div>

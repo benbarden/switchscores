@@ -1,0 +1,15 @@
+{% macro standard(item) %}
+    {% if item.console_id == 1 or (item.console.id is defined and item.console.id == 1) %}
+        <label class="badge bg-info">Switch 1</label>
+    {% elseif item.console_id == 2 or (item.console.id is defined and item.console.id == 2) %}
+        <label class="badge bg-success">Switch 2</label>
+    {% endif %}
+{% endmacro %}
+
+{% macro short(item) %}
+    {% if item.console_id == 1 or (item.console.id is defined and item.console.id == 1) %}
+        <label class="badge bg-info">S1</label>
+    {% elseif item.console_id == 2 or (item.console.id is defined and item.console.id == 2) %}
+        <label class="badge bg-success">S2</label>
+    {% endif %}
+{% endmacro %}

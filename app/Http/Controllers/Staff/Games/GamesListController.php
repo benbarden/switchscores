@@ -14,11 +14,14 @@ use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameCollection\Repository as CollectionRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 
 use App\Models\Category;
+use App\Models\Game;
 use App\Models\GameSeries;
 use App\Models\Tag;
 use App\Models\GameCollection;
+use App\Models\GamesCompany;
 
 use App\Enums\GameListType;
 
@@ -32,6 +35,7 @@ class GamesListController extends Controller
         private TagRepository $repoTag,
         private CollectionRepository $repoCollection,
         private GameAffiliateRepository $repoGameAffiliate,
+        private GamesCompanyRepository $repoGamesCompany,
     )
     {
     }
@@ -157,6 +161,22 @@ class GamesListController extends Controller
                 },
                 'dynamicTitle' => true,
             ],
+            'by-company' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($companyId) {
+                    $company = $this->repoGamesCompany->find($companyId);
+                    if (!$company) abort(404);
+                    return Game::where(function ($query) use ($companyId) {
+                        $query->whereHas('gameDevelopers', function ($q) use ($companyId) {
+                            $q->where('developer_id', $companyId);
+                        })->orWhereHas('gamePublishers', function ($q) use ($companyId) {
+                            $q->where('publisher_id', $companyId);
+                        });
+                    })->orderBy('title', 'asc')->get();
+                },
+                'dynamicTitle' => true,
+            ],
             // Affiliates
             'amazon-us-unchecked' => [
                 'title' => 'Amazon US: Unchecked',
@@ -246,6 +266,11 @@ class GamesListController extends Controller
                 [$collectionId] = array_pad($args, 1, null);
                 $collectionName = $this->repoCollection->find($collectionId)?->name ?? '(Unknown collection)';
                 return 'By collection: ' . $collectionName;
+
+            case 'by-company':
+                [$companyId] = array_pad($args, 1, null);
+                $companyName = $this->repoGamesCompany->find($companyId)?->name ?? '(Unknown company)';
+                return 'By company: ' . $companyName;
 
             default:
                 return '(Untitled list)';
