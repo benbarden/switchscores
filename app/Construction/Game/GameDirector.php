@@ -160,6 +160,9 @@ class GameDirector
         if (array_key_exists('game_description', $params)) {
             $this->builder->setGameDescription($params['game_description']);
         }
+        if (array_key_exists('game_status', $params)) {
+            $this->builder->setGameStatus($params['game_status']);
+        }
     }
 
     public function buildReleaseYear($releaseDate): string

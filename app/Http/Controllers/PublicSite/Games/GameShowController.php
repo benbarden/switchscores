@@ -56,6 +56,10 @@ class GameShowController extends Controller
             abort(404);
         }
 
+        if ($gameData->isSoftDeleted()) {
+            abort(410, 'This game has been removed.');
+        }
+
         if ($gameData->link_title != $linkTitle) {
             $redirUrl = sprintf('/games/%s/%s', $gameId, $gameData->link_title);
             return redirect($redirUrl, 301);
@@ -207,6 +211,10 @@ class GameShowController extends Controller
         $gameData = $this->repoGame->find($id);
         if (!$gameData) {
             abort(404);
+        }
+
+        if ($gameData->isSoftDeleted()) {
+            abort(410, 'This game has been removed.');
         }
 
         $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);

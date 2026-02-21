@@ -53,7 +53,6 @@
 
     <div class="col-md-4">
 
-
     </div>
 
     <div class="col-md-4">
@@ -83,7 +82,44 @@
 
     <div class="col-md-4">
 
-        <h2 class="hdr-block">Data checks</h2>
+        <h5 class="hdr-block">Game status</h5>
+
+        <div id="game-status-display" class="row" style="align-items:center; margin:2px 0;">
+            <div class="col-md-5 col-sm-6 col-12" style="line-height:1.2;">
+                <strong>Status</strong>
+            </div>
+            <div class="col-md-3 col-sm-3 col-6" style="line-height:1.2;">
+                {% if GameData.game_status.value == 'active' %}
+                    <span class="badge bg-success" style="display:inline-block; min-width:72px; text-align:center;">Active</span>
+                {% elseif GameData.game_status.value == 'delisted' %}
+                    <span class="badge bg-warning" style="display:inline-block; min-width:72px; text-align:center;">De-listed</span>
+                {% elseif GameData.game_status.value == 'soft_deleted' %}
+                    <span class="badge bg-danger" style="display:inline-block; min-width:72px; text-align:center;">Soft deleted</span>
+                {% else %}
+                    <span class="badge bg-secondary" style="display:inline-block; min-width:72px; text-align:center;">Unknown</span>
+                {% endif %}
+            </div>
+            <div class="col-md-4 col-sm-3 col-6" style="line-height:1.2;">
+                <a href="#" id="game-status-edit-btn" class="btn btn-sm btn-outline-secondary" style="margin-left:6px;">Edit</a>
+            </div>
+        </div>
+        <div id="game-status-edit" class="row" style="align-items:center; margin:2px 0; display:none;">
+            <div class="col-md-5 col-sm-6 col-12" style="line-height:1.2;">
+                <strong>Status</strong>
+            </div>
+            <div class="col-md-7 col-sm-6 col-12" style="line-height:1.2;">
+                <select id="game-status-dropdown" class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                    <option value="active" {% if GameData.game_status.value == 'active' %}selected{% endif %}>Active</option>
+                    <option value="delisted" {% if GameData.game_status.value == 'delisted' %}selected{% endif %}>De-listed</option>
+                    <option value="soft_deleted" {% if GameData.game_status.value == 'soft_deleted' %}selected{% endif %}>Soft deleted</option>
+                </select>
+                <a href="#" id="game-status-save-btn" class="btn btn-sm btn-primary ms-2">Save</a>
+                <a href="#" id="game-status-cancel-btn" class="btn btn-sm btn-outline-secondary ms-1">Cancel</a>
+            </div>
+        </div>
+        <hr style="margin:6px 0;">
+
+        <h5 class="hdr-block">Data checks</h5>
         {% include 'ui/components/game/checks.twig' with {'checks': Checks} %}
 
     </div>
@@ -272,6 +308,41 @@
             $('#js-admin-notify').text('Updated!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 2000);
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#game-status-edit-btn').on('click', function(e) {
+        e.preventDefault();
+        $('#game-status-display').hide();
+        $('#game-status-edit').css('display', 'flex');
+    });
+
+    $('#game-status-cancel-btn').on('click', function(e) {
+        e.preventDefault();
+        $('#game-status-edit').hide();
+        $('#game-status-display').css('display', 'flex');
+    });
+
+    $('#game-status-save-btn').on('click', function(e) {
+        e.preventDefault();
+        var newStatus = $('#game-status-dropdown').val();
+
+        $('#js-admin-notify').hide();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.post('{{ route('staff.games.detail.updateStatus', {'gameId': GameId}) }}', {status: newStatus}, function(data) {
+            $('#js-admin-notify').text('Status updated!');
+            $('#js-admin-notify').show();
+            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1500);
         })
         .fail(function(data) {
             $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);

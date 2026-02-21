@@ -32,6 +32,7 @@
         formVals['format_physical'] = "{{ GameData.format_physical }}";
         formVals['format_dlc'] = "{{ GameData.format_dlc }}";
         formVals['format_demo'] = "{{ GameData.format_demo }}";
+        formVals['game_status'] = "{{ GameData.game_status.value }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
         formVals['video_type'] = "{{ GameData.video_type }}";
@@ -125,6 +126,7 @@
     $('#format_physical').val(formVals['format_physical']);
     $('#format_dlc').val(formVals['format_dlc']);
     $('#format_demo').val(formVals['format_demo']);
+    $('#game_status').val(formVals['game_status']);
     // *** Additional *** //
     $('#video_url').val(formVals['video_url']);
     $('#video_type').val(formVals['video_type']);

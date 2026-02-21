@@ -87,7 +87,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('game_rank', 'asc')
             ->orderBy('title', 'asc');
@@ -106,7 +106,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereIn('review_count', [1, 2])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('rating_avg', 'desc');
 
@@ -123,7 +123,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('review_count', 'desc')
             ->orderBy('title', 'asc');
@@ -142,7 +142,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
-            ->where('format_digital', '=', Game::FORMAT_DELISTED)
+            ->delisted()
             ->orderBy('title', 'asc')
             ->orderBy('eu_release_date', 'asc');
 
@@ -159,7 +159,7 @@ class Repository
         $games = Game::where('console_id', $consoleId)
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 1)
             ->orderBy('title', 'asc')
             ->orderBy('eu_release_date', 'asc');
@@ -179,44 +179,44 @@ class Repository
             ->where('console_id', $consoleId);
 
         $total = (clone $games)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $ranked = (clone $games)
             ->where('review_count', '>=', 3)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $reviewedButUnranked = (clone $games)
             ->whereIn('review_count', [1, 2])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $noReviews = (clone $games)
             ->whereIn('review_count', [0])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $lowQuality = (clone $games)
             ->where('is_low_quality', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->count();
 
         $delisted = (clone $games)
-            ->where('format_digital', Game::FORMAT_DELISTED)
+            ->delisted()
             ->count();
 
         // Newest release
         $newest = (clone $games)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->orderBy('eu_release_date', 'desc')
@@ -237,7 +237,7 @@ class Repository
     {
         $query = Game::where('category_id', $categoryId)
             ->where('console_id', $consoleId)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1);
 

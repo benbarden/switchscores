@@ -5,6 +5,7 @@ namespace App\Domain\Tag;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Enums\GameStatus;
 use App\Models\Tag;
 use App\Models\Game;
 use App\Models\TagCategory;
@@ -104,7 +105,7 @@ class Repository
             ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNotNull('games.game_rank')
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->where('games.is_low_quality', 0)
             ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.title', 'asc');
@@ -130,7 +131,7 @@ class Repository
             ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->where('games.is_low_quality', 0)
             ->orderBy('games.title', 'asc');
 
@@ -155,7 +156,7 @@ class Repository
             ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
             ->whereNull('games.game_rank')
-            ->where('format_digital', '=', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::DELISTED->value)
             ->orderBy('games.title', 'asc');
 
         if ($limit) {
@@ -177,7 +178,7 @@ class Repository
                 'tags.tag_name')
             ->where('games.console_id', $consoleId)
             ->where('game_tags.tag_id', $tagId)
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->where('games.is_low_quality', 1)
             ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.title', 'asc');

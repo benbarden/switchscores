@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 112**
+**Next ID: 114**
 
 ---
 
@@ -26,11 +26,11 @@ This document tracks potential improvements, features, and enhancements for the 
 - Designed #110 (unified crawl queue) - see `docs/tasks/110-game-crawl-queue-system.md`
 
 **High priority items:**
-1. #7 - Tag URL bug (duplicate link_titles)
-2. #8 - Companies search performance (3k records)
+1. ~~#7 - Tag URL bug (duplicate link_titles)~~ DONE
+2. ~~#8 - Companies search performance (3k records)~~ DONE
 3. #11 + #30 - S2 URL handling (do together)
-4. #22 - Game status field (Delisted/Soft delete)
-5. #106 - Duplicate DataParsedItem bug
+4. ~~#22 - Game status field (Delisted/Soft delete)~~ DONE
+5. ~~#106 - Duplicate DataParsedItem bug~~ DONE
 6. #110 - Unified game crawl queue
 
 ---
@@ -40,7 +40,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
 | 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
-| 22 | Add game status for Delisted, (Soft) deleted | Medium | Add dedicated status enum field; migrate from format_digital | First-class field separate from API-driven format. Handle sync issues (API breaks, scripts fail). Soft delete for #31 (410 status). Hard delete still needed for accidents. De-listed hidden on v2 pages. |
 | 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
 | 110 | Unified game crawl queue system | High | New infrastructure | Solves #70, #78, #109 together. One crawl per game: images, 404s, missing data. Track last_checked, space requests (50-100/few hours), manual/periodic re-queue. |
 
@@ -50,6 +49,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
+| 113 | Game status: surface API vs manual conflicts | Medium | Follow-up from #22 | When API says "available" but game_status is "delisted" (or vice versa), log conflicts and show on staff dashboard. Helps catch manual overrides that may need review. |
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
@@ -60,7 +60,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 19 | Make registration open. Keep invite codes for partners etc | Medium | Invite code validation exists; add open registration toggle | Spam concern. Drop Twitter login around same time. Shore up member tools first. |
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
-| 31 | Hold deleted URLs; send 410 status to Google | Medium | Need deleted_urls table + handler logic | For SEO. Games only - others via .htaccess. Consider alongside #22 (soft delete). |
 | 42 | Event/log when game hits 3 reviews | Medium | No event system for review milestones; needs dispatcher | 3 reviews = ranking threshold. Surface "newly ranked" across homepage, reviews, members, staff. |
 | 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. |
 | 49 | Games companies: create dashboard and missing data filters | Medium | Dashboard exists; add missing data filter queries | For outreach - find companies to contact. Some may exist already - needs review. |
@@ -78,6 +77,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
 | 95 | GH76: multiplayer options | High | No field; requires migration + UI | Nintendo has more player info (Local/Online). Related to #107. Worth storing. |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
+| 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
 
 ---
 
@@ -151,6 +151,8 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 22 | Add game status for Delisted, (Soft) deleted | Done | 2026-02-21 | GameStatus enum (ACTIVE/DELISTED/SOFT_DELETED), all repos updated to use active()/delisted() scopes, staff inline editor, 410 for soft_deleted, API safeguards. See `docs/tasks/022-game-status-field.md` |
+| 31 | Hold deleted URLs; send 410 status to Google | Done | 2026-02-21 | Implemented via #22 - soft_deleted games return 410 status, `errors/410.twig` created |
 | 18 | Tag categories: show groups on categorisation dashboard | Done | 2026-02-21 | Reorganized dashboard layout, added progress bars for each tag category, excludes low quality/de-listed games |
 | 41 | Update the title hash when editing a game's title | Done | 2026-02-21 | Auto-creates new title hash when title changes; validates against other games; added repository methods |
 | 65 | Game list: by games company | Done | 2026-02-21 | Added by-company list type with CSV export, limited company show page to 10 recent games with total count, created reusable console-badge.twig macro |

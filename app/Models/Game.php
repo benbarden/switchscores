@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GameStatus;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -40,7 +41,7 @@ class Game extends Model implements Auditable
         'category_verification', 'tags_verification',
         'image_square', 'image_header',
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
-        'format_digital', 'format_physical', 'format_dlc', 'format_demo',
+        'format_digital', 'format_physical', 'format_dlc', 'format_demo', 'game_status',
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
         'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch',
         'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin'
@@ -49,6 +50,7 @@ class Game extends Model implements Auditable
     protected $casts = [
         'category_verification' => 'integer',
         'tags_verification' => 'integer',
+        'game_status' => GameStatus::class,
     ];
 
     public function console()
@@ -135,6 +137,35 @@ class Game extends Model implements Auditable
     public function isDigitalDelisted()
     {
         return $this->format_digital == self::FORMAT_DELISTED;
+    }
+
+    // Game status helpers
+
+    public function isActive(): bool
+    {
+        return $this->game_status === GameStatus::ACTIVE;
+    }
+
+    public function isDelisted(): bool
+    {
+        return $this->game_status === GameStatus::DELISTED;
+    }
+
+    public function isSoftDeleted(): bool
+    {
+        return $this->game_status === GameStatus::SOFT_DELETED;
+    }
+
+    // Game status scopes
+
+    public function scopeActive($query)
+    {
+        return $query->where('game_status', GameStatus::ACTIVE);
+    }
+
+    public function scopeDelisted($query)
+    {
+        return $query->where('game_status', GameStatus::DELISTED);
     }
 
     public function getVideoTypeDesc()

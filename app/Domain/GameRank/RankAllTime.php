@@ -3,6 +3,7 @@
 
 namespace App\Domain\GameRank;
 
+use App\Enums\GameStatus;
 use App\Models\Game;
 use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
@@ -43,9 +44,9 @@ class RankAllTime
             FROM games g
             WHERE console_id = ?
             AND review_count > 2
-            AND format_digital != ?
+            AND game_status = ?
             ORDER BY rating_avg DESC
-        ", [$this->consoleId, Game::FORMAT_DELISTED]);
+        ", [$this->consoleId, GameStatus::ACTIVE->value]);
     }
 
     public function process()

@@ -21,7 +21,7 @@
 
     {% set hasLinks = amazon.urlUk or amazon.urlUs or game.DSNintendoCoUk or game.nintendo_store_url_override %}
 
-    {% if hasLinks and not game.isDelisted %}
+    {% if hasLinks and not game.isDelisted() %}
 
         {% set useTiny = (size == 'tiny') %}
 

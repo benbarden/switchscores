@@ -17,6 +17,22 @@
 
         <div class="col-md-10">
 
+            {% if FormMode == 'edit' %}
+            <fieldset class="rounded p-3 mb-4" style="background-color: #fde8e8;">
+                <legend class="fs-5 fw-semibold">Game status</legend>
+                <div class="row mb-3">
+                    <label for="game_status" class="col-md-3 col-form-label">Status</label>
+                    <div class="col-md-6">
+                        <select id="game_status" class="form-select" name="game_status">
+                            {% for value, label in GameStatusList %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            {% endif %}
+
             <fieldset class="rounded p-3 mb-4" style="background-color: #fffbeb;">
                 <legend class="fs-5 fw-semibold">Main</legend>
                 <div class="row mb-3">

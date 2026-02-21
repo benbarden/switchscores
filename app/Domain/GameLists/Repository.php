@@ -298,7 +298,7 @@ class Repository extends AbstractRepository
     {
         $games = Game::where('category_id', $categoryId)
             ->where('eu_is_released', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('eu_release_date', 'desc');
 
         if ($limit) {
@@ -501,7 +501,7 @@ class Repository extends AbstractRepository
         $gameList = Game::whereNull('eshop_europe_fs_id')
             ->whereNull('nintendo_store_url_override')
             ->whereNotNull('eu_release_date')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('id', 'desc');
         if ($limit) {
             $gameList = $gameList->limit($limit);

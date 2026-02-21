@@ -1,0 +1,21 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
+
+{{ heading.renderSlick('Game stats') }}
+
+<table class="table">
+    <tbody>
+    {{ rowstat.renderB5(
+        'Total games', null, TotalGameCount
+    ) }}
+    {{ rowstat.renderB5(
+        'Active', null, ActiveGameCount
+    ) }}
+    {{ rowstat.renderB5(
+        'Delisted', null, DelistedGameCount
+    ) }}
+    {{ rowstat.renderB5(
+        'Soft deleted', null, SoftDeletedGameCount
+    ) }}
+    </tbody>
+</table>

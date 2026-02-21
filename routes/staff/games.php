@@ -51,6 +51,7 @@ Route::group([
         Route::get('detail/full-audit/{game}', 'showFullAudit')->name('detail.fullAudit');
         Route::get('detail/{gameId}/update-eshop-data', 'updateEshopData')->name('detail.updateEshopData');
         Route::get('detail/{gameId}/redownload-packshots', 'redownloadPackshots')->name('detail.redownloadPackshots');
+        Route::post('detail/{gameId}/update-status', 'updateStatus')->name('detail.updateStatus');
     });
 
     // ---- Game add / edit / delete ----

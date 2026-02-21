@@ -59,7 +59,7 @@ class Repository extends AbstractRepository
         return Game::where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->where('is_low_quality', 0)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->inRandomOrder()
             ->first();
     }
@@ -71,7 +71,7 @@ class Repository extends AbstractRepository
             $games = $games->where('is_low_quality', 0);
         }
         if (!$includeDeListed) {
-            $games = $games->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            $games = $games->active();
         }
         match ($sortBy) {
             'newest' => $games = $games->orderBy('eu_release_date', 'desc')->orderBy('title', 'asc'),

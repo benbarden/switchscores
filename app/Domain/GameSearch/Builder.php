@@ -122,9 +122,9 @@ class Builder
 
         if ($title == 'the') abort(404);
 
-        // Hide de-listed
+        // Hide de-listed and soft-deleted
         if (!$title) {
-            $searchResults = $searchResults->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            $searchResults = $searchResults->active();
         }
 
         if ($showRankedUnranked == 'Ranked') {

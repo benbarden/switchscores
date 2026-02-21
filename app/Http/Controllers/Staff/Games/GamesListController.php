@@ -193,10 +193,7 @@ class GamesListController extends Controller
                         });
                     })
                     ->where('is_low_quality', 0)
-                    ->where(function ($query) {
-                        $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                              ->orWhereNull('format_digital');
-                    })
+                    ->active()
                     ->orderBy('title', 'asc')
                     ->limit(100)
                     ->get();

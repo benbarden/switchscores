@@ -4,6 +4,7 @@
 namespace App\Domain\GameLists;
 
 
+use App\Enums\GameStatus;
 use App\Models\Game;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class DbQueries
                 'tags.tag_name')
             ->where('game_tags.tag_id', $tagId)
             //->where('games.eu_is_released', '1')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->orderBy('games.title', 'asc');
             //->orderBy('games.rating_avg', 'desc')
             //->orderBy('games.eu_release_date', 'desc');

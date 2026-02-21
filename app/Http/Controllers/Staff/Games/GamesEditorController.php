@@ -35,6 +35,7 @@ use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 use App\Enums\AmazonAffiliateStatus;
+use App\Enums\GameStatus;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -249,6 +250,8 @@ class GamesEditorController extends Controller
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
         $bindings['FormatDLCList'] = $this->formatOptions->getOptionsDLC();
         $bindings['FormatDemoList'] = $this->formatOptions->getOptionsDemo();
+
+        $bindings['GameStatusList'] = GameStatus::options();
 
         return view('staff.games.editor.edit', $bindings);
     }

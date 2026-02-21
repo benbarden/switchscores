@@ -294,4 +294,10 @@ class GameBuilder
         $this->game->added_batch_date = today();
         return $this;
     }
+
+    public function setGameStatus($gameStatus): GameBuilder
+    {
+        $this->game->game_status = $gameStatus;
+        return $this;
+    }
 }

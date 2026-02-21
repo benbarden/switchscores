@@ -38,10 +38,11 @@ class DashboardController extends Controller
         $bindings['NoPriceCount'] = $this->repoGameStatsLegacy->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStatsLegacy->totalNoVideoType();
 
-        // Release date stats
+        // Game stats by status
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
-        $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
-        $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
+        $bindings['ActiveGameCount'] = $this->repoGameStats->totalActive();
+        $bindings['DelistedGameCount'] = $this->repoGameStats->totalDelisted();
+        $bindings['SoftDeletedGameCount'] = $this->repoGameStats->totalSoftDeleted();
 
         // Verification
         $bindings['CategoryVerified'] = $this->repoGameStatsLegacy->totalCategoryVerified();
@@ -69,10 +70,11 @@ class DashboardController extends Controller
         $pageTitle = 'Games stats';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
-        // Release date stats
+        // Game stats by status
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
-        $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
-        $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
+        $bindings['ActiveGameCount'] = $this->repoGameStats->totalActive();
+        $bindings['DelistedGameCount'] = $this->repoGameStats->totalDelisted();
+        $bindings['SoftDeletedGameCount'] = $this->repoGameStats->totalSoftDeleted();
 
         // Format stats
         $bindings['FormatDigital'] = $this->repoGameStats->getFormatDigital();

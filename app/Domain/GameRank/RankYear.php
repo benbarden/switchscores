@@ -3,6 +3,7 @@
 
 namespace App\Domain\GameRank;
 
+use App\Enums\GameStatus;
 use App\Models\Game;
 use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
@@ -44,9 +45,9 @@ class RankYear
             where g.console_id = ?
             and g.release_year = ?
             and g.review_count > 2
-            and g.format_digital != ?
+            and g.game_status = ?
             order by rating_avg desc
-        ", [$this->consoleId, $year, Game::FORMAT_DELISTED]);
+        ", [$this->consoleId, $year, GameStatus::ACTIVE->value]);
     }
 
     public function process($year)

@@ -4,6 +4,7 @@ namespace App\Domain\GamePublisher;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Enums\GameStatus;
 use App\Models\DataSource;
 use App\Models\Game;
 
@@ -52,7 +53,7 @@ class DbQueries
                 'games_companies.name',
                 'games.eu_release_date')
             ->where('game_publishers.publisher_id', $publisherId)
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->whereNotNull('games.game_rank')
             ->orderBy('games.game_rank', 'desc')
             ->orderBy('games.title', 'asc');
@@ -74,7 +75,7 @@ class DbQueries
                 'games_companies.name',
                 'games.eu_release_date')
             ->where('game_publishers.publisher_id', $publisherId)
-            ->where('games.format_digital', '<>', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::ACTIVE->value)
             ->whereNull('games.game_rank')
             ->orderBy('games.title', 'asc');
 
@@ -95,7 +96,7 @@ class DbQueries
                 'games_companies.name',
                 'games.eu_release_date')
             ->where('game_publishers.publisher_id', $publisherId)
-            ->where('games.format_digital', '=', Game::FORMAT_DELISTED)
+            ->where('games.game_status', GameStatus::DELISTED->value)
             ->orderBy('games.title', 'asc');
 
         if ($limit) {

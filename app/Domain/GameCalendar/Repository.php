@@ -4,6 +4,7 @@ namespace App\Domain\GameCalendar;
 
 use App\Domain\Repository\AbstractRepository;
 use App\Enums\CacheDuration;
+use App\Enums\GameStatus;
 use App\Models\GameCalendarStat;
 use App\Models\Game;
 use Illuminate\Support\Facades\DB;
@@ -30,10 +31,7 @@ class Repository extends AbstractRepository
         return Game::where('console_id', $consoleId)
             ->whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
-            ->where(function ($query) {
-                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                    ->orWhereNull('format_digital');
-            })
+            ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
     }
@@ -44,10 +42,7 @@ class Repository extends AbstractRepository
             ->whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
             ->where('games.is_low_quality', $isLowQuality)
-            ->where(function ($query) {
-                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                    ->orWhereNull('format_digital');
-            })
+            ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
     }
@@ -59,10 +54,10 @@ class Repository extends AbstractRepository
             FROM games g
             JOIN categories c ON c.id = g.category_id
             WHERE g.console_id = ? AND YEAR(g.eu_release_date) = ? AND MONTH(g.eu_release_date) = ?
-            AND (format_digital <> ? OR format_digital IS NULL)
+            AND g.game_status = ?
             GROUP BY g.category_id
             ORDER BY count DESC, RAND() LIMIT 1
-        ", [$consoleId, $year, $month, Game::FORMAT_DELISTED]);
+        ", [$consoleId, $year, $month, GameStatus::ACTIVE->value]);
     }
 
     public function getTopPublishersByMonth($consoleId, $year, $month)
@@ -74,10 +69,10 @@ class Repository extends AbstractRepository
             join games_companies gc on gc.id = gp.publisher_id
             where g.console_id = ? and g.is_low_quality = 0
             and year(g.eu_release_date) = ? and month(g.eu_release_date) = ?
-            AND (format_digital <> ? OR format_digital IS NULL)
+            AND g.game_status = ?
             group by gc.id
             order by count(*) desc, gc.name asc
-        ", [$consoleId, $year, $month, Game::FORMAT_DELISTED]);
+        ", [$consoleId, $year, $month, GameStatus::ACTIVE->value]);
     }
 
     public function getMonthlyHiddenGems($consoleId, $year, $month)
@@ -88,10 +83,7 @@ class Repository extends AbstractRepository
             ->where('games.is_low_quality', 0)
             ->where('review_count', '<', 3)
             ->where('review_count', '>', 0)
-            ->where(function ($query) {
-                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                    ->orWhereNull('format_digital');
-            })
+            ->active()
             ->orderBy('games.rating_avg', 'desc')
             ->orderBy('games.review_count', 'desc')
             ->get();
@@ -107,10 +99,7 @@ class Repository extends AbstractRepository
     {
         return Game::whereYear('games.eu_release_date', '=', $year)
             ->whereMonth('games.eu_release_date', '=', $month)
-            ->where(function ($query) {
-                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                    ->orWhereNull('format_digital');
-            })
+            ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
     }
@@ -119,10 +108,7 @@ class Repository extends AbstractRepository
     {
         $gameList = Game::where('console_id', $consoleId)
             ->whereYear('games.eu_release_date', '=', $year)
-            ->where(function ($query) {
-                $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
-                    ->orWhereNull('format_digital');
-            });
+            ->active();
 
         if (!$includeLowQuality) {
             $gameList = $gameList->where('is_low_quality', 0);

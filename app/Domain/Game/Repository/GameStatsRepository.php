@@ -28,7 +28,7 @@ class GameStatsRepository extends AbstractRepository
      */
     public function totalReleased()
     {
-        return Game::where('eu_is_released', 1)->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+        return Game::where('eu_is_released', 1)->active()->count();
     }
 
     /**
@@ -44,9 +44,32 @@ class GameStatsRepository extends AbstractRepository
      */
     public function totalRanked()
     {
-        return Game::whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+        return Game::whereNotNull('game_rank')->active()->count();
     }
 
+    /**
+     * @return integer
+     */
+    public function totalActive()
+    {
+        return Game::active()->count();
+    }
+
+    /**
+     * @return integer
+     */
+    public function totalDelisted()
+    {
+        return Game::delisted()->count();
+    }
+
+    /**
+     * @return integer
+     */
+    public function totalSoftDeleted()
+    {
+        return Game::where('game_status', \App\Enums\GameStatus::SOFT_DELETED)->count();
+    }
 
     /**
      * @return integer

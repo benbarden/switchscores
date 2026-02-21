@@ -22,6 +22,7 @@ use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\Gsc\Snapshot\Repository\GscPageSnapshotRepository;
 
+use App\Enums\GameStatus;
 use App\Models\Game;
 
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -239,6 +240,34 @@ class GamesDetailController extends Controller
             'status' => 'OK'
         );
         return response()->json($data, 200);
+    }
+
+    public function updateStatus($gameId)
+    {
+        $request = request();
+
+        $newStatus = $request->input('status');
+        if (!$newStatus) {
+            return response()->json(['error' => 'Missing data: status'], 400);
+        }
+
+        $validStatuses = array_keys(GameStatus::options());
+        if (!in_array($newStatus, $validStatuses)) {
+            return response()->json(['error' => 'Invalid status value'], 400);
+        }
+
+        $game = $this->repoGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        $game->game_status = $newStatus;
+        $game->save();
+
+        // Clear cache
+        $this->repoGame->clearCacheCoreData($gameId);
+
+        return response()->json(['status' => 'OK', 'new_status' => $newStatus], 200);
     }
 
 }

@@ -22,7 +22,7 @@ class Repository
     {
         return Game::where('review_count', '>', 2)
             ->whereNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('id', 'asc')->get();
     }
 
