@@ -15,6 +15,7 @@ use App\Domain\Tag\Repository as TagRepository;
 use App\Domain\GameCollection\Repository as CollectionRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
 use App\Models\Category;
 use App\Models\Game;
@@ -36,6 +37,7 @@ class GamesListController extends Controller
         private CollectionRepository $repoCollection,
         private GameAffiliateRepository $repoGameAffiliate,
         private GamesCompanyRepository $repoGamesCompany,
+        private TagCategoryRepository $repoTagCategory,
     )
     {
     }
@@ -177,6 +179,31 @@ class GamesListController extends Controller
                 },
                 'dynamicTitle' => true,
             ],
+            'no-tag-category' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($tagCategoryId) {
+                    $tagCategory = $this->repoTagCategory->find($tagCategoryId);
+                    if (!$tagCategory) abort(404);
+                    // Get games that don't have any tag from this tag category
+                    // Excludes low quality and de-listed games
+                    return Game::whereDoesntHave('gameTags', function ($query) use ($tagCategoryId) {
+                        $query->whereHas('tag', function ($q) use ($tagCategoryId) {
+                            $q->where('tag_category_id', $tagCategoryId);
+                        });
+                    })
+                    ->where('is_low_quality', 0)
+                    ->where(function ($query) {
+                        $query->where('format_digital', '<>', Game::FORMAT_DELISTED)
+                              ->orWhereNull('format_digital');
+                    })
+                    ->orderBy('title', 'asc')
+                    ->limit(100)
+                    ->get();
+                },
+                'dynamicTitle' => true,
+                'limit' => 100,
+            ],
             // Affiliates
             'amazon-us-unchecked' => [
                 'title' => 'Amazon US: Unchecked',
@@ -271,6 +298,11 @@ class GamesListController extends Controller
                 [$companyId] = array_pad($args, 1, null);
                 $companyName = $this->repoGamesCompany->find($companyId)?->name ?? '(Unknown company)';
                 return 'By company: ' . $companyName;
+
+            case 'no-tag-category':
+                [$tagCategoryId] = array_pad($args, 1, null);
+                $tagCategoryName = $this->repoTagCategory->find($tagCategoryId)?->name ?? '(Unknown tag category)';
+                return 'No tag from: ' . $tagCategoryName;
 
             default:
                 return '(Untitled list)';

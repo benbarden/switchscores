@@ -44,6 +44,36 @@
                 </tbody>
             </table>
 
+            {{ heading.renderSlick('Navigation') }}
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.category.list') }}">Categories</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.tag.list') }}">Tags</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.game-series.list') }}">Series</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.categorisation.game-collection.list') }}">Collections</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-md-4">
+
             {{ heading.renderSlick('Bulk tools') }}
             <table class="table">
                 <tbody>
@@ -77,140 +107,33 @@
 
         <div class="col-md-4">
 
-            {{ heading.renderSlick('Navigation') }}
-            <table class="table">
-                <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.categorisation.category.list') }}">Categories</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.categorisation.tag.list') }}">Tags</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.categorisation.game-series.list') }}">Series</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.categorisation.game-collection.list') }}">Collections</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            {{ heading.renderSlick('Tag category progress') }}
+            <p class="text-muted small">Total games: {{ TotalGames }}</p>
 
-        </div>
-
-        <div class="col-md-4">
-
-            {{ heading.renderSlick('Tools') }}
-            <table class="table">
-                <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_sim'}) }}">
-                            Edit missing category groups: Sim(ulation)
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategorySimCount }}</span>
-                    </td>
-                </tr>
-                <td>
-                    <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_survival'}) }}">
-                        Edit missing category groups: Survival
-                    </a>
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ BulkEditMissingCategorySurvivalCount }}</span>
-                </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_quiz'}) }}">
-                            Edit missing category groups: Quiz
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryQuizCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_spot_the_difference'}) }}">
-                            Edit missing category groups: Spot the Difference
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategorySpotTheDifferenceCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_puzzle'}) }}">
-                            Edit missing category groups: Puzzle
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryPuzzleCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_sports_racing'}) }}">
-                            Edit missing category groups: Sports and Racing
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategorySportsRacingCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_hidden'}) }}">
-                            Edit missing category groups: Hidden
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryHiddenCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_escape'}) }}">
-                            Edit missing category groups: Escape
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryEscapeCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_hentai_girls'}) }}">
-                            Edit missing category groups: Hentai Girls
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryHentaiGirlsCount }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.bulk-edit.editPredefinedList', {'editMode': 'category_drone_flying_tour'}) }}">
-                            Edit missing category groups: Drone Flying Tour
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <span class="h4">{{ BulkEditMissingCategoryDroneFlyingTourCount }}</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            {% for item in TagCategoryProgress %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span>{{ item.name }}</span>
+                        <span class="small">
+                            {{ item.games_with_tag }} / {{ TotalGames }}
+                            ({{ item.percentage }}%)
+                        </span>
+                    </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: {{ item.percentage }}%"
+                             aria-valuenow="{{ item.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    {% if item.games_without_tag > 0 %}
+                        <div class="small mt-1">
+                            <a href="{{ route('staff.games.list.showList', {'listType': 'no-tag-category', 'param1': item.id}) }}">
+                                View {{ item.games_without_tag }} games without this tag category
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
 
         </div>
 

@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 111**
+**Next ID: 112**
 
 ---
 
@@ -57,7 +57,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
-| 18 | Tag categories: show groups on categorisation dashboard | Low | Dashboard exists - add grouping | Goal: every game has 1+ tag from each tag category (Game type, Gameplay, Content, Mood, Visual style, Viewpoint). Dashboard shows progress. Claude can help with mass tagging. |
 | 19 | Make registration open. Keep invite codes for partners etc | Medium | Invite code validation exists; add open registration toggle | Spam concern. Drop Twitter login around same time. Shore up member tools first. |
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
@@ -78,6 +77,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 87 | GH156: save smaller versions of images for landing pages | High | Requires ImageMagick + CDN strategy | Big images slow pages. But don't want fuzzy images in larger spaces. Balance needed. |
 | 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
 | 95 | GH76: multiplayer options | High | No field; requires migration + UI | Nintendo has more player info (Local/Online). Related to #107. Worth storing. |
+| 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 
 ---
 
@@ -151,6 +151,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 18 | Tag categories: show groups on categorisation dashboard | Done | 2026-02-21 | Reorganized dashboard layout, added progress bars for each tag category, excludes low quality/de-listed games |
 | 41 | Update the title hash when editing a game's title | Done | 2026-02-21 | Auto-creates new title hash when title changes; validates against other games; added repository methods |
 | 65 | Game list: by games company | Done | 2026-02-21 | Added by-company list type with CSV export, limited company show page to 10 recent games with total count, created reusable console-badge.twig macro |
 | 101 | Quick reviews: char count in content box | Done | 2026-02-21 | Added live character counter with maxlength and color warnings |
