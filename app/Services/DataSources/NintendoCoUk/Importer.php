@@ -116,7 +116,8 @@ class Importer
         if ($systemType == 'switch2') {
             $systemQuery = '"nintendoswitch2"';
         } else {
-            $systemQuery = 'nintendoswitch*'." AND product_code_txt:*";
+            // Exclude Switch 2 games from Switch 1 query to prevent duplicates
+            $systemQuery = '(nintendoswitch* AND -system_type:"nintendoswitch2")'." AND product_code_txt:*";
         }
 
         // Build query string

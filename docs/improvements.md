@@ -42,7 +42,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
 | 22 | Add game status for Delisted, (Soft) deleted | Medium | Add dedicated status enum field; migrate from format_digital | First-class field separate from API-driven format. Handle sync issues (API breaks, scripts fail). Soft delete for #31 (410 status). Hard delete still needed for accidents. De-listed hidden on v2 pages. |
 | 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
-| 106 | BUG: Duplicate DataParsedItem records for same console | Medium | Console detection not always working | Sometimes creates two records for same console. Needs investigation. |
 | 110 | Unified game crawl queue system | High | New infrastructure | Solves #70, #78, #109 together. One crawl per game: images, 404s, missing data. Track last_checked, space requests (50-100/few hours), manual/periodic re-queue. |
 
 ---
@@ -156,6 +155,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 106 | BUG: Duplicate DataParsedItem records for same console | Done | 2026-02-21 | Switch 1 query wildcard was matching Switch 2 games; added exclusion filter |
 | 8 | Games companies: search without needing to view all | Done | 2026-02-21 | Replaced full list with search page + quick filter links |
 | 37 | Replace substr with str_starts_with | Done | 2026-02-21 | PHP 8 modernization - 12 replacements across 7 files |
 | 38 | Replace strpos with str_contains | Done | 2026-02-21 | PHP 8 modernization - 7 replacements across 6 files |
