@@ -21,7 +21,7 @@ php artisan route:clear
 php artisan view:clear
 
 echo "=== Clearing Twig cache ==="
-rm -rf storage/framework/views/twig/*
+sudo rm -rf storage/framework/views/twig/*
 
 echo "=== Running migrations ==="
 php artisan migrate --force
