@@ -57,7 +57,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
 | 10 | Scrape publisher name, players, and other info from Nintendo URL | High | Needs new scraper class + DOM parsing | For backfilling - new games covered. Page structure fairly stable. Already doing this in another Claude Code project. |
-| 12 | Table sorting is broken on one staff page | Low | Need to identify which page | Page: /staff/data-sources/nintendo-co-uk/ignored. JS/DataTables broken. Shows entire dataset without pagination. |
+| 12 | ~~Table sorting is broken on one staff page~~ | Low | Need to identify which page | → Moved to Done |
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
@@ -159,24 +159,25 @@ This document tracks potential improvements, features, and enhancements for the 
 
 ## Merged / Killed / Done
 
-| # | Idea | Status | Notes |
-|---|------|--------|-------|
-| 21 | Show "one to watch" on site | Merged | → #16 |
-| 24 | Rework tag pages for v2 layout | Merged | → #6 |
-| 25 | Allow drill down by tag within a category | Merged | → #5 |
-| 26 | Update series pages to have Switch 1/2 in single list | Merged | → #3 |
-| 27 | Update collection pages to have Switch 1/2 in single list | Merged | → #4 |
-| 45 | Games with multiple editions: link together (S1/S2) | Merged | → #44 |
-| 48 | Search by games companies without going into the list | Merged | → #8 |
-| 54 | Look into splitting low quality games from browse pages | Done | Covered by v2 templates |
-| 55 | Send invite codes from requests screen | Superseded | By #19 (open registration) |
-| 60 | Auto-assignment rules | Killed | Doing via Claude Code already |
-| 71 | View all in series/category: split by Switch 1/2 | Merged | → #3 |
-| 72 | Homepage: console split for Recent top rated | Killed | Yearly done, console name shown above images |
-| 76 | Bulk edit: publisher link should go to staff | Killed | Low value, may replace bulk edit pages anyway |
-| 91 | Data Sources - view parsed item | Merged | → #14 |
-| 92 | Link DSParsedItem to DSRawItem | Merged | → #14 |
-| 104 | Update sitemaps to include games companies | Killed | 3k thin pages not worth it |
+| # | Idea | Status | Date | Notes |
+|---|------|--------|------|-------|
+| 12 | Table sorting is broken on one staff page | Done | 2026-02-21 | Fixed missing Console column in DataTables config (list-scripts.twig) |
+| 21 | Show "one to watch" on site | Merged | 2026-02-20 | → #16 |
+| 24 | Rework tag pages for v2 layout | Merged | 2026-02-20 | → #6 |
+| 25 | Allow drill down by tag within a category | Merged | 2026-02-20 | → #5 |
+| 26 | Update series pages to have Switch 1/2 in single list | Merged | 2026-02-20 | → #3 |
+| 27 | Update collection pages to have Switch 1/2 in single list | Merged | 2026-02-20 | → #4 |
+| 45 | Games with multiple editions: link together (S1/S2) | Merged | 2026-02-20 | → #44 |
+| 48 | Search by games companies without going into the list | Merged | 2026-02-20 | → #8 |
+| 54 | Look into splitting low quality games from browse pages | Done | 2026-02-20 | Covered by v2 templates |
+| 55 | Send invite codes from requests screen | Superseded | 2026-02-20 | By #19 (open registration) |
+| 60 | Auto-assignment rules | Killed | 2026-02-20 | Doing via Claude Code already |
+| 71 | View all in series/category: split by Switch 1/2 | Merged | 2026-02-20 | → #3 |
+| 72 | Homepage: console split for Recent top rated | Killed | 2026-02-20 | Yearly done, console name shown above images |
+| 76 | Bulk edit: publisher link should go to staff | Killed | 2026-02-20 | Low value, may replace bulk edit pages anyway |
+| 91 | Data Sources - view parsed item | Merged | 2026-02-20 | → #14 |
+| 92 | Link DSParsedItem to DSRawItem | Merged | 2026-02-20 | → #14 |
+| 104 | Update sitemaps to include games companies | Killed | 2026-02-20 | 3k thin pages not worth it |
 
 ---
 

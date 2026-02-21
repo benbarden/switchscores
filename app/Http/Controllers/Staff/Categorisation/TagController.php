@@ -23,7 +23,7 @@ class TagController extends Controller
     /**
      * @var array
      */
-    private $validationRules = [
+    private $validationRulesBase = [
         'tag_name' => 'required',
         'link_title' => 'required',
     ];
@@ -65,7 +65,10 @@ class TagController extends Controller
 
             $bindings['FormMode'] = 'add-post';
 
-            $this->validate($request, $this->validationRules);
+            $rules = array_merge($this->validationRulesBase, [
+                'link_title' => 'required|unique:tags,link_title',
+            ]);
+            $this->validate($request, $rules);
 
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
@@ -104,7 +107,10 @@ class TagController extends Controller
 
             $bindings['FormMode'] = 'edit-post';
 
-            $this->validate($request, $this->validationRules);
+            $rules = array_merge($this->validationRulesBase, [
+                'link_title' => 'required|unique:tags,link_title,'.$tagId,
+            ]);
+            $this->validate($request, $rules);
 
             $tagName = $request->tag_name;
             $linkTitle = $request->link_title;
