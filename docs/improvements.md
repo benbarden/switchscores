@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 114**
+**Next ID: 116**
 
 ---
 
@@ -41,7 +41,7 @@ This document tracks potential improvements, features, and enhancements for the 
 |---|------|------------|-------|------------|
 | 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
 | 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
-| 110 | Unified game crawl queue system | High | New infrastructure | Solves #70, #78, #109 together. One crawl per game: images, 404s, missing data. Track last_checked, space requests (50-100/few hours), manual/periodic re-queue. |
+| 110 | Game crawl POC: single game URL check | Medium | Foundation for crawl system | Build `game:crawl {id}` command, add `last_crawled_at` field, check URL status (200/404/etc). Proves the approach before building full queue. Design doc: `docs/tasks/110-game-crawl-queue-system.md` |
 
 ---
 
@@ -78,6 +78,8 @@ This document tracks potential improvements, features, and enhancements for the 
 | 95 | GH76: multiplayer options | High | No field; requires migration + UI | Nintendo has more player info (Local/Online). Related to #107. Worth storing. |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 | 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
+| 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
+| 115 | Claude-assisted game tagging | Medium | Discovery/clustering goal | Help tag games to improve discoverability. Focus on Viewpoint, Visual style, Game type. Phase 1: keyword matching (title contains "Solitaire" → Solitaire tag). Phase 2: Nintendo genres_json mapping. Phase 3: interactive batch suggestions. Build artisan command to export "games with keyword X but missing tag Y". |
 
 ---
 
@@ -189,6 +191,7 @@ Tasks where Claude Code can help directly (no UI needed):
 
 | Related # | Task |
 |-----------|------|
+| 115 | Claude-assisted game tagging (keyword matching, Nintendo data, batch suggestions) |
 | 2, 18 | Mass tagging games |
 | 10, 95 | Scraping Nintendo page data |
 | 59 | Review import tool (scrape to JSON) |

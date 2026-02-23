@@ -1,6 +1,33 @@
-# 110: Unified Game Crawl Queue System
+# 110: Game Crawl POC - Single Game URL Check
 
 ## Overview
+
+**This task:** Build a proof-of-concept single-game crawl command that checks URL status. This validates the approach before building the full queue system.
+
+**Future tasks:** Once POC proves the approach, create new tasks for expanding data points, queue infrastructure, and full rollout.
+
+## Scope for #110
+
+- [x] Design doc (this file)
+- [x] Add `last_crawled_at` field to games table
+- [x] Add `last_crawl_status` field to games table
+- [x] Create `game_crawl_lifecycle` table + model
+- [x] Build `php artisan game:crawl {game_id} [--save-html]` command
+- [x] Build `php artisan game:crawl-batch` command with rate limiting
+- [x] Fetch Nintendo UK URL for a game
+- [x] Return and log HTTP status code (200, 404, 410, 301, etc.)
+- [x] Update `last_crawled_at` on success
+- [x] Log to lifecycle table (problems + recoveries only)
+- [x] Staff dashboard: crawl lifecycle stats
+- [x] Test manually
+
+**Out of scope for #110:** Queue table, batch processing, image downloads, metadata scraping, staff UI.
+
+## Key Context
+
+Around 2023, Nintendo's API broke - coverage dropped from 80-90% of games to just 5-10%. As a workaround, ~8430 games now have manual `nintendo_store_url_override` URLs. These have been sitting unchecked since then, potentially going stale with no automated way to detect broken links. This is the primary driver for the crawl queue system.
+
+## Full Vision (for reference)
 
 A queue-based system to crawl Nintendo game pages and maintain data freshness across ~15k games. Instead of batch operations that hammer the server or manual one-off fixes, this provides a sustainable, rate-limited approach to data maintenance.
 
@@ -44,13 +71,12 @@ A queue-based system to crawl Nintendo game pages and maintain data freshness ac
 ## Proposed Schema
 
 ```sql
--- Main queue table
+-- Queue table (only needed for Phase 3+)
 CREATE TABLE game_crawl_queue (
     id BIGINT PRIMARY KEY,
     game_id INT UNSIGNED NOT NULL,
 
     -- Scheduling
-    last_crawled_at TIMESTAMP NULL,
     next_crawl_at TIMESTAMP NULL,
     priority TINYINT DEFAULT 5,  -- 0=highest, 10=lowest
 
@@ -58,11 +84,6 @@ CREATE TABLE game_crawl_queue (
     status ENUM('pending', 'in_progress', 'completed', 'failed') DEFAULT 'pending',
     consecutive_failures TINYINT DEFAULT 0,
     last_failure_reason VARCHAR(255) NULL,
-
-    -- What to check on next crawl (flags)
-    check_url_status BOOLEAN DEFAULT TRUE,
-    check_image BOOLEAN DEFAULT TRUE,
-    check_metadata BOOLEAN DEFAULT TRUE,
 
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
@@ -72,22 +93,14 @@ CREATE TABLE game_crawl_queue (
     INDEX idx_status (status)
 );
 
--- Crawl history/results (optional, for debugging)
-CREATE TABLE game_crawl_log (
-    id BIGINT PRIMARY KEY,
-    game_id INT UNSIGNED NOT NULL,
-    crawled_at TIMESTAMP,
+-- Note: No separate log table needed.
+-- `last_crawled_at` lives on the games table.
+-- Audit history via existing audits system.
+```
 
-    url_status SMALLINT,  -- HTTP status code
-    image_updated BOOLEAN DEFAULT FALSE,
-    metadata_updated BOOLEAN DEFAULT FALSE,
-
-    raw_response TEXT NULL,  -- Store for debugging if needed
-    error_message VARCHAR(255) NULL,
-
-    FOREIGN KEY (game_id) REFERENCES games(id),
-    INDEX idx_game_date (game_id, crawled_at)
-);
+### Games Table Addition
+```sql
+ALTER TABLE games ADD COLUMN last_crawled_at TIMESTAMP NULL;
 ```
 
 ## Architecture Options
@@ -168,38 +181,37 @@ Most robust but requires supervisor setup.
 
 Start with **Option A** (scheduled command). It's the simplest, requires no new infrastructure, and handles 50-100 games every few hours perfectly well. Can upgrade to Option B/C later if needed.
 
-## Implementation Phases
+## Implementation Phases (Revised)
 
-### Phase 1: Foundation
-1. Create migrations for `game_crawl_queue` table
+### Phase 1: Single Game Command
+1. Add `last_crawled_at` to games table
+2. Create `php artisan game:crawl {game_id} [--save-html]` command
+3. Implement URL status check (HTTP status code)
+4. Test manually on a few games
+
+### Phase 2: Expand Data Points
+Once URL check works, add:
+- Image URL extraction (#70)
+- Player count scraping (#95, #107)
+- Publisher scraping (#10)
+- Add new fields if needed
+
+### Phase 3: Queue Infrastructure
+1. Create `game_crawl_queue` table
 2. Create `GameCrawlQueue` model
-3. Seed queue with all games (initial `next_crawl_at` spread over 60 days)
-4. Create basic `ProcessGameCrawlQueue` command
-5. Add cron entry
+3. Create `php artisan games:process-crawl-queue --limit=50` command
+4. Seed with small test set (e.g., 100 recent games)
+5. Validate full cycle
 
-### Phase 2: URL Health Check (#78, #109)
-1. Implement URL status checking
-2. Update game's URL status field
-3. Handle 404s (mark as potentially de-listed)
-4. Handle redirects (update URL if permanent)
-
-### Phase 3: Image Quality (#70)
-1. Check current image dimensions
-2. Compare with Nintendo page image
-3. Re-download if higher quality available
-4. Update game record
-
-### Phase 4: Metadata Scraping (#10, #95, #107)
-1. Scrape player counts (Local/Online)
-2. Scrape publisher
-3. Store in appropriate game fields
-4. Add new fields if needed for Local/Online players
+### Phase 4: Full Rollout
+1. Seed queue with all games (spread `next_crawl_at` over 60 days)
+2. Add cron entry
+3. Monitor and adjust
 
 ### Phase 5: Staff UI
 1. Dashboard showing queue status
-2. Manual re-queue buttons
-3. View crawl history per game
-4. Bulk actions (re-queue category, re-queue failed, etc.)
+2. Manual re-queue button on game detail page
+3. Bulk actions (re-queue failed, re-queue by filter)
 
 ## Rate Limiting Strategy
 
@@ -229,13 +241,50 @@ Start with **Option A** (scheduled command). It's the simplest, requires no new 
 - **3+ consecutive failures:** Lower priority, flag for manual review
 - **Rate limited (429):** Pause queue, alert, backoff
 
-## Questions to Resolve
+## Questions - RESOLVED
 
-1. Do we need the full crawl log table, or just last_crawled_at?
-2. Should we store raw HTML responses for debugging?
-3. How to handle games with no Nintendo URL?
-4. Add US URL field to games table now, or later?
-5. What triggers a manual re-queue? Game edit? Staff button?
+1. **Crawl log table?** No - just `last_crawled_at`. Games already have full audit history.
+2. **Store raw HTML?** Only for debugging specific games. Add `--save-html` option for single-game crawl mode. Don't store HTML during mass crawling.
+3. **Games with no Nintendo URL?** Can't handle them now. They need either an override URL or a linked DataSource item. Create a list to identify these (<100 games, low impact).
+4. **US URL field?** Later.
+5. **Manual re-queue trigger?** Staff button only. No auto-trigger on edit. Can bump priority by clearing `last_crawled_at`.
+
+## Pre-requisite: Identify Games Without URLs
+
+Before crawling, need to know which games CAN be crawled. A game needs either:
+- `nintendo_store_url_override` field set, OR
+- Linked DataSourceParsed item with a URL
+
+Create a staff list or query to identify games with neither (<100 expected). These are out of scope for crawling.
+
+## Iterative Approach
+
+**Key principle:** Start very small. Don't load 15k games into the queue until the crawl-and-save flow is proven.
+
+### Step 1: Single Game Crawl
+- Build command: `php artisan game:crawl {game_id} [--save-html]`
+- Fetch Nintendo UK page
+- Parse ONE piece of data (e.g., URL status or image URL)
+- Save to game record
+- Update `last_crawled_at`
+
+**Suggested first data point: URL status check**
+- Simple: just HTTP status code (200, 404, 410, 301, etc.)
+- Immediately useful: finds dead links
+- Low risk: doesn't modify game data, just validates
+
+### Step 2: Validate & Expand Data
+- Once one data point works reliably, add more (players, publisher, etc.)
+- Test on a handful of games manually
+
+### Step 3: Queue Infrastructure
+- Only then add the queue table and batch processing
+- Start with a small subset (e.g., 100 recently released games)
+- Validate the full cycle works
+
+### Step 4: Full Rollout
+- Seed queue with all games
+- Enable cron schedule
 
 ## Notes
 

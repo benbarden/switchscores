@@ -11,6 +11,7 @@ use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -61,6 +62,32 @@ class DashboardController extends Controller
         $bindings['AmazonUKLinkedCount'] = $this->repoGameAffiliate->countLinked('uk');
         $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
         $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
+
+        // Crawl lifecycle stats (active games only)
+        $bindings['CrawlNotYetCrawled'] = DB::table('games')
+            ->whereNull('last_crawled_at')
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus200'] = DB::table('games')
+            ->where('last_crawl_status', 200)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus404'] = DB::table('games')
+            ->where('last_crawl_status', 404)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus410'] = DB::table('games')
+            ->where('last_crawl_status', 410)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatusRedirect'] = DB::table('games')
+            ->whereBetween('last_crawl_status', [300, 399])
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatusError'] = DB::table('games')
+            ->where('last_crawl_status', '>=', 500)
+            ->where('game_status', 'active')
+            ->count();
 
         return view('staff.games.dashboard', $bindings);
     }

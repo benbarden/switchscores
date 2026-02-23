@@ -16,6 +16,7 @@ use App\Domain\GameCollection\Repository as CollectionRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
+use App\Domain\Game\Repository\GameCrawlRepository;
 
 use App\Models\Category;
 use App\Models\Game;
@@ -38,6 +39,7 @@ class GamesListController extends Controller
         private GameAffiliateRepository $repoGameAffiliate,
         private GamesCompanyRepository $repoGamesCompany,
         private TagCategoryRepository $repoTagCategory,
+        private GameCrawlRepository $repoGameCrawl,
     )
     {
     }
@@ -249,6 +251,27 @@ class GamesListController extends Controller
                 //'sort'  => "[6, 'asc']",
                 'fetch' => fn() => $this->repoGameAffiliate->getIgnored('uk'),
                 'limit' => 1000,
+            ],
+            // Crawl status
+            'crawl-status-404' => [
+                'title' => 'Crawl status: 404 Not Found',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameCrawl->getStatus404(),
+            ],
+            'crawl-status-410' => [
+                'title' => 'Crawl status: 410 Gone',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameCrawl->getStatus410(),
+            ],
+            'crawl-status-redirect' => [
+                'title' => 'Crawl status: 3xx Redirect',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameCrawl->getStatusRedirect(),
+            ],
+            'crawl-status-error' => [
+                'title' => 'Crawl status: 5xx Server Error',
+                'sort'  => "[0, 'desc']",
+                'fetch' => fn() => $this->repoGameCrawl->getStatusServerError(),
             ],
 
         ];

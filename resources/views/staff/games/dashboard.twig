@@ -180,6 +180,30 @@
 
         {% include 'staff/games/partials/game-status-stats.twig' %}
 
+        {{ heading.renderSlick('Crawl lifecycle') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Not yet crawled', null, CrawlNotYetCrawled
+            ) }}
+            {{ rowstat.renderB5(
+                '200 - OK', null, CrawlStatus200
+            ) }}
+            {{ rowstat.renderB5(
+                '404 - Not found', route('staff.games.list.showList', {'listType': 'crawl-status-404'}), CrawlStatus404
+            ) }}
+            {{ rowstat.renderB5(
+                '410 - Gone', route('staff.games.list.showList', {'listType': 'crawl-status-410'}), CrawlStatus410
+            ) }}
+            {{ rowstat.renderB5(
+                '3xx - Redirect', route('staff.games.list.showList', {'listType': 'crawl-status-redirect'}), CrawlStatusRedirect
+            ) }}
+            {{ rowstat.renderB5(
+                '5xx - Server error', route('staff.games.list.showList', {'listType': 'crawl-status-error'}), CrawlStatusError
+            ) }}
+            </tbody>
+        </table>
 
         {{ heading.renderSlick('Affiliates') }}
 

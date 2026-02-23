@@ -169,6 +169,9 @@ class GamesDetailController extends Controller
 
         $bindings['Checks'] = $checks;
 
+        // Crawl lifecycle history
+        $bindings['CrawlLifecycle'] = $game->crawlLifecycle()->orderBy('crawled_at', 'desc')->limit(20)->get();
+
         return view('staff.games.detail.show', $bindings);
     }
 

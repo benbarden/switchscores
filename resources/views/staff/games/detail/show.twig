@@ -161,6 +161,7 @@
                 <li><a href="#tabs-data-sources">Data sources</a></li>
                 <li><a href="#tabs-import-rules">Import rules</a></li>
                 <li><a href="#tabs-audit">Audit</a></li>
+                <li><a href="#tabs-crawl-lifecycle">Crawl lifecycle</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
             </ul>
@@ -203,6 +204,75 @@
 
                 <h2>Audit</h2>
                 {% include 'staff/games/detail/tab-audit.twig' %}
+
+            </div>
+
+            <div id="tabs-crawl-lifecycle">
+
+                <h2>Crawl lifecycle</h2>
+
+                <p>
+                    <strong>Last crawled:</strong>
+                    {% if GameData.last_crawled_at %}
+                        {{ GameData.last_crawled_at|date('Y-m-d H:i:s') }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <strong>Last status:</strong>
+                    {% if GameData.last_crawl_status %}
+                        {{ GameData.last_crawl_status }}
+                        {% if GameData.last_crawl_status == 200 %}
+                            <span class="badge bg-success">OK</span>
+                        {% elseif GameData.last_crawl_status == 404 %}
+                            <span class="badge bg-danger">Not Found</span>
+                        {% elseif GameData.last_crawl_status == 410 %}
+                            <span class="badge bg-danger">Gone</span>
+                        {% elseif GameData.last_crawl_status >= 300 and GameData.last_crawl_status < 400 %}
+                            <span class="badge bg-warning">Redirect</span>
+                        {% elseif GameData.last_crawl_status >= 500 %}
+                            <span class="badge bg-danger">Server Error</span>
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
+
+                {% if CrawlLifecycle|length > 0 %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in CrawlLifecycle %}
+                        <tr>
+                            <td>{{ item.crawled_at|date('Y-m-d H:i:s') }}</td>
+                            <td>
+                                {{ item.status_code }}
+                                {% if item.status_code == 200 %}
+                                    <span class="badge bg-success">Recovered</span>
+                                {% elseif item.status_code == 404 %}
+                                    <span class="badge bg-danger">Not Found</span>
+                                {% elseif item.status_code == 410 %}
+                                    <span class="badge bg-danger">Gone</span>
+                                {% elseif item.status_code >= 300 and item.status_code < 400 %}
+                                    <span class="badge bg-warning">Redirect</span>
+                                {% elseif item.status_code >= 500 %}
+                                    <span class="badge bg-danger">Server Error</span>
+                                {% endif %}
+                            </td>
+                            <td style="font-size: 0.85em; word-break: break-all;">{{ item.url_crawled }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No lifecycle events recorded yet. Events are logged when crawl status changes (problems detected or resolved).</p>
+                {% endif %}
 
             </div>
 

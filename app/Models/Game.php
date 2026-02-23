@@ -44,13 +44,15 @@ class Game extends Model implements Auditable
         'format_digital', 'format_physical', 'format_dlc', 'format_demo', 'game_status',
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
         'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch',
-        'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin'
+        'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin',
+        'last_crawled_at', 'last_crawl_status'
     ];
 
     protected $casts = [
         'category_verification' => 'integer',
         'tags_verification' => 'integer',
         'game_status' => GameStatus::class,
+        'last_crawled_at' => 'datetime',
     ];
 
     public function console()
@@ -101,6 +103,11 @@ class Game extends Model implements Auditable
     public function gamePublishers()
     {
         return $this->hasMany('App\Models\GamePublisher', 'game_id', 'id');
+    }
+
+    public function crawlLifecycle()
+    {
+        return $this->hasMany('App\Models\GameCrawlLifecycle', 'game_id', 'id');
     }
 
     public function gameQualityScore()
