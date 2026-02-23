@@ -158,6 +158,9 @@ class GameCrawlBatch extends Command
             $game->last_crawl_status = $statusCode;
             $game->save();
 
+            // Clear cache so updated data is visible immediately
+            $this->repoGame->clearCacheCoreData($game->id);
+
             // Log to lifecycle table if it's a problem or recovery
             $this->logLifecycleEvent($game, $statusCode, $previousStatus, $url);
 

@@ -91,6 +91,9 @@ class GameCrawlUrl extends Command
             $game->last_crawl_status = $statusCode;
             $game->save();
 
+            // Clear cache so updated data is visible immediately
+            $this->repoGame->clearCacheCoreData($game->id);
+
             $this->info("Updated last_crawled_at and last_crawl_status");
             $logger->info("Updated crawl fields for game: {$game->id}");
 
