@@ -4,6 +4,46 @@ Development history and completed work.
 
 ---
 
+## 2026-02-23 — Game Crawl System (Task #110)
+
+**Summary:**
+Built infrastructure to crawl Nintendo URLs and detect broken links across ~8430 games with manual override URLs. Sustainable approach: 100 games/night via cron, full cycle in ~3 months.
+
+**Commands:**
+- `php artisan game:crawl {gameId} [--save-html]` — Single game crawl with optional HTML debug output
+- `php artisan game:crawl-batch [--limit=100] [--delay=3] [--source=override]` — Batch crawl with rate limiting
+
+**Database:**
+- `games.last_crawled_at` — Timestamp of last crawl
+- `games.last_crawl_status` — HTTP status code (200, 404, 410, etc.)
+- `game_crawl_lifecycle` table — Logs problems (non-200) and recoveries (200 after problem) only
+
+**Staff UI:**
+- Dashboard: Crawl lifecycle stats (Not yet crawled, 200 OK, 404, 410, redirects, errors)
+- Clickable links to list pages for each problem status
+- GameDetail: New "Crawl lifecycle" tab showing current status and history
+
+**Cron:**
+```
+30 6 * * * php artisan game:crawl-batch --limit=100 --delay=3
+```
+
+**Key design decisions:**
+- Only active games are crawled (delisted/soft-deleted excluded)
+- Lifecycle table only stores state changes (not routine 200s) to avoid bloat
+- Must clear game cache after crawl (`clearCacheCoreData()`) due to ONE_DAY caching
+
+**Also completed:**
+- Created `docs/coding-standards.md` documenting repository pattern and other standards
+- Created `App\Domain\Game\Repository\GameCrawlRepository` for crawl status queries
+
+**Related tasks for future phases:**
+- #70 — Re-download hi-res images (can use crawl infrastructure)
+- #10 — Scrape publisher, players from Nintendo URL
+- #95/#107 — Scrape multiplayer options (Local/Online player counts)
+
+---
+
 ## Planned: GameCreationService Refactor
 
 **Goal:** Consolidate game creation logic into a single service class.

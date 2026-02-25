@@ -119,9 +119,11 @@ class GameCrawlBatch extends Command
         }
         // 'all' doesn't add extra filters
 
-        // Prioritise: never crawled first, then oldest crawled
-        $query->orderByRaw('last_crawled_at IS NULL DESC')
+        // Prioritise: override URLs first (most likely broken), then never crawled, then oldest crawled, then oldest games
+        $query->orderByRaw('nintendo_store_url_override IS NOT NULL DESC')
+              ->orderByRaw('last_crawled_at IS NULL DESC')
               ->orderBy('last_crawled_at', 'asc')
+              ->orderBy('id', 'asc')
               ->limit($limit);
 
         return $query->get()->all();

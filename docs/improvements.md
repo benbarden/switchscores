@@ -41,8 +41,6 @@ This document tracks potential improvements, features, and enhancements for the 
 |---|------|------------|-------|------------|
 | 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
 | 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
-| 110 | Game crawl POC: single game URL check | Medium | Foundation for crawl system | Build `game:crawl {id}` command, add `last_crawled_at` field, check URL status (200/404/etc). Proves the approach before building full queue. Design doc: `docs/tasks/110-game-crawl-queue-system.md` |
-
 ---
 
 ## Medium Priority
@@ -53,7 +51,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
-| 10 | Scrape publisher name, players, and other info from Nintendo URL | High | Needs new scraper class + DOM parsing | For backfilling - new games covered. Page structure fairly stable. Already doing this in another Claude Code project. |
+| 10 | Scrape publisher name, players, and other info from Nintendo URL | Medium | Extend #110 crawl system | For backfilling - new games covered. Can now use crawl infrastructure from #110 - add metadata parsing to `GameCrawlBatch`. |
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
@@ -72,10 +70,10 @@ This document tracks potential improvements, features, and enhancements for the 
 | 62 | New process status: Content does not meet inclusion criteria | Medium | Add new status constant + update logic | Consolidates similar statuses. Needs data fix for existing records. |
 | 66 | Submit quick review without signing up | High | Auth system requires user; needs guest flow | Spam risk but need reviews. WordPress-style: Name/Email, cookie, optional auto-account. Low friction. Do even with good signup. |
 | 69 | Fix Digitally Downloaded Feedburner review links | Low | Update PartnerFeedLink URL | Older review URLs are dead. Need scraping to find actual URLs. Claude can help. |
-| 70 | Re-download hi-res images for N.co.uk linked games | Medium | Add re-download job with filtering | Old images are low quality. Bigger idea: unified crawl queue for images, 404s, missing data. One crawl per game, track last check, space out requests (50-100 every few hours). Manual or periodic re-queue. |
+| 70 | Re-download hi-res images for N.co.uk linked games | Medium | Extend #110 crawl system | Old images are low quality. Can now use crawl infrastructure from #110 - add image parsing to `GameCrawlBatch`. |
 | 87 | GH156: save smaller versions of images for landing pages | High | Requires ImageMagick + CDN strategy | Big images slow pages. But don't want fuzzy images in larger spaces. Balance needed. |
 | 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
-| 95 | GH76: multiplayer options | High | No field; requires migration + UI | Nintendo has more player info (Local/Online). Related to #107. Worth storing. |
+| 95 | GH76: multiplayer options | Medium | Extend #110 crawl system | Nintendo has more player info (Local/Online). Related to #107. Can use crawl infrastructure from #110 to scrape this data. |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 | 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
 | 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
@@ -112,7 +110,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 74 | Featured games: rotate | Medium | FeaturedGame model exists; add rotation logic | Only in Members (latest 3). Ties to displaying featured elsewhere. May overlap with existing ticket. |
 | 75 | Daily stats for monitoring | Medium | No model; create new stats table | Most exist already: games, review links, ranked, without categories, unlinked, N.co.uk parsed. |
 | 77 | Video URL: load from N URL? | Medium | Needs new scraper parser | Claude could scrape this. |
-| 78 | 404 checker: 100-200 per day, sort by last check/de-listed | Medium | No infrastructure; new model + command | Related to #109 (dead Nintendo URLs). Strategy TBD. |
+| 78 | 404 checker | Merged | 2026-02-23 | → #110 |
 | 79 | Unranked for members | Low | Add unranked filter to member views | May push members to review games. |
 | 80 | Twitter signup / autogenerated email address | High | OAuth exists; needs email auto-gen flow | Tech debt. Low value if removing Twitter. But useful if multiple login methods later. Hold for now. |
 | 81 | Review links: remove ability to change site id | Low | Add validation to prevent changes | Only for incorrect imports. Keep for now. |
@@ -143,9 +141,9 @@ This document tracks potential improvements, features, and enhancements for the 
 | 4 | Change collection page to be both consoles | Low | Same pattern as #3 | Part of console-split decision - see #3. Includes #27. |
 | 56 | Lists: New additions/DB entries | Low | recentlyAdded() exists; create public list view | Raw DB additions less useful than new releases. Real value might be "surprise releases" - games that appear without being on coming soon. Consider killing or repurposing. |
 | 98 | Review sites: link to all reviews by a partner (public) | Low | Add public page listing reviews | Only show latest 20-25 per partner. NLife has 3000+. Rethink or revamp partner profile pages instead? Maybe kill and create new tasks. |
-| 107 | Store Local vs Online player counts separately | Medium | Nintendo pages show different counts | Newer data from Nintendo - worth capturing |
+| 107 | Store Local vs Online player counts separately | Medium | Extend #110 crawl system | Nintendo pages show different counts. Can use crawl infrastructure from #110. Related to #95. |
 | 108 | Scrape Developer from US Nintendo pages | Medium | UK pages don't have Developer, US does | Would need to add US URLs first |
-| 109 | Check for dead Nintendo URLs | High | 15k URLs, can't check regularly | Hard-coded URLs may go dead. Need strategy. See #110 for unified approach. |
+| 109 | Check for dead Nintendo URLs | Merged | 2026-02-23 | → #110 |
 
 ---
 
@@ -153,6 +151,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 110 | Game crawl POC | Done | 2026-02-23 | `game:crawl` + `game:crawl-batch` commands, `last_crawled_at` + `last_crawl_status` fields, `game_crawl_lifecycle` table, dashboard stats with links to list pages, GameDetail tab, cron entry (100/night). See `docs/tasks/110-game-crawl-queue-system.md` |
 | 22 | Add game status for Delisted, (Soft) deleted | Done | 2026-02-21 | GameStatus enum (ACTIVE/DELISTED/SOFT_DELETED), all repos updated to use active()/delisted() scopes, staff inline editor, 410 for soft_deleted, API safeguards. See `docs/tasks/022-game-status-field.md` |
 | 31 | Hold deleted URLs; send 410 status to Google | Done | 2026-02-21 | Implemented via #22 - soft_deleted games return 410 status, `errors/410.twig` created |
 | 18 | Tag categories: show groups on categorisation dashboard | Done | 2026-02-21 | Reorganized dashboard layout, added progress bars for each tag category, excludes low quality/de-listed games |
