@@ -45,7 +45,9 @@ class Game extends Model implements Auditable
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
         'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch',
         'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin',
-        'last_crawled_at', 'last_crawl_status'
+        'last_crawled_at', 'last_crawl_status',
+        'multiplayer_mode', 'has_online_play', 'has_local_multiplayer',
+        'play_mode_tv', 'play_mode_tabletop', 'play_mode_handheld'
     ];
 
     protected $casts = [

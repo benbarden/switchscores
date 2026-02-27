@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\BrowserKit\HttpBrowser;
 
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Scraper\NintendoCoUkGameData;
 use App\Models\Game;
 use App\Models\GameCrawlLifecycle;
+use App\Models\GameScrapedData;
 
 class GameCrawlUrl extends Command
 {
@@ -99,6 +101,11 @@ class GameCrawlUrl extends Command
 
             // Log to lifecycle table if it's a problem or recovery
             $this->logLifecycleEvent($game, $statusCode, $previousStatus, $url, $logger);
+
+            // Scrape game data if page is live
+            if ($statusCode === 200) {
+                $this->scrapeGameData($game, $crawler->html(), $logger);
+            }
 
             // Report on status
             $this->reportStatus($statusCode);
@@ -201,5 +208,118 @@ class GameCrawlUrl extends Command
             $this->info("Logged lifecycle event: {$eventType}");
             $logger->info("Logged lifecycle event for game {$game->id}: {$eventType}");
         }
+    }
+
+    /**
+     * Scrape game data from the HTML and save to database.
+     */
+    private function scrapeGameData(Game $game, string $html, $logger): void
+    {
+        try {
+            $scraper = new NintendoCoUkGameData($html);
+
+            if (!$scraper->hasData()) {
+                $this->info("No player/multiplayer data found on page");
+                $logger->info("No player/multiplayer data found for game: {$game->id}");
+                return;
+            }
+
+            // Update or create the scraped data record
+            GameScrapedData::updateOrCreate(
+                ['game_id' => $game->id],
+                [
+                    'players_local' => $scraper->getPlayersLocal(),
+                    'players_wireless' => $scraper->getPlayersWireless(),
+                    'players_online' => $scraper->getPlayersOnline(),
+                    'multiplayer_mode' => $scraper->getMultiplayerMode(),
+                    'features_json' => $scraper->getFeatures(),
+                    'scraped_at' => now(),
+                ]
+            );
+
+            $this->info("Scraped game data saved");
+            $logger->info("Scraped game data saved for game: {$game->id}");
+
+            // Log what was found
+            $data = $scraper->getData();
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
+                $this->info("  {$key}: {$value}");
+            }
+
+            // Update game fields from scraped data
+            $this->updateGameFromScrapedData($game, $scraper, $logger);
+
+        } catch (\Exception $e) {
+            $this->warn("Failed to scrape game data: " . $e->getMessage());
+            $logger->warning("Failed to scrape game data for game {$game->id}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update game fields from scraped data.
+     */
+    private function updateGameFromScrapedData(Game $game, NintendoCoUkGameData $scraper, $logger): void
+    {
+        $updates = [];
+        $changes = [];
+
+        // Players field
+        $combinedPlayers = $scraper->getCombinedPlayers();
+        if ($combinedPlayers !== null && $game->players !== $combinedPlayers) {
+            $oldValue = $game->players ?? '(empty)';
+            $updates['players'] = $combinedPlayers;
+            $changes[] = "players: {$oldValue} -> {$combinedPlayers}";
+        }
+
+        // Multiplayer mode
+        $multiplayerMode = $scraper->getMultiplayerMode();
+        if ($multiplayerMode !== null && $game->multiplayer_mode !== $multiplayerMode) {
+            $oldValue = $game->multiplayer_mode ?? '(empty)';
+            $updates['multiplayer_mode'] = $multiplayerMode;
+            $changes[] = "multiplayer_mode: {$oldValue} -> {$multiplayerMode}";
+        }
+
+        // Boolean flags - only update if scraper found features data
+        if (!empty($scraper->getFeatures()) || $scraper->hasPlayerData()) {
+            $booleanFields = [
+                'has_online_play' => $scraper->hasOnlinePlay(),
+                'has_local_multiplayer' => $scraper->hasLocalMultiplayer(),
+                'play_mode_tv' => $scraper->hasPlayModeTv(),
+                'play_mode_tabletop' => $scraper->hasPlayModeTabletop(),
+                'play_mode_handheld' => $scraper->hasPlayModeHandheld(),
+            ];
+
+            foreach ($booleanFields as $field => $newValue) {
+                $currentValue = (bool) $game->{$field};
+                if ($currentValue !== $newValue) {
+                    $updates[$field] = $newValue;
+                    $oldStr = $currentValue ? 'true' : 'false';
+                    $newStr = $newValue ? 'true' : 'false';
+                    $changes[] = "{$field}: {$oldStr} -> {$newStr}";
+                }
+            }
+        }
+
+        // Apply updates if any
+        if (empty($updates)) {
+            $this->info("Game fields unchanged");
+            return;
+        }
+
+        foreach ($updates as $field => $value) {
+            $game->{$field} = $value;
+        }
+        $game->save();
+
+        // Clear cache since we updated game data
+        $this->repoGame->clearCacheCoreData($game->id);
+
+        foreach ($changes as $change) {
+            $this->info("Updated: {$change}");
+        }
+        $logger->info("Updated game {$game->id}: " . implode(', ', $changes));
     }
 }

@@ -38,6 +38,10 @@ class DashboardController extends Controller
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->repoGameStatsLegacy->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStatsLegacy->totalNoVideoType();
+        $bindings['MissingPlayersCount'] = DB::table('games')
+            ->whereNull('players')
+            ->where('game_status', 'active')
+            ->count();
 
         // Game stats by status
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();

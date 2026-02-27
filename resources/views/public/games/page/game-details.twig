@@ -55,6 +55,50 @@
     </tr>
     {% endif %}
 
+    {% if GameData.multiplayer_mode %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Multiplayer mode</span>
+        </td>
+        <td>{{ GameData.multiplayer_mode }}</td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.has_online_play or GameData.has_local_multiplayer %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Multiplayer</span>
+        </td>
+        <td>
+            {% if GameData.has_online_play %}
+                <span class="label label-info">Online</span>
+            {% endif %}
+            {% if GameData.has_local_multiplayer %}
+                <span class="label label-info">Local</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.play_mode_tv or GameData.play_mode_tabletop or GameData.play_mode_handheld %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Play modes</span>
+        </td>
+        <td>
+            {% if GameData.play_mode_tv %}
+                <span class="label label-default">TV</span>
+            {% endif %}
+            {% if GameData.play_mode_tabletop %}
+                <span class="label label-default">Tabletop</span>
+            {% endif %}
+            {% if GameData.play_mode_handheld %}
+                <span class="label label-default">Handheld</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
     {% if GameDevelopers|length > 0 %}
 
         <tr>

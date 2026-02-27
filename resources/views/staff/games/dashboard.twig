@@ -43,7 +43,7 @@
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Watchlists') }}
+        {{ heading.renderSlick('Missing data') }}
 
         <table class="table">
             <tbody>
@@ -84,6 +84,14 @@
                 </td>
                 <td class="text-end">
                     <a href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}" class="h4">{{ MissingVideoTypeCount }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Missing players
+                </td>
+                <td class="text-end">
+                    <span class="h4">{{ MissingPlayersCount }}</span>
                 </td>
             </tr>
             </tbody>

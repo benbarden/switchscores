@@ -1,5 +1,52 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 
+{{ heading.renderSlick('Games companies') }}
+
+<table class="table table-sm table-responsive">
+    <tr>
+        <td>
+            {% if mode == 'reviewers' %}
+                <strong>Publishers</strong>
+            {% else %}
+                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+            {% endif %}
+        </td>
+        <td>
+            {% if GamePublishers|length > 0 %}
+                {% for item in GamePublishers %}
+                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
+                        {{ item.publisher.name }}
+                    </a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.publisher }}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {% if mode == 'reviewers' %}
+                <strong>Developers</strong>
+            {% else %}
+                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+            {% endif %}
+        </td>
+        <td>
+            {% if GameDevelopers|length > 0 %}
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
+                        {{ item.developer.name }}
+                    </a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.developer }}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
 {{ heading.renderSlick('Categorisation') }}
 
 <table class="table table-sm table-responsive">

@@ -140,52 +140,52 @@
 
 </table>
 
-{{ heading.renderSlick('Games companies') }}
+{{ heading.renderSlick('Players and modes') }}
 
 <table class="table table-sm table-responsive">
-
     <tr>
+        <td><strong>Players</strong></td>
+        <td>{{ GameData.players ?: '-' }}</td>
+    </tr>
+    <tr>
+        <td><strong>Multiplayer mode</strong></td>
+        <td>{{ GameData.multiplayer_mode ?: '-' }}</td>
+    </tr>
+    <tr>
+        <td><strong>Online play</strong></td>
         <td>
-            {% if mode == 'reviewers' %}
-                <strong>Publishers</strong>
+            {% if GameData.has_online_play %}
+                <span class="badge bg-success">Yes</span>
             {% else %}
-                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
-            {% endif %}
-        </td>
-        <td>
-            {% if GamePublishers|length > 0 %}
-                {% for item in GamePublishers %}
-                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
-                        {{ item.publisher.name }}
-                    </a>
-                    <br>
-                {% endfor %}
-            {% else %}
-                {{ GameData.publisher }}
+                -
             {% endif %}
         </td>
     </tr>
-
     <tr>
+        <td><strong>Local multiplayer</strong></td>
         <td>
-            {% if mode == 'reviewers' %}
-                <strong>Developers</strong>
+            {% if GameData.has_local_multiplayer %}
+                <span class="badge bg-success">Yes</span>
             {% else %}
-                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
-            {% endif %}
-        </td>
-        <td>
-            {% if GameDevelopers|length > 0 %}
-                {% for item in GameDevelopers %}
-                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
-                        {{ item.developer.name }}
-                    </a>
-                    <br>
-                {% endfor %}
-            {% else %}
-                {{ GameData.developer }}
+                -
             {% endif %}
         </td>
     </tr>
-
+    <tr>
+        <td><strong>Play modes</strong></td>
+        <td>
+            {% if GameData.play_mode_tv %}
+                <span class="badge bg-secondary">TV</span>
+            {% endif %}
+            {% if GameData.play_mode_tabletop %}
+                <span class="badge bg-secondary">Tabletop</span>
+            {% endif %}
+            {% if GameData.play_mode_handheld %}
+                <span class="badge bg-secondary">Handheld</span>
+            {% endif %}
+            {% if not GameData.play_mode_tv and not GameData.play_mode_tabletop and not GameData.play_mode_handheld %}
+                -
+            {% endif %}
+        </td>
+    </tr>
 </table>
