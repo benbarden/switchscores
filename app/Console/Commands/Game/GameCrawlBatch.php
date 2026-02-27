@@ -148,9 +148,12 @@ class GameCrawlBatch extends Command
             return;
         }
 
+        // Show which game we're crawling
+        $this->line("[{$current}/{$total}] Crawling: {$game->id} - {$game->title}");
+
         $url = $this->getNintendoUrl($game);
         if (!$url) {
-            $this->line("[{$current}/{$total}] {$game->title} - No URL");
+            $this->line("  No URL available");
             $this->results['no_url']++;
             return;
         }
@@ -159,11 +162,14 @@ class GameCrawlBatch extends Command
             $crawler = $httpBrowser->request('GET', $url);
             $response = $httpBrowser->getResponse();
             $statusCode = $response->getStatusCode();
+            $isSoft404 = false;
 
             // Check for soft 404 (redirected to 404 page but got 200 status)
             $finalUrl = $httpBrowser->getHistory()->current()->getUri();
             if ($statusCode === 200 && $this->isSoft404($finalUrl)) {
                 $statusCode = 404;
+                $isSoft404 = true;
+                $this->warn("  Soft 404 detected (redirected to: {$finalUrl})");
                 $logger->warning("Soft 404 detected for game {$game->id}: {$finalUrl}");
             }
 
@@ -185,17 +191,17 @@ class GameCrawlBatch extends Command
             $scrapeWarnings = [];
             if ($statusCode === 200) {
                 $scrapeWarnings = $this->scrapeGameData($game, $crawler->html(), $logger);
+                foreach ($scrapeWarnings as $warning) {
+                    $this->warn("  {$warning}");
+                }
             }
 
             // Categorise result for summary
             $this->recordResult($game, $statusCode, $url);
 
-            // Display
+            // Display final status
             $statusEmoji = $this->getStatusEmoji($statusCode);
-            $warningStr = !empty($scrapeWarnings) ? ' [' . implode(', ', $scrapeWarnings) . ']' : '';
-            $this->line("[{$current}/{$total}] {$statusEmoji} {$statusCode} - {$game->title}{$warningStr}");
-
-            $logger->info("Game {$game->id}: {$statusCode} - {$game->title}");
+            $this->line("  {$statusEmoji} Status: {$statusCode}");
 
         } catch (\Exception $e) {
             $this->results['error']++;
@@ -206,7 +212,7 @@ class GameCrawlBatch extends Command
                 'url' => $url,
                 'message' => $e->getMessage(),
             ];
-            $this->line("[{$current}/{$total}] ERROR - {$game->title}: {$e->getMessage()}");
+            $this->error("  ERROR: {$e->getMessage()}");
             $logger->error("Game {$game->id} error: {$e->getMessage()}");
         }
     }
