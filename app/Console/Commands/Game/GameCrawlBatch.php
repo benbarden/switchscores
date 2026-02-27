@@ -160,6 +160,13 @@ class GameCrawlBatch extends Command
             $response = $httpBrowser->getResponse();
             $statusCode = $response->getStatusCode();
 
+            // Check for soft 404 (redirected to 404 page but got 200 status)
+            $finalUrl = $httpBrowser->getHistory()->current()->getUri();
+            if ($statusCode === 200 && $this->isSoft404($finalUrl)) {
+                $statusCode = 404;
+                $logger->warning("Soft 404 detected for game {$game->id}: {$finalUrl}");
+            }
+
             // Capture previous status before updating
             $previousStatus = $game->last_crawl_status;
 
@@ -175,8 +182,9 @@ class GameCrawlBatch extends Command
             $this->logLifecycleEvent($game, $statusCode, $previousStatus, $url);
 
             // Scrape game data if page is live
+            $scrapeWarnings = [];
             if ($statusCode === 200) {
-                $this->scrapeGameData($game, $crawler->html(), $logger);
+                $scrapeWarnings = $this->scrapeGameData($game, $crawler->html(), $logger);
             }
 
             // Categorise result for summary
@@ -184,7 +192,8 @@ class GameCrawlBatch extends Command
 
             // Display
             $statusEmoji = $this->getStatusEmoji($statusCode);
-            $this->line("[{$current}/{$total}] {$statusEmoji} {$statusCode} - {$game->title}");
+            $warningStr = !empty($scrapeWarnings) ? ' [' . implode(', ', $scrapeWarnings) . ']' : '';
+            $this->line("[{$current}/{$total}] {$statusEmoji} {$statusCode} - {$game->title}{$warningStr}");
 
             $logger->info("Game {$game->id}: {$statusCode} - {$game->title}");
 
@@ -335,14 +344,21 @@ class GameCrawlBatch extends Command
 
     /**
      * Scrape game data from the HTML and save to database.
+     * Returns array of warnings (e.g., fields still missing).
      */
-    private function scrapeGameData($game, string $html, $logger): void
+    private function scrapeGameData($game, string $html, $logger): array
     {
+        $warnings = [];
+        $playersWasNull = $game->players === null;
+
         try {
             $scraper = new NintendoCoUkGameData($html);
 
             if (!$scraper->hasData()) {
-                return;
+                if ($playersWasNull) {
+                    $warnings[] = 'players still NULL - no data found';
+                }
+                return $warnings;
             }
 
             // Update or create the scraped data record
@@ -361,9 +377,18 @@ class GameCrawlBatch extends Command
             // Update game fields from scraped data
             $this->updateGameFromScrapedData($game, $scraper);
 
+            // Check if players is still null after scraping
+            $game->refresh();
+            if ($playersWasNull && $game->players === null) {
+                $warnings[] = 'players still NULL';
+            }
+
         } catch (\Exception $e) {
             $logger->warning("Failed to scrape game data for game {$game->id}: " . $e->getMessage());
+            $warnings[] = 'scrape error';
         }
+
+        return $warnings;
     }
 
     /**
@@ -411,5 +436,27 @@ class GameCrawlBatch extends Command
             $game->save();
             $this->repoGame->clearCacheCoreData($game->id);
         }
+    }
+
+    /**
+     * Check if the final URL indicates a soft 404 (redirected to error page).
+     */
+    private function isSoft404(string $finalUrl): bool
+    {
+        // Nintendo's 404 page URL patterns
+        $soft404Patterns = [
+            '/404.html',
+            '/404',
+            '/en-gb/404',
+            '/en-gb/404.html',
+        ];
+
+        foreach ($soft404Patterns as $pattern) {
+            if (str_contains($finalUrl, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

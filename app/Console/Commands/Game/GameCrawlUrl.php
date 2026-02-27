@@ -77,6 +77,14 @@ class GameCrawlUrl extends Command
             $response = $httpBrowser->getResponse();
             $statusCode = $response->getStatusCode();
 
+            // Check for soft 404 (redirected to 404 page but got 200 status)
+            $finalUrl = $httpBrowser->getHistory()->current()->getUri();
+            if ($statusCode === 200 && $this->isSoft404($finalUrl)) {
+                $statusCode = 404;
+                $this->warn("Detected soft 404 (redirected to: {$finalUrl})");
+                $logger->warning("Soft 404 detected for game {$game->id}: {$finalUrl}");
+            }
+
             $this->info("Status: {$statusCode}");
             $logger->info("Status: {$statusCode}");
 
@@ -321,5 +329,27 @@ class GameCrawlUrl extends Command
             $this->info("Updated: {$change}");
         }
         $logger->info("Updated game {$game->id}: " . implode(', ', $changes));
+    }
+
+    /**
+     * Check if the final URL indicates a soft 404 (redirected to error page).
+     */
+    private function isSoft404(string $finalUrl): bool
+    {
+        // Nintendo's 404 page URL patterns
+        $soft404Patterns = [
+            '/404.html',
+            '/404',
+            '/en-gb/404',
+            '/en-gb/404.html',
+        ];
+
+        foreach ($soft404Patterns as $pattern) {
+            if (str_contains($finalUrl, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

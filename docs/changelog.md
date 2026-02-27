@@ -4,6 +4,58 @@ Development history and completed work.
 
 ---
 
+## 2026-02-27 — Multiplayer Data Scraping (Tasks #95, #107)
+
+**Summary:**
+Extended the crawl system to scrape player and multiplayer data from Nintendo UK pages. Games with override URLs (no API link) can now get player data populated automatically.
+
+**New Database Table:**
+- `game_scraped_data` — Stores scraped data per game:
+  - `players_local` (e.g., "1", "2-4")
+  - `players_wireless` (e.g., "1-8")
+  - `players_online` (e.g., "1-8")
+  - `multiplayer_mode` (e.g., "Simultaneous")
+  - `features_json` (array of features)
+  - `scraped_at` timestamp
+
+**New Game Fields:**
+- `multiplayer_mode` — varchar(50)
+- `has_online_play` — boolean
+- `has_local_multiplayer` — boolean
+- `play_mode_tv` — boolean
+- `play_mode_tabletop` — boolean
+- `play_mode_handheld` — boolean
+
+**New Scraper:**
+- `App\Domain\Scraper\NintendoCoUkGameData` — Parses Nintendo UK HTML pages
+- Extracts: Players (local/wireless/online), Multiplayer mode, Features
+- `getCombinedPlayers()` — Combines all player ranges into "1-8" format for `games.players`
+
+**Updated Commands:**
+- `game:crawl` — Now scrapes game data on successful 200 response
+- `game:crawl-batch` — Same scraping, plus inline warnings for missing data (e.g., `[players still NULL]`)
+- Batch crawl prioritises games with null `players` field
+
+**Staff UI:**
+- Games detail: New "Players and modes" section showing all multiplayer fields
+- Dashboard: Renamed "Watchlists" to "Missing data", added "Missing players" counter
+
+**Public UI:**
+- Game page: Shows multiplayer mode, online/local multiplayer badges, play mode badges (TV/Tabletop/Handheld)
+
+**Unit Tests:**
+- `tests/Unit/Domain/Scraper/NintendoCoUkGameDataTest.php` — 25+ test cases covering:
+  - `getCombinedPlayers()` with various player configurations
+  - Individual field parsing
+  - Boolean feature flag detection
+  - Edge cases (empty HTML, whitespace)
+
+**Related improvements.md tasks closed:**
+- #95 — GH76: multiplayer options
+- #107 — Store Local vs Online player counts separately
+
+---
+
 ## 2026-02-23 — Game Crawl System (Task #110)
 
 **Summary:**
