@@ -1,5 +1,16 @@
 <table class="table table-condensed table-responsive">
 
+    {% if GameData.isDelisted() %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Status</span>
+        </td>
+        <td>
+            <span class="label label-warning">De-listed</span>
+        </td>
+    </tr>
+    {% endif %}
+
     {% if GameData.console_id %}
     <tr>
         <td>

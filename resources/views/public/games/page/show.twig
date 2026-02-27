@@ -99,7 +99,7 @@
                 {{ affiliate.buyButtons(GameData, Amazon) }}
 
                 {#
-                {% if not GameData.isDigitalDelisted() and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
+                {% if not GameData.isDelisted() and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
                     <h2>Buy this game</h2>
                     {% if FullAmazonUkLink %}
                         <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
