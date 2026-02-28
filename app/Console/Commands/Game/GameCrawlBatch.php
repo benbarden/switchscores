@@ -104,7 +104,7 @@ class GameCrawlBatch extends Command
     private function getGamesToCrawl(string $source, int $limit): array
     {
         $query = DB::table('games')
-            ->select('id', 'title', 'nintendo_store_url_override')
+            ->select('id', 'title', 'nintendo_store_url_override', 'crawl_priority')
             ->where('game_status', 'active');
 
         // Filter by source
@@ -149,8 +149,8 @@ class GameCrawlBatch extends Command
             return;
         }
 
-        // Show which game we're crawling
-        $priorityTag = $game->crawl_priority ? ' [PRIORITY]' : '';
+        // Show which game we're crawling (use $gameRow for priority as $game may be cached)
+        $priorityTag = $gameRow->crawl_priority ? ' [PRIORITY]' : '';
         $this->line("[{$current}/{$total}] Crawling: {$game->id} - {$game->title}{$priorityTag}");
 
         $url = $this->getNintendoUrl($game);
