@@ -236,6 +236,13 @@
                     {% else %}
                         -
                     {% endif %}
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <strong>Priority:</strong>
+                    {% if GameData.crawl_priority %}
+                        <span class="badge bg-info">Queued</span>
+                    {% else %}
+                        <a href="#" id="queue-crawl-btn" class="btn btn-sm btn-outline-primary">Queue for crawl</a>
+                    {% endif %}
                 </p>
 
                 {% if CrawlLifecycle|length > 0 %}
@@ -411,6 +418,28 @@
 
         $.post('{{ route('staff.games.detail.updateStatus', {'gameId': GameId}) }}', {status: newStatus}, function(data) {
             $('#js-admin-notify').text('Status updated!');
+            $('#js-admin-notify').show();
+            setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1500);
+        })
+        .fail(function(data) {
+            $('#js-admin-notify').text('An error occurred: ' + data.responseJSON.error);
+            $('#js-admin-notify').show();
+        });
+    });
+
+    $('#queue-crawl-btn').on('click', function(e) {
+        e.preventDefault();
+
+        $('#js-admin-notify').hide();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.post('{{ route('staff.games.detail.queueCrawl', {'gameId': GameId}) }}', {}, function(data) {
+            $('#js-admin-notify').text('Queued for priority crawl!');
             $('#js-admin-notify').show();
             setTimeout("$('#js-admin-notify').fadeOut(); window.location.reload(true);", 1500);
         })

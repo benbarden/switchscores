@@ -122,16 +122,17 @@ class GameCrawlBatch extends Command
         // 'all' doesn't add extra filters
 
         // Prioritise:
-        // 1. Games with override URLs (most likely to have issues)
-        // 2. Games with null players (need data populated)
-        // 3. Never crawled
-        // 4. Oldest crawled
-        // 5. Oldest games
-        $query->orderByRaw('nintendo_store_url_override IS NOT NULL DESC')
-              ->orderByRaw('players IS NULL DESC')
+        // 1. Priority flag (newly imported games)
+        // 2. Games with override URLs (most likely to have issues)
+        // 3. Never crawled (newest first)
+        // 4. Games with null players (need data populated)
+        // 5. Oldest crawled
+        $query->orderByRaw('crawl_priority DESC')
+              ->orderByRaw('nintendo_store_url_override IS NOT NULL DESC')
               ->orderByRaw('last_crawled_at IS NULL DESC')
+              ->orderBy('created_at', 'desc')
+              ->orderByRaw('players IS NULL DESC')
               ->orderBy('last_crawled_at', 'asc')
-              ->orderBy('id', 'asc')
               ->limit($limit);
 
         return $query->get()->all();
@@ -149,7 +150,8 @@ class GameCrawlBatch extends Command
         }
 
         // Show which game we're crawling
-        $this->line("[{$current}/{$total}] Crawling: {$game->id} - {$game->title}");
+        $priorityTag = $game->crawl_priority ? ' [PRIORITY]' : '';
+        $this->line("[{$current}/{$total}] Crawling: {$game->id} - {$game->title}{$priorityTag}");
 
         $url = $this->getNintendoUrl($game);
         if (!$url) {
@@ -179,6 +181,7 @@ class GameCrawlBatch extends Command
             // Update game record
             $game->last_crawled_at = now();
             $game->last_crawl_status = $statusCode;
+            $game->crawl_priority = false;
             $game->save();
 
             // Clear cache so updated data is visible immediately

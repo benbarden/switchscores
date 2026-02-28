@@ -273,4 +273,20 @@ class GamesDetailController extends Controller
         return response()->json(['status' => 'OK', 'new_status' => $newStatus], 200);
     }
 
+    public function queueCrawl($gameId)
+    {
+        $game = $this->repoGame->find($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Cannot find game!'], 400);
+        }
+
+        $game->crawl_priority = true;
+        $game->save();
+
+        // Clear cache
+        $this->repoGame->clearCacheCoreData($gameId);
+
+        return response()->json(['status' => 'OK'], 200);
+    }
+
 }

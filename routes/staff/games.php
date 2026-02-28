@@ -52,6 +52,7 @@ Route::group([
         Route::get('detail/{gameId}/update-eshop-data', 'updateEshopData')->name('detail.updateEshopData');
         Route::get('detail/{gameId}/redownload-packshots', 'redownloadPackshots')->name('detail.redownloadPackshots');
         Route::post('detail/{gameId}/update-status', 'updateStatus')->name('detail.updateStatus');
+        Route::post('detail/{gameId}/queue-crawl', 'queueCrawl')->name('detail.queueCrawl');
     });
 
     // ---- Game add / edit / delete ----

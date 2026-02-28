@@ -218,10 +218,11 @@ class JsonImportService
             $game->category_verification = 1;
         }
 
-        // Save if we made any post-creation changes
-        if ($batchDate || $validation['categoryId']) {
-            $game->save();
-        }
+        // Prioritise for crawling
+        $game->crawl_priority = true;
+
+        // Save post-creation changes
+        $game->save();
 
         return $game;
     }

@@ -22,20 +22,26 @@ class UpdateGame
         }
 
         // Update format_digital (maintains history)
+        // Only mark as available if in API data
         Game::whereIn('eshop_europe_fs_id', $linkIds)
             ->update(['format_digital' => Game::FORMAT_AVAILABLE]);
 
+        // For override URL games, only mark available if crawl confirmed 200
         Game::whereNotNull('nintendo_store_url_override')
             ->where('format_digital', Game::FORMAT_DELISTED)
+            ->where('last_crawl_status', 200)
             ->update(['format_digital' => Game::FORMAT_AVAILABLE]);
 
         // Update game_status: only change DELISTED -> ACTIVE (never touch SOFT_DELETED)
+        // Only reset if in API data
         Game::whereIn('eshop_europe_fs_id', $linkIds)
             ->where('game_status', GameStatus::DELISTED)
             ->update(['game_status' => GameStatus::ACTIVE]);
 
+        // For override URL games, only reset to active if crawl confirmed 200
         Game::whereNotNull('nintendo_store_url_override')
             ->where('game_status', GameStatus::DELISTED)
+            ->where('last_crawl_status', 200)
             ->update(['game_status' => GameStatus::ACTIVE]);
 
         return $linkIds->count();
