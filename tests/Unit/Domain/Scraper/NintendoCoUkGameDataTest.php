@@ -423,4 +423,54 @@ class NintendoCoUkGameDataTest extends TestCase
         $this->assertTrue($scraper->hasPlayModeTabletop());
         $this->assertTrue($scraper->hasPlayModeHandheld());
     }
+
+    // ===========================================
+    // Header image URL tests
+    // ===========================================
+
+    public function testHeaderImageUrlWithHttps()
+    {
+        $html = '<html><head><meta property="og:image" content="https://example.com/image.jpg"></head><body></body></html>';
+
+        $scraper = new NintendoCoUkGameData($html);
+
+        $this->assertEquals('https://example.com/image.jpg', $scraper->getHeaderImageUrl());
+    }
+
+    public function testHeaderImageUrlWithProtocolRelative()
+    {
+        $html = '<html><head><meta property="og:image" content="//cdn.nintendo.com/image.jpg"></head><body></body></html>';
+
+        $scraper = new NintendoCoUkGameData($html);
+
+        $this->assertEquals('//cdn.nintendo.com/image.jpg', $scraper->getHeaderImageUrl());
+    }
+
+    public function testHeaderImageUrlWithNewlines()
+    {
+        $html = '<html><head><meta property="og:image" content="https://example.com/image.jpg
+"></head><body></body></html>';
+
+        $scraper = new NintendoCoUkGameData($html);
+
+        $this->assertEquals('https://example.com/image.jpg', $scraper->getHeaderImageUrl());
+    }
+
+    public function testHeaderImageUrlNotFound()
+    {
+        $html = '<html><head><meta property="og:title" content="Some Title"></head><body></body></html>';
+
+        $scraper = new NintendoCoUkGameData($html);
+
+        $this->assertNull($scraper->getHeaderImageUrl());
+    }
+
+    public function testHeaderImageUrlEmpty()
+    {
+        $html = '<html><head><meta property="og:image" content=""></head><body></body></html>';
+
+        $scraper = new NintendoCoUkGameData($html);
+
+        $this->assertNull($scraper->getHeaderImageUrl());
+    }
 }

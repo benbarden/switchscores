@@ -11,6 +11,7 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
 use App\Models\GameCrawlLifecycle;
 use App\Models\GameScrapedData;
+use App\Services\Game\Images as GameImages;
 
 class GameCrawlBatch extends Command
 {
@@ -196,6 +197,12 @@ class GameCrawlBatch extends Command
                 $scrapeWarnings = $this->scrapeGameData($game, $crawler->html(), $logger);
                 foreach ($scrapeWarnings as $warning) {
                     $this->warn("  {$warning}");
+                }
+
+                // Check and update header image
+                $imageResult = $this->checkHeaderImage($game, $crawler->html(), $logger);
+                if ($imageResult) {
+                    $this->info("  {$imageResult}");
                 }
             }
 
@@ -467,5 +474,128 @@ class GameCrawlBatch extends Command
         }
 
         return false;
+    }
+
+    /**
+     * Check header image and re-download if remote size differs from local.
+     * Returns a status message or null if no action taken.
+     */
+    private function checkHeaderImage($game, string $html, $logger): ?string
+    {
+        try {
+            $scraper = new NintendoCoUkGameData($html);
+            $remoteUrl = $scraper->getHeaderImageUrl();
+
+            if (!$remoteUrl) {
+                return null;
+            }
+
+            // Ensure URL has protocol
+            if (str_starts_with($remoteUrl, '//')) {
+                $remoteUrl = 'https:' . $remoteUrl;
+            }
+
+            // Get remote file size via HEAD request
+            $remoteSize = $this->getRemoteFileSize($remoteUrl);
+            if ($remoteSize === null) {
+                return null;
+            }
+
+            // Check local file
+            $localPath = public_path() . GameImages::PATH_IMAGE_HEADER . $game->image_header;
+            $localSize = null;
+
+            if ($game->image_header && file_exists($localPath)) {
+                $localSize = filesize($localPath);
+            }
+
+            // Compare sizes
+            if ($localSize === $remoteSize) {
+                // Still save the URL and size for tracking
+                $this->saveHeaderImageData($game, $remoteUrl, $remoteSize);
+                return null; // No change, don't output anything
+            }
+
+            // Download new image
+            $this->downloadHeaderImage($game, $remoteUrl, $remoteSize, $logger);
+            $newSize = filesize($localPath);
+
+            return "[image updated] {$localSize} → {$newSize} bytes";
+
+        } catch (\Exception $e) {
+            $logger->warning("Failed to check header image for game {$game->id}: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Save header image URL and size to game_scraped_data.
+     */
+    private function saveHeaderImageData($game, string $url, int $size): void
+    {
+        GameScrapedData::updateOrCreate(
+            ['game_id' => $game->id],
+            [
+                'header_image_url' => $url,
+                'header_image_size' => $size,
+            ]
+        );
+    }
+
+    /**
+     * Get remote file size via HEAD request.
+     */
+    private function getRemoteFileSize(string $url): ?int
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+        curl_exec($ch);
+        $contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200 || $contentLength < 0) {
+            return null;
+        }
+
+        return (int) $contentLength;
+    }
+
+    /**
+     * Download and save header image, replacing the existing file.
+     */
+    private function downloadHeaderImage($game, string $remoteUrl, int $remoteSize, $logger): void
+    {
+        $destPath = public_path() . GameImages::PATH_IMAGE_HEADER;
+
+        // Generate filename if game doesn't have one
+        if (!$game->image_header) {
+            $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+            $filename = 'hdr-' . $game->id . '-' . $game->link_title . '.' . $fileExt;
+            $game->image_header = $filename;
+        }
+
+        $destFile = $destPath . $game->image_header;
+
+        $imageData = file_get_contents($remoteUrl);
+        if ($imageData === false) {
+            throw new \Exception("Failed to download image from: {$remoteUrl}");
+        }
+
+        file_put_contents($destFile, $imageData);
+        $game->save();
+
+        // Save header image data to game_scraped_data
+        $this->saveHeaderImageData($game, $remoteUrl, $remoteSize);
+
+        // Clear cache since we updated game data
+        $this->repoGame->clearCacheCoreData($game->id);
+
+        $logger->info("Header image updated for game {$game->id}: {$game->image_header}");
     }
 }

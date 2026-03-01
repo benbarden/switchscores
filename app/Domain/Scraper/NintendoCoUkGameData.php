@@ -30,6 +30,7 @@ class NintendoCoUkGameData
         $this->parsePlayersField();
         $this->parseMultiplayerMode();
         $this->parseFeatures();
+        $this->parseHeaderImageUrl();
     }
 
     /**
@@ -108,6 +109,25 @@ class NintendoCoUkGameData
     }
 
     /**
+     * Parse the header image URL from og:image meta tag.
+     */
+    private function parseHeaderImageUrl(): void
+    {
+        try {
+            $metaNode = $this->domCrawler->filterXPath('//meta[@property="og:image"]');
+            if ($metaNode->count() > 0) {
+                $headerUrl = $metaNode->attr('content');
+                if ($headerUrl) {
+                    $headerUrl = str_replace("\n", "", $headerUrl);
+                    $this->parsedData['header_image_url'] = trim($headerUrl);
+                }
+            }
+        } catch (\Exception $e) {
+            // Silently handle parsing errors
+        }
+    }
+
+    /**
      * Get the text content for a game_info_title field.
      */
     private function getGameInfoText(string $titleName): ?string
@@ -179,6 +199,14 @@ class NintendoCoUkGameData
     public function getFeatures(): array
     {
         return $this->parsedData['features'] ?? [];
+    }
+
+    /**
+     * Get header image URL.
+     */
+    public function getHeaderImageUrl(): ?string
+    {
+        return $this->parsedData['header_image_url'] ?? null;
     }
 
     /**

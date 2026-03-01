@@ -93,7 +93,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 62 | New process status: Content does not meet inclusion criteria | Medium | Add new status constant + update logic | Consolidates similar statuses. Needs data fix for existing records. |
 | 66 | Submit quick review without signing up | High | Auth system requires user; needs guest flow | Spam risk but need reviews. WordPress-style: Name/Email, cookie, optional auto-account. Low friction. Do even with good signup. |
 | 69 | Fix Digitally Downloaded Feedburner review links | Low | Update PartnerFeedLink URL | Older review URLs are dead. Need scraping to find actual URLs. Claude can help. |
-| 70 | Re-download hi-res images for N.co.uk linked games | Medium | Extend #110 crawl system | Old images are low quality. Can now use crawl infrastructure from #110. **Approach:** Check remote file size against local; only re-download if different. Focus on header images only. |
+| 70 | Re-download hi-res images for N.co.uk linked games | Done | 2026-03-01 | → Done section |
 | 77 | Video URL: scrape from Nintendo pages | Medium | Extend #110 crawl system | Scrape official video URL from Nintendo UK pages during crawl. |
 | 116 | Publisher change monitoring | Medium | New feature | Watch for publisher name changes on Nintendo pages. Challenge: distinguish between publisher renames (update existing) vs legitimate publisher changes (new assignment). Log changes for staff review rather than auto-updating. |
 | 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Low | Quick cleanup | Nintendo now redirects `.co.uk` to `.com/en-gb/` with 308. Override URLs may still use old format, causing extra redirect hop on every crawl. Options: (1) migrate stored URLs in DB, (2) normalise in crawler code. Also affects `DownloadPackshotHelper`. |
@@ -177,6 +177,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 70 | Re-download hi-res header images | Done | 2026-03-01 | Extended crawl system to check header image sizes. Compares remote Content-Length via HEAD request against local file size. Re-downloads if different. Added to both `game:crawl` and `game:crawl-batch` commands. Uses og:image meta tag for URL. Output: `[image updated] X → Y bytes`. |
 | 33 | Remove old image fields | Done | 2026-03-01 | Removed legacy `boxart_square_url` and `boxart_header_image` fields. Only 1 game had values, and it already had images in the new fields. No `/img/games/` folder exists anymore. Cleaned up: Game model, ImageHelper, GameBuilder, GameDirector, GameFactory, unit tests. Migration to drop columns. |
 | 10 | Scrape publisher name, players, and other info from Nintendo URL | Done | 2026-03-01 | Superseded by #95/#107 for players; publisher handled in separate import project. New #116 created for publisher change monitoring. |
 | 95 | GH76: multiplayer options | Done | 2026-02-27 | Extended crawl system to scrape players (local/wireless/online), multiplayer mode, features (online play, local multiplayer, play modes). New `game_scraped_data` table, `NintendoCoUkGameData` scraper, new game fields (`multiplayer_mode`, `has_online_play`, `has_local_multiplayer`, `play_mode_tv/tabletop/handheld`). Shown on staff detail + public game pages. Related: #107. |

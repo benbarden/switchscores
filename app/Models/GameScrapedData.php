@@ -21,6 +21,8 @@ class GameScrapedData extends Model
         'players_online',
         'multiplayer_mode',
         'features_json',
+        'header_image_url',
+        'header_image_size',
         'scraped_at',
     ];
 
