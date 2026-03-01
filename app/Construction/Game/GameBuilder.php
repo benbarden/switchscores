@@ -157,21 +157,9 @@ class GameBuilder
         return $this;
     }
 
-    public function setBoxartSquareUrl($boxartSquareUrl): GameBuilder
-    {
-        $this->game->boxart_square_url = $boxartSquareUrl;
-        return $this;
-    }
-
     public function setEshopEuropeFsId($eshopEuropeFsId): GameBuilder
     {
         $this->game->eshop_europe_fs_id = $eshopEuropeFsId;
-        return $this;
-    }
-
-    public function setBoxartHeaderImage($boxartHeaderImage): GameBuilder
-    {
-        $this->game->boxart_header_image = $boxartHeaderImage;
         return $this;
     }
 

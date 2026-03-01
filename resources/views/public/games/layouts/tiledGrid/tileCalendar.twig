@@ -1,7 +1,7 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
 
 {# PACKSHOTS #}
-{% if item.boxart_header_image or item.image_header %}
+{% if item.image_header %}
     {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
     {% if item.eu_is_released == 0 %}
         {% set imageOpacity = ' opacity: 0.4;' %}

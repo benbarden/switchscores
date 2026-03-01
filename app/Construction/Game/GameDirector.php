@@ -94,14 +94,8 @@ class GameDirector
         if (array_key_exists('video_type', $params)) {
             $this->builder->setVideoType($params['video_type']);
         }
-        if (array_key_exists('boxart_square_url', $params)) {
-            $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
-        }
         if (array_key_exists('eshop_europe_fs_id', $params)) {
             $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
-        }
-        if (array_key_exists('boxart_header_image', $params)) {
-            $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
         }
         if (array_key_exists('image_square', $params)) {
             $this->builder->setImageSquare($params['image_square']);
