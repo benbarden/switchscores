@@ -64,11 +64,29 @@ class GameStatsRepository extends AbstractRepository
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getDelisted()
+    {
+        return Game::delisted()->orderBy('title', 'asc')->get();
+    }
+
+    /**
      * @return integer
      */
     public function totalSoftDeleted()
     {
         return Game::where('game_status', \App\Enums\GameStatus::SOFT_DELETED)->count();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getSoftDeleted()
+    {
+        return Game::where('game_status', \App\Enums\GameStatus::SOFT_DELETED)
+            ->orderBy('title', 'asc')
+            ->get();
     }
 
     /**

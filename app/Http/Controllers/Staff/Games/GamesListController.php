@@ -17,6 +17,7 @@ use App\Domain\Game\Repository\GameAffiliateRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 use App\Domain\Game\Repository\GameCrawlRepository;
+use App\Domain\Game\Repository\GameStatsRepository;
 
 use App\Models\Category;
 use App\Models\Game;
@@ -40,6 +41,7 @@ class GamesListController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private TagCategoryRepository $repoTagCategory,
         private GameCrawlRepository $repoGameCrawl,
+        private GameStatsRepository $repoGameStats,
     )
     {
     }
@@ -272,6 +274,17 @@ class GamesListController extends Controller
                 'title' => 'Crawl status: 5xx Server Error',
                 'sort'  => "[0, 'desc']",
                 'fetch' => fn() => $this->repoGameCrawl->getStatusServerError(),
+            ],
+            // Game status
+            'game-status-delisted' => [
+                'title' => 'Game status: Delisted',
+                'sort'  => "[1, 'asc']",
+                'fetch' => fn() => $this->repoGameStats->getDelisted(),
+            ],
+            'game-status-soft-deleted' => [
+                'title' => 'Game status: Soft deleted',
+                'sort'  => "[1, 'asc']",
+                'fetch' => fn() => $this->repoGameStats->getSoftDeleted(),
             ],
 
         ];

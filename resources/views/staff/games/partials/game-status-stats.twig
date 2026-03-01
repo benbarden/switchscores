@@ -12,10 +12,10 @@
         'Active', null, ActiveGameCount
     ) }}
     {{ rowstat.renderB5(
-        'Delisted', null, DelistedGameCount
+        'Delisted', route('staff.games.list.showList', {'listType': 'game-status-delisted'}), DelistedGameCount
     ) }}
     {{ rowstat.renderB5(
-        'Soft deleted', null, SoftDeletedGameCount
+        'Soft deleted', route('staff.games.list.showList', {'listType': 'game-status-soft-deleted'}), SoftDeletedGameCount
     ) }}
     </tbody>
 </table>
