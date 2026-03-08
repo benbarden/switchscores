@@ -81,6 +81,7 @@ class IndexController extends Controller
 
         // Owner links
         $bindings['RegisteredUserCount'] = $this->repoUser->getCount();
+        $bindings['UnverifiedMemberCount'] = $this->repoUser->getUnverifiedCount();
 
         return view('staff.index', $bindings);
     }

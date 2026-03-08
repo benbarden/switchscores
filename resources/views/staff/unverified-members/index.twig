@@ -1,0 +1,98 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if app.session.has('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ app.session.get('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+<p>
+    Members who have not verified their email address. They can browse but cannot add games or submit reviews.
+</p>
+
+{% if UnverifiedMembers|length > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th class="text-left">Email</th>
+                <th class="text-left">Display name</th>
+                <th class="text-center">Points</th>
+                <th class="text-center">Signed up</th>
+                <th class="text-center">Last access</th>
+                <th class="text-center">Days old</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in UnverifiedMembers %}
+                {% set daysOld = ((date().timestamp - user.created_at.timestamp) / 86400)|round %}
+                <tr{% if daysOld > 7 %} class="table-warning"{% endif %}>
+                    <td class="text-end">
+                        {{ user.id }}
+                    </td>
+                    <td class="text-left">
+                        {{ user.email }}
+                    </td>
+                    <td class="text-left">
+                        {{ user.display_name }}
+                    </td>
+                    <td class="text-center">
+                        {{ user.points_balance|default(0) }}
+                    </td>
+                    <td class="text-center">
+                        {{ user.created_at|date('Y-m-d') }}
+                    </td>
+                    <td class="text-center">
+                        {% if user.last_access_date %}
+                            {{ user.last_access_date|date('Y-m-d') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ daysOld }}
+                    </td>
+                    <td class="text-center">
+                        <form action="{{ route('staff.unverified-members.verify', {'userId': user.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Verify this user?')">
+                                Verify
+                            </button>
+                        </form>
+                        <form action="{{ route('staff.unverified-members.delete', {'userId': user.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this user? This cannot be undone.')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="text-muted">
+        <small>Rows highlighted in yellow are users who signed up more than 7 days ago without verifying.</small>
+    </p>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">No unverified members found.</p>
+    </div>
+{% endif %}
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [5, 'desc'],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 7 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

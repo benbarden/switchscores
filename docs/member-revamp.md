@@ -35,7 +35,97 @@ Goal: Tidy up member tools before making signup easier (#19).
 ### Signup (do last)
 | # | Task | Complexity | Status |
 |---|------|------------|--------|
-| 19 | Make registration open | Medium | |
+| 19 | Make registration open | Medium | Done 2026-03-08 |
+
+## Open Registration (#19) - DONE 2026-03-08
+
+### Overview
+Open registration to all, with email verification required for full access.
+
+### 1. Twitter Signup Block
+- Keep Twitter OAuth login route working
+- On callback, check if user exists in DB:
+  - **Existing user** → log in as normal
+  - **New user** → redirect to signup page with flash message: "Twitter signup is no longer available. Please register with email."
+- No changes needed for existing Twitter users
+
+### 2. Email Verification Flow
+
+**Signup:**
+1. User registers with email/password
+2. User logged in immediately
+3. **No automatic verification email** (avoids spamming fake addresses)
+4. Banner shows: "Your email is not verified. Click here to send a verification link."
+5. User clicks → verification email sent → success message
+
+**Verification email:**
+- Subject: "Verify your Switch Scores account"
+- From: noreply@switchscores.com (or similar)
+- Simple, friendly tone
+- Single CTA button: "Verify my email"
+- Link expires after 24-48 hours
+
+**After verification:**
+- `email_verified_at` populated
+- Banner disappears
+- Full access granted
+
+### 3. Unverified User Restrictions
+
+**Can do (read-only):**
+- Browse member dashboard
+- View collection (empty initially)
+- View wishlist
+- Use "Find a game"
+- View settings
+
+**Cannot do (requires verification):**
+- Add to collection
+- Add to wishlist
+- Hide games
+- Submit quick reviews
+- Suggest featured games
+
+**Implementation:**
+- Middleware or check in controllers
+- Redirect to "please verify" page with resend link
+- Or show inline message: "Verify your email to unlock this feature"
+
+### 4. Spam Prevention
+
+Multiple layers of protection implemented server-side. Details kept private.
+
+### 5. Staff Monitoring
+
+**New staff page: Unverified Members**
+- List users where `email_verified_at IS NULL`
+- Show: email, signup date, last access, days since signup
+- Highlight users > 7 days old without verification
+- Option to manually verify or delete
+
+**Existing invite codes:**
+- Keep working for reviewers/games companies
+- Not required for regular members
+
+### 6. Database Changes
+
+```sql
+-- Already exists in Laravel's default users table:
+-- email_verified_at TIMESTAMP NULL
+
+-- May want to add:
+-- verification_email_sent_at TIMESTAMP NULL (to track if they requested it)
+```
+
+### 7. Implementation Order
+
+1. Add honeypot + rate limiting to existing signup form
+2. Implement email verification flow (manual trigger)
+3. Add unverified restrictions (read-only mode)
+4. Block new Twitter signups (keep login for existing)
+5. Staff page for monitoring unverified users
+6. Test thoroughly
+7. Enable open registration
 
 ## Suggested Order
 
@@ -46,7 +136,7 @@ Goal: Tidy up member tools before making signup easier (#19).
 5. **Discovery Hub Phase 2** - Saved searches (next!)
 6. **#94** - Staff approve/deny workflow
 7. **#100** - Collection quick status changes
-8. Then consider **#19** (open signup)
+8. ~~**#19** (open signup)~~ Done
 
 ## Discovery Hub - NEW DIRECTION
 

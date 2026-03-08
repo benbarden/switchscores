@@ -6,55 +6,15 @@
 
     <div class="col-md-12">
 
-        {#
-        <p>
-            To register with your email address and a password, you need an invite code. This is
-            to stop spam. <a href="{{ route('about.landing') }}">Get in touch</a> and we'll be happy
-            to give you a code.
-        </p>
-        <p>
-            You can also register with Twitter - this doesn't need a code.
-            <a href="{{ route('login') }}">Go to the login screen</a>
-            and click the Twitter button.
-        </p>
-        #}
-
-        <h3>Request an invite code</h3>
-        <p>
-            To register, you'll need an invite code. Enter your details below and we'll send you an invite code soon.
-        </p>
-        <form class="form-horizontal" role="form" method="POST" action="{{ route('auth.register.request-invite-code') }}">
-            {{ csrf_field() }}
-            <div class="form-group">
-                <label for="waitlist_email" class="col-md-2 control-label">Email address</label>
-
-                <div class="col-md-4">
-                    <input id="waitlist_email" type="email" class="form-control" name="waitlist_email" maxlength="100" required autofocus>
-                </div>
+        {% if app.session.has('error') %}
+            <div class="alert alert-warning">
+                {{ app.session.get('error') }}
             </div>
-            <div class="form-group">
-                <label for="waitlist_bio" class="col-md-2 control-label">Tell us how you found us (anti-spam)</label>
-
-                <div class="col-md-4">
-                    <input type="text" id="waitlist_bio" name="waitlist_bio" class="form-control" maxlength="300" required>
-                    <small>In a few words, tell us how you found Switch Scores. This is to reduce fake signups.</small>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-2">
-
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary pull-left">
-                        Submit
-                    </button>
-                </div>
-            </div>
-        </form>
+        {% endif %}
 
         <h3>Sign up</h3>
         <p>
-            When you have an invite code, you can register below.
+            Create an account to track your games collection, write quick reviews, and more.
         </p>
         {% if errors.any %}
             <div class="alert alert-danger">
@@ -99,10 +59,11 @@
             </div>
 
             <div class="form-group">
-                <label for="invite_code" class="col-md-2 control-label">Invite code</label>
+                <label for="invite_code" class="col-md-2 control-label">Invite code (optional)</label>
 
                 <div class="col-md-4">
-                    <input id="invite_code" type="text" class="form-control" name="invite_code" value="{{ old('invite_code') }}" maxlength="50" required>
+                    <input id="invite_code" type="text" class="form-control" name="invite_code" value="{{ old('invite_code') }}" maxlength="50">
+                    <small class="text-muted">Only needed if you're a reviewer or games company.</small>
                 </div>
             </div>
 
@@ -112,6 +73,12 @@
             </div>
             <div class="form-group">
                 <input id="signup_beta" name="signup_beta" type="hidden">
+            </div>
+
+            <!-- Honeypot -->
+            <div class="form-group" style="position: absolute; left: -9999px;" aria-hidden="true">
+                <label for="website">Website</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
 
             <div class="form-group">

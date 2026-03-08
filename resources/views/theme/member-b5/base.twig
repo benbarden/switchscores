@@ -189,7 +189,35 @@
         </nav>
     {% endif %}
 
+    {# Email verification banner #}
+    {% if auth_user() and not auth_user().isEmailVerified() %}
+        <div class="alert alert-warning alert-dismissible mb-0 rounded-0" role="alert">
+            <div class="container">
+                <strong>Your email is not verified.</strong>
+                To add games to your collection and use all features, please verify your email.
+                <form action="{{ route('members.email.send-verification') }}" method="POST" class="d-inline">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-warning btn-sm ms-2">Send verification email</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="container">
+        {# Flash messages #}
+        {% if app.session.has('success') %}
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                {{ app.session.get('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% if app.session.has('error') %}
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                {{ app.session.get('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
         {% block page_body %}
         {% endblock page_body %}
     </div>

@@ -183,6 +183,8 @@
                                     </p>
                                     {% if game.id in CollectionGameIds %}
                                         <span class="badge bg-info">In collection</span>
+                                    {% elseif not auth_user().isEmailVerified() %}
+                                        <span class="text-muted small">Verify email to add</span>
                                     {% else %}
                                         <div class="btn-group btn-group-sm" id="game-actions-{{ game.id }}">
                                             <a href="{{ route('members.collection.add', {'gameId': game.id}) }}" class="btn btn-outline-primary" title="Add to collection">

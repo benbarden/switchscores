@@ -32,9 +32,13 @@
                                 <p class="card-text small text-muted mb-2">
                                     Hidden {{ item.created_at|date('j M Y') }}
                                 </p>
-                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="unhideGame({{ game.id }})">
-                                    Unhide
-                                </button>
+                                {% if auth_user().isEmailVerified() %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="unhideGame({{ game.id }})">
+                                        Unhide
+                                    </button>
+                                {% else %}
+                                    <span class="text-muted small">Verify email to manage</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

@@ -37,18 +37,22 @@
                                 <p class="card-text small text-muted mb-2">
                                     Added {{ item.created_at|date('j M Y') }}
                                 </p>
-                                <div class="btn-group btn-group-sm">
-                                    {% if game.id in CollectionGameIds %}
-                                        <span class="badge bg-info align-self-center me-2">In collection</span>
-                                    {% else %}
-                                        <a href="{{ route('members.collection.add', {'gameId': game.id}) }}" class="btn btn-outline-success">
-                                            Got it!
-                                        </a>
-                                    {% endif %}
-                                    <button type="button" class="btn btn-outline-danger" onclick="removeFromWishlist({{ game.id }})">
-                                        Remove
-                                    </button>
-                                </div>
+                                {% if not auth_user().isEmailVerified() %}
+                                    <span class="text-muted small">Verify email to manage</span>
+                                {% else %}
+                                    <div class="btn-group btn-group-sm">
+                                        {% if game.id in CollectionGameIds %}
+                                            <span class="badge bg-info align-self-center me-2">In collection</span>
+                                        {% else %}
+                                            <a href="{{ route('members.collection.add', {'gameId': game.id}) }}" class="btn btn-outline-success">
+                                                Got it!
+                                            </a>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-outline-danger" onclick="removeFromWishlist({{ game.id }})">
+                                            Remove
+                                        </button>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

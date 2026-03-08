@@ -102,4 +102,23 @@ class Repository
             ->orderBy('last_access_date', 'desc')
             ->limit($limit)->get();
     }
+
+    public function getUnverified()
+    {
+        return User::whereNull('email_verified_at')
+            ->orderBy('last_access_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function getUnverifiedCount()
+    {
+        return User::whereNull('email_verified_at')->count();
+    }
+
+    public function verifyEmail(User $user)
+    {
+        $user->email_verified_at = now();
+        $user->save();
+    }
 }

@@ -8,6 +8,12 @@
             Search for games to add to your collection. Results are limited to 20 items.
         </p>
 
+        {% if not auth_user().isEmailVerified() %}
+            <div class="alert alert-warning">
+                <strong>Your email is not verified.</strong> You can search for games, but you'll need to verify your email before adding them to your collection.
+            </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-2 mb-3">
                 <input type="text" x-model="query" @input.debounce.500ms="searchGames"
@@ -85,6 +91,7 @@
                                 <label class="badge bg-info h7">De-listed</label>
                             </template>
                         </div>
+                        {% if auth_user().isEmailVerified() %}
                         <div class="col-3 mb-3" x-show="!game.inCollection">
                             <select x-model="game.selectedStatus" class="form-select">
                                 <option value="not-started">Not started</option>
@@ -104,6 +111,11 @@
                                 Add
                             </button>
                         </div>
+                        {% else %}
+                        <div class="col-5 mb-3" x-show="!game.inCollection">
+                            <span class="text-muted">Verify email to add</span>
+                        </div>
+                        {% endif %}
                         <template x-if="game.inCollection">
                             <div class="col-3 mb-3">
                                 <p class="text-green-600 mt-2">In your collection</p>
