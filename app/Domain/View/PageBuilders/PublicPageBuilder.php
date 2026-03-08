@@ -6,7 +6,7 @@ final class PublicPageBuilder extends AbstractPageBuilder
 {
     protected function titleSuffix(): string
     {
-        return 'Switch Scores';
+        return '';
     }
 
     protected function contextBindings(): array

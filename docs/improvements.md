@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 118**
+**Next ID: 119**
 
 ---
 
@@ -96,7 +96,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 70 | Re-download hi-res images for N.co.uk linked games | Done | 2026-03-01 | → Done section |
 | 77 | Video URL: scrape from Nintendo pages | Medium | Extend #110 crawl system | Scrape official video URL from Nintendo UK pages during crawl. |
 | 116 | Publisher change monitoring | Medium | New feature | Watch for publisher name changes on Nintendo pages. Challenge: distinguish between publisher renames (update existing) vs legitimate publisher changes (new assignment). Log changes for staff review rather than auto-updating. |
-| 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Low | Quick cleanup | Nintendo now redirects `.co.uk` to `.com/en-gb/` with 308. Override URLs may still use old format, causing extra redirect hop on every crawl. Options: (1) migrate stored URLs in DB, (2) normalise in crawler code. Also affects `DownloadPackshotHelper`. |
+| 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Done | 2026-03-08 | → Done section |
 | 87 | GH156: save smaller versions of images for landing pages | High | Requires ImageMagick + CDN strategy | Big images slow pages. But don't want fuzzy images in larger spaces. Balance needed. |
 | 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
 | 95 | GH76: multiplayer options | Done | 2026-02-27 | → Done section |
@@ -177,7 +177,9 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
-| 70 | Re-download hi-res header images | Done | 2026-03-01 | Extended crawl system to check header image sizes. Compares remote Content-Length via HEAD request against local file size. Re-downloads if different. Added to both `game:crawl` and `game:crawl-batch` commands. Uses og:image meta tag for URL. Output: `[image updated] X → Y bytes`. |
+| 118 | Page title has Switch Scores twice | Done | 2026-03-08 | `PublicPageBuilder::titleSuffix()` returned "Switch Scores", then base template appended "| Switch Scores". Fixed by returning empty suffix for public pages; `buildTopTitle()` now handles empty suffix gracefully. |
+| 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Done | 2026-03-08 | Updated 3589 `nintendo_store_url_override` URLs from `nintendo.co.uk` to `nintendo.com/en-gb`. Eliminates 308 redirect hop on every crawl. Also found and cleared 1 bad 3DS URL. `data_source_parsed.url` was already using path format. |
+| 70 | Re-download hi-res header images | Done | 2026-03-01 | Extended crawl system to check header image sizes. Compares remote Content-Length via HEAD request against local file size. Re-downloads if different. Added to both `game:crawl` and `game:crawl-batch` commands. Uses og:image meta tag for URL. Output: `[image updated] X → Y bytes`. **2026-03-08:** Added dated filenames (`hdr-{id}-{title}-{YYMMDD}.jpg`) to bypass Cloudflare's 1-year cache; deletes old image after successful download. |
 | 33 | Remove old image fields | Done | 2026-03-01 | Removed legacy `boxart_square_url` and `boxart_header_image` fields. Only 1 game had values, and it already had images in the new fields. No `/img/games/` folder exists anymore. Cleaned up: Game model, ImageHelper, GameBuilder, GameDirector, GameFactory, unit tests. Migration to drop columns. |
 | 10 | Scrape publisher name, players, and other info from Nintendo URL | Done | 2026-03-01 | Superseded by #95/#107 for players; publisher handled in separate import project. New #116 created for publisher change monitoring. |
 | 95 | GH76: multiplayer options | Done | 2026-02-27 | Extended crawl system to scrape players (local/wireless/online), multiplayer mode, features (online play, local multiplayer, play modes). New `game_scraped_data` table, `NintendoCoUkGameData` scraper, new game fields (`multiplayer_mode`, `has_online_play`, `has_local_multiplayer`, `play_mode_tv/tabletop/handheld`). Shown on staff detail + public game pages. Related: #107. |
