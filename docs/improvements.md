@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 119**
+**Next ID: 120**
 
 ---
 
@@ -177,6 +177,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 119 | Crawler hangs on redirect loops | Done | 2026-03-08 | Added `setMaxRedirects(3)` to HttpBrowser in crawl commands and Base scraper. Catches `\LogicException` for redirect limit, marks game with status 310, continues batch. Also added 30s timeout. Affects `GameCrawlBatch`, `GameCrawlUrl`, and `Base` scraper (used by editor page). |
 | 118 | Page title has Switch Scores twice | Done | 2026-03-08 | `PublicPageBuilder::titleSuffix()` returned "Switch Scores", then base template appended "| Switch Scores". Fixed by returning empty suffix for public pages; `buildTopTitle()` now handles empty suffix gracefully. |
 | 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Done | 2026-03-08 | Updated 3589 `nintendo_store_url_override` URLs from `nintendo.co.uk` to `nintendo.com/en-gb`. Eliminates 308 redirect hop on every crawl. Also found and cleared 1 bad 3DS URL. `data_source_parsed.url` was already using path format. |
 | 70 | Re-download hi-res header images | Done | 2026-03-01 | Extended crawl system to check header image sizes. Compares remote Content-Length via HEAD request against local file size. Re-downloads if different. Added to both `game:crawl` and `game:crawl-batch` commands. Uses og:image meta tag for URL. Output: `[image updated] X → Y bytes`. **2026-03-08:** Added dated filenames (`hdr-{id}-{title}-{YYMMDD}.jpg`) to bypass Cloudflare's 1-year cache; deletes old image after successful download. |

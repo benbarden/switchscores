@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
@@ -72,7 +73,9 @@ class GameCrawlUrl extends Command
 
         // Crawl the URL
         try {
-            $httpBrowser = new HttpBrowser();
+            $httpClient = HttpClient::create(['timeout' => 30]);
+            $httpBrowser = new HttpBrowser($httpClient);
+            $httpBrowser->setMaxRedirects(3);
             $crawler = $httpBrowser->request('GET', $url);
 
             $response = $httpBrowser->getResponse();
@@ -119,6 +122,21 @@ class GameCrawlUrl extends Command
 
             // Report on status
             $this->reportStatus($statusCode);
+
+        } catch (\LogicException $e) {
+            if (str_contains($e->getMessage(), 'redirections was reached')) {
+                $this->warn("Redirect loop detected - too many redirects");
+                $logger->warning("Game {$game->id} redirect loop: {$url}");
+
+                // Update game record to mark the issue
+                $game->last_crawled_at = now();
+                $game->last_crawl_status = 310; // Custom code for redirect loop
+                $game->save();
+                $this->repoGame->clearCacheCoreData($game->id);
+
+                return 1;
+            }
+            throw $e; // Re-throw other LogicExceptions
 
         } catch (\Exception $e) {
             $this->error("Crawl failed: " . $e->getMessage());

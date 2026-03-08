@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
@@ -78,7 +79,9 @@ class GameCrawlBatch extends Command
         $this->info("Found {$total} games to crawl");
         $this->newLine();
 
-        $httpBrowser = new HttpBrowser();
+        $httpClient = HttpClient::create(['timeout' => 30]);
+        $httpBrowser = new HttpBrowser($httpClient);
+        $httpBrowser->setMaxRedirects(3);
         $processed = 0;
 
         foreach ($games as $game) {
@@ -212,6 +215,30 @@ class GameCrawlBatch extends Command
             // Display final status
             $statusEmoji = $this->getStatusEmoji($statusCode);
             $this->line("  {$statusEmoji} Status: {$statusCode}");
+
+        } catch (\LogicException $e) {
+            // Too many redirects - mark as redirect loop
+            if (str_contains($e->getMessage(), 'redirections was reached')) {
+                $this->results['redirect']++;
+                $this->problemGames[] = [
+                    'id' => $game->id,
+                    'title' => $game->title,
+                    'status' => 'REDIRECT_LOOP',
+                    'url' => $url,
+                    'message' => 'Too many redirects',
+                ];
+                $this->warn("  ↻ Redirect loop detected");
+                $logger->warning("Game {$game->id} redirect loop: {$url}");
+
+                // Update game record to mark the issue
+                $game->last_crawled_at = now();
+                $game->last_crawl_status = 310; // Custom code for redirect loop
+                $game->crawl_priority = false;
+                $game->save();
+                $this->repoGame->clearCacheCoreData($game->id);
+            } else {
+                throw $e; // Re-throw other LogicExceptions
+            }
 
         } catch (\Exception $e) {
             $this->results['error']++;
