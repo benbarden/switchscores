@@ -128,8 +128,17 @@
                                 <a class="nav-link" href="{{ route('staff.index') }}">Staff index</a>
                             </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                        </li>
 
                     </ul>
+                </form>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
                 </form>
 
             </div>

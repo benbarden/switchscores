@@ -39,6 +39,7 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
 
     // Settings
     Route::get('/settings', 'Members\SettingsController@show')->name('settings');
+    Route::post('/settings', 'Members\SettingsController@update')->name('settings.update');
 
     // Developers
     // *************** Developer hub: Dashboard *************** //
