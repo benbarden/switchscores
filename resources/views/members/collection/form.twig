@@ -12,87 +12,105 @@
     {% if FormMode == 'add' %}
         <input type="hidden" id="game_id" name="game_id" value="{{ UrlGameId }}">
     {% endif %}
-    <fieldset>
-        <legend>Basic details</legend>
-        <div class="mb-3 row">
-            <label for="game_id" class="col-md-4 col-form-label">Game</label>
-            <div class="col-md-6">
-                <span class="form-control-plaintext">{{ CollectionGame.title }}</span>
-            </div>
-        </div>
 
-        <div class="mb-3 row">
-            <label class="col-md-4 col-form-label">Play status</label>
-            <div class="col-md-6">
+    <div class="row mb-4">
+        <div class="col">
+            <h4 class="mb-3">{{ CollectionGame.title }}</h4>
+
+            <label class="form-label fw-bold">Play status</label>
+            <div class="row g-2">
                 {% for item in PlayStatusList %}
-                    <div class="form-check">
-                        <input class="form-check-input" id="play_status_{{ item.id }}" name="play_status" value="{{ item.id }}" type="radio">
-                        <label class="form-check-label" for="play_status_{{ item.id }}">
-                            <i class="fas fa-{{ item.icon }}" style="color: {{ item.iconColor }}; font-size: 24px;"></i>
+                    <div class="col-4">
+                        <input class="btn-check" id="play_status_{{ item.id }}" name="play_status" value="{{ item.id }}" type="radio" autocomplete="off">
+                        <label class="btn play-status-btn w-100" for="play_status_{{ item.id }}" style="--status-color: {{ item.iconColor }};">
+                            <i class="fas fa-{{ item.icon }}"></i>
                             {{ item.desc }}
                         </label>
                     </div>
                 {% endfor %}
             </div>
-            <div class="col-md-2">
-                {{ packshots.square(CollectionGame) }}
+        </div>
+        <div class="col-auto" style="max-width: 250px;">
+            {{ packshots.square(CollectionGame) }}
+        </div>
+    </div>
+
+    {% if FormMode == 'add' %}
+    <div class="mb-4">
+        <label class="form-label fw-bold">When did you get it?</label>
+        <div class="d-flex flex-wrap gap-2 align-items-start">
+            <div class="form-check">
+                <input class="form-check-input" id="owned_from_skip" name="owned_from_option" value="skip" type="radio" checked>
+                <label class="form-check-label" for="owned_from_skip">
+                    Skip / Don't know
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="owned_from_today" name="owned_from_option" value="today" type="radio">
+                <label class="form-check-label" for="owned_from_today">
+                    Today
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="owned_from_custom" name="owned_from_option" value="custom" type="radio">
+                <label class="form-check-label" for="owned_from_custom">
+                    Choose a date
+                </label>
             </div>
         </div>
-    </fieldset>
-
-    <fieldset>
-        <legend>Optional extras</legend>
-        <div class="mb-3 row">
-            <label class="col-md-4 col-form-label">Owned type</label>
-            <div class="col-md-6">
-                <div class="form-check">
-                    <input class="form-check-input" id="owned_type_none" name="owned_type" value="" type="radio">
-                    <label class="form-check-label" for="owned_type_none">
-                        Not specified
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" id="owned_type_digital" name="owned_type" value="Digital" type="radio">
-                    <label class="form-check-label" for="owned_type_digital">
-                        Digital
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" id="owned_type_physical" name="owned_type" value="Physical" type="radio">
-                    <label class="form-check-label" for="owned_type_physical">
-                        Physical
-                    </label>
-                </div>
+        <div id="owned_from_date_wrapper" class="mt-2" style="display: none; max-width: 200px;">
+            <input id="owned_from" type="date" class="form-control" name="owned_from">
+        </div>
+        <div id="owned_from_skip_info" class="form-text">
+            You can add the owned date later by editing this game in your collection.
+        </div>
+    </div>
+    {% else %}
+    <div class="mb-4">
+        <label class="form-label fw-bold">Owned type</label>
+        <div class="d-flex flex-wrap gap-3">
+            <div class="form-check">
+                <input class="form-check-input" id="owned_type_none" name="owned_type" value="" type="radio">
+                <label class="form-check-label" for="owned_type_none">
+                    Not specified
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="owned_type_digital" name="owned_type" value="Digital" type="radio">
+                <label class="form-check-label" for="owned_type_digital">
+                    Digital
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" id="owned_type_physical" name="owned_type" value="Physical" type="radio">
+                <label class="form-check-label" for="owned_type_physical">
+                    Physical
+                </label>
             </div>
         </div>
+    </div>
 
-        <div class="mb-3 row">
-            <label for="owned_from" class="col-md-4 col-form-label">Owned from</label>
-            <div class="col-md-6">
-                <input id="owned_from" type="date" class="form-control" name="owned_from">
-                <div class="form-text">
-                    The date that you got this game. Leave blank if you're not sure.
-                </div>
-            </div>
+    <div class="mb-4">
+        <label for="owned_from" class="form-label fw-bold">Owned from</label>
+        <input id="owned_from" type="date" class="form-control" name="owned_from" style="max-width: 200px;">
+        <div class="form-text">
+            The date that you got this game. Leave blank if you're not sure.
         </div>
+    </div>
 
-        <div class="mb-3 row">
-            <label for="hours_played" class="col-md-4 col-form-label">Hours played</label>
-            <div class="col-md-6">
-                <input id="hours_played" type="text" class="form-control" name="hours_played">
-                <div class="form-text">
-                    The number of hours you've played this game for. You can find this on the Switch itself -
-                    go to your profile and you'll see a list of times.
-                </div>
-            </div>
+    <div class="mb-4">
+        <label for="hours_played" class="form-label fw-bold">Hours played</label>
+        <input id="hours_played" type="text" class="form-control" name="hours_played" style="max-width: 120px;">
+        <div class="form-text">
+            The number of hours you've played this game for. You can find this on the Switch itself -
+            go to your profile and you'll see a list of times.
         </div>
-    </fieldset>
+    </div>
+    {% endif %}
 
-    <div class="mb-3 row">
-        <div class="col-md-8 offset-md-4">
-            <button type="submit" class="btn btn-primary">
-                Submit
-            </button>
-        </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary btn-lg">
+            {% if FormMode == 'add' %}Add to collection{% else %}Save changes{% endif %}
+        </button>
     </div>
 </form>

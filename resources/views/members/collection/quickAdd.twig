@@ -4,12 +4,8 @@
 
     <div class="container" x-data="collectionQuickAdd()">
 
-        {#
-        <h1 class="text-xl font-bold mb-4">Quick add to collection</h1>
-        #}
-
         <p>
-            Results are limited to 20 items. Try using a precise search term if you don't find what you need.
+            Search for games to add to your collection. Results are limited to 20 items.
         </p>
 
         <div class="row">
@@ -140,7 +136,7 @@
                         .then(data => {
                             this.results = data.games.map(game => ({
                                 ...game,
-                                selectedStatus: 'not_started',
+                                selectedStatus: 'not-started',
                                 added: game.inCollection
                             }));
                             if (this.results.length < 1) {

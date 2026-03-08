@@ -101,7 +101,7 @@ class CollectionController extends Controller
 
     public function quickAdd()
     {
-        $pageTitle = 'Quick add to collection';
+        $pageTitle = 'Add to collection';
         $bindings = $this->pageBuilder->build($pageTitle, MembersBreadcrumbs::collectionSubpage($pageTitle))->bindings;
 
         $currentUser = resolve('User/Repository')->currentUser();
@@ -223,9 +223,17 @@ class CollectionController extends Controller
                     ->withInput();
             }
 
+            // Handle owned_from based on quick option selection
+            $ownedFrom = null;
+            if ($request->owned_from_option === 'today') {
+                $ownedFrom = now()->format('Y-m-d');
+            } elseif ($request->owned_from_option === 'custom' && $request->owned_from) {
+                $ownedFrom = $request->owned_from;
+            }
+
             $userGamesCollection = $this->repoUserGamesCollection->create(
-                $userId, $request->game_id, $request->owned_from, $request->owned_type,
-                $request->hours_played, $request->play_status
+                $userId, $request->game_id, $ownedFrom, null,
+                null, $request->play_status
             );
 
             // Trigger event

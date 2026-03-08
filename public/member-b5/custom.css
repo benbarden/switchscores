@@ -209,3 +209,33 @@ nav ol.breadcrumb {
     font-size: 16px;
 }
 
+/* Play status buttons - collection form */
+.play-status-btn {
+    border: 2px solid var(--status-color);
+    background-color: color-mix(in srgb, var(--status-color) 15%, white);
+    color: #333;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.play-status-btn i {
+    color: var(--status-color);
+    margin-right: 0.4rem;
+}
+
+.play-status-btn:hover {
+    background-color: color-mix(in srgb, var(--status-color) 30%, white);
+    border-color: var(--status-color);
+    color: #333;
+}
+
+.btn-check:checked + .play-status-btn {
+    background-color: var(--status-color);
+    border-color: var(--status-color);
+    color: #fff;
+}
+
+.btn-check:checked + .play-status-btn i {
+    color: #fff;
+}
+
