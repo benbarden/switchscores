@@ -11,9 +11,9 @@
             <thead>
             <tr>
                 <th class="text-center">#</th>
-                <th class="text-left">Game</th>
+                <th class="text-start">Game</th>
                 {% if PlayStatus is not defined %}
-                    <th class="text-left">
+                    <th class="text-start">
                         Play status
                     </th>
                 {% endif %}
@@ -42,11 +42,11 @@
                 {% set RowGameId = item.game.id %}
                 <tr id="js-collection-row-{{ item.id }}">
                     <td class="text-center">{{ item.id }}</td>
-                    <td class="text-left">
+                    <td class="text-start">
                         <a href="{{ game_url(item.game) }}" target="_blank">{{ item.game.title }}</a>
                     </td>
                     {% if PlayStatus is not defined %}
-                        <td class="text-left" style="vertical-align: middle;">
+                        <td class="text-start" style="vertical-align: middle;">
                             {% set playStatusItem = item.getPlayStatus(item.play_status) %}
                             <i class="fas fa-{{ playStatusItem.getIcon }}" style="color: {{ playStatusItem.iconColor }}; font-size: 24px;"></i>
                             {{ playStatusItem.getDesc }}
@@ -112,7 +112,7 @@
     {% endif %}
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

@@ -59,18 +59,38 @@ h3 {
 }
 
 
-/* Top navbar */
-.navbar {
+/* Primary navbar */
+.navbar-primary {
     background: #256ae5;
     color: #ffffff;
 }
 
-.navbar .nav-item.dropdown .dropdown-item {
+.navbar-primary .nav-item.dropdown .dropdown-item {
     font-size: 80%;
 }
 
-li.nav-item a.nav-link, li.nav-item a.nav-link {
+.navbar-primary li.nav-item a.nav-link {
     color: #ffffff !important;
+}
+
+/* Secondary navbar */
+.navbar-secondary {
+    background: #e8f0fc;
+    border-bottom: 1px solid #ccdcf5;
+}
+
+.navbar-secondary .navbar-text {
+    color: #1a4db3;
+    font-size: 90%;
+}
+
+.navbar-secondary li.nav-item a.nav-link {
+    color: #256ae5 !important;
+    font-size: 90%;
+}
+
+.navbar-secondary li.nav-item a.nav-link:hover {
+    color: #1a4db3 !important;
 }
 
 /* Breadcrumbs */

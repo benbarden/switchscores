@@ -28,7 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
 
     <!-- Switch Scores custom code -->
-    <link href="{{ asset('member-b5/custom.css') }}?v=251205" rel="stylesheet">
+    <link href="{{ asset('member-b5/custom.css') }}?v=260308a" rel="stylesheet">
     <script src="{{ asset('js/ssAdminTools.js') }}?v=240505a"></script>
 
     <!-- Font Awesome -->
@@ -48,106 +48,137 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    {% set currentPath = app.request.pathInfo %}
+    {% set inDevelopers = (currentPath starts with '/members/developers') %}
+    {% set inMembers = (currentPath starts with '/members') and not inDevelopers %}
+    {% set inReviewers = (currentPath starts with '/reviewers') %}
+    {% set inGamesCompanies = (currentPath starts with '/games-companies') %}
+    {% set inStaff = (currentPath starts with '/staff') %}
 
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-primary">
         <div class="container">
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
                     <li class="nav-item">
                         <a class="navbar-brand" href="{{ url('/') }}">
                             &lt; back to {{ config('app.name', 'Laravel') }}
                         </a>
                     </li>
                 </ul>
-
-                <form class="d-flex">
-
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link{% if inMembers %} active{% endif %}" href="{{ route('members.index') }}">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if inDevelopers %} active{% endif %}" href="{{ route('members.developers.index') }}">Developers</a>
+                    </li>
+                    {% if auth_user().isReviewer() %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('members.index') }}">Members</a>
+                            <a class="nav-link{% if inReviewers %} active{% endif %}" href="{{ route('reviewers.index') }}">Reviewers</a>
                         </li>
+                    {% endif %}
+                    {% if auth_user().isGamesCompany() %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('members.collection.landing') }}">Games collection</a>
+                            <a class="nav-link{% if inGamesCompanies %} active{% endif %}" href="{{ route('games-companies.index') }}">Games companies</a>
                         </li>
+                    {% endif %}
+                    {% if auth_user().isStaff() %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('members.quick-reviews.list') }}">Quick reviews</a>
+                            <a class="nav-link{% if inStaff %} active{% endif %}" href="{{ route('staff.index') }}">Staff</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDevelopers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Developers
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDevelopers">
-                                <li><a class="dropdown-item" href="{{ route('members.developers.index') }}">Developer index</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('members.developers.api.guide') }}">API guide</a></li>
-                                <li><a class="dropdown-item" href="{{ route('members.developers.api.methods') }}">API methods</a></li>
-                                <li><a class="dropdown-item" href="{{ route('members.developers.api.tokens') }}">API tokens</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('members.developers.switch-weekly') }}">Upcoming games (Switch Weekly)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('members.developers.hanafuda-report') }}">Hanafuda Report: Database updates</a></li>
-                            </ul>
-                        </li>
-                        {% if auth_user().isReviewer() %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarReviewers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Reviewers
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarReviewers">
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.index') }}">Reviewers index</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.profile.edit') }}">Edit your details</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.reviews.landing') }}">Your reviews</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.feed-health.landing') }}">Feed health</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.stats.landing') }}">Stats</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 2}) }}">Unranked: 2 reviews</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 1}) }}">Unranked: 1 review</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviewers.unranked-games.list', {'mode' : 'by-count', 'filter': 0}) }}">Unranked: 0 reviews</a></li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        {% if auth_user().isGamesCompany() %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarGamesCompanies" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Games companies
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarGamesCompanies">
-                                    <li><a class="dropdown-item" href="{{ route('games-companies.index') }}">Games companies index</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ route('games-companies.profile.edit') }}">Edit your details</a>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        {% if auth_user().isStaff() %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('staff.index') }}">Staff index</a>
-                            </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                        </li>
-
-                    </ul>
-                </form>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
                 </form>
-
             </div>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
     </nav>
+
+    {# Secondary navigation - contextual links based on current section #}
+    {% if inMembers or inDevelopers or inReviewers or inGamesCompanies %}
+        <nav class="navbar navbar-expand-lg navbar-secondary py-1">
+            <div class="container justify-content-start">
+                <span class="navbar-text fw-bold me-2">
+                    {% if inMembers %}Members:
+                    {% elseif inDevelopers %}Developers:
+                    {% elseif inReviewers %}Reviewers:
+                    {% elseif inGamesCompanies %}Games companies:
+                    {% endif %}
+                </span>
+                <ul class="navbar-nav">
+                    {% if inMembers %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.index') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.collection.landing') }}">Collection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.quick-reviews.list') }}">Quick reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.settings') }}">Settings</a>
+                        </li>
+                    {% elseif inDevelopers %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.index') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.api.guide') }}">API guide</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.api.methods') }}">API methods</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.api.tokens') }}">API tokens</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.switch-weekly') }}">Switch Weekly</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('members.developers.hanafuda-report') }}">Hanafuda Report</a>
+                        </li>
+                    {% elseif inReviewers %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.index') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.reviews.landing') }}">Your reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.feed-health.landing') }}">Feed health</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.stats.landing') }}">Stats</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.unranked-games.list', {'mode': 'by-count', 'filter': 2}) }}">Unranked games</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reviewers.profile.edit') }}">Edit profile</a>
+                        </li>
+                    {% elseif inGamesCompanies %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('games-companies.index') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('games-companies.profile.edit') }}">Edit profile</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    {% endif %}
 
     <div class="container">
         {% block page_body %}

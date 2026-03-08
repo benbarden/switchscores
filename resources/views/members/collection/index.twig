@@ -1,17 +1,14 @@
-{% extends 'theme/wos/member/clean-wide.twig' %}
-
-{% set hideHeader = 'Y' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
 <div class="row">
     <div class="col-md-8">
-        <h1>{{ PageTitle }}</h1>
         <p>
             Welcome to your Switch games collection. Get started by clicking "Add a game".
         </p>
         <p>
-            <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-collection-item'}) }}" class="btn outline btn-primary">+ Add a game</a>
+            <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-collection-item'}) }}" class="btn btn-outline-primary">+ Add a game</a>
         </p>
     </div>
     <div class="col-md-4">

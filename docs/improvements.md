@@ -102,7 +102,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 95 | GH76: multiplayer options | Done | 2026-02-27 | → Done section |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 | 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
-| 120 | Member nav restructure with secondary nav bar | Medium | UX improvement | Add second-level nav (different colour) for contextual sub-links. Primary nav: Members, Developers, Reviewers, etc. Secondary nav appears when in a section with its sub-links. Consolidate Members dropdown (Dashboard, Collection, Quick Reviews, Settings). |
+| 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | → Done section |
 | 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
 | 115 | Claude-assisted game tagging | Medium | Discovery/clustering goal | Help tag games to improve discoverability. Focus on Viewpoint, Visual style, Game type. Phase 1: keyword matching (title contains "Solitaire" → Solitaire tag). Phase 2: Nintendo genres_json mapping. Phase 3: interactive batch suggestions. Build artisan command to export "games with keyword X but missing tag Y". |
 
@@ -178,6 +178,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | Primary nav simplified to top-level links (Members, Developers, Reviewers, Games companies, Staff, Logout) with active state. Secondary nav (lighter colour) shows contextual sub-links per section. Each section has Dashboard link. Also migrated 8 collection pages from B3 to B5. |
 | 53 | Allow members to edit display name, email, and pw | Done | 2026-03-08 | Settings page at `/members/settings` with display name (all users), email and password (email login users only). Added "Edit your details" button to dashboard and Logout link to nav. |
 | 119 | Crawler hangs on redirect loops | Done | 2026-03-08 | Added `setMaxRedirects(3)` to HttpBrowser in crawl commands and Base scraper. Catches `\LogicException` for redirect limit, marks game with status 310, continues batch. Also added 30s timeout. Affects `GameCrawlBatch`, `GameCrawlUrl`, and `Base` scraper (used by editor page). |
 | 118 | Page title has Switch Scores twice | Done | 2026-03-08 | `PublicPageBuilder::titleSuffix()` returned "Switch Scores", then base template appended "| Switch Scores". Fixed by returning empty suffix for public pages; `buildTopTitle()` now handles empty suffix gracefully. |

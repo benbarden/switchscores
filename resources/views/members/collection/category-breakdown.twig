@@ -1,4 +1,4 @@
-{% extends 'theme/wos/member/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -7,28 +7,30 @@
     <div class="col-sm-12 col-md-9">
 
         {% if CategoryBreakdown %}
-        <table class="table table-condensed table-responsive">
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th class="text-center">Number of games</th>
-                    <th class="text-left">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in CategoryBreakdown %}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
                     <tr>
-                        <td>{{ item.name }}</td>
-                        <td class="text-center">{{ item.count }}</td>
-                        <td class="text-left">
-                            <a href="{{ route('members.collection.top-rated-by-category', {'categoryId': item.category_id}) }}">
-                                Find more in {{ item.name }}
-                            </a>
-                        </td>
+                        <th>Category</th>
+                        <th class="text-center">Number of games</th>
+                        <th class="text-start">Options</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for item in CategoryBreakdown %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td class="text-center">{{ item.count }}</td>
+                            <td class="text-start">
+                                <a href="{{ route('members.collection.top-rated-by-category', {'categoryId': item.category_id}) }}">
+                                    Find more in {{ item.name }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
             <p>
                 Whoops, looks like your collection is empty!
