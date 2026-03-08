@@ -11,6 +11,9 @@
 
     {% if FormMode == 'add' %}
         <input type="hidden" id="game_id" name="game_id" value="{{ UrlGameId }}">
+        {% if ReturnUrl %}
+            <input type="hidden" name="return_url" value="{{ ReturnUrl }}">
+        {% endif %}
     {% endif %}
 
     <div class="row mb-4">

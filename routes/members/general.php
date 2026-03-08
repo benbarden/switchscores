@@ -27,6 +27,19 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
         Route::get('/collection/quick-add', 'quickAdd')->name('collection.quickAdd');
     });
 
+    // Game finder
+    Route::get('/find-game', 'Members\GameFinderController@index')->name('game-finder.index');
+
+    // Wishlist
+    Route::get('/wishlist', 'Members\WishlistController@index')->name('wishlist.index');
+    Route::post('/wishlist/add/{gameId}', 'Members\WishlistController@add')->name('wishlist.add');
+    Route::post('/wishlist/remove/{gameId}', 'Members\WishlistController@remove')->name('wishlist.remove');
+
+    // Ignored/hidden games
+    Route::get('/ignored-games', 'Members\IgnoredGamesController@index')->name('ignored-games.index');
+    Route::post('/ignored-games/add/{gameId}', 'Members\IgnoredGamesController@add')->name('ignored-games.add');
+    Route::post('/ignored-games/remove/{gameId}', 'Members\IgnoredGamesController@remove')->name('ignored-games.remove');
+
     // Quick reviews
     Route::match(['get', 'post'], '/quick-reviews/add/{gameId}', 'Members\QuickReviewController@add')->name('quick-reviews.add');
     Route::get('/quick-reviews/{report?}', 'Members\QuickReviewController@showList')->name('quick-reviews.list');

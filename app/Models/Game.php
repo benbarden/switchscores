@@ -92,6 +92,11 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\Models\QuickReview', 'game_id', 'id');
     }
 
+    public function userCollection()
+    {
+        return $this->hasMany('App\Models\UserGamesCollection', 'game_id', 'id');
+    }
+
     public function gameTags()
     {
         return $this->hasMany('App\Models\GameTag', 'game_id', 'id');

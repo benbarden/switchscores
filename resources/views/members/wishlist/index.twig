@@ -1,0 +1,87 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
+{% block page_inner %}
+
+<p class="lead">
+    Games you want to buy. When you get a game, move it to your collection.
+</p>
+
+{% if WishlistItems|length > 0 %}
+    <p>{{ WishlistItems|length }} game{% if WishlistItems|length != 1 %}s{% endif %} in your wishlist.</p>
+
+    <div class="row g-3">
+        {% for item in WishlistItems %}
+            {% set game = item.game %}
+            <div class="col-md-6 col-lg-4" id="wishlist-item-{{ game.id }}">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-4">
+                            {{ packshots.square(game) }}
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body">
+                                <h6 class="card-title mb-1">
+                                    <a href="{{ route('game.show', {'id': game.id, 'linkTitle': game.link_title}) }}">
+                                        {{ game.title }}
+                                    </a>
+                                </h6>
+                                <p class="card-text small text-muted mb-1">
+                                    {{ game.category.name|default('Uncategorised') }}
+                                </p>
+                                {% if game.rating_avg %}
+                                    <p class="card-text mb-1">
+                                        <span class="badge bg-success">{{ game.rating_avg|number_format(1) }}</span>
+                                    </p>
+                                {% endif %}
+                                <p class="card-text small text-muted mb-2">
+                                    Added {{ item.created_at|date('j M Y') }}
+                                </p>
+                                <div class="btn-group btn-group-sm">
+                                    {% if game.id in CollectionGameIds %}
+                                        <span class="badge bg-info align-self-center me-2">In collection</span>
+                                    {% else %}
+                                        <a href="{{ route('members.collection.add', {'gameId': game.id}) }}" class="btn btn-outline-success">
+                                            Got it!
+                                        </a>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-outline-danger" onclick="removeFromWishlist({{ game.id }})">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">Your wishlist is empty.</p>
+    </div>
+    <p>
+        <a href="{{ route('members.game-finder.index') }}" class="btn btn-primary">Find a game</a>
+    </p>
+{% endif %}
+
+<script>
+function removeFromWishlist(gameId) {
+    if (!confirm('Remove this game from your wishlist?')) return;
+
+    fetch('/members/wishlist/remove/' + gameId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById('wishlist-item-' + gameId).remove();
+        }
+    });
+}
+</script>
+
+{% endblock page_inner %}

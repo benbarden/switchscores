@@ -1,0 +1,256 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
+{% block page_inner %}
+
+<p class="lead">
+    Find your next game using filters for category, multiplayer, play modes, and more.
+</p>
+
+<form method="GET" action="{{ route('members.game-finder.index') }}" class="mb-4">
+    <input type="hidden" name="search" value="1">
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label for="keywords" class="form-label fw-bold">Keywords</label>
+            <input type="text" class="form-control" id="keywords" name="keywords"
+                   value="{{ Filters.keywords|default('') }}" placeholder="Search by title...">
+        </div>
+
+        <div class="col-md-4">
+            <label for="category_id" class="form-label fw-bold">Category</label>
+            <select class="form-select" id="category_id" name="category_id">
+                <option value="">Any category</option>
+                {% for category in Categories %}
+                    <option value="{{ category.id }}" {% if Filters.category_id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% if category.children %}
+                        {% for child in category.children %}
+                            <option value="{{ child.id }}" {% if Filters.category_id == child.id %}selected{% endif %}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}
+                            </option>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="console_id" class="form-label fw-bold">Console</label>
+            <select class="form-select" id="console_id" name="console_id">
+                <option value="">Any console</option>
+                {% for console in ConsoleList %}
+                    <option value="{{ console.id }}" {% if Filters.console_id == console.id %}selected{% endif %}>
+                        {{ console.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-3">
+            <label for="min_rating" class="form-label fw-bold">Minimum rating</label>
+            <select class="form-select" id="min_rating" name="min_rating">
+                <option value="">Any rating</option>
+                <option value="9" {% if Filters.min_rating == '9' %}selected{% endif %}>9+ (Excellent)</option>
+                <option value="8" {% if Filters.min_rating == '8' %}selected{% endif %}>8+ (Great)</option>
+                <option value="7" {% if Filters.min_rating == '7' %}selected{% endif %}>7+ (Good)</option>
+                <option value="6" {% if Filters.min_rating == '6' %}selected{% endif %}>6+ (Above average)</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="min_players" class="form-label fw-bold">Player count</label>
+            <select class="form-select" id="min_players" name="min_players">
+                <option value="">Any</option>
+                <option value="2" {% if Filters.min_players == '2' %}selected{% endif %}>2+ players</option>
+                <option value="3" {% if Filters.min_players == '3' %}selected{% endif %}>3+ players</option>
+                <option value="4" {% if Filters.min_players == '4' %}selected{% endif %}>4+ players</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Multiplayer</label>
+            <div class="d-flex gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="has_local_multiplayer" name="has_local_multiplayer" value="1"
+                           {% if Filters.has_local_multiplayer %}checked{% endif %}>
+                    <label class="form-check-label" for="has_local_multiplayer">Local multiplayer</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="has_online_play" name="has_online_play" value="1"
+                           {% if Filters.has_online_play %}checked{% endif %}>
+                    <label class="form-check-label" for="has_online_play">Online play</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Play modes</label>
+            <div class="d-flex gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="play_mode_tv" name="play_mode_tv" value="1"
+                           {% if Filters.play_mode_tv %}checked{% endif %}>
+                    <label class="form-check-label" for="play_mode_tv">TV</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="play_mode_tabletop" name="play_mode_tabletop" value="1"
+                           {% if Filters.play_mode_tabletop %}checked{% endif %}>
+                    <label class="form-check-label" for="play_mode_tabletop">Tabletop</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="play_mode_handheld" name="play_mode_handheld" value="1"
+                           {% if Filters.play_mode_handheld %}checked{% endif %}>
+                    <label class="form-check-label" for="play_mode_handheld">Handheld</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Options</label>
+            <div class="d-flex gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="ranked_only" name="ranked_only" value="1"
+                           {% if Filters.ranked_only %}checked{% endif %}>
+                    <label class="form-check-label" for="ranked_only">Ranked games only</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exclude_owned" name="exclude_owned" value="1"
+                           {% if Filters.exclude_owned %}checked{% endif %}>
+                    <label class="form-check-label" for="exclude_owned">Hide games I own</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">Find games</button>
+        <a href="{{ route('members.game-finder.index') }}" class="btn btn-outline-secondary">Clear filters</a>
+        {% if IgnoredCount > 0 %}
+            <a href="{{ route('members.ignored-games.index') }}" class="btn btn-link text-muted">
+                {{ IgnoredCount }} hidden game{% if IgnoredCount != 1 %}s{% endif %}
+            </a>
+        {% endif %}
+    </div>
+</form>
+
+{% if SearchResults is defined %}
+    <hr>
+    <h2>Results</h2>
+    {% if SearchResults|length > 0 %}
+        <p>{{ SearchResults|length }} game{% if SearchResults|length != 1 %}s{% endif %} found{% if SearchResults|length == 100 %} (showing first 100){% endif %}.</p>
+
+        <div class="row g-3">
+            {% for game in SearchResults %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="row g-0">
+                            <div class="col-4">
+                                {{ packshots.square(game) }}
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-1">
+                                        <a href="{{ route('game.show', {'id': game.id, 'linkTitle': game.link_title}) }}">
+                                            {{ game.title }}
+                                        </a>
+                                    </h6>
+                                    <p class="card-text small text-muted mb-1">
+                                        {{ game.category.name|default('Uncategorised') }}
+                                        {% if game.console_id == 2 %}
+                                            <span class="badge bg-success">S2</span>
+                                        {% endif %}
+                                    </p>
+                                    {% if game.rating_avg %}
+                                        <p class="card-text mb-1">
+                                            <span class="badge bg-success">{{ game.rating_avg|number_format(1) }}</span>
+                                        </p>
+                                    {% endif %}
+                                    <p class="card-text small mb-2">
+                                        {% if game.players %}
+                                            <span class="me-2" title="Players"><i class="fas fa-user"></i> {{ game.players }}</span>
+                                        {% endif %}
+                                        {% if game.has_local_multiplayer %}
+                                            <span class="me-2" title="Local multiplayer"><i class="fas fa-users"></i></span>
+                                        {% endif %}
+                                        {% if game.has_online_play %}
+                                            <span title="Online play"><i class="fas fa-globe"></i></span>
+                                        {% endif %}
+                                    </p>
+                                    {% if game.id in CollectionGameIds %}
+                                        <span class="badge bg-info">In collection</span>
+                                    {% else %}
+                                        <div class="btn-group btn-group-sm" id="game-actions-{{ game.id }}">
+                                            <a href="{{ route('members.collection.add', {'gameId': game.id}) }}" class="btn btn-outline-primary" title="Add to collection">
+                                                Own it
+                                            </a>
+                                            {% if game.id in WishlistGameIds %}
+                                                <span class="btn btn-success disabled">Wishlisted</span>
+                                            {% else %}
+                                                <button type="button" class="btn btn-outline-secondary" onclick="addToWishlist({{ game.id }})" title="Add to wishlist">
+                                                    Want it
+                                                </button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-outline-danger" onclick="hideGame({{ game.id }})" title="Hide from results">
+                                                <i class="fas fa-eye-slash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No games found matching your filters. Try broadening your search.</p>
+    {% endif %}
+{% endif %}
+
+<script>
+function addToWishlist(gameId) {
+    fetch('/members/wishlist/add/' + gameId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(res => {
+        if (res.ok) {
+            // Replace "Want it" button with "Wishlisted" badge
+            const actionsDiv = document.getElementById('game-actions-' + gameId);
+            const buttons = actionsDiv.querySelectorAll('button');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === 'Want it') {
+                    btn.outerHTML = '<span class="btn btn-success btn-sm disabled">Wishlisted</span>';
+                }
+            });
+        }
+    });
+}
+
+function hideGame(gameId) {
+    fetch('/members/ignored-games/add/' + gameId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(res => {
+        if (res.ok) {
+            // Remove the card from results
+            const card = document.getElementById('game-actions-' + gameId).closest('.col-md-6');
+            card.remove();
+        }
+    });
+}
+</script>
+
+{% endblock page_inner %}

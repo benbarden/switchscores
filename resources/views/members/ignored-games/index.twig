@@ -1,0 +1,68 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+
+{% block page_inner %}
+
+<p class="lead">
+    Games you've hidden from search results. Unhide them if you change your mind.
+</p>
+
+{% if IgnoredGames|length > 0 %}
+    <p>{{ IgnoredGames|length }} hidden game{% if IgnoredGames|length != 1 %}s{% endif %}.</p>
+
+    <div class="row g-3">
+        {% for item in IgnoredGames %}
+            {% set game = item.game %}
+            <div class="col-md-6 col-lg-4" id="ignored-item-{{ game.id }}">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-4">
+                            {{ packshots.square(game) }}
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body">
+                                <h6 class="card-title mb-1">
+                                    <a href="{{ route('game.show', {'id': game.id, 'linkTitle': game.link_title}) }}">
+                                        {{ game.title }}
+                                    </a>
+                                </h6>
+                                <p class="card-text small text-muted mb-1">
+                                    {{ game.category.name|default('Uncategorised') }}
+                                </p>
+                                <p class="card-text small text-muted mb-2">
+                                    Hidden {{ item.created_at|date('j M Y') }}
+                                </p>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="unhideGame({{ game.id }})">
+                                    Unhide
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">You haven't hidden any games.</p>
+    </div>
+{% endif %}
+
+<script>
+function unhideGame(gameId) {
+    fetch('/members/ignored-games/remove/' + gameId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById('ignored-item-' + gameId).remove();
+        }
+    });
+}
+</script>
+
+{% endblock page_inner %}

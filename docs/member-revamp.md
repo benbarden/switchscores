@@ -42,9 +42,55 @@ Goal: Tidy up member tools before making signup easier (#19).
 1. ~~**#53** - Basic account editing (foundational)~~ Done
 2. ~~**#82 + #83** - Games collection UX fixes (quick wins)~~ Done
 3. ~~**#120** - Nav restructure (improves navigation)~~ Done
-4. **#94** - Staff approve/deny workflow
-5. **#100** - Collection quick status changes
-6. Then consider **#19** (open signup)
+4. ~~**Discovery Hub Phase 1** - Find a game + Wishlist + Hidden games~~ Done
+5. **Discovery Hub Phase 2** - Saved searches (next!)
+6. **#94** - Staff approve/deny workflow
+7. **#100** - Collection quick status changes
+8. Then consider **#19** (open signup)
+
+## Discovery Hub - NEW DIRECTION
+
+### The problem
+Public pages are cached (bot traffic), so we can't personalise them for logged-in users.
+
+### The solution
+Make the **member dashboard** the personalised discovery hub. Primary CTA: **"Find me a game"**
+
+### Phase 1 - DONE 2026-03-08
+
+**Find me a game** (`/members/find-game`)
+- Keyword search
+- Category filter (hierarchical)
+- Console filter (Switch 1/2)
+- Minimum rating
+- Player count (2+, 3+, 4+)
+- Local multiplayer / Online play checkboxes
+- Play modes (TV, Tabletop, Handheld)
+- "Ranked games only" filter (default on)
+- "Hide games I own" filter
+- Results as cards with "Own it" / "Want it" / "Hide" buttons
+
+**Wishlist** (`/members/wishlist`)
+- Games you want to buy
+- "Got it!" moves to collection (auto-removes from wishlist)
+- "Remove" button
+
+**Hidden games** (`/members/ignored-games`)
+- Games hidden from search results
+- "Unhide" button
+
+**UX improvements**
+- Return to search after adding to collection
+- Nav: Dashboard | Find a game | Wishlist | Collection | Add to collection | Quick reviews | Settings
+
+### Phase 2 - Saved Searches (next)
+- Save any search with a name
+- Dashboard shows results of saved searches
+- "3 new games match your 'Local co-op platformers' search"
+
+### Phase 3 - Email notifications (future)
+- Notify users of new releases/reviews matching saved searches
+- Opt-in per saved search
 
 ## Nav Restructure (#120) - DONE 2026-03-08
 
@@ -56,7 +102,7 @@ Goal: Tidy up member tools before making signup easier (#19).
 - No more dropdowns
 
 **Secondary nav (light blue, contextual):**
-- **Members:** Dashboard | Collection | Add to collection | Quick reviews | Settings
+- **Members:** Dashboard | Find a game | Wishlist | Collection | Add to collection | Quick reviews | Settings
 - **Developers:** Dashboard | API guide | API methods | API tokens | Switch Weekly | Hanafuda Report
 - **Reviewers:** Dashboard | Your reviews | Feed health | Stats | Unranked games | Edit profile
 - **Games companies:** Dashboard | Edit profile

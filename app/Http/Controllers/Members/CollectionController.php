@@ -19,6 +19,7 @@ use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Domain\UserGamesCollection\DbQueries as UserGamesCollectionDbQueries;
 use App\Domain\UserGamesCollection\PlayStatus as UserGamesCollectionPlayStatus;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
 
@@ -42,7 +43,8 @@ class CollectionController extends Controller
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private UserGamesCollectionPlayStatus $ugcPlayStatus,
         private UserGamesCollectionDbQueries $dbUserGamesCollection,
-        private CollectionStatsRepository $repoCollectionStats
+        private CollectionStatsRepository $repoCollectionStats,
+        private UserWishlistRepository $repoWishlist
     )
     {
     }
@@ -236,9 +238,16 @@ class CollectionController extends Controller
                 null, $request->play_status
             );
 
+            // Remove from wishlist if present
+            $this->repoWishlist->deleteByUserAndGame($userId, $request->game_id);
+
             // Trigger event
             event(new GameCollectionAdded($userGamesCollection));
 
+            // Return to previous page if specified, otherwise collection list
+            if ($request->return_url) {
+                return redirect($request->return_url);
+            }
             return redirect(route('members.collection.list', ['listOption' => 'recently-added']));
 
         }
@@ -257,6 +266,12 @@ class CollectionController extends Controller
         $gameData = $this->repoGame->find($urlGameId);
         $bindings['CollectionGame'] = $gameData;
         $bindings['SelectedGameTitle'] = $gameData->title;
+
+        // Capture return URL from referrer (if from game-finder or wishlist)
+        $referrer = $request->headers->get('referer');
+        if ($referrer && (str_contains($referrer, '/find-game') || str_contains($referrer, '/wishlist'))) {
+            $bindings['ReturnUrl'] = $referrer;
+        }
 
         return view('members.collection.add', $bindings);
     }

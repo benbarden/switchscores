@@ -13,6 +13,7 @@ use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\UserGamesCollection\CollectionStatsRepository;
 use App\Domain\UserGamesCollection\DbQueries as CollectionDbQueries;
+use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 
 class IndexController extends Controller
 {
@@ -24,6 +25,7 @@ class IndexController extends Controller
         private GameRepository $repoGame,
         private QuickReviewRepository $repoQuickReview,
         private UnrankedRepository $repoUnranked,
+        private UserWishlistRepository $repoWishlist,
     )
     {
     }
@@ -45,6 +47,7 @@ class IndexController extends Controller
         $bindings['UserData'] = $currentUser;
         $bindings['TotalGames'] = $this->repoCollectionStats->userTotalGames($userId);
         $bindings['TotalHours'] = $this->repoCollectionStats->userTotalHours($userId);
+        $bindings['TotalWishlist'] = $this->repoWishlist->countByUser($userId);
 
         // Featured game
         $featuredGame = $this->repoFeaturedGame->getLatest(3);

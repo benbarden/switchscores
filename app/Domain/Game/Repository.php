@@ -54,6 +54,86 @@ class Repository extends AbstractRepository
         return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();
     }
 
+    public function findWithFilters(array $filters, int $userId = null)
+    {
+        $query = Game::query()
+            ->with('category')
+            ->where('eu_is_released', 1)
+            ->active();
+
+        // Keywords
+        if (!empty($filters['keywords'])) {
+            $query->where('title', 'like', '%' . $filters['keywords'] . '%');
+        }
+
+        // Category (including children)
+        if (!empty($filters['category_id'])) {
+            $categoryId = (int) $filters['category_id'];
+            $query->where(function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId)
+                  ->orWhereHas('category', function ($q2) use ($categoryId) {
+                      $q2->where('parent_id', $categoryId);
+                  });
+            });
+        }
+
+        // Console (Switch 1 / Switch 2)
+        if (!empty($filters['console_id'])) {
+            $query->where('console_id', (int) $filters['console_id']);
+        }
+
+        // Ranked games only (has game_rank)
+        if (!empty($filters['ranked_only'])) {
+            $query->whereNotNull('game_rank');
+        }
+
+        // Minimum rating
+        if (!empty($filters['min_rating'])) {
+            $query->where('rating_avg', '>=', (float) $filters['min_rating']);
+        }
+
+        // Multiplayer options
+        if (!empty($filters['has_local_multiplayer'])) {
+            $query->where('has_local_multiplayer', 1);
+        }
+        if (!empty($filters['has_online_play'])) {
+            $query->where('has_online_play', 1);
+        }
+
+        // Minimum players
+        if (!empty($filters['min_players'])) {
+            $query->where('players', '>=', (int) $filters['min_players']);
+        }
+
+        // Play modes
+        if (!empty($filters['play_mode_tv'])) {
+            $query->where('play_mode_tv', 1);
+        }
+        if (!empty($filters['play_mode_tabletop'])) {
+            $query->where('play_mode_tabletop', 1);
+        }
+        if (!empty($filters['play_mode_handheld'])) {
+            $query->where('play_mode_handheld', 1);
+        }
+
+        // Exclude owned games
+        if (!empty($filters['exclude_owned']) && $userId) {
+            $query->whereDoesntHave('userCollection', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+        }
+
+        // Exclude ignored games
+        if (!empty($filters['exclude_ignored']) && !empty($filters['ignored_game_ids'])) {
+            $query->whereNotIn('id', $filters['ignored_game_ids']);
+        }
+
+        return $query->orderBy('rating_avg', 'DESC')
+            ->orderBy('title', 'ASC')
+            ->limit(100)
+            ->get();
+    }
+
     public function randomGame()
     {
         return Game::where('eu_is_released', 1)

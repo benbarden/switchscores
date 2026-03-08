@@ -49,6 +49,14 @@
                     <td>{{ TotalGames }}</td>
                 </tr>
                 <tr>
+                    <td>
+                        <a href="{{ route('members.wishlist.index') }}">
+                            Games on your wishlist
+                        </a>
+                    </td>
+                    <td>{{ TotalWishlist }}</td>
+                </tr>
+                <tr>
                     <td>Registered</td>
                     <td>{{ UserData.created_at|date('d M Y') }}</td>
                 </tr>
@@ -58,18 +66,14 @@
 
         <div class="col-xs-12 col-sm-4 col-md-4">
 
+            {{ heading.renderChunky('Find your next game', 'h4') }}
+            <p>
+                Search by category, multiplayer options, play modes, and more.
+            </p>
+            <a href="{{ route('members.game-finder.index') }}" class="btn btn-primary btn-lg mb-4">Find me a game</a>
+
             {{ heading.renderChunky('Quick links', 'h4') }}
             <table class="table">
-                <tr>
-                    <td>
-                        <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('members.quick-reviews.list') }}">View your quick reviews</a>
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         <a href="{{ route('members.collection.quickAdd') }}">Add to collection</a>
@@ -78,6 +82,16 @@
                 <tr>
                     <td>
                         <a href="{{ route('members.collection.landing') }}">View your collection</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('members.quick-reviews.list') }}">View your quick reviews</a>
                     </td>
                 </tr>
                 <tr>
