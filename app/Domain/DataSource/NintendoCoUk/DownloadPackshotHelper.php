@@ -84,7 +84,7 @@ class DownloadPackshotHelper
             $downloadByDataSource->download();
             */
 
-            $storeUrl = 'https://www.nintendo.com/'.$dsItem->url;
+            $storeUrl = 'https://www.nintendo.com'.$dsItem->url;
 
         } else {
 

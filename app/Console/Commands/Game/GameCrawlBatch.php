@@ -265,7 +265,7 @@ class GameCrawlBatch extends Command
 
         $dsItem = $game->dspNintendoCoUk()->first();
         if ($dsItem && $dsItem->url) {
-            return 'https://www.nintendo.com/' . $dsItem->url;
+            return 'https://www.nintendo.com' . $dsItem->url;
         }
 
         return null;

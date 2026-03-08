@@ -166,7 +166,7 @@ class GameCrawlUrl extends Command
         // Then check for DataSourceParsed item
         $dsItem = $game->dspNintendoCoUk()->first();
         if ($dsItem && $dsItem->url) {
-            return 'https://www.nintendo.com/' . $dsItem->url;
+            return 'https://www.nintendo.com' . $dsItem->url;
         }
 
         return null;
