@@ -518,9 +518,8 @@ class GameCrawlBatch extends Command
 
             // Download new image
             $this->downloadHeaderImage($game, $remoteUrl, $remoteSize, $logger);
-            $newSize = filesize($localPath);
 
-            return "[image updated] {$localSize} → {$newSize} bytes";
+            return "[image updated] " . ($localSize ?? 'N/A') . " → {$remoteSize} bytes";
 
         } catch (\Exception $e) {
             $logger->warning("Failed to check header image for game {$game->id}: " . $e->getMessage());
@@ -567,27 +566,33 @@ class GameCrawlBatch extends Command
     }
 
     /**
-     * Download and save header image, replacing the existing file.
+     * Download and save header image with dated filename, deleting the old one.
      */
     private function downloadHeaderImage($game, string $remoteUrl, int $remoteSize, $logger): void
     {
         $destPath = public_path() . GameImages::PATH_IMAGE_HEADER;
 
-        // Generate filename if game doesn't have one
-        if (!$game->image_header) {
-            $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-            $filename = 'hdr-' . $game->id . '-' . $game->link_title . '.' . $fileExt;
-            $game->image_header = $filename;
-        }
+        // Store old filename for cleanup
+        $oldFilename = $game->image_header;
+        $oldFilePath = $oldFilename ? $destPath . $oldFilename : null;
 
-        $destFile = $destPath . $game->image_header;
+        // Generate new filename with date suffix (YYMMDD)
+        $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+        $dateSuffix = date('ymd');
+        $newFilename = 'hdr-' . $game->id . '-' . $game->link_title . '-' . $dateSuffix . '.' . $fileExt;
+        $newFilePath = $destPath . $newFilename;
 
+        // Download the image
         $imageData = file_get_contents($remoteUrl);
         if ($imageData === false) {
             throw new \Exception("Failed to download image from: {$remoteUrl}");
         }
 
-        file_put_contents($destFile, $imageData);
+        // Save new image
+        file_put_contents($newFilePath, $imageData);
+
+        // Update game record
+        $game->image_header = $newFilename;
         $game->save();
 
         // Save header image data to game_scraped_data
@@ -596,6 +601,12 @@ class GameCrawlBatch extends Command
         // Clear cache since we updated game data
         $this->repoGame->clearCacheCoreData($game->id);
 
-        $logger->info("Header image updated for game {$game->id}: {$game->image_header}");
+        // Delete old image if it exists and is different from new
+        if ($oldFilePath && $oldFilename !== $newFilename && file_exists($oldFilePath)) {
+            unlink($oldFilePath);
+            $logger->info("Deleted old header image: {$oldFilename}");
+        }
+
+        $logger->info("Header image updated for game {$game->id}: {$newFilename}");
     }
 }

@@ -446,28 +446,34 @@ class GameCrawlUrl extends Command
     }
 
     /**
-     * Download and save header image, replacing the existing file.
+     * Download and save header image with dated filename, deleting the old one.
      */
     private function downloadHeaderImage(Game $game, string $remoteUrl, int $remoteSize, $logger): void
     {
         $destPath = public_path() . GameImages::PATH_IMAGE_HEADER;
 
-        // Generate filename if game doesn't have one
-        if (!$game->image_header) {
-            $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-            $filename = 'hdr-' . $game->id . '-' . $game->link_title . '.' . $fileExt;
-            $game->image_header = $filename;
-        }
+        // Store old filename for cleanup
+        $oldFilename = $game->image_header;
+        $oldFilePath = $oldFilename ? $destPath . $oldFilename : null;
 
-        $destFile = $destPath . $game->image_header;
+        // Generate new filename with date suffix (YYMMDD)
+        $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+        $dateSuffix = date('ymd');
+        $newFilename = 'hdr-' . $game->id . '-' . $game->link_title . '-' . $dateSuffix . '.' . $fileExt;
+        $newFilePath = $destPath . $newFilename;
 
         try {
+            // Download the image
             $imageData = file_get_contents($remoteUrl);
             if ($imageData === false) {
                 throw new \Exception("Failed to download image from: {$remoteUrl}");
             }
 
-            file_put_contents($destFile, $imageData);
+            // Save new image
+            file_put_contents($newFilePath, $imageData);
+
+            // Update game record
+            $game->image_header = $newFilename;
             $game->save();
 
             // Save header image data to game_scraped_data
@@ -476,9 +482,16 @@ class GameCrawlUrl extends Command
             // Clear cache since we updated game data
             $this->repoGame->clearCacheCoreData($game->id);
 
-            $newSize = filesize($destFile);
-            $this->info("Header image updated ({$newSize} bytes): {$game->image_header}");
-            $logger->info("Header image updated for game {$game->id}: {$game->image_header}");
+            // Delete old image if it exists and is different from new
+            if ($oldFilePath && $oldFilename !== $newFilename && file_exists($oldFilePath)) {
+                unlink($oldFilePath);
+                $this->info("Deleted old header image: {$oldFilename}");
+                $logger->info("Deleted old header image: {$oldFilename}");
+            }
+
+            $newSize = filesize($newFilePath);
+            $this->info("Header image updated ({$newSize} bytes): {$newFilename}");
+            $logger->info("Header image updated for game {$game->id}: {$newFilename}");
 
         } catch (\Exception $e) {
             throw new \Exception("Failed to save header image: " . $e->getMessage());
