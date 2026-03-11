@@ -24,7 +24,7 @@ class GameCrawlBatch extends Command
     protected $signature = 'game:crawl-batch
                             {--limit=50 : Number of games to process}
                             {--delay=2 : Seconds to wait between requests}
-                            {--source=override : Source to crawl: override, datasource, or all}';
+                            {--source=all : Source to crawl: override, datasource, or all}';
 
     /**
      * The console command description.
@@ -127,15 +127,8 @@ class GameCrawlBatch extends Command
 
         // Prioritise:
         // 1. Priority flag (newly imported games)
-        // 2. Games with override URLs (most likely to have issues)
-        // 3. Never crawled (newest first)
-        // 4. Games with null players (need data populated)
-        // 5. Oldest crawled
+        // 2. Never crawled (NULL first in ASC), then oldest crawled
         $query->orderByRaw('crawl_priority DESC')
-              ->orderByRaw('nintendo_store_url_override IS NOT NULL DESC')
-              ->orderByRaw('last_crawled_at IS NULL DESC')
-              ->orderBy('created_at', 'desc')
-              ->orderByRaw('players IS NULL DESC')
               ->orderBy('last_crawled_at', 'asc')
               ->limit($limit);
 
