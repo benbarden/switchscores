@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Members;
 
 use App\Domain\User\VerifyEmail;
+use App\Http\Controllers\Members\IntentController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
@@ -25,10 +26,19 @@ class EmailVerificationController extends Controller
             return redirect()->back()->with('success', 'Your email is already verified.');
         }
 
+        // Build URL parameters, including any pending intent
+        $urlParams = ['id' => $user->id];
+
+        $intentData = IntentController::getIntentFromSession($request);
+        if ($intentData) {
+            $urlParams['intent_action'] = $intentData['action'];
+            $urlParams['intent_game_id'] = $intentData['game_id'];
+        }
+
         $verificationUrl = URL::temporarySignedRoute(
             'members.email.verify',
             now()->addHours(24),
-            ['id' => $user->id]
+            $urlParams
         );
 
         Mail::to($user->email)->send(new VerifyEmail($verificationUrl));
@@ -55,6 +65,25 @@ class EmailVerificationController extends Controller
 
         $user->email_verified_at = now();
         $user->save();
+
+        // Check for pending intent - first from URL params (reliable), then session (fallback)
+        $intentAction = $request->query('intent_action');
+        $intentGameId = $request->query('intent_game_id');
+
+        if ($intentAction && $intentGameId) {
+            // Intent was embedded in verification URL - clear session and redirect
+            IntentController::clearIntentFromSession($request);
+            return redirect()->route('members.intent.execute', [
+                'action' => $intentAction,
+                'gameId' => $intentGameId,
+            ]);
+        }
+
+        // Fallback: check session for pending intent
+        $pendingIntentUrl = IntentController::executePendingIntent($request, $user);
+        if ($pendingIntentUrl) {
+            return redirect($pendingIntentUrl);
+        }
 
         return redirect()->route('members.index')
             ->with('success', 'Your email has been verified! You now have full access.');

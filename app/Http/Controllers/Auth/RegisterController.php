@@ -37,11 +37,30 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
-     * Where to redirect users after registration.
+     * Where to redirect users after registration (fallback).
      *
      * @var string
      */
     protected $redirectTo = '/members';
+
+    /**
+     * Track if invite code set a specific redirect.
+     */
+    private bool $hasInviteCodeRedirect = false;
+
+    /**
+     * Get the post-registration redirect path.
+     * Invite code redirects take precedence, then intended URL, then default.
+     */
+    protected function redirectTo(): string
+    {
+        // Invite code redirects always take precedence
+        if ($this->hasInviteCodeRedirect) {
+            return $this->redirectTo;
+        }
+
+        return session()->pull('url.intended', $this->redirectTo);
+    }
 
     /**
      * Create a new controller instance.
@@ -140,9 +159,11 @@ class RegisterController extends Controller
                 if ($inviteCode->games_company_id) {
                     $values['games_company_id'] = $inviteCode->games_company_id;
                     $this->redirectTo = route('games-companies.index').'?action=newsignup';
+                    $this->hasInviteCodeRedirect = true;
                 } elseif ($inviteCode->reviewer_id) {
                     $values['partner_id'] = $inviteCode->reviewer_id;
                     $this->redirectTo = route('reviewers.index').'?action=newsignup';
+                    $this->hasInviteCodeRedirect = true;
                 }
             } else {
                 $hasInviteCode = false;

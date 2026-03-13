@@ -120,7 +120,8 @@
                 #}
 
                 {% include 'public/games/page/reviews-critic.twig' with {'GameReviews': GameReviews} %}
-                {% include 'public/games/page/reviews-member.twig' with {'ReviewList': GameQuickReviewList} %}
+                {% include 'public/games/page/reviews-member.twig' with {'ReviewList': GameQuickReviewList, 'GameData': GameData} %}
+                {% include 'public/games/page/member-collection.twig' with {'GameData': GameData} %}
                 {% include 'public/games/page/news.twig' with {'NewsList': GameNews} %}
 
             </div>

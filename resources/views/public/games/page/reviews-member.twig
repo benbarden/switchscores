@@ -6,6 +6,11 @@
     {% endfor %}
 {% else %}
     <p>
-        None yet.
+        No member reviews yet.
     </p>
 {% endif %}
+<p>
+    <a href="{{ route('members.intent.handle', {'action': 'quick-review', 'gameId': GameData.id}) }}" class="btn btn-primary">
+        <i class="fa fa-star" aria-hidden="true"></i> Write a review
+    </a>
+</p>

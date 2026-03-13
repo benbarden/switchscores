@@ -30,6 +30,7 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
+     * Note: Laravel's redirect()->intended() handles session-stored URLs automatically.
      *
      * @var string
      */

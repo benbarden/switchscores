@@ -1,0 +1,70 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{% block page_inner %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <h2 class="mb-4">Verify your email to continue</h2>
+
+                {% if IntentData %}
+                    <p class="lead mb-4">
+                        To <strong>{{ IntentLabel }}</strong>
+                        {% if IntentData.game_title %}
+                            (<em>{{ IntentData.game_title }}</em>)
+                        {% endif %},
+                        you need to verify your email address first.
+                    </p>
+                {% else %}
+                    <p class="lead mb-4">
+                        To use this feature, you need to verify your email address first.
+                    </p>
+                {% endif %}
+
+                <div class="alert alert-info">
+                    <p class="mb-0">
+                        Your email: <strong>{{ UserData.email }}</strong>
+                    </p>
+                </div>
+
+                {% if UserData.verification_email_sent_at %}
+                    <p class="text-muted mb-4">
+                        We sent a verification email on {{ UserData.verification_email_sent_at|date('d M Y \\a\\t H:i') }}.
+                        <br>
+                        Check your inbox (and spam folder) for the verification link.
+                    </p>
+                {% endif %}
+
+                <form action="{{ route('members.email.send-verification') }}" method="POST" class="mb-4">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        {% if UserData.verification_email_sent_at %}
+                            Resend verification email
+                        {% else %}
+                            Send verification email
+                        {% endif %}
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="text-muted">
+                    <small>
+                        Wrong email address?
+                        <a href="{{ route('members.settings') }}">Update your settings</a>
+                    </small>
+                </p>
+
+                <p class="text-muted">
+                    <small>
+                        <a href="{{ route('members.index') }}">Return to dashboard</a>
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock page_inner %}

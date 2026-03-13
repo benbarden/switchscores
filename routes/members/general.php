@@ -65,6 +65,12 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
     Route::post('/email/send-verification', 'Members\EmailVerificationController@sendVerification')->name('email.send-verification');
     Route::get('/email/verify/{id}', 'Members\EmailVerificationController@verify')->name('email.verify');
 
+    // Intent system (deferred actions from public pages)
+    // Note: specific routes must come before wildcard routes
+    Route::get('/intent/verify-prompt', 'Members\IntentController@verifyPrompt')->name('intent.verify-prompt');
+    Route::get('/intent/execute/{action}/{gameId}', 'Members\IntentController@execute')->name('intent.execute');
+    Route::get('/intent/{action}/{gameId}', 'Members\IntentController@handle')->name('intent.handle');
+
     // Developers
     // *************** Developer hub: Dashboard *************** //
     Route::get('/developers', 'Members\Developers\IndexController@index')->name('developers.index');
