@@ -4,6 +4,56 @@ Development history and completed work.
 
 ---
 
+## 2026-03-13 — Member Intent System (Public Page CTAs)
+
+**Summary:**
+Built a deferred action system that allows public game pages to have CTAs (Add to Wishlist, Add to Collection, Write a Review) that work seamlessly through the auth and email verification flow.
+
+**Problem solved:**
+Site is cached so public pages can't detect logged-in users. Needed generic CTAs that guide users through signup/verification while remembering what action they wanted to perform.
+
+**New files:**
+- `app/Enums/MemberIntent.php` — Supported actions enum (wishlist-add, collection-add, quick-review)
+- `app/Http/Controllers/Members/IntentController.php` — Main controller handling the flow
+- `resources/views/members/intent/verify-prompt.twig` — Verification prompt page with action context
+- `resources/views/public/games/page/member-collection.twig` — Public page CTA partial
+
+**Flow:**
+1. User clicks CTA on public game page → `/members/intent/{action}/{gameId}`
+2. If not logged in → auth middleware stores URL → redirect to login/register
+3. After auth → back to intent URL
+4. If not verified → store intent in session → show verification prompt with game context
+5. User requests verification email → **intent embedded in signed URL** (key reliability fix)
+6. User clicks verification link → intent read from URL params → action executed
+
+**Key design decision:**
+Intent data is embedded directly in the verification email URL (not just session). This ensures the action completes even if:
+- User opens email in different tab
+- Session expires between registration and verification
+- Any other session persistence issues
+
+**Routes added:**
+```
+GET /members/intent/verify-prompt
+GET /members/intent/execute/{action}/{gameId}
+GET /members/intent/{action}/{gameId}
+```
+
+**Auth controller changes:**
+- `RegisterController` — Added `redirectTo()` method to use Laravel's intended URL mechanism
+- `EmailVerificationController` — Reads intent from URL params, executes pending action after verification
+
+**Public game page changes:**
+- Added "Write a review" button to Member reviews section
+- Added new "Your collection" section with "Add to collection" and "Add to wishlist" buttons
+
+**Other UX improvements in this session:**
+- Login page: Changed "Sign up" to "New member? Sign up here", button to "Create an account"
+- Register page: Added autofocus to display name field
+- Quick review form: Added `tabindex="-1"` to packshot image
+
+---
+
 ## 2026-02-27 — Multiplayer Data Scraping (Tasks #95, #107)
 
 **Summary:**

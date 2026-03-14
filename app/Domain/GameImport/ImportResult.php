@@ -73,6 +73,8 @@ class ImportResult
                 'publisher' => $game->publisher,
                 'players' => $game->players,
                 'category' => $game->category,
+                'collection' => $game->collection,
+                'series' => $game->series,
                 'consoleSlug' => $game->consoleSlug,
                 'sourceFile' => $game->sourceFile,
                 'validation' => $this->gameValidation[$index] ?? [],
@@ -104,6 +106,8 @@ class ImportResult
                 'publisher' => $gameData['publisher'],
                 'players' => $gameData['players'],
                 'category' => $gameData['category'],
+                'collection' => $gameData['collection'],
+                'series' => $gameData['series'],
                 'console_slug' => $gameData['consoleSlug'],
                 'source_file' => $gameData['sourceFile'],
             ]);

@@ -16,6 +16,8 @@ class ImportGameData
         public readonly ?string $publisher,
         public readonly ?string $players,
         public readonly ?string $category,
+        public readonly ?string $collection,
+        public readonly ?string $series,
         public readonly string $consoleSlug,
         public readonly ?string $sourceFile,
     ) {
@@ -32,12 +34,14 @@ class ImportGameData
             publisher: $data['publisher'] ?? null,
             players: $data['players'] ?? null,
             category: $data['category'] ?? null,
+            collection: $data['collection'] ?? null,
+            series: $data['series'] ?? null,
             consoleSlug: $data['console_slug'] ?? 'switch-1',
             sourceFile: $data['source_file'] ?? null,
         );
     }
 
-    public function toGameParams(int $consoleId, ?int $categoryId, string $linkTitle, ?string $batchDate): array
+    public function toGameParams(int $consoleId, ?int $categoryId, ?int $collectionId, ?int $seriesId, string $linkTitle, ?string $batchDate): array
     {
         $params = [
             'title' => $this->title,
@@ -56,6 +60,14 @@ class ImportGameData
 
         if ($categoryId) {
             $params['category_id'] = $categoryId;
+        }
+
+        if ($collectionId) {
+            $params['collection_id'] = $collectionId;
+        }
+
+        if ($seriesId) {
+            $params['series_id'] = $seriesId;
         }
 
         if ($this->packshotUrl) {

@@ -4,7 +4,9 @@ namespace App\Domain\GameImport;
 
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
+use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
+use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\GameTitleHash\HashGenerator;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
@@ -24,6 +26,8 @@ class JsonImportService
 
     public function __construct(
         private CategoryRepository $categoryRepository,
+        private GameCollectionRepository $gameCollectionRepository,
+        private GameSeriesRepository $gameSeriesRepository,
         private GamesCompanyRepository $gamesCompanyRepository,
         private GameTitleHashRepository $gameTitleHashRepository,
         private GamePublisherRepository $gamePublisherRepository,
@@ -100,6 +104,36 @@ class JsonImportService
             $categoryId = $category->id;
         }
         $validation['categoryId'] = $categoryId;
+
+        // Validate collection (optional but must exist if provided)
+        $collectionId = null;
+        $collectionName = null;
+        if ($game->collection) {
+            $collection = $this->gameCollectionRepository->getByLinkTitle($game->collection);
+            if (!$collection) {
+                $result->addError($index, $game->title, "Collection not found: {$game->collection}");
+                return;
+            }
+            $collectionId = $collection->id;
+            $collectionName = $collection->name;
+        }
+        $validation['collectionId'] = $collectionId;
+        $validation['collectionName'] = $collectionName;
+
+        // Validate series (optional but must exist if provided)
+        $seriesId = null;
+        $seriesName = null;
+        if ($game->series) {
+            $series = $this->gameSeriesRepository->getByLinkTitle($game->series);
+            if (!$series) {
+                $result->addError($index, $game->title, "Series not found: {$game->series}");
+                return;
+            }
+            $seriesId = $series->id;
+            $seriesName = $series->series;
+        }
+        $validation['seriesId'] = $seriesId;
+        $validation['seriesName'] = $seriesName;
 
         // Check publisher - may need to be auto-created
         $publisherId = null;
@@ -202,6 +236,8 @@ class JsonImportService
         $params = $gameData->toGameParams(
             consoleId: $validation['consoleId'],
             categoryId: $validation['categoryId'],
+            collectionId: $validation['collectionId'],
+            seriesId: $validation['seriesId'],
             linkTitle: $validation['linkTitle'],
             batchDate: $batchDate
         );

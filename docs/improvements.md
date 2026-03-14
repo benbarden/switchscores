@@ -8,6 +8,25 @@ This document tracks potential improvements, features, and enhancements for the 
 
 ## Session Log
 
+### 2026-03-13: Member Intent System (Public Page CTAs)
+
+**New feature:** Intent system for deferred member actions from public pages
+- Public game page CTAs: "Add to collection", "Add to wishlist", "Write a review"
+- Handles auth flow: stores intended URL, redirects back after login/register
+- Handles verification flow: stores intent in session, shows verification prompt with game context
+- **Key fix:** Intent embedded in verification email URL for reliability (survives session issues)
+- New controller: `IntentController`, new enum: `MemberIntent`
+- New views: `verify-prompt.twig`, `member-collection.twig` (public page partial)
+
+**UX improvements:**
+- Login page: "New member? Sign up here" heading, "Create an account" button
+- Register page: autofocus on display name field
+- Quick review form: `tabindex="-1"` on packshot to skip in tab order
+
+**Related:** #19 (open registration) - now has conversion-focused public CTAs
+
+---
+
 ### 2026-02-28: Crawl System Enhancements
 
 **Bug fix:** `UpdateGame::updateDigitalAvailable()` was resetting delisted games back to ACTIVE if they had an override URL. Now only resets games with `last_crawl_status = 200`.
@@ -78,7 +97,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
-| 19 | Make registration open. Keep invite codes for partners etc | Medium | Invite code validation exists; add open registration toggle | Spam concern. Drop Twitter login around same time. Shore up member tools first. |
+| 19 | Make registration open. Keep invite codes for partners etc | Done | 2026-03-08 | → Done section |
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
 | 42 | Event/log when game hits 3 reviews | Medium | No event system for review milestones; needs dispatcher | 3 reviews = ranking threshold. Surface "newly ranked" across homepage, reviews, members, staff. |
@@ -153,7 +172,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 96 | GH124: Allow games companies to update contact details | Medium | Add edit form for companies | Useful but not urgent - few signups, companies inactive. |
 | 97 | Show recent quick reviews on homepage/Reviews homepage | Low | Already shown on Community page | Need more reviews first. Already on Members page. |
 | 99 | GH30: member profiles | High | No profile model; requires full implementation | Worth doing once more members. Can be lightweight initially. |
-| 100 | GH32: Games collection - quick status changes | Medium | Add quick status buttons/AJAX | Have new way but 2 tools exist. Need to consolidate. |
+| 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | → Done section |
 | 102 | Onboarding: dismissable notice banner for logged in users | Medium | Need notification model + dismissal | Nice but low priority without new signups. |
 | 103 | Upload / edit avatar | High | No avatar field; requires full implementation | Useful as members grow. |
 | 105 | Record user id of submitted review links | Low | Add migration + populate records | Tiny, low value. Keep for now. |
@@ -178,6 +197,8 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | Superseded by redesigned add/edit collection pages with play status button tiles (#82/#83). |
+| 19 | Make registration open + intent system | Done | 2026-03-13 | Open registration live since 2026-03-08. Intent system added 2026-03-13: public game page CTAs (Add to collection/wishlist, Write review) that work through auth + verification flow. Intent embedded in verification URL for reliability. Login/register UX improved. |
 | 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | Primary nav simplified to top-level links (Members, Developers, Reviewers, Games companies, Staff, Logout) with active state. Secondary nav (lighter colour) shows contextual sub-links per section. Each section has Dashboard link. Also migrated 8 collection pages from B3 to B5. |
 | 53 | Allow members to edit display name, email, and pw | Done | 2026-03-08 | Settings page at `/members/settings` with display name (all users), email and password (email login users only). Added "Edit your details" button to dashboard and Logout link to nav. |
 | 119 | Crawler hangs on redirect loops | Done | 2026-03-08 | Added `setMaxRedirects(3)` to HttpBrowser in crawl commands and Base scraper. Catches `\LogicException` for redirect limit, marks game with status 310, continues batch. Also added 30s timeout. Affects `GameCrawlBatch`, `GameCrawlUrl`, and `Base` scraper (used by editor page). |
