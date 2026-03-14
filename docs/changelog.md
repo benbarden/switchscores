@@ -4,6 +4,29 @@ Development history and completed work.
 
 ---
 
+## 2026-03-14 — JSON Import: Collection and Series Support
+
+**Summary:**
+Extended the staff JSON import tool to support optional `collection` and `series` fields.
+
+**Changes:**
+- `ImportGameData` — Added `collection` and `series` properties
+- `JsonImportService` — Validates collection/series by `link_title`, shows row-level error if not found
+- Preview page — Shows Collection and Series columns
+- Upload page — Updated JSON format example with new fields
+
+**JSON format:**
+```json
+{
+  "collection": "collection-link-title",
+  "series": "series-link-title"
+}
+```
+
+Both fields are optional. Must use the `link_title` (slug) to match existing records. Invalid values show an error for that row only; other valid games still import.
+
+---
+
 ## 2026-03-13 — Member Intent System (Public Page CTAs)
 
 **Summary:**
