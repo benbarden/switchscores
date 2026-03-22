@@ -93,6 +93,21 @@ h3 {
     color: #1a4db3 !important;
 }
 
+/* Secondary nav horizontal scroll on mobile */
+@media (max-width: 991.98px) {
+    .navbar-secondary .container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .navbar-secondary .navbar-nav {
+        flex-wrap: nowrap;
+    }
+    .navbar-secondary .nav-item {
+        white-space: nowrap;
+    }
+}
+
 /* Breadcrumbs */
 nav ol.breadcrumb {
     background: #f5f5f5;

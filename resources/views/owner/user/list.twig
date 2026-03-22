@@ -31,6 +31,9 @@
                         {% elseif item.isGamesCompany() %}
                             <span class="badge bg-info">Games company</span>
                         {% endif %}
+                        {% if not item.isEmailVerified() %}
+                            <span class="badge bg-warning text-dark">Unverified</span>
+                        {% endif %}
                         <br>
                         <small>{{ item.email }}</small>
                     </td>
