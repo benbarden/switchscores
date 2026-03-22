@@ -104,7 +104,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. |
 | 49 | Games companies: create dashboard and missing data filters | Medium | Dashboard exists; add missing data filter queries | For outreach - find companies to contact. Some may exist already - needs review. |
 | 50 | GH118: public companies page improvements | Medium | Public profile exists; enhance layout/data | Searchable list, recent games by publisher, avg score, "Claim this page" CTA, show if company is engaged. |
-| 51 | View games company signups | Medium | Signup model exists; create staff list view | No list page currently - have to check DB directly. |
+| 51 | View games company signups | Done | 2026-03-22 | → Done section |
 | 52 | Games company signup | Low | Already implemented and working | MVP done. Full flow: status on submissions, staff approve/deny, create company+user, link, notify. Handle duplicates, validate access to existing companies. |
 | 53 | Allow members to edit display name, email, and pw | Done | 2026-03-08 | -> Done section |
 | 59 | Set up eShopperReviews as a reviewer | Low | Add ReviewSite entry + feed config | Their data sucks but lots of reviews. Custom scraper needed. One-time scrape to JSON + review import tool. Could reuse for future reviewers! |
@@ -197,6 +197,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 51 | View games company signups | Done | 2026-03-22 | Staff list page at `/staff/games-company-signups`. Shows contact info, existing/new company details, games list. Linked from staff dashboard. |
 | 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | Superseded by redesigned add/edit collection pages with play status button tiles (#82/#83). |
 | 19 | Make registration open + intent system | Done | 2026-03-13 | Open registration live since 2026-03-08. Intent system added 2026-03-13: public game page CTAs (Add to collection/wishlist, Write review) that work through auth + verification flow. Intent embedded in verification URL for reliability. Login/register UX improved. |
 | 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | Primary nav simplified to top-level links (Members, Developers, Reviewers, Games companies, Staff, Logout) with active state. Secondary nav (lighter colour) shows contextual sub-links per section. Each section has Dashboard link. Also migrated 8 collection pages from B3 to B5. |

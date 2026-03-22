@@ -400,6 +400,15 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    // *** GAMES COMPANY SIGNUPS *** //
+    public static function gamesCompanySignupsList(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games company signups'),
+        ]);
+    }
+
     // *** OWNER: USERS *** //
     public static function usersList(): BreadcrumbNav
     {

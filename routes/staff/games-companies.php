@@ -7,6 +7,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     Route::get('/staff/games-companies/dashboard', 'Staff\GamesCompanies\DashboardController@show')->name('staff.games-companies.dashboard');
 
+    // Games company signups
+    Route::get('/staff/games-company-signups', 'Staff\GamesCompanySignupsController@index')->name('staff.games-company-signups.index');
+
     // Partners: Games companies
     Route::match(['get', 'post'], '/staff/games-companies/add', 'Staff\GamesCompanies\CompanyController@add')->name('staff.games-companies.add');
     Route::match(['get', 'post'], '/staff/games-companies/edit/{gamesCompanyId}', 'Staff\GamesCompanies\CompanyController@edit')->name('staff.games-companies.edit');
