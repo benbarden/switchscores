@@ -27,9 +27,9 @@
     {% set boxartUrl = image.square(item)|trim %}
     <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
         {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" class="img-thumbnail me-2 align-middle" style="border: 0; width: 75px; height: auto;" alt="{{ item.title }}">
+            <img src="{{ boxartUrl }}" class="img-thumbnail me-2 align-middle" style="border: 0; width: 60px; height: auto;" alt="{{ item.title }}">
         {% else %}
-            <img src="/img/placeholder/no-image-found-square.png" class="img-thumbnail me-2 align-middle" style="border: 0; width: 75px; height: auto;" alt="{{ item.title }}">
+            <img src="/img/placeholder/no-image-found-square.png" class="img-thumbnail me-2 align-middle" style="border: 0; width: 60px; height: auto;" alt="{{ item.title }}">
         {% endif %}
     </a>
 {% endmacro %}
