@@ -65,13 +65,7 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
     Route::post('/email/send-verification', 'Members\EmailVerificationController@sendVerification')->name('email.send-verification');
     Route::get('/email/verify/{id}', 'Members\EmailVerificationController@verify')->name('email.verify');
 
-    // Intent system (deferred actions from public pages)
-    // Note: specific routes must come before wildcard routes
-    Route::get('/intent/verify-prompt', 'Members\IntentController@verifyPrompt')->name('intent.verify-prompt');
-    Route::get('/intent/execute/{action}/{gameId}', 'Members\IntentController@execute')->name('intent.execute');
-    Route::get('/intent/{action}/{gameId}', 'Members\IntentController@handle')->name('intent.handle');
-
-    // Developers
+// Developers
     // *************** Developer hub: Dashboard *************** //
     Route::get('/developers', 'Members\Developers\IndexController@index')->name('developers.index');
 
@@ -87,4 +81,12 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
     Route::get('/developers/api/tokens/create', 'Members\Developers\ApiController@createToken')->name('developers.api.tokens.create');
     Route::get('/developers/api/tokens/delete/{tokenId}', 'Members\Developers\ApiController@deleteToken')->name('developers.api.tokens.delete');
 
+});
+
+// Intent system (deferred actions from public pages)
+// Bot rejection middleware runs BEFORE auth so bots get 410 instead of redirect to login
+Route::prefix('members')->middleware(['reject.bots.intent', 'auth'])->name('members.')->group(function () {
+    Route::get('/intent/verify-prompt', 'Members\IntentController@verifyPrompt')->name('intent.verify-prompt');
+    Route::get('/intent/execute/{action}/{gameId}', 'Members\IntentController@execute')->name('intent.execute');
+    Route::get('/intent/{action}/{gameId}', 'Members\IntentController@handle')->name('intent.handle');
 });

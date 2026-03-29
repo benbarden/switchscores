@@ -75,5 +75,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'check.user.role' => \App\Http\Middleware\CheckUserRole::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+        'reject.bots.intent' => \App\Http\Middleware\RejectBotsOnIntentRoutes::class,
     ];
 }
