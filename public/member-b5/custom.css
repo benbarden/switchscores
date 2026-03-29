@@ -112,6 +112,10 @@ h3 {
     .navbar-secondary .nav-item {
         white-space: nowrap;
     }
+    .navbar-secondary .nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
 }
 
 /* Breadcrumbs */
