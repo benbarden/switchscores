@@ -19,7 +19,8 @@ class IntentController extends Controller
         private GameRepository $repoGame,
         private UserWishlistRepository $repoWishlist
     ) {
-        $this->middleware('auth');
+        // Note: auth middleware is applied via route group in routes/members/general.php
+        // Do not add it here, as route-level middleware (reject.bots.intent) must run first
     }
 
     /**
