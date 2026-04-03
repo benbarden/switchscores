@@ -52,7 +52,7 @@
                             {% for row in ready %}
                                 {% set g = row.game %}
                                 <tr>
-                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td><a href="{{ game_url(g) }}" target="_blank">{{ g.title }}</a></td>
                                     <td class="text-center">{{ g.rating_avg is not null ? g.rating_avg|number_format(1) : '—' }}</td>
                                     <td class="text-center">{{ g.review_count }}</td>
                                     <td>{{ row.notes }}</td>
@@ -81,7 +81,7 @@
                             {% for row in used %}
                                 {% set g = row.game %}
                                 <tr>
-                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td><a href="{{ game_url(g) }}" target="_blank">{{ g.title }}</a></td>
                                     <td>{{ row.used_at ? row.used_at.format('Y-m-d H:i') : '' }}</td>
                                     <td>{{ row.notes }}</td>
                                 </tr>

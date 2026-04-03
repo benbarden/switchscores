@@ -74,15 +74,25 @@ class GamesTitleHashController extends Controller
                     ->withInput();
             }
 
-            // Check title hash is unique
+            // Get the game to determine console
+            $gameId = $request->game_id;
+            $game = $this->repoGame->find($gameId);
+            if (!$game) {
+                return redirect(route('staff.games.title-hash.add'))
+                    ->withErrors(['game_id' => 'Game not found'])
+                    ->withInput();
+            }
+            $consoleId = $game->console_id;
+
+            // Check title hash is unique for this console
             $titleLowercase = strtolower($request->title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
-            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+            $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
             $validator->after(function ($validator) use ($hashExists) {
-                // Check for duplicates
+                // Check for duplicates on this console
                 if ($hashExists) {
-                    $validator->errors()->add('title', 'Title already exists for another record!');
+                    $validator->errors()->add('title', 'Title already exists for another game on this console!');
                 }
             });
 
@@ -93,8 +103,7 @@ class GamesTitleHashController extends Controller
             }
 
             // Add to DB
-            $gameId = $request->game_id;
-            $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+            $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId, $consoleId);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?tabid=title-hashes');

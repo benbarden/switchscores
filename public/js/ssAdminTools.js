@@ -20,21 +20,29 @@ var ssAdminTools = {
 
     },
 
-    checkForExistingGameTitle: function(idOfFieldToCheck, gameId) {
+    checkForExistingGameTitle: function(idOfFieldToCheck, gameId, consoleId) {
 
         textToCheck = $('#' + idOfFieldToCheck).val();
         if (textToCheck == '') {
             return false;
         }
 
-        $.getJSON('/api/game/get-by-exact-title-match', {title: textToCheck, gameId: gameId}, function(data) {
+        // If no console selected, show a warning instead of checking
+        if (!consoleId) {
+            $('#js-game-title-pass').hide();
+            $('#js-game-title-fail-desc').html('Select a console first');
+            $('#js-game-title-fail').show();
+            return false;
+        }
+
+        $.getJSON('/api/game/get-by-exact-title-match', {title: textToCheck, gameId: gameId, consoleId: consoleId}, function(data) {
             existingGameId = data.gameId;
             existingDSItemId = data.dsItemId;
             console.log(data.dsItemId);
             if (existingGameId != null) {
                 //console.log('Found game: ' + existingGameId)
                 $('#js-game-title-pass').hide();
-                $('#js-game-title-fail-desc').html('Title exists. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>.');
+                $('#js-game-title-fail-desc').html('Title exists on this console. <a href="/staff/games/detail/' + existingGameId + '">View detail</a>.');
                 $('#js-game-title-fail').show();
             } else if (existingDSItemId != null) {
                 $('#js-game-title-pass').hide();

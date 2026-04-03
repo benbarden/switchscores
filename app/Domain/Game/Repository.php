@@ -188,6 +188,26 @@ class Repository extends AbstractRepository
     }
 
     /**
+     * Check if a title exists for a specific console
+     */
+    public function titleExistsForConsole($title, $consoleId, $excludeGameId = null): bool
+    {
+        $game = Game::where('title', $title)->where('console_id', $consoleId);
+        if ($excludeGameId) {
+            $game = $game->where('id', '<>', $excludeGameId);
+        }
+        return $game->exists();
+    }
+
+    /**
+     * Get a game by title and console
+     */
+    public function getByTitleAndConsole($title, $consoleId)
+    {
+        return Game::where('title', $title)->where('console_id', $consoleId)->first();
+    }
+
+    /**
      * @param $idList
      * @param string[] $orderBy
      * @return \Illuminate\Support\Collection

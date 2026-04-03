@@ -104,15 +104,16 @@ class GamesEditorController extends Controller
                     ->withInput();
             }
 
-            // Check title hash is unique
+            // Check title hash is unique for this console
             $titleLowercase = strtolower($request->title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
-            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+            $consoleId = (int) $request->console_id;
+            $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
             $validator->after(function ($validator) use ($hashExists) {
-                // Check for duplicates
+                // Check for duplicates on this console
                 if ($hashExists) {
-                    $validator->errors()->add('title', 'Title already exists for another record!');
+                    $validator->errors()->add('title', 'Title already exists for another game on this console!');
                 }
             });
 
@@ -132,7 +133,7 @@ class GamesEditorController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+            $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId, $consoleId);
 
             // Add publisher, if selected
             if ($request->publisher_id) {
@@ -203,13 +204,14 @@ class GamesEditorController extends Controller
             // Check if title has changed and update title hash if needed
             $oldTitle = $gameData->title;
             $newTitle = $request->title;
+            $consoleId = $gameData->console_id;
             if (strtolower($oldTitle) !== strtolower($newTitle)) {
                 $newHashedTitle = $this->gameTitleHashGenerator->generateHash($newTitle);
 
-                // Check if this hash already exists for a different game
-                if ($this->repoGameTitleHash->hashExistsForOtherGame($newHashedTitle, $gameId)) {
+                // Check if this hash already exists for a different game on the same console
+                if ($this->repoGameTitleHash->hashExistsForOtherGameOnConsole($newHashedTitle, $gameId, $consoleId)) {
                     $validator->after(function ($validator) {
-                        $validator->errors()->add('title', 'This title already exists for another game!');
+                        $validator->errors()->add('title', 'This title already exists for another game on this console!');
                     });
                     return redirect(route('staff.games.edit', ['gameId' => $gameId]))
                         ->withErrors($validator)
@@ -218,7 +220,7 @@ class GamesEditorController extends Controller
 
                 // Add new title hash for this game (if it doesn't already exist)
                 if (!$this->repoGameTitleHash->hashExistsForGame($newHashedTitle, $gameId)) {
-                    $this->repoGameTitleHash->create(strtolower($newTitle), $newHashedTitle, $gameId);
+                    $this->repoGameTitleHash->create(strtolower($newTitle), $newHashedTitle, $gameId, $consoleId);
                 }
             }
 

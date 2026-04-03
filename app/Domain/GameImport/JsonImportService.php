@@ -78,20 +78,20 @@ class JsonImportService
             return;
         }
 
-        // Check for duplicate title
-        $titleHash = $this->hashGenerator->generateHash($game->title);
-        if ($this->gameTitleHashRepository->titleHashExists($titleHash)) {
-            $result->addError($index, $game->title, 'Game already exists (duplicate title)');
-            return;
-        }
-
-        // Validate console
+        // Validate console first (needed for duplicate check)
         $consoleId = self::CONSOLE_SLUG_MAP[$game->consoleSlug] ?? null;
         if (!$consoleId) {
             $result->addError($index, $game->title, "Invalid console slug: {$game->consoleSlug}");
             return;
         }
         $validation['consoleId'] = $consoleId;
+
+        // Check for duplicate title on this console
+        $titleHash = $this->hashGenerator->generateHash($game->title);
+        if ($this->gameTitleHashRepository->titleHashExistsForConsole($titleHash, $consoleId)) {
+            $result->addError($index, $game->title, 'Game already exists on this console (duplicate title)');
+            return;
+        }
 
         // Validate category (optional but must exist if provided)
         $categoryId = null;
@@ -199,7 +199,8 @@ class JsonImportService
             // Create title hash for duplicate detection
             $titleLowercase = strtolower($gameData->title);
             $titleHash = $this->hashGenerator->generateHash($gameData->title);
-            $this->gameTitleHashRepository->create($titleLowercase, $titleHash, $game->id);
+            $consoleId = $validation['consoleId'];
+            $this->gameTitleHashRepository->create($titleLowercase, $titleHash, $game->id, $consoleId);
 
             // Download images
             if ($gameData->packshotUrl) {

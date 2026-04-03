@@ -36,9 +36,19 @@
             <fieldset class="rounded p-3 mb-4" style="background-color: #fffbeb;">
                 <legend class="fs-5 fw-semibold">Main</legend>
                 <div class="row mb-3">
+                    <label for="console_id" class="col-md-3 col-form-label">Console</label>
+                    <div class="col-md-6">
+                        <select id="console_id" class="form-select" name="console_id" size="2" required autofocus>
+                            {% for item in ConsoleList %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <label for="title" class="col-md-3 col-form-label">Title</label>
                     <div class="col-md-6">
-                        <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
+                        <input id="title" type="text" class="form-control" name="title" maxlength="255" required>
                     </div>
                     <div class="col-md-3">
                         <div id="js-game-title-pass" style="display: none;">
@@ -61,16 +71,6 @@
                     <label for="link_title" class="col-md-3 col-form-label">Link title</label>
                     <div class="col-md-6">
                         <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="console_id" class="col-md-3 col-form-label">Console</label>
-                    <div class="col-md-6">
-                        <select id="console_id" class="form-select" name="console_id" size="2">
-                            {% for item in ConsoleList %}
-                                <option value="{{ item.id }}">{{ item.name }}</option>
-                            {% endfor %}
-                        </select>
                     </div>
                 </div>
                 {{ categorySelect.renderB5Horizontal(

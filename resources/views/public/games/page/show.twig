@@ -203,7 +203,7 @@
             } only %}
         {% endif %}
 
-        {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
+        {% set GameShowUrl = game_url(GameData) %}
 
     </div>
 

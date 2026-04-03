@@ -27,7 +27,7 @@
             </td>
             <td style="width: 300px; vertical-align: middle;">
                 <span class="h5">
-                    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ item.title }}</a>
+                    <a href="{{ game_url(item) }}">{{ item.title }}</a>
                 </span>
             </td>
             <td style="vertical-align: middle;">

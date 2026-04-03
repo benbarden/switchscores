@@ -101,29 +101,21 @@ class DataSourceParsedController extends Controller
         if ($request->isMethod('post')) {
 
             $title = $dsParsedItem->title;
+            $consoleId = $dsParsedItem->console_id;
 
             // Perform common title replacements
             $title = str_replace('®', '', $title);
             $title = str_replace('™', '', $title);
             $title = str_replace(' – ', ': ', $title);
 
-            // Check title hash is unique
+            // Check title hash is unique for this console
             $titleLowercase = strtolower($title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
-            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+            $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
-            // Switch 2 duplicate title check
-            if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $hashExists) {
-                // Generate new title hash
-                $title .= ' (Switch 2)';
-                $titleLowercase = strtolower($title);
-                $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
-                $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
-            }
-
-            // Check for duplicates
+            // Check for duplicates on this console
             if ($hashExists) {
-                $customErrors[] = 'Title already exists for another record!';
+                $customErrors[] = 'Title already exists for another game on this console!';
                 $okToProceed = false;
             }
 
@@ -148,7 +140,7 @@ class DataSourceParsedController extends Controller
                 $gameId = $game->id;
 
                 // Add title hash
-                $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+                $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId, $consoleId);
 
                 // Update eShop data
                 $game = $game->fresh();

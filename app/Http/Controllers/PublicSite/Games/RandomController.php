@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PublicSite\Games;
 
 use App\Domain\Game\Repository as GameRepository;
+use App\Models\Console;
 use Illuminate\Routing\Controller as Controller;
 
 class RandomController extends Controller
@@ -20,10 +21,15 @@ class RandomController extends Controller
     {
         $game = $this->repoGame->randomGame();
 
-        $gameId = $game->id;
-        $gameLinkTitle = $game->link_title;
+        if ($game->console_id === Console::ID_SWITCH_2) {
+            $redirUrl = route('game.show.switch2', [
+                'id' => $game->id,
+                'linkTitle' => $game->link_title
+            ]);
+        } else {
+            $redirUrl = sprintf('/games/%s/%s', $game->id, $game->link_title);
+        }
 
-        $redirUrl = sprintf('/games/%s/%s', $gameId, $gameLinkTitle);
         return redirect($redirUrl);
     }
 

@@ -143,7 +143,19 @@
         // Autogenerate link URL
         ssAdminTools.convertToLinkTitle('title', 'link_title');
         // Check for duplicates. Also check for unlinked items with this title.
-        ssAdminTools.checkForExistingGameTitle('title', gameId);
+        var consoleId = $('#console_id').val();
+        ssAdminTools.checkForExistingGameTitle('title', gameId, consoleId);
+
+    });
+
+    $('#console_id').on('change', function() {
+
+        // Re-validate title when console changes
+        var title = $('#title').val();
+        if (title != '') {
+            var consoleId = $('#console_id').val();
+            ssAdminTools.checkForExistingGameTitle('title', gameId, consoleId);
+        }
 
     });
 

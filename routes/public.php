@@ -88,7 +88,13 @@ Route::redirect('/games/by-date/{date}', '/c/switch-1/2025', 301)->name('games.b
 // Random
 Route::get('/games/random', 'PublicSite\Games\RandomController@getRandom')->name('game.random');
 
-// These must be after the game redirects
+// Switch 2 game pages (new URL format)
+Route::middleware('throttle:60,1')->controller('PublicSite\Games\GameShowController')->group(function () {
+    Route::get('/switch-2/games/{id}', 'showIdSwitch2')->name('game.showId.switch2');
+    Route::get('/switch-2/games/{id}/{linkTitle}', 'showSwitch2')->name('game.show.switch2');
+});
+
+// Switch 1 game pages (legacy URL format - kept for backwards compatibility)
 Route::middleware('throttle:60,1')->controller('PublicSite\Games\GameShowController')->group(function () {
     Route::get('/games/{id}', 'showId')->name('game.showId');
     Route::get('/games/{id}/{linkTitle}', 'show')->name('game.show');

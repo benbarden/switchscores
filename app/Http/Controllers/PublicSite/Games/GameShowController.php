@@ -20,6 +20,7 @@ use App\Domain\News\Repository as NewsRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Models\Console;
 
 class GameShowController extends Controller
 {
@@ -43,14 +44,11 @@ class GameShowController extends Controller
     }
 
     /**
-     * @param $gameId
-     * @param $linkTitle
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * Switch 1 game page (legacy URL format)
+     * Redirects Switch 2 games to their new URL format
      */
     public function show($gameId, $linkTitle)
     {
-        $bindings = [];
-
         $gameData = $this->repoGame->find($gameId);
         if (!$gameData) {
             abort(404);
@@ -60,10 +58,135 @@ class GameShowController extends Controller
             abort(410, 'This game has been removed.');
         }
 
+        // Redirect Switch 2 games to new URL format
+        if ($gameData->console_id === Console::ID_SWITCH_2) {
+            return redirect(route('game.show.switch2', [
+                'id' => $gameId,
+                'linkTitle' => $gameData->link_title
+            ]), 301);
+        }
+
         if ($gameData->link_title != $linkTitle) {
             $redirUrl = sprintf('/games/%s/%s', $gameId, $gameData->link_title);
             return redirect($redirUrl, 301);
         }
+
+        return $this->renderGamePage($gameData);
+    }
+
+    /**
+     * Switch 2 game page (new URL format)
+     * Redirects Switch 1 games to legacy URL format
+     */
+    public function showSwitch2($gameId, $linkTitle)
+    {
+        $gameData = $this->repoGame->find($gameId);
+        if (!$gameData) {
+            abort(404);
+        }
+
+        if ($gameData->isSoftDeleted()) {
+            abort(410, 'This game has been removed.');
+        }
+
+        // Redirect Switch 1 games to legacy URL format
+        if ($gameData->console_id === Console::ID_SWITCH_1) {
+            return redirect(route('game.show', [
+                'id' => $gameId,
+                'linkTitle' => $gameData->link_title
+            ]), 301);
+        }
+
+        if ($gameData->link_title != $linkTitle) {
+            return redirect(route('game.show.switch2', [
+                'id' => $gameId,
+                'linkTitle' => $gameData->link_title
+            ]), 301);
+        }
+
+        return $this->renderGamePage($gameData);
+    }
+
+    /**
+     * This is for redirecting old links. Do not use for new links.
+     * Redirects Switch 2 games to new URL format
+     */
+    public function showId($id)
+    {
+        $gameData = $this->repoGame->find($id);
+        if (!$gameData) {
+            abort(404);
+        }
+
+        if ($gameData->isSoftDeleted()) {
+            abort(410, 'This game has been removed.');
+        }
+
+        // Redirect to appropriate URL based on console
+        if ($gameData->console_id === Console::ID_SWITCH_2) {
+            return redirect(route('game.show.switch2', [
+                'id' => $id,
+                'linkTitle' => $gameData->link_title
+            ]), 301);
+        }
+
+        $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
+        return redirect($redirUrl, 301);
+    }
+
+    /**
+     * Switch 2 game page redirect from ID only
+     */
+    public function showIdSwitch2($id)
+    {
+        $gameData = $this->repoGame->find($id);
+        if (!$gameData) {
+            abort(404);
+        }
+
+        if ($gameData->isSoftDeleted()) {
+            abort(410, 'This game has been removed.');
+        }
+
+        // Redirect Switch 1 games to legacy URL format
+        if ($gameData->console_id === Console::ID_SWITCH_1) {
+            return redirect(route('game.show', [
+                'id' => $id,
+                'linkTitle' => $gameData->link_title
+            ]), 301);
+        }
+
+        return redirect(route('game.show.switch2', [
+            'id' => $id,
+            'linkTitle' => $gameData->link_title
+        ]), 301);
+    }
+
+    /**
+     * Build the canonical URL for a game based on its console
+     */
+    private function buildGameUrl($gameData): string
+    {
+        if ($gameData->console_id === Console::ID_SWITCH_2) {
+            return route('game.show.switch2', [
+                'id' => $gameData->id,
+                'linkTitle' => $gameData->link_title
+            ]);
+        }
+
+        return route('game.show', [
+            'id' => $gameData->id,
+            'linkTitle' => $gameData->link_title
+        ]);
+    }
+
+    /**
+     * Render the game page (shared logic for both S1 and S2)
+     */
+    private function renderGamePage($gameData)
+    {
+        $bindings = [];
+        $gameId = $gameData->id;
 
         $console = $gameData->console;
         $consoleName = $gameData->console->name;
@@ -83,45 +206,14 @@ class GameShowController extends Controller
 
         // Affiliates
         $amazon = $this->affiliateAmazon->buildLinksForGame($gameData);
-
         $bindings['Amazon'] = $amazon;
-
-        /*
-        // Amazon
-        $tempAmazonUkLink = $gameData['amazon_uk_link'];
-        if ($tempAmazonUkLink) {
-            $amazonUKId = $this->affiliateAmazon->getUKId();
-            $fullAmazonUkLink = $tempAmazonUkLink.'?tag='.$amazonUKId;
-            $bindings['FullAmazonUkLink'] = $fullAmazonUkLink;
-        }
-
-        // Amazon US id
-        $amazonUSId = $this->affiliateAmazon->getUSId();
-        $tempAmazonUsLink = $gameData['amazon_us_link'];
-        if ($tempAmazonUsLink) {
-            if (str_contains($tempAmazonUsLink, '?')) {
-                $fullAmazonUsLink = $tempAmazonUsLink.'&tag='.$amazonUSId;
-            } else {
-                $fullAmazonUsLink = $tempAmazonUsLink.'?tag='.$amazonUSId;
-            }
-            $bindings['FullAmazonUsLink'] = $fullAmazonUsLink;
-            $bindings['AmazonUSLinkType'] = 'product';
-        } else {
-            // Fallback; go to search page
-            $urlTitle = $gameData->title;
-            $bindings['FullAmazonUsLink'] = 'https://www.amazon.com/s?k=nintendo+switch+games+'.$urlTitle.'&tag='.$amazonUSId;
-            $bindings['AmazonUSLinkType'] = 'search';
-        }
-        */
 
         // Video
         $videoUrl = $gameData->video_url;
         if ($videoUrl) {
             if (!str_contains($videoUrl, 'https://youtu.be/')) {
-                // Standard URL
                 $cleanVideoUrl = $videoUrl;
             } else {
-                // Shortened URL
                 $videoData = explode('https://youtu.be/', $videoUrl);
                 if (count($videoData) <> 2) {
                     $cleanVideoUrl = null;
@@ -196,29 +288,9 @@ class GameShowController extends Controller
         $bindings['GameBlurb'] = $autoDescription;
         $bindings['MetaDescription'] = strip_tags($metaDescription);
 
-        $bindings['CanonicalUrl'] = route('game.show', ['id' => $gameId, 'linkTitle' => $gameData->link_title]);
+        $bindings['CanonicalUrl'] = $this->buildGameUrl($gameData);
 
         return view('public.games.page.show', $bindings);
-    }
-
-    /**
-     * This is for redirecting old links. Do not use for new links.
-     * @param integer $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function showId($id)
-    {
-        $gameData = $this->repoGame->find($id);
-        if (!$gameData) {
-            abort(404);
-        }
-
-        if ($gameData->isSoftDeleted()) {
-            abort(410, 'This game has been removed.');
-        }
-
-        $redirUrl = sprintf('/games/%s/%s', $id, $gameData->link_title);
-        return redirect($redirUrl, 301);
     }
 
 }

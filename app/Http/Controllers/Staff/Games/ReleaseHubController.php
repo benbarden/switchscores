@@ -135,15 +135,15 @@ class ReleaseHubController extends Controller
         $imageUrl = $validated['image_url'];
         $consoleId = $validated['console_id'];
 
-        // Check title hash is unique
+        // Check title hash is unique for this console
         $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
-        $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+        $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
-        // Check for duplicates
+        // Check for duplicates on this console
         if ($hashExists) {
             return response()->json([
                 'success' => false,
-                'message' => 'A game with this title already exists.'
+                'message' => 'A game with this title already exists on this console.'
             ], 422);
         }
 
@@ -174,7 +174,7 @@ class ReleaseHubController extends Controller
         $gameId = $game->id;
 
         // Add title hash
-        $this->repoGameTitleHash->create($title, $hashedTitle, $gameId);
+        $this->repoGameTitleHash->create($title, $hashedTitle, $gameId, $consoleId);
 
         // Add publisher, if selected
         // @todo

@@ -4,7 +4,7 @@
     {% if withTitles %}
         <div class="row quick-reviews-title">
             <div class="col-md-12">
-                <a href="{{ route('game.show', {'id': review.game.id, 'linkTitle': review.game.link_title}) }}">
+                <a href="{{ game_url(review.game) }}">
                     {{ review.game.title }}
                 </a>
             </div>

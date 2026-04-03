@@ -81,8 +81,8 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
-| 11 | URLs to include console name / unique title check to use console | Low | Switch 2 handling exists in parsed items | Allow same title on both consoles. Currently S2 titles blocked if S1 exists, forcing "(Switch 2)" suffix. Need per-console unique check. Related to #30. |
-| 30 | Change Switch 2 game URLs. Allow S1/S2 same title | High | URL structure change affects 6+ controllers + 301 redirects | Core URL change. #11 is part of this - do together. Foundational for S2 title handling. |
+| 11 | URLs to include console name / unique title check to use console | Done | 2026-04-03 | → Done section (with #30) |
+| 30 | Change Switch 2 game URLs. Allow S1/S2 same title | Done | 2026-04-03 | → Done section |
 ---
 
 ## Medium Priority
@@ -197,6 +197,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 11+30 | Switch 2 game URLs + per-console title uniqueness | Done | 2026-04-03 | S2 games use `/switch-2/games/{id}/{slug}`, S1 unchanged at `/games/{id}/{slug}`. Title uniqueness now per-console (`game_title_hashes.console_id`). `game_url()` Twig function is console-aware. Cleanup command `game:cleanup-switch2-titles` removes "(Switch 2)" suffix. See `docs/tasks/011-030-switch-2-game-urls.md`. Out of scope: S1 migration to `/switch-1/...`, dropping `/c/` prefix. |
 | 51 | View games company signups | Done | 2026-03-22 | Staff list page at `/staff/games-company-signups`. Shows contact info, existing/new company details, games list. Linked from staff dashboard. |
 | 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | Superseded by redesigned add/edit collection pages with play status button tiles (#82/#83). |
 | 19 | Make registration open + intent system | Done | 2026-03-13 | Open registration live since 2026-03-08. Intent system added 2026-03-13: public game page CTAs (Add to collection/wishlist, Write review) that work through auth + verification flow. Intent embedded in verification URL for reliability. Login/register UX improved. |
