@@ -278,6 +278,12 @@ class GameShowController extends Controller
             $bindings['UserCollectionGame'] = $gameData;
         }
 
+        // Other console version (same link_title on different console)
+        $otherConsoleGame = $this->repoGame->getByLinkTitleOnOtherConsole($gameData->link_title, $gameData->console_id);
+        if ($otherConsoleGame) {
+            $bindings['OtherConsoleGame'] = $otherConsoleGame;
+        }
+
         // Game blurb
         $autoDescription = $this->autoDescription->generate($gameData);
         if ($gameData->game_description) {

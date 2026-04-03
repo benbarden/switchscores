@@ -189,6 +189,19 @@
         {{ heading.renderChunky('Game details', 'h2') }}
         {% include 'public/games/page/game-details.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
 
+        {% if OtherConsoleGame %}
+            {{ heading.renderChunky('Also on ' ~ OtherConsoleGame.console.name, 'h2') }}
+            <a href="{{ game_url(OtherConsoleGame) }}">
+                {% set otherBoxart = ImageHelper.imageSquareUrl(OtherConsoleGame) %}
+                {% if otherBoxart %}
+                    <img src="{{ otherBoxart }}" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                {% else %}
+                    <img src="/img/placeholder/no-image-found-square.png" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                {% endif %}
+                <span style="margin-left: 10px;">{{ OtherConsoleGame.title }}</span>
+            </a>
+        {% endif %}
+
         {% if GameData.game_rank or GameData.gameRankYear.game_rank or GameData.gameRankYearMonth.game_rank %}
             {% if GameData.console_id %}
                 {{ heading.renderChunky('Rank ('~GameData.console.name~')', 'h2') }}

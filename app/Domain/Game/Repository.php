@@ -261,4 +261,15 @@ class Repository extends AbstractRepository
             ->limit(12)
             ->pluck('added_batch_date');
     }
+
+    /**
+     * Find a game with the same link_title on a different console
+     */
+    public function getByLinkTitleOnOtherConsole($linkTitle, $currentConsoleId)
+    {
+        return Game::where('link_title', $linkTitle)
+            ->where('console_id', '!=', $currentConsoleId)
+            ->active()
+            ->first();
+    }
 }

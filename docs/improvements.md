@@ -2,11 +2,28 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 121**
+**Next ID: 122**
 
 ---
 
 ## Session Log
+
+### 2026-04-03: Cross-Console Game Links
+
+**New feature:** #121 - "Also on" section on game pages
+- Shows when the same game exists on both Switch 1 and Switch 2
+- Matches by `link_title` (same normalized title = same game)
+- Displays 75px square packshot with game title, links to other console version
+- Located in right sidebar after Game details
+
+**Files changed:**
+- `app/Domain/Game/Repository.php` - `getByLinkTitleOnOtherConsole()` method
+- `app/Http/Controllers/PublicSite/Games/GameShowController.php` - fetches `OtherConsoleGame`
+- `resources/views/public/games/page/show.twig` - "Also on [Console]" section
+
+**Limitation:** Won't match games with different titles (e.g. "Game" vs "Game - Switch 2 Edition"). Future: explicit cross-console linking or edition field (#44).
+
+---
 
 ### 2026-03-13: Member Intent System (Public Page CTAs)
 
