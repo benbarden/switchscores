@@ -592,4 +592,30 @@ class Repository extends AbstractRepository
             ->orderBy('eu_release_date')
             ->get();
     }
+
+    public function crawlPriorityQueue($limit = 15)
+    {
+        return Game::where('crawl_priority', true)
+            ->active()
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function nextToCrawl($limit = 15)
+    {
+        return Game::active()
+            ->where(function ($query) {
+                $query->whereNotNull('nintendo_store_url_override')
+                      ->orWhereExists(function ($q) {
+                          $q->select(DB::raw(1))
+                            ->from('data_source_parsed')
+                            ->whereColumn('data_source_parsed.game_id', 'games.id')
+                            ->whereNotNull('data_source_parsed.url');
+                      });
+            })
+            ->orderBy('last_crawled_at', 'asc')
+            ->limit($limit)
+            ->get();
+    }
 }

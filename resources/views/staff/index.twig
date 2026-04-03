@@ -205,23 +205,51 @@
     <div class="col-md-4">
 
         {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {{ heading.renderSlick('Category: Unverified') }}
-            {% if CategoryUnverifiedList.count > 0 %}
+            {% if CrawlPriorityQueue.count > 0 %}
+                {{ heading.renderSlick('Crawl priority queue') }}
                 <div class="col-md-12">
-                    {% for item in CategoryUnverifiedList %}
+                    {% for item in CrawlPriorityQueue %}
                         <div class="row" style="margin-top: 6px;">
                             <div class="col-md-3 col-sm-3 col-xs-3">
                                 {{ packshots.square(item) }}
                             </div>
                             <div class="col-md-9 col-sm-9 col-xs-9">
+                                {{ consolebadge.short(item) }}
                                 {{ gamelink.title(item, 'staff') }}
                                 <br>
                                 <small>
-                                    Category: {{ item.category.name }}
+                                    {% if item.last_crawled_at %}
+                                        Last crawled: {{ item.last_crawled_at|date('d M Y') }}
+                                    {% else %}
+                                        Never crawled
+                                    {% endif %}
                                 </small>
+                                {% if item.is_low_quality == 1 %}
+                                    <br>
+                                    <label class="badge bg-danger">Low quality</label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% elseif NextToCrawl is defined and NextToCrawl.count > 0 %}
+                {{ heading.renderSlick('Next to crawl') }}
+                <div class="col-md-12">
+                    {% for item in NextToCrawl %}
+                        <div class="row" style="margin-top: 6px;">
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                {{ packshots.square(item) }}
+                            </div>
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                {{ consolebadge.short(item) }}
+                                {{ gamelink.title(item, 'staff') }}
                                 <br>
                                 <small>
-                                    Released: {{ item.eu_release_date|date('d F Y') }}
+                                    {% if item.last_crawled_at %}
+                                        Last crawled: {{ item.last_crawled_at|date('d M Y') }}
+                                    {% else %}
+                                        Never crawled
+                                    {% endif %}
                                 </small>
                                 {% if item.is_low_quality == 1 %}
                                     <br>
@@ -232,7 +260,8 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p>No items found!</p>
+                {{ heading.renderSlick('Crawl queue') }}
+                <p>No games to crawl.</p>
             {% endif %}
         {% endif %}
 
