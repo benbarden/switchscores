@@ -188,6 +188,14 @@ class Repository extends AbstractRepository
     }
 
     /**
+     * Get all games matching a title (may exist on multiple consoles)
+     */
+    public function getAllByTitle($title): \Illuminate\Support\Collection
+    {
+        return Game::where('title', $title)->get();
+    }
+
+    /**
      * Check if a title exists for a specific console
      */
     public function titleExistsForConsole($title, $consoleId, $excludeGameId = null): bool

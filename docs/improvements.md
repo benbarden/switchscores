@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 122**
+**Next ID: 123**
 
 ---
 
@@ -118,7 +118,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
 | 42 | Event/log when game hits 3 reviews | Medium | No event system for review milestones; needs dispatcher | 3 reviews = ranking threshold. Surface "newly ranked" across homepage, reviews, members, staff. |
-| 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. |
+| 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. **Note:** Weekly update converts "Nintendo Switch 2 Edition" → "(Switch 2)" in titles, which the cleanup command then removes. When implementing, re-check all existing S2 listings to identify editions. |
 | 49 | Games companies: create dashboard and missing data filters | Medium | Dashboard exists; add missing data filter queries | For outreach - find companies to contact. Some may exist already - needs review. |
 | 50 | GH118: public companies page improvements | Medium | Public profile exists; enhance layout/data | Searchable list, recent games by publisher, avg score, "Claim this page" CTA, show if company is engaged. |
 | 51 | View games company signups | Done | 2026-03-22 | → Done section |
@@ -141,6 +141,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | → Done section |
 | 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
 | 115 | Claude-assisted game tagging | Medium | Discovery/clustering goal | Help tag games to improve discoverability. Focus on Viewpoint, Visual style, Game type. Phase 1: keyword matching (title contains "Solitaire" → Solitaire tag). Phase 2: Nintendo genres_json mapping. Phase 3: interactive batch suggestions. Build artisan command to export "games with keyword X but missing tag Y". |
+| 122 | Email members when quick review approved | Low | Member retention | Notify members when their quick review is approved. Could bring members back after initial signup. Of 5 April 2026 signups, 2 submitted quick reviews but none returned since - this could re-engage them. Simple: trigger email on review status change to approved. |
 
 ---
 
