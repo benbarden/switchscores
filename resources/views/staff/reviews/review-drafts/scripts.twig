@@ -71,13 +71,13 @@
             "</div>"
         );
 
-        $container.find(".select2-result-game__title").text(game.title);
+        $container.find(".select2-result-game__title").text(game.display_title);
 
         return $container;
     }
 
     function formatGameSelection(game) {
-        return game.title;
+        return game.display_title || game.title;
     }
 
 </script>
