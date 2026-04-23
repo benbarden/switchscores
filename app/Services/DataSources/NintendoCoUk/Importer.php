@@ -195,6 +195,7 @@ class Importer
                 $dataSourceRaw = new DataSourceRaw();
                 $dataSourceRaw->source_id = $sourceId;
                 $dataSourceRaw->console_id = $consoleId;
+                $dataSourceRaw->link_id = $sourceItem['fs_id'] ?? null;
                 $dataSourceRaw->title = $sourceItem['title'];
                 $dataSourceRaw->source_data_json = json_encode($sourceItem);
                 $dataSourceRaw->save();

@@ -33,6 +33,11 @@ class DataSourceParsed extends Model
         return $this->source_id == DataSource::DSID_WIKIPEDIA;
     }
 
+    public function game()
+    {
+        return $this->hasOne('App\Models\Game', 'id', 'game_id');
+    }
+
     public function console()
     {
         return $this->hasOne('App\Models\Console', 'id', 'console_id');

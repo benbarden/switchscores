@@ -6,7 +6,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="text-left">Field</th>
+                <th class="text-left" style="width: 220px;">Field</th>
                 <th class="text-left">Value</th>
             </tr>
         </thead>
@@ -16,7 +16,7 @@
                         <td class="text-left">
                             {{ field }}
                         </td>
-                        <td class="text-left">
+                        <td class="text-left" style="word-break: break-word;">
                             {% if dataval is iterable %}
                                 {% for valueNode in dataval %}
                                     {{ valueNode }}

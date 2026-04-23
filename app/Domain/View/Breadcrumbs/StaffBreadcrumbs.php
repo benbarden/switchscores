@@ -326,6 +326,16 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function dataSourcesListParsedSubpage(string $title, DataSource $dataSource): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem($dataSource->name.' - Parsed items', route('staff.data-sources.list-parsed', ['sourceId' => $dataSource->id])),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     // *** DATA QUALITY *** //
 
     public static function dataQualityDashboard(): BreadcrumbNav

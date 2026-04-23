@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\DataSources;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Models\DataSource;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Models\Console;
@@ -20,6 +21,7 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
@@ -33,10 +35,65 @@ class DataSourceParsedController extends Controller
         private DataSourceRepository $repoDataSource,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private DataSourceRawRepository $repoDataSourceRaw,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator,
         private DownloadPackshotHelper $downloadPackshotHelper
     ){
+    }
+
+    public function showList($sourceId)
+    {
+        $dataSource = $this->repoDataSource->find($sourceId);
+        if (!$dataSource) abort(404);
+
+        $pageTitle = $dataSource->name.' - Parsed items';
+        $tableSort = "[ 1, 'asc' ]";
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
+
+        $request = request();
+        $searchTitle = $request->searchTitle;
+        $filterLinked = $request->filterLinked;
+        $filterEuDate = $request->filterEuDate;
+
+        $hasFilters = $searchTitle || $filterLinked || $filterEuDate;
+
+        $ignoreIdList = $this->repoDataSourceIgnore->getAllBySource($sourceId)->pluck('link_id')->toArray();
+
+        $bindings['SourceId'] = $dataSource->id;
+        $bindings['DataSource'] = $dataSource;
+        $bindings['SearchTitle'] = $searchTitle ?? '';
+        $bindings['FilterLinked'] = $filterLinked ?? '';
+        $bindings['FilterEuDate'] = $filterEuDate ?? '';
+        $bindings['IgnoreIdList'] = $ignoreIdList;
+        $bindings['ItemList'] = $hasFilters
+            ? $this->repoDataSourceParsed->getBySourceFiltered($sourceId, $searchTitle, $filterLinked, $filterEuDate)
+            : null;
+
+        return view('staff.data-sources.parsed.list', $bindings);
+    }
+
+    public function viewParsed($sourceId, $linkId)
+    {
+        $dataSource = $this->repoDataSource->find($sourceId);
+        if (!$dataSource) abort(404);
+
+        $dsParsedItem = $this->repoDataSourceParsed->getBySourceAndLinkId($sourceId, $linkId);
+        if (!$dsParsedItem) abort(404);
+
+        $pageTitle = $dsParsedItem->title;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesListParsedSubpage($pageTitle, $dataSource))->bindings;
+
+        $ignoreIdList = $this->repoDataSourceIgnore->getAllBySource($sourceId)->pluck('link_id')->toArray();
+
+        $rawItem = $this->repoDataSourceRaw->findBySourceIdAndLinkId($sourceId, $linkId);
+
+        $bindings['DSParsedItem'] = $dsParsedItem;
+        $bindings['IgnoreIdList'] = $ignoreIdList;
+        $bindings['RawItem'] = $rawItem;
+        $bindings['SourceDataRaw'] = $rawItem ? json_decode($rawItem->source_data_json, true) : null;
+
+        return view('staff.data-sources.parsed.view', $bindings);
     }
 
     public function nintendoCoUkUnlinkedItems()

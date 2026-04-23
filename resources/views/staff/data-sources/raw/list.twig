@@ -2,50 +2,56 @@
 
 {% block page_inner %}
 
-{% if ItemList.count > 0 %}
+<form method="get" action="" class="row g-2 align-items-end mb-3">
+    <div class="col-auto">
+        <label for="searchTitle" class="form-label mb-0">Search by title:</label>
+        <input type="text" id="searchTitle" name="searchTitle" class="form-control" value="{{ SearchTitle }}" placeholder="Enter title..." autofocus>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+<hr>
+
+{% if ItemList is null %}
+    <p class="text-muted">Enter a title to search for raw items.</p>
+{% elseif ItemList.count > 0 %}
     <table class="table data-sortable">
         <thead>
             <tr>
                 <th class="text-center">#</th>
-                <th class="text-left">Title</th>
+                <th class="text-start">Title</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
         <tbody>
             {% for item in ItemList %}
                 <tr>
-                    <td class="text-center">
-                        {{ item.id }}
-                    </td>
-                    <td class="text-left">
-                        {{ item.title }}
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('staff.data-sources.list-raw.view', {'sourceId': item.source_id, 'itemId': item.id}) }}">
-                            View raw item
-                        </a>
-                    </td>
+                    <td class="text-center"><a href="{{ route('staff.data-sources.detail', {'sourceId': item.source_id, 'linkId': item.link_id}) }}#tabs-raw">{{ item.id }}</a></td>
+                    <td class="text-start">{{ item.title }}</td>
+                    <td class="text-center"></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-{% else %}
-    <p>No items found!</p>
-{% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
-<script>
-    $(document).ready(function() {
-        $('.data-sortable').DataTable({
-            "order": [{{ jsInitialSort|raw }}],
-            "pageLength": 50,
-            "columns": [
-                null,
-                null,
-                { "orderable": false }
-            ]
+    {% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+    <script>
+        $(document).ready(function() {
+            $('.data-sortable').DataTable({
+                "order": [{{ jsInitialSort|raw }}],
+                "pageLength": 50,
+                "columns": [
+                    null,
+                    null,
+                    { "orderable": false }
+                ]
+            });
         });
-    });
-</script>
+    </script>
+{% else %}
+    <p>No items found for "{{ SearchTitle }}".</p>
+{% endif %}
 
 {% endblock page_inner %}

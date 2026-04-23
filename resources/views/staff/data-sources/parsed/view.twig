@@ -1,0 +1,223 @@
+{% import 'ui/components/headings/heading.twig' as heading %}
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% set isIgnored = DSParsedItem.link_id in IgnoreIdList %}
+
+<div id="tabs">
+
+    <ul>
+        <li><a href="#tabs-parsed">Parsed item</a></li>
+        <li><a href="#tabs-raw">Raw item</a></li>
+    </ul>
+
+    <div id="tabs-parsed">
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <h2>Parsed item details</h2>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td style="width: 220px;"><strong>ID</strong></td>
+                            <td>{{ DSParsedItem.id }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Link ID</strong></td>
+                            <td>{{ DSParsedItem.link_id }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Title</strong></td>
+                            <td>{{ DSParsedItem.title }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Console</strong></td>
+                            <td>{{ DSParsedItem.console ? DSParsedItem.console.name : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td>
+                                {% if DSParsedItem.game_id %}
+                                    <span class="badge bg-success">Linked</span>
+                                {% elseif isIgnored %}
+                                    <span class="badge bg-secondary">Ignored</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Unlinked</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Linked game</strong></td>
+                            <td>
+                                {% if DSParsedItem.game_id and DSParsedItem.game %}
+                                    {{ gamelink.title(DSParsedItem.game, 'staff') }}
+                                {% elseif DSParsedItem.game_id %}
+                                    ID: {{ DSParsedItem.game_id }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {{ heading.renderSlick('Dates') }}
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td style="width: 220px;"><strong>EU release date</strong></td>
+                            <td>{{ DSParsedItem.release_date_eu ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>US release date</strong></td>
+                            <td>{{ DSParsedItem.release_date_us ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>JP release date</strong></td>
+                            <td>{{ DSParsedItem.release_date_jp ?? '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {{ heading.renderSlick('Pricing') }}
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td style="width: 220px;"><strong>Price (standard)</strong></td>
+                            <td>{{ DSParsedItem.price_standard ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Price (discounted)</strong></td>
+                            <td>{{ DSParsedItem.price_discounted ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Discount %</strong></td>
+                            <td>{{ DSParsedItem.price_discount_pc ?? '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {{ heading.renderSlick('Content') }}
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td style="width: 220px;"><strong>Developers</strong></td>
+                            <td style="word-break: break-word;">{{ DSParsedItem.developers ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Publishers</strong></td>
+                            <td style="word-break: break-word;">{{ DSParsedItem.publishers ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Players</strong></td>
+                            <td>{{ DSParsedItem.players ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Genres</strong></td>
+                            <td style="word-break: break-word;">{{ DSParsedItem.genres_json ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>URL</strong></td>
+                            <td style="word-break: break-word;">
+                                {% if DSParsedItem.url %}
+                                    <a href="{{ eshop_url('eu', DSParsedItem.url) }}" target="_blank">{{ eshop_url('eu', DSParsedItem.url) }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {{ heading.renderSlick('Flags') }}
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td style="width: 220px;"><strong>Has physical version</strong></td>
+                            <td>{{ DSParsedItem.has_physical_version ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Has DLC</strong></td>
+                            <td>{{ DSParsedItem.has_dlc ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Has demo</strong></td>
+                            <td>{{ DSParsedItem.has_demo ?? '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="col-md-4">
+
+                {% if DSParsedItem.image_header %}
+                    <img src="{{ DSParsedItem.image_header }}" alt="" class="img-fluid w-100 mb-1">
+                    <small class="text-muted d-block mb-3" style="word-break: break-word;">{{ DSParsedItem.image_header }}</small>
+                {% endif %}
+
+                {% if DSParsedItem.image_square %}
+                    <img src="{{ DSParsedItem.image_square }}" alt="" class="mb-1" style="max-width: 150px;">
+                    <br><small class="text-muted" style="word-break: break-word;">{{ DSParsedItem.image_square }}</small>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="tabs-raw">
+
+        <h2>Raw item details</h2>
+
+        {% if SourceDataRaw %}
+            <table class="table" style="max-width: 800px;">
+                <thead>
+                    <tr>
+                        <th class="text-start" style="width: 220px;">Field</th>
+                        <th class="text-start">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field, dataval in SourceDataRaw %}
+                        <tr>
+                            <td><strong>{{ field }}</strong></td>
+                            <td style="word-break: break-word;">
+                                {% if dataval is iterable %}
+                                    {% for valueNode in dataval %}
+                                        {{ valueNode }}{% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {{ dataval }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">No raw item found for this parsed item.</p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#tabs').tabs();
+    });
+</script>
+
+{% endblock page_inner %}

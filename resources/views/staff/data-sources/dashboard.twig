@@ -131,7 +131,9 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        {{ item.itemsParsed().count() }}
+                        <a href="{{ route('staff.data-sources.list-parsed', {'sourceId': item.id}) }}">
+                            {{ item.itemsParsed().count() }}
+                        </a>
                     </td>
                 </tr>
             {% endfor %}

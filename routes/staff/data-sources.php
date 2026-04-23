@@ -10,6 +10,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     // Data sources: Lists
     Route::get('/staff/data-sources/{sourceId}/list-raw', 'Staff\DataSources\DataSourceRawController@show')->name('staff.data-sources.list-raw');
     Route::get('/staff/data-sources/{sourceId}/list-raw/{itemId}/view', 'Staff\DataSources\DataSourceRawController@view')->name('staff.data-sources.list-raw.view');
+    Route::get('/staff/data-sources/{sourceId}/list-parsed', 'Staff\DataSources\DataSourceParsedController@showList')->name('staff.data-sources.list-parsed');
+    Route::get('/staff/data-sources/{sourceId}/detail/{linkId}', 'Staff\DataSources\DataSourceParsedController@viewParsed')->name('staff.data-sources.detail');
 
     // Data sources: Ignore list
     Route::get('/staff/data-sources/ignore/add', 'Staff\DataSources\DataSourceIgnoreController@addToIgnoreList')->name('staff.data-sources.ignore.addToIgnoreList');

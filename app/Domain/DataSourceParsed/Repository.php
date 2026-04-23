@@ -23,6 +23,29 @@ class Repository
         return DataSourceParsed::where('source_id', $sourceId)->orderBy('title', 'asc')->get();
     }
 
+    public function getBySourceFiltered($sourceId, $searchTitle = null, $linkedFilter = null, $euDateFilter = null)
+    {
+        $query = DataSourceParsed::where('source_id', $sourceId);
+
+        if ($searchTitle) {
+            $query->where('title', 'like', '%'.$searchTitle.'%');
+        }
+
+        if ($linkedFilter === 'linked') {
+            $query->whereNotNull('game_id');
+        } elseif ($linkedFilter === 'unlinked') {
+            $query->whereNull('game_id');
+        }
+
+        if ($euDateFilter === 'with') {
+            $query->whereNotNull('release_date_eu');
+        } elseif ($euDateFilter === 'without') {
+            $query->whereNull('release_date_eu');
+        }
+
+        return $query->orderBy('title', 'asc')->get();
+    }
+
     public function getAllBySourceWithGameId($sourceId)
     {
         return DataSourceParsed::where('source_id', $sourceId)->whereNotNull('game_id')->orderBy('game_id', 'asc')->get();

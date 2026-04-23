@@ -16,6 +16,19 @@ class Repository
         return DataSourceRaw::where('source_id', $sourceId)->orderBy('id', 'asc')->get();
     }
 
+    public function searchBySourceIdAndTitle($sourceId, $title)
+    {
+        return DataSourceRaw::where('source_id', $sourceId)
+            ->where('title', 'like', '%'.$title.'%')
+            ->orderBy('title', 'asc')
+            ->get();
+    }
+
+    public function findBySourceIdAndLinkId($sourceId, $linkId)
+    {
+        return DataSourceRaw::where('source_id', $sourceId)->where('link_id', $linkId)->first();
+    }
+
     public function deleteBySourceId($sourceId)
     {
         DataSourceRaw::where('source_id', $sourceId)->delete();
