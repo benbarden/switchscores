@@ -17,7 +17,7 @@ class DataSourceImportLog extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'run_id', 'source_id', 'link_id', 'game_id', 'event_type', 'changed_fields', 'created_at'
+        'run_id', 'source_id', 'link_id', 'title', 'game_id', 'event_type', 'changed_fields', 'created_at'
     ];
 
     protected $casts = [

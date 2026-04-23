@@ -123,6 +123,7 @@ class ImportParseLink extends Command
                         $this->repoImportLog->create(
                             $sourceId,
                             $rawRecord->link_id,
+                            $rawRecord->title,
                             $rawRecord->game_id,
                             DataSourceImportLog::EVENT_DELISTED,
                             $runId
@@ -153,6 +154,7 @@ class ImportParseLink extends Command
                         $this->repoImportLog->create(
                             $sourceId,
                             $rawRecord->link_id,
+                            $rawRecord->title,
                             $rawRecord->game_id,
                             DataSourceImportLog::EVENT_CONFLICT,
                             $runId
@@ -180,7 +182,7 @@ class ImportParseLink extends Command
                     ? DataSourceImportLog::EVENT_ADDED
                     : DataSourceImportLog::EVENT_UPDATED;
 
-                $this->repoImportLog->create($sourceId, $rawItem->link_id, $parsedItem->game_id, $eventType, $runId);
+                $this->repoImportLog->create($sourceId, $rawItem->link_id, $rawItem->title, $parsedItem->game_id, $eventType, $runId);
 
                 $parsedItemCount++;
             }

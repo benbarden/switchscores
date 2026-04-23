@@ -57,7 +57,7 @@
         </tbody>
     </table>
 
-    {{ Runs.links() }}
+    {{ Runs.links()|raw }}
 {% else %}
     <p class="text-muted">No import runs recorded yet.</p>
 {% endif %}

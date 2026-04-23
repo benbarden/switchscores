@@ -6,16 +6,17 @@ use App\Models\DataSourceImportLog;
 
 class Repository
 {
-    public function create($sourceId, $linkId, $gameId, $eventType, $runId = null, $changedFields = null)
+    public function create($sourceId, $linkId, $title, $gameId, $eventType, $runId = null, $changedFields = null)
     {
         $log = new DataSourceImportLog();
-        $log->run_id        = $runId;
-        $log->source_id     = $sourceId;
-        $log->link_id       = $linkId;
-        $log->game_id       = $gameId;
-        $log->event_type    = $eventType;
+        $log->run_id         = $runId;
+        $log->source_id      = $sourceId;
+        $log->link_id        = $linkId;
+        $log->title          = $title;
+        $log->game_id        = $gameId;
+        $log->event_type     = $eventType;
         $log->changed_fields = $changedFields;
-        $log->created_at    = now();
+        $log->created_at     = now();
         $log->save();
         return $log;
     }
@@ -50,12 +51,15 @@ class Repository
         return $counts;
     }
 
-    public function getByRunId($runId)
+    public function getByRunIdPaginated($runId, $eventType = null, $perPage = 100)
     {
-        return DataSourceImportLog::where('run_id', $runId)
-            ->orderBy('event_type')
-            ->orderBy('created_at')
-            ->get();
+        $query = DataSourceImportLog::where('run_id', $runId);
+
+        if ($eventType) {
+            $query->where('event_type', $eventType);
+        }
+
+        return $query->orderBy('event_type')->orderBy('created_at')->paginate($perPage);
     }
 
     public function getRecentBySource($sourceId, $limit = 100)

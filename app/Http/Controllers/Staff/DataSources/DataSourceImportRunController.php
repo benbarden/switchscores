@@ -11,13 +11,15 @@ use App\Models\DataSourceImportLog;
 
 use App\Domain\DataSourceImportRun\Repository as DataSourceImportRunRepository;
 use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
+use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 
 class DataSourceImportRunController extends Controller
 {
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private DataSourceImportRunRepository $repoImportRun,
-        private DataSourceImportLogRepository $repoImportLog
+        private DataSourceImportLogRepository $repoImportLog,
+        private DataSourceIgnoreRepository $repoDataSourceIgnore
     ) {
     }
 
@@ -45,12 +47,15 @@ class DataSourceImportRunController extends Controller
         $pageTitle = 'Import run #'.$runId;
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesImportRunDetailSubpage($pageTitle))->bindings;
 
-        $logEntries = $this->repoImportLog->getByRunId($runId);
+        $eventType = request('eventType');
+        $logEntries = $this->repoImportLog->getByRunIdPaginated($runId, $eventType);
         $counts = $this->repoImportLog->getCountsByRunIds([$runId])[$runId] ?? [];
 
         $bindings['Run'] = $run;
         $bindings['LogEntries'] = $logEntries;
         $bindings['Counts'] = $counts;
+        $bindings['FilterEventType'] = $eventType ?? '';
+        $bindings['IgnoreIdList'] = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
 
         return view('staff.data-sources.import-runs.view', $bindings);
     }
