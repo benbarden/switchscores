@@ -5,50 +5,36 @@ namespace App\Console\Commands\DataSource\NintendoCoUk;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\DataSourceImportLog;
+use App\Models\Game;
+
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
+use App\Domain\DataSourceImportRun\Repository as DataSourceImportRunRepository;
 
 use App\Services\DataSources\NintendoCoUk\Importer;
 use App\Services\DataSources\NintendoCoUk\Parser;
 
 class ImportParseLink extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'DSNintendoCoUkImportParseLink {mode?}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Imports and parses data, then links it to games.';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct(
         private DataSourceRepository $repoDataSource,
         private DataSourceRawRepository $repoDataSourceRaw,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private DataSourceImportLogRepository $repoImportLog,
+        private DataSourceImportRunRepository $repoImportRun,
         private Importer $importer,
         private Parser $parser
-    )
-    {
+    ) {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $argMode = $this->argument('mode');
@@ -58,104 +44,159 @@ class ImportParseLink extends Command
 
         $sourceId = $this->repoDataSource->getSourceNintendoCoUk()->id;
 
+        $run = $this->repoImportRun->startRun($sourceId);
+        $runId = $run->id;
+
         try {
+
+            $allNewIds      = [];
+            $allChangedIds  = [];
+            $allRelistedIds = [];
 
             // PARSE-ONLY MODE
             if ($argMode == 'parse') {
 
                 $logger->info('Parse-only mode; skipping data download from eShop.');
+                // Parse all non-delisted records
+                $allNewIds = $this->repoDataSourceRaw->getBySourceId($sourceId)->pluck('id')->toArray();
 
             } else {
 
-                // Do cleanup first
-                $logger->info('Clearing previous raw data...');
-                $this->repoDataSourceRaw->deleteBySourceId($sourceId);
-                $logger->info('Clearing previous parsed data...');
-                $this->repoDataSourceParsed->deleteBySourceId($sourceId);
+                $importStart = now();
 
-                //
-                //if (\App::environment() == 'localx') {
-                //    $logger->info('Loading local data from JSON file');
-                //    $importer->loadLocalData('europe-test-1500-games.json');
-                //} else {
-                //}
                 $logger->warning('Loading LIVE data from eShop. Do not abuse!');
 
                 $loadLimit = 1000;
-                $maxExpectedItems = 10000;
-                $loadOffsets = [0];
-                for ($i = $loadLimit; $i <= $maxExpectedItems; $i+=$loadLimit) {
-                    $loadOffsets[] = $i;
-                }
 
-                // Switch 1
-                foreach ($loadOffsets as $offset) {
+                // Switch 1 — get count first, then load in batches
+                $this->importer->loadGames(0, 0);
+                $switch1Total = $this->importer->getNumFound();
+                $logger->info('Switch 1 total items: '.$switch1Total);
 
-                    $logger->info(sprintf('Loading %s items; offset %s', $loadLimit, $offset));
+                foreach (range(0, $switch1Total - 1, $loadLimit) as $offset) {
+
+                    $logger->info(sprintf('Switch 1: loading %s items at offset %s', $loadLimit, $offset));
                     $this->importer->loadGames($loadLimit, $offset);
 
-                    $responseArray = $this->importer->getResponseData();
-
-                    $gameData = $responseArray['response']['docs'];
+                    $gameData = $this->importer->getResponseData()['response']['docs'] ?? null;
                     if (!is_array($gameData)) {
-                        $logger->error('Cannot load game data');
+                        $logger->error('Cannot load game data at offset '.$offset);
                         continue;
                     }
-                    $logger->info('Successfully loaded game data into temporary storage.');
 
-                    // Raw data
-                    $logger->info('Importing raw data...');
-                    $this->importer->importToDb($sourceId);
-                    $importedItemCount = $this->importer->getImportedCount();
-                    $logger->info('Imported '.$importedItemCount.' item(s)');
+                    $result = $this->importer->importToDb($sourceId);
+                    $allNewIds      = array_merge($allNewIds, $result['new_ids']);
+                    $allChangedIds  = array_merge($allChangedIds, $result['changed_ids']);
+                    $allRelistedIds = array_merge($allRelistedIds, $result['relisted_ids']);
 
+                    $logger->info(sprintf('Processed %s item(s)', $this->importer->getImportedCount()));
                 }
 
                 // Switch 2
-                $logger->info('Loading Switch 2 data... ');
+                $logger->info('Loading Switch 2 data...');
                 $this->importer->loadGamesSwitch2($loadLimit, 0);
 
-                $responseArray = $this->importer->getResponseData();
-
-                $gameData = $responseArray['response']['docs'];
+                $gameData = $this->importer->getResponseData()['response']['docs'] ?? null;
                 if (!is_array($gameData)) {
-                    $logger->error('Cannot load game data');
+                    $logger->error('Cannot load Switch 2 game data');
                 } else {
-                    $logger->info('Successfully loaded game data into temporary storage.');
+                    $result = $this->importer->importToDb($sourceId);
+                    $allNewIds      = array_merge($allNewIds, $result['new_ids']);
+                    $allChangedIds  = array_merge($allChangedIds, $result['changed_ids']);
+                    $allRelistedIds = array_merge($allRelistedIds, $result['relisted_ids']);
+                    $logger->info(sprintf('Switch 2: processed %s item(s)', $this->importer->getImportedCount()));
+                }
 
-                    // Raw data
-                    $logger->info('Importing raw data...');
-                    $this->importer->importToDb($sourceId);
-                    $importedItemCount = $this->importer->getImportedCount();
-                    $logger->info('Imported '.$importedItemCount.' item(s)');
+                // Mark records not seen this run as delisted
+                $newlyDelisted = $this->repoDataSourceRaw->markDelistedBeforeDate($sourceId, $importStart);
+
+                if ($newlyDelisted->count() > 0) {
+                    $logger->info('Newly delisted: '.$newlyDelisted->count().' item(s)');
+
+                    $delistedLinkIds = $newlyDelisted->pluck('link_id')->filter()->toArray();
+
+                    // Mark corresponding parsed records as delisted
+                    $this->repoDataSourceParsed->markDelistedByLinkIds($sourceId, $delistedLinkIds);
+
+                    // Update linked games and write audit log
+                    foreach ($newlyDelisted as $rawRecord) {
+                        $this->repoImportLog->create(
+                            $sourceId,
+                            $rawRecord->link_id,
+                            $rawRecord->game_id,
+                            DataSourceImportLog::EVENT_DELISTED,
+                            $runId
+                        );
+
+                        if ($rawRecord->game_id) {
+                            $game = Game::find($rawRecord->game_id);
+                            if ($game && $game->isActive()) {
+                                $game->game_status = \App\Enums\GameStatus::DELISTED;
+                                if ($game->format_digital === Game::FORMAT_AVAILABLE) {
+                                    $game->format_digital = Game::FORMAT_DELISTED;
+                                }
+                                $game->save();
+                                $logger->info('Delisted game ID '.$game->id.': '.$game->title);
+                            }
+                        }
+                    }
+
+                    // Mark delisted raw records
+                    $newlyDelisted->each(function($r) { $r->is_delisted = 1; $r->save(); });
+                }
+
+                // Log re-listed items as conflicts
+                if (!empty($allRelistedIds)) {
+                    $relistedRecords = $this->repoDataSourceRaw->getByIds($allRelistedIds);
+                    $logger->info('Re-listed (conflict): '.$relistedRecords->count().' item(s)');
+                    foreach ($relistedRecords as $rawRecord) {
+                        $this->repoImportLog->create(
+                            $sourceId,
+                            $rawRecord->link_id,
+                            $rawRecord->game_id,
+                            DataSourceImportLog::EVENT_CONFLICT,
+                            $runId
+                        );
+                        $logger->warning('Conflict — re-listed item: '.$rawRecord->link_id.' ('.$rawRecord->title.')');
+                    }
                 }
 
             }
 
-            // Parsed data
-            $logger->info('Parsing data...');
+            // Parse new and changed records only
+            $parseIds = array_unique(array_merge($allNewIds, $allChangedIds));
+            $logger->info('Parsing '.count($parseIds).' new/changed item(s)...');
+
             $this->parser->setLogger($logger);
             $parsedItemCount = 0;
-            $rawSourceData = $this->repoDataSourceRaw->getBySourceId($sourceId);
-            $totalItemCount = count($rawSourceData);
-            foreach ($rawSourceData as $rawItem) {
-                if (($parsedItemCount % 1000) == 0) {
-                    $logger->info(sprintf('Parsed %s/%s items', $parsedItemCount, $totalItemCount));
-                }
+            $rawItemsToParse = $this->repoDataSourceRaw->getByIds($parseIds);
+
+            foreach ($rawItemsToParse as $rawItem) {
                 $this->parser->setDataSourceRaw($rawItem);
                 $parsedItem = $this->parser->parseItem();
                 $parsedItem->save();
+
+                $eventType = in_array($rawItem->id, $allNewIds)
+                    ? DataSourceImportLog::EVENT_ADDED
+                    : DataSourceImportLog::EVENT_UPDATED;
+
+                $this->repoImportLog->create($sourceId, $rawItem->link_id, $parsedItem->game_id, $eventType, $runId);
+
                 $parsedItemCount++;
             }
-            $logger->info('Parsing complete. Parsed '.$parsedItemCount.' items(s).');
+
+            $logger->info('Parsing complete. Parsed '.$parsedItemCount.' item(s).');
 
             // Link games
             $logger->info('Updating game links...');
             $this->repoDataSourceParsed->updateNintendoCoUkGameIds();
             $logger->info('Linking complete');
 
+            $this->repoImportRun->completeRun($run);
+
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
+            $this->repoImportRun->failRun($run);
         }
     }
 }

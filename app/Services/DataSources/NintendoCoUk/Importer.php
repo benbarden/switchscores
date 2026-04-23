@@ -84,6 +84,11 @@ class Importer
         return $this->importedItemCount;
     }
 
+    public function getNumFound()
+    {
+        return $this->responseData['response']['numFound'] ?? null;
+    }
+
     public function loadLocalData($file)
     {
         $json = file_get_contents(dirname(__FILE__).'/../../../storage/eshop/'.$file);
@@ -165,7 +170,15 @@ class Importer
         }
     }
 
-    public function importToDb($sourceId)
+    /**
+     * Upsert raw records from the last loaded response.
+     *
+     * Returns an array with:
+     *   'new_ids'      => IDs of newly inserted records (need parsing)
+     *   'changed_ids'  => IDs of records whose content hash changed (need parsing)
+     *   'relisted_ids' => IDs of records that were is_delisted=1 but reappeared
+     */
+    public function importToDb($sourceId): array
     {
         if (!$this->responseData) {
             throw new \Exception('Nothing to import!');
@@ -174,7 +187,10 @@ class Importer
         $sourceItem = null;
         $rawSourceData = $this->responseData['response']['docs'];
 
-        $totalItemCount = count($rawSourceData);
+        $newIds      = [];
+        $changedIds  = [];
+        $relistedIds = [];
+        $now = now();
 
         try {
 
@@ -192,19 +208,55 @@ class Importer
                     $consoleId = Console::ID_SWITCH_1;
                 }
 
-                $dataSourceRaw = new DataSourceRaw();
-                $dataSourceRaw->source_id = $sourceId;
-                $dataSourceRaw->console_id = $consoleId;
-                $dataSourceRaw->link_id = $sourceItem['fs_id'] ?? null;
-                $dataSourceRaw->title = $sourceItem['title'];
-                $dataSourceRaw->source_data_json = json_encode($sourceItem);
-                $dataSourceRaw->save();
+                $linkId      = $sourceItem['fs_id'] ?? null;
+                $jsonString  = json_encode($sourceItem);
+                $contentHash = md5($jsonString);
 
+                $existing = $linkId
+                    ? DataSourceRaw::where('source_id', $sourceId)->where('link_id', $linkId)->first()
+                    : null;
+
+                if (!$existing) {
+                    $record = new DataSourceRaw();
+                    $record->source_id        = $sourceId;
+                    $record->console_id       = $consoleId;
+                    $record->link_id          = $linkId;
+                    $record->title            = $sourceItem['title'];
+                    $record->source_data_json = $jsonString;
+                    $record->content_hash     = $contentHash;
+                    $record->last_seen_at     = $now;
+                    $record->is_delisted      = 0;
+                    $record->save();
+                    $newIds[] = $record->id;
+                } else {
+                    if ($existing->is_delisted) {
+                        $relistedIds[] = $existing->id;
+                    }
+
+                    if ($existing->content_hash !== $contentHash) {
+                        $existing->console_id       = $consoleId;
+                        $existing->title            = $sourceItem['title'];
+                        $existing->source_data_json = $jsonString;
+                        $existing->content_hash     = $contentHash;
+                        $changedIds[] = $existing->id;
+                    }
+
+                    $existing->last_seen_at = $now;
+                    $existing->is_delisted  = 0;
+                    $existing->save();
+                }
             }
+
         } catch (\Exception $e) {
             throw new \Exception('Error importing data! Message: '.$e->getMessage().'; Record: '.var_export($sourceItem, true));
         }
 
-        $this->importedItemCount = $totalItemCount;
+        $this->importedItemCount = count($rawSourceData);
+
+        return [
+            'new_ids'      => $newIds,
+            'changed_ids'  => $changedIds,
+            'relisted_ids' => $relistedIds,
+        ];
     }
 }

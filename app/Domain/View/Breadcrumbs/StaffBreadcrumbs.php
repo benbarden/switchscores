@@ -336,6 +336,25 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function dataSourcesImportRunsSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function dataSourcesImportRunDetailSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem('Import runs', route('staff.data-sources.import-runs')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     // *** DATA QUALITY *** //
 
     public static function dataQualityDashboard(): BreadcrumbNav

@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 127**
+**Next ID: 130**
 
 ---
 
@@ -104,7 +104,9 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
-| 113 | Game status: surface API vs manual conflicts | Medium | Follow-up from #22 | When API says "available" but game_status is "delisted" (or vice versa), log conflicts and show on staff dashboard. Helps catch manual overrides that may need review. |
+| 127 | Smarter Nintendo.co.uk import | Medium | Replaces wipe-and-replace; closes #113 | Sync/upsert approach with content hashing. Detects new/changed/removed games. Audit log per change (added/updated/delisted/conflict). Marks removed games as delisted. See `docs/tasks/127-smarter-nintendo-import.md`. |
+| 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
+| 129 | Remove Genres from Differences section | Low | Genres never map cleanly | Remove Genres diff link from DS dashboard, remove associated controller/query logic and route. Genres from API are reference only, not for copying over. |
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
@@ -177,6 +179,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 88 | GH141: Generate images for "by collection" like "by series" | High | No image generation service | Series page is long/slow. Collections smaller - more suitable. Fiddly but nice results. |
 | 89 | GH56: add more signup methods | Medium | OAuth exists; add providers. *Related to #80* | Maybe just Google. Remove Twitter. Keep email/pw. Risk: multiple accounts if users forget which method. Hard problem. |
 | 93 | Raw items: replace list view with search | Medium | Currently loads all items at once — DB intensive | Replace full list with a search/filter UI with pagination. |
+| 113 | Game status: surface API vs manual conflicts | Closed | 2026-04-23 | → Addressed by #127 audit log (conflict event type) |
 | 96 | GH124: Allow games companies to update contact details | Done | 2026-04-23 | → Done section |
 | 97 | Show recent quick reviews on homepage/Reviews homepage | Low | Already shown on Community page | Need more reviews first. Already on Members page. |
 | 99 | GH30: member profiles | High | No profile model; requires full implementation | Worth doing once more members. Can be lightweight initially. |

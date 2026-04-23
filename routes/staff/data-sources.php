@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_DATA_SOURCE_MANAGER]], function() {
 
     Route::get('/staff/data-sources/dashboard', 'Staff\DataSources\DashboardController@show')->name('staff.data-sources.dashboard');
+    Route::get('/staff/data-sources/import-runs', 'Staff\DataSources\DataSourceImportRunController@index')->name('staff.data-sources.import-runs');
+    Route::get('/staff/data-sources/import-runs/{runId}', 'Staff\DataSources\DataSourceImportRunController@view')->name('staff.data-sources.import-runs.view');
 
     // Data sources: Lists
     Route::get('/staff/data-sources/{sourceId}/list-raw', 'Staff\DataSources\DataSourceRawController@show')->name('staff.data-sources.list-raw');

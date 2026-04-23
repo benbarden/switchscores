@@ -6,6 +6,71 @@
 
 <div class="row">
 
+    <div class="col-md-8">
+
+        <h2>Import runs</h2>
+
+        {% if RecentRuns.count > 0 %}
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-center">Added</th>
+                        <th class="text-center">Updated</th>
+                        <th class="text-center">Delisted</th>
+                        <th class="text-center">Conflicts</th>
+                        <th class="text-center">Duration</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for run in RecentRuns %}
+                    {% set counts = RunCounts[run.id] ?? {} %}
+                    <tr>
+                        <td style="white-space: nowrap;"><a href="{{ route('staff.data-sources.import-runs.view', {'runId': run.id}) }}">{{ run.started_at|date('d M H:i') }}</a></td>
+                        <td class="text-center">{{ counts['added'] ?? 0 }}</td>
+                        <td class="text-center">{{ counts['updated'] ?? 0 }}</td>
+                        <td class="text-center">
+                            {% if (counts['delisted'] ?? 0) > 0 %}
+                                <span class="text-danger fw-bold">{{ counts['delisted'] }}</span>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if (counts['conflict'] ?? 0) > 0 %}
+                                <span class="text-warning fw-bold">{{ counts['conflict'] }}</span>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if run.durationSeconds() is not null %}
+                                {{ run.durationSeconds() }}s
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if run.status == 'completed' %}
+                                <span class="badge bg-success">Done</span>
+                            {% elseif run.status == 'running' %}
+                                <span class="badge bg-warning">Running</span>
+                            {% else %}
+                                <span class="badge bg-danger">Failed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ route('staff.data-sources.import-runs') }}" class="btn btn-sm btn-outline-secondary mt-1">View all runs</a>
+        {% else %}
+            <p class="text-muted">No import runs recorded yet.</p>
+        {% endif %}
+
+    </div>
+
     <div class="col-md-4">
 
         <h2>Nintendo.co.uk API</h2>
@@ -39,109 +104,79 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}">
-                        EU release date
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}">EU release date</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}" class="h4">
-                        {{ ReleaseDateEUNintendoCoUkDifferenceCount }}
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}" class="h4">{{ ReleaseDateEUNintendoCoUkDifferenceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}">
-                        Price
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}">Price</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}" class="h4">
-                        {{ PriceNintendoCoUkDifferenceCount }}
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}" class="h4">{{ PriceNintendoCoUkDifferenceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}">
-                        Players
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}">Players</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}" class="h4">
-                        {{ PlayersNintendoCoUkDifferenceCount }}
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}" class="h4">{{ PlayersNintendoCoUkDifferenceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.publishers') }}">
-                        Publishers
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.publishers') }}">Publishers</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.publishers') }}" class="h4">
-                        {{ PublishersNintendoCoUkDifferenceCount }}
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.publishers') }}" class="h4">{{ PublishersNintendoCoUkDifferenceCount }}</a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.genres') }}">
-                        Genres
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.genres') }}">Genres</a>
                 </td>
                 <td class="text-end">
-                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.genres') }}" class="h4">
-                        {{ GenresNintendoCoUkDifferenceCount }}
-                    </a>
+                    <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.genres') }}" class="h4">{{ GenresNintendoCoUkDifferenceCount }}</a>
                 </td>
             </tr>
             </tbody>
         </table>
 
-    </div>
+        {{ heading.renderSlick('Import totals') }}
 
-    <div class="col-md-4">
-
-        <h2>Import totals</h2>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Details</th>
-                <th class="text-center">Raw</th>
-                <th class="text-center">Parsed</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in DataSources %}
-                <tr>
-                    <td>
-                        {{ item.name }}
-                        <br>
-                        <small>
-                            ID: {{ item.id }} -
-                            Method: {{ item.importMethodDesc() }}
-                        </small>
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('staff.data-sources.list-raw', {'sourceId': item.id}) }}">
-                            {{ item.itemsRaw().count() }}
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="{{ route('staff.data-sources.list-parsed', {'sourceId': item.id}) }}">
-                            {{ item.itemsParsed().count() }}
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-md-4">
+        {% if NintendoSource %}
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th class="text-center">Raw</th>
+                        <th class="text-center">Parsed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{ NintendoSource.name }}
+                            <br>
+                            <small class="text-muted">ID: {{ NintendoSource.id }}</small>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.data-sources.list-raw', {'sourceId': NintendoSource.id}) }}">
+                                {{ NintendoSource.itemsRaw().count() }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.data-sources.list-parsed', {'sourceId': NintendoSource.id}) }}">
+                                {{ NintendoSource.itemsParsed().count() }}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
 
     </div>
 

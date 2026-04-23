@@ -43,7 +43,9 @@
                         <tr>
                             <td><strong>Status</strong></td>
                             <td>
-                                {% if DSParsedItem.game_id %}
+                                {% if DSParsedItem.is_delisted %}
+                                    <span class="badge bg-dark">Delisted</span>
+                                {% elseif DSParsedItem.game_id %}
                                     <span class="badge bg-success">Linked</span>
                                 {% elseif isIgnored %}
                                     <span class="badge bg-secondary">Ignored</span>

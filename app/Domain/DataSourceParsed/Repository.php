@@ -106,6 +106,20 @@ class Repository
         return DataSourceParsed::where('source_id', $sourceId)->where('link_id', $linkId)->first();
     }
 
+    public function markDelistedByLinkIds($sourceId, array $linkIds)
+    {
+        DataSourceParsed::where('source_id', $sourceId)
+            ->whereIn('link_id', $linkIds)
+            ->update(['is_delisted' => 1]);
+    }
+
+    public function clearDelistedByLinkIds($sourceId, array $linkIds)
+    {
+        DataSourceParsed::where('source_id', $sourceId)
+            ->whereIn('link_id', $linkIds)
+            ->update(['is_delisted' => 0]);
+    }
+
     public function deleteBySourceId($sourceId)
     {
         DataSourceParsed::where('source_id', $sourceId)->delete();

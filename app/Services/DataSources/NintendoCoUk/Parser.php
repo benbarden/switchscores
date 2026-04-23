@@ -35,11 +35,17 @@ class Parser
 
     public function setDataSourceRaw(DataSourceRaw $dataSourceRaw)
     {
-        $dataSourceParsed = new DataSourceParsed();
+        $existing = DataSourceParsed::where('source_id', $dataSourceRaw->source_id)
+            ->where('link_id', $dataSourceRaw->link_id)
+            ->first();
 
-        $dataSourceParsed->source_id = $dataSourceRaw->source_id;
+        $dataSourceParsed = $existing ?? new DataSourceParsed();
+
+        $dataSourceParsed->source_id  = $dataSourceRaw->source_id;
         $dataSourceParsed->console_id = $dataSourceRaw->console_id;
-        $dataSourceParsed->title = $dataSourceRaw->title;
+        $dataSourceParsed->title      = $dataSourceRaw->title;
+        $dataSourceParsed->is_delisted = 0;
+        // game_id is preserved if $existing already has one
 
         $this->dataSourceParsed = $dataSourceParsed;
         $this->rawJsonData = json_decode($dataSourceRaw->source_data_json, true);

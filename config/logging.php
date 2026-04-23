@@ -68,6 +68,7 @@ return [
             'path' => storage_path('logs/cron.log'),
             'level' => 'debug',
             'days' => 7,
+            'permission' => 0664,
         ],
 
         'dev-debug-single' => [
@@ -81,6 +82,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
             'days' => 14,
+            'permission' => 0664,
         ],
 
         'slack' => [
@@ -126,11 +128,12 @@ return [
         ],
 
         'slow_queries' => [
-            'driver' => 'daily', // or 'single'
+            'driver' => 'daily',
             'path' => storage_path('logs/slow-queries.log'),
             'level' => 'debug',
             'days' => 14,
             'replace_placeholders' => true,
+            'permission' => 0664,
         ],
     ],
 
