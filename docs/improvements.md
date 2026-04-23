@@ -96,10 +96,8 @@ This document tracks potential improvements, features, and enhancements for the 
 
 ## High Priority
 
-| # | Idea | Complexity | Notes | Your Notes |
-|---|------|------------|-------|------------|
-| 11 | URLs to include console name / unique title check to use console | Done | 2026-04-03 | → Done section (with #30) |
-| 30 | Change Switch 2 game URLs. Allow S1/S2 same title | Done | 2026-04-03 | → Done section |
+*All items done — see Done section.*
+
 ---
 
 ## Medium Priority
@@ -110,35 +108,27 @@ This document tracks potential improvements, features, and enhancements for the 
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
 | 6 | Tags: add support for layout v2 | Medium | Field/enum exist - need Twig template | V2 works well for categories. Needs templates + queries. Requires on-page intro + meta descriptions per tag. Gradual rollout once available. |
 | 9 | Add data checks as global lists | Medium | IntegrityCheck methods exist - need staff pages | GameDetail checks (category, players, price etc) rolled up to dashboard. Show totals, click through to fix. Could use Claude to scrape/backfill. |
-| 10 | Scrape publisher name, players, and other info from Nintendo URL | Done | 2026-03-01 | → Done section (superseded by #95/#107 for players; publisher handled elsewhere) |
 | 14 | Show raw/parsed item data on Game Detail | Medium | Data exists - expose on staff view | Tab or linked page. See raw data for new fields we could use. Link to items from game detail, drop full list. Includes #91, #92. |
 | 15 | Data source items: staff pages | Medium | Basic pages exist - need comprehensive CRUD | Remove full DS raw list (slow). Link raw/parsed detail from Game Detail. Link from ignored items lists. Supersedes older DS ideas. |
 | 17 | Action list for games without a custom description | Low | Simple query + list view | On-page descriptions for SEO (thin content fix). Not copied from Nintendo to avoid duplicate content. Check if also in meta. |
-| 19 | Make registration open. Keep invite codes for partners etc | Done | 2026-03-08 | → Done section |
 | 28 | Update New releases page to new layout | Medium | V1 template exists; create v2 with stats/featured sections | High traffic page. Simple list currently. Could add affiliate links, more info. Not same as category v2. |
 | 29 | Update homepage to new layout | Medium | Refactor to unified bindings + v2 layout | Needs refresh, been same for a while. Open to ideas. Could incorporate ones-to-watch, featured, etc. |
 | 42 | Event/log when game hits 3 reviews | Medium | No event system for review milestones; needs dispatcher | 3 reviews = ranking threshold. Surface "newly ranked" across homepage, reviews, members, staff. |
 | 44 | Add edition field to games + link S1/S2 versions | Medium-High | Requires migration, model, editor UI, linking | For "Switch 2 Edition" games. Link to S1 version. Helps count unique games. Becoming more common. **Note:** Weekly update converts "Nintendo Switch 2 Edition" → "(Switch 2)" in titles, which the cleanup command then removes. When implementing, re-check all existing S2 listings to identify editions. |
 | 49 | Games companies: create dashboard and missing data filters | Medium | Dashboard exists; add missing data filter queries | For outreach - find companies to contact. Some may exist already - needs review. |
 | 50 | GH118: public companies page improvements | Medium | Public profile exists; enhance layout/data | Searchable list, recent games by publisher, avg score, "Claim this page" CTA, show if company is engaged. |
-| 51 | View games company signups | Done | 2026-03-22 | → Done section |
 | 52 | Games company signup | Low | Already implemented and working | MVP done. Full flow: status on submissions, staff approve/deny, create company+user, link, notify. Handle duplicates, validate access to existing companies. |
-| 53 | Allow members to edit display name, email, and pw | Done | 2026-03-08 | -> Done section |
 | 59 | Set up eShopperReviews as a reviewer | Low | Add ReviewSite entry + feed config | Their data sucks but lots of reviews. Custom scraper needed. One-time scrape to JSON + review import tool. Could reuse for future reviewers! |
 | 61 | GH111: more names for games companies | Medium | Need UI for alternative names | Match name variations to one company. Doing some via Claude but UI would help. |
 | 62 | New process status: Content does not meet inclusion criteria | Medium | Add new status constant + update logic | Consolidates similar statuses. Needs data fix for existing records. |
 | 66 | Submit quick review without signing up | High | Auth system requires user; needs guest flow | Spam risk but need reviews. WordPress-style: Name/Email, cookie, optional auto-account. Low friction. Do even with good signup. |
 | 69 | Fix Digitally Downloaded Feedburner review links | Low | Update PartnerFeedLink URL | Older review URLs are dead. Need scraping to find actual URLs. Claude can help. |
-| 70 | Re-download hi-res images for N.co.uk linked games | Done | 2026-03-01 | → Done section |
 | 77 | Video URL: scrape from Nintendo pages | Medium | Extend #110 crawl system | Scrape official video URL from Nintendo UK pages during crawl. |
 | 116 | Publisher change monitoring | Medium | New feature | Watch for publisher name changes on Nintendo pages. Challenge: distinguish between publisher renames (update existing) vs legitimate publisher changes (new assignment). Log changes for staff review rather than auto-updating. |
-| 117 | Migrate Nintendo URLs from .co.uk to .com/en-gb | Done | 2026-03-08 | → Done section |
 | 87 | GH156: save smaller versions of images for landing pages | High | Requires ImageMagick + CDN strategy | Big images slow pages. But don't want fuzzy images in larger spaces. Balance needed. |
 | 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
-| 95 | GH76: multiplayer options | Done | 2026-02-27 | → Done section |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 | 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
-| 120 | Member nav restructure with secondary nav bar | Done | 2026-03-08 | → Done section |
 | 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
 | 115 | Claude-assisted game tagging | Medium | Discovery/clustering goal | Help tag games to improve discoverability. Focus on Viewpoint, Visual style, Game type. Phase 1: keyword matching (title contains "Solitaire" → Solitaire tag). Phase 2: Nintendo genres_json mapping. Phase 3: interactive batch suggestions. Build artisan command to export "games with keyword X but missing tag Y". |
 | 122 | Email members when quick review approved | Low | Member retention | Notify members when their quick review is approved. Could bring members back after initial signup. Of 5 April 2026 signups, 2 submitted quick reviews but none returned since - this could re-engage them. Simple: trigger email on review status change to approved. |
@@ -155,7 +145,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 20 | Move Stats dashboard to Staff dashboard | Low | Stats dashboard exists; reuse queries in staff view | Consolidation - not much on stats dashboard currently. |
 | 23 | Split out tag verified into one field per tag category | High | Currently single field; requires ~12 new fields + complex migration | Few games have tags - might re-assess all anyway. Flag tracked update progress. Open to simpler approaches. |
 | 32 | Improve 404 page with more useful links | Low | Custom view + related game suggestions | Not much on it currently. Add helpful links to guide users. |
-| 33 | Remove old image fields | Done | 2026-03-01 | → Done section |
 | 34 | Change PlayStatus to an Enum | Medium | 7 constants + factory methods; test coverage impact | IDE autocompletion benefit. Code cleanliness. |
 | 35 | Change FormatOptions to an Enum | Low | Only 5 format constants; simple extraction | IDE autocompletion benefit. |
 | 36 | Change VideoType to an Enum | Low | Only 3 constants in Game model | IDE autocompletion benefit. |
@@ -186,11 +175,9 @@ This document tracks potential improvements, features, and enhancements for the 
 | 88 | GH141: Generate images for "by collection" like "by series" | High | No image generation service | Series page is long/slow. Collections smaller - more suitable. Fiddly but nice results. |
 | 89 | GH56: add more signup methods | Medium | OAuth exists; add providers. *Related to #80* | Maybe just Google. Remove Twitter. Keep email/pw. Risk: multiple accounts if users forget which method. Hard problem. |
 | 93 | Raw items - replace with search | Medium | Add search/filter UI with pagination | Maybe kill screen and replace via #14/91/92 combo. Keep ticket, screen may be replaced. |
-| 94 | Quick reviews: approve/deny, not Edit | Medium | Change to approve/deny workflow | UX inconsistencies in Staff. |
 | 96 | GH124: Allow games companies to update contact details | Medium | Add edit form for companies | Useful but not urgent - few signups, companies inactive. |
 | 97 | Show recent quick reviews on homepage/Reviews homepage | Low | Already shown on Community page | Need more reviews first. Already on Members page. |
 | 99 | GH30: member profiles | High | No profile model; requires full implementation | Worth doing once more members. Can be lightweight initially. |
-| 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | → Done section |
 | 102 | Onboarding: dismissable notice banner for logged in users | Medium | Need notification model + dismissal | Nice but low priority without new signups. |
 | 103 | Upload / edit avatar | High | No avatar field; requires full implementation | Useful as members grow. |
 | 105 | Record user id of submitted review links | Low | Add migration + populate records | Tiny, low value. Keep for now. |
@@ -205,7 +192,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 4 | Change collection page to be both consoles | Low | Same pattern as #3 | Part of console-split decision - see #3. Includes #27. |
 | 56 | Lists: New additions/DB entries | Low | recentlyAdded() exists; create public list view | Raw DB additions less useful than new releases. Real value might be "surprise releases" - games that appear without being on coming soon. Consider killing or repurposing. |
 | 98 | Review sites: link to all reviews by a partner (public) | Low | Add public page listing reviews | Only show latest 20-25 per partner. NLife has 3000+. Rethink or revamp partner profile pages instead? Maybe kill and create new tasks. |
-| 107 | Store Local vs Online player counts separately | Done | 2026-02-27 | → Done section (with #95) |
 | 108 | Scrape Developer from US Nintendo pages | Medium | UK pages don't have Developer, US does | Would need to add US URLs first |
 | 109 | Check for dead Nintendo URLs | Merged | 2026-02-23 | → #110 |
 
@@ -215,6 +201,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 94 | Quick reviews: approve/reject workflow | Done | 2026-04-23 | Replaced Edit with Approve/Reject buttons on staff list. STATUS_INACTIVE renamed to STATUS_REJECTED (value 9→2) with data migration. Edit screen removed. Review body shown inline on list view. Members only see Pending/Active reviews (not Rejected). |
 | 11+30 | Switch 2 game URLs + per-console title uniqueness | Done | 2026-04-03 | S2 games use `/switch-2/games/{id}/{slug}`, S1 unchanged at `/games/{id}/{slug}`. Title uniqueness now per-console (`game_title_hashes.console_id`). `game_url()` Twig function is console-aware. Cleanup command `game:cleanup-switch2-titles` removes "(Switch 2)" suffix. See `docs/tasks/011-030-switch-2-game-urls.md`. Out of scope: S1 migration to `/switch-1/...`, dropping `/c/` prefix. |
 | 51 | View games company signups | Done | 2026-03-22 | Staff list page at `/staff/games-company-signups`. Shows contact info, existing/new company details, games list. Linked from staff dashboard. |
 | 100 | GH32: Games collection - quick status changes | Done | 2026-03-13 | Superseded by redesigned add/edit collection pages with play status button tiles (#82/#83). |

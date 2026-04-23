@@ -8,7 +8,7 @@
     <div class="col-12 col-sm-12">
         <div class="float-end">
             <label for="admin-nav-status-filter">Filter by status:</label>
-            <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-control">
+            <select id="admin-nav-status-filter" name="admin-nav-status-filter" class="form-select">
                 <option value="">All</option>
                 {% for item in QuickReviewStatusList %}
                     <option value="{{ item.id }}">{{ item.title }}</option>
