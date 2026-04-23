@@ -103,7 +103,7 @@
                     <a href="{{ route('staff.data-sources.detail', {'sourceId': entry.source_id, 'linkId': entry.link_id}) }}">{{ entry.link_id }}</a>
                 </td>
                 <td>
-                    {% if entry.game %}
+                    {% if entry.game and entry.game.id %}
                         {{ gamelink.title(entry.game, 'staff') }}
                     {% elseif entry.game_id %}
                         <span class="text-muted">ID: {{ entry.game_id }}</span>
