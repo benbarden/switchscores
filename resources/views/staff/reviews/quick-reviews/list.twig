@@ -45,7 +45,7 @@
                         Submitted by <a href="{{ route('owner.user.view', {'userId': item.user.id}) }}">{{ item.user.display_name }}</a>
                     </small>
                     <hr class="my-1">
-                    <small><strong>Review body:</strong> {{ item.review_body }}</small>
+                    <small><strong>Review body:</strong> {{ item.review_body|striptags }}</small>
                 </td>
                 <td class="text-center">
                     {{ item.created_at }}
