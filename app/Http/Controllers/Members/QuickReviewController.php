@@ -89,7 +89,7 @@ class QuickReviewController extends Controller
             $bindings['MsgSuccess'] = true;
         }
 
-        $bindings['ReviewList'] = $this->repoQuickReview->byUser($userId);
+        $bindings['ReviewList'] = $this->repoQuickReview->byUserVisible($userId);
 
         return view('members.quick-reviews.list', $bindings);
     }

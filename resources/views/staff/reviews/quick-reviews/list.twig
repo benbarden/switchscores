@@ -25,7 +25,7 @@
         <thead>
         <tr>
             <th class="text-end">#</th>
-            <th class="text-start">Game</th>
+            <th class="text-start">Details</th>
             <th class="text-center">Date</th>
             <th class="text-center">Score</th>
             <th class="text-center">Status</th>
@@ -38,12 +38,14 @@
                 <td class="text-end">
                     {{ item.id }}
                 </td>
-                <td class="text-start">
+                <td class="text-start" style="max-width: 400px;">
                     {{ gamelink.title(item.game, 'staff') }}
                     <br>
                     <small>
                         Submitted by <a href="{{ route('owner.user.view', {'userId': item.user.id}) }}">{{ item.user.display_name }}</a>
                     </small>
+                    <hr class="my-1">
+                    <small><strong>Review body:</strong> {{ item.review_body }}</small>
                 </td>
                 <td class="text-center">
                     {{ item.created_at }}
@@ -55,8 +57,19 @@
                     {{ item.getStatusDesc() }}
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('staff.reviews.quick-reviews.edit', {'reviewId': item.id}) }}">Edit</a> :
-                    <a href="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': item.id}) }}">Delete</a>
+                    {% if item.item_status != constant('App\\Models\\QuickReview::STATUS_ACTIVE') %}
+                        <form method="post" action="{{ route('staff.reviews.quick-reviews.approve', {'reviewId': item.id}) }}" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                    {% endif %}
+                    {% if item.item_status != constant('App\\Models\\QuickReview::STATUS_REJECTED') %}
+                        <form method="post" action="{{ route('staff.reviews.quick-reviews.reject', {'reviewId': item.id}) }}" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    {% endif %}
+                    <a href="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': item.id}) }}" class="btn btn-outline-secondary btn-sm">Delete</a>
                 </td>
             </tr>
         {% endfor %}

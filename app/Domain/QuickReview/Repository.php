@@ -63,6 +63,14 @@ class Repository
         return QuickReview::where('user_id', $userId)->orderBy('id', 'desc')->get();
     }
 
+    public function byUserVisible($userId)
+    {
+        return QuickReview::where('user_id', $userId)
+            ->whereIn('item_status', [QuickReview::STATUS_PENDING, QuickReview::STATUS_ACTIVE])
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public function byUserGameIdList($userId)
     {
         return QuickReview::where('user_id', $userId)->orderBy('id', 'desc')->pluck('game_id');
@@ -93,7 +101,7 @@ class Repository
         $statuses = [];
         $statuses[] = ['id' => QuickReview::STATUS_PENDING, 'title' => 'Pending'];
         $statuses[] = ['id' => QuickReview::STATUS_ACTIVE, 'title' => 'Active'];
-        $statuses[] = ['id' => QuickReview::STATUS_INACTIVE, 'title' => 'Inactive'];
+        $statuses[] = ['id' => QuickReview::STATUS_REJECTED, 'title' => 'Rejected'];
         return $statuses;
     }
 }

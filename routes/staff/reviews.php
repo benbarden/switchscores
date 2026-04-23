@@ -25,7 +25,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/link/{report?}', 'Staff\Reviews\ReviewLinkController@showList')->name('staff.reviews.link.list');
 
     // Quick reviews
-    Route::match(['get', 'post'], '/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
+    Route::post('/staff/reviews/quick-reviews/approve/{reviewId}', 'Staff\Reviews\QuickReviewController@approve')->name('staff.reviews.quick-reviews.approve');
+    Route::post('/staff/reviews/quick-reviews/reject/{reviewId}', 'Staff\Reviews\QuickReviewController@reject')->name('staff.reviews.quick-reviews.reject');
     Route::match(['get', 'post'], '/staff/reviews/quick-reviews/delete/{reviewId}', 'Staff\Reviews\QuickReviewController@delete')->name('staff.reviews.quick-reviews.delete');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
