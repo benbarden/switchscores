@@ -423,6 +423,7 @@ class WeeklyBatchListController extends Controller
             WeeklyBatchItem::STATUS_ALREADY_IN_DB,
             WeeklyBatchItem::STATUS_BUNDLE,
             WeeklyBatchItem::STATUS_LOW_QUALITY,
+            WeeklyBatchItem::STATUS_EXCLUDED,
         ];
         $fetchItemsByPage = $allItems
             ->filter(fn($i) => !in_array($i->item_status, $skippedStatuses))
