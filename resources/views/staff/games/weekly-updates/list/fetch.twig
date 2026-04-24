@@ -11,6 +11,62 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 {% endif %}
 
+{# ---- LQ review section (top — requires user action) ---- #}
+{% if LqItems|length > 0 %}
+<div class="alert alert-warning">
+    <strong>{{ LqItems|length }} game{{ LqItems|length != 1 ? 's' : '' }} flagged for LQ review</strong> — decisions required before continuing.
+</div>
+<form method="post" action="{{ route('staff.games.weekly-updates.list.fetch.lq-decisions', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+    {{ csrf_field()|raw }}
+
+    <table class="table table-sm table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 28%;">Title</th>
+                <th style="width: 18%;">Publisher</th>
+                <th style="width: 10%;">Players</th>
+                <th style="width: 22%;">Flag reason</th>
+                <th style="width: 22%;">Decision</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in LqItems %}
+            <tr>
+                <td>
+                    {{ item.title }}
+                    {% if item.nintendo_url %}
+                        <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted">Nintendo page ↗</a>
+                    {% endif %}
+                </td>
+                <td>{{ item.publisher_normalised ?? item.publisher_raw ?? '—' }}</td>
+                <td>{{ item.players ?? '—' }}</td>
+                <td><small class="text-muted">{{ item.lq_flag_reason ?? '—' }}</small></td>
+                <td>
+                    <div class="d-flex gap-1 flex-wrap">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-lq" value="low_quality">
+                            <label class="form-check-label text-danger" for="lq-{{ item.id }}-lq">LQ</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-bundle" value="bundle">
+                            <label class="form-check-label text-info" for="lq-{{ item.id }}-bundle">Bundle</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-keep" value="keep">
+                            <label class="form-check-label text-success" for="lq-{{ item.id }}-keep">Keep</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary mb-4">Save LQ decisions</button>
+</form>
+<hr>
+{% endif %}
+
 {# ---- Fetch section ---- #}
 {% if RawPages|length == 0 %}
     <p class="text-muted">No pages uploaded yet.</p>
@@ -126,110 +182,41 @@
 
 {% endif %}
 
-{# ---- Auto-LQ section (informational) ---- #}
-{% if LqAutoItems|length > 0 %}
+{# ---- Combined skipped items (informational) ---- #}
+{% if SkippedItems|length > 0 %}
 <hr class="mt-2">
-<h2 class="mt-4">Confirmed low quality</h2>
-<p class="text-muted">These games were automatically marked as low quality because their publisher is flagged in the database. No action needed.</p>
-
+<h2 class="mt-4">Skipped items</h2>
+<p class="text-muted">These games will not be imported. No action needed.</p>
 <table class="table table-sm table-bordered">
     <thead class="table-dark">
         <tr>
-            <th>Title</th>
-            <th>Publisher</th>
-            <th>Reason</th>
+            <th style="width: 35%;">Title</th>
+            <th style="width: 15%;">Publisher</th>
+            <th style="width: 12%;">Reason</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
-    {% for item in LqAutoItems %}
+    {% for item in SkippedItems %}
         <tr class="text-muted">
             <td>{{ item.title }}</td>
-            <td>{{ item.publisher_normalised ?? item.lq_publisher_name ?? '—' }}</td>
-            <td><small>{{ item.lq_flag_reason ?? '—' }}</small></td>
+            <td>{{ item.publisher_normalised ?? '—' }}</td>
+            <td>
+                {% if item.item_status == 'low_quality' %}
+                    <span class="badge bg-danger">Low quality</span>
+                {% elseif item.item_status == 'bundle' %}
+                    <span class="badge bg-info text-dark">Bundle</span>
+                {% elseif item.item_status == 'already_in_db' %}
+                    <span class="badge bg-secondary">Already in DB</span>
+                {% elseif item.item_status == 'excluded' %}
+                    <span class="badge bg-secondary">Manually excluded</span>
+                {% endif %}
+            </td>
+            <td><small>{{ item.lq_flag_reason ?? '' }}</small></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-{% endif %}
-
-{# ---- Bundle section (informational) ---- #}
-{% if BundleItems|length > 0 %}
-<hr class="mt-2">
-<h2 class="mt-4">Bundles</h2>
-<p class="text-muted">These games were automatically detected as bundles and will not be imported. No action needed.</p>
-
-<table class="table table-sm table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Title</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for item in BundleItems %}
-        <tr class="text-muted">
-            <td>{{ item.title }}</td>
-            <td>{{ item.price_gbp ? '£' ~ item.price_gbp : '—' }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
-{# ---- LQ review section ---- #}
-{% if LqItems|length > 0 %}
-<hr class="mt-2">
-<h2 class="mt-4">Needs LQ review</h2>
-<p class="text-muted">These games have been flagged for review. Decide whether to mark as low quality, bundle, or keep in the pipeline.</p>
-
-<form method="post" action="{{ route('staff.games.weekly-updates.list.fetch.lq-decisions', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
-    {{ csrf_field()|raw }}
-
-    <table class="table table-sm table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th style="width: 28%;">Title</th>
-                <th style="width: 18%;">Publisher</th>
-                <th style="width: 10%;">Players</th>
-                <th style="width: 22%;">Flag reason</th>
-                <th style="width: 22%;">Decision</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in LqItems %}
-            <tr>
-                <td>
-                    {{ item.title }}
-                    {% if item.nintendo_url %}
-                        <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted">Nintendo page ↗</a>
-                    {% endif %}
-                </td>
-                <td>{{ item.publisher_normalised ?? item.publisher_raw ?? '—' }}</td>
-                <td>{{ item.players ?? '—' }}</td>
-                <td><small class="text-muted">{{ item.lq_flag_reason ?? '—' }}</small></td>
-                <td>
-                    <div class="d-flex gap-1 flex-wrap">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-lq" value="low_quality">
-                            <label class="form-check-label text-danger" for="lq-{{ item.id }}-lq">LQ</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-bundle" value="bundle">
-                            <label class="form-check-label text-info" for="lq-{{ item.id }}-bundle">Bundle</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-keep" value="keep">
-                            <label class="form-check-label text-success" for="lq-{{ item.id }}-keep">Keep</label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <button type="submit" class="btn btn-primary">Save LQ decisions</button>
-</form>
 {% endif %}
 
 {# ---- Continue button ---- #}

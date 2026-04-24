@@ -414,9 +414,7 @@ class WeeklyBatchListController extends Controller
         $rawPages    = $this->repoRawPage->getForList($batchId, $console, $listType);
         $counts      = $this->repoItem->getStatusCounts($batchId, $console, $listType);
         $allItems    = $this->repoItem->getForList($batchId, $console, $listType);
-        $lqItems     = $this->repoItem->getByStatus($batchId, $console, $listType, WeeklyBatchItem::STATUS_LQ_REVIEW);
-        $lqAutoItems = $this->repoItem->getByStatus($batchId, $console, $listType, WeeklyBatchItem::STATUS_LOW_QUALITY);
-        $bundleItems = $this->repoItem->getByStatus($batchId, $console, $listType, WeeklyBatchItem::STATUS_BUNDLE);
+        $lqItems = $this->repoItem->getByStatus($batchId, $console, $listType, WeeklyBatchItem::STATUS_LQ_REVIEW);
 
         $skippedStatuses = [
             WeeklyBatchItem::STATUS_OUT_OF_RANGE,
@@ -429,6 +427,13 @@ class WeeklyBatchListController extends Controller
             ->filter(fn($i) => !in_array($i->item_status, $skippedStatuses))
             ->groupBy('page_number');
 
+        $skippedItems = $allItems->filter(fn($i) => in_array($i->item_status, [
+            WeeklyBatchItem::STATUS_LOW_QUALITY,
+            WeeklyBatchItem::STATUS_BUNDLE,
+            WeeklyBatchItem::STATUS_ALREADY_IN_DB,
+            WeeklyBatchItem::STATUS_EXCLUDED,
+        ]))->sortBy('sort_order');
+
         $bindings['Batch']            = $batch;
         $bindings['Console']          = $console;
         $bindings['ListType']         = $listType;
@@ -437,10 +442,9 @@ class WeeklyBatchListController extends Controller
         $bindings['Counts']           = $counts;
         $bindings['FetchItemsByPage'] = $fetchItemsByPage;
         $bindings['LqItems']          = $lqItems;
-        $bindings['LqAutoItems']      = $lqAutoItems;
-        $bindings['BundleItems']      = $bundleItems;
-        $bindings['Stages']         = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
-        $bindings['CurrentStage']   = 'fetch';
+        $bindings['SkippedItems']     = $skippedItems;
+        $bindings['Stages']           = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
+        $bindings['CurrentStage']     = 'fetch';
 
         return view('staff.games.weekly-updates.list.fetch', $bindings);
     }
