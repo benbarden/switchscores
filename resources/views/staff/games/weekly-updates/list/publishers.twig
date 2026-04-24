@@ -21,8 +21,8 @@
 
 {% if newCount > 0 %}
 <div class="alert alert-warning mb-3">
-    <strong>{{ newCount }} new publisher{{ newCount != 1 ? 's' : '' }} need{{ newCount == 1 ? 's' : '' }} to be created</strong> before importing.
-    Review each one below — edit the name if needed, then click Create or Create as LQ.
+    <strong>{{ newCount }} new publisher{{ newCount != 1 ? 's' : '' }} need{{ newCount == 1 ? 's' : '' }} to be resolved</strong> before importing.
+    Review each one below — edit the name if needed, then click Save. If the name matches an existing publisher it will link automatically; otherwise a new one will be created.
 </div>
 
 <h2 class="mb-2">New publishers</h2>
@@ -50,11 +50,11 @@
                 <div class="d-flex gap-2 align-items-center">
                     <button type="button" class="btn btn-sm btn-success create-btn"
                             data-create-url="{{ route('staff.games.weekly-updates.list.publishers.create', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
-                        Create
+                        Save
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-danger create-lq-btn"
                             data-create-url="{{ route('staff.games.weekly-updates.list.publishers.create', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
-                        Create as LQ
+                        Save as LQ
                     </button>
                     <span class="status-cell d-none"></span>
                 </div>

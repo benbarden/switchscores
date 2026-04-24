@@ -144,7 +144,9 @@ class NintendoPageFetcher
         // Publisher found and not LQ — check if they have very few games (emerging publisher)
         $gameCount = $company->publisher_games_count ?? 0;
         if ($gameCount < self::NEW_PUBLISHER_GAME_THRESHOLD) {
-            return [false, true, "Publisher has only {$gameCount} game(s) in DB — new or unverified: {$company->name}", $company->name, $company->name];
+            $gameWord = $gameCount === 1 ? 'game' : 'games';
+            $countDesc = $gameCount === 0 ? 'no games' : "{$gameCount} {$gameWord}";
+            return [false, true, "New or unverified publisher ({$countDesc} in DB): {$company->name}", $company->name, $company->name];
         }
 
         return [false, false, '', null, $company->name];
