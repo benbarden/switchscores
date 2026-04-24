@@ -114,6 +114,16 @@ class TitleNormaliserTest extends TestCase
         );
     }
 
+    // ---- Hyphenated ALL CAPS words ----
+
+    public function testHyphenatedAllCapsWordTitleCasedPerPart()
+    {
+        $this->assertEquals(
+            'R-Type DX: Music Encore',
+            $this->normaliser->normalise('R-TYPE DX: Music Encore')
+        );
+    }
+
     // ---- Mixed-case titles with short ALL CAPS real words ----
 
     public function testShortAllCapsRealWordsInMixedTitle()

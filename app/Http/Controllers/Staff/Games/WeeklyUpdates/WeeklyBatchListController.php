@@ -382,12 +382,17 @@ class WeeklyBatchListController extends Controller
 
         foreach ($urls as $itemId => $url) {
             $url = trim($url);
-            if ($url === '') continue;
 
             $item = $this->repoItem->find((int) $itemId);
             if (!$item || $item->batch_id != $batchId) continue;
 
-            $this->repoItem->updateUrl($item, $url);
+            if ($url === '') {
+                if ($item->nintendo_url) {
+                    $this->repoItem->clearUrl($item);
+                }
+            } else {
+                $this->repoItem->updateUrl($item, $url);
+            }
         }
 
         $pageNumber = request('page_number', 1);

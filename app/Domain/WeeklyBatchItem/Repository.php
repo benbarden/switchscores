@@ -170,6 +170,14 @@ class Repository
         $item->save();
     }
 
+    public function clearUrl(WeeklyBatchItem $item): void
+    {
+        $item->nintendo_url = null;
+        $item->item_status  = WeeklyBatchItem::STATUS_PENDING;
+        $item->fetch_status = null;
+        $item->save();
+    }
+
     public function updatePackshot(WeeklyBatchItem $item, string $url): void
     {
         $item->packshot_url = $url;

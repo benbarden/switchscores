@@ -128,17 +128,28 @@ class TitleNormaliser
                 // No vowels (ZPF, MSX...) → likely an acronym, keep as-is
                 // Has vowels (ALL, YOU...) → real word, title-case it
                 if (in_array(strtolower($letters), self::MINOR_WORDS)) {
-                    $result[] = ucfirst(strtolower($word));
+                    $result[] = $this->titleCaseWord($word);
                 } elseif (!preg_match('/[AEIOU]/i', $letters)) {
                     $result[] = $word;
                 } else {
-                    $result[] = ucfirst(strtolower($word));
+                    $result[] = $this->titleCaseWord($word);
                 }
             } else {
-                $result[] = ucfirst(strtolower($word));
+                $result[] = $this->titleCaseWord($word);
             }
         }
         return implode(' ', $result);
+    }
+
+    private function titleCaseWord(string $word): string
+    {
+        if (!str_contains($word, '-')) {
+            return ucfirst(strtolower($word));
+        }
+        return implode('-', array_map(
+            fn($part) => $part !== '' ? ucfirst(strtolower($part)) : '',
+            explode('-', $word)
+        ));
     }
 
     private function isRomanNumeral(string $str): bool
@@ -176,7 +187,7 @@ class TitleNormaliser
             ) {
                 $hasVowel = (bool) preg_match('/[AEIOU]/', $letters);
                 if ($hasVowel || strlen($letters) >= 5) {
-                    $result[] = ucfirst(strtolower($word));
+                    $result[] = $this->titleCaseWord($word);
                 } else {
                     $result[] = $word;
                 }
