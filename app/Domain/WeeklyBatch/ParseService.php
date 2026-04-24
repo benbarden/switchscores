@@ -96,7 +96,8 @@ class ParseService
             }
 
             // DB duplicate check
-            if ($this->repoGame->titleExistsForConsole($title, $consoleId)) {
+            $existingGame = $this->repoGame->getByTitleAndConsole($title, $consoleId);
+            if ($existingGame) {
                 $this->repoItem->create([
                     'batch_id'    => $batchId,
                     'console'     => $console,
@@ -113,6 +114,7 @@ class ParseService
                     'nintendo_genres'   => $entry['nintendo_genres'],
                     'description'       => $entry['description'],
                     'item_status' => 'already_in_db',
+                    'game_id'     => $existingGame->id,
                 ]);
                 $summary['already_in_db']++;
                 continue;

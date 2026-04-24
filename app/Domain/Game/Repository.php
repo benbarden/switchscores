@@ -223,6 +223,11 @@ class Repository extends AbstractRepository
         return Game::where('title', $title)->where('console_id', $consoleId)->first();
     }
 
+    public function updateEshopOrder(int $gameId, int $order): void
+    {
+        Game::where('id', $gameId)->update(['eshop_europe_order' => $order]);
+    }
+
     /**
      * @param $idList
      * @param string[] $orderBy

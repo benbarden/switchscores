@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
@@ -29,6 +30,7 @@ class WeeklyBatchListController extends Controller
         private CategorySuggester $categorySuggester,
         private CategoryRepository $repoCategory,
         private GamesCompanyRepository $repoGamesCompany,
+        private GameRepository $repoGame,
         private GameImporter $gameImporter
     ) {
     }
@@ -816,19 +818,41 @@ class WeeklyBatchListController extends Controller
 
         $readyItems = $this->repoItem->getReadyForImport($batchId, $console, $listType);
 
+        // Build a full ordering sequence using all items (including already_in_db) so that
+        // existing games and new games share a consistent eshop_europe_order per release date.
+        $allOrderedItems = $this->repoItem->getForList($batchId, $console, $listType)
+            ->whereIn('item_status', [
+                WeeklyBatchItem::STATUS_ALREADY_IN_DB,
+                WeeklyBatchItem::STATUS_READY,
+            ])
+            ->sortBy('sort_order')
+            ->sortBy('page_number');
+
+        $orderByDate = [];
+        $eshopOrderMap = []; // item_id → eshop_europe_order
+
+        foreach ($allOrderedItems as $item) {
+            $date = $item->release_date?->toDateString();
+            if ($date) {
+                $orderByDate[$date] = ($orderByDate[$date] ?? 0) + 1;
+                $eshopOrderMap[$item->id] = $orderByDate[$date];
+            }
+        }
+
+        // Update eshop_europe_order on already_in_db games now that we know their position
+        foreach ($allOrderedItems->where('item_status', WeeklyBatchItem::STATUS_ALREADY_IN_DB) as $item) {
+            if ($item->game_id && isset($eshopOrderMap[$item->id])) {
+                $this->repoGame->updateEshopOrder($item->game_id, $eshopOrderMap[$item->id]);
+            }
+        }
+
         $imported       = 0;
         $errors         = [];
         $packshotFailed = [];
         $headerFailed   = [];
-        $orderByDate    = [];
 
         foreach ($readyItems as $item) {
-            $date = $item->release_date?->toDateString();
-            $eshopOrder = null;
-            if ($date) {
-                $orderByDate[$date] = ($orderByDate[$date] ?? 0) + 1;
-                $eshopOrder = $orderByDate[$date];
-            }
+            $eshopOrder = $eshopOrderMap[$item->id] ?? null;
 
             try {
                 $result = $this->gameImporter->importItem($item, $eshopOrder);
