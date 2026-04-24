@@ -12,6 +12,7 @@
             <tr>
                 <th class="text-end">#</th>
                 <th>Game series</th>
+                <th>Category hints</th>
                 <th class="text-center">Game count</th>
                 <th class="text-center">View</th>
                 <th class="text-center">Options</th>
@@ -25,6 +26,15 @@
                     </td>
                     <td>
                         {{ item.series }}
+                    </td>
+                    <td>
+                        {% if item.category_hints and item.category_hints|length > 0 %}
+                            {% for hint in item.category_hints %}
+                                <span class="badge {% if item.category_hints|length == 1 %}bg-success{% else %}bg-warning text-dark{% endif %} me-1">{{ hint }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {{ item.games().count }}
@@ -53,6 +63,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,

@@ -1,0 +1,65 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row g-3 mb-4">
+{% for list in Lists %}
+    {% set console = list.console %}
+    {% set listType = list.list_type %}
+    {% set lc = AllCounts[console][listType] ?? {} %}
+    {% set imported = lc['imported'] ?? 0 %}
+    {% set ready = lc['ready'] ?? 0 %}
+    {% set pending = (lc['pending'] ?? 0) + (lc['fetch_pending'] ?? 0) + (lc['lq_review'] ?? 0) + (lc['packshot_pending'] ?? 0) + (lc['category_pending'] ?? 0) %}
+    {% set lq = lc['low_quality'] ?? 0 %}
+    {% set bundle = lc['bundle'] ?? 0 %}
+    {% set alreadyInDb = lc['already_in_db'] ?? 0 %}
+
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>{{ list.label }}</strong>
+                {% if imported > 0 %}
+                    <span class="badge bg-success">Imported</span>
+                {% elseif ready > 0 %}
+                    <span class="badge bg-primary">Ready</span>
+                {% elseif pending > 0 %}
+                    <span class="badge bg-warning text-dark">In progress</span>
+                {% else %}
+                    <span class="badge bg-secondary">Not started</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-3" style="max-width: 280px;">
+                    <tbody>
+                        {% set rawPages = RawPageCounts[console][listType] ?? 0 %}
+                        {% if rawPages > 0 and imported == 0 and ready == 0 and pending == 0 %}
+                            <tr><td class="text-muted">Raw pages uploaded</td><td class="text-muted">{{ rawPages }}</td></tr>
+                        {% endif %}
+                        <tr><td>Imported</td><td>{{ imported }}</td></tr>
+                        <tr><td>Ready</td><td>{{ ready }}</td></tr>
+                        <tr><td>In pipeline</td><td>{{ pending }}</td></tr>
+                        <tr><td>Low quality</td><td>{{ lq }}</td></tr>
+                        <tr><td>Bundles</td><td>{{ bundle }}</td></tr>
+                        <tr><td>Already in DB</td><td>{{ alreadyInDb }}</td></tr>
+                    </tbody>
+                </table>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{{ route('staff.games.weekly-updates.list.raw', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-primary">Raw input</a>
+                    <a href="{{ route('staff.games.weekly-updates.list.urls', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">URLs</a>
+                    <a href="{{ route('staff.games.weekly-updates.list.fetch', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">Fetch</a>
+                    <a href="{{ route('staff.games.weekly-updates.list.prices', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">Prices</a>
+                    <a href="{{ route('staff.games.weekly-updates.list.packshots', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">Packshots</a>
+                    <a href="{{ route('staff.games.weekly-updates.list.categories', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">Categories</a>
+                    {% if ready > 0 or imported > 0 %}
+                        <a href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-danger">Confirm and import</a>
+                    {% else %}
+                        <span class="btn btn-sm btn-outline-secondary disabled" title="No games ready to import yet">Confirm and import</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock page_inner %}

@@ -1,0 +1,186 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{% if RawPages|length == 0 %}
+    <p class="text-muted">No pages have been uploaded yet.</p>
+{% else %}
+
+    {# ---- Summary box ---- #}
+    {% set totalMissing = 0 %}
+    {% for page in RawPages %}
+        {% set pageItems = ItemsByPage[page.page_number] ?? [] %}
+        {% set totalMissing = totalMissing + pageItems|filter(i => i.item_status == 'packshot_pending')|length %}
+    {% endfor %}
+
+    {% if totalMissing == 0 %}
+        <div class="alert alert-success mb-3"><strong>✓</strong> All packshots present.</div>
+    {% else %}
+        <div class="alert alert-danger mb-3">
+            <strong>{{ totalMissing }} packshot{{ totalMissing != 1 ? 's' : '' }} missing</strong> —
+            {% for page in RawPages %}
+                {% set pageMissing = (ItemsByPage[page.page_number] ?? [])|filter(i => i.item_status == 'packshot_pending')|length %}
+                {% if pageMissing > 0 %}
+                    Page {{ page.page_number }}: {{ pageMissing }} missing{% if not loop.last %}, {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% set allSkippedItems = [] %}
+
+    {% for page in RawPages %}
+        {% set allPageItems = ItemsByPage[page.page_number] ?? [] %}
+
+        {% set mainItems = [] %}
+        {% for item in allPageItems %}
+            {% if item.item_status in ['excluded', 'low_quality', 'bundle', 'out_of_range'] %}
+                {% set allSkippedItems = allSkippedItems|merge([item]) %}
+            {% else %}
+                {% set mainItems = mainItems|merge([item]) %}
+            {% endif %}
+        {% endfor %}
+
+        {% if mainItems|length > 0 %}
+
+        <h2 class="mt-4">Page {{ page.page_number }}</h2>
+
+        <form method="post" action="{{ route('staff.games.weekly-updates.list.packshots.save', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+            {{ csrf_field()|raw }}
+            <input type="hidden" name="page_number" value="{{ page.page_number }}">
+
+            <table class="table table-sm table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 35%;">Title</th>
+                        <th class="text-center" style="width: 10%;">Date</th>
+                        <th>Packshot URL</th>
+                        <th class="text-center" style="width: 130px;">Preview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in mainItems %}
+                    {% set isSkipped = item.item_status == 'already_in_db' %}
+                    <tr class="{{ isSkipped ? 'text-muted' : '' }}">
+                        <td>
+                            {{ item.title }}
+                            {% if item.nintendo_url %}
+                                <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo page ↗</a>
+                            {% endif %}
+                        </td>
+                        <td class="text-center align-middle" style="white-space: nowrap;">
+                            {{ item.release_date ? item.release_date|date('d M Y') : '—' }}
+                        </td>
+                        <td class="align-middle">
+                            {% if isSkipped %}
+                                <span class="text-muted fst-italic">Already in DB</span>
+                            {% else %}
+                                <input type="text"
+                                       name="packshots[{{ item.id }}]"
+                                       value="{{ item.packshot_url ?? '' }}"
+                                       class="form-control form-control-sm packshot-url-input{{ item.packshot_url ? ' is-valid' : '' }}"
+                                       placeholder="https://...">
+                            {% endif %}
+                        </td>
+                        <td class="text-center align-middle">
+                            {% if not isSkipped %}
+                                <img src="{{ item.packshot_url ?? '' }}"
+                                     class="packshot-preview"
+                                     style="max-height: 100px; max-width: 100px; display: {{ item.packshot_url ? 'block' : 'none' }}; margin: auto;">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% set pagePackshotPending = mainItems|filter(i => i.item_status == 'packshot_pending')|length %}
+            {% if pagePackshotPending == 0 %}
+                <p class="text-success mb-2"><strong>✓</strong> All items on page {{ page.page_number }} have packshots.</p>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary btn-sm mb-4">Save packshots for page {{ page.page_number }}</button>
+        </form>
+
+        {% endif %}
+
+    {% endfor %}
+
+    {# ---- Combined skipped items (all pages) ---- #}
+    {% if allSkippedItems|length > 0 %}
+    <h2 class="mt-4">Skipped items</h2>
+    <table class="table table-sm table-bordered text-muted" style="max-width: 700px;">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 6%;">Page</th>
+                <th>Title</th>
+                <th class="text-center" style="width: 14%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in allSkippedItems %}
+            <tr>
+                <td class="text-center">{{ item.page_number }}</td>
+                <td>{{ item.title }}</td>
+                <td class="text-center">
+                    {% if item.item_status == 'excluded' %}
+                        <span class="badge bg-secondary">Excluded</span>
+                    {% elseif item.item_status == 'low_quality' %}
+                        <span class="badge bg-danger">Low quality</span>
+                    {% elseif item.item_status == 'bundle' %}
+                        <span class="badge bg-info text-dark">Bundle</span>
+                    {% elseif item.item_status == 'out_of_range' %}
+                        <span class="badge bg-light text-dark border">Out of range</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <hr class="mt-2">
+    {% set packshotPendingCount = Counts['packshot_pending'] ?? 0 %}
+    {% if packshotPendingCount == 0 %}
+        <a href="{{ route('staff.games.weekly-updates.list.categories', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Categories →</a>
+    {% else %}
+        <a href="{{ route('staff.games.weekly-updates.list.categories', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
+            Continue to Categories → <small>({{ packshotPendingCount }} packshot{{ packshotPendingCount != 1 ? 's' : '' }} still needed)</small>
+        </a>
+    {% endif %}
+
+{% endif %}
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    document.querySelectorAll('.packshot-url-input').forEach(function (input) {
+        var preview = input.closest('tr').querySelector('.packshot-preview');
+        if (!preview) return;
+
+        input.addEventListener('input', function () {
+            var url = input.value.trim();
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+        });
+    });
+})();
+</script>
+{% endblock page_body %}

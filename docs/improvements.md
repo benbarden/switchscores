@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 130**
+**Next ID: 132**
 
 ---
 
@@ -96,7 +96,10 @@ This document tracks potential improvements, features, and enhancements for the 
 
 ## High Priority
 
-*All items done — see Done section.*
+| # | Idea | Complexity | Notes | Your Notes |
+|---|------|------------|-------|------------|
+| 130 | Weekly update tool | High | Replaces manual Claude Code session process | Full pipeline: raw paste → parse → URL collection → Nintendo page fetch → LQ review → packshot collection → category review → import. See `docs/tasks/130-weekly-update-tool.md`. |
+| 131 | LQ decision tracking for publishers and keywords | Medium | Build on top of #130 weekly update tool | Track every LQ-related decision made during the weekly update pipeline. When a game is marked LQ, kept despite a flag, or a keyword warning overridden, record the decision against the publisher and keyword. Over time: surface publishers with escalating LQ counts (emerging shovelware), show keyword hit rates (e.g. "SIMULATOR: flagged 12×, kept 2, marked LQ 10"), and flag new publishers with no history. Helps spot LQ culprits before they accumulate many games. Likely a new `weekly_batch_lq_decisions` table + staff report page. |
 
 ---
 
@@ -104,7 +107,6 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
-| 127 | Smarter Nintendo.co.uk import | Medium | Replaces wipe-and-replace; closes #113 | Sync/upsert approach with content hashing. Detects new/changed/removed games. Audit log per change (added/updated/delisted/conflict). Marks removed games as delisted. See `docs/tasks/127-smarter-nintendo-import.md`. |
 | 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
 | 129 | Remove Genres from Differences section | Low | Genres never map cleanly | Remove Genres diff link from DS dashboard, remove associated controller/query logic and route. Genres from API are reference only, not for copying over. |
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
@@ -206,6 +208,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 127 | Smarter Nintendo.co.uk import | Done | 2026-04-23 | Upsert approach with content hashing. Detects new/changed/delisted games. Full audit log (`data_source_import_log`) with event types added/updated/delisted/conflict. Import run tracking (`data_source_import_runs`). Staff dashboard shows 21-day run history; detail page shows paginated log entries with filter by event type. Closes #113. |
 | 96 | Allow games companies to update contact details | Done | 2026-04-23 | Edit profile page allows updating email, URL, and social links. |
 | 14+15 | Data source items: staff pages | Superseded | 2026-04-23 | Replaced by #93, #123, #124, #125, #126. |
 | 39 | Migrate staff pages to Bootstrap 5 | Done | 2026-04-23 | All staff views migrated. Remaining `form-control` on select elements fixed 2026-04-23. |

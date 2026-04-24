@@ -1,0 +1,115 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+<form method="post" action="{{ route('staff.games.weekly-updates.list.prices.save', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+    {{ csrf_field()|raw }}
+
+    {# ---- Prices to review ---- #}
+    {% if FlaggedItems|length > 0 %}
+    <h2>Prices to review</h2>
+    <p class="text-muted">Enter the correct price for each item. Leave blank to make no change.</p>
+    <table class="table table-sm table-bordered table-striped" style="max-width: 800px;">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th class="text-center" style="width: 12%;">Current price</th>
+                <th style="width: 22%;">Reason</th>
+                <th style="width: 14%;">New price (£)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in FlaggedItems %}
+            <tr>
+                <td>
+                    {{ item.title }}
+                    {% if item.nintendo_url %}
+                        <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted">Nintendo page ↗</a>
+                    {% endif %}
+                </td>
+                <td class="text-center align-middle text-muted">
+                    {{ item.price_gbp is not null ? '£' ~ item.price_gbp|number_format(2) : '—' }}
+                </td>
+                <td class="small text-muted align-middle">{{ item.price_flag_reason ?: '—' }}</td>
+                <td>
+                    <input type="number"
+                           name="prices[{{ item.id }}]"
+                           value=""
+                           class="form-control form-control-sm"
+                           step="0.01" min="0"
+                           placeholder="0.00">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-success"><strong>✓</strong> No prices need reviewing.</p>
+    {% endif %}
+
+    {# ---- Other items ---- #}
+    {% if UnflaggedItems|length > 0 %}
+    <h2 class="mt-4">Other items</h2>
+    <p class="text-muted">These prices look fine. You can still edit them if needed.</p>
+    <table class="table table-sm table-bordered table-striped" style="max-width: 800px;">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th class="text-center" style="width: 12%;">Current price</th>
+                <th style="width: 22%;"></th>
+                <th style="width: 14%;">New price (£)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in UnflaggedItems %}
+            <tr>
+                <td>
+                    {{ item.title }}
+                    {% if item.nintendo_url %}
+                        <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted">Nintendo page ↗</a>
+                    {% endif %}
+                </td>
+                <td class="text-center align-middle text-muted">
+                    {{ item.price_gbp is not null ? '£' ~ item.price_gbp|number_format(2) : '—' }}
+                </td>
+                <td></td>
+                <td>
+                    <input type="number"
+                           name="prices[{{ item.id }}]"
+                           value=""
+                           class="form-control form-control-sm"
+                           step="0.01" min="0"
+                           placeholder="0.00">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if FlaggedItems|length > 0 or UnflaggedItems|length > 0 %}
+    <button type="submit" class="btn btn-primary mb-4">Save prices</button>
+    {% endif %}
+
+</form>
+
+<hr class="mt-2">
+{% set priceFlagCount = FlaggedItems|length %}
+{% if priceFlagCount == 0 %}
+    <a href="{{ route('staff.games.weekly-updates.list.packshots', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Packshots →</a>
+{% else %}
+    <a href="{{ route('staff.games.weekly-updates.list.packshots', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
+        Continue to Packshots → <small>({{ priceFlagCount }} price{{ priceFlagCount != 1 ? 's' : '' }} still to review)</small>
+    </a>
+{% endif %}
+
+{% endblock page_inner %}

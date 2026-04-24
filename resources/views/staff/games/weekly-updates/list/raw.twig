@@ -1,0 +1,348 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+<div class="row mb-3">
+    <div class="col">
+        <p class="mb-1">
+            <strong>Date range:</strong>
+            {% if ListType == 'new' %}
+                New releases: {{ DateFrom }} – {{ DateTo }}
+            {% else %}
+                Upcoming: {{ DateFrom }} – {{ DateTo }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+{# ---- Pages already uploaded ---- #}
+{% if RawPages|length > 0 %}
+    <h2>Pages uploaded</h2>
+    <table class="table table-sm table-bordered table-striped" style="max-width: 600px;">
+        <thead class="table-dark">
+            <tr>
+                <th>Page</th>
+                <th>Status</th>
+                <th class="text-center">In range</th>
+                <th class="text-center">Imported</th>
+                <th class="text-center">Already in DB</th>
+                <th class="text-center">Out of range</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for page in RawPages %}
+            {% set pc = PageCounts[page.page_number] ?? {} %}
+            <tr>
+                <td>Page {{ page.page_number }}</td>
+                <td>
+                    {% if page.isParsed() %}
+                        <span class="badge bg-success">Parsed</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Not parsed</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ pc['in_range'] ?? '—' }}</td>
+                <td class="text-center">
+                    {% if (pc['imported'] ?? 0) > 0 %}
+                        <span class="text-success fw-semibold">{{ pc['imported'] }}</span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ pc['already_in_db'] ?? '—' }}</td>
+                <td class="text-center">{{ pc['out_of_range'] ?? '—' }}</td>
+                <td>
+                    <form method="post" action="{{ route('staff.games.weekly-updates.list.raw.remove-page', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="d-inline" onsubmit="return confirm('Remove page {{ page.page_number }} and all its parsed items?')">
+                        {{ csrf_field()|raw }}
+                        <input type="hidden" name="page_number" value="{{ page.page_number }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{# ---- Add / replace page ---- #}
+<h2 class="mt-4">{{ RawPages|length > 0 ? 'Add another page' : 'Add page 1' }}</h2>
+
+<form method="post" action="{{ route('staff.games.weekly-updates.list.raw.save-page', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+    {{ csrf_field()|raw }}
+    <input type="hidden" name="page_number" value="{{ NextPageNumber }}">
+
+    <div class="mb-3" style="max-width: 700px;">
+        <label class="form-label">Paste Nintendo listing data for page {{ NextPageNumber }}</label>
+        <textarea name="raw_content" class="form-control font-monospace" rows="20" placeholder="Paste raw Nintendo listing data here..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save and parse page {{ NextPageNumber }}</button>
+</form>
+
+{# ---- Replace existing page ---- #}
+{% if RawPages|length > 0 %}
+<details class="mt-4">
+    <summary class="text-muted" style="cursor: pointer;">Replace an existing page</summary>
+    <div class="mt-3">
+        {% for page in RawPages %}
+        <h2>Replace page {{ page.page_number }}</h2>
+        <form method="post" action="{{ route('staff.games.weekly-updates.list.raw.save-page', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="mb-3">
+            {{ csrf_field()|raw }}
+            <input type="hidden" name="page_number" value="{{ page.page_number }}">
+            <div class="mb-2" style="max-width: 700px;">
+                <textarea name="raw_content" class="form-control font-monospace" rows="8" placeholder="Paste replacement content for page {{ page.page_number }}..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-sm btn-warning">Replace page {{ page.page_number }}</button>
+        </form>
+        {% endfor %}
+    </div>
+</details>
+{% endif %}
+
+{# ---- Parsed items summary ---- #}
+{% if Items|length > 0 %}
+    <hr class="mt-4">
+    <h2>Parsed items</h2>
+
+    <div class="mb-3">
+        <span class="badge bg-primary">{{ Counts['pending'] ?? 0 }} to process</span>
+        <span class="badge bg-secondary ms-1">{{ Counts['already_in_db'] ?? 0 }} already in DB</span>
+        <span class="badge bg-light text-dark border ms-1">{{ Counts['out_of_range'] ?? 0 }} out of range</span>
+        {% if (Counts['low_quality'] ?? 0) > 0 %}
+            <span class="badge bg-warning text-dark ms-1">{{ Counts['low_quality'] }} LQ signalled</span>
+        {% endif %}
+        {% if (Counts['bundle'] ?? 0) > 0 %}
+            <span class="badge bg-info text-dark ms-1">{{ Counts['bundle'] }} bundles</span>
+        {% endif %}
+    </div>
+
+    {% set activeItems     = Items|filter(i => i.item_status not in ['out_of_range', 'already_in_db']) %}
+    {% set inDbItems       = Items|filter(i => i.item_status == 'already_in_db') %}
+    {% set outOfRangeItems = Items|filter(i => i.item_status == 'out_of_range') %}
+
+    {% if activeItems|length > 0 %}
+    <table class="table table-sm table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center">Page</th>
+                <th>Title</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Price</th>
+                <th>Genres</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in activeItems %}
+            <tr>
+                <td class="text-center">{{ item.page_number }}</td>
+                <td>
+                    {{ item.title }}
+                    {% if item.title != item.title_raw %}
+                        <br><small class="text-muted">Original: {{ item.title_raw }}</small>
+                    {% endif %}
+                    {% if item.collection %}
+                        <br><span class="badge bg-info text-dark">{{ item.collection }}</span>
+                    {% endif %}
+                </td>
+                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+                <td class="text-center" style="white-space: nowrap;">
+                    {% if item.price_gbp is not null %}
+                        £{{ item.price_gbp|number_format(2) }}
+                        {% if item.price_flag %}
+                            <span class="badge bg-warning text-dark" title="{{ item.price_flag_reason }}">⚑</span>
+                        {% endif %}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td><small>{{ item.nintendo_genres ?? '—' }}</small></td>
+                <td class="status-cell">
+                    {% if item.item_status == 'pending' %}
+                        <span class="badge bg-primary">To process</span>
+                    {% elseif item.item_status == 'bundle' %}
+                        <span class="badge bg-info text-dark">Bundle</span>
+                    {% elseif item.item_status == 'low_quality' %}
+                        <span class="badge bg-danger">LQ</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ item.item_status }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.lq_flag %}
+                        <div class="mb-1">
+                            <span class="badge bg-warning text-dark">⚑ LQ signal</span>
+                            <br><small class="text-muted">{{ item.lq_flag_reason }}</small>
+                        </div>
+                    {% endif %}
+                    {% if item.price_flag %}
+                        <div>
+                            <span class="badge bg-warning text-dark">⚑ Price</span>
+                            <br><small class="text-muted">{{ item.price_flag_reason }}</small>
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.item_status not in ['imported'] %}
+                    <select class="form-select form-select-sm item-action-select"
+                            data-action-url="{{ route('staff.games.weekly-updates.list.item.action', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
+                        <option value="">Action…</option>
+                        <option value="reparse">Re-parse title</option>
+                        <option value="low_quality">Low quality</option>
+                        <option value="bundle">Bundle</option>
+                        <option value="excluded">Exclude (other reason)</option>
+                        <option value="reset">Reset</option>
+                    </select>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {# ---- Already in DB ---- #}
+    {% if inDbItems|length > 0 %}
+    <h3 class="mt-4">Already in DB ({{ inDbItems|length }})</h3>
+    <table class="table table-sm table-bordered text-muted" style="max-width: 700px;">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 6%;">Page</th>
+                <th>Title</th>
+                <th class="text-center" style="width: 14%;">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in inDbItems %}
+            <tr>
+                <td class="text-center">{{ item.page_number }}</td>
+                <td>{{ item.title_raw }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {# ---- Out of range ---- #}
+    {% if outOfRangeItems|length > 0 %}
+    <h3 class="mt-4">Out of range ({{ outOfRangeItems|length }})</h3>
+    <table class="table table-sm table-bordered text-muted" style="max-width: 700px;">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 6%;">Page</th>
+                <th>Title</th>
+                <th class="text-center" style="width: 14%;">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in outOfRangeItems %}
+            <tr>
+                <td class="text-center">{{ item.page_number }}</td>
+                <td>{{ item.title_raw }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+{% endif %}
+
+{% if RawPages|length > 0 %}
+<div class="mt-4">
+    <a href="{{ route('staff.games.weekly-updates.list.urls', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to URL collection →</a>
+</div>
+{% endif %}
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    const CSRF_TOKEN = '{{ csrf_token() }}';
+
+    const ACTION_BADGE = {
+        'bundle':        '<span class="badge bg-info text-dark">Bundle</span>',
+        'excluded':      '<span class="badge bg-secondary">Excluded</span>',
+        'low_quality':   '<span class="badge bg-danger">LQ</span>',
+        'pending':       '<span class="badge bg-primary">To process</span>',
+        'fetch_pending': '<span class="badge bg-primary">To process</span>',
+    };
+
+    document.querySelectorAll('.item-action-select').forEach(function (select) {
+        select.addEventListener('change', function () {
+            const action = select.value;
+            if (!action) return;
+
+            const url = select.dataset.actionUrl;
+            const row = select.closest('tr');
+
+            // Re-parse needs a full reload since it changes the title text
+            if (action === 'reparse') {
+                select.disabled = true;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=reparse',
+                }).then(function () { window.location.reload(); });
+                return;
+            }
+
+            select.disabled = true;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=' + encodeURIComponent(action),
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.status === 'ok') {
+                    const newStatus = data.new_status;
+                    const statusCell = row.querySelector('.status-cell');
+                    if (statusCell && ACTION_BADGE[newStatus]) {
+                        statusCell.innerHTML = ACTION_BADGE[newStatus];
+                    }
+                    if (['bundle', 'excluded', 'low_quality'].includes(newStatus)) {
+                        row.style.opacity = '0.5';
+                        select.remove();
+                    } else {
+                        select.value = '';
+                        select.disabled = false;
+                    }
+                } else {
+                    select.value = '';
+                    select.disabled = false;
+                }
+            })
+            .catch(function () {
+                select.value = '';
+                select.disabled = false;
+            });
+        });
+    });
+})();
+</script>
+{% endblock page_body %}

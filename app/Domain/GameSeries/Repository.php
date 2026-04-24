@@ -28,6 +28,12 @@ class Repository
         $collection->save();
     }
 
+    public function editCategoryHints(GameSeries $series, array $hints): void
+    {
+        $series->category_hints = empty($hints) ? null : $hints;
+        $series->save();
+    }
+
     public function find($seriesId)
     {
         return GameSeries::find($seriesId);

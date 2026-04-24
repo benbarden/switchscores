@@ -4,6 +4,7 @@ namespace App\Domain\View\Breadcrumbs;
 
 use App\Models\DataSource;
 use App\Models\Game;
+use App\Models\WeeklyBatch;
 
 final class StaffBreadcrumbs
 {
@@ -351,6 +352,28 @@ final class StaffBreadcrumbs
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
             new BreadcrumbItem('Import runs', route('staff.data-sources.import-runs')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    // *** WEEKLY UPDATES *** //
+    public static function weeklyUpdatesSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Weekly updates', route('staff.games.weekly-updates.index')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function weeklyUpdatesListSubpage(string $title, WeeklyBatch $batch): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Weekly updates', route('staff.games.weekly-updates.index')),
+            new BreadcrumbItem($batch->batch_date->format('d M Y'), route('staff.games.weekly-updates.show', ['batchId' => $batch->id])),
             new BreadcrumbItem($title),
         ]);
     }

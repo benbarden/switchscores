@@ -1,0 +1,411 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{# ---- Fetch section ---- #}
+{% if RawPages|length == 0 %}
+    <p class="text-muted">No pages uploaded yet.</p>
+{% else %}
+
+    {% for page in RawPages %}
+        {% set pageItems = FetchItemsByPage[page.page_number] ?? [] %}
+        {% if pageItems|length > 0 %}
+
+        <h2 class="mt-4">Page {{ page.page_number }}</h2>
+
+        <table class="table table-sm table-bordered table-striped" id="fetch-table-{{ page.page_number }}">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 40%;">Title</th>
+                    <th style="width: 20%;">Publisher</th>
+                    <th style="width: 10%;">Players</th>
+                    <th style="width: 15%;">Status</th>
+                    <th style="width: 15%;"></th>
+                    <th style="width: 12%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in pageItems %}
+                <tr id="fetch-row-{{ item.id }}"
+                    data-item-id="{{ item.id }}"
+                    data-page="{{ page.page_number }}"
+                    data-item-status="{{ item.item_status }}"
+                    data-fetch-status="{{ item.fetch_status ?? 'pending' }}">
+                    <td>
+                        {{ item.title }}
+                        {% if item.nintendo_url %}
+                            <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo ↗</a>
+                        {% endif %}
+                    </td>
+                    <td class="publisher-cell">{{ item.publisher_normalised ?? '—' }}</td>
+                    <td class="players-cell">{{ item.players ?? '—' }}</td>
+                    <td class="status-cell">
+                        {% if item.item_status == 'pending' %}
+                            <span class="badge bg-light text-dark border">No URL</span>
+                        {% elseif item.item_status == 'fetch_pending' %}
+                            <span class="badge bg-primary">Pending</span>
+                        {% elseif item.fetch_status == 'failed' %}
+                            <span class="badge bg-danger">Failed</span>
+                        {% elseif item.item_status == 'excluded' %}
+                            <span class="badge bg-secondary">Excluded</span>
+                        {% elseif item.item_status == 'low_quality' %}
+                            <span class="badge bg-danger">Auto LQ</span>
+                        {% elseif item.item_status == 'bundle' %}
+                            <span class="badge bg-info text-dark">Bundle</span>
+                        {% elseif item.item_status == 'lq_review' %}
+                            <span class="badge bg-warning text-dark">Needs review</span>
+                        {% elseif item.item_status in ['packshot_pending', 'category_pending', 'ready', 'imported'] %}
+                            <span class="badge bg-success">Done</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ item.item_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="error-cell text-muted small">
+                        {% if item.fetch_status == 'failed' and item.fetch_error %}
+                            {{ item.fetch_error }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.item_status not in ['already_in_db', 'out_of_range', 'imported'] %}
+                        <select class="form-select form-select-sm item-action-select"
+                                data-action-url="{{ route('staff.games.weekly-updates.list.item.action', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}"
+                                data-item-id="{{ item.id }}">
+                            <option value="">Exclude…</option>
+                            <option value="low_quality">Low quality</option>
+                            <option value="bundle">Bundle</option>
+                            <option value="excluded">Exclude (other reason)</option>
+                            <option value="reset">Reset</option>
+                        </select>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set pendingCount = pageItems|filter(i => i.item_status == 'fetch_pending')|length %}
+        {% set noUrlCount   = pageItems|filter(i => i.item_status == 'pending')|length %}
+        {% if pendingCount > 0 %}
+            <button type="button"
+                    class="btn btn-primary btn-fetch-page mb-4"
+                    data-page="{{ page.page_number }}"
+                    data-fetch-url="{{ route('staff.games.weekly-updates.list.fetch.item', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': '__ITEM_ID__'}) }}">
+                Fetch page {{ page.page_number }} ({{ pendingCount }} item{{ pendingCount != 1 ? 's' : '' }})
+            </button>
+            <div id="fetch-progress-{{ page.page_number }}" class="mb-4 d-none">
+                <div class="progress" style="max-width: 400px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         id="fetch-bar-{{ page.page_number }}"
+                         role="progressbar" style="width: 0%"></div>
+                </div>
+                <small class="text-muted mt-1 d-block" id="fetch-label-{{ page.page_number }}"></small>
+            </div>
+        {% else %}
+            <p class="text-success mb-4">
+                <strong>✓</strong> All items on page {{ page.page_number }} fetched.
+                {% if noUrlCount > 0 %}
+                    <span class="text-muted">({{ noUrlCount }} item{{ noUrlCount != 1 ? 's' : '' }} had no URL and could not be fetched.)</span>
+                {% endif %}
+            </p>
+        {% endif %}
+
+        {% endif %}
+    {% endfor %}
+
+{% endif %}
+
+{# ---- Auto-LQ section (informational) ---- #}
+{% if LqAutoItems|length > 0 %}
+<hr class="mt-2">
+<h2 class="mt-4">Confirmed low quality</h2>
+<p class="text-muted">These games were automatically marked as low quality because their publisher is flagged in the database. No action needed.</p>
+
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Publisher</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in LqAutoItems %}
+        <tr class="text-muted">
+            <td>{{ item.title }}</td>
+            <td>{{ item.publisher_normalised ?? item.lq_publisher_name ?? '—' }}</td>
+            <td><small>{{ item.lq_flag_reason ?? '—' }}</small></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{# ---- Bundle section (informational) ---- #}
+{% if BundleItems|length > 0 %}
+<hr class="mt-2">
+<h2 class="mt-4">Bundles</h2>
+<p class="text-muted">These games were automatically detected as bundles and will not be imported. No action needed.</p>
+
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in BundleItems %}
+        <tr class="text-muted">
+            <td>{{ item.title }}</td>
+            <td>{{ item.price_gbp ? '£' ~ item.price_gbp : '—' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{# ---- LQ review section ---- #}
+{% if LqItems|length > 0 %}
+<hr class="mt-2">
+<h2 class="mt-4">Needs LQ review</h2>
+<p class="text-muted">These games have been flagged for review. Decide whether to mark as low quality, bundle, or keep in the pipeline.</p>
+
+<form method="post" action="{{ route('staff.games.weekly-updates.list.fetch.lq-decisions', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+    {{ csrf_field()|raw }}
+
+    <table class="table table-sm table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 28%;">Title</th>
+                <th style="width: 18%;">Publisher</th>
+                <th style="width: 10%;">Players</th>
+                <th style="width: 22%;">Flag reason</th>
+                <th style="width: 22%;">Decision</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in LqItems %}
+            <tr>
+                <td>
+                    {{ item.title }}
+                    {% if item.nintendo_url %}
+                        <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted">Nintendo page ↗</a>
+                    {% endif %}
+                </td>
+                <td>{{ item.publisher_normalised ?? item.publisher_raw ?? '—' }}</td>
+                <td>{{ item.players ?? '—' }}</td>
+                <td><small class="text-muted">{{ item.lq_flag_reason ?? '—' }}</small></td>
+                <td>
+                    <div class="d-flex gap-1 flex-wrap">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-lq" value="low_quality">
+                            <label class="form-check-label text-danger" for="lq-{{ item.id }}-lq">LQ</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-bundle" value="bundle">
+                            <label class="form-check-label text-info" for="lq-{{ item.id }}-bundle">Bundle</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="decisions[{{ item.id }}]" id="lq-{{ item.id }}-keep" value="keep">
+                            <label class="form-check-label text-success" for="lq-{{ item.id }}-keep">Keep</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Save LQ decisions</button>
+</form>
+{% endif %}
+
+{# ---- Continue button ---- #}
+<hr class="mt-4">
+{% set lqReviewCount = Counts['lq_review'] ?? 0 %}
+{% set fetchPendingCount = Counts['fetch_pending'] ?? 0 %}
+{% if fetchPendingCount == 0 and lqReviewCount == 0 %}
+    <a href="{{ route('staff.games.weekly-updates.list.publishers', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Publishers →</a>
+{% else %}
+    <a href="{{ route('staff.games.weekly-updates.list.publishers', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
+        Continue to Publishers →
+        <small>
+            ({% if fetchPendingCount > 0 %}{{ fetchPendingCount }} still to fetch{% endif %}{% if fetchPendingCount > 0 and lqReviewCount > 0 %}, {% endif %}{% if lqReviewCount > 0 %}{{ lqReviewCount }} awaiting LQ decision{% endif %})
+        </small>
+    </a>
+{% endif %}
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    const CSRF_TOKEN = '{{ csrf_token() }}';
+    const DELAY_MS   = 1500;
+
+    document.querySelectorAll('.btn-fetch-page').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const page      = btn.dataset.page;
+            const urlTpl    = btn.dataset.fetchUrl;
+            const tableBody = document.querySelector('#fetch-table-' + page + ' tbody');
+            const progress  = document.getElementById('fetch-progress-' + page);
+            const bar       = document.getElementById('fetch-bar-' + page);
+            const label     = document.getElementById('fetch-label-' + page);
+
+            const pendingRows = Array.from(tableBody.querySelectorAll('tr[data-item-status="fetch_pending"]'));
+            if (pendingRows.length === 0) return;
+
+            btn.disabled = true;
+            progress.classList.remove('d-none');
+
+            let done = 0;
+
+            function fetchNext(index) {
+                if (index >= pendingRows.length) {
+                    bar.style.width = '100%';
+                    label.textContent = 'All done. Reload to see LQ review results.';
+                    bar.classList.remove('progress-bar-animated');
+                    btn.textContent = 'Reload page';
+                    btn.disabled = false;
+                    btn.classList.replace('btn-primary', 'btn-secondary');
+                    btn.addEventListener('click', function () { window.location.reload(); }, { once: true });
+                    return;
+                }
+
+                const row    = pendingRows[index];
+                const itemId = row.dataset.itemId;
+                const url    = urlTpl.replace('__ITEM_ID__', itemId);
+
+                label.textContent = 'Fetching ' + (index + 1) + ' of ' + pendingRows.length + '…';
+                bar.style.width = Math.round((index / pendingRows.length) * 100) + '%';
+
+                setRowStatus(row, 'fetching');
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    updateRow(row, data);
+                    done++;
+                    setTimeout(function () { fetchNext(index + 1); }, DELAY_MS);
+                })
+                .catch(function (err) {
+                    setRowStatus(row, 'error');
+                    row.querySelector('.error-cell').textContent = err.message || 'Request failed';
+                    setTimeout(function () { fetchNext(index + 1); }, DELAY_MS);
+                });
+            }
+
+            fetchNext(0);
+        });
+    });
+
+    function setRowStatus(row, status) {
+        const cell = row.querySelector('.status-cell');
+        const badges = {
+            fetching: '<span class="badge bg-info text-dark">Fetching…</span>',
+            done:     '<span class="badge bg-success">Done</span>',
+            lq:       '<span class="badge bg-danger">Auto LQ</span>',
+            review:   '<span class="badge bg-warning text-dark">Needs review</span>',
+            failed:   '<span class="badge bg-danger">Failed</span>',
+            error:    '<span class="badge bg-danger">Error</span>',
+        };
+        cell.innerHTML = badges[status] || status;
+    }
+
+    function updateRow(row, data) {
+        if (data.status === 'done') {
+            row.dataset.itemStatus = data.item_status;
+
+            if (data.publisher)  row.querySelector('.publisher-cell').textContent = data.publisher;
+            if (data.players)    row.querySelector('.players-cell').textContent   = data.players;
+
+            if (data.lq_confirmed) {
+                setRowStatus(row, 'lq');
+            } else if (data.lq_uncertain) {
+                setRowStatus(row, 'review');
+            } else {
+                setRowStatus(row, 'done');
+            }
+        } else if (data.status === 'skipped') {
+            setRowStatus(row, 'done');
+        } else {
+            setRowStatus(row, 'failed');
+            row.querySelector('.error-cell').textContent = data.message || 'Failed';
+        }
+    }
+
+    // ---- Inline item actions (bundle / exclude / reset) ----
+    const ACTION_BADGE = {
+        'bundle':      '<span class="badge bg-info text-dark">Bundle</span>',
+        'excluded':    '<span class="badge bg-secondary">Excluded</span>',
+        'low_quality': '<span class="badge bg-danger">Low quality</span>',
+        'fetch_pending': '<span class="badge bg-warning text-dark">Fetch pending</span>',
+        'pending':     '<span class="badge bg-secondary">Pending</span>',
+    };
+
+    document.querySelectorAll('.item-action-select').forEach(function (select) {
+        select.addEventListener('change', function () {
+            const action = select.value;
+            if (!action) return;
+
+            const url    = select.dataset.actionUrl;
+            const row    = select.closest('tr');
+
+            select.disabled = true;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=' + encodeURIComponent(action),
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.status === 'ok') {
+                    const newStatus = data.new_status;
+                    const statusCell = row.querySelector('.status-cell');
+                    if (statusCell && ACTION_BADGE[newStatus]) {
+                        statusCell.innerHTML = ACTION_BADGE[newStatus];
+                    }
+                    if (['bundle', 'excluded', 'low_quality'].includes(newStatus)) {
+                        row.style.opacity = '0.5';
+                        select.remove();
+                    } else {
+                        // reset — re-enable and reset the dropdown
+                        select.value = '';
+                        select.disabled = false;
+                    }
+                } else {
+                    select.value = '';
+                    select.disabled = false;
+                }
+            })
+            .catch(function () {
+                select.value = '';
+                select.disabled = false;
+            });
+        });
+    });
+})();
+</script>
+{% endblock page_body %}

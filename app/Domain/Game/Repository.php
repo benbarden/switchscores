@@ -20,6 +20,14 @@ class Repository extends AbstractRepository
         $this->clearCache($cacheKey);
     }
 
+    public function findByTitleAndConsole(string $title, int $consoleId): ?Game
+    {
+        return Game::where('console_id', $consoleId)
+            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->with('category')
+            ->first();
+    }
+
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');

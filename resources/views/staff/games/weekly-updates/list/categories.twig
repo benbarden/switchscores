@@ -1,0 +1,340 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{% if Items|length == 0 %}
+    <p class="text-muted">No items need a category.</p>
+{% else %}
+
+{# ---- Confidence summary ---- #}
+{% set countHigh   = 0 %}
+{% set countMedium = 0 %}
+{% set countLow    = 0 %}
+{% set countNone   = 0 %}
+{% set countReady  = 0 %}
+{% for item in Items %}
+    {% set conf = (SuggestionMeta[item.id] ?? {}).confidence ?? 'none' %}
+    {% if item.item_status == 'ready' %}
+        {% set countReady = countReady + 1 %}
+    {% elseif conf == 'high' %}
+        {% set countHigh = countHigh + 1 %}
+    {% elseif conf == 'medium' %}
+        {% set countMedium = countMedium + 1 %}
+    {% elseif conf == 'low' %}
+        {% set countLow = countLow + 1 %}
+    {% else %}
+        {% set countNone = countNone + 1 %}
+    {% endif %}
+{% endfor %}
+{% set countTotal   = Items|length %}
+{% set countPending = countTotal - countReady %}
+{% set pctReady     = countTotal > 0 ? ((countReady / countTotal) * 100)|round : 0 %}
+
+<div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+    <span class="text-muted small fw-semibold">Confidence:</span>
+    {% if countReady > 0 %}
+        <span><span class="badge bg-success">{{ countReady }}</span> <small class="text-muted">Accepted</small></span>
+    {% endif %}
+    {% if countHigh > 0 %}
+        <span><span class="badge bg-success">{{ countHigh }}</span> <small class="text-muted">High</small></span>
+    {% endif %}
+    {% if countMedium > 0 %}
+        <span><span class="badge bg-warning text-dark">{{ countMedium }}</span> <small class="text-muted">Medium</small></span>
+    {% endif %}
+    {% if countLow > 0 %}
+        <span><span class="badge" style="background-color:#fd7e14;color:#fff;">{{ countLow }}</span> <small class="text-muted">Low</small></span>
+    {% endif %}
+    {% if countNone > 0 %}
+        <span><span class="badge bg-danger">{{ countNone }}</span> <small class="text-muted">No suggestion</small></span>
+    {% endif %}
+    <span class="ms-auto d-flex gap-3 align-items-center">
+        <a href="#" id="toggle-accepted" class="small text-muted">Show accepted (<span id="accepted-count">{{ countReady }}</span>)</a>
+        <form method="post" action="{{ route('staff.games.weekly-updates.list.categories.reset', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="d-inline" onsubmit="return confirm('Reset all saved categories? This cannot be undone.')">
+            {{ csrf_field()|raw }}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Reset all</button>
+        </form>
+    </span>
+</div>
+
+<div class="mb-3">
+    <div class="d-flex justify-content-between mb-1">
+        <small class="text-muted">Progress: <span id="progress-accepted">{{ countReady }}</span> of {{ countTotal }} accepted</small>
+        <small class="text-muted"><span id="progress-pending">{{ countPending }}</span> remaining &mdash; <span id="progress-message" class="fst-italic">{{ pctReady == 100 ? "All done! Time for a cup of tea." : (pctReady >= 80 ? "So close... finish strong!" : (pctReady >= 66 ? "Nearly there, push through!" : (pctReady >= 50 ? "Halfway! Don't stop now." : (pctReady >= 25 ? "Good progress, keep going!" : (pctReady > 0 ? "Just getting started..." : "Ready to roll."))))) }}</span></small>
+    </div>
+    <div class="progress" style="height: 12px;">
+        <div class="progress-bar bg-success" id="progress-bar" role="progressbar"
+             style="width: {{ pctReady }}%;"
+             aria-valuenow="{{ countReady }}" aria-valuemin="0" aria-valuemax="{{ countTotal }}"></div>
+    </div>
+</div>
+
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 25%;">Title</th>
+            <th style="width: 15%;">Nintendo genres</th>
+            <th style="width: 22%;">Suggestion</th>
+            <th style="width: 8%;" class="text-center">Confidence</th>
+            <th>Category</th>
+            <th style="width: 10%;"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in Items %}
+        {% set meta = SuggestionMeta[item.id] ?? {'category': null, 'confidence': 'none', 'score': 0, 'reason': ''} %}
+        {% set conf = meta.confidence %}
+        {% set suggested = meta.category %}
+        {% set displayValue = item.category ?? suggested ?? '' %}
+        {% set isAccepted = item.item_status == 'ready' %}
+
+        <tr class="category-row{% if isAccepted %} accepted-row{% endif %}"
+            data-item-id="{{ item.id }}"
+            data-accepted="{{ isAccepted ? '1' : '0' }}"
+            style="{{ isAccepted ? 'display:none;' : '' }}">
+            <td class="align-middle">
+                {{ item.title }}
+                {% if item.nintendo_url %}
+                    <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo page ↗</a>
+                {% endif %}
+            </td>
+            <td class="align-middle small text-muted">
+                {{ item.nintendo_genres ?? '—' }}
+            </td>
+            <td class="align-middle">
+                {% if suggested %}
+                    <span class="fw-semibold small">{{ suggested }}</span>
+                {% else %}
+                    <span class="text-muted fst-italic small">No suggestion</span>
+                {% endif %}
+                {% if meta.reason %}
+                    <br><small class="text-muted">{{ meta.reason }}</small>
+                {% endif %}
+            </td>
+            <td class="align-middle text-center conf-cell">
+                {% if isAccepted %}
+                    <span class="badge bg-success">✓</span>
+                {% elseif conf == 'high' %}
+                    <span class="badge bg-success fs-6">{{ meta.score }}</span><br><small class="text-muted">High</small>
+                {% elseif conf == 'medium' %}
+                    <span class="badge bg-warning text-dark fs-6">{{ meta.score }}</span><br><small class="text-muted">Medium</small>
+                {% elseif conf == 'low' %}
+                    <span class="badge fs-6" style="background-color: #fd7e14; color: #fff;">{{ meta.score }}</span><br><small class="text-muted">Low</small>
+                {% else %}
+                    <span class="badge bg-danger fs-6">—</span><br><small class="text-muted">N/A</small>
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm category-select{% if isAccepted %} is-valid{% elseif conf == 'none' %} border-danger{% endif %}"
+                            data-original="{{ displayValue }}"
+                            data-suggestion="{{ suggested ?? '' }}"
+                            data-save-url="{{ route('staff.games.weekly-updates.list.categories.save-item', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
+                        <option value="">— Select category —</option>
+                        {% for group in CategoryGroups %}
+                            <optgroup label="{{ group.parent }}">
+                                {% if group.children|length == 0 %}
+                                    <option value="{{ group.parent }}"{% if displayValue == group.parent %} selected{% endif %}>{{ group.parent }}</option>
+                                {% else %}
+                                    {% for child in group.children %}
+                                        <option value="{{ child.name }}"{% if displayValue == child.name %} selected{% endif %}>{{ child.name }}</option>
+                                    {% endfor %}
+                                    <option value="{{ group.parent }}"{% if displayValue == group.parent %} selected{% endif %}>{{ group.parent }} (top-level)</option>
+                                {% endif %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                    <span class="badge bg-secondary modified-badge d-none" title="Unsaved change">✏</span>
+                </div>
+            </td>
+            <td class="align-middle text-center action-cell">
+                {% if suggested and not isAccepted %}
+                    <button type="button" class="btn btn-sm btn-outline-success accept-btn"
+                            data-accept-url="{{ route('staff.games.weekly-updates.list.categories.accept', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}"
+                            title="Accept suggestion">✓ Accept</button>
+                {% elseif isAccepted %}
+                    <span class="text-success small">Accepted</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
+
+<hr class="mt-2">
+{% set categoryPendingCount = Counts['category_pending'] ?? 0 %}
+{% if categoryPendingCount == 0 %}
+    <a href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Confirm →</a>
+{% else %}
+    <a href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
+        Continue to Confirm → <small>({{ categoryPendingCount }} categor{{ categoryPendingCount != 1 ? 'ies' : 'y' }} still needed)</small>
+    </a>
+{% endif %}
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    const CSRF_TOKEN = '{{ csrf_token() }}';
+    var acceptedCount = parseInt(document.getElementById('accepted-count').textContent, 10) || 0;
+    var showingAccepted = false;
+
+    // ---- Per-row dropdown: show Save button on change ----
+    document.querySelectorAll('.category-select').forEach(function (sel) {
+        var original  = sel.dataset.original;
+        var badge     = sel.closest('.d-flex').querySelector('.modified-badge');
+        var actionCell = sel.closest('tr').querySelector('.action-cell');
+        var saveUrl   = sel.dataset.saveUrl;
+
+        sel.addEventListener('change', function () {
+            var changed = sel.value !== original && sel.value !== '';
+            badge.classList.toggle('d-none', !changed);
+
+            if (sel.value) {
+                sel.classList.add('is-valid');
+                sel.classList.remove('border-danger');
+            } else {
+                sel.classList.remove('is-valid');
+            }
+
+            // Show/update per-row Save button when something is selected
+            var existingSave = actionCell.querySelector('.save-btn');
+            if (changed) {
+                if (!existingSave) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn btn-sm btn-primary save-btn';
+                    btn.textContent = 'Save';
+                    actionCell.innerHTML = '';
+                    actionCell.appendChild(btn);
+                    btn.addEventListener('click', function () { saveRow(sel, btn, saveUrl); });
+                }
+            } else {
+                // Reverted to original — restore Accept button if there was one
+                if (existingSave) {
+                    actionCell.innerHTML = sel.dataset.suggestion
+                        ? '<span class="text-muted small">Reverted</span>'
+                        : '';
+                }
+            }
+        });
+    });
+
+    function saveRow(sel, btn, url) {
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'category=' + encodeURIComponent(sel.value),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.status === 'ok') {
+                var row = sel.closest('tr');
+                markRowAccepted(row);
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Save';
+            }
+        })
+        .catch(function () {
+            btn.disabled = false;
+            btn.textContent = 'Save';
+        });
+    }
+
+    // ---- Accept button ----
+    document.querySelectorAll('.accept-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var url = btn.dataset.acceptUrl;
+            var row = btn.closest('tr');
+            btn.disabled = true;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.status === 'ok') {
+                    markRowAccepted(row);
+                } else {
+                    btn.disabled = false;
+                }
+            })
+            .catch(function () { btn.disabled = false; });
+        });
+    });
+
+    function markRowAccepted(row) {
+        row.dataset.accepted = '1';
+        row.classList.add('accepted-row');
+
+        var confCell = row.querySelector('.conf-cell');
+        confCell.innerHTML = '<span class="badge bg-success">✓</span>';
+
+        var actionCell = row.querySelector('.action-cell');
+        actionCell.innerHTML = '<span class="text-success small">Accepted</span>';
+
+        var badge = row.querySelector('.modified-badge');
+        if (badge) badge.classList.add('d-none');
+
+        acceptedCount++;
+        document.getElementById('accepted-count').textContent = acceptedCount;
+
+        var total   = {{ Items|length }};
+        var pct     = Math.round((acceptedCount / total) * 100);
+        var bar     = document.getElementById('progress-bar');
+        bar.style.width = pct + '%';
+        bar.setAttribute('aria-valuenow', acceptedCount);
+        document.getElementById('progress-accepted').textContent = acceptedCount;
+        document.getElementById('progress-pending').textContent  = (total - acceptedCount);
+        var msg = pct >= 100 ? "All done! Time for a cup of tea."
+                : pct >= 80  ? "So close... finish strong!"
+                : pct >= 66  ? "Nearly there, push through!"
+                : pct >= 50  ? "Halfway! Don't stop now."
+                : pct >= 25  ? "Good progress, keep going!"
+                : pct > 0    ? "Just getting started..."
+                :              "Ready to roll.";
+        document.getElementById('progress-message').textContent = msg;
+
+        if (!showingAccepted) {
+            row.style.display = 'none';
+        }
+    }
+
+    // ---- Toggle accepted rows ----
+    document.getElementById('toggle-accepted').addEventListener('click', function (e) {
+        e.preventDefault();
+        showingAccepted = !showingAccepted;
+        document.querySelectorAll('.accepted-row').forEach(function (row) {
+            row.style.display = showingAccepted ? '' : 'none';
+        });
+        this.textContent = (showingAccepted ? 'Hide accepted (' : 'Show accepted (') + acceptedCount + ')';
+    });
+})();
+</script>
+{% endblock page_body %}

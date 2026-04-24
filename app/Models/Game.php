@@ -43,7 +43,7 @@ class Game extends Model implements Auditable
         'eu_released_on', 'eu_release_date', 'us_release_date', 'jp_release_date', 'eu_is_released', 'release_year',
         'format_digital', 'format_physical', 'format_dlc', 'format_demo', 'game_status',
         'eshop_europe_order', 'video_type', 'price_eshop_discounted', 'price_eshop_discount_pc',
-        'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'one_to_watch',
+        'is_low_quality', 'taxonomy_needs_review', 'packshot_square_url_override', 'game_description', 'nintendo_description', 'one_to_watch',
         'added_batch_date', 'amazon_uk_status', 'amazon_us_status', 'amazon_uk_asin', 'amazon_us_asin',
         'last_crawled_at', 'last_crawl_status',
         'multiplayer_mode', 'has_online_play', 'has_local_multiplayer',

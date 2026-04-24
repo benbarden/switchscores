@@ -1,0 +1,263 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{% if Publishers|length == 0 %}
+    <p class="text-muted">No publishers found — fetch some games first.</p>
+{% else %}
+
+{% set newPublishers      = Publishers|filter(p => p.status == 'new') %}
+{% set existingPublishers = Publishers|filter(p => p.status != 'new') %}
+{% set newCount           = newPublishers|length %}
+
+{% if newCount > 0 %}
+<div class="alert alert-warning mb-3">
+    <strong>{{ newCount }} new publisher{{ newCount != 1 ? 's' : '' }} need{{ newCount == 1 ? 's' : '' }} to be created</strong> before importing.
+    Review each one below — edit the name if needed, then click Create or Create as LQ.
+</div>
+
+<h2 class="mb-2">New publishers</h2>
+<table class="table table-sm table-bordered mb-4">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 35%;">Publisher</th>
+            <th style="width: 10%;" class="text-center">This batch</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pub in newPublishers %}
+        <tr class="publisher-row" data-name="{{ pub.name }}" data-status="{{ pub.status }}">
+            <td class="align-middle publisher-name-cell">
+                <input type="text" class="form-control form-control-sm pub-name-input" value="{{ pub.name }}">
+                {% if pub.sample_nintendo_url %}
+                    <a href="{{ pub.sample_nintendo_url }}" target="_blank" class="small text-muted">Sample game link (Nintendo.com) ↗</a>
+                {% endif %}
+            </td>
+            <td class="align-middle text-center">
+                <span class="badge bg-secondary">{{ pub.item_count }}</span>
+            </td>
+            <td class="align-middle action-cell">
+                <div class="d-flex gap-2 align-items-center">
+                    <button type="button" class="btn btn-sm btn-success create-btn"
+                            data-create-url="{{ route('staff.games.weekly-updates.list.publishers.create', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+                        Create
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger create-lq-btn"
+                            data-create-url="{{ route('staff.games.weekly-updates.list.publishers.create', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+                        Create as LQ
+                    </button>
+                    <span class="status-cell d-none"></span>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if existingPublishers|length > 0 %}
+<h2 class="mb-2">Existing publishers</h2>
+<table class="table table-sm table-bordered mb-4">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 35%;">Publisher</th>
+            <th style="width: 10%;" class="text-center">This batch</th>
+            <th style="width: 10%;" class="text-center">DB games</th>
+            <th style="width: 12%;" class="text-center">Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pub in existingPublishers %}
+        <tr class="publisher-row" data-name="{{ pub.name }}" data-status="{{ pub.status }}">
+            <td class="align-middle publisher-name-cell">
+                {% if pub.company %}
+                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': pub.company.id}) }}" target="_blank">{{ pub.name }}</a>
+                {% else %}
+                    {{ pub.name }}
+                {% endif %}
+            </td>
+            <td class="align-middle text-center">
+                <span class="badge bg-secondary">{{ pub.item_count }}</span>
+            </td>
+            <td class="align-middle text-center text-muted small">{{ pub.db_game_count }}</td>
+            <td class="align-middle text-center status-cell">
+                {% if pub.status == 'lq' %}
+                    <span class="badge bg-danger">LQ</span>
+                {% else %}
+                    <span class="badge bg-success">Known</span>
+                {% endif %}
+            </td>
+            <td class="align-middle action-cell">
+                {% if pub.status == 'known' and pub.db_game_count < 10 %}
+                    <button type="button" class="btn btn-sm btn-outline-danger mark-lq-btn"
+                            data-mark-lq-url="{{ route('staff.games.weekly-updates.list.publishers.mark-lq', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+                        Mark batch as LQ
+                    </button>
+                {% else %}
+                    <span class="text-muted small">—</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endif %}
+
+<hr class="mt-2">
+{% if newCount is defined and newCount == 0 %}
+    <a href="{{ route('staff.games.weekly-updates.list.prices', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Prices →</a>
+{% else %}
+    <a href="{{ route('staff.games.weekly-updates.list.prices', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
+        Continue to Prices → <small>({{ newCount }} publisher{{ newCount != 1 ? 's' : '' }} still to create)</small>
+    </a>
+{% endif %}
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    const CSRF_TOKEN = '{{ csrf_token() }}';
+
+    function doCreate(row, isLq) {
+        var input    = row.querySelector('.pub-name-input');
+        var oldName  = row.dataset.name;
+        var newName  = input ? input.value.trim() : oldName;
+        var url      = row.querySelector('.create-btn, .create-lq-btn').dataset.createUrl;
+
+        if (!newName) return;
+
+        var btns = row.querySelectorAll('button');
+        btns.forEach(function (b) { b.disabled = true; });
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'old_name=' + encodeURIComponent(oldName) +
+                  '&new_name=' + encodeURIComponent(newName) +
+                  '&is_lq='    + (isLq ? '1' : '0'),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.status === 'created' || data.status === 'already_exists') {
+                row.dataset.name = data.name;
+                updateRowToCreated(row, data.name, data.is_lq, data.company_id);
+                updateNewCount();
+            } else {
+                btns.forEach(function (b) { b.disabled = false; });
+            }
+        })
+        .catch(function () {
+            btns.forEach(function (b) { b.disabled = false; });
+        });
+    }
+
+    function doMarkLq(row) {
+        var name = row.dataset.name;
+        var url  = row.querySelector('.mark-lq-btn').dataset.markLqUrl;
+
+        if (!confirm('Mark all batch games from "' + name + '" as LQ? This will remove them from the active pipeline.')) return;
+
+        var btn = row.querySelector('.mark-lq-btn');
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'name=' + encodeURIComponent(name),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.status === 'ok') {
+                updateRowToLq(row);
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Mark batch as LQ';
+            }
+        })
+        .catch(function () {
+            btn.disabled = false;
+            btn.textContent = 'Mark batch as LQ';
+        });
+    }
+
+    function updateRowToCreated(row, name, isLq, companyId) {
+        row.dataset.status = isLq ? 'lq' : 'known';
+        var nameCell = row.querySelector('.publisher-name-cell');
+        // Replace input + Nintendo link with a plain link
+        nameCell.innerHTML = '<a href="/staff/games-companies/show/' + companyId + '" target="_blank">' + name + '</a>';
+
+        if (isLq) {
+            updateRowToLq(row);
+        } else {
+            row.querySelector('.action-cell').innerHTML = '<span class="text-muted small">—</span>';
+        }
+    }
+
+    function updateRowToLq(row) {
+        row.dataset.status = 'lq';
+        var statusCell = row.querySelector('.status-cell');
+        if (statusCell) statusCell.innerHTML = '<span class="badge bg-danger">LQ</span>';
+        row.querySelector('.action-cell').innerHTML = '<span class="text-muted small">—</span>';
+        row.style.opacity = '0.5';
+    }
+
+    function updateNewCount() {
+        var remaining = document.querySelectorAll('.publisher-row[data-status="new"]').length;
+        var continueBtn = document.querySelector('a.btn-success, a.btn-outline-secondary');
+        if (!continueBtn) return;
+        if (remaining === 0) {
+            continueBtn.className = continueBtn.className.replace('btn-outline-secondary', 'btn-success');
+            continueBtn.innerHTML = 'Continue to Prices →';
+        }
+    }
+
+    function attachMarkLqHandler(btn) {
+        btn.addEventListener('click', function () {
+            doMarkLq(btn.closest('tr'));
+        });
+    }
+
+    // Attach create handlers
+    document.querySelectorAll('.create-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            doCreate(btn.closest('tr'), false);
+        });
+    });
+
+    document.querySelectorAll('.create-lq-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            doCreate(btn.closest('tr'), true);
+        });
+    });
+
+    // Attach mark-LQ handlers
+    document.querySelectorAll('.mark-lq-btn').forEach(attachMarkLqHandler);
+})();
+</script>
+{% endblock page_body %}

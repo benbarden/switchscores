@@ -31,6 +31,9 @@ class NintendoCoUkGameData
         $this->parseMultiplayerMode();
         $this->parseFeatures();
         $this->parseHeaderImageUrl();
+        $this->parsePublisher();
+        $this->parseDescription();
+        $this->parseBodyDescription();
     }
 
     /**
@@ -109,6 +112,35 @@ class NintendoCoUkGameData
     }
 
     /**
+     * Parse the Publisher field.
+     */
+    private function parsePublisher(): void
+    {
+        $publisher = $this->getGameInfoText('Publisher');
+        if ($publisher) {
+            $this->parsedData['publisher'] = trim($publisher);
+        }
+    }
+
+    /**
+     * Parse page description from meta description tag.
+     */
+    private function parseDescription(): void
+    {
+        try {
+            $metaNode = $this->domCrawler->filterXPath('//meta[@name="description"]');
+            if ($metaNode->count() > 0) {
+                $content = $metaNode->attr('content');
+                if ($content) {
+                    $this->parsedData['description'] = trim($content);
+                }
+            }
+        } catch (\Exception $e) {
+            // Silently handle parsing errors
+        }
+    }
+
+    /**
      * Parse the header image URL from og:image meta tag.
      */
     private function parseHeaderImageUrl(): void
@@ -125,6 +157,66 @@ class NintendoCoUkGameData
         } catch (\Exception $e) {
             // Silently handle parsing errors
         }
+    }
+
+    /**
+     * Parse the body description from the game overview section.
+     * Tries several selectors in order; uses the first that yields substantial text.
+     * Strips the "Nintendo Switch 2 Edition features" box and the publisher disclaimer.
+     */
+    private function parseBodyDescription(): void
+    {
+        // Selectors tried in order — update if Nintendo changes their HTML structure
+        $selectors = [
+            '[data-section-type="overview"] .content',  // Nintendo UK current structure
+            '#Overview .content',                        // Nintendo UK alternative
+            '[itemprop="description"]',
+            '.body-text',
+            '.body-text__wrapper',
+            '.overview__description',
+            '.game-description',
+        ];
+
+        foreach ($selectors as $selector) {
+            try {
+                $node = $this->domCrawler->filter($selector);
+                if ($node->count() === 0) continue;
+
+                $text = trim($node->first()->text());
+                if (strlen($text) < 100) continue;
+
+                $cleaned = $this->cleanBodyDescription($text);
+                if (strlen($cleaned) > 50) {
+                    $this->parsedData['body_description'] = $cleaned;
+                    return;
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+    }
+
+    private function cleanBodyDescription(string $text): string
+    {
+        // Remove "Nintendo Switch 2 Edition features" box — appears at the top when present.
+        // It ends before the main description paragraph begins.
+        $text = preg_replace(
+            '/Nintendo Switch\s+2\s+Edition\s+features.*?\n\n(?=\S)/si',
+            '',
+            $text
+        );
+
+        // Remove everything from the publisher disclaimer onwards
+        $cutoff = 'This description was provided by the publisher.';
+        $pos = strpos($text, $cutoff);
+        if ($pos !== false) {
+            $text = substr($text, 0, $pos);
+        }
+
+        // Collapse excessive blank lines and trim
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+
+        return trim($text);
     }
 
     /**
@@ -287,6 +379,21 @@ class NintendoCoUkGameData
     public function hasData(): bool
     {
         return !empty($this->parsedData);
+    }
+
+    public function getPublisher(): ?string
+    {
+        return $this->parsedData['publisher'] ?? null;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->parsedData['description'] ?? null;
+    }
+
+    public function getBodyDescription(): ?string
+    {
+        return $this->parsedData['body_description'] ?? null;
     }
 
     /**

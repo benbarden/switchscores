@@ -1,0 +1,76 @@
+{#
+    Stage navigation for list pages.
+    Requires: Batch, Stages (array), CurrentStage (string), Counts (array)
+#}
+<div class="card mb-4">
+    <div class="card-body py-3">
+
+        {# Back to batch #}
+        <div class="mb-3">
+            <a href="{{ route('staff.games.weekly-updates.show', {'batchId': Batch.id}) }}" class="text-muted text-decoration-none">
+                ← Back to batch
+            </a>
+        </div>
+
+        {# Step indicator #}
+        <div class="d-flex align-items-start flex-wrap gap-0">
+            {% for stage in Stages %}
+                {% set isCurrent = stage.key == CurrentStage %}
+
+                {% if not loop.first %}
+                    <div class="d-flex align-items-center px-1" style="padding-top: 10px;">
+                        <span class="text-muted">›</span>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex flex-column align-items-center" style="min-width: 90px; max-width: 110px;">
+                    {% if isCurrent %}
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                             style="width:32px;height:32px;font-size:0.85rem;">{{ loop.index }}</div>
+                        <div class="text-center mt-1" style="font-size:0.75rem; font-weight:600; color: #0d6efd;">{{ stage.label }}</div>
+                    {% elseif stage.reachable %}
+                        <a href="{{ stage.url }}" class="text-decoration-none">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto"
+                                 style="width:32px;height:32px;font-size:0.85rem;">{{ loop.index }}</div>
+                        </a>
+                        <div class="text-center mt-1" style="font-size:0.75rem;">
+                            <a href="{{ stage.url }}" class="text-success text-decoration-none">{{ stage.label }}</a>
+                        </div>
+                    {% else %}
+                        <div class="rounded-circle bg-light border text-muted d-flex align-items-center justify-content-center"
+                             style="width:32px;height:32px;font-size:0.85rem;">{{ loop.index }}</div>
+                        <div class="text-center mt-1 text-muted" style="font-size:0.75rem;">{{ stage.label }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Status counts summary #}
+        {% set pendingCount    = Counts['pending'] ?? 0 %}
+        {% set inDbCount       = Counts['already_in_db'] ?? 0 %}
+        {% set outOfRangeCount = Counts['out_of_range'] ?? 0 %}
+        {% set excludedCount   = Counts['excluded'] ?? 0 %}
+        {% set fetchPending    = Counts['fetch_pending'] ?? 0 %}
+        {% set lqReview        = Counts['lq_review'] ?? 0 %}
+        {% set packshotPending = Counts['packshot_pending'] ?? 0 %}
+        {% set categoryPending = Counts['category_pending'] ?? 0 %}
+        {% set readyCount      = Counts['ready'] ?? 0 %}
+        {% set importedCount   = Counts['imported'] ?? 0 %}
+
+        <div class="mt-3 text-muted" style="font-size:0.8rem;">
+            {% set parts = [] %}
+            {% if pendingCount > 0 %}{% set parts = parts|merge([pendingCount ~ ' pending']) %}{% endif %}
+            {% if fetchPending > 0 %}{% set parts = parts|merge([fetchPending ~ ' URL saved']) %}{% endif %}
+            {% if lqReview > 0 %}{% set parts = parts|merge([lqReview ~ ' LQ review']) %}{% endif %}
+            {% if packshotPending > 0 %}{% set parts = parts|merge([packshotPending ~ ' packshots needed']) %}{% endif %}
+            {% if categoryPending > 0 %}{% set parts = parts|merge([categoryPending ~ ' category needed']) %}{% endif %}
+            {% if readyCount > 0 %}{% set parts = parts|merge([readyCount ~ ' ready']) %}{% endif %}
+            {% if importedCount > 0 %}{% set parts = parts|merge([importedCount ~ ' imported']) %}{% endif %}
+            {% if inDbCount > 0 %}{% set parts = parts|merge([inDbCount ~ ' already in DB']) %}{% endif %}
+            {% if outOfRangeCount > 0 %}{% set parts = parts|merge([outOfRangeCount ~ ' out of range']) %}{% endif %}
+            {% if excludedCount > 0 %}{% set parts = parts|merge([excludedCount ~ ' excluded']) %}{% endif %}
+            {{ parts|join(' · ') }}
+        </div>
+
+    </div>
+</div>

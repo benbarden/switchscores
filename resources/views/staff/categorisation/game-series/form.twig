@@ -19,6 +19,38 @@
         </div>
     </div>
 
+    {% if CategoryGroups is defined %}
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Category hints</label>
+        <div class="col-sm-6">
+            <div class="border rounded p-3" style="max-height: 260px; overflow-y: auto;">
+                {% set currentHints = SeriesData.category_hints ?? [] %}
+                {% for group in CategoryGroups %}
+                    <div class="mb-1"><strong class="small text-muted">{{ group.parent }}</strong></div>
+                    {% if group.children|length == 0 %}
+                        <div class="form-check ms-3 mb-1">
+                            <input class="form-check-input" type="checkbox" name="category_hints[]"
+                                   value="{{ group.parent }}" id="hint_{{ group.parent|replace({' ': '_', "'": ''}) }}"
+                                   {% if group.parent in currentHints %}checked{% endif %}>
+                            <label class="form-check-label small" for="hint_{{ group.parent|replace({' ': '_', "'": ''}) }}">{{ group.parent }}</label>
+                        </div>
+                    {% else %}
+                        {% for child in group.children %}
+                        <div class="form-check ms-3 mb-1">
+                            <input class="form-check-input" type="checkbox" name="category_hints[]"
+                                   value="{{ child.name }}" id="hint_{{ child.name|replace({' ': '_', "'": ''}) }}"
+                                   {% if child.name in currentHints %}checked{% endif %}>
+                            <label class="form-check-label small" for="hint_{{ child.name|replace({' ': '_', "'": ''}) }}">{{ child.name }}</label>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="form-text">Check 1 category for a clean mapping. Check multiple if the series spans categories (no suggestion will be made).</div>
+        </div>
+    </div>
+    {% endif %}
+
     {{ formsubmit.renderB5() }}
 
 </form>

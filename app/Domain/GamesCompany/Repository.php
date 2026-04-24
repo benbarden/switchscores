@@ -7,6 +7,16 @@ use App\Models\GamesCompany;
 
 class Repository
 {
+    public function createCompany(string $name, string $linkTitle, bool $isLowQuality = false): GamesCompany
+    {
+        $company = new GamesCompany();
+        $company->name = $name;
+        $company->link_title = $linkTitle;
+        $company->is_low_quality = $isLowQuality ? 1 : 0;
+        $company->save();
+        return $company;
+    }
+
     public function editGamesCompany(
         GamesCompany $gamesCompany, $name, $linkTitle, $websiteUrl, $twitterId, $isLowQuality, $email, $threadsId, $blueskyId
     )
@@ -44,6 +54,13 @@ class Repository
     public function getByName($name)
     {
         return GamesCompany::where('name', $name)->first();
+    }
+
+    public function findByNameCaseInsensitive(string $name): ?GamesCompany
+    {
+        return GamesCompany::whereRaw('LOWER(name) = ?', [strtolower($name)])
+            ->withCount('publisherGames')
+            ->first();
     }
 
     public function getAll()
