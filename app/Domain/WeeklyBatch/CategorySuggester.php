@@ -112,12 +112,15 @@ class CategorySuggester
         "shoot 'em up"            => "Shoot 'em up",
         'shoot em up'             => "Shoot 'em up",
         'bullet hell'             => "Shoot 'em up",
+        '3D platformer'           => 'Platformer (3D)',
+        '3d platformer'           => 'Platformer (3D)',
         'metroidvania'            => 'Metroidvania',
         'roguelike'               => 'Roguelike',
         'rogue-like'              => 'Roguelike',
         'roguelite'               => 'Roguelike',
         'rogue-lite'              => 'Roguelike',
         'kart racing'             => 'Kart racing',
+        'picross'                 => 'Logic puzzle',
         'escape room'             => 'Logic puzzle',
         'spot the difference'     => 'Matching puzzle',
         'find the difference'     => 'Matching puzzle',
@@ -321,7 +324,8 @@ class CategorySuggester
         $titleLower = strtolower($item->title);
 
         foreach ($this->seriesList as $series) {
-            if (!str_contains($titleLower, strtolower($series->series))) {
+            $pattern = '/\b' . preg_quote(strtolower($series->series), '/') . '\b/';
+            if (!preg_match($pattern, $titleLower)) {
                 continue;
             }
 
