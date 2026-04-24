@@ -117,8 +117,17 @@ class TitleNormaliser
                 // Roman numeral (I, II, III, IV, VI, VII, VIII, IX, X, etc.) — keep uppercase
                 $result[] = $word;
             } elseif (strlen($letters) <= 3) {
-                // Short (1-3 letters) — likely an abbreviation, keep as-is
-                $result[] = $word;
+                // Short (1-3 letters): use vowels to distinguish real words from acronyms
+                // Minor words (the, is, of...) → title-case; lowercaseMinorWords handles placement
+                // No vowels (ZPF, MSX...) → likely an acronym, keep as-is
+                // Has vowels (ALL, YOU...) → real word, title-case it
+                if (in_array(strtolower($letters), self::MINOR_WORDS)) {
+                    $result[] = ucfirst(strtolower($word));
+                } elseif (!preg_match('/[AEIOU]/i', $letters)) {
+                    $result[] = $word;
+                } else {
+                    $result[] = ucfirst(strtolower($word));
+                }
             } else {
                 $result[] = ucfirst(strtolower($word));
             }
