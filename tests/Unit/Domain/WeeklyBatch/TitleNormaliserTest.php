@@ -126,6 +126,11 @@ class TitleNormaliserTest extends TestCase
         $this->assertEquals('Game Title', $this->normaliser->normalise('Game Title®'));
     }
 
+    public function testTrademarkBetweenWordAndDigitInsertsSpace()
+    {
+        $this->assertEquals('MotoGP 26', $this->normaliser->normalise('MotoGP™26'));
+    }
+
     // ---- Separators ----
 
     public function testTildeAsSubtitleSeparator()
