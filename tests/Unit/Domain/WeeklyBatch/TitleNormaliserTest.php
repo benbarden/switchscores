@@ -114,6 +114,34 @@ class TitleNormaliserTest extends TestCase
         );
     }
 
+    // ---- Mixed-case titles with short ALL CAPS real words ----
+
+    public function testShortAllCapsRealWordsInMixedTitle()
+    {
+        $this->assertEquals(
+            'Get Fit: Power Workout',
+            $this->normaliser->normalise('GET FIT – Power Workout')
+        );
+    }
+
+    // ---- Curly quote normalisation ----
+
+    public function testCurlyDoubleQuotesNormalised()
+    {
+        $this->assertEquals(
+            'Your "Hidden Side" Test',
+            $this->normaliser->normalise("Your \u{201C}Hidden Side\u{201D} Test")
+        );
+    }
+
+    public function testCurlyApostropheNormalised()
+    {
+        $this->assertEquals(
+            "Don't Stop",
+            $this->normaliser->normalise("Don\u{2019}t Stop")
+        );
+    }
+
     // ---- Trademark/symbol removal ----
 
     public function testTrademarkRemoved()

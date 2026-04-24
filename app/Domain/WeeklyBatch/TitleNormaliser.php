@@ -23,6 +23,10 @@ class TitleNormaliser
 
     public function normalise(string $title): string
     {
+        // Normalise curly/typographic quotes and apostrophes to straight equivalents
+        $title = str_replace(["\u{201C}", "\u{201D}", "\u{201F}"], '"', $title);
+        $title = str_replace(["\u{2018}", "\u{2019}", "\u{201B}"], "'", $title);
+
         // Remove trademark/registered symbols
         // If the symbol sits between a word and a digit (e.g. "MotoGP™26"), insert a space
         $title = preg_replace('/[™®](\d)/u', ' $1', $title);
@@ -163,12 +167,19 @@ class TitleNormaliser
                 continue;
             }
 
-            // ALL CAPS word with 5+ letters → Title Case (unless a known abbreviation or Roman numeral)
-            if ($letters === strtoupper($letters) && strlen($letters) >= 5
+            // ALL CAPS word → Title Case unless it's a known abbreviation, Roman numeral, or short with no vowels
+            // Short no-vowel words (ZPF, TV, PC) are acronyms — keep as-is
+            // Short words with vowels (GET, FIT) are real words — title-case them
+            if ($letters === strtoupper($letters)
                 && !$this->isRomanNumeral($letters)
                 && !in_array($letters, self::KNOWN_CAPS)
             ) {
-                $result[] = ucfirst(strtolower($word));
+                $hasVowel = (bool) preg_match('/[AEIOU]/', $letters);
+                if ($hasVowel || strlen($letters) >= 5) {
+                    $result[] = ucfirst(strtolower($word));
+                } else {
+                    $result[] = $word;
+                }
             }
             // All-lowercase non-minor, non-first word → Capitalise
             elseif (!$isFirst && $letters === strtolower($letters) && !in_array(strtolower($letters), self::MINOR_WORDS)) {
