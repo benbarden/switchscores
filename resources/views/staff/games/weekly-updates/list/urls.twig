@@ -29,7 +29,7 @@
             {% if item.item_status == 'out_of_range' %}
                 {% set outOfRangeItems = outOfRangeItems|merge([item]) %}
                 {% set allOutOfRangeItems = allOutOfRangeItems|merge([item]) %}
-            {% elseif item.item_status in ['excluded', 'low_quality', 'bundle'] %}
+            {% elseif item.item_status in ['excluded', 'low_quality', 'bundle', 'already_in_db'] %}
                 {% set skippedItems = skippedItems|merge([item]) %}
                 {% set allSkippedItems = allSkippedItems|merge([item]) %}
             {% else %}
@@ -46,28 +46,31 @@
             <table class="table table-sm table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th style="width: 42%;">Title</th>
+                        <th style="width: 35%;">Title</th>
                         <th class="text-center" style="width: 10%;">Date</th>
                         <th>Nintendo URL</th>
+                        <th class="text-center" style="width: 10%;">Nintendo page</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for item in activeItems %}
-                    {% set isSkipped = item.item_status == 'already_in_db' %}
-                    <tr class="{{ isSkipped ? 'text-muted' : '' }}">
-                        <td>{{ item.title }}</td>
-                        <td class="text-center" style="white-space: nowrap;">
+                    <tr>
+                        <td class="align-middle">{{ item.title }}</td>
+                        <td class="text-center align-middle" style="white-space: nowrap;">
                             {{ item.release_date ? item.release_date|date('d M Y') : '—' }}
                         </td>
-                        <td>
-                            {% if isSkipped %}
-                                <span class="text-muted fst-italic">Already in DB</span>
+                        <td class="align-middle">
+                            <input type="text"
+                                   name="urls[{{ item.id }}]"
+                                   value="{{ item.nintendo_url ?? '' }}"
+                                   class="form-control form-control-sm{{ item.nintendo_url ? ' is-valid' : '' }}"
+                                   placeholder="https://www.nintendo.com/en-gb/Games/...">
+                        </td>
+                        <td class="text-center align-middle">
+                            {% if item.nintendo_url %}
+                                <a href="{{ item.nintendo_url }}" target="_blank" class="small" tabindex="-1">Open ↗</a>
                             {% else %}
-                                <input type="text"
-                                       name="urls[{{ item.id }}]"
-                                       value="{{ item.nintendo_url ?? '' }}"
-                                       class="form-control form-control-sm{{ item.nintendo_url ? ' is-valid' : '' }}"
-                                       placeholder="https://www.nintendo.com/en-gb/Games/...">
+                                <span class="text-muted">—</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -109,6 +112,8 @@
                         <span class="badge bg-danger">Low quality</span>
                     {% elseif item.item_status == 'bundle' %}
                         <span class="badge bg-info text-dark">Bundle</span>
+                    {% elseif item.item_status == 'already_in_db' %}
+                        <span class="badge bg-secondary">Already in DB</span>
                     {% endif %}
                 </td>
                 <td>

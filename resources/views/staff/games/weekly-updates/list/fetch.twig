@@ -25,12 +25,13 @@
         <table class="table table-sm table-bordered table-striped" id="fetch-table-{{ page.page_number }}">
             <thead class="table-dark">
                 <tr>
-                    <th style="width: 40%;">Title</th>
-                    <th style="width: 20%;">Publisher</th>
-                    <th style="width: 10%;">Players</th>
-                    <th style="width: 15%;">Status</th>
-                    <th style="width: 15%;"></th>
-                    <th style="width: 12%;"></th>
+                    <th style="width: 35%;">Title</th>
+                    <th class="text-center" style="width: 8%;">Nintendo page</th>
+                    <th style="width: 18%;">Publisher</th>
+                    <th style="width: 8%;">Players</th>
+                    <th style="width: 13%;">Status</th>
+                    <th style="width: 13%;"></th>
+                    <th style="width: 10%;"></th>
                 </tr>
             </thead>
             <tbody>
@@ -40,15 +41,17 @@
                     data-page="{{ page.page_number }}"
                     data-item-status="{{ item.item_status }}"
                     data-fetch-status="{{ item.fetch_status ?? 'pending' }}">
-                    <td>
-                        {{ item.title }}
+                    <td class="align-middle">{{ item.title }}</td>
+                    <td class="text-center align-middle">
                         {% if item.nintendo_url %}
-                            <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo ↗</a>
+                            <a href="{{ item.nintendo_url }}" target="_blank" class="small" tabindex="-1">Open ↗</a>
+                        {% else %}
+                            <span class="text-muted">—</span>
                         {% endif %}
                     </td>
-                    <td class="publisher-cell">{{ item.publisher_normalised ?? '—' }}</td>
-                    <td class="players-cell">{{ item.players ?? '—' }}</td>
-                    <td class="status-cell">
+                    <td class="publisher-cell align-middle">{{ item.publisher_normalised ?? '—' }}</td>
+                    <td class="players-cell align-middle">{{ item.players ?? '—' }}</td>
+                    <td class="status-cell align-middle">
                         {% if item.item_status == 'pending' %}
                             <span class="badge bg-light text-dark border">No URL</span>
                         {% elseif item.item_status == 'fetch_pending' %}
@@ -69,7 +72,7 @@
                             <span class="badge bg-secondary">{{ item.item_status }}</span>
                         {% endif %}
                     </td>
-                    <td class="error-cell text-muted small">
+                    <td class="error-cell text-muted small align-middle">
                         {% if item.fetch_status == 'failed' and item.fetch_error %}
                             {{ item.fetch_error }}
                         {% endif %}
