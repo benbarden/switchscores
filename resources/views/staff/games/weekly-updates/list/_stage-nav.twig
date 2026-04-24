@@ -63,7 +63,7 @@
             {% if fetchPending > 0 %}{% set parts = parts|merge([fetchPending ~ ' URL saved']) %}{% endif %}
             {% if lqReview > 0 %}{% set parts = parts|merge([lqReview ~ ' LQ review']) %}{% endif %}
             {% if packshotPending > 0 %}{% set parts = parts|merge([packshotPending ~ ' packshots needed']) %}{% endif %}
-            {% if categoryPending > 0 %}{% set parts = parts|merge([categoryPending ~ ' category needed']) %}{% endif %}
+            {% if categoryPending > 0 %}{% set parts = parts|merge([categoryPending ~ (categoryPending != 1 ? ' categories' : ' category') ~ ' needed']) %}{% endif %}
             {% if readyCount > 0 %}{% set parts = parts|merge([readyCount ~ ' ready']) %}{% endif %}
             {% if importedCount > 0 %}{% set parts = parts|merge([importedCount ~ ' imported']) %}{% endif %}
             {% if inDbCount > 0 %}{% set parts = parts|merge([inDbCount ~ ' already in DB']) %}{% endif %}

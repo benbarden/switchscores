@@ -173,13 +173,12 @@
 
 <hr class="mt-2">
 {% set categoryPendingCount = Counts['category_pending'] ?? 0 %}
-{% if categoryPendingCount == 0 %}
-    <a href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-success">Continue to Confirm →</a>
-{% else %}
-    <a href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="btn btn-outline-secondary">
-        Continue to Confirm → <small>({{ categoryPendingCount }} categor{{ categoryPendingCount != 1 ? 'ies' : 'y' }} still needed)</small>
-    </a>
-{% endif %}
+<a id="continue-btn"
+   href="{{ route('staff.games.weekly-updates.list.confirm', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}"
+   class="btn {{ categoryPendingCount == 0 ? 'btn-success' : 'btn-outline-secondary' }}"
+   data-pending="{{ categoryPendingCount }}">
+    Continue to Confirm →{% if categoryPendingCount > 0 %} <small id="continue-label">({{ categoryPendingCount }} categor{{ categoryPendingCount != 1 ? 'ies' : 'y' }} still needed)</small>{% endif %}
+</a>
 
 {% endblock page_inner %}
 
@@ -323,6 +322,22 @@
 
         if (!showingAccepted) {
             row.style.display = 'none';
+        }
+
+        // Update Continue button
+        var btn = document.getElementById('continue-btn');
+        var pending = parseInt(btn.dataset.pending, 10) - 1;
+        btn.dataset.pending = pending;
+        if (pending <= 0) {
+            btn.className = 'btn btn-success';
+            var lbl = document.getElementById('continue-label');
+            if (lbl) lbl.remove();
+        } else {
+            var lbl = document.getElementById('continue-label');
+            var word = pending === 1 ? 'category' : 'categories';
+            if (lbl) {
+                lbl.textContent = '(' + pending + ' ' + word + ' still needed)';
+            }
         }
     }
 

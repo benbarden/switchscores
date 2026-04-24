@@ -16,20 +16,12 @@
 
     <div class="col-md-6">
         <div class="card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header">
                 <strong>{{ list.label }}</strong>
-                {% if imported > 0 %}
-                    <span class="badge bg-success">Imported</span>
-                {% elseif ready > 0 %}
-                    <span class="badge bg-primary">Ready</span>
-                {% elseif pending > 0 %}
-                    <span class="badge bg-warning text-dark">In progress</span>
-                {% else %}
-                    <span class="badge bg-secondary">Not started</span>
-                {% endif %}
             </div>
             <div class="card-body">
-                <table class="table table-sm mb-3" style="max-width: 280px;">
+                <div class="d-flex gap-4">
+                <table class="table table-sm mb-3" style="max-width: 280px; flex-shrink: 0;">
                     <tbody>
                         {% set rawPages = RawPageCounts[console][listType] ?? 0 %}
                         {% if rawPages > 0 and imported == 0 and ready == 0 and pending == 0 %}
@@ -43,6 +35,23 @@
                         <tr><td>Already in DB</td><td>{{ alreadyInDb }}</td></tr>
                     </tbody>
                 </table>
+                <div class="d-flex flex-column align-items-center justify-content-center text-center ms-auto" style="min-width: 110px;">
+                    {% if imported > 0 %}
+                        <i class="fas fa-check-circle text-success" style="font-size: 2.5rem;"></i>
+                        <div class="fw-semibold text-success mt-2">Imported</div>
+                    {% elseif ready > 0 %}
+                        <i class="fas fa-flag-checkered text-primary" style="font-size: 2.5rem;"></i>
+                        <div class="fw-semibold text-primary mt-2">Ready to import</div>
+                    {% elseif pending > 0 %}
+                        <i class="fas fa-hourglass-half text-warning" style="font-size: 2.5rem;"></i>
+                        <div class="fw-semibold text-warning mt-2">In progress</div>
+                    {% else %}
+                        <i class="fas fa-minus-circle text-secondary" style="font-size: 2.5rem;"></i>
+                        <div class="fw-semibold text-secondary mt-2">Not started</div>
+                    {% endif %}
+                </div>
+                </div>
+
                 <div class="d-flex gap-2 flex-wrap">
                     <a href="{{ route('staff.games.weekly-updates.list.raw', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-primary">Raw input</a>
                     <a href="{{ route('staff.games.weekly-updates.list.urls', {'batchId': Batch.id, 'console': console, 'listType': listType}) }}" class="btn btn-sm btn-outline-secondary">URLs</a>

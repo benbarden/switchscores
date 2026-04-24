@@ -146,6 +146,8 @@ class CategorySuggester
         'survival roguelike'      => 'Survivor roguelike',
         'survivors'               => 'Survivor roguelike',
         'survival horror'         => 'Horror',
+        'horror game'             => 'Horror',
+        'horror masterpiece'      => 'Horror',
         'colouring book'          => 'Educational',
         'coloring book'           => 'Educational',
         'colour by number'        => 'Educational',
