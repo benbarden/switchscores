@@ -24,6 +24,8 @@ class TitleNormaliser
     public function normalise(string $title): string
     {
         // Remove trademark/registered symbols
+        // If the symbol sits between a word and a digit (e.g. "MotoGP™26"), insert a space
+        $title = preg_replace('/[™®](\d)/', ' $1', $title);
         $title = str_replace(['™', '®'], '', $title);
         $title = trim($title);
 
