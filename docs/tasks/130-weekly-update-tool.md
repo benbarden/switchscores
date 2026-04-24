@@ -549,6 +549,7 @@ Key files:
 ### To Do
 
 - **Publisher aliases** — support alternative names for publishers (e.g. "CGI Lab Games" → "CGI Lab"). Needs: `games_company_aliases` table (`company_id`, `alias_name`), lookup in Publishers step and NintendoPageFetcher, UI on company page to manage aliases. Workaround: rename in the publisher name input before clicking Create.
+- **Duplicate detection resilience** — if an existing game's title uses ` - ` as a separator and the TitleNormaliser converts it to `: `, the duplicate check fails and a new game is created instead. Fix: normalise the lookup title before comparing, or run a fuzzy match (strip punctuation/case). Workaround: manually delete the new duplicate, rename the old game to the corrected title, and set eshop_europe_order manually.
 - Stage 7: Confirm and import
 
 ---

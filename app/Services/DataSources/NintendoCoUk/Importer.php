@@ -210,7 +210,7 @@ class Importer
 
                 $linkId      = $sourceItem['fs_id'] ?? null;
                 $jsonString  = json_encode($sourceItem);
-                $contentHash = md5($jsonString);
+                $contentHash = md5($this->hashableFields($sourceItem));
 
                 $existing = $linkId
                     ? DataSourceRaw::where('source_id', $sourceId)->where('link_id', $linkId)->first()
@@ -229,8 +229,12 @@ class Importer
                     $record->save();
                     $newIds[] = $record->id;
                 } else {
+                    $changed = false;
+
                     if ($existing->is_delisted) {
                         $relistedIds[] = $existing->id;
+                        $existing->is_delisted = 0;
+                        $changed = true;
                     }
 
                     if ($existing->content_hash !== $contentHash) {
@@ -239,11 +243,18 @@ class Importer
                         $existing->source_data_json = $jsonString;
                         $existing->content_hash     = $contentHash;
                         $changedIds[] = $existing->id;
+                        $changed = true;
                     }
 
-                    $existing->last_seen_at = $now;
-                    $existing->is_delisted  = 0;
-                    $existing->save();
+                    if ($changed) {
+                        $existing->last_seen_at = $now;
+                        $existing->save();
+                    } else {
+                        // Only last_seen_at changes — use a raw update to avoid touching updated_at
+                        \Illuminate\Support\Facades\DB::table('data_source_raw')
+                            ->where('id', $existing->id)
+                            ->update(['last_seen_at' => $now]);
+                    }
                 }
             }
 
@@ -258,5 +269,29 @@ class Importer
             'changed_ids'  => $changedIds,
             'relisted_ids' => $relistedIds,
         ];
+    }
+
+    /**
+     * Extract only the meaningful fields for hashing.
+     * Excludes volatile Solr metadata (_version_, score, etc.) that changes every run.
+     */
+    private function hashableFields(array $item): string
+    {
+        $keys = [
+            'fs_id', 'title', 'system_type', 'url',
+            'price_regular_f', 'price_lowest_f', 'price_discount_percentage_f',
+            'pretty_date_s', 'publisher',
+            'players_from', 'players_to',
+            'pretty_game_categories_txt',
+            'image_url_sq_s', 'image_url_h2x1_s',
+            'physical_version_b', 'dlc_shown_b', 'demo_availability',
+        ];
+
+        $subset = [];
+        foreach ($keys as $key) {
+            $subset[$key] = $item[$key] ?? null;
+        }
+
+        return json_encode($subset);
     }
 }
