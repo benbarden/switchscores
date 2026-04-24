@@ -835,8 +835,7 @@ class WeeklyBatchListController extends Controller
                 WeeklyBatchItem::STATUS_ALREADY_IN_DB,
                 WeeklyBatchItem::STATUS_READY,
             ])
-            ->sortBy('sort_order')
-            ->sortBy('page_number');
+            ->sortBy(fn($i) => [$i->page_number, $i->sort_order]);
 
         $orderByDate = [];
         $eshopOrderMap = []; // item_id → eshop_europe_order

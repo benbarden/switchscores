@@ -22,16 +22,25 @@
         {% for batch in Batches %}
             <tr>
                 <td><a href="{{ route('staff.games.weekly-updates.show', {'batchId': batch.id}) }}">{{ batch.batch_date|date('d M Y') }}</a></td>
+                {% set c = AllCounts[batch.id] ?? {} %}
+                {% set totalImported = 0 %}
+                {% set totalPending = 0 %}
+                {% for con in ['switch-2', 'switch-1'] %}
+                    {% for lt in ['new', 'upcoming'] %}
+                        {% set lc2 = c[con][lt] ?? {} %}
+                        {% set totalImported = totalImported + (lc2['imported'] ?? 0) %}
+                        {% set totalPending = totalPending + (lc2['pending'] ?? 0) + (lc2['fetch_pending'] ?? 0) + (lc2['lq_review'] ?? 0) + (lc2['packshot_pending'] ?? 0) + (lc2['category_pending'] ?? 0) + (lc2['ready'] ?? 0) %}
+                    {% endfor %}
+                {% endfor %}
                 <td>
-                    {% if batch.status == 'complete' %}
+                    {% if totalImported > 0 and totalPending == 0 %}
                         <span class="badge bg-success">Complete</span>
-                    {% elseif batch.status == 'in_progress' %}
+                    {% elseif totalImported > 0 or totalPending > 0 %}
                         <span class="badge bg-primary">In progress</span>
                     {% else %}
                         <span class="badge bg-secondary">Setup</span>
                     {% endif %}
                 </td>
-                {% set c = AllCounts[batch.id] ?? {} %}
                 {% for console in ['switch-2', 'switch-1'] %}
                     {% for listType in ['new', 'upcoming'] %}
                         {% set lc = c[console][listType] ?? {} %}
@@ -39,11 +48,12 @@
                         {% set ready = lc['ready'] ?? 0 %}
                         {% set lq = lc['low_quality'] ?? 0 %}
                         {% set bundle = lc['bundle'] ?? 0 %}
+                        {% set excluded = lq + bundle %}
                         <td class="text-center small">
-                            {% if imported > 0 %}<span class="text-success">{{ imported }} done</span>{% endif %}
-                            {% if ready > 0 %}<span class="text-primary"> {{ ready }} ready</span>{% endif %}
-                            {% if lq > 0 %}<span class="text-muted"> {{ lq }} LQ</span>{% endif %}
-                            {% if imported == 0 and ready == 0 and lq == 0 %}—{% endif %}
+                            {% if imported > 0 %}<span class="text-success">{{ imported }} imported</span>{% endif %}
+                            {% if ready > 0 %}<br><span class="text-primary">{{ ready }} ready</span>{% endif %}
+                            {% if excluded > 0 %}<br><span class="text-muted">{{ excluded }} excluded</span>{% endif %}
+                            {% if imported == 0 and ready == 0 and excluded == 0 %}—{% endif %}
                         </td>
                     {% endfor %}
                 {% endfor %}
