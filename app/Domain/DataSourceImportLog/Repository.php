@@ -69,4 +69,17 @@ class Repository
             ->limit($limit)
             ->get();
     }
+
+    public function find($logId): ?DataSourceImportLog
+    {
+        return DataSourceImportLog::find($logId);
+    }
+
+    public function getBySourceIdAndLinkId($sourceId, $linkId)
+    {
+        return DataSourceImportLog::where('source_id', $sourceId)
+            ->where('link_id', $linkId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 }

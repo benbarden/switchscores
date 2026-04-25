@@ -178,11 +178,15 @@ class ImportParseLink extends Command
                 $parsedItem = $this->parser->parseItem();
                 $parsedItem->save();
 
-                $eventType = in_array($rawItem->id, $allNewIds)
-                    ? DataSourceImportLog::EVENT_ADDED
-                    : DataSourceImportLog::EVENT_UPDATED;
-
-                $this->repoImportLog->create($sourceId, $rawItem->link_id, $rawItem->title, $parsedItem->game_id, $eventType, $runId);
+                if (in_array($rawItem->id, $allNewIds)) {
+                    $this->repoImportLog->create($sourceId, $rawItem->link_id, $rawItem->title, $parsedItem->game_id, DataSourceImportLog::EVENT_ADDED, $runId);
+                } else {
+                    // Only log as updated when parsed fields actually changed
+                    $changedFields = $this->parser->getChangedFields();
+                    if ($changedFields !== null) {
+                        $this->repoImportLog->create($sourceId, $rawItem->link_id, $rawItem->title, $parsedItem->game_id, DataSourceImportLog::EVENT_UPDATED, $runId, $changedFields);
+                    }
+                }
 
                 $parsedItemCount++;
             }

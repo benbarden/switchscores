@@ -1,0 +1,71 @@
+{% import 'ui/components/headings/heading.twig' as heading %}
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="mb-3">
+    <a href="{{ route('staff.data-sources.import-runs.view', {'runId': Run.id}) }}" class="btn btn-sm btn-outline-secondary">&larr; Back to run #{{ Run.id }}</a>
+    <a href="{{ route('staff.data-sources.detail', {'sourceId': LogEntry.source_id, 'linkId': LogEntry.link_id}) }}" class="btn btn-sm btn-outline-secondary ms-1">View parsed item</a>
+</div>
+
+<table class="table table-sm" style="max-width: 600px;">
+    <tbody>
+        <tr>
+            <td style="width: 140px;"><strong>Title</strong></td>
+            <td>{{ LogEntry.title ?? '—' }}</td>
+        </tr>
+        <tr>
+            <td><strong>Link ID</strong></td>
+            <td>{{ LogEntry.link_id }}</td>
+        </tr>
+        {% if LogEntry.game and LogEntry.game.id %}
+            <tr>
+                <td><strong>Game</strong></td>
+                <td>{{ gamelink.title(LogEntry.game, 'staff') }}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td><strong>Run</strong></td>
+            <td><a href="{{ route('staff.data-sources.import-runs.view', {'runId': Run.id}) }}">#{{ Run.id }}</a></td>
+        </tr>
+        <tr>
+            <td><strong>Time</strong></td>
+            <td>{{ LogEntry.created_at|date('d M Y H:i:s') }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{{ heading.renderSlick('Changed fields') }}
+
+{% if LogEntry.changed_fields and LogEntry.changed_fields|length > 0 %}
+
+    <table class="table table-sm table-bordered" style="max-width: 800px;">
+        <thead>
+            <tr>
+                <th style="width: 180px;">Field</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field, change in LogEntry.changed_fields %}
+                <tr>
+                    <td><strong>{{ field }}</strong></td>
+                    <td class="text-danger" style="word-break: break-word;">
+                        {% if change.from is not null %}{{ change.from }}{% else %}<em class="text-muted">null</em>{% endif %}
+                    </td>
+                    <td class="text-success" style="word-break: break-word;">
+                        {% if change.to is not null %}{{ change.to }}{% else %}<em class="text-muted">null</em>{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <p class="text-muted">No field-level diff recorded for this entry.</p>
+{% endif %}
+
+{% endblock page_inner %}

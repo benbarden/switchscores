@@ -8,6 +8,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/data-sources/dashboard', 'Staff\DataSources\DashboardController@show')->name('staff.data-sources.dashboard');
     Route::get('/staff/data-sources/import-runs', 'Staff\DataSources\DataSourceImportRunController@index')->name('staff.data-sources.import-runs');
     Route::get('/staff/data-sources/import-runs/{runId}', 'Staff\DataSources\DataSourceImportRunController@view')->name('staff.data-sources.import-runs.view');
+    Route::get('/staff/data-sources/import-runs/{runId}/log/{logId}/diff', 'Staff\DataSources\DataSourceImportRunController@viewDiff')->name('staff.data-sources.import-runs.diff');
 
     // Data sources: Lists
     Route::get('/staff/data-sources/{sourceId}/list-raw', 'Staff\DataSources\DataSourceRawController@show')->name('staff.data-sources.list-raw');

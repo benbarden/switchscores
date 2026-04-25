@@ -356,6 +356,17 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function dataSourcesImportRunDiffSubpage(string $title, int $runId): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem('Import runs', route('staff.data-sources.import-runs')),
+            new BreadcrumbItem('Run #'.$runId, route('staff.data-sources.import-runs.view', ['runId' => $runId])),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     // *** WEEKLY UPDATES *** //
     public static function weeklyUpdatesSubpage(string $title): BreadcrumbNav
     {

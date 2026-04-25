@@ -59,4 +59,21 @@ class DataSourceImportRunController extends Controller
 
         return view('staff.data-sources.import-runs.view', $bindings);
     }
+
+    public function viewDiff($runId, $logId)
+    {
+        $run = $this->repoImportRun->find($runId);
+        if (!$run) abort(404);
+
+        $logEntry = $this->repoImportLog->find($logId);
+        if (!$logEntry || $logEntry->run_id != $runId) abort(404);
+
+        $pageTitle = 'Diff: '.$logEntry->title;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesImportRunDiffSubpage($pageTitle, $runId))->bindings;
+
+        $bindings['Run'] = $run;
+        $bindings['LogEntry'] = $logEntry;
+
+        return view('staff.data-sources.import-runs.diff', $bindings);
+    }
 }

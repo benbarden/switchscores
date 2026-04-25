@@ -97,6 +97,7 @@
                 <th>Link ID</th>
                 <th>Game</th>
                 <th>Time</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -131,6 +132,11 @@
                     {% endif %}
                 </td>
                 <td style="white-space: nowrap;">{{ entry.created_at|date('H:i:s') }}</td>
+                <td>
+                    {% if entry.event_type == 'updated' %}
+                        <a href="{{ route('staff.data-sources.import-runs.diff', {'runId': Run.id, 'logId': entry.id}) }}" class="btn btn-sm btn-outline-primary">Diff</a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

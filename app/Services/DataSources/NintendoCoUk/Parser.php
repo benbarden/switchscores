@@ -24,6 +24,8 @@ class Parser
      */
     private $rawJsonData;
 
+    private ?array $oldFieldValues = null;
+
     public function __construct()
     {
     }
@@ -39,6 +41,9 @@ class Parser
             ->where('link_id', $dataSourceRaw->link_id)
             ->first();
 
+        // Snapshot field values before any changes; null means this is a new record
+        $this->oldFieldValues = $existing ? $this->snapshotFields($existing) : null;
+
         $dataSourceParsed = $existing ?? new DataSourceParsed();
 
         $dataSourceParsed->source_id  = $dataSourceRaw->source_id;
@@ -49,6 +54,63 @@ class Parser
 
         $this->dataSourceParsed = $dataSourceParsed;
         $this->rawJsonData = json_decode($dataSourceRaw->source_data_json, true);
+    }
+
+    /**
+     * Returns a field-level diff of parsed values compared to the previous snapshot.
+     * Returns null for new records (no previous values to compare against).
+     * Returns null if no parsed fields changed.
+     * If new raw fields are added to parsed records in future, add them to snapshotFields().
+     */
+    public function getChangedFields(): ?array
+    {
+        if ($this->oldFieldValues === null) {
+            return null;
+        }
+
+        $newValues = $this->snapshotFields($this->dataSourceParsed);
+        $diff = [];
+
+        foreach ($this->oldFieldValues as $field => $oldValue) {
+            $newValue = $newValues[$field] ?? null;
+            if ($this->valuesAreDifferent($oldValue, $newValue)) {
+                $diff[$field] = ['from' => $oldValue, 'to' => $newValue];
+            }
+        }
+
+        return empty($diff) ? null : $diff;
+    }
+
+    private function snapshotFields(DataSourceParsed $item): array
+    {
+        return [
+            'title'                => $item->title,
+            'console_id'           => $item->console_id,
+            'url'                  => $item->url,
+            'price_standard'       => $item->price_standard,
+            'price_discounted'     => $item->price_discounted,
+            'price_discount_pc'    => $item->price_discount_pc,
+            'release_date_eu'      => $item->release_date_eu,
+            'release_date_us'      => $item->release_date_us,
+            'release_date_jp'      => $item->release_date_jp,
+            'developers'           => $item->developers,
+            'publishers'           => $item->publishers,
+            'players'              => $item->players,
+            'genres_json'          => $item->genres_json,
+            'image_square'         => $item->image_square,
+            'image_header'         => $item->image_header,
+            'has_physical_version' => $item->has_physical_version,
+            'has_dlc'              => $item->has_dlc,
+            'has_demo'             => $item->has_demo,
+            'is_delisted'          => $item->is_delisted,
+        ];
+    }
+
+    private function valuesAreDifferent($a, $b): bool
+    {
+        if ($a === null && $b === null) return false;
+        if ($a === null || $b === null) return true;
+        return (string) $a !== (string) $b;
     }
 
     /**

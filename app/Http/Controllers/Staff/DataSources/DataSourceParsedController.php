@@ -22,6 +22,7 @@ use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
+use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
@@ -36,6 +37,7 @@ class DataSourceParsedController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private DataSourceRawRepository $repoDataSourceRaw,
+        private DataSourceImportLogRepository $repoImportLog,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator,
         private DownloadPackshotHelper $downloadPackshotHelper
@@ -92,6 +94,7 @@ class DataSourceParsedController extends Controller
         $bindings['IgnoreIdList'] = $ignoreIdList;
         $bindings['RawItem'] = $rawItem;
         $bindings['SourceDataRaw'] = $rawItem ? json_decode($rawItem->source_data_json, true) : null;
+        $bindings['HistoryEntries'] = $this->repoImportLog->getBySourceIdAndLinkId($sourceId, $linkId);
 
         return view('staff.data-sources.parsed.view', $bindings);
     }

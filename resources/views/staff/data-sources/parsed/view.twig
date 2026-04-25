@@ -12,6 +12,7 @@
     <ul>
         <li><a href="#tabs-parsed">Parsed item</a></li>
         <li><a href="#tabs-raw">Raw item</a></li>
+        <li><a href="#tabs-history">History {% if HistoryEntries|length > 0 %}({{ HistoryEntries|length }}){% endif %}</a></li>
     </ul>
 
     <div id="tabs-parsed">
@@ -210,6 +211,69 @@
             </table>
         {% else %}
             <p class="text-muted">No raw item found for this parsed item.</p>
+        {% endif %}
+
+    </div>
+
+    <div id="tabs-history">
+
+        <h2>History</h2>
+
+        {% if HistoryEntries|length > 0 %}
+
+            <table class="table table-sm table-striped table-hover" style="max-width: 900px;">
+                <thead>
+                    <tr>
+                        <th style="width: 170px;">Date</th>
+                        <th style="width: 110px;">Event</th>
+                        <th style="width: 80px;">Run</th>
+                        <th>Fields changed</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in HistoryEntries %}
+                        <tr>
+                            <td style="white-space: nowrap;">{{ entry.created_at|date('d M Y H:i:s') }}</td>
+                            <td>
+                                {% if entry.event_type == 'added' %}
+                                    <span class="badge bg-success">Added</span>
+                                {% elseif entry.event_type == 'updated' %}
+                                    <span class="badge bg-primary">Updated</span>
+                                {% elseif entry.event_type == 'delisted' %}
+                                    <span class="badge bg-dark">Delisted</span>
+                                {% elseif entry.event_type == 'conflict' %}
+                                    <span class="badge bg-warning text-dark">Conflict</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ entry.event_type }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if entry.run_id %}
+                                    <a href="{{ route('staff.data-sources.import-runs.view', {'runId': entry.run_id}) }}">#{{ entry.run_id }}</a>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if entry.changed_fields and entry.changed_fields|length > 0 %}
+                                    {{ entry.changed_fields|keys|join(', ') }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if entry.event_type == 'updated' and entry.run_id %}
+                                    <a href="{{ route('staff.data-sources.import-runs.diff', {'runId': entry.run_id, 'logId': entry.id}) }}" class="btn btn-sm btn-outline-primary">View diff</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p class="text-muted">No history found for this item.</p>
         {% endif %}
 
     </div>
