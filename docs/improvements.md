@@ -132,7 +132,6 @@ This document tracks potential improvements, features, and enhancements for the 
 | 77 | Video URL: scrape from Nintendo pages | Medium | Extend #110 crawl system | Scrape official video URL from Nintendo UK pages during crawl. |
 | 116 | Publisher change monitoring | Medium | New feature | Watch for publisher name changes on Nintendo pages. Challenge: distinguish between publisher renames (update existing) vs legitimate publisher changes (new assignment). Log changes for staff review rather than auto-updating. |
 | 87 | GH156: save smaller versions of images for landing pages | High | Requires ImageMagick + CDN strategy | Big images slow pages. But don't want fuzzy images in larger spaces. Balance needed. |
-| 90 | GH16: Link to Steam and reviews | High | No Steam integration; requires API | Don't use in ranking but show for games with 0-1 reviews. Better than empty page. |
 | 111 | Refactor App\Domain folder structure | Medium-High | Do in stages | Split large Repository.php files into smaller focused files. Only have folders in App\Domain that map to models. Phase out App\Domain\Game\Repository.php (already started). Merge App\Domain\GameStats into App\Domain\Game. Pattern: App\Domain\Game\Repository\* for sub-repositories. |
 | 112 | Standardise staff page section headers | Low | Twig macro exists | Mix of hard-coded HTML and reusable heading.renderSlick(). Audit staff views and consolidate to use the macro consistently. |
 | 114 | Retire App\Services folder | Medium | 13 files to migrate | Move all Services to Domain: DataSources/NintendoCoUk→DataSource/NintendoCoUk, Game/*→Game/, Feed/*→Feed/, DataQuality→Game or new folder, Eshop/*→DataSource/. Update namespaces, imports, and delete empty folders. Related to #111. |
@@ -208,6 +207,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 90 | Link to Steam and reviews | Done | 2026-05-04 | Staff screen to track Steam status per game (not checked / linked / not on Steam). Auto-sync Steam review summary on link. Weekly cron (`game:sync-steam-reviews`). Public game page shows Steam review summary with colour-coded sentiment. LQ games excluded throughout. |
 | 127 | Smarter Nintendo.co.uk import | Done | 2026-04-23 | Upsert approach with content hashing. Detects new/changed/delisted games. Full audit log (`data_source_import_log`) with event types added/updated/delisted/conflict. Import run tracking (`data_source_import_runs`). Staff dashboard shows 21-day run history; detail page shows paginated log entries with filter by event type. Closes #113. |
 | 96 | Allow games companies to update contact details | Done | 2026-04-23 | Edit profile page allows updating email, URL, and social links. |
 | 14+15 | Data source items: staff pages | Superseded | 2026-04-23 | Replaced by #93, #123, #124, #125, #126. |

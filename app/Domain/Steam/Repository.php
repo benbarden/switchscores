@@ -55,6 +55,31 @@ class Repository
         return $changed;
     }
 
+    public function getUnrankedNotChecked(?int $limit = null)
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->active()
+            ->orderBy('review_count', 'asc')
+            ->orderBy('eu_release_date', 'asc');
+
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    public function countUnrankedNotChecked(): int
+    {
+        return Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->active()
+            ->count();
+    }
+
     public function getByStatus(SteamStatus $status, ?int $limit = null, bool $oldestFirst = false)
     {
         $dateOrder = $oldestFirst ? 'asc' : 'desc';

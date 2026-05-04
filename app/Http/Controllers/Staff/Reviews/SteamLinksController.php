@@ -15,7 +15,7 @@ use App\Models\Game;
 
 class SteamLinksController extends Controller
 {
-    private const VALID_TABS = ['not-checked', 'not-checked-oldest', 'linked', 'not-on-steam'];
+    private const VALID_TABS = ['not-checked', 'not-checked-oldest', 'not-checked-unranked', 'linked', 'not-on-steam'];
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
@@ -30,14 +30,16 @@ class SteamLinksController extends Controller
         $pageTitle = 'Steam links';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
-        $bindings['GamesNotChecked']       = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100);
-        $bindings['GamesNotCheckedOldest'] = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100, true);
-        $bindings['GamesLinked']           = $this->repoSteam->getByStatus(SteamStatus::LINKED);
-        $bindings['GamesNotOnSteam']       = $this->repoSteam->getByStatus(SteamStatus::NOT_ON_STEAM);
+        $bindings['GamesNotChecked']         = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100);
+        $bindings['GamesNotCheckedOldest']   = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100, true);
+        $bindings['GamesNotCheckedUnranked'] = $this->repoSteam->getUnrankedNotChecked(100);
+        $bindings['GamesLinked']             = $this->repoSteam->getByStatus(SteamStatus::LINKED);
+        $bindings['GamesNotOnSteam']         = $this->repoSteam->getByStatus(SteamStatus::NOT_ON_STEAM);
 
-        $bindings['CountNotChecked']  = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
-        $bindings['CountLinked']      = count($bindings['GamesLinked']);
-        $bindings['CountNotOnSteam']  = count($bindings['GamesNotOnSteam']);
+        $bindings['CountNotChecked']         = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
+        $bindings['CountNotCheckedUnranked'] = $this->repoSteam->countUnrankedNotChecked();
+        $bindings['CountLinked']             = count($bindings['GamesLinked']);
+        $bindings['CountNotOnSteam']         = count($bindings['GamesNotOnSteam']);
 
         return view('staff.reviews.steam-links.index', $bindings);
     }

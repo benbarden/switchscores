@@ -22,6 +22,12 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="not-checked-unranked-tab" data-bs-toggle="tab" data-bs-target="#not-checked-unranked" type="button" role="tab">
+            Unranked
+            <span class="badge bg-warning ms-1">{{ CountNotCheckedUnranked }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked" type="button" role="tab">
             Linked
             <span class="badge bg-success ms-1">{{ CountLinked }}</span>
@@ -60,6 +66,19 @@
             {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedOldest, 'RedirectTab': 'not-checked-oldest'} %}
         {% else %}
             <p>All done! No games left to check.</p>
+        {% endif %}
+    </div>
+
+    {# ---- NOT CHECKED (UNRANKED) ---- #}
+    <div class="tab-pane fade" id="not-checked-unranked" role="tabpanel">
+        <p class="text-muted">Unranked games with no Steam status set, sorted by review count then release date. Low quality titles are excluded.</p>
+        {% if GamesNotCheckedUnranked|length < CountNotCheckedUnranked %}
+            <div class="alert alert-info">Showing {{ GamesNotCheckedUnranked|length }} of {{ CountNotCheckedUnranked }} games. Work through these and reload to see the next batch.</div>
+        {% endif %}
+        {% if GamesNotCheckedUnranked|length > 0 %}
+            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedUnranked, 'RedirectTab': 'not-checked-unranked'} %}
+        {% else %}
+            <p>No unranked games left to check.</p>
         {% endif %}
     </div>
 
