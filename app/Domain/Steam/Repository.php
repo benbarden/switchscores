@@ -16,11 +16,14 @@ class Repository
             ->count();
     }
 
-    public function getLinkedGames()
+    public function getLinkedGames(int $limit = 100)
     {
         return Game::where('steam_status', SteamStatus::LINKED->value)
             ->active()
-            ->get(['id', 'title', 'steam_id']);
+            ->leftJoin('steam_review_data', 'games.id', '=', 'steam_review_data.game_id')
+            ->orderByRaw('steam_review_data.last_synced_at IS NOT NULL, steam_review_data.last_synced_at ASC')
+            ->limit($limit)
+            ->get(['games.id', 'games.title', 'games.steam_id']);
     }
 
     public function getReviewDataForGame(int $gameId): ?SteamReviewData

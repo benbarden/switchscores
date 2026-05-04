@@ -10,6 +10,7 @@ use App\Domain\Steam\SyncService as SteamSyncService;
 class SyncSteamReviews extends Command
 {
     protected $signature = 'game:sync-steam-reviews
+                            {--limit=100 : Number of games to process per run}
                             {--delay=2 : Seconds to wait between API requests}';
 
     protected $description = 'Fetch and store Steam review summaries for all linked games.';
@@ -24,8 +25,9 @@ class SyncSteamReviews extends Command
 
     public function handle(): void
     {
+        $limit = (int) $this->option('limit');
         $delay = (int) $this->option('delay');
-        $games = $this->repoSteam->getLinkedGames();
+        $games = $this->repoSteam->getLinkedGames($limit);
 
         if ($games->isEmpty()) {
             $this->info('No games linked to Steam.');
