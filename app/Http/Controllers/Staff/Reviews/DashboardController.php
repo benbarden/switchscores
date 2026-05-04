@@ -63,9 +63,10 @@ class DashboardController extends Controller
         $bindings['ProcessStatusStats'] = $this->statsReviewDraft->getProcessStatusStats();
 
         // Steam coverage
-        $bindings['SteamCountLinked']     = $this->repoSteam->countByStatus(SteamStatus::LINKED);
-        $bindings['SteamCountNotOnSteam'] = $this->repoSteam->countByStatus(SteamStatus::NOT_ON_STEAM);
-        $bindings['SteamCountNotChecked'] = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
+        $bindings['SteamCountLinked']           = $this->repoSteam->countByStatus(SteamStatus::LINKED);
+        $bindings['SteamCountNotOnSteam']       = $this->repoSteam->countByStatus(SteamStatus::NOT_ON_STEAM);
+        $bindings['SteamCountNotChecked']       = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
+        $bindings['SteamCountUnrankedNotChecked'] = $this->repoSteam->countUnrankedNotChecked();
 
         return view('staff.reviews.dashboard', $bindings);
     }

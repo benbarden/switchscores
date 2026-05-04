@@ -60,6 +60,8 @@ class Repository
         $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
             ->where('is_low_quality', 0)
             ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
             ->active()
             ->orderBy('review_count', 'asc')
             ->orderBy('eu_release_date', 'asc');
@@ -76,6 +78,8 @@ class Repository
         return Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
             ->where('is_low_quality', 0)
             ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
             ->active()
             ->count();
     }

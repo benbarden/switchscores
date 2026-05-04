@@ -159,6 +159,14 @@
                     <a href="{{ route('staff.reviews.steam-links.index') }}" class="h4">{{ SteamCountNotChecked }}</a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked">Unranked (excl. Arcade Archives)</a>
+                </td>
+                <td class="text-end">
+                    <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked" class="h4">{{ SteamCountUnrankedNotChecked }}</a>
+                </td>
+            </tr>
             </tbody>
         </table>
 
