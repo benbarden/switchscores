@@ -41,6 +41,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/reviews/campaigns/edit/{campaignId}', 'Staff\Reviews\CampaignsController@edit')->name('staff.reviews.campaigns.edit');
     Route::match(['get', 'post'], '/staff/reviews/campaigns/edit-games/{campaignId}', 'Staff\Reviews\CampaignsController@editGames')->name('staff.reviews.campaigns.editGames');
 
+    // Steam links
+    Route::get('/staff/reviews/steam-links', 'Staff\Reviews\SteamLinksController@index')->name('staff.reviews.steam-links.index');
+    Route::post('/staff/reviews/steam-links/{gameId}/link', 'Staff\Reviews\SteamLinksController@link')->name('staff.reviews.steam-links.link');
+    Route::post('/staff/reviews/steam-links/{gameId}/not-on-steam', 'Staff\Reviews\SteamLinksController@notOnSteam')->name('staff.reviews.steam-links.notOnSteam');
+    Route::post('/staff/reviews/steam-links/{gameId}/reset', 'Staff\Reviews\SteamLinksController@reset')->name('staff.reviews.steam-links.reset');
+
     // Unranked lists
     Route::get('/staff/reviews/unranked/review-count', 'Staff\Reviews\UnrankedController@reviewCountLanding')->name('staff.reviews.unranked.review-count-landing');
     Route::get('/staff/reviews/unranked/review-count/{reviewCount}/list', 'Staff\Reviews\UnrankedController@reviewCountList')->name('staff.reviews.unranked.review-count-list');

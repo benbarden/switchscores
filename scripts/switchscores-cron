@@ -31,3 +31,6 @@
 
 # URL crawl - check Nintendo URLs for 404s (100 games/night, ~5 min runtime)
 30 6 * * * www-data cd /var/www/switchscores.com && php artisan game:crawl-batch --limit=100 --delay=3 >/dev/null 2>&1
+
+# Steam reviews - weekly sync (Sunday 3am)
+0 3 * * 0 www-data cd /var/www/switchscores.com && php artisan game:sync-steam-reviews --delay=2 >/dev/null 2>&1

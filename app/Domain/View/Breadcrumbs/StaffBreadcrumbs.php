@@ -93,6 +93,16 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function reviewsSteamLinksSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Reviews', route('staff.reviews.dashboard')),
+            new BreadcrumbItem('Steam links', route('staff.reviews.steam-links.index')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     public static function reviewsReviewSitesSubpage(string $title): BreadcrumbNav
     {
         return new BreadcrumbNav([
