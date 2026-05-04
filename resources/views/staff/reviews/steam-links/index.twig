@@ -90,11 +90,11 @@
                 <thead>
                     <tr>
                         <th class="text-end">#</th>
-                        <th>Title</th>
+                        <th style="min-width: 400px;">Title</th>
                         <th>Release date</th>
                         <th class="text-center">Steam Store</th>
-                        <th>Steam reviews</th>
-                        <th style="min-width: 200px;">Steam App ID</th>
+                        <th style="min-width: 100px;">Steam reviews</th>
+                        <th style="min-width: 130px;">Steam App ID</th>
                         <th class="text-center">Reset</th>
                     </tr>
                 </thead>
@@ -102,7 +102,7 @@
                     {% for item in GamesLinked %}
                         <tr>
                             <td class="text-end">{{ item.id }}</td>
-                            <td style="max-width: 400px; word-break: break-word;">{{ gamelink.title(item, 'staff') }}</td>
+                            <td style="min-width: 400px; word-break: break-word;">{{ gamelink.title(item, 'staff') }}</td>
                             <td>{{ item.eu_release_date }}</td>
                             <td class="text-center">
                                 <a href="https://store.steampowered.com/app/{{ item.steam_id }}" target="_blank" class="btn btn-sm btn-outline-primary">
