@@ -145,6 +145,7 @@ class CategorySuggester
         'deck builder'            => 'Card game',
         'deck-builder'            => 'Card game',
         'deckbuilder'             => 'Card game',
+        'cards'                   => 'Card game',
         'survivor roguelike'      => 'Survivor roguelike',
         'survival roguelike'      => 'Survivor roguelike',
         'survivors'               => 'Survivor roguelike',
@@ -152,6 +153,7 @@ class CategorySuggester
         'brick breaking'          => 'Brick breaking',
         'block breaker'           => 'Brick breaking',
         'breakout'                => 'Brick breaking',
+        'survival adventure'      => 'Survival',
         'survival horror'         => 'Horror',
         'horror game'             => 'Horror',
         'horror masterpiece'      => 'Horror',
@@ -162,6 +164,11 @@ class CategorySuggester
         'for toddlers'            => 'Educational',
         'kids and toddlers'       => 'Educational',
         'for young children'      => 'Educational',
+    ];
+
+    // Phrases scored at SCORE_STRONG — generic enough to need corroboration
+    private const PHRASE_MAP_STRONG = [
+        'survival' => 'Survival',
     ];
 
     // parentMap built from DB: child category name => parent category name
@@ -296,6 +303,12 @@ class CategorySuggester
         foreach (self::PHRASE_MAP as $phrase => $cat) {
             if (str_contains($lower, strtolower($phrase))) {
                 $this->addScore($scores, $signals, $cat, self::SCORE_DEFINITIVE, "{$source}: \"{$phrase}\"");
+            }
+        }
+
+        foreach (self::PHRASE_MAP_STRONG as $phrase => $cat) {
+            if (str_contains($lower, strtolower($phrase))) {
+                $this->addScore($scores, $signals, $cat, self::SCORE_STRONG, "{$source}: \"{$phrase}\"");
             }
         }
     }
