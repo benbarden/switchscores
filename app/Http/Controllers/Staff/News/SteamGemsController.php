@@ -167,7 +167,7 @@ class SteamGemsController extends Controller
             $steamSentiment = '';
             if ($game->steamReviewData) {
                 $steamSentiment = '<p><em>Steam: ' . e($game->steamReviewData->review_score_desc)
-                    . ' — ' . number_format($game->steamReviewData->total_reviews) . ' reviews</em></p>';
+                    . ' (' . number_format($game->steamReviewData->total_reviews) . ' reviews)</em></p>';
             }
 
             $gameHtml .= '<h3>' . e($game->title) . '</h3>' . "\n";
@@ -176,23 +176,32 @@ class SteamGemsController extends Controller
             $gameHtml .= '[gameblurb ids="' . $game->id . '"]' . "\n";
         }
 
-        $month       = now()->format('F Y');
+        $previousPostCount = DB::table('news_post_games as npg')
+            ->join('feature_queue as fq', 'fq.id', '=', 'npg.feature_queue_id')
+            ->where('npg.bucket', $bucket)
+            ->where('fq.category_id', $categoryId)
+            ->distinct('npg.news_post_id')
+            ->count('npg.news_post_id');
+
+        $partNumber   = $previousPostCount + 1;
         $categorySlug = Str::slug($category->name);
-        $postTitle   = "{$category->name} Switch games loved on Steam — {$month}";
-        $postSlug    = "{$categorySlug}-switch-games-loved-on-steam-" . now()->format('Y-m');
-        $url         = '/news/' . now()->format('Y-m-d') . '/' . $postSlug;
+        $postTitle    = "Unranked Switch games popular on Steam, part {$partNumber}: {$category->name}";
+        $postSlug     = "unranked-switch-games-popular-on-steam-part-{$partNumber}-{$categorySlug}";
+        $url          = '/news/' . now()->format('Y-m-d') . '/' . $postSlug;
 
         $existingPost = $this->repoNews->getByUrl($url);
         if ($existingPost) {
             return redirect()->route('staff.news.edit', $existingPost->id);
         }
 
-        $intro = "These {$category->name} Switch games haven't been reviewed much on Switch Scores yet, "
-            . "but Steam players love them. If you've played any of these, consider adding your review.";
+        $intro = "Many Switch games don't have enough reviews to be ranked at Switch Scores. "
+            . "Some don't have any reviews at all. But they're popular on Steam. "
+            . "This series is to showcase some undiscovered gems on Switch that landed well on Steam. "
+            . "This time we'll be looking at the {$category->name} category.";
 
         $contentHtml = "<p>{$intro}</p>\n{$gameHtml}";
 
-        $post = $this->repoNews->create($postTitle, 8, $url, $contentHtml, $firstGameId);
+        $post = $this->repoNews->create($postTitle, 13, $url, $contentHtml, $firstGameId);
 
         DB::table('news_post_games')->insert($picks->map(fn($row) => [
             'news_post_id'     => $post->id,
