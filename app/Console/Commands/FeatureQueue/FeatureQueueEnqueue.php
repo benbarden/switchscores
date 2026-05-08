@@ -16,6 +16,8 @@ class FeatureQueueEnqueue extends Command
     protected $signature = 'features:enqueue
         {--bucket= : Bucket slug}
         {--min-score=7.5}
+        {--min-steam-score=7 : Minimum Steam review_score (0-9) for unranked-steam-gem bucket}
+        {--category-id= : Category ID to scope the unranked-steam-gem bucket}
         {--cooldown-days=120}
         {--refresh : Clear unused entries in this bucket before enqueueing}';
 
@@ -31,8 +33,10 @@ class FeatureQueueEnqueue extends Command
      */
     public function handle()
     {
-        $minScore = (float) $this->option('min-score');
-        $cooldown = (int) $this->option('cooldown-days');
+        $minScore     = (float) $this->option('min-score');
+        $minSteamScore = (int) $this->option('min-steam-score');
+        $cooldown     = (int) $this->option('cooldown-days');
+        $categoryId   = $this->option('category-id') ? (int) $this->option('category-id') : null;
 
         $bucket = FeatureQueueBucket::tryFromSlug($this->option('bucket'));
         if (!$bucket) {
@@ -42,13 +46,20 @@ class FeatureQueueEnqueue extends Command
 
         $bucketSlug = $bucket->value;
 
-        // --refresh: clear only unused rows in this bucket
+        // --refresh: clear only unused rows in this bucket (scoped to category if provided)
         if ($this->option('refresh')) {
-            $deleted = DB::table('feature_queue')
+            $deleteQuery = DB::table('feature_queue')
                 ->where('bucket', $bucketSlug)
-                ->whereNull('used_at')
-                ->delete();
+                ->whereNull('used_at');
+            if ($categoryId) {
+                $deleteQuery->where('category_id', $categoryId);
+            }
+            $deleted = $deleteQuery->delete();
             $this->info("Refreshed queue: removed {$deleted} unused rows for '{$bucketSlug}'.");
+        }
+
+        if ($bucketSlug === FeatureQueueBucket::UNRANKED_STEAM_GEM->value) {
+            return $this->enqueueSteamGems($bucketSlug, $categoryId, $minSteamScore, $cooldown);
         }
 
         // derive conditions per bucket
@@ -64,20 +75,18 @@ class FeatureQueueEnqueue extends Command
             return self::FAILURE;
         }
 
-        // Adjust column names if different in your schema:
-        // games.review_count, games.avg_score, games.quality_flag
         $sql = "
             INSERT IGNORE INTO feature_queue (game_id, bucket, priority, notes)
             SELECT g.id,
                    '{$bucketSlug}' AS bucket,
                    (
-                     (g.rating_avg * 10)                                   -- base weight from score
-                     + (CASE g.review_count WHEN 2 THEN 5 ELSE 0 END)      -- bonus for 2 reviews
+                     (g.rating_avg * 10)
+                     + (CASE g.review_count WHEN 2 THEN 5 ELSE 0 END)
                      + (CASE
                           WHEN g.eu_release_date IS NOT NULL
                           THEN GREATEST(0, 200 - DATEDIFF(CURDATE(), g.eu_release_date)) / 25
                           ELSE 0
-                        END)                                               -- boost for recency
+                        END)
                    ) AS priority,
                    '{$notes}' AS notes
             FROM games g
@@ -101,6 +110,59 @@ class FeatureQueueEnqueue extends Command
         ]);
 
         $this->info("Enqueue complete: {$inserted} row(s) added.");
+        return self::SUCCESS;
+    }
+
+    private function enqueueSteamGems(string $bucketSlug, ?int $categoryId, int $minSteamScore, int $cooldown): int
+    {
+        $categoryFilter = $categoryId ? "AND g.category_id = {$categoryId}" : '';
+
+        // Deduplicate by steam_id: one queue entry per unique Steam game per category.
+        // If two game records (S1 + S2) share a steam_id, pick the one with the lower id.
+        $sql = "
+            INSERT IGNORE INTO feature_queue (game_id, bucket, category_id, priority, notes)
+            SELECT g.id,
+                   '{$bucketSlug}' AS bucket,
+                   " . ($categoryId ? $categoryId : 'NULL') . " AS category_id,
+                   (
+                     (srd.review_score * 10)
+                     + LOG(GREATEST(srd.total_reviews, 1))
+                   ) AS priority,
+                   CONCAT('Steam: ', srd.review_score_desc, ' (', srd.total_reviews, ' reviews)') AS notes
+            FROM games g
+            JOIN steam_review_data srd ON srd.game_id = g.id
+            WHERE g.is_low_quality = 0
+              AND g.format_digital <> 'De-listed'
+              AND g.steam_status = 'linked'
+              AND (g.review_count IS NULL OR g.review_count < 3)
+              AND g.game_rank IS NULL
+              AND srd.review_score >= :minSteamScore
+              {$categoryFilter}
+              AND g.id = (
+                  SELECT MIN(g2.id)
+                  FROM games g2
+                  WHERE g2.steam_id = g.steam_id
+                    AND g2.is_low_quality = 0
+                    AND g2.format_digital <> 'De-listed'
+              )
+              AND NOT EXISTS (
+                  SELECT 1 FROM feature_queue fq
+                  WHERE fq.game_id = g.id
+                    AND fq.bucket = '{$bucketSlug}'
+                    AND fq.used_at IS NOT NULL
+                    AND fq.used_at >= DATE_SUB(CURDATE(), INTERVAL :cooldown DAY)
+              )
+            ORDER BY priority DESC
+        ";
+
+        $inserted = DB::affectingStatement($sql, [
+            'minSteamScore' => $minSteamScore,
+            'cooldown'      => $cooldown,
+        ]);
+
+        $this->info("Enqueue complete: {$inserted} row(s) added for '{$bucketSlug}'" .
+            ($categoryId ? " (category {$categoryId})" : '') . '.');
+
         return self::SUCCESS;
     }
 }

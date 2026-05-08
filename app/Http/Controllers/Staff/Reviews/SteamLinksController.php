@@ -16,7 +16,7 @@ use App\Models\Game;
 
 class SteamLinksController extends Controller
 {
-    private const VALID_TABS = ['not-checked', 'not-checked-oldest', 'not-checked-unranked', 'linked', 'not-on-steam'];
+    private const VALID_TABS = ['summary', 'not-checked', 'not-checked-oldest', 'not-checked-unranked', 'linked', 'not-on-steam'];
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
@@ -50,6 +50,7 @@ class SteamLinksController extends Controller
         $bindings['SelectedCategoryId']  = $categoryId;
         $bindings['SelectedYear']        = $year;
         $bindings['YearList']            = range(2017, (int) date('Y'));
+        $bindings['CategoryStats']       = $this->repoSteam->getUnrankedStatsByCategory();
 
         return view('staff.reviews.steam-links.index', $bindings);
     }

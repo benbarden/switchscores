@@ -1,0 +1,82 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+<p class="text-muted">
+    Unranked Switch games loved on Steam, organised by category.
+    <strong>Potential</strong> = linked Steam games not yet in the queue.
+    <strong>In queue</strong> = ready to generate a post (need {{ DraftThreshold }} to generate).
+    <strong>Used</strong> = already featured in a news post.
+</p>
+
+{% if Rows|length > 0 %}
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th class="text-center">Potential</th>
+                <th class="text-center">In queue</th>
+                <th class="text-center">Used</th>
+                <th class="text-center">Enqueue</th>
+                <th class="text-center">Generate draft</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in Rows %}
+                <tr>
+                    <td>{{ row.category.name }}</td>
+                    <td class="text-center">
+                        {% if row.potential > 0 %}
+                            <span class="badge bg-secondary">{{ row.potential }}</span>
+                        {% else %}
+                            <span class="text-muted">0</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if row.in_queue >= DraftThreshold %}
+                            <span class="badge bg-success">{{ row.in_queue }}</span>
+                        {% elseif row.in_queue > 0 %}
+                            <span class="badge bg-warning text-dark">{{ row.in_queue }}</span>
+                        {% else %}
+                            <span class="text-muted">0</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if row.used > 0 %}
+                            <span class="badge bg-secondary">{{ row.used }}</span>
+                        {% else %}
+                            <span class="text-muted">0</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <form method="POST" action="{{ route('staff.news.steam-gems.enqueue', {'categoryId': row.category.id}) }}">
+                            {{ csrf_field()|raw }}
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Enqueue</button>
+                        </form>
+                    </td>
+                    <td class="text-center">
+                        {% if row.can_generate %}
+                            <form method="POST" action="{{ route('staff.news.steam-gems.generate', {'categoryId': row.category.id}) }}">
+                                {{ csrf_field()|raw }}
+                                <button type="submit" class="btn btn-sm btn-success">Generate draft</button>
+                            </form>
+                        {% else %}
+                            <span class="text-muted small">Need {{ DraftThreshold - row.in_queue }} more</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No categories have Steam-linked unranked games yet. Start by checking Steam IDs on the <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked">Steam links page</a>.</p>
+{% endif %}
+
+{% endblock page_inner %}

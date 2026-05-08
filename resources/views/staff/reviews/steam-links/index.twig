@@ -10,6 +10,11 @@
 
 <ul class="nav nav-tabs mb-3" id="steamTabs" role="tablist">
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">
+            Summary
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="not-checked-tab" data-bs-toggle="tab" data-bs-target="#not-checked" type="button" role="tab">
             Not checked (newest)
             <span class="badge bg-secondary ms-1">{{ CountNotChecked }}</span>
@@ -42,6 +47,70 @@
 </ul>
 
 <div class="tab-content" id="steamTabsContent">
+
+    {# ---- SUMMARY ---- #}
+    <div class="tab-pane fade" id="summary" role="tabpanel">
+        <p class="text-muted">Unranked games by category showing checking progress. Click a category name to open the Unranked tab filtered to that category.</p>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th class="text-center">Not checked</th>
+                    <th class="text-center">Linked</th>
+                    <th class="text-center">Not on Steam</th>
+                    <th style="min-width: 150px;">Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in CategoryList %}
+                    {% set parentStats = CategoryStats[cat.id] ?? {not_checked: 0, linked: 0, not_on_steam: 0} %}
+                    {% set parentTotal = parentStats.not_checked + parentStats.linked + parentStats.not_on_steam %}
+                    {% set parentDone = parentStats.linked + parentStats.not_on_steam %}
+                    {% set parentPct = parentTotal > 0 ? ((parentDone / parentTotal) * 100)|round : 0 %}
+                    <tr class="table-light fw-semibold">
+                        <td>
+                            <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked&category_id={{ cat.id }}" target="_blank">{{ cat.name }}</a>
+                        </td>
+                        <td class="text-center">{{ parentStats.not_checked > 0 ? parentStats.not_checked : '—' }}</td>
+                        <td class="text-center">{{ parentStats.linked > 0 ? parentStats.linked : '—' }}</td>
+                        <td class="text-center">{{ parentStats.not_on_steam > 0 ? parentStats.not_on_steam : '—' }}</td>
+                        <td>
+                            {% if parentTotal > 0 %}
+                                <div class="progress" style="height: 16px;" title="{{ parentDone }}/{{ parentTotal }} checked">
+                                    <div class="progress-bar bg-success" style="width: {{ parentPct }}%">
+                                        {% if parentPct >= 20 %}{{ parentPct }}%{% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% for child in cat.children %}
+                        {% set stats = CategoryStats[child.id] ?? {not_checked: 0, linked: 0, not_on_steam: 0} %}
+                        {% set total = stats.not_checked + stats.linked + stats.not_on_steam %}
+                        {% set done = stats.linked + stats.not_on_steam %}
+                        {% set pct = total > 0 ? ((done / total) * 100)|round : 0 %}
+                        <tr>
+                            <td class="ps-4">
+                                <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked&category_id={{ child.id }}" target="_blank">{{ child.name }}</a>
+                            </td>
+                            <td class="text-center">{{ stats.not_checked > 0 ? stats.not_checked : '—' }}</td>
+                            <td class="text-center">{{ stats.linked > 0 ? stats.linked : '—' }}</td>
+                            <td class="text-center">{{ stats.not_on_steam > 0 ? stats.not_on_steam : '—' }}</td>
+                            <td>
+                                {% if total > 0 %}
+                                    <div class="progress" style="height: 16px;" title="{{ done }}/{{ total }} checked">
+                                        <div class="progress-bar bg-success" style="width: {{ pct }}%">
+                                            {% if pct >= 20 %}{{ pct }}%{% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {# ---- NOT CHECKED (NEWEST) ---- #}
     <div class="tab-pane fade" id="not-checked" role="tabpanel">
@@ -221,7 +290,7 @@
     $(document).ready(function() {
         // Activate tab from ?tab= query param
         var params = new URLSearchParams(window.location.search);
-        var activeTab = params.get('tab') || 'not-checked';
+        var activeTab = params.get('tab') || 'summary';
         var tabEl = document.getElementById(activeTab + '-tab');
         if (tabEl) {
             bootstrap.Tab.getOrCreateInstance(tabEl).show();

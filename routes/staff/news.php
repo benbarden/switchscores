@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Staff\News\DashboardController;
+use App\Http\Controllers\Staff\News\SteamGemsController;
 
 // *************** Staff: NEWS *************** //
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_NEWS_MANAGER]], function() {
@@ -22,6 +23,15 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/news/category/list', 'Staff\News\CategoryController@showList')->name('staff.news.category.list');
     Route::match(['get', 'post'], '/staff/news/category/add', 'Staff\News\CategoryController@add')->name('staff.news.category.add');
     Route::match(['get', 'post'], '/staff/news/category/edit/{newsCategoryId}', 'Staff\News\CategoryController@edit')->name('staff.news.category.edit');
+
+    Route::prefix('staff/news')->group(function () {
+        Route::get('/steam-gems', [SteamGemsController::class, 'index'])
+            ->name('staff.news.steam-gems.index');
+        Route::post('/steam-gems/{categoryId}/enqueue', [SteamGemsController::class, 'enqueue'])
+            ->name('staff.news.steam-gems.enqueue');
+        Route::post('/steam-gems/{categoryId}/generate', [SteamGemsController::class, 'generate'])
+            ->name('staff.news.steam-gems.generate');
+    });
 
     Route::prefix('staff/news')->group(function () {
         Route::get('/bucket/{bucket}', [DashboardController::class, 'bucket'])

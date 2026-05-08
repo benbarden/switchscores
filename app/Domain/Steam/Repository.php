@@ -5,6 +5,7 @@ namespace App\Domain\Steam;
 use App\Enums\SteamStatus;
 use App\Models\Game;
 use App\Models\SteamReviewData;
+use Illuminate\Support\Facades\DB;
 
 class Repository
 {
@@ -85,6 +86,34 @@ class Repository
             ->where('title', 'not like', 'ACA NeoGeo%')
             ->active()
             ->count();
+    }
+
+    public function getUnrankedStatsByCategory(): array
+    {
+        $rows = DB::select("
+            SELECT
+                category_id,
+                SUM(CASE WHEN steam_status = 'not_checked' THEN 1 ELSE 0 END)  AS not_checked,
+                SUM(CASE WHEN steam_status = 'linked' THEN 1 ELSE 0 END)       AS linked,
+                SUM(CASE WHEN steam_status = 'not_on_steam' THEN 1 ELSE 0 END) AS not_on_steam
+            FROM games
+            WHERE is_low_quality = 0
+              AND game_rank IS NULL
+              AND format_digital != 'De-listed'
+              AND title NOT LIKE 'Arcade Archives%'
+              AND title NOT LIKE 'ACA NeoGeo%'
+            GROUP BY category_id
+        ");
+
+        $indexed = [];
+        foreach ($rows as $row) {
+            $indexed[(int) $row->category_id] = [
+                'not_checked'  => (int) $row->not_checked,
+                'linked'       => (int) $row->linked,
+                'not_on_steam' => (int) $row->not_on_steam,
+            ];
+        }
+        return $indexed;
     }
 
     public function getUnrankedNotCheckedFiltered(?int $categoryId, ?int $year, int $limit = 100)
