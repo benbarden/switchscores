@@ -102,6 +102,9 @@ POST /staff/news/steam-gems/{categoryId}/generate    → generate draft for cate
 | 5 | Dedicated `/staff/news/steam-gems` page rather than extending the existing dashboard. The existing dashboard's hard-coded switch statement doesn't scale to 30–50 categories. |
 | 6 | Post threshold: ~10 games in queue before generating a post. |
 | 7 | If a subcategory doesn't have enough games to reach the threshold, pulling from the parent category + all its subcategories is a stage 2 enhancement. |
+| 8 | Queue entries are marked as used at draft creation, not at publish time. This prevents overlapping drafts from drawing the same games. The news editor should show a notice making this clear. |
+| 9 | "Reset and delete draft" button in the news editor for Steam gem posts. Clears `used_at` on the linked queue entries (via `news_post_games`) before deleting the post, so games return to the ready pool. Not automated on delete — must be an explicit action. |
+| 10 | Delete-after-publish does not restore games to the queue. The cooldown period applies; manual reset via the bucket view is the escape hatch if needed. |
 
 ---
 

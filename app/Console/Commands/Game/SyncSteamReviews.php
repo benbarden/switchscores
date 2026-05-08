@@ -10,7 +10,7 @@ use App\Domain\Steam\SyncService as SteamSyncService;
 class SyncSteamReviews extends Command
 {
     protected $signature = 'game:sync-steam-reviews
-                            {--limit=100 : Number of games to process per run}
+                            {--limit=50 : Number of games to process per run}
                             {--delay=2 : Seconds to wait between API requests}';
 
     protected $description = 'Fetch and store Steam review summaries for all linked games.';
