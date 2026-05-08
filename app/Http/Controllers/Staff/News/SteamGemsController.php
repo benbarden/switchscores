@@ -74,6 +74,9 @@ class SteamGemsController extends Controller
                       ->where('bucket', $bucket)
                       ->where('category_id', $cat->id);
                 })
+                ->whereNotIn('games.id', function ($q) {
+                    $q->select('game_id')->from('steam_gem_exclusions');
+                })
                 ->count();
 
             $inQueue = FeatureQueue::where('bucket', $bucket)
