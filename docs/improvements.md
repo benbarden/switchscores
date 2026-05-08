@@ -107,6 +107,7 @@ This document tracks potential improvements, features, and enhancements for the 
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
+| 132 | Steam-backed news content (editorial auto-generation) | Medium | Builds on #90 Steam infrastructure + existing feature queue system | New `unranked-steam-gem` bucket: selects games with 0–2 Switch Scores reviews + Steam `review_score >= 8`. Extends `features:enqueue` to use Steam priority signal. Auto-generates `/news` draft on cadence via existing `generateBucketDraft()`. Staff dashboard link to trigger. See `docs/tasks/132-steam-backed-news-content.md`. |
 | 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
 | 129 | Remove Genres from Differences section | Low | Genres never map cleanly | Remove Genres diff link from DS dashboard, remove associated controller/query logic and route. Genres from API are reference only, not for copying over. |
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |
