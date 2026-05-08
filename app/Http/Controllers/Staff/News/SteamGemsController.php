@@ -40,23 +40,27 @@ class SteamGemsController extends Controller
 
         $bucket = FeatureQueueBucket::UNRANKED_STEAM_GEM->value;
 
-        $categories = $this->repoCategory->topLevelCategories();
+        $topLevel = $this->repoCategory->topLevelCategories();
 
-        // Collect all category IDs (parents + children) for the potential count query
-        $allCategoryIds = [];
-        foreach ($categories as $cat) {
-            $allCategoryIds[$cat->id] = array_merge([$cat->id], $cat->children->pluck('id')->all());
+        // Build a flat ordered list: parent, then its children, then next parent etc.
+        $flatCategories = [];
+        foreach ($topLevel as $parent) {
+            $flatCategories[] = ['category' => $parent, 'is_child' => false];
+            foreach ($parent->children as $child) {
+                $flatCategories[] = ['category' => $child, 'is_child' => true];
+            }
         }
 
-        $rows = [];
-
-        foreach ($categories as $cat) {
-            $ids = $allCategoryIds[$cat->id];
+        // First pass: calculate counts for all categories
+        $allRows = [];
+        foreach ($flatCategories as $item) {
+            $cat = $item['category'];
 
             $potential = Game::where('steam_status', SteamStatus::LINKED->value)
                 ->where('is_low_quality', 0)
-                ->whereIn('category_id', $ids)
+                ->where('category_id', $cat->id)
                 ->whereNull('game_rank')
+                ->active()
                 ->where(function ($q) {
                     $q->whereNull('review_count')->orWhere('review_count', '<', 3);
                 })
@@ -78,23 +82,37 @@ class SteamGemsController extends Controller
                 ->whereNotNull('used_at')
                 ->count();
 
-            if ($potential === 0 && $inQueue === 0 && $used === 0) {
-                continue;
-            }
-
-            $rows[] = [
-                'category'   => $cat,
-                'potential'  => $potential,
-                'in_queue'   => $inQueue,
-                'used'       => $used,
+            $allRows[] = [
+                'category'     => $cat,
+                'is_child'     => $item['is_child'],
+                'parent_id'    => $item['is_child'] ? $cat->parent_id : null,
+                'potential'    => $potential,
+                'in_queue'     => $inQueue,
+                'used'         => $used,
                 'can_generate' => $inQueue >= self::DRAFT_THRESHOLD,
             ];
         }
 
-        // Sort: most in_queue first, then most potential
-        usort($rows, fn($a, $b) =>
-            $b['in_queue'] <=> $a['in_queue'] ?: $b['potential'] <=> $a['potential']
-        );
+        // Find which parent IDs have at least one child with records
+        $parentsWithActiveChildren = [];
+        foreach ($allRows as $row) {
+            if ($row['is_child'] && ($row['potential'] > 0 || $row['in_queue'] > 0 || $row['used'] > 0)) {
+                $parentsWithActiveChildren[$row['parent_id']] = true;
+            }
+        }
+
+        // Second pass: filter out empty rows, but keep parents that have active children
+        $rows = [];
+        foreach ($allRows as $row) {
+            $hasRecords = $row['potential'] > 0 || $row['in_queue'] > 0 || $row['used'] > 0;
+            $isKeptParent = !$row['is_child'] && isset($parentsWithActiveChildren[$row['category']->id]);
+
+            if (!$hasRecords && !$isKeptParent) {
+                continue;
+            }
+
+            $rows[] = $row;
+        }
 
         $bindings['Rows'] = $rows;
         $bindings['DraftThreshold'] = self::DRAFT_THRESHOLD;

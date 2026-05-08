@@ -30,8 +30,8 @@
         </thead>
         <tbody>
             {% for row in Rows %}
-                <tr>
-                    <td>{{ row.category.name }}</td>
+                <tr{% if not row.is_child %} class="table-light fw-semibold"{% endif %}>
+                    <td{% if row.is_child %} class="ps-4"{% endif %}>{{ row.category.name }}</td>
                     <td class="text-center">
                         {% if row.potential > 0 %}
                             <span class="badge bg-secondary">{{ row.potential }}</span>
@@ -56,10 +56,12 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <form method="POST" action="{{ route('staff.news.steam-gems.enqueue', {'categoryId': row.category.id}) }}">
-                            {{ csrf_field()|raw }}
-                            <button type="submit" class="btn btn-sm btn-outline-primary">Enqueue</button>
-                        </form>
+                        {% if row.potential > 0 %}
+                            <form method="POST" action="{{ route('staff.news.steam-gems.enqueue', {'categoryId': row.category.id}) }}">
+                                {{ csrf_field()|raw }}
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Enqueue</button>
+                            </form>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {% if row.can_generate %}
