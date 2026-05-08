@@ -18,6 +18,7 @@ use App\Models\Category;
 use App\Models\FeatureQueue;
 use App\Models\Game;
 use App\Models\News;
+use App\Models\SteamGemExclusion;
 use Illuminate\Support\Str;
 
 class SteamGemsController extends Controller
@@ -121,6 +122,29 @@ class SteamGemsController extends Controller
         $bindings['DraftThreshold'] = self::DRAFT_THRESHOLD;
 
         return view('staff.news.steam-gems.index', $bindings);
+    }
+
+    public function exclude(Request $request, int $gameId)
+    {
+        $request->validate([
+            'reason' => 'required|in:' . implode(',', array_keys(SteamGemExclusion::$reasons)),
+        ]);
+
+        $game = Game::findOrFail($gameId);
+
+        SteamGemExclusion::updateOrCreate(
+            ['game_id' => $gameId],
+            ['reason'  => $request->input('reason')]
+        );
+
+        // Remove from queue if present (any category)
+        DB::table('feature_queue')
+            ->where('game_id', $gameId)
+            ->where('bucket', FeatureQueueBucket::UNRANKED_STEAM_GEM->value)
+            ->whereNull('used_at')
+            ->delete();
+
+        return back()->with('success', "\"{$game->title}\" permanently excluded from Steam gems.");
     }
 
     public function enqueue(Request $request, int $categoryId)

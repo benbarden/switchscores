@@ -152,6 +152,9 @@ class FeatureQueueEnqueue extends Command
                     AND fq.used_at IS NOT NULL
                     AND fq.used_at >= DATE_SUB(CURDATE(), INTERVAL :cooldown DAY)
               )
+              AND NOT EXISTS (
+                  SELECT 1 FROM steam_gem_exclusions sge WHERE sge.game_id = g.id
+              )
             ORDER BY priority DESC
         ";
 

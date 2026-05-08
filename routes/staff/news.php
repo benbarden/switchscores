@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
             ->name('staff.news.steam-gems.enqueue');
         Route::post('/steam-gems/{categoryId}/generate', [SteamGemsController::class, 'generate'])
             ->name('staff.news.steam-gems.generate');
+        Route::post('/steam-gems/exclude/{gameId}', [SteamGemsController::class, 'exclude'])
+            ->name('staff.news.steam-gems.exclude');
     });
 
     Route::prefix('staff/news')->group(function () {
