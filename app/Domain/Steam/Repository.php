@@ -99,7 +99,7 @@ class Repository
             FROM games
             WHERE is_low_quality = 0
               AND game_rank IS NULL
-              AND format_digital != 'De-listed'
+              AND game_status = 'active'
               AND title NOT LIKE 'Arcade Archives%'
               AND title NOT LIKE 'ACA NeoGeo%'
             GROUP BY category_id
