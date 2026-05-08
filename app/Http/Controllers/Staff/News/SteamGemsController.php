@@ -201,6 +201,10 @@ class SteamGemsController extends Controller
             $gameHtml .= $steamSentiment;
             $gameHtml .= '[gameheader ids="' . $game->id . '"]' . "\n";
             $gameHtml .= '[gameblurb ids="' . $game->id . '"]' . "\n";
+            $gameUrl = $game->console_id === \App\Models\Console::ID_SWITCH_2
+                ? route('game.show.switch2', ['id' => $game->id, 'linkTitle' => $game->link_title])
+                : route('game.show', ['id' => $game->id, 'linkTitle' => $game->link_title]);
+            $gameHtml .= '<p><a href="' . $gameUrl . '">More details about: ' . e($game->title) . '</a></p>' . "\n";
         }
 
         $previousPostCount = DB::table('news_post_games as npg')
