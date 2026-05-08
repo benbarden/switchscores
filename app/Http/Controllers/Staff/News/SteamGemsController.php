@@ -64,8 +64,10 @@ class SteamGemsController extends Controller
                 ->where(function ($q) {
                     $q->whereNull('review_count')->orWhere('review_count', '<', 3);
                 })
+                ->join('steam_review_data', 'steam_review_data.game_id', '=', 'games.id')
+                ->where('steam_review_data.review_score', '>=', 7)
                 ->whereRaw('games.id = (SELECT MIN(g2.id) FROM games g2 WHERE g2.steam_id = games.steam_id AND g2.is_low_quality = 0 AND g2.game_status = "active")')
-                ->whereNotIn('id', function ($q) use ($bucket, $cat) {
+                ->whereNotIn('games.id', function ($q) use ($bucket, $cat) {
                     $q->select('game_id')
                       ->from('feature_queue')
                       ->where('bucket', $bucket)

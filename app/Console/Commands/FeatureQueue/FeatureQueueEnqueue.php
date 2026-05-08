@@ -132,7 +132,7 @@ class FeatureQueueEnqueue extends Command
             FROM games g
             JOIN steam_review_data srd ON srd.game_id = g.id
             WHERE g.is_low_quality = 0
-              AND g.format_digital <> 'De-listed'
+              AND g.game_status = 'active'
               AND g.steam_status = 'linked'
               AND (g.review_count IS NULL OR g.review_count < 3)
               AND g.game_rank IS NULL
@@ -143,7 +143,7 @@ class FeatureQueueEnqueue extends Command
                   FROM games g2
                   WHERE g2.steam_id = g.steam_id
                     AND g2.is_low_quality = 0
-                    AND g2.format_digital <> 'De-listed'
+                    AND g2.game_status = 'active'
               )
               AND NOT EXISTS (
                   SELECT 1 FROM feature_queue fq
