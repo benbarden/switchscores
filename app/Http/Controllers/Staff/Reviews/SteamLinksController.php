@@ -9,6 +9,7 @@ use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\Steam\Repository as SteamRepository;
 use App\Domain\Steam\SyncService as SteamSyncService;
+use App\Domain\Category\Repository as CategoryRepository;
 
 use App\Enums\SteamStatus;
 use App\Models\Game;
@@ -20,26 +21,35 @@ class SteamLinksController extends Controller
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private SteamRepository $repoSteam,
-        private SteamSyncService $steamSync
+        private SteamSyncService $steamSync,
+        private CategoryRepository $repoCategory
     )
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $pageTitle = 'Steam links';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsSubpage($pageTitle))->bindings;
 
+        $categoryId = $request->input('category_id') ? (int) $request->input('category_id') : null;
+        $year       = $request->input('year') ? (int) $request->input('year') : null;
+
         $bindings['GamesNotChecked']         = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100);
         $bindings['GamesNotCheckedOldest']   = $this->repoSteam->getByStatus(SteamStatus::NOT_CHECKED, 100, true);
-        $bindings['GamesNotCheckedUnranked'] = $this->repoSteam->getUnrankedNotChecked(100);
+        $bindings['GamesNotCheckedUnranked'] = $this->repoSteam->getUnrankedNotCheckedFiltered($categoryId, $year, 100);
         $bindings['GamesLinked']             = $this->repoSteam->getByStatus(SteamStatus::LINKED);
         $bindings['GamesNotOnSteam']         = $this->repoSteam->getByStatus(SteamStatus::NOT_ON_STEAM);
 
         $bindings['CountNotChecked']         = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
-        $bindings['CountNotCheckedUnranked'] = $this->repoSteam->countUnrankedNotChecked();
+        $bindings['CountNotCheckedUnranked'] = $this->repoSteam->countUnrankedNotCheckedFiltered($categoryId, $year);
         $bindings['CountLinked']             = count($bindings['GamesLinked']);
         $bindings['CountNotOnSteam']         = count($bindings['GamesNotOnSteam']);
+
+        $bindings['CategoryList']        = $this->repoCategory->topLevelCategories();
+        $bindings['SelectedCategoryId']  = $categoryId;
+        $bindings['SelectedYear']        = $year;
+        $bindings['YearList']            = range(2017, (int) date('Y'));
 
         return view('staff.reviews.steam-links.index', $bindings);
     }
@@ -95,6 +105,16 @@ class SteamLinksController extends Controller
         if (!in_array($tab, self::VALID_TABS)) {
             $tab = $default;
         }
-        return redirect(route('staff.reviews.steam-links.index') . '?tab=' . $tab);
+
+        $params = ['tab' => $tab];
+
+        if ($request->input('filter_category_id')) {
+            $params['category_id'] = $request->input('filter_category_id');
+        }
+        if ($request->input('filter_year')) {
+            $params['year'] = $request->input('filter_year');
+        }
+
+        return redirect(route('staff.reviews.steam-links.index') . '?' . http_build_query($params));
     }
 }

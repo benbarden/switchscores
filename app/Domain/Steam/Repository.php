@@ -87,6 +87,48 @@ class Repository
             ->count();
     }
 
+    public function getUnrankedNotCheckedFiltered(?int $categoryId, ?int $year, int $limit = 100)
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active()
+            ->orderBy('review_count', 'asc')
+            ->orderBy('eu_release_date', 'asc');
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($year) {
+            $query->whereYear('eu_release_date', $year);
+        }
+
+        return $query->limit($limit)->get();
+    }
+
+    public function countUnrankedNotCheckedFiltered(?int $categoryId, ?int $year): int
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($year) {
+            $query->whereYear('eu_release_date', $year);
+        }
+
+        return $query->count();
+    }
+
     public function getByStatus(SteamStatus $status, ?int $limit = null, bool $oldestFirst = false)
     {
         $dateOrder = $oldestFirst ? 'asc' : 'desc';

@@ -71,12 +71,48 @@
 
     {# ---- NOT CHECKED (UNRANKED) ---- #}
     <div class="tab-pane fade" id="not-checked-unranked" role="tabpanel">
-        <p class="text-muted">Unranked games with no Steam status set, sorted by review count then release date. Low quality titles are excluded.</p>
+        <form method="GET" action="{{ route('staff.reviews.steam-links.index') }}" class="row g-2 align-items-end mb-3">
+            <input type="hidden" name="tab" value="not-checked-unranked">
+            <div class="col-auto">
+                <label class="form-label mb-1">Category</label>
+                <select name="category_id" class="form-select form-select-sm">
+                    <option value="">Any category</option>
+                    {% for cat in CategoryList %}
+                        <option value="{{ cat.id }}" {% if SelectedCategoryId == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% for child in cat.children %}
+                            <option value="{{ child.id }}" {% if SelectedCategoryId == child.id %}selected{% endif %}>&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="form-label mb-1">Year</label>
+                <select name="year" class="form-select form-select-sm">
+                    <option value="">Any year</option>
+                    {% for y in YearList %}
+                        <option value="{{ y }}" {% if SelectedYear == y %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                {% if SelectedCategoryId or SelectedYear %}
+                    <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked" class="btn btn-sm btn-outline-secondary ms-1">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+
+        <p class="text-muted">
+            Unranked games with no Steam status set, sorted by review count then release date. Low quality titles are excluded.
+            {% if SelectedCategoryId or SelectedYear %}
+                <strong>Filters active.</strong>
+            {% endif %}
+        </p>
         {% if GamesNotCheckedUnranked|length < CountNotCheckedUnranked %}
             <div class="alert alert-info">Showing {{ GamesNotCheckedUnranked|length }} of {{ CountNotCheckedUnranked }} games. Work through these and reload to see the next batch.</div>
         {% endif %}
         {% if GamesNotCheckedUnranked|length > 0 %}
-            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedUnranked, 'RedirectTab': 'not-checked-unranked'} %}
+            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedUnranked, 'RedirectTab': 'not-checked-unranked', 'FilterCategoryId': SelectedCategoryId, 'FilterYear': SelectedYear} %}
         {% else %}
             <p>No unranked games left to check.</p>
         {% endif %}
