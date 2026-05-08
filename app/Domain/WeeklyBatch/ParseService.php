@@ -4,6 +4,7 @@ namespace App\Domain\WeeklyBatch;
 
 use Carbon\Carbon;
 use App\Models\Console;
+use App\Models\WeeklyBatchItem;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\WeeklyBatchRawPage\Repository as WeeklyBatchRawPageRepository;
@@ -25,11 +26,17 @@ class ParseService
         '/\bbundle\b/i',
     ];
 
+    // Title prefixes that auto-mark an item as low_quality at parse time (no URL fetch needed)
+    private const AUTO_LQ_PREFIXES = [
+        'Korean Drone Flying Tour',
+    ];
+
     // Title/price signals suggesting a game may be low quality (flagged for review, not auto-marked)
+    // pattern => human-readable reason shown in the Notes column
     private const LQ_TITLE_PATTERNS = [
-        '/\bSIMULATOR\b/i',
-        '/^[A-Z\d:!.]+(\s[A-Z\s\d:!.]+)+$/',   // ALL CAPS multi-word titles
-        '/\bHENTAI\b/i',
+        '/\bSIMULATOR\b/i'                      => "Title contains 'Simulator'",
+        '/^[A-Z\d:!.]+(\s[A-Z\s\d:!.]+)+$/'    => 'Title is ALL CAPS',
+        '/\bHENTAI\b/i'                         => "Title contains 'Hentai'",
     ];
 
     public function __construct(
@@ -122,8 +129,18 @@ class ParseService
 
             // Active item — detect collection, bundles, and LQ signals
             $collection   = $this->matchCollection($title);
+            $isAutoLq     = $this->detectAutoLq($title);
             $isBundle     = $this->detectBundle($title);
             $lqFlagReason = $this->detectLqSignals($title, $entry['price_gbp']);
+
+            if ($isAutoLq) {
+                $itemStatus   = WeeklyBatchItem::STATUS_LOW_QUALITY;
+                $lqFlagReason = 'Auto-LQ title prefix: '.$title;
+            } elseif ($isBundle) {
+                $itemStatus = WeeklyBatchItem::STATUS_BUNDLE;
+            } else {
+                $itemStatus = WeeklyBatchItem::STATUS_PENDING;
+            }
 
             $item = $this->repoItem->create([
                 'batch_id'    => $batchId,
@@ -141,7 +158,7 @@ class ParseService
                 'nintendo_genres'   => $entry['nintendo_genres'],
                 'description'       => $entry['description'],
                 'collection'  => $collection,
-                'item_status' => $isBundle ? 'bundle' : 'pending',
+                'item_status' => $itemStatus,
                 'lq_flag'     => $lqFlagReason ? 1 : 0,
                 'lq_flag_reason' => $lqFlagReason,
             ]);
@@ -186,12 +203,17 @@ class ParseService
     {
         $title      = $this->titleNormaliser->normalise($item->title_raw);
         $collection = $this->matchCollection($title);
+        $isAutoLq   = $this->detectAutoLq($title);
         $isBundle   = $this->detectBundle($title);
-        $lqReason   = $this->detectLqSignals($title, $item->price_gbp);
+        $lqReason   = $isAutoLq ? 'Auto-LQ title prefix: '.$title : $this->detectLqSignals($title, $item->price_gbp);
 
         $item->title          = $title;
         $item->collection     = $collection;
-        $item->item_status    = $isBundle ? 'bundle' : $item->item_status;
+        if ($isAutoLq) {
+            $item->item_status = WeeklyBatchItem::STATUS_LOW_QUALITY;
+        } elseif ($isBundle) {
+            $item->item_status = WeeklyBatchItem::STATUS_BUNDLE;
+        }
         $item->lq_flag        = $lqReason ? 1 : 0;
         $item->lq_flag_reason = $lqReason;
         $item->save();
@@ -207,6 +229,16 @@ class ParseService
         return null;
     }
 
+    private function detectAutoLq(string $title): bool
+    {
+        foreach (self::AUTO_LQ_PREFIXES as $prefix) {
+            if (str_starts_with($title, $prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private function detectBundle(string $title): bool
     {
         foreach (self::BUNDLE_PATTERNS as $pattern) {
@@ -219,9 +251,9 @@ class ParseService
 
     private function detectLqSignals(string $title, ?float $price): ?string
     {
-        foreach (self::LQ_TITLE_PATTERNS as $pattern) {
+        foreach (self::LQ_TITLE_PATTERNS as $pattern => $reason) {
             if (preg_match($pattern, $title)) {
-                return 'Title pattern: '.$title;
+                return $reason;
             }
         }
         if ($price !== null && $price > 0 && $price <= 0.99) {
