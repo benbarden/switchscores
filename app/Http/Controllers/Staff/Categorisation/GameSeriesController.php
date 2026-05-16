@@ -81,7 +81,10 @@ class GameSeriesController extends Controller
             }
 
             // All ok
-            $this->repoGameSeries->create($request->name, $request->link_title);
+            $seriesData = $this->repoGameSeries->create($request->name, $request->link_title);
+
+            $hints = array_values(array_filter((array) $request->input('category_hints', [])));
+            $this->repoGameSeries->editCategoryHints($seriesData, $hints);
 
             return redirect(route('staff.categorisation.game-series.list'));
 

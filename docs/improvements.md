@@ -149,7 +149,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 13 | Slow queries: stats on Browse by date page | Medium | Heavy stats queries - needs caching/indexes | From pre-Cloudflare logging. May be less urgent now. Could add Redis caching for big queries. Review needed. |
 | 16 | Ones to watch: show a list in admin and public | Medium | `one_to_watch` field exists - need views | Manual flag on games. Placement TBD - Members, homepage, or /switch-1/ landing pages. Includes #21. |
 | 20 | Move Stats dashboard to Staff dashboard | Low | Stats dashboard exists; reuse queries in staff view | Consolidation - not much on stats dashboard currently. |
-| 23 | Split out tag verified into one field per tag category | High | Currently single field; requires ~12 new fields + complex migration | Few games have tags - might re-assess all anyway. Flag tracked update progress. Open to simpler approaches. |
+| 23 | Split out tag verified into one field per tag category | Killed | 2026-05-16 | → Dropped `tags_verification` field entirely. Categorisation dashboard already shows tag category progress per-category. |
 | 32 | Improve 404 page with more useful links | Low | Custom view + related game suggestions | Not much on it currently. Add helpful links to guide users. |
 | 34 | Change PlayStatus to an Enum | Medium | 7 constants + factory methods; test coverage impact | IDE autocompletion benefit. Code cleanliness. |
 | 35 | Change FormatOptions to an Enum | Low | Only 5 format constants; simple extraction | IDE autocompletion benefit. |

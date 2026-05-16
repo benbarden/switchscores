@@ -136,12 +136,6 @@ class GameDirector
         if (array_key_exists('category_verification', $params)) {
             $this->builder->setCategoryVerification($params['category_verification']);
         }
-        if (array_key_exists('tags_verification', $params)) {
-            $this->builder->setTagsVerification($params['tags_verification']);
-        }
-        if (array_key_exists('taxonomy_needs_review', $params)) {
-            $this->builder->setTaxonomyNeedsReview($params['taxonomy_needs_review']);
-        }
         if (array_key_exists('packshot_square_url_override', $params)) {
             $this->builder->setPackshotSquareUrlOverride($params['packshot_square_url_override']);
         }

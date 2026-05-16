@@ -131,8 +131,6 @@ class BulkToolsController extends Controller
                 $ignoredCount++;
             } else {
                 $this->repoGameTag->create($gameId, $tagId);
-                $game->taxonomy_needs_review = 1;
-                $game->save();
                 $updatedCount++;
                 $this->repoGame->clearCacheCoreData($game->id);
             }
@@ -196,7 +194,6 @@ class BulkToolsController extends Controller
                 $ignoredCount++;
             } else {
                 $game->category_id = $categoryId;
-                $game->taxonomy_needs_review = 1;
                 $game->save();
                 $updatedCount++;
                 $this->repoGame->clearCacheCoreData($game->id);
@@ -364,8 +361,6 @@ class BulkToolsController extends Controller
                 $ignoredCount++;
             } else {
                 $this->repoGameTag->create($gameId, $tagToId);
-                $game->taxonomy_needs_review = 1;
-                $game->save();
                 $updatedCount++;
                 $this->repoGame->clearCacheCoreData($game->id);
             }

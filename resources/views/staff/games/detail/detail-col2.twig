@@ -128,33 +128,4 @@
         </td>
     </tr>
 
-    <tr>
-        <td>
-            <strong>Tags</strong>
-        </td>
-        <td>
-            {% if GameData.tags_verification == 0 %}
-                Unverified
-            {% elseif GameData.tags_verification == 1 %}
-                Verified
-            {% elseif GameData.tags_verification == 2 %}
-                Needs review
-            {% else %}
-                -
-            {% endif %}
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            <strong>Taxonomy</strong>
-        </td>
-        <td>
-            {% if GameData.taxonomy_needs_review == 1 %}
-                Needs review
-            {% else %}
-                Normal
-            {% endif %}
-        </td>
-    </tr>
 </table>

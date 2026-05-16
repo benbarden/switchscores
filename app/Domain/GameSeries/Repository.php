@@ -9,9 +9,9 @@ use App\Models\Console;
 
 class Repository
 {
-    public function create($name, $linkTitle)
+    public function create($name, $linkTitle): GameSeries
     {
-        GameSeries::create([
+        return GameSeries::create([
             'series' => $name,
             'link_title' => $linkTitle
         ]);
