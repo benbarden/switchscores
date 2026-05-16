@@ -8,19 +8,23 @@ use App\Models\GameCollection;
 
 class Repository
 {
-    public function create($name, $linkTitle)
+    public function create($name, $linkTitle, $introDescription = null, $metaDescription = null): GameCollection
     {
-        GameCollection::create([
+        return GameCollection::create([
             'name' => $name,
             'link_title' => $linkTitle,
+            'intro_description' => $introDescription,
+            'meta_description' => $metaDescription,
         ]);
     }
 
-    public function edit(GameCollection $collection, $name, $linkTitle)
+    public function edit(GameCollection $collection, $name, $linkTitle, $introDescription = null, $metaDescription = null)
     {
         $values = [
             'name' => $name,
             'link_title' => $linkTitle,
+            'intro_description' => $introDescription,
+            'meta_description' => $metaDescription,
         ];
 
         $collection->fill($values);

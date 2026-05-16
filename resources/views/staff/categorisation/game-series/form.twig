@@ -51,6 +51,20 @@
     </div>
     {% endif %}
 
+    <div class="row mb-3">
+        <label for="intro_description" class="col-sm-2 col-form-label">Intro description</label>
+        <div class="col-sm-6">
+            <textarea id="intro_description" name="intro_description" class="form-control" rows="4"></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="meta_description" class="col-sm-2 col-form-label">Meta description</label>
+        <div class="col-sm-6">
+            <textarea id="meta_description" name="meta_description" class="form-control" rows="4"></textarea>
+        </div>
+    </div>
+
     {{ formsubmit.renderB5() }}
 
 </form>

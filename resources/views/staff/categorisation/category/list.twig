@@ -15,8 +15,8 @@
                 <th class="text-center">Game count</th>
                 <th class="text-center">Verified #</th>
                 <th class="text-center">Verified %</th>
-                <th class="text-center">Taxonomy reviewed</th>
-                <th class="text-center">Layout</th>
+                <th class="text-center">Intro desc</th>
+                <th class="text-center">Meta desc</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -51,16 +51,10 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {% if item.taxonomy_reviewed == 0 %}
-                            <span class="badge bg-info">Not reviewed</span>
-                        {% elseif item.taxonomy_reviewed == 1 %}
-                            <span class="badge bg-success">Reviewed</span>
-                        {% elseif item.taxonomy_reviewed == 2 %}
-                            <span class="badge bg-danger">Deprecated</span>
-                        {% endif %}
+                        {% if item.intro_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
                     </td>
                     <td class="text-center">
-                        {{ item.layout_version }}
+                        {% if item.meta_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.category.edit', {'categoryId': item.id}) }}">Edit</a>

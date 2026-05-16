@@ -14,6 +14,8 @@
                 <th>Game series</th>
                 <th>Category hints</th>
                 <th class="text-center">Game count</th>
+                <th class="text-center">Intro desc</th>
+                <th class="text-center">Meta desc</th>
                 <th class="text-center">View</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -40,6 +42,12 @@
                         {{ item.games().count }}
                     </td>
                     <td class="text-center">
+                        {% if item.intro_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.meta_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
+                    </td>
+                    <td class="text-center">
                         <a href="{{ route('staff.games.list.showList', { 'listType': 'by-series', 'param1': item }) }}">View games</a>
                     </td>
                     <td class="text-center">
@@ -63,6 +71,8 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
+                null,
                 null,
                 null,
                 null,

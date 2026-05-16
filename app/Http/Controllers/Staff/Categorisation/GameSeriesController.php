@@ -81,7 +81,7 @@ class GameSeriesController extends Controller
             }
 
             // All ok
-            $seriesData = $this->repoGameSeries->create($request->name, $request->link_title);
+            $seriesData = $this->repoGameSeries->create($request->name, $request->link_title, $request->intro_description, $request->meta_description);
 
             $hints = array_values(array_filter((array) $request->input('category_hints', [])));
             $this->repoGameSeries->editCategoryHints($seriesData, $hints);
@@ -129,7 +129,7 @@ class GameSeriesController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->repoGameSeries->edit($seriesData, $request->name, $request->link_title);
+            $this->repoGameSeries->edit($seriesData, $request->name, $request->link_title, $request->intro_description, $request->meta_description);
 
             $hints = array_values(array_filter((array) $request->input('category_hints', [])));
             $this->repoGameSeries->editCategoryHints($seriesData, $hints);

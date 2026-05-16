@@ -9,19 +9,23 @@ use App\Models\Console;
 
 class Repository
 {
-    public function create($name, $linkTitle): GameSeries
+    public function create($name, $linkTitle, $introDescription = null, $metaDescription = null): GameSeries
     {
         return GameSeries::create([
             'series' => $name,
-            'link_title' => $linkTitle
+            'link_title' => $linkTitle,
+            'intro_description' => $introDescription,
+            'meta_description' => $metaDescription,
         ]);
     }
 
-    public function edit(GameSeries $collection, $name, $linkTitle)
+    public function edit(GameSeries $collection, $name, $linkTitle, $introDescription = null, $metaDescription = null)
     {
         $values = [
             'series' => $name,
             'link_title' => $linkTitle,
+            'intro_description' => $introDescription,
+            'meta_description' => $metaDescription,
         ];
 
         $collection->fill($values);
