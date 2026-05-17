@@ -87,7 +87,7 @@
                         <i class="fa fa-tag" aria-hidden="true"></i>
                         <strong>Tags -</strong>
                         {% for item in GameTags %}
-                            <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}">
+                            <a href="{{ route('browse.byTag.page', {'tag': item.tag.link_title}) }}">
                                 <nobr>{{ item.tag.tag_name }}</nobr>
                             </a>
                             {% if not loop.last %},{% endif %}
@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.byCategory.list', {'console': GameData.console, 'category': GameData.category.link_title}) }}"
+                    <a href="{{ route('browse.byCategory.list', {'category': GameData.category.link_title}) }}"
                        class="view-all-link">
                         View all in {{ GameData.category.name }} →
                     </a>
@@ -157,7 +157,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}"
+                    <a href="{{ route('browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}"
                        class="view-all-link">
                         View all in {{ CollectionName }} →
                     </a>
@@ -175,7 +175,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}"
+                    <a href="{{ route('browse.bySeries.page', {'series': GameData.series.link_title}) }}"
                        class="view-all-link">
                         View all in {{ SeriesName }} →
                     </a>

@@ -31,7 +31,7 @@
                             {{ item.parent.name }}
                             &gt;&gt;
                         {% endif %}
-                        <a href="{{ route('console.byCategory.page', {'console': 'switch-1', 'category': item.link_title}) }}" target="_blank">
+                        <a href="{{ route('browse.byCategory.page', {'category': item.link_title}) }}" target="_blank">
                             {{ item.name }}
                         </a>
                     </td>

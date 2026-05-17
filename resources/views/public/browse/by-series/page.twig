@@ -1,0 +1,129 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/rating.twig' as gamerating %}
+
+{% block page_body %}
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            {% if GameSeries.intro_description %}
+                <div class="category-intro">
+                    <p>{{ GameSeries.intro_description }}</p>
+                </div>
+            {% endif %}
+
+            <div class="filter-bar">
+                <a class="filter-pill {{ ConsoleSlug is null ? 'active' }}"
+                   href="{{ route('browse.bySeries.page', {'series': GameSeries.link_title}) }}">
+                    All consoles
+                </a>
+                <a class="filter-pill {{ ConsoleSlug == 'switch-1' ? 'active' }}"
+                   href="{{ route('browse.bySeries.page', {'series': GameSeries.link_title}) }}?console=switch-1">
+                    Switch 1
+                </a>
+                <a class="filter-pill {{ ConsoleSlug == 'switch-2' ? 'active' }}"
+                   href="{{ route('browse.bySeries.page', {'series': GameSeries.link_title}) }}?console=switch-2">
+                    Switch 2
+                </a>
+            </div>
+
+            <div class="series-snapshot-row">
+                <div class="snapshot">
+                    <h2>Snapshot</h2>
+                    <table class="snapshot-table">
+                        <tbody>
+                        <tr>
+                            <th>Total games</th>
+                            <td>{{ Stats.total }} <span class="snapshot-note">– excluding low quality and de-listed</span></td>
+                        </tr>
+                        <tr>
+                            <th>Ranked games</th>
+                            <td>{{ Stats.ranked }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reviewed but unranked</th>
+                            <td>{{ Stats.reviewedButUnranked }}</td>
+                        </tr>
+                        <tr>
+                            <th>No reviews</th>
+                            <td>{{ Stats.noReviews }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% if GameSeries.landing_image %}
+                    <div class="series-landing-image-container">
+                        <img src="/img/gen/series/{{ GameSeries.landing_image }}"
+                             alt="{{ GameSeries.series }}"
+                             title="{{ GameSeries.series }}"
+                             class="img-responsive">
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if TopRated|length %}
+                <section class="top-rated">
+                    <h3>Top rated {{ GameSeries.series }} games</h3>
+                    <div class="top-rated-grid">
+                        {% for game in TopRated %}
+                            <div class="game-card">
+                                <a href="{{ game_url(game) }}" class="card-link">
+                                    <div class="game-card-console">
+                                        {% if game.console_id == 1 %}<span class="console-label console-label-s1">Switch 1</span>
+                                        {% elseif game.console_id == 2 %}<span class="console-label console-label-s2">Switch 2</span>{% endif %}
+                                    </div>
+                                    <div class="game-card-image">
+                                        {{ packshots.squareImageOnly(game) }}
+                                    </div>
+                                    <div class="game-card-title">{{ game.title }}</div>
+                                    <div class="game-card-rating">
+                                        {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if HiddenGems|length %}
+                <section class="hidden-gems">
+                    <h3>Hidden gems</h3>
+                    <p class="hidden-gems-note">
+                        These games have 1 or 2 ratings, so don't have ranks yet — but they're highly rated!
+                    </p>
+                    <div class="top-rated-grid">
+                        {% for game in HiddenGems %}
+                            <div class="game-card">
+                                <a href="{{ game_url(game) }}" class="card-link">
+                                    <div class="game-card-console">
+                                        {% if game.console_id == 1 %}<span class="console-label console-label-s1">Switch 1</span>
+                                        {% elseif game.console_id == 2 %}<span class="console-label console-label-s2">Switch 2</span>{% endif %}
+                                    </div>
+                                    <div class="game-card-image">
+                                        {{ packshots.squareImageOnly(game) }}
+                                    </div>
+                                    <div class="game-card-title">{{ game.title }}</div>
+                                    <div class="game-card-rating">
+                                        {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            <div class="view-all-container">
+                <a href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title})
+                    ~ (ConsoleSlug ? '?console=' ~ ConsoleSlug : '') }}"
+                   class="view-all-link">
+                    View all {{ GameSeries.series }} games →
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock page_body %}

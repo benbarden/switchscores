@@ -30,9 +30,9 @@
             <td>
                 <span itemprop="genre">
                     {% if GameData.category.parent.id %}
-                        <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                        <a href="{{ route('browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
                     {% endif %}
-                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                    <a href="{{ route('browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
                 </span>
             </td>
         </tr>

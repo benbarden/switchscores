@@ -1,0 +1,41 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+        {% if TagCategoryList %}
+            {% for item in TagCategoryList %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>{{ item.name }}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for categoryItem in item.tags %}
+                        <div class="col-md-3">
+                            <i class="fa fa-tag" aria-hidden="true"></i>
+                            <span class="h6">
+                                <a href="{{ route('browse.byTag.page', {'tag': categoryItem.link_title}) }}">{{ categoryItem.tag_name }}</a>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No tags found!</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        {{ heading.renderChunky('Search games', 'h4') }}
+        {% include 'ui/components/search/form-mini.twig' %}
+
+        {{ heading.renderChunky('Browse by', 'h4') }}
+        {% include 'ui/components/navigation/nav-right-browse-merged.twig' %}
+
+    </div>
+</div>
+
+{% endblock page_body %}
