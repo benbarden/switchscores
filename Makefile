@@ -17,6 +17,7 @@ test-filter:
 	./vendor/bin/phpunit --filter $(F)
 
 test-file:
+	@test -n "$(FILE)" || (echo "Usage: make test-file FILE=tests/path/to/SomeTest.php" && exit 1)
 	./vendor/bin/phpunit $(FILE)
 
 local-startup:

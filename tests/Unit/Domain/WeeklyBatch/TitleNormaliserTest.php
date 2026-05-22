@@ -224,4 +224,28 @@ class TitleNormaliserTest extends TestCase
             $this->normaliser->normalise('CARD&CASINO')
         );
     }
+
+    // ---- Dotted acronyms ----
+
+    public function testDottedAcronymPreserved()
+    {
+        $this->assertEquals('N.E.R.D', $this->normaliser->normalise('N.E.R.D'));
+    }
+
+    // ---- Decorative symbol stripping ----
+
+    public function testHeartSymbolStripped()
+    {
+        $this->assertEquals('Rica Mode', $this->normaliser->normalise('Rica Mode♡'));
+    }
+
+    // ---- Integral sign as separator ----
+
+    public function testIntegralSignAsSeparator()
+    {
+        $this->assertEquals(
+            'Néro and Sci: Integral Edition',
+            $this->normaliser->normalise('Néro and Sci ∫ Integral Edition')
+        );
+    }
 }

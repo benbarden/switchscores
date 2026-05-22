@@ -33,6 +33,13 @@ class TitleNormaliser
         $title = str_replace(['™', '®'], '', $title);
         $title = trim($title);
 
+        // Strip decorative symbols (e.g. ♡ in "Rica Mode♡")
+        $title = preg_replace('/[♡♥]/u', '', $title);
+        $title = trim($title);
+
+        // Mathematical integral sign used as separator: "A ∫ B" → "A: B"
+        $title = preg_replace('/\s+∫\s+/u', ': ', $title);
+
         // "EGGCONSOLE" → "Egg Console" (before ALL CAPS detection)
         $title = preg_replace('/\bEGGCONSOLE\b/i', 'Egg Console', $title);
 
@@ -122,6 +129,9 @@ class TitleNormaliser
             } elseif ($this->isRomanNumeral($letters)) {
                 // Roman numeral (I, II, III, IV, VI, VII, VIII, IX, X, etc.) — keep uppercase
                 $result[] = $word;
+            } elseif ($this->isDottedAcronym($word)) {
+                // Dotted acronym (N.E.R.D, U.S.A.) — keep as-is
+                $result[] = $word;
             } elseif (strlen($letters) <= 3) {
                 // Short (1-3 letters): use vowels to distinguish real words from acronyms
                 // Minor words (the, is, of...) → title-case; lowercaseMinorWords handles placement
@@ -152,6 +162,12 @@ class TitleNormaliser
         ));
     }
 
+    private function isDottedAcronym(string $word): bool
+    {
+        // Matches patterns like N.E.R.D or U.S.A. (single uppercase letters separated by dots)
+        return (bool) preg_match('/^[A-Z](\.[A-Z]){1,}\.?$/', $word);
+    }
+
     private function isRomanNumeral(string $str): bool
     {
         return (bool) preg_match('/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i', $str)
@@ -178,11 +194,12 @@ class TitleNormaliser
                 continue;
             }
 
-            // ALL CAPS word → Title Case unless it's a known abbreviation, Roman numeral, or short with no vowels
+            // ALL CAPS word → Title Case unless it's a known abbreviation, Roman numeral, short with no vowels, or dotted acronym
             // Short no-vowel words (ZPF, TV, PC) are acronyms — keep as-is
             // Short words with vowels (GET, FIT) are real words — title-case them
             if ($letters === strtoupper($letters)
                 && !$this->isRomanNumeral($letters)
+                && !$this->isDottedAcronym($word)
                 && !in_array($letters, self::KNOWN_CAPS)
             ) {
                 $hasVowel = (bool) preg_match('/[AEIOU]/', $letters);
