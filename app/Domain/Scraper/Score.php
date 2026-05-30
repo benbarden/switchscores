@@ -55,7 +55,7 @@ class Score extends BaseScraper
 
         $useSeparator = null;
         foreach ($possibleSeparators as $separator) {
-            if (strpos($value, $separator) !== false) {
+            if (str_contains($value, $separator)) {
                 $useSeparator = $separator;
                 break;
             }

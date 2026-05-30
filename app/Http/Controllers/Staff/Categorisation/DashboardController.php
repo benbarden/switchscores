@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Staff\Categorisation;
 
 use Illuminate\Routing\Controller as Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\GameStats\Repository as GameStatsRepository;
-use App\Domain\GameLists\MissingCategory as GameListMissingCategoryRepository;
+use App\Domain\TagCategory\Repository as TagCategoryRepository;
 
 class DashboardController extends Controller
 {
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private GameStatsRepository $repoGameStats,
-        private GameListMissingCategoryRepository $repoGameListMissingCategory,
+        private TagCategoryRepository $repoTagCategory,
     )
     {
     }
@@ -30,27 +31,46 @@ class DashboardController extends Controller
         $bindings['NoCategoryWithCollectionCount'] = $this->repoGameStats->totalNoCategoryWithCollectionId();
         $bindings['NoCategoryWithReviewsCount'] = $this->repoGameStats->totalNoCategoryWithReviews();
 
-        // Bulk edit stats
-        $missingCategorySimulation = $this->repoGameListMissingCategory->simulation();
-        $bindings['BulkEditMissingCategorySimCount'] = count($missingCategorySimulation);
-        $missingCategorySurvival = $this->repoGameListMissingCategory->survival();
-        $bindings['BulkEditMissingCategorySurvivalCount'] = count($missingCategorySurvival);
-        $missingCategoryQuiz = $this->repoGameListMissingCategory->quiz();
-        $bindings['BulkEditMissingCategoryQuizCount'] = count($missingCategoryQuiz);
-        $missingCategorySpotTheDifference = $this->repoGameListMissingCategory->spotTheDifference();
-        $bindings['BulkEditMissingCategorySpotTheDifferenceCount'] = count($missingCategorySpotTheDifference);
-        $missingCategoryPuzzle = $this->repoGameListMissingCategory->puzzle();
-        $bindings['BulkEditMissingCategoryPuzzleCount'] = count($missingCategoryPuzzle);
-        $missingCategorySportsRacing = $this->repoGameListMissingCategory->sportsAndRacing();
-        $bindings['BulkEditMissingCategorySportsRacingCount'] = count($missingCategorySportsRacing);
-        $missingCategoryHidden = $this->repoGameListMissingCategory->hidden();
-        $bindings['BulkEditMissingCategoryHiddenCount'] = count($missingCategoryHidden);
-        $missingCategoryEscape = $this->repoGameListMissingCategory->escape();
-        $bindings['BulkEditMissingCategoryEscapeCount'] = count($missingCategoryEscape);
-        $missingCategoryHentaiGirls = $this->repoGameListMissingCategory->hentaiGirls();
-        $bindings['BulkEditMissingCategoryHentaiGirlsCount'] = count($missingCategoryHentaiGirls);
-        $missingCategoryDroneFlyingTour = $this->repoGameListMissingCategory->droneFlyingTour();
-        $bindings['BulkEditMissingCategoryDroneFlyingTourCount'] = count($missingCategoryDroneFlyingTour);
+        // Tag category progress (excluding low quality and de-listed games)
+        $totalGames = DB::table('games')
+            ->where('is_low_quality', 0)
+            ->where(function ($query) {
+                $query->where('format_digital', '<>', 'De-listed')
+                      ->orWhereNull('format_digital');
+            })
+            ->count();
+
+        $tagCategories = $this->repoTagCategory->getAll();
+
+        $tagCategoryProgress = [];
+        foreach ($tagCategories as $tagCategory) {
+            // Count games that have at least one tag from this category
+            $gamesWithTag = DB::table('games')
+                ->join('game_tags', 'games.id', '=', 'game_tags.game_id')
+                ->join('tags', 'game_tags.tag_id', '=', 'tags.id')
+                ->where('tags.tag_category_id', $tagCategory->id)
+                ->where('games.is_low_quality', 0)
+                ->where(function ($query) {
+                    $query->where('games.format_digital', '<>', 'De-listed')
+                          ->orWhereNull('games.format_digital');
+                })
+                ->distinct('games.id')
+                ->count('games.id');
+
+            $gamesWithoutTag = $totalGames - $gamesWithTag;
+            $percentage = $totalGames > 0 ? round(($gamesWithTag / $totalGames) * 100, 1) : 0;
+
+            $tagCategoryProgress[] = [
+                'id' => $tagCategory->id,
+                'name' => $tagCategory->name,
+                'games_with_tag' => $gamesWithTag,
+                'games_without_tag' => $gamesWithoutTag,
+                'percentage' => $percentage,
+            ];
+        }
+
+        $bindings['TagCategoryProgress'] = $tagCategoryProgress;
+        $bindings['TotalGames'] = $totalGames;
 
         return view('staff.categorisation.dashboard', $bindings);
     }

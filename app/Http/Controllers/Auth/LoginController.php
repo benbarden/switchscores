@@ -30,6 +30,7 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
+     * Note: Laravel's redirect()->intended() handles session-stored URLs automatically.
      *
      * @var string
      */
@@ -77,17 +78,14 @@ class LoginController extends Controller
 
         $user = Socialite::driver('twitter')->user();
         $twitterUserId = $user->id;
-        $twitterName = $user->nickname;
 
         $siteUser = $repoUser->getByTwitterId($twitterUserId);
 
         if (!$siteUser) {
-            $siteUser = $repoUser->createFromTwitterLogin($twitterUserId, $twitterName);
-            event(new UserCreated($siteUser));
+            // Block new Twitter signups - redirect to register page
+            return redirect(route('register'))
+                ->with('error', 'Twitter signup is no longer available. Please register with your email address.');
         }
-
-        // we should have a user by now
-        if (!$siteUser) abort(400);
 
         auth()->login($siteUser);
         return redirect(route('members.index'));

@@ -20,7 +20,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" class="h4">{{ item.title }}</a>
+                        <a href="{{ game_url(item) }}" class="h4">{{ item.title }}</a>
                     </td>
                     <td class="text-center">
                         <span class="h4">

@@ -15,11 +15,16 @@ class GameTitleHash extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'title_hash', 'game_id',
+        'title', 'title_hash', 'game_id', 'console_id',
     ];
 
     public function game()
     {
         return $this->hasOne('App\Models\Game', 'id', 'game_id');
+    }
+
+    public function console()
+    {
+        return $this->hasOne('App\Models\Console', 'id', 'console_id');
     }
 }

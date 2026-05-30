@@ -22,22 +22,34 @@ class TitleMatch
 
         $title = $request->title;
         $gameId = $request->gameId;
+        $consoleId = $request->consoleId;
 
         if (!$title) {
             return response()->json(['error' => 'Missing data: title'], 400);
         }
 
-        $titleExists = $this->repoGame->titleExists($title, $gameId);
-        $dsTitleItem = $this->repoDataSource->getUnlinkedByTitle($title);
-
-        if ($titleExists) {
-            $existingGame = $this->repoGame->getByTitle($title);
-            return response()->json(['gameId' => $existingGame->id], 200);
-        } elseif ($dsTitleItem) {
-            return response()->json(['dsItemId' => $dsTitleItem->id], 200);
+        // Use console-scoped check if consoleId provided, otherwise fall back to global check
+        if ($consoleId) {
+            $titleExists = $this->repoGame->titleExistsForConsole($title, $consoleId, $gameId);
+            if ($titleExists) {
+                $existingGame = $this->repoGame->getByTitleAndConsole($title, $consoleId);
+                return response()->json(['gameId' => $existingGame->id], 200);
+            }
         } else {
-            return response()->json(['gameId' => null], 200);
+            $titleExists = $this->repoGame->titleExists($title, $gameId);
+            if ($titleExists) {
+                $existingGame = $this->repoGame->getByTitle($title);
+                return response()->json(['gameId' => $existingGame->id], 200);
+            }
         }
+
+        // Check for unlinked data source items (not console-specific)
+        $dsTitleItem = $this->repoDataSource->getUnlinkedByTitle($title);
+        if ($dsTitleItem) {
+            return response()->json(['dsItemId' => $dsTitleItem->id], 200);
+        }
+
+        return response()->json(['gameId' => null], 200);
     }
 
     public function getUnlinkedDataSourceItem()

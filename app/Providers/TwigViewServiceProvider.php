@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Twig\Environment;
 use Twig\TwigFunction;
 
+use App\Models\Console;
 use App\Support\Links;
 
 class TwigViewServiceProvider extends ServiceProvider
@@ -17,6 +18,16 @@ class TwigViewServiceProvider extends ServiceProvider
         }));
 
         $twig->addFunction(new TwigFunction('game_url', function ($game) {
+            // Handle both Eloquent models (console_id) and raw DB results (console_id)
+            $consoleId = $game->console_id ?? null;
+
+            if ($consoleId === Console::ID_SWITCH_2) {
+                return route('game.show.switch2', [
+                    'id'        => $game->id,
+                    'linkTitle' => $game->link_title,
+                ]);
+            }
+
             return route('game.show', [
                 'id'        => $game->id,
                 'linkTitle' => $game->link_title,

@@ -21,6 +21,23 @@
     $('#review_score').val(formVals['review_score']);
     $('#review_body').text(formVals['review_body']);
 
+    // Character counter
+    function updateCharCount() {
+        var count = $('#review_body').val().length;
+        var countEl = $('#review_body_count');
+        countEl.text(count);
+        if (count > 800) {
+            countEl.addClass('text-danger fw-bold');
+        } else if (count > 700) {
+            countEl.addClass('text-warning').removeClass('text-danger fw-bold');
+        } else {
+            countEl.removeClass('text-warning text-danger fw-bold');
+        }
+    }
+
+    $('#review_body').on('input', updateCharCount);
+    updateCharCount(); // Initial count for edit mode
+
     $('#review_score').focus();
 
 </script>

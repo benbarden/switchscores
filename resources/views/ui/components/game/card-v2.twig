@@ -2,7 +2,7 @@
     {% import 'ui/components/game/packshots.twig' as packshots %}
     {% import 'ui/components/game/rating.twig' as gamerating %}
     <div class="game-card">
-        <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+        <a href="{{ game_url(game) }}" class="card-link">
             <div class="game-card-image">
                 {{ packshots.squareImageOnly(game) }}
             </div>

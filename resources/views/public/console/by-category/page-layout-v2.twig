@@ -64,7 +64,7 @@
                     <div class="top-rated-grid">
                         {% for game in TopRated %}
                             <div class="game-card">
-                                <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+                                <a href="{{ game_url(game) }}" class="card-link">
                                     <div class="game-card-image">
                                         {{ packshots.squareImageOnly(game) }}
                                     </div>
@@ -90,7 +90,7 @@
                     <div class="top-rated-grid">
                         {% for game in HiddenGems %}
                             <div class="game-card">
-                                <a href="{{ route('game.show', { id: game.id, linkTitle: game.link_title }) }}" class="card-link">
+                                <a href="{{ game_url(game) }}" class="card-link">
                                     <div class="game-card-image">
                                         {{ packshots.squareImageOnly(game) }}
                                     </div>

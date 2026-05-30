@@ -25,6 +25,23 @@
                 <li><a href="{{ route('welcome') }}">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        Browse <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('browse.byCategory.landing') }}">Browse by category</a></li>
+                        <li><a href="{{ route('browse.bySeries.landing') }}">Browse by series</a></li>
+                        <li><a href="{{ route('browse.byCollection.landing') }}">Browse by collection</a></li>
+                        <li><a href="{{ route('browse.byTag.landing') }}">Browse by tag</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
+                        <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
+                        <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ route('game.random') }}">Random game</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         Switch 1 <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -32,17 +49,8 @@
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ route('console.newReleases', {'console': consoleSwitch1}) }}">New releases</a></li>
                         <li><a href="{{ route('console.upcomingReleases', {'console': consoleSwitch1}) }}">Upcoming releases</a></li>
-                        <li><a href="{{ route('games.onSale') }}">Games on sale</a></li>
-                        <li><a href="{{ route('reviews.landing') }}">Recent reviews</a></li>
-                        <li><a href="{{ route('lists.recently-ranked') }}">Recently ranked</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{{ route('console.byCategory.landing', {'console': consoleSwitch1}) }}">Browse by category</a></li>
                         <li><a href="{{ route('console.byDate', {'console': consoleSwitch1}) }}">Browse by date</a></li>
-                        <li><a href="{{ route('console.bySeries.landing', {'console': consoleSwitch1}) }}">Browse by series</a></li>
-                        <li><a href="{{ route('console.byCollection.landing', {'console': consoleSwitch1}) }}">Browse by collection</a></li>
-                        <li><a href="{{ route('console.byTag.landing', {'console': consoleSwitch1}) }}">Browse by tag</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="{{ route('game.random') }}">Random game</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -55,11 +63,7 @@
                         <li><a href="{{ route('console.newReleases', {'console': consoleSwitch2}) }}">New releases</a></li>
                         <li><a href="{{ route('console.upcomingReleases', {'console': consoleSwitch2}) }}">Upcoming releases</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{{ route('console.byCategory.landing', {'console': consoleSwitch2}) }}">Browse by category</a></li>
                         <li><a href="{{ route('console.byDate', {'console': consoleSwitch2}) }}">Browse by date</a></li>
-                        <li><a href="{{ route('console.bySeries.landing', {'console': consoleSwitch2}) }}">Browse by series</a></li>
-                        <li><a href="{{ route('console.byCollection.landing', {'console': consoleSwitch2}) }}">Browse by collection</a></li>
-                        <li><a href="{{ route('console.byTag.landing', {'console': consoleSwitch2}) }}">Browse by tag</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

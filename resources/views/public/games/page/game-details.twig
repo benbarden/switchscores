@@ -1,5 +1,16 @@
 <table class="table table-condensed table-responsive">
 
+    {% if GameData.isDelisted() %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Status</span>
+        </td>
+        <td>
+            <span class="label label-warning">De-listed</span>
+        </td>
+    </tr>
+    {% endif %}
+
     {% if GameData.console_id %}
     <tr>
         <td>
@@ -19,9 +30,9 @@
             <td>
                 <span itemprop="genre">
                     {% if GameData.category.parent.id %}
-                        <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
+                        <a href="{{ route('browse.byCategory.page', {'category': GameData.category.parent.link_title}) }}">{{ GameData.category.parent.name }}</a> &raquo;
                     {% endif %}
-                    <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
+                    <a href="{{ route('browse.byCategory.page', {'category': GameData.category.link_title}) }}">{{ GameData.category.name }}</a>
                 </span>
             </td>
         </tr>
@@ -52,6 +63,50 @@
             <span style="font-weight: bold;">Players</span>
         </td>
         <td>{{ GameData.players }}</td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.multiplayer_mode %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Multiplayer mode</span>
+        </td>
+        <td>{{ GameData.multiplayer_mode }}</td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.has_online_play or GameData.has_local_multiplayer %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Multiplayer</span>
+        </td>
+        <td>
+            {% if GameData.has_online_play %}
+                <span class="label label-info">Online</span>
+            {% endif %}
+            {% if GameData.has_local_multiplayer %}
+                <span class="label label-info">Local</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if GameData.play_mode_tv or GameData.play_mode_tabletop or GameData.play_mode_handheld %}
+    <tr>
+        <td>
+            <span style="font-weight: bold;">Play modes</span>
+        </td>
+        <td>
+            {% if GameData.play_mode_tv %}
+                <span class="label label-default">TV</span>
+            {% endif %}
+            {% if GameData.play_mode_tabletop %}
+                <span class="label label-default">Tabletop</span>
+            {% endif %}
+            {% if GameData.play_mode_handheld %}
+                <span class="label label-default">Handheld</span>
+            {% endif %}
+        </td>
     </tr>
     {% endif %}
 

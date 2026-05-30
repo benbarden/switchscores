@@ -4,6 +4,7 @@ namespace App\Domain\Scraper;
 
 use Symfony\Component\BrowserKit\HttpBrowser as ScraperClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
+use Symfony\Component\HttpClient\HttpClient;
 
 class Base
 {
@@ -24,7 +25,9 @@ class Base
 
     public function __construct()
     {
-        $this->scraperClient = new ScraperClient();
+        $httpClient = HttpClient::create(['timeout' => 30]);
+        $this->scraperClient = new ScraperClient($httpClient);
+        $this->scraperClient->setMaxRedirects(3);
     }
 
     public function __destruct()

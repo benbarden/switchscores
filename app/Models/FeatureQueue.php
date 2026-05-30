@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FeatureQueue extends Model
 {
     protected $table = 'feature_queue';
-    protected $fillable = ['game_id', 'bucket', 'priority', 'queued_at', 'used_at', 'notes'];
+    protected $fillable = ['game_id', 'bucket', 'category_id', 'priority', 'queued_at', 'used_at', 'notes'];
     protected $casts = ['queued_at' => 'datetime', 'used_at' => 'datetime'];
 
     public function game()

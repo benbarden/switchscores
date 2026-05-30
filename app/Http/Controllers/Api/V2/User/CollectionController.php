@@ -56,7 +56,7 @@ class CollectionController
                 'inCollection' => $inCollection,
                 'squareImageUrl' => $squareImageUrl,
                 'isLowQuality' => (int) $game->is_low_quality,
-                'isDeListed' => $game->format_digital == Game::FORMAT_DELISTED ? 1 : 0,
+                'isDeListed' => $game->isDelisted() ? 1 : 0,
                 'consoleName' => $game->console->name,
             ];
         }

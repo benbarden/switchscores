@@ -254,7 +254,7 @@ class ImportByFeed
         $feedUrlPrefix = $this->partnerFeedLink->feed_url_prefix;
         if ($feedUrlPrefix) {
             $fullPrefix = $this->reviewSite->website_url.$feedUrlPrefix;
-            if (substr($itemUrl, 0, strlen($fullPrefix)) != $fullPrefix) {
+            if (!str_starts_with($itemUrl, $fullPrefix)) {
                 throw new FeedUrlPrefixNotMatched('Does not match feed URL prefix: '.$itemUrl.' - Date: '.$itemDate);
             }
         }
@@ -316,9 +316,11 @@ class ImportByFeed
             'item_rating' => $itemRating,
         ];
 
-        $game = $this->repoGame->getByTitle($itemTitle);
-        if ($game) {
-            $reviewDraft['game_id'] = $game->id;
+        // Only auto-match if exactly one game has this title.
+        // If multiple exist (same title on different consoles), leave for manual review.
+        $games = $this->repoGame->getAllByTitle($itemTitle);
+        if ($games->count() === 1) {
+            $reviewDraft['game_id'] = $games->first()->id;
             $reviewDraft['parse_status'] = ReviewDraft::PARSE_STATUS_AUTO_MATCHED;
         }
 

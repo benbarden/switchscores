@@ -1,15 +1,113 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
 
 {% block page_inner %}
 
     <div class="row">
         <div class="col-md-6">
-            <h3>Coming soon!</h3>
-            <p>
-                This page is a bit empty right now. We'll add something useful here at some point.
-            </p>
+
+            {% if session('success') %}
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            {% endif %}
+
+            {% if errors.any() %}
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for error in errors.all() %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ route('members.settings.update') }}">
+                {{ csrf_field() }}
+
+                {{ heading.renderChunky('Display name', 'h4') }}
+                <div class="mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="display_name"
+                           name="display_name"
+                           value="{{ old('display_name', UserData.display_name) }}"
+                           required
+                           maxlength="100">
+                    <div class="form-text">This is how your name appears on reviews and in the community.</div>
+                </div>
+
+                {{ heading.renderChunky('Email', 'h4') }}
+                <div class="mb-3">
+                    {% if IsTwitterLogin %}
+                        <input type="email"
+                               class="form-control"
+                               value="{{ UserData.email }}"
+                               disabled>
+                        <div class="form-text">You signed up with Twitter, so your email cannot be changed here.</div>
+                    {% else %}
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               name="email"
+                               value="{{ old('email', UserData.email) }}"
+                               required
+                               maxlength="255">
+                    {% endif %}
+                </div>
+
+                {% if not IsTwitterLogin %}
+                    {{ heading.renderChunky('Change password', 'h4') }}
+                    <p class="text-muted">Leave blank to keep your current password.</p>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">New password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="password"
+                               minlength="8">
+                        <div class="form-text">Minimum 8 characters.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Confirm new password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="password_confirmation"
+                               name="password_confirmation"
+                               minlength="8">
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a href="{{ route('members.index') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+
+            </form>
+
         </div>
         <div class="col-md-6">
+            {{ heading.renderChunky('Account info', 'h4') }}
+            <table class="table">
+                <tr>
+                    <td>Login method</td>
+                    <td>
+                        {% if IsTwitterLogin %}
+                            Twitter
+                        {% else %}
+                            Email
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Member since</td>
+                    <td>{{ UserData.created_at|date('d M Y') }}</td>
+                </tr>
+                <tr>
+                    <td>Points balance</td>
+                    <td>{{ UserData.points_balance }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 

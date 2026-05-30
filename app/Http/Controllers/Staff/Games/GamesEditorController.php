@@ -22,6 +22,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\FormatOptions as GameFormatOptions;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\GameCrawlLifecycle\Repository as GameCrawlLifecycleRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
@@ -35,6 +36,7 @@ use App\Domain\News\Repository as NewsRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 use App\Enums\AmazonAffiliateStatus;
+use App\Enums\GameStatus;
 
 use App\Events\GameCreated;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
@@ -66,6 +68,7 @@ class GamesEditorController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private GameRepository $repoGame,
+        private GameCrawlLifecycleRepository $repoGameCrawlLifecycle,
         private GameFormatOptions $formatOptions,
         private GameCollectionRepository $repoGameCollection,
         private GameDeveloperRepository $repoGameDeveloper,
@@ -103,15 +106,16 @@ class GamesEditorController extends Controller
                     ->withInput();
             }
 
-            // Check title hash is unique
+            // Check title hash is unique for this console
             $titleLowercase = strtolower($request->title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($request->title);
-            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+            $consoleId = (int) $request->console_id;
+            $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
             $validator->after(function ($validator) use ($hashExists) {
-                // Check for duplicates
+                // Check for duplicates on this console
                 if ($hashExists) {
-                    $validator->errors()->add('title', 'Title already exists for another record!');
+                    $validator->errors()->add('title', 'Title already exists for another game on this console!');
                 }
             });
 
@@ -131,7 +135,7 @@ class GamesEditorController extends Controller
             $gameId = $game->id;
 
             // Add title hash
-            $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+            $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId, $consoleId);
 
             // Add publisher, if selected
             if ($request->publisher_id) {
@@ -199,6 +203,29 @@ class GamesEditorController extends Controller
                     ->withInput();
             }
 
+            // Check if title has changed and update title hash if needed
+            $oldTitle = $gameData->title;
+            $newTitle = $request->title;
+            $consoleId = $gameData->console_id;
+            if (strtolower($oldTitle) !== strtolower($newTitle)) {
+                $newHashedTitle = $this->gameTitleHashGenerator->generateHash($newTitle);
+
+                // Check if this hash already exists for a different game on the same console
+                if ($this->repoGameTitleHash->hashExistsForOtherGameOnConsole($newHashedTitle, $gameId, $consoleId)) {
+                    $validator->after(function ($validator) {
+                        $validator->errors()->add('title', 'This title already exists for another game on this console!');
+                    });
+                    return redirect(route('staff.games.edit', ['gameId' => $gameId]))
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                // Add new title hash for this game (if it doesn't already exist)
+                if (!$this->repoGameTitleHash->hashExistsForGame($newHashedTitle, $gameId)) {
+                    $this->repoGameTitleHash->create(strtolower($newTitle), $newHashedTitle, $gameId, $consoleId);
+                }
+            }
+
             GameDirectorFactory::updateExisting($gameData, $request->post());
 
             // Clear cache
@@ -227,6 +254,8 @@ class GamesEditorController extends Controller
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
         $bindings['FormatDLCList'] = $this->formatOptions->getOptionsDLC();
         $bindings['FormatDemoList'] = $this->formatOptions->getOptionsDemo();
+
+        $bindings['GameStatusList'] = GameStatus::options();
 
         return view('staff.games.editor.edit', $bindings);
     }
@@ -382,6 +411,8 @@ class GamesEditorController extends Controller
             // Data source cleanup
             $this->repoDataSourceParsed->clearGameIdFromNintendoCoUkItems($gameId);
             $this->repoDataSourceParsed->removeSwitchEshopItems($gameId);
+            // Crawl lifecycle cleanup
+            $this->repoGameCrawlLifecycle->deleteByGameId($gameId);
             // Ready to delete the game
             $this->repoGame->delete($gameId);
 

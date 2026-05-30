@@ -13,28 +13,40 @@
         formVals['play_status'] = "{{ CollectionData.play_status }}";
         formVals['hours_played'] = "{{ CollectionData.hours_played }}";
 
+        $('#owned_from').val(formVals['owned_from']);
+        if (formVals['owned_type'] != '') {
+            $('input[name=owned_type][value=' + formVals['owned_type'] + ']').attr('checked', true);
+        } else {
+            $('input[name=owned_type][value=""]').attr('checked', true);
+        }
+        $('#hours_played').val(formVals['hours_played']);
+
     } else {
 
-        // This is used for new games.
-        // It's also used when submitting the edit version, to avoid the DB data overwriting the form.
-        formVals['owned_from'] = "{{ old('owned_from') }}";
-        formVals['owned_type'] = "{{ old('owned_type') }}";
-        formVals['play_status'] = "{{ old('play_status') }}";
-        formVals['hours_played'] = "{{ old('hours_played') }}";
+        // Add mode: handle owned_from quick options
+        $('input[name=owned_from_option]').on('change', function() {
+            var selected = $(this).val();
+            if (selected === 'custom') {
+                $('#owned_from_date_wrapper').show();
+                $('#owned_from_skip_info').hide();
+            } else if (selected === 'skip') {
+                $('#owned_from_date_wrapper').hide();
+                $('#owned_from').val('');
+                $('#owned_from_skip_info').show();
+            } else {
+                $('#owned_from_date_wrapper').hide();
+                $('#owned_from').val('');
+                $('#owned_from_skip_info').hide();
+            }
+        });
 
     }
 
-    $('#owned_from').val(formVals['owned_from']);
-    if (formVals['owned_type'] != '') {
-        $('input[name=owned_type][value=' + formVals['owned_type'] + ']').attr('checked', true);
+    // Play status - set from saved value (edit) or default to not-started (add)
+    if (formMode == 'edit' && formVals['play_status']) {
+        $('input[name=play_status][value="' + formVals['play_status'] + '"]').prop('checked', true);
     } else {
-        $('input[name=owned_type][value=""]').attr('checked', true);
+        $('input[name=play_status][value="not-started"]').prop('checked', true);
     }
-    if (formVals['play_status'] != '') {
-        $('input[name=play_status][value=' + formVals['play_status'] + ']').attr('checked', true);
-    } else {
-        $('input[name=play_status][value=not-started]').attr('checked', true);
-    }
-    $('#hours_played').val(formVals['hours_played']);
 
 </script>

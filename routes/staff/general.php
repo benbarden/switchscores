@@ -36,3 +36,11 @@ Route::group(['middleware' => ['auth.staff']], function() {
     Route::match(['get', 'post'], '/staff/invite-code/delete/{inviteCodeId}', 'Staff\InviteCodeController@deleteInviteCode')->name('staff.invite-code.delete');
     Route::match(['get', 'post'], '/staff/invite-code/generate-codes', 'Staff\InviteCodeController@generateCodes')->name('staff.invite-code.generate-codes');
 });
+
+// *************** Staff: UNVERIFIED MEMBERS *************** //
+Route::group(['middleware' => ['auth.staff']], function() {
+
+    Route::get('/staff/unverified-members', 'Staff\UnverifiedMembersController@index')->name('staff.unverified-members.index');
+    Route::post('/staff/unverified-members/verify/{userId}', 'Staff\UnverifiedMembersController@verify')->name('staff.unverified-members.verify');
+    Route::post('/staff/unverified-members/delete/{userId}', 'Staff\UnverifiedMembersController@delete')->name('staff.unverified-members.delete');
+});

@@ -41,7 +41,11 @@ abstract class AbstractPageBuilder
 
     final protected function buildTopTitle(string $pageTitle): string
     {
-        return sprintf('%s - %s', $pageTitle, $this->titleSuffix());
+        $suffix = $this->titleSuffix();
+        if ($suffix === '') {
+            return $pageTitle;
+        }
+        return sprintf('%s - %s', $pageTitle, $suffix);
     }
 
     /** e.g. 'Staff', 'Members', 'Switch Scores' */

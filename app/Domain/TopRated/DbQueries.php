@@ -2,6 +2,7 @@
 
 namespace App\Domain\TopRated;
 
+use App\Enums\GameStatus;
 use App\Models\Game;
 use Illuminate\Support\Facades\DB;
 
@@ -204,9 +205,9 @@ class DbQueries
             FROM games
             WHERE console_id = ?
             AND release_year = ?
-            AND format_digital <> ?
+            AND game_status = ?
             GROUP BY is_ranked
-        ', [$consoleId, $year, Game::FORMAT_DELISTED]);
+        ', [$consoleId, $year, GameStatus::ACTIVE->value]);
 
         return $rankCount;
     }
@@ -227,9 +228,9 @@ class DbQueries
             count(*) AS count
             FROM games
             WHERE release_year = ?
-            AND format_digital <> ?
+            AND game_status = ?
             GROUP BY is_ranked
-        ', [$year, Game::FORMAT_DELISTED]);
+        ', [$year, GameStatus::ACTIVE->value]);
 
         return $rankCount;
     }

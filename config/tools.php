@@ -10,6 +10,7 @@ return [
                 ['cmd' => 'DSNintendoCoUkUpdateAvailability', 'desc' => 'Update availability from EU eShop data'],
                 ['cmd' => 'DSNintendoCoUkUpdateGames',        'desc' => 'Refresh linked game data'],
                 ['cmd' => 'DSNintendoCoUkDownloadPackshots',  'desc' => 'Download packshots'],
+                ['cmd' => 'game:crawl-batch --limit=10',      'desc' => 'Crawl Nintendo URLs for game data (10 games)'],
             ],
         ],
 

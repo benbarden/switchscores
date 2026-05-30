@@ -11,6 +11,7 @@ use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -37,20 +38,21 @@ class DashboardController extends Controller
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
         $bindings['NoPriceCount'] = $this->repoGameStatsLegacy->totalNoPrice();
         $bindings['MissingVideoTypeCount'] = $this->repoGameStatsLegacy->totalNoVideoType();
+        $bindings['MissingPlayersCount'] = DB::table('games')
+            ->whereNull('players')
+            ->where('game_status', 'active')
+            ->count();
 
-        // Release date stats
+        // Game stats by status
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
-        $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
-        $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
+        $bindings['ActiveGameCount'] = $this->repoGameStats->totalActive();
+        $bindings['DelistedGameCount'] = $this->repoGameStats->totalDelisted();
+        $bindings['SoftDeletedGameCount'] = $this->repoGameStats->totalSoftDeleted();
 
         // Verification
         $bindings['CategoryVerified'] = $this->repoGameStatsLegacy->totalCategoryVerified();
         $bindings['CategoryUnverified'] = $this->repoGameStatsLegacy->totalCategoryUnverified();
         $bindings['CategoryNeedsReview'] = $this->repoGameStatsLegacy->totalCategoryNeedsReview();
-        $bindings['TagsVerified'] = $this->repoGameStatsLegacy->totalTagsVerified();
-        $bindings['TagsUnverified'] = $this->repoGameStatsLegacy->totalTagsUnverified();
-        $bindings['TagsNeedsReview'] = $this->repoGameStatsLegacy->totalTagsNeedsReview();
-
         // Affiliates
         $bindings['AmazonUSUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('us');
         $bindings['AmazonUSLinkedCount'] = $this->repoGameAffiliate->countLinked('us');
@@ -61,6 +63,32 @@ class DashboardController extends Controller
         $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
         $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
 
+        // Crawl lifecycle stats (active games only)
+        $bindings['CrawlNotYetCrawled'] = DB::table('games')
+            ->whereNull('last_crawled_at')
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus200'] = DB::table('games')
+            ->where('last_crawl_status', 200)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus404'] = DB::table('games')
+            ->where('last_crawl_status', 404)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatus410'] = DB::table('games')
+            ->where('last_crawl_status', 410)
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatusRedirect'] = DB::table('games')
+            ->whereBetween('last_crawl_status', [300, 399])
+            ->where('game_status', 'active')
+            ->count();
+        $bindings['CrawlStatusError'] = DB::table('games')
+            ->where('last_crawl_status', '>=', 500)
+            ->where('game_status', 'active')
+            ->count();
+
         return view('staff.games.dashboard', $bindings);
     }
 
@@ -69,10 +97,11 @@ class DashboardController extends Controller
         $pageTitle = 'Games stats';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
 
-        // Release date stats
+        // Game stats by status
         $bindings['TotalGameCount'] = $this->repoGameStats->grandTotal();
-        $bindings['ReleasedGameCount'] = $this->repoGameStats->totalReleased();
-        $bindings['UpcomingGameCount'] = $this->repoGameStats->totalUpcoming();
+        $bindings['ActiveGameCount'] = $this->repoGameStats->totalActive();
+        $bindings['DelistedGameCount'] = $this->repoGameStats->totalDelisted();
+        $bindings['SoftDeletedGameCount'] = $this->repoGameStats->totalSoftDeleted();
 
         // Format stats
         $bindings['FormatDigital'] = $this->repoGameStats->getFormatDigital();

@@ -48,12 +48,25 @@ class UpdateAvailability extends Command
 
         $logger->info('Updating games to Available ... ');
 
-        $updateGame->updateDigitalAvailable();
+        $availableCount = $updateGame->updateDigitalAvailable();
+        if ($availableCount === 0) {
+            $logger->warning('Skipped: insufficient data source records (possible API/import failure)');
+            $this->error('Skipped: insufficient data source records. Check API import.');
+            return 1;
+        }
+        $logger->info("Processed with {$availableCount} link IDs");
 
         $logger->info('Updating games to De-listed ... ');
 
-        $updateGame->updateDigitalDelisted();
+        $delistedCount = $updateGame->updateDigitalDelisted();
+        if ($delistedCount === 0) {
+            $logger->warning('Skipped: insufficient data source records (possible API/import failure)');
+            $this->error('Skipped: insufficient data source records. Check API import.');
+            return 1;
+        }
+        $logger->info("Processed with {$delistedCount} link IDs");
 
         $logger->info('Complete');
+        return 0;
     }
 }

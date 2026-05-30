@@ -15,7 +15,7 @@ class DataSourceParsed extends Model
      * @var array
      */
     protected $fillable = [
-        'source_id', 'console_id', 'game_id', 'link_id', 'title',
+        'source_id', 'console_id', 'game_id', 'is_delisted', 'link_id', 'title',
         'release_date_eu', 'release_date_us', 'release_date_jp',
         'price_standard', 'price_discounted', 'price_discount_pc',
         'developers', 'publishers', 'genres_json', 'players', 'url',
@@ -31,6 +31,11 @@ class DataSourceParsed extends Model
     public function isSourceWikipedia()
     {
         return $this->source_id == DataSource::DSID_WIKIPEDIA;
+    }
+
+    public function game()
+    {
+        return $this->hasOne('App\Models\Game', 'id', 'game_id');
     }
 
     public function console()

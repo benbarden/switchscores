@@ -32,6 +32,7 @@
         formVals['format_physical'] = "{{ GameData.format_physical }}";
         formVals['format_dlc'] = "{{ GameData.format_dlc }}";
         formVals['format_demo'] = "{{ GameData.format_demo }}";
+        formVals['game_status'] = "{{ GameData.game_status.value }}";
         // *** Additional *** //
         formVals['video_url'] = "{{ GameData.video_url }}";
         formVals['video_type'] = "{{ GameData.video_type }}";
@@ -40,12 +41,8 @@
         formVals['eshop_europe_order'] = "{{ GameData.eshop_europe_order }}";
         formVals['is_low_quality'] = "{{ GameData.is_low_quality }}";
         formVals['category_verification'] = "{{ GameData.category_verification }}";
-        formVals['tags_verification'] = "{{ GameData.tags_verification }}";
-        formVals['taxonomy_needs_review'] = "{{ GameData.taxonomy_needs_review }}";
         formVals['image_square'] = "{{ GameData.image_square }}";
         formVals['image_header'] = "{{ GameData.image_header }}";
-        formVals['boxart_square_url'] = "{{ GameData.boxart_square_url }}";
-        formVals['boxart_header_image'] = "{{ GameData.boxart_header_image }}";
 
     } else {
 
@@ -84,12 +81,8 @@
         formVals['eshop_europe_order'] = "{{ old('eshop_europe_order') }}";
         formVals['is_low_quality'] = "{{ old('is_low_quality') }}";
         formVals['category_verification'] = "{{ old('category_verification') }}";
-        formVals['tags_verification'] = "{{ old('tags_verification') }}";
-        formVals['taxonomy_needs_review'] = "{{ old('taxonomy_needs_review') }}";
         formVals['image_square'] = "{{ old('image_square') }}";
         formVals['image_header'] = "{{ old('image_header') }}";
-        formVals['boxart_square_url'] = "{{ old('boxart_square_url') }}";
-        formVals['boxart_header_image'] = "{{ old('boxart_header_image') }}";
 
     }
 
@@ -125,6 +118,7 @@
     $('#format_physical').val(formVals['format_physical']);
     $('#format_dlc').val(formVals['format_dlc']);
     $('#format_demo').val(formVals['format_demo']);
+    $('#game_status').val(formVals['game_status']);
     // *** Additional *** //
     $('#video_url').val(formVals['video_url']);
     $('#video_type').val(formVals['video_type']);
@@ -135,19 +129,27 @@
         $('#is_low_quality').attr('checked', true);
     }
     $('#category_verification').val(formVals['category_verification']);
-    $('#tags_verification').val(formVals['tags_verification']);
-    $('#taxonomy_needs_review').val(formVals['taxonomy_needs_review']);
     $('#image_square').val(formVals['image_square']);
     $('#image_header').val(formVals['image_header']);
-    $('#boxart_square_url').val(formVals['boxart_square_url']);
-    $('#boxart_header_image').val(formVals['boxart_header_image']);
 
     $('#title').on('blur', function() {
 
         // Autogenerate link URL
         ssAdminTools.convertToLinkTitle('title', 'link_title');
         // Check for duplicates. Also check for unlinked items with this title.
-        ssAdminTools.checkForExistingGameTitle('title', gameId);
+        var consoleId = $('#console_id').val();
+        ssAdminTools.checkForExistingGameTitle('title', gameId, consoleId);
+
+    });
+
+    $('#console_id').on('change', function() {
+
+        // Re-validate title when console changes
+        var title = $('#title').val();
+        if (title != '') {
+            var consoleId = $('#console_id').val();
+            ssAdminTools.checkForExistingGameTitle('title', gameId, consoleId);
+        }
 
     });
 
@@ -183,8 +185,6 @@
         //$('#grp_packshot_square_url_override').hide();
         $('#grp_is_low_quality').hide();
         $('#grp_category_verification').hide();
-        $('#grp_tags_verification').hide();
-        $('#grp_taxonomy_needs_review').hide();
 
         // hide all editorial fields
         $('#fs_editorial').hide();

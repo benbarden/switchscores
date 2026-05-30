@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Models\Console;
 use App\Models\Game;
 
 use App\Domain\Game\Repository as GameRepository;
@@ -32,6 +33,13 @@ class GameController
 
         $games = $this->repoGame->partialTitleSearch($title);
 
+        // Add display_title with console prefix for disambiguation
+        $games = $games->map(function ($game) {
+            $consolePrefix = $game->console_id === Console::ID_SWITCH_2 ? '[Switch 2]' : '[Switch 1]';
+            $game->display_title = $consolePrefix . ' ' . $game->title;
+            return $game;
+        });
+
         return response()->json(['games' => $games], 200);
     }
 
@@ -48,7 +56,7 @@ class GameController
 
     private function parseGameData(Game $game)
     {
-        $gameUrl = route('game.show', ['id' => $game->id, 'linkTitle' => $game->link_title]);
+        $gameUrl = $this->buildGameUrl($game);
         $gameData = [
             'id' => $game->id,
             'title' => $game->title,
@@ -99,7 +107,7 @@ class GameController
 
     public function getDetailsByLinkId($linkId)
     {
-        if (strpos($linkId, ",") !== false) {
+        if (str_contains($linkId, ",")) {
             $linkIdList = explode(",", $linkId);
         } else {
             $linkIdList = [$linkId];
@@ -133,5 +141,20 @@ class GameController
         $gameReviews = $this->repoReviewLink->byGame($gameId);
 
         return response()->json(['reviews' => $gameReviews], 200);
+    }
+
+    private function buildGameUrl(Game $game): string
+    {
+        if ($game->console_id === Console::ID_SWITCH_2) {
+            return route('game.show.switch2', [
+                'id' => $game->id,
+                'linkTitle' => $game->link_title
+            ]);
+        }
+
+        return route('game.show', [
+            'id' => $game->id,
+            'linkTitle' => $game->link_title
+        ]);
     }
 }

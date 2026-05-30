@@ -73,7 +73,7 @@ class AutoDescription
 
     public function delisted()
     {
-        if ($this->game->isDigitalDelisted()) {
+        if ($this->game->isDelisted()) {
             return 'It has been <strong>de-listed</strong> from the eShop. De-listed games are not included in our rankings.';
         } else {
             return '';
@@ -88,7 +88,7 @@ class AutoDescription
         } else {
             $consoleDesc = Console::DESC_SWITCH_1;
         }
-        if (!$this->game->isDigitalDelisted() && ($this->game->game_rank)) {
+        if (!$this->game->isDelisted() && ($this->game->game_rank)) {
             $blurb = 'It is ranked #'.$this->game->game_rank.' on the all-time Top Rated '.$consoleDesc.' games, '.
                 'with '.$this->game->review_count.' reviews '.
                 'and an average score of '.$this->game->rating_avg.'. ';
@@ -99,7 +99,7 @@ class AutoDescription
     public function reviews()
     {
         $blurb = '';
-        if (!$this->game->isDigitalDelisted() && (!$this->game->game_rank) && ($this->game->eu_is_released == 1) && ($this->game->is_low_quality == 0)) {
+        if (!$this->game->isDelisted() && (!$this->game->game_rank) && ($this->game->eu_is_released == 1) && ($this->game->is_low_quality == 0)) {
             switch ($this->game->review_count) {
                 case 0:
                     $blurb = 'This game hasn\'t been ranked yet, as it doesn\'t have any reviews. We need 3 reviews to give it a rank. ';

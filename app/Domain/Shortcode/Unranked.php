@@ -59,7 +59,7 @@ class Unranked
             $year = $shortcode['year'];
             $month = $shortcode['month'];
 
-            if (strpos($parsedHtml, $key)) {
+            if (str_contains($parsedHtml, $key)) {
                 $gameList = $this->dbTopRated->byMonthUnranked($year, $month);
                 $shortcodeHtml = view('ui.blocks.shortcodes.unranked', ['GameList' => $gameList]);
                 $parsedHtml = str_replace($key, $shortcodeHtml, $parsedHtml);

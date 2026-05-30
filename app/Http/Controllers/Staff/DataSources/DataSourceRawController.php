@@ -27,7 +27,13 @@ class DataSourceRawController extends Controller
         $pageTitle = $dataSource->name.' - Raw items';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle))->bindings;
 
-        $bindings['ItemList'] = $this->repoDataSourceRaw->getBySourceId($sourceId);
+        $request = request();
+        $searchTitle = $request->searchTitle;
+
+        $bindings['SearchTitle'] = $searchTitle ?? '';
+        $bindings['ItemList'] = $searchTitle
+            ? $this->repoDataSourceRaw->searchBySourceIdAndTitle($sourceId, $searchTitle)
+            : null;
 
         return view('staff.data-sources.raw.list', $bindings);
     }

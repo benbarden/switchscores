@@ -8,10 +8,10 @@
     {% if context == 'staff' %}
         <a href="{{ route('staff.games.detail', {'gameId': item.id}) }}" tabindex="-1">{{ linkText }}</a>
     {% else %}
-        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">{{ linkText }}</a>
+        <a href="{{ game_url(item) }}">{{ linkText }}</a>
     {% endif %}
 
-    <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank" title="Open game page in a new tab" tabindex="-1">
+    <a href="{{ game_url(item) }}" target="_blank" title="Open game page in a new tab" tabindex="-1">
         <i class="fas fa-external-link-alt"></i>
     </a>
 {% endmacro %}

@@ -54,10 +54,19 @@ class CompanyController extends Controller
 
         $gamesCompanyId = $gamesCompany->id;
 
-        $gameDevList = $this->dbGameDeveloper->getGamesByDeveloper($gamesCompanyId, false);
-        $gamePubList = $this->dbGamePublisher->getGamesByPublisher($gamesCompanyId, false);
+        // Get full lists for total count
+        $gameDevListAll = $this->dbGameDeveloper->getGamesByDeveloper($gamesCompanyId, false);
+        $gamePubListAll = $this->dbGamePublisher->getGamesByPublisher($gamesCompanyId, false);
+        $mergedGameListAll = $this->repoGamesCompany->getMergedGameList($gameDevListAll, $gamePubListAll);
+        $totalGameCount = count($mergedGameListAll);
 
+        // Get limited lists for display (10 most recent)
+        $gameDevList = $this->dbGameDeveloper->getGamesByDeveloper($gamesCompanyId, false, 10);
+        $gamePubList = $this->dbGamePublisher->getGamesByPublisher($gamesCompanyId, false, 10);
         $mergedGameList = $this->repoGamesCompany->getMergedGameList($gameDevList, $gamePubList);
+        // Sort by release date and limit to 10
+        usort($mergedGameList, fn($a, $b) => strcmp($b->eu_release_date ?? '', $a->eu_release_date ?? ''));
+        $mergedGameList = array_slice($mergedGameList, 0, 10);
 
         $bindings['GamesCompany'] = $gamesCompany;
         $bindings['GamesCompanyId'] = $gamesCompanyId;
@@ -65,6 +74,7 @@ class CompanyController extends Controller
         $bindings['OutreachList'] = $this->repoPartnerOutreach->byPartnerId($gamesCompanyId);
 
         $bindings['MergedGameList'] = $mergedGameList;
+        $bindings['TotalGameCount'] = $totalGameCount;
 
         return view('staff.games-companies.company.show', $bindings);
     }

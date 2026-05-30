@@ -1,0 +1,89 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Companies or individuals who have signed up to claim or create a games company profile.
+</p>
+
+{% if SignupList|length > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th>Contact</th>
+                <th>Company</th>
+                <th>Games</th>
+                <th class="text-center">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in SignupList %}
+                <tr>
+                    <td class="text-end">
+                        {{ item.id }}
+                    </td>
+                    <td>
+                        <strong>{{ item.contact_name }}</strong>
+                        <br>
+                        <small>{{ item.contact_role }}</small>
+                        <br>
+                        <small><a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a></small>
+                    </td>
+                    <td>
+                        {% if item.existing_company_id %}
+                            <span class="badge bg-info">Existing</span>
+                            {% if item.gamesCompany %}
+                                <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.existing_company_id}) }}">
+                                    {{ item.gamesCompany.name }}
+                                </a>
+                            {% else %}
+                                ID: {{ item.existing_company_id }} (not found)
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-success">New</span>
+                            <strong>{{ item.new_company_name }}</strong>
+                            <br>
+                            <small>Type: {{ item.new_company_type }}</small>
+                            {% if item.new_company_url %}
+                                <br>
+                                <small><a href="{{ item.new_company_url }}" target="_blank">{{ item.new_company_url }}</a></small>
+                            {% endif %}
+                            {% if item.new_company_twitter %}
+                                <br>
+                                <small>Twitter: @{{ item.new_company_twitter }}</small>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.list_of_games %}
+                            <small>{{ item.list_of_games|nl2br }}</small>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ item.created_at|date('Y-m-d') }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">No signups found.</p>
+    </div>
+{% endif %}
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 3 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

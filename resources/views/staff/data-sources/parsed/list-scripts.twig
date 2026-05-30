@@ -13,6 +13,7 @@
                 null, // title
                 null, // release_date_eu
                 {% if DataSource.isNintendoCoUk() %}
+                null, // console
                 null, // price_standard
                 { "orderable": false }, // Nintendo URL
                 {% endif %}

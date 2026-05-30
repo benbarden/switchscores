@@ -18,7 +18,7 @@
 
                 <tr>
                     <td class="text-right">
-                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+                        <a href="{{ game_url(item) }}">
                             {% if boxartUrl %}
                                 <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; height: 75px; width: 75px;" alt="{{ item.title }}">
                             {% else %}

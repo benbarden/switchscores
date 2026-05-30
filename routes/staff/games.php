@@ -10,6 +10,7 @@ use App\Http\Controllers\Staff\Games\SearchController;
 use App\Http\Controllers\Staff\Games\GamesDetailController;
 use App\Http\Controllers\Staff\Games\GamesEditorController;
 use App\Http\Controllers\Staff\Games\BulkEditorController;
+use App\Http\Controllers\Staff\Games\JsonImportController;
 use App\Http\Controllers\Staff\Games\ImportRuleEshopController;
 use App\Http\Controllers\Staff\Games\GamesListController;
 use App\Http\Controllers\Staff\Games\FeaturedGameController;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
+use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
+use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchListController;
 
 // *************** Staff: GAMES *************** //
 Route::group([
@@ -50,6 +53,8 @@ Route::group([
         Route::get('detail/full-audit/{game}', 'showFullAudit')->name('detail.fullAudit');
         Route::get('detail/{gameId}/update-eshop-data', 'updateEshopData')->name('detail.updateEshopData');
         Route::get('detail/{gameId}/redownload-packshots', 'redownloadPackshots')->name('detail.redownloadPackshots');
+        Route::post('detail/{gameId}/update-status', 'updateStatus')->name('detail.updateStatus');
+        Route::post('detail/{gameId}/queue-crawl', 'queueCrawl')->name('detail.queueCrawl');
     });
 
     // ---- Game add / edit / delete ----
@@ -66,20 +71,21 @@ Route::group([
             ->name('editAffiliates');
     });
 
-    // ---- Bulk add and import ----
+    // ---- Bulk edit ----
     Route::controller(BulkEditorController::class)->group(function () {
-        Route::match(['get', 'post'], 'bulk-add', 'bulkAdd')->name('bulk-add.add');
-        Route::match(['get', 'post'], 'bulk-add-complete/{errors?}', 'bulkAddComplete')->name('bulk-add.complete');
-
-        Route::match(['get', 'post'], 'import-from-csv', 'importFromCsv')->name('import-from-csv.import');
-        Route::match(['get', 'post'], 'import-from-csv/{errors?}', 'importFromCsvComplete')->name('import-from-csv.complete');
-
         Route::match(['get', 'post'], 'bulk-edit/edit-predefined-list/{editMode}', 'editList')
             ->name('bulk-edit.editPredefinedList');
         Route::match(['get', 'post'], 'bulk-edit/edit-game-id-list/{editMode}/{gameIdList}', 'editList')
             ->name('bulk-edit.editGameIdList');
         Route::match(['get', 'post'], 'bulk-edit/eshop-upcoming-crosscheck/{consoleId}', 'eshopUpcomingCrosscheck')
             ->name('bulk-edit.eshopUpcomingCrosscheck');
+    });
+
+    // ---- JSON import ----
+    Route::controller(JsonImportController::class)->group(function () {
+        Route::get('json-import', 'showUploadForm')->name('json-import.upload');
+        Route::post('json-import/preview', 'preview')->name('json-import.preview');
+        Route::post('json-import/confirm', 'confirm')->name('json-import.confirm');
     });
 
     // ---- Import rules ----
@@ -125,5 +131,48 @@ Route::group([
     Route::match(['get', 'post'], 'tag/{gameId}/edit',
         [GamesTagController::class, 'edit']
     )->name('tag.edit');
+
+    // ---- Weekly updates ----
+    Route::controller(WeeklyBatchController::class)->group(function () {
+        Route::get('weekly-updates', 'index')->name('weekly-updates.index');
+        Route::get('weekly-updates/create', 'create')->name('weekly-updates.create');
+        Route::post('weekly-updates/store', 'store')->name('weekly-updates.store');
+        Route::get('weekly-updates/{batchId}', 'show')->name('weekly-updates.show');
+    });
+
+    Route::controller(WeeklyBatchListController::class)
+        ->prefix('weekly-updates/{batchId}/{console}/{listType}')
+        ->name('weekly-updates.list.')
+        ->group(function () {
+            Route::get('raw', 'raw')->name('raw');
+            Route::post('raw/save-page', 'savePage')->name('raw.save-page');
+            Route::post('raw/remove-page', 'removePage')->name('raw.remove-page');
+            Route::get('urls', 'urls')->name('urls');
+            Route::post('urls/save', 'saveUrls')->name('urls.save');
+
+            Route::get('fetch', 'fetch')->name('fetch');
+            Route::post('fetch/item/{itemId}', 'fetchItem')->name('fetch.item');
+            Route::post('fetch/lq-decisions', 'saveLqDecisions')->name('fetch.lq-decisions');
+            Route::post('item/{itemId}/action', 'itemAction')->name('item.action');
+
+            Route::get('publishers', 'publishers')->name('publishers');
+            Route::post('publishers/create', 'createPublisher')->name('publishers.create');
+            Route::post('publishers/mark-lq', 'markPublisherLq')->name('publishers.mark-lq');
+
+            Route::get('prices', 'prices')->name('prices');
+            Route::post('prices/save', 'savePrices')->name('prices.save');
+
+            Route::get('packshots', 'packshots')->name('packshots');
+            Route::post('packshots/save', 'savePackshots')->name('packshots.save');
+
+            Route::get('categories', 'categories')->name('categories');
+            Route::post('categories/save-item/{itemId}', 'saveItemCategory')->name('categories.save-item');
+            Route::post('categories/accept/{itemId}', 'acceptCategory')->name('categories.accept');
+            Route::post('categories/reset', 'resetCategories')->name('categories.reset');
+
+            Route::get('confirm', 'confirm')->name('confirm');
+            Route::post('confirm/save-publisher/{itemId}', 'saveItemPublisher')->name('confirm.save-publisher');
+            Route::post('import', 'import')->name('import');
+        });
 
 });

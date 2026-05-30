@@ -1,6 +1,6 @@
 {% import 'ui/components/rating/badge.twig' as rating %}
 
-{% extends 'theme/wos/member/clean-wide.twig' %}
+{% extends 'theme/member-b5/layout-default.twig' %}
 
 {% block page_inner %}
 
@@ -12,46 +12,48 @@
             <p>
                 Showing top rated games in {{ Category.name }}.
             </p>
-            <table class="table table-condensed table-responsive">
-                <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th>Game</th>
-                        <th class="text-center">Rating</th>
-                        <th class="text-center">Rank</th>
-                        <th class="text-center">Reviews</th>
-                        <th class="text-center">Release date (EU)</th>
-                        <th class="text-center">In your collection?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in RankedGameList %}
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
                         <tr>
-                            <td class="text-center">{{ item.id }}</td>
-                            <td>
-                                <a href="{{ game_url(item) }}" target="_blank">{{ item.title }}</a>
-                            </td>
-                            <td class="text-center">
-                                {% if item.review_count > 2 %}
-                                    {{ rating.score(item.rating_avg, 'h6', 'b3') }}
-                                {% else %}
-                                    {{ rating.tbc(item.review_count, 'h6', 'b3') }}
-                                {% endif %}
-                            </td>
-                            <td class="text-center">{{ item.game_rank }}</td>
-                            <td class="text-center">{{ item.review_count }}</td>
-                            <td class="text-center">{{ item.eu_release_date }}</td>
-                            <td class="text-center">
-                                {% if item.id in OwnedGamedIdList %}
-                                    <div style="color: #009900; font-size: 18px; font-weight: bold;">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                {% endif %}
-                            </td>
+                            <th class="text-center">#</th>
+                            <th>Game</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Rank</th>
+                            <th class="text-center">Reviews</th>
+                            <th class="text-center">Release date (EU)</th>
+                            <th class="text-center">In your collection?</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for item in RankedGameList %}
+                            <tr>
+                                <td class="text-center">{{ item.id }}</td>
+                                <td>
+                                    <a href="{{ game_url(item) }}" target="_blank">{{ item.title }}</a>
+                                </td>
+                                <td class="text-center">
+                                    {% if item.review_count > 2 %}
+                                        {{ rating.score(item.rating_avg, 'h6', 'b5') }}
+                                    {% else %}
+                                        {{ rating.tbc(item.review_count, 'h6', 'b5') }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">{{ item.game_rank }}</td>
+                                <td class="text-center">{{ item.review_count }}</td>
+                                <td class="text-center">{{ item.eu_release_date }}</td>
+                                <td class="text-center">
+                                    {% if item.id in OwnedGamedIdList %}
+                                        <div style="color: #009900; font-size: 18px; font-weight: bold;">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <p>
                 No games to display! Maybe something went wrong...

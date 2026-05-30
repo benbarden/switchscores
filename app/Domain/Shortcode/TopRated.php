@@ -51,7 +51,7 @@ class TopRated
             $year = $shortcode['year'];
             $month = $shortcode['month'];
 
-            if (strpos($parsedHtml, $key)) {
+            if (str_contains($parsedHtml, $key)) {
                 // @todo either replace the console with a variable, or remove this shortcode
                 $gameList = $this->dbTopRated->byMonthWithRanks(1, $year, $month, 10);
                 $shortcodeHtml = view('ui.blocks.shortcodes.top-rated', ['GameList' => $gameList]);

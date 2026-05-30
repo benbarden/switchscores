@@ -68,6 +68,7 @@ class IndexController extends Controller
 
         $bindings['UpcomingS1'] = $this->repoGameLists->upcomingByBatch(Console::ID_SWITCH_1, $selectedDate);
         $bindings['UpcomingS2'] = $this->repoGameLists->upcomingByBatch(Console::ID_SWITCH_2, $selectedDate);
+        $bindings['UpcomingAll'] = $bindings['UpcomingS1']->concat($bindings['UpcomingS2'])->sortBy('eu_release_date')->values();
         $bindings['ReleasedS1'] = $this->repoGameLists->releasedByBatch(Console::ID_SWITCH_1, $selectedDate);
         $bindings['ReleasedS2'] = $this->repoGameLists->releasedByBatch(Console::ID_SWITCH_2, $selectedDate);
 

@@ -6,10 +6,15 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_DATA_SOURCE_MANAGER]], function() {
 
     Route::get('/staff/data-sources/dashboard', 'Staff\DataSources\DashboardController@show')->name('staff.data-sources.dashboard');
+    Route::get('/staff/data-sources/import-runs', 'Staff\DataSources\DataSourceImportRunController@index')->name('staff.data-sources.import-runs');
+    Route::get('/staff/data-sources/import-runs/{runId}', 'Staff\DataSources\DataSourceImportRunController@view')->name('staff.data-sources.import-runs.view');
+    Route::get('/staff/data-sources/import-runs/{runId}/log/{logId}/diff', 'Staff\DataSources\DataSourceImportRunController@viewDiff')->name('staff.data-sources.import-runs.diff');
 
     // Data sources: Lists
     Route::get('/staff/data-sources/{sourceId}/list-raw', 'Staff\DataSources\DataSourceRawController@show')->name('staff.data-sources.list-raw');
     Route::get('/staff/data-sources/{sourceId}/list-raw/{itemId}/view', 'Staff\DataSources\DataSourceRawController@view')->name('staff.data-sources.list-raw.view');
+    Route::get('/staff/data-sources/{sourceId}/list-parsed', 'Staff\DataSources\DataSourceParsedController@showList')->name('staff.data-sources.list-parsed');
+    Route::get('/staff/data-sources/{sourceId}/detail/{linkId}', 'Staff\DataSources\DataSourceParsedController@viewParsed')->name('staff.data-sources.detail');
 
     // Data sources: Ignore list
     Route::get('/staff/data-sources/ignore/add', 'Staff\DataSources\DataSourceIgnoreController@addToIgnoreList')->name('staff.data-sources.ignore.addToIgnoreList');

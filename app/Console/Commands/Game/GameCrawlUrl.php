@@ -1,0 +1,518 @@
+<?php
+
+namespace App\Console\Commands\Game;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
+
+use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Scraper\NintendoCoUkGameData;
+use App\Models\Game;
+use App\Models\GameCrawlLifecycle;
+use App\Models\GameScrapedData;
+use App\Services\Game\Images as GameImages;
+
+class GameCrawlUrl extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'game:crawl {gameId} {--save-html}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Crawls a game\'s Nintendo UK URL and checks its status.';
+
+    public function __construct(
+        private GameRepository $repoGame
+    )
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $gameId = $this->argument('gameId');
+        $saveHtml = $this->option('save-html');
+
+        $logger = Log::channel('cron');
+        $logger->info(' *************** '.$this->signature.' *************** ');
+
+        // Find the game
+        $game = $this->repoGame->find($gameId);
+        if (!$game) {
+            $this->error("Game not found: {$gameId}");
+            $logger->error("Game not found: {$gameId}");
+            return 1;
+        }
+
+        $this->info("Game: {$game->title} [{$game->id}]");
+        $logger->info("Game: {$game->title} [{$game->id}]");
+
+        // Get the Nintendo URL
+        $url = $this->getNintendoUrl($game);
+        if (!$url) {
+            $this->error("No Nintendo URL available for this game");
+            $logger->error("No Nintendo URL available for game: {$game->id}");
+            return 1;
+        }
+
+        $this->info("URL: {$url}");
+        $logger->info("URL: {$url}");
+
+        // Crawl the URL
+        try {
+            $httpClient = HttpClient::create(['timeout' => 30]);
+            $httpBrowser = new HttpBrowser($httpClient);
+            $httpBrowser->setMaxRedirects(3);
+            $crawler = $httpBrowser->request('GET', $url);
+
+            $response = $httpBrowser->getResponse();
+            $statusCode = $response->getStatusCode();
+
+            // Check for soft 404 (redirected to 404 page but got 200 status)
+            $finalUrl = $httpBrowser->getHistory()->current()->getUri();
+            if ($statusCode === 200 && $this->isSoft404($finalUrl)) {
+                $statusCode = 404;
+                $this->warn("Detected soft 404 (redirected to: {$finalUrl})");
+                $logger->warning("Soft 404 detected for game {$game->id}: {$finalUrl}");
+            }
+
+            $this->info("Status: {$statusCode}");
+            $logger->info("Status: {$statusCode}");
+
+            // Save HTML if requested
+            if ($saveHtml) {
+                $this->saveHtml($game, $crawler->html(), $statusCode);
+            }
+
+            // Capture previous status before updating
+            $previousStatus = $game->last_crawl_status;
+
+            // Update game record
+            $game->last_crawled_at = now();
+            $game->last_crawl_status = $statusCode;
+            $game->save();
+
+            // Clear cache so updated data is visible immediately
+            $this->repoGame->clearCacheCoreData($game->id);
+
+            $this->info("Updated last_crawled_at and last_crawl_status");
+            $logger->info("Updated crawl fields for game: {$game->id}");
+
+            // Log to lifecycle table if it's a problem or recovery
+            $this->logLifecycleEvent($game, $statusCode, $previousStatus, $url, $logger);
+
+            // Scrape game data if page is live
+            if ($statusCode === 200) {
+                $this->scrapeGameData($game, $crawler->html(), $logger);
+                $this->checkHeaderImage($game, $crawler->html(), $logger);
+            }
+
+            // Report on status
+            $this->reportStatus($statusCode);
+
+        } catch (\LogicException $e) {
+            if (str_contains($e->getMessage(), 'redirections was reached')) {
+                $this->warn("Redirect loop detected - too many redirects");
+                $logger->warning("Game {$game->id} redirect loop: {$url}");
+
+                // Update game record to mark the issue
+                $game->last_crawled_at = now();
+                $game->last_crawl_status = 310; // Custom code for redirect loop
+                $game->save();
+                $this->repoGame->clearCacheCoreData($game->id);
+
+                return 1;
+            }
+            throw $e; // Re-throw other LogicExceptions
+
+        } catch (\Exception $e) {
+            $this->error("Crawl failed: " . $e->getMessage());
+            $logger->error("Crawl failed for game {$game->id}: " . $e->getMessage());
+
+            if ($saveHtml) {
+                $this->saveErrorLog($game, $e->getMessage());
+            }
+
+            return 1;
+        }
+
+        $logger->info('Complete');
+        return 0;
+    }
+
+    /**
+     * Get the Nintendo UK URL for a game.
+     */
+    private function getNintendoUrl(Game $game): ?string
+    {
+        // First check for override URL
+        if ($game->nintendo_store_url_override) {
+            return $game->nintendo_store_url_override;
+        }
+
+        // Then check for DataSourceParsed item
+        $dsItem = $game->dspNintendoCoUk()->first();
+        if ($dsItem && $dsItem->url) {
+            return 'https://www.nintendo.com' . $dsItem->url;
+        }
+
+        return null;
+    }
+
+    /**
+     * Save HTML to storage for debugging.
+     */
+    private function saveHtml(Game $game, string $html, int $statusCode): void
+    {
+        $filename = "crawl-debug/game-{$game->id}-{$statusCode}-" . date('Y-m-d-His') . ".html";
+        Storage::disk('local')->put($filename, $html);
+        $this->info("Saved HTML to: storage/app/{$filename}");
+    }
+
+    /**
+     * Save error log to storage.
+     */
+    private function saveErrorLog(Game $game, string $error): void
+    {
+        $filename = "crawl-debug/game-{$game->id}-error-" . date('Y-m-d-His') . ".txt";
+        Storage::disk('local')->put($filename, $error);
+        $this->info("Saved error log to: storage/app/{$filename}");
+    }
+
+    /**
+     * Report on the status code meaning.
+     */
+    private function reportStatus(int $statusCode): void
+    {
+        $message = match(true) {
+            $statusCode === 200 => "Page is live and accessible",
+            $statusCode === 301 => "Permanent redirect - URL may have changed",
+            $statusCode === 302 => "Temporary redirect",
+            $statusCode === 404 => "Page not found - game may be de-listed",
+            $statusCode === 410 => "Gone - game has been removed",
+            $statusCode >= 500 => "Server error - temporary issue",
+            default => "Unexpected status code"
+        };
+
+        $this->info("Result: {$message}");
+    }
+
+    /**
+     * Log to lifecycle table if it's a problem or recovery.
+     */
+    private function logLifecycleEvent(Game $game, int $statusCode, ?int $previousStatus, string $url, $logger): void
+    {
+        $shouldLog = false;
+        $eventType = '';
+
+        if ($statusCode !== 200) {
+            $shouldLog = true;
+            $eventType = 'problem';
+        } elseif ($previousStatus !== null && $previousStatus !== 200) {
+            $shouldLog = true;
+            $eventType = 'recovery';
+        }
+
+        if ($shouldLog) {
+            GameCrawlLifecycle::create([
+                'game_id' => $game->id,
+                'status_code' => $statusCode,
+                'url_crawled' => $url,
+                'crawled_at' => now(),
+            ]);
+            $this->info("Logged lifecycle event: {$eventType}");
+            $logger->info("Logged lifecycle event for game {$game->id}: {$eventType}");
+        }
+    }
+
+    /**
+     * Scrape game data from the HTML and save to database.
+     */
+    private function scrapeGameData(Game $game, string $html, $logger): void
+    {
+        try {
+            $scraper = new NintendoCoUkGameData($html);
+
+            if (!$scraper->hasData()) {
+                $this->info("No player/multiplayer data found on page");
+                $logger->info("No player/multiplayer data found for game: {$game->id}");
+                return;
+            }
+
+            // Update or create the scraped data record
+            GameScrapedData::updateOrCreate(
+                ['game_id' => $game->id],
+                [
+                    'players_local' => $scraper->getPlayersLocal(),
+                    'players_wireless' => $scraper->getPlayersWireless(),
+                    'players_online' => $scraper->getPlayersOnline(),
+                    'multiplayer_mode' => $scraper->getMultiplayerMode(),
+                    'features_json' => $scraper->getFeatures(),
+                    'scraped_at' => now(),
+                ]
+            );
+
+            $this->info("Scraped game data saved");
+            $logger->info("Scraped game data saved for game: {$game->id}");
+
+            // Log what was found
+            $data = $scraper->getData();
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
+                $this->info("  {$key}: {$value}");
+            }
+
+            // Update game fields from scraped data
+            $this->updateGameFromScrapedData($game, $scraper, $logger);
+
+        } catch (\Exception $e) {
+            $this->warn("Failed to scrape game data: " . $e->getMessage());
+            $logger->warning("Failed to scrape game data for game {$game->id}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update game fields from scraped data.
+     */
+    private function updateGameFromScrapedData(Game $game, NintendoCoUkGameData $scraper, $logger): void
+    {
+        $updates = [];
+        $changes = [];
+
+        // Players field
+        $combinedPlayers = $scraper->getCombinedPlayers();
+        if ($combinedPlayers !== null && $game->players !== $combinedPlayers) {
+            $oldValue = $game->players ?? '(empty)';
+            $updates['players'] = $combinedPlayers;
+            $changes[] = "players: {$oldValue} -> {$combinedPlayers}";
+        }
+
+        // Multiplayer mode
+        $multiplayerMode = $scraper->getMultiplayerMode();
+        if ($multiplayerMode !== null && $game->multiplayer_mode !== $multiplayerMode) {
+            $oldValue = $game->multiplayer_mode ?? '(empty)';
+            $updates['multiplayer_mode'] = $multiplayerMode;
+            $changes[] = "multiplayer_mode: {$oldValue} -> {$multiplayerMode}";
+        }
+
+        // Boolean flags - only update if scraper found features data
+        if (!empty($scraper->getFeatures()) || $scraper->hasPlayerData()) {
+            $booleanFields = [
+                'has_online_play' => $scraper->hasOnlinePlay(),
+                'has_local_multiplayer' => $scraper->hasLocalMultiplayer(),
+                'play_mode_tv' => $scraper->hasPlayModeTv(),
+                'play_mode_tabletop' => $scraper->hasPlayModeTabletop(),
+                'play_mode_handheld' => $scraper->hasPlayModeHandheld(),
+            ];
+
+            foreach ($booleanFields as $field => $newValue) {
+                $currentValue = (bool) $game->{$field};
+                if ($currentValue !== $newValue) {
+                    $updates[$field] = $newValue;
+                    $oldStr = $currentValue ? 'true' : 'false';
+                    $newStr = $newValue ? 'true' : 'false';
+                    $changes[] = "{$field}: {$oldStr} -> {$newStr}";
+                }
+            }
+        }
+
+        // Apply updates if any
+        if (empty($updates)) {
+            $this->info("Game fields unchanged");
+            return;
+        }
+
+        foreach ($updates as $field => $value) {
+            $game->{$field} = $value;
+        }
+        $game->save();
+
+        // Clear cache since we updated game data
+        $this->repoGame->clearCacheCoreData($game->id);
+
+        foreach ($changes as $change) {
+            $this->info("Updated: {$change}");
+        }
+        $logger->info("Updated game {$game->id}: " . implode(', ', $changes));
+    }
+
+    /**
+     * Check if the final URL indicates a soft 404 (redirected to error page).
+     */
+    private function isSoft404(string $finalUrl): bool
+    {
+        // Nintendo's 404 page URL patterns
+        $soft404Patterns = [
+            '/404.html',
+            '/404',
+            '/en-gb/404',
+            '/en-gb/404.html',
+        ];
+
+        foreach ($soft404Patterns as $pattern) {
+            if (str_contains($finalUrl, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check header image and re-download if remote size differs from local.
+     */
+    private function checkHeaderImage(Game $game, string $html, $logger): void
+    {
+        try {
+            $scraper = new NintendoCoUkGameData($html);
+            $remoteUrl = $scraper->getHeaderImageUrl();
+
+            if (!$remoteUrl) {
+                $this->info("No header image URL found on page");
+                return;
+            }
+
+            // Ensure URL has protocol
+            if (str_starts_with($remoteUrl, '//')) {
+                $remoteUrl = 'https:' . $remoteUrl;
+            }
+
+            // Get remote file size via HEAD request
+            $remoteSize = $this->getRemoteFileSize($remoteUrl);
+            if ($remoteSize === null) {
+                $this->warn("Could not get remote file size for header image");
+                return;
+            }
+
+            // Check local file
+            $localPath = public_path() . GameImages::PATH_IMAGE_HEADER . $game->image_header;
+            $localSize = null;
+
+            if ($game->image_header && file_exists($localPath)) {
+                $localSize = filesize($localPath);
+            }
+
+            // Compare sizes
+            if ($localSize === $remoteSize) {
+                $this->info("Header image unchanged (size: {$localSize} bytes)");
+                // Still save the URL and size for tracking
+                $this->saveHeaderImageData($game, $remoteUrl, $remoteSize);
+                return;
+            }
+
+            // Download new image
+            $this->info("Header image size differs - local: " . ($localSize ?? 'N/A') . ", remote: {$remoteSize}");
+            $this->downloadHeaderImage($game, $remoteUrl, $remoteSize, $logger);
+
+        } catch (\Exception $e) {
+            $this->warn("Failed to check header image: " . $e->getMessage());
+            $logger->warning("Failed to check header image for game {$game->id}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Save header image URL and size to game_scraped_data.
+     */
+    private function saveHeaderImageData(Game $game, string $url, int $size): void
+    {
+        GameScrapedData::updateOrCreate(
+            ['game_id' => $game->id],
+            [
+                'header_image_url' => $url,
+                'header_image_size' => $size,
+            ]
+        );
+    }
+
+    /**
+     * Get remote file size via HEAD request.
+     */
+    private function getRemoteFileSize(string $url): ?int
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+        curl_exec($ch);
+        $contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200 || $contentLength < 0) {
+            return null;
+        }
+
+        return (int) $contentLength;
+    }
+
+    /**
+     * Download and save header image with dated filename, deleting the old one.
+     */
+    private function downloadHeaderImage(Game $game, string $remoteUrl, int $remoteSize, $logger): void
+    {
+        $destPath = public_path() . GameImages::PATH_IMAGE_HEADER;
+
+        // Store old filename for cleanup
+        $oldFilename = $game->image_header;
+        $oldFilePath = $oldFilename ? $destPath . $oldFilename : null;
+
+        // Generate new filename with date suffix (YYMMDD)
+        $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
+        $dateSuffix = date('ymd');
+        $newFilename = 'hdr-' . $game->id . '-' . $game->link_title . '-' . $dateSuffix . '.' . $fileExt;
+        $newFilePath = $destPath . $newFilename;
+
+        try {
+            // Download the image
+            $imageData = file_get_contents($remoteUrl);
+            if ($imageData === false) {
+                throw new \Exception("Failed to download image from: {$remoteUrl}");
+            }
+
+            // Save new image
+            file_put_contents($newFilePath, $imageData);
+
+            // Update game record
+            $game->image_header = $newFilename;
+            $game->save();
+
+            // Save header image data to game_scraped_data
+            $this->saveHeaderImageData($game, $remoteUrl, $remoteSize);
+
+            // Clear cache since we updated game data
+            $this->repoGame->clearCacheCoreData($game->id);
+
+            // Delete old image if it exists and is different from new
+            if ($oldFilePath && $oldFilename !== $newFilename && file_exists($oldFilePath)) {
+                unlink($oldFilePath);
+                $this->info("Deleted old header image: {$oldFilename}");
+                $logger->info("Deleted old header image: {$oldFilename}");
+            }
+
+            $newSize = filesize($newFilePath);
+            $this->info("Header image updated ({$newSize} bytes): {$newFilename}");
+            $logger->info("Header image updated for game {$game->id}: {$newFilename}");
+
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to save header image: " . $e->getMessage());
+        }
+    }
+}

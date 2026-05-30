@@ -51,10 +51,10 @@
                 <div class="row mb-3">
                     <label for="nintendo_co_uk_link_id" class="col-md-4 col-form-label">Link</label>
                     <div class="col-md-6">
-                        <select id="nintendo_co_uk_link_id" class="form-control" name="nintendo_co_uk_link_id">
+                        <select id="nintendo_co_uk_link_id" class="form-select" name="nintendo_co_uk_link_id">
                             <option value="">&nbsp;</option>
                             {% for item in DSNintendoCoUkParsedList %}
-                                <option value="{{ item.link_id }}">{{ item.title }} (Link id: {{ item.link_id }})</option>
+                                <option value="{{ item.link_id }}">{% if item.console_id == 1 %}Switch 1{% elseif item.console_id == 2 %}Switch 2{% endif %} - {{ item.title }} (Link id: {{ item.link_id }})</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -86,26 +86,6 @@
                             </td>
                             <td>
                                 {{ GameData.image_header }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>
-                                    Boxart square (old)
-                                </strong>
-                            </td>
-                            <td>
-                                {{ GameData.boxart_square_url }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>
-                                    Boxart header (old)
-                                </strong>
-                            </td>
-                            <td>
-                                {{ GameData.boxart_header_image }}
                             </td>
                         </tr>
                     </tbody>

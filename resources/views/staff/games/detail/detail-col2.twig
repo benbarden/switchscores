@@ -1,5 +1,52 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 
+{{ heading.renderSlick('Games companies') }}
+
+<table class="table table-sm table-responsive">
+    <tr>
+        <td>
+            {% if mode == 'reviewers' %}
+                <strong>Publishers</strong>
+            {% else %}
+                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Publishers</strong></a>
+            {% endif %}
+        </td>
+        <td>
+            {% if GamePublishers|length > 0 %}
+                {% for item in GamePublishers %}
+                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
+                        {{ item.publisher.name }}
+                    </a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.publisher }}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {% if mode == 'reviewers' %}
+                <strong>Developers</strong>
+            {% else %}
+                <a href="{{ route('staff.games.partner.list', {'gameId': GameId}) }}"><strong>Developers</strong></a>
+            {% endif %}
+        </td>
+        <td>
+            {% if GameDevelopers|length > 0 %}
+                {% for item in GameDevelopers %}
+                    <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
+                        {{ item.developer.name }}
+                    </a>
+                    <br>
+                {% endfor %}
+            {% else %}
+                {{ GameData.developer }}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
 {{ heading.renderSlick('Categorisation') }}
 
 <table class="table table-sm table-responsive">
@@ -10,7 +57,7 @@
         </td>
         <td>
             {% if GameData.category and GameData.category_id %}
-                <a href="{{ route('console.byCategory.page', {'console': GameData.console, 'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
+                <a href="{{ route('browse.byCategory.page', {'category': GameData.category.link_title}) }}" target="_blank">{{ GameData.category.name }}</a>
             {% endif %}
         </td>
     </tr>
@@ -21,7 +68,7 @@
         </td>
         <td>
             {% if GameData.series_id %}
-                <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
+                <a href="{{ route('browse.bySeries.page', {'series': GameData.series.link_title}) }}" target="_blank">{{ GameData.series.series }}</a>
             {% endif %}
         </td>
     </tr>
@@ -32,7 +79,7 @@
         </td>
         <td>
             {% if GameData.collection_id %}
-                <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}" target="_blank">{{ GameData.gameCollection.name }}</a>
+                <a href="{{ route('browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}" target="_blank">{{ GameData.gameCollection.name }}</a>
             {% endif %}
         </td>
     </tr>
@@ -48,7 +95,7 @@
         <td>
             {% if GameTags|length > 0 %}
                 {% for item in GameTags %}
-                    <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}" target="_blank">
+                    <a href="{{ route('browse.byTag.page', {'tag': item.tag.link_title}) }}" target="_blank">
                         <nobr>{{ item.tag.tag_name }}</nobr>
                     </a>
                     {% if not loop.last %}, {% endif %}
@@ -81,33 +128,4 @@
         </td>
     </tr>
 
-    <tr>
-        <td>
-            <strong>Tags</strong>
-        </td>
-        <td>
-            {% if GameData.tags_verification == 0 %}
-                Unverified
-            {% elseif GameData.tags_verification == 1 %}
-                Verified
-            {% elseif GameData.tags_verification == 2 %}
-                Needs review
-            {% else %}
-                -
-            {% endif %}
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            <strong>Taxonomy</strong>
-        </td>
-        <td>
-            {% if GameData.taxonomy_needs_review == 1 %}
-                Needs review
-            {% else %}
-                Normal
-            {% endif %}
-        </td>
-    </tr>
 </table>

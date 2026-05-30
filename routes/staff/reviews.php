@@ -25,7 +25,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/link/{report?}', 'Staff\Reviews\ReviewLinkController@showList')->name('staff.reviews.link.list');
 
     // Quick reviews
-    Route::match(['get', 'post'], '/staff/reviews/quick-reviews/edit/{reviewId}', 'Staff\Reviews\QuickReviewController@edit')->name('staff.reviews.quick-reviews.edit');
+    Route::post('/staff/reviews/quick-reviews/approve/{reviewId}', 'Staff\Reviews\QuickReviewController@approve')->name('staff.reviews.quick-reviews.approve');
+    Route::post('/staff/reviews/quick-reviews/reject/{reviewId}', 'Staff\Reviews\QuickReviewController@reject')->name('staff.reviews.quick-reviews.reject');
     Route::match(['get', 'post'], '/staff/reviews/quick-reviews/delete/{reviewId}', 'Staff\Reviews\QuickReviewController@delete')->name('staff.reviews.quick-reviews.delete');
     Route::get('/staff/reviews/quick-reviews/{report?}', 'Staff\Reviews\QuickReviewController@showList')->name('staff.reviews.quick-reviews.list');
 
@@ -39,6 +40,12 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/reviews/campaigns/add', 'Staff\Reviews\CampaignsController@add')->name('staff.reviews.campaigns.add');
     Route::match(['get', 'post'], '/staff/reviews/campaigns/edit/{campaignId}', 'Staff\Reviews\CampaignsController@edit')->name('staff.reviews.campaigns.edit');
     Route::match(['get', 'post'], '/staff/reviews/campaigns/edit-games/{campaignId}', 'Staff\Reviews\CampaignsController@editGames')->name('staff.reviews.campaigns.editGames');
+
+    // Steam links
+    Route::get('/staff/reviews/steam-links', 'Staff\Reviews\SteamLinksController@index')->name('staff.reviews.steam-links.index');
+    Route::post('/staff/reviews/steam-links/{gameId}/link', 'Staff\Reviews\SteamLinksController@link')->name('staff.reviews.steam-links.link');
+    Route::post('/staff/reviews/steam-links/{gameId}/not-on-steam', 'Staff\Reviews\SteamLinksController@notOnSteam')->name('staff.reviews.steam-links.notOnSteam');
+    Route::post('/staff/reviews/steam-links/{gameId}/reset', 'Staff\Reviews\SteamLinksController@reset')->name('staff.reviews.steam-links.reset');
 
     // Unranked lists
     Route::get('/staff/reviews/unranked/review-count', 'Staff\Reviews\UnrankedController@reviewCountLanding')->name('staff.reviews.unranked.review-count-landing');

@@ -94,14 +94,8 @@ class GameDirector
         if (array_key_exists('video_type', $params)) {
             $this->builder->setVideoType($params['video_type']);
         }
-        if (array_key_exists('boxart_square_url', $params)) {
-            $this->builder->setBoxartSquareUrl($params['boxart_square_url']);
-        }
         if (array_key_exists('eshop_europe_fs_id', $params)) {
             $this->builder->setEshopEuropeFsId($params['eshop_europe_fs_id']);
-        }
-        if (array_key_exists('boxart_header_image', $params)) {
-            $this->builder->setBoxartHeaderImage($params['boxart_header_image']);
         }
         if (array_key_exists('image_square', $params)) {
             $this->builder->setImageSquare($params['image_square']);
@@ -142,12 +136,6 @@ class GameDirector
         if (array_key_exists('category_verification', $params)) {
             $this->builder->setCategoryVerification($params['category_verification']);
         }
-        if (array_key_exists('tags_verification', $params)) {
-            $this->builder->setTagsVerification($params['tags_verification']);
-        }
-        if (array_key_exists('taxonomy_needs_review', $params)) {
-            $this->builder->setTaxonomyNeedsReview($params['taxonomy_needs_review']);
-        }
         if (array_key_exists('packshot_square_url_override', $params)) {
             $this->builder->setPackshotSquareUrlOverride($params['packshot_square_url_override']);
         }
@@ -159,6 +147,9 @@ class GameDirector
         }
         if (array_key_exists('game_description', $params)) {
             $this->builder->setGameDescription($params['game_description']);
+        }
+        if (array_key_exists('game_status', $params)) {
+            $this->builder->setGameStatus($params['game_status']);
         }
     }
 

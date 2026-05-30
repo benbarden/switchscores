@@ -95,19 +95,6 @@ class GameBuilderTest extends TestCase
         $this->assertEquals($videoUrl, $game->video_url);
     }
 
-    public function testBoxartSquareUrl()
-    {
-        $title = 'Yoshi';
-        $boxartSquareUrl = 'yoshi-boxart-square.jpg';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setBoxartSquareUrl($boxartSquareUrl)
-            ->getGame();
-        $this->assertEquals($boxartSquareUrl, $game->boxart_square_url);
-    }
-
     public function testEshopEuropeFsId()
     {
         $title = 'Yoshi';
@@ -119,19 +106,6 @@ class GameBuilderTest extends TestCase
             ->setEshopEuropeFsId($fsId)
             ->getGame();
         $this->assertEquals($fsId, $game->eshop_europe_fs_id);
-    }
-
-    public function testBoxartHeaderImage()
-    {
-        $title = 'Yoshi';
-        $boxartHeaderImage = 'yoshi-boxart-header.jpg';
-
-        $gameBuilder = new GameBuilder();
-        $game = $gameBuilder
-            ->setTitle($title)
-            ->setBoxartHeaderImage($boxartHeaderImage)
-            ->getGame();
-        $this->assertEquals($boxartHeaderImage, $game->boxart_header_image);
     }
 
     public function testRatingAvg()

@@ -1,0 +1,151 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row mb-4">
+    <div class="col-12 col-md-6">
+        <a href="{{ route('staff.games-companies.add') }}" class="btn outline btn-primary">+ Add games company</a>
+    </div>
+    <div class="col-12 col-md-6 text-md-end">
+        <strong>Quick filters:</strong>
+        <a href="{{ route('staff.games-companies.normal-quality') }}" class="btn btn-sm btn-outline-secondary">Normal quality</a>
+        <a href="{{ route('staff.games-companies.low-quality') }}" class="btn btn-sm btn-outline-secondary">Low quality</a>
+        <a href="{{ route('staff.games-companies.without-emails') }}" class="btn btn-sm btn-outline-secondary">Without emails</a>
+    </div>
+</div>
+
+<hr>
+
+{% include 'ui/components/alerts/form-errors.twig' %}
+<form role="form" method="post" action="{{ route('staff.games-companies.search') }}">
+    {{ csrf_field() }}
+
+    <div class="row mb-3">
+        <label for="search_keywords" class="col-md-2 col-form-label">Search:</label>
+        <div class="col-md-6">
+            <input id="search_keywords" name="search_keywords" type="text" class="form-control" placeholder="Enter company name (min 3 characters)">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn outline btn-primary">
+                Search
+            </button>
+        </div>
+    </div>
+
+</form>
+
+{% if SearchResults is defined %}
+    <h2>Results</h2>
+    {% if SearchResults|length > 0 %}
+        {% if SearchResults|length == 1 %}
+            <p>1 result found.</p>
+        {% else %}
+            <p>{{ SearchResults|length }} results found.</p>
+        {% endif %}
+        <table class="table data-sortable">
+            <thead>
+                <tr>
+                    <th class="text-end">#</th>
+                    <th>Name</th>
+                    <th class="text-center">Website</th>
+                    <th class="text-center">Twitter</th>
+                    <th class="text-center">SS login</th>
+                    <th class="text-center">Assigned games<br>(developer)</th>
+                    <th class="text-center">Assigned games<br>(publisher)</th>
+                    <th class="text-center">Quality filter</th>
+                    <th class="text-center">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in SearchResults %}
+                    <tr>
+                        <td class="text-end">
+                            {{ item.id }}
+                        </td>
+                        <td>
+                            <a href="{{ route('staff.games-companies.show', {'gamesCompany': item}) }}">{{ item.name }}</a>
+                            <a href="{{ route('partners.detail.games-company', {'linkTitle': item.link_title}) }}" target="_blank" title="Open partner page in a new tab">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {% if item.website_url %}
+                                <a href="{{ item.website_url }}" target="_blank">
+                                    <i class="fas fa-link"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.twitter_id %}
+                                <a href="https://twitter.com/{{ item.twitter_id }}" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if item.gamesCompanyUser.id %}
+                                {% include 'ui/components/icons/icon-check-green.twig' %}
+                            {% else %}
+                                {% include 'ui/components/icons/icon-cross-red.twig' %}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ item.developerGames().count }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.publisherGames().count }}
+                        </td>
+                        <td class="text-center">
+                            {% if item.is_low_quality == 1 %}
+                                <label class="badge bg-danger">Low quality</label>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.games-companies.edit', {'gamesCompanyId': item.id}) }}">Edit</a> :
+                            <a href="{{ route('staff.games-companies.delete', {'gamesCompanyId': item.id}) }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endif %}
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+
+    $(document).ready(function() {
+
+        $('.data-sortable').DataTable({
+            "order": [{{ jsInitialSort|raw }}],
+            "pageLength": 25,
+            "columns": [
+                null,
+                null,
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null,
+                null,
+                { "orderable": false }
+            ]
+        });
+
+        $('#search_keywords').focus();
+
+    });
+
+    var searchKeywords = '{{ SearchKeywords }}';
+
+    if (searchKeywords != '') {
+        $('#search_keywords').val(searchKeywords);
+    }
+
+</script>
+
+{% endblock page_inner %}

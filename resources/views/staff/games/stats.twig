@@ -9,21 +9,7 @@
 
     <div class="col-md-4">
 
-        {{ heading.renderSlick('Game stats') }}
-
-        <table class="table">
-            <tbody>
-            {{ rowstat.renderB5(
-                'Total games', null, TotalGameCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Released games', null, ReleasedGameCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Upcoming games', null, UpcomingGameCount
-            ) }}
-            </tbody>
-        </table>
+        {% include 'staff/games/partials/game-status-stats.twig' %}
 
     </div>
 

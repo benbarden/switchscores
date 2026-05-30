@@ -20,4 +20,9 @@ class Repository
         return GamesCompanySignup::orderBy('id')->count();
     }
 
+    public function getAll()
+    {
+        return GamesCompanySignup::orderBy('id', 'desc')->get();
+    }
+
 }

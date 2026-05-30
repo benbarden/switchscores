@@ -95,6 +95,11 @@ nav ol.breadcrumb {
 }
 
 /* Release hub */
+#gameTable td {
+    padding: 0.1rem 0.4rem;
+    vertical-align: middle;
+}
+
 .sortable-ghost {
     background-color: #f8f9fa !important;
     opacity: 0.8;

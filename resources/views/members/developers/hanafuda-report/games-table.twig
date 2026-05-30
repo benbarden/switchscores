@@ -19,7 +19,7 @@
             {% for item in GamesList %}
                 <tr>
                     <td>
-                        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}" target="_blank">
+                        <a href="{{ game_url(item) }}" target="_blank">
                             {{ item.title }}
                         </a>
                         {% if item.is_low_quality == 1 %}

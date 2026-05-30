@@ -27,7 +27,7 @@
         route('console.topRated.allTime', { console: _console }),
         GameData.game_rank ?? null,
         RankMaximum ?? null,
-        GameData.isDigitalDelisted() ? 'N/A (De-listed)' : 'TBC'
+        GameData.isDelisted() ? 'N/A (De-listed)' : 'TBC'
     ) }}
 
     {# 2) Year (optional) #}

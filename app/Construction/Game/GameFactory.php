@@ -13,16 +13,12 @@ class GameFactory
      * @param $players
      * @param null $amazonUkLink
      * @param null $videoUrl
-     * @param null $boxartSquareUrl
-     * @param null $nintendoPageUrl
      * @param null $eshopEuropeFsId
-     * @param null $boxartHeaderImage
      * @return Game
      */
     public static function create(
         $title, $linkTitle, $priceEshop, $players, $amazonUkLink = null, $videoUrl = null,
-        $boxartSquareUrl = null, $eshopEuropeFsId = null,
-        $boxartHeaderImage = null
+        $eshopEuropeFsId = null
     )
     {
         return new Game(
@@ -34,9 +30,7 @@ class GameFactory
                 'review_count' => 0,
                 'amazon_uk_link' => $amazonUkLink,
                 'video_url' => $videoUrl,
-                'boxart_square_url' => $boxartSquareUrl,
                 'eshop_europe_fs_id' => $eshopEuropeFsId,
-                'boxart_header_image' => $boxartHeaderImage,
             ]
         );
     }

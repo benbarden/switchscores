@@ -78,7 +78,7 @@ class GameCollectionController extends Controller
             }
 
             // All ok
-            $this->repoGameCollection->create($request->name, $request->link_title);
+            $this->repoGameCollection->create($request->name, $request->link_title, $request->intro_description, $request->meta_description);
 
             return redirect(route('staff.categorisation.game-collection.list'));
 
@@ -109,7 +109,7 @@ class GameCollectionController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->repoGameCollection->edit($collectionData, $request->name, $request->link_title);
+            $this->repoGameCollection->edit($collectionData, $request->name, $request->link_title, $request->intro_description, $request->meta_description);
 
             return redirect(route('staff.categorisation.game-collection.list'));
 

@@ -15,7 +15,7 @@ class GameCollection extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'link_title'
+        'name', 'link_title', 'intro_description', 'meta_description',
     ];
 
     public function games()

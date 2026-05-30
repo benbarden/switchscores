@@ -4,6 +4,7 @@ namespace App\Domain\View\Breadcrumbs;
 
 use App\Models\DataSource;
 use App\Models\Game;
+use App\Models\WeeklyBatch;
 
 final class StaffBreadcrumbs
 {
@@ -88,6 +89,16 @@ final class StaffBreadcrumbs
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Reviews', route('staff.reviews.dashboard')),
             new BreadcrumbItem('Quick reviews', route('staff.reviews.quick-reviews.list')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function reviewsSteamLinksSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Reviews', route('staff.reviews.dashboard')),
+            new BreadcrumbItem('Steam links', route('staff.reviews.steam-links.index')),
             new BreadcrumbItem($title),
         ]);
     }
@@ -272,7 +283,7 @@ final class StaffBreadcrumbs
         return new BreadcrumbNav([
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Games companies', route('staff.games-companies.dashboard')),
-            new BreadcrumbItem('Company list', route('staff.games-companies.list')),
+            new BreadcrumbItem('Company search', route('staff.games-companies.search')),
             new BreadcrumbItem($title),
         ]);
     }
@@ -322,6 +333,68 @@ final class StaffBreadcrumbs
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
             new BreadcrumbItem($dataSource->name.' - Raw items', route('staff.data-sources.list-raw', ['sourceId' => $dataSource->id])),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function dataSourcesListParsedSubpage(string $title, DataSource $dataSource): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem($dataSource->name.' - Parsed items', route('staff.data-sources.list-parsed', ['sourceId' => $dataSource->id])),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function dataSourcesImportRunsSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function dataSourcesImportRunDetailSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem('Import runs', route('staff.data-sources.import-runs')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function dataSourcesImportRunDiffSubpage(string $title, int $runId): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Data sources', route('staff.data-sources.dashboard')),
+            new BreadcrumbItem('Import runs', route('staff.data-sources.import-runs')),
+            new BreadcrumbItem('Run #'.$runId, route('staff.data-sources.import-runs.view', ['runId' => $runId])),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    // *** WEEKLY UPDATES *** //
+    public static function weeklyUpdatesSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Weekly updates', route('staff.games.weekly-updates.index')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function weeklyUpdatesListSubpage(string $title, WeeklyBatch $batch): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Weekly updates', route('staff.games.weekly-updates.index')),
+            new BreadcrumbItem($batch->batch_date->format('d M Y'), route('staff.games.weekly-updates.show', ['batchId' => $batch->id])),
             new BreadcrumbItem($title),
         ]);
     }
@@ -388,6 +461,24 @@ final class StaffBreadcrumbs
             new BreadcrumbItem('Staff', route('staff.index')),
             new BreadcrumbItem('Invite codes', route('staff.invite-code.list')),
             new BreadcrumbItem($title),
+        ]);
+    }
+
+    // *** UNVERIFIED MEMBERS *** //
+    public static function unverifiedMembersDashboard(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Unverified members'),
+        ]);
+    }
+
+    // *** GAMES COMPANY SIGNUPS *** //
+    public static function gamesCompanySignupsList(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games company signups'),
         ]);
     }
 

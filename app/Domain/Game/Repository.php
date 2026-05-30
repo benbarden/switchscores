@@ -20,6 +20,14 @@ class Repository extends AbstractRepository
         $this->clearCache($cacheKey);
     }
 
+    public function findByTitleAndConsole(string $title, int $consoleId): ?Game
+    {
+        return Game::where('console_id', $consoleId)
+            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->with('category')
+            ->first();
+    }
+
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -54,12 +62,92 @@ class Repository extends AbstractRepository
         return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();
     }
 
+    public function findWithFilters(array $filters, int $userId = null)
+    {
+        $query = Game::query()
+            ->with('category')
+            ->where('eu_is_released', 1)
+            ->active();
+
+        // Keywords
+        if (!empty($filters['keywords'])) {
+            $query->where('title', 'like', '%' . $filters['keywords'] . '%');
+        }
+
+        // Category (including children)
+        if (!empty($filters['category_id'])) {
+            $categoryId = (int) $filters['category_id'];
+            $query->where(function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId)
+                  ->orWhereHas('category', function ($q2) use ($categoryId) {
+                      $q2->where('parent_id', $categoryId);
+                  });
+            });
+        }
+
+        // Console (Switch 1 / Switch 2)
+        if (!empty($filters['console_id'])) {
+            $query->where('console_id', (int) $filters['console_id']);
+        }
+
+        // Ranked games only (has game_rank)
+        if (!empty($filters['ranked_only'])) {
+            $query->whereNotNull('game_rank');
+        }
+
+        // Minimum rating
+        if (!empty($filters['min_rating'])) {
+            $query->where('rating_avg', '>=', (float) $filters['min_rating']);
+        }
+
+        // Multiplayer options
+        if (!empty($filters['has_local_multiplayer'])) {
+            $query->where('has_local_multiplayer', 1);
+        }
+        if (!empty($filters['has_online_play'])) {
+            $query->where('has_online_play', 1);
+        }
+
+        // Minimum players
+        if (!empty($filters['min_players'])) {
+            $query->where('players', '>=', (int) $filters['min_players']);
+        }
+
+        // Play modes
+        if (!empty($filters['play_mode_tv'])) {
+            $query->where('play_mode_tv', 1);
+        }
+        if (!empty($filters['play_mode_tabletop'])) {
+            $query->where('play_mode_tabletop', 1);
+        }
+        if (!empty($filters['play_mode_handheld'])) {
+            $query->where('play_mode_handheld', 1);
+        }
+
+        // Exclude owned games
+        if (!empty($filters['exclude_owned']) && $userId) {
+            $query->whereDoesntHave('userCollection', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+        }
+
+        // Exclude ignored games
+        if (!empty($filters['exclude_ignored']) && !empty($filters['ignored_game_ids'])) {
+            $query->whereNotIn('id', $filters['ignored_game_ids']);
+        }
+
+        return $query->orderBy('rating_avg', 'DESC')
+            ->orderBy('title', 'ASC')
+            ->limit(100)
+            ->get();
+    }
+
     public function randomGame()
     {
         return Game::where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->where('is_low_quality', 0)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->inRandomOrder()
             ->first();
     }
@@ -71,7 +159,7 @@ class Repository extends AbstractRepository
             $games = $games->where('is_low_quality', 0);
         }
         if (!$includeDeListed) {
-            $games = $games->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            $games = $games->active();
         }
         match ($sortBy) {
             'newest' => $games = $games->orderBy('eu_release_date', 'desc')->orderBy('title', 'asc'),
@@ -105,6 +193,39 @@ class Repository extends AbstractRepository
     public function getByTitle($title)
     {
         return Game::where('title', $title)->first();
+    }
+
+    /**
+     * Get all games matching a title (may exist on multiple consoles)
+     */
+    public function getAllByTitle($title): \Illuminate\Support\Collection
+    {
+        return Game::where('title', $title)->get();
+    }
+
+    /**
+     * Check if a title exists for a specific console
+     */
+    public function titleExistsForConsole($title, $consoleId, $excludeGameId = null): bool
+    {
+        $game = Game::where('title', $title)->where('console_id', $consoleId);
+        if ($excludeGameId) {
+            $game = $game->where('id', '<>', $excludeGameId);
+        }
+        return $game->exists();
+    }
+
+    /**
+     * Get a game by title and console
+     */
+    public function getByTitleAndConsole($title, $consoleId)
+    {
+        return Game::where('title', $title)->where('console_id', $consoleId)->first();
+    }
+
+    public function updateEshopOrder(int $gameId, int $order): void
+    {
+        Game::where('id', $gameId)->update(['eshop_europe_order' => $order]);
     }
 
     /**
@@ -160,5 +281,16 @@ class Repository extends AbstractRepository
             ->orderByDesc('added_batch_date')
             ->limit(12)
             ->pluck('added_batch_date');
+    }
+
+    /**
+     * Find a game with the same link_title on a different console
+     */
+    public function getByLinkTitleOnOtherConsole($linkTitle, $currentConsoleId)
+    {
+        return Game::where('link_title', $linkTitle)
+            ->where('console_id', '!=', $currentConsoleId)
+            ->active()
+            ->first();
     }
 }

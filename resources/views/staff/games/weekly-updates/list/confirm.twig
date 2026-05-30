@@ -1,0 +1,136 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% include 'staff/games/weekly-updates/list/_stage-nav.twig' %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{# ---- Ready to import ---- #}
+{% if ReadyItems|length == 0 %}
+    <p class="text-muted">No items ready to import.</p>
+{% else %}
+
+<h2 class="mb-3">Ready to import ({{ ReadyItems|length }})</h2>
+
+{% if MissingPublishers|length > 0 %}
+<div class="alert alert-danger mb-3">
+    <strong>{{ MissingPublishers|length }} publisher{{ MissingPublishers|length != 1 ? 's' : '' }} not yet created:</strong>
+    {{ MissingPublishers|join(', ') }}<br>
+    <small>Games marked with <i class="fas fa-exclamation-circle text-danger"></i> will be imported without a publisher link. <a href="{{ route('staff.games.weekly-updates.list.publishers', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">Go to Publishers step →</a></small>
+</div>
+{% endif %}
+
+<div class="alert alert-info mb-3">
+    <p class="mb-1">Below is a list of games that will be imported to the database. Check everything looks good before continuing.</p>
+    <p class="mb-0 small">
+        Not importing:
+        {{ Counts['low_quality'] ?? 0 }} low quality,
+        {{ Counts['bundle'] ?? 0 }} bundle,
+        {{ Counts['excluded'] ?? 0 }} excluded
+        &mdash;
+        {{ Counts['already_in_db'] ?? 0 }} already in DB,
+        {{ Counts['out_of_range'] ?? 0 }} out of range
+    </p>
+</div>
+
+<table class="table table-sm table-bordered table-striped mb-3">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 30%;">Title</th>
+            <th style="width: 12%;">Release date</th>
+            <th style="width: 8%;">Price</th>
+            <th style="width: 20%;">Category</th>
+            <th style="width: 20%;">Publisher</th>
+            <th style="width: 10%;">Packshot</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in ReadyItems %}
+        <tr>
+            <td class="align-middle">
+                {{ item.title }}
+                {% if item.nintendo_url %}
+                    <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo ↗</a>
+                {% endif %}
+            </td>
+            <td class="align-middle small">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+            <td class="align-middle small">{{ item.price_gbp ? '£' ~ item.price_gbp : '—' }}</td>
+            <td class="align-middle small">{{ item.category ?? '—' }}</td>
+            <td class="align-middle small">
+                {% if item.publisher_normalised and item.publisher_normalised in MissingPublishers %}
+                    <i class="fas fa-exclamation-circle text-danger" title="Publisher not yet created"></i>
+                    {{ item.publisher_normalised }}
+                {% else %}
+                    {{ item.publisher_normalised ?? '—' }}
+                {% endif %}
+            </td>
+            <td class="align-middle text-center">
+                {% if item.packshot_url %}
+                    <img src="{{ item.packshot_url }}" alt="" style="height: 40px; width: auto;">
+                {% else %}
+                    <span class="text-muted">—</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<form method="post" action="{{ route('staff.games.weekly-updates.list.import', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}">
+    {{ csrf_field()|raw }}
+    <button type="submit" class="btn btn-success mb-4"
+            onclick="return confirm('Import {{ ReadyItems|length }} game{{ ReadyItems|length != 1 ? 's' : '' }} into the database?')">
+        Import {{ ReadyItems|length }} game{{ ReadyItems|length != 1 ? 's' : '' }} →
+    </button>
+</form>
+
+{% endif %}
+
+{# ---- LQ publisher reminder ---- #}
+{% if LqReminderPublishers|length > 0 %}
+<div class="alert alert-info mb-3">
+    <strong>Reminder:</strong> Games from the following publishers were marked as LQ this batch:
+    {% for name, companyId in LqReminderPublishers %}
+        <a href="{{ route('staff.games-companies.show', {'gamesCompany': companyId}) }}" target="_blank">{{ name }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+    — check whether their publisher records should also be marked as LQ.
+</div>
+{% endif %}
+
+{# ---- Already imported ---- #}
+{% if ImportedItems|length > 0 %}
+<h2 class="mb-1">Already imported ({{ ImportedItems|length }})</h2>
+<p class="mb-3"><a href="{{ ReleaseHubUrl }}" class="btn btn-outline-secondary btn-sm" target="_blank">View in Release Hub ↗</a></p>
+<table class="table table-sm table-bordered table-striped mb-3">
+    <thead class="table-secondary">
+        <tr>
+            <th>Title</th>
+            <th style="width: 15%;">Category</th>
+            <th style="width: 15%;">Publisher</th>
+            <th style="width: 10%;" class="text-center">Game</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in ImportedItems %}
+        <tr>
+            <td class="align-middle">{{ item.title }}</td>
+            <td class="align-middle small">{{ item.category ?? '—' }}</td>
+            <td class="align-middle small">{{ item.publisher_normalised ?? '—' }}</td>
+            <td class="align-middle text-center">
+                {% if item.game_id %}
+                    <a href="{{ route('staff.games.detail', {'gameId': item.game_id}) }}" target="_blank" class="btn btn-sm btn-outline-secondary">View</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock page_inner %}

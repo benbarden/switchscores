@@ -2,7 +2,7 @@
     {% for item in GameList %}
     <div class="col-sm-12 col-md-12 col-lg-12">
         {% set boxartUrl = ImageHelper.imageHeaderUrl(item) %}
-        <a href="{{ route('game.show', {'id': item.id, 'linkTitle': item.link_title}) }}">
+        <a href="{{ game_url(item) }}">
             {% if boxartUrl %}
                 <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
             {% else %}

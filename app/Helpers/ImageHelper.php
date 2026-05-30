@@ -53,9 +53,6 @@ class ImageHelper
         if ($game->image_square) {
             $boxartPath = GameImages::PATH_IMAGE_SQUARE;
             $boxartUrl = $game->image_square;
-        } elseif ($game->boxart_square_url) {
-            $boxartPath = '/img/games/square/';
-            $boxartUrl = $boxartPath . $game->boxart_square_url;
         } else {
             $boxartPath = null;
             $boxartUrl = null;
@@ -88,8 +85,6 @@ class ImageHelper
     {
         if ($game->image_header) {
             $imageUrl = GameImages::PATH_IMAGE_HEADER.$game->image_header;
-        } elseif ($game->boxart_header_image) {
-            $imageUrl = '/img/games/header/'.$game->boxart_header_image;
         } else {
             $imageUrl = '';
         }
@@ -101,8 +96,6 @@ class ImageHelper
     {
         if ($game->image_square) {
             $imageUrl = GameImages::PATH_IMAGE_SQUARE.$game->image_square;
-        } elseif ($game->boxart_square_url) {
-            $imageUrl = '/img/games/square/'.$game->boxart_square_url;
         } else {
             $imageUrl = '';
         }

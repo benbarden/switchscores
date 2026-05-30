@@ -104,14 +104,13 @@ class Generator
         $repoConsole = new ConsoleRepository();
         $consoleList = $repoConsole->getAll();
         foreach ($consoleList as $console) {
-            // Landing
             $sitemapPages[] = array('url' => route('console.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-            // Pages
-            $sitemapPages[] = array('url' => route('console.byCategory.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-            $sitemapPages[] = array('url' => route('console.bySeries.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-            $sitemapPages[] = array('url' => route('console.byTag.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
-            $sitemapPages[] = array('url' => route('console.byCollection.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         }
+
+        $sitemapPages[] = array('url' => route('browse.byCategory.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        $sitemapPages[] = array('url' => route('browse.bySeries.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        $sitemapPages[] = array('url' => route('browse.byCollection.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
+        $sitemapPages[] = array('url' => route('browse.byTag.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
 
         //$sitemapPages[] = array('url' => route('games.browse.byDate.landing'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.9');
         $sitemapPages[] = array('url' => route('games.recentReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
@@ -259,18 +258,12 @@ class Generator
 
         $sitemapPages = [];
 
-        $repoConsole = new ConsoleRepository();
-        $consoleList = $repoConsole->getAll();
         $categoryList = $repoCategory->getAll();
 
-        foreach ($consoleList as $console) {
+        $sitemapPages[] = ['url' => route('browse.byCategory.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
-            $sitemapPages[] = ['url' => route('console.byCategory.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-
-            foreach ($categoryList as $item) {
-                $sitemapPages[] = ['url' => route('console.byCategory.page', ['console' => $console, 'category' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-            }
-
+        foreach ($categoryList as $item) {
+            $sitemapPages[] = ['url' => route('browse.byCategory.page', ['category' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -287,18 +280,12 @@ class Generator
 
         $sitemapPages = [];
 
-        $repoConsole = new ConsoleRepository();
-        $consoleList = $repoConsole->getAll();
         $collectionList = $repoCollection->getAll();
 
-        foreach ($consoleList as $console) {
+        $sitemapPages[] = ['url' => route('browse.byCollection.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
-            $sitemapPages[] = ['url' => route('console.byCollection.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-
-            foreach ($collectionList as $item) {
-                $sitemapPages[] = ['url' => route('console.byCollection.page', ['console' => $console, 'collection' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-            }
-
+        foreach ($collectionList as $item) {
+            $sitemapPages[] = ['url' => route('browse.byCollection.page', ['collection' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -315,18 +302,12 @@ class Generator
 
         $sitemapPages = [];
 
-        $repoConsole = new ConsoleRepository();
-        $consoleList = $repoConsole->getAll();
         $seriesList = $repoSeries->getAll();
 
-        foreach ($consoleList as $console) {
+        $sitemapPages[] = ['url' => route('browse.bySeries.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
-            $sitemapPages[] = ['url' => route('console.bySeries.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-
-            foreach ($seriesList as $item) {
-                $sitemapPages[] = ['url' => route('console.bySeries.page', ['console' => $console, 'series' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-            }
-
+        foreach ($seriesList as $item) {
+            $sitemapPages[] = ['url' => route('browse.bySeries.page', ['series' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -343,18 +324,12 @@ class Generator
 
         $sitemapPages = [];
 
-        $repoConsole = new ConsoleRepository();
-        $consoleList = $repoConsole->getAll();
         $tagList = $repoTag->getAll();
 
-        foreach ($consoleList as $console) {
+        $sitemapPages[] = ['url' => route('browse.byTag.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
-            $sitemapPages[] = ['url' => route('console.byTag.landing', ['console' => $console]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-
-            foreach ($tagList as $item) {
-                $sitemapPages[] = ['url' => route('console.byTag.page', ['console' => $console, 'tag' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
-            }
-
+        foreach ($tagList as $item) {
+            $sitemapPages[] = ['url' => route('browse.byTag.page', ['tag' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;

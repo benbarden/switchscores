@@ -117,14 +117,14 @@ class ReviewDraftController extends Controller
                 if ($isYoutubeChannel) {
                     $youtubeMatchLinkFull = 'https://www.youtube.com/watch?v=';
                     $youtubeMatchLinkShort = 'https://youtu.be/';
-                    if (substr($feedItemUrl, 0, strlen($youtubeMatchLinkFull)) == $youtubeMatchLinkFull) {
+                    if (str_starts_with($feedItemUrl, $youtubeMatchLinkFull)) {
                         // OK
-                    } elseif (substr($feedItemUrl, 0, strlen($youtubeMatchLinkShort)) == $youtubeMatchLinkShort) {
+                    } elseif (str_starts_with($feedItemUrl, $youtubeMatchLinkShort)) {
                         // OK
                     } else {
                         $validator->errors()->add('title', 'The URL you\'ve entered doesn\'t appear to be a YouTube link. Please try another.');
                     }
-                } elseif (substr($feedItemUrl, 0, strlen($partnerUrl)) != $partnerUrl) {
+                } elseif (!str_starts_with($feedItemUrl, $partnerUrl)) {
                     $validator->errors()->add('title', 'The URL you\'ve entered doesn\'t appear to be from your site. Please try another.');
                 }
 

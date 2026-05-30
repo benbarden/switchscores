@@ -7,6 +7,7 @@ namespace App\Domain\GameStats;
 use App\Domain\Cache\CacheManager;
 use App\Domain\Repository\AbstractRepository;
 use App\Enums\CacheDuration;
+use App\Enums\GameStatus;
 use App\Models\Game;
 
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class Repository extends AbstractRepository
      */
     public function totalReleased()
     {
-        return Game::where('eu_is_released', 1)->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+        return Game::where('eu_is_released', 1)->active()->count();
     }
 
     /**
@@ -42,7 +43,7 @@ class Repository extends AbstractRepository
      */
     public function totalRanked()
     {
-        return Game::whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+        return Game::whereNotNull('game_rank')->active()->count();
     }
 
     public function clearCacheTotalRanked($consoleId)
@@ -55,7 +56,7 @@ class Repository extends AbstractRepository
     {
         $cacheKey = $this->buildCacheKey("$consoleId-total-ranked");
         return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($consoleId) {
-            return Game::where('console_id', $consoleId)->whereNotNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+            return Game::where('console_id', $consoleId)->whereNotNull('game_rank')->active()->count();
         });
     }
 
@@ -197,20 +198,5 @@ class Repository extends AbstractRepository
     public function totalCategoryNeedsReview()
     {
         return Game::where('category_verification', Game::VERIF_NEEDS_REVIEW)->count();
-    }
-
-    public function totalTagsUnverified()
-    {
-        return Game::where('tags_verification', Game::VERIF_UNVERIFIED)->count();
-    }
-
-    public function totalTagsVerified()
-    {
-        return Game::where('tags_verification', Game::VERIF_VERIFIED)->count();
-    }
-
-    public function totalTagsNeedsReview()
-    {
-        return Game::where('tags_verification', Game::VERIF_NEEDS_REVIEW)->count();
     }
 }

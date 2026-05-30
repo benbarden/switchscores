@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\DataSources;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
+use App\Models\DataSource;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Models\Console;
@@ -20,6 +21,8 @@ use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\DataSource\Repository as DataSourceRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\DataSourceRaw\Repository as DataSourceRawRepository;
+use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 
@@ -33,10 +36,67 @@ class DataSourceParsedController extends Controller
         private DataSourceRepository $repoDataSource,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private DataSourceRawRepository $repoDataSourceRaw,
+        private DataSourceImportLogRepository $repoImportLog,
         private GameTitleHashRepository $repoGameTitleHash,
         private HashGeneratorRepository $gameTitleHashGenerator,
         private DownloadPackshotHelper $downloadPackshotHelper
     ){
+    }
+
+    public function showList($sourceId)
+    {
+        $dataSource = $this->repoDataSource->find($sourceId);
+        if (!$dataSource) abort(404);
+
+        $pageTitle = $dataSource->name.' - Parsed items';
+        $tableSort = "[ 1, 'asc' ]";
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesSubpage($pageTitle), jsInitialSort: $tableSort)->bindings;
+
+        $request = request();
+        $searchTitle = $request->searchTitle;
+        $filterLinked = $request->filterLinked;
+        $filterEuDate = $request->filterEuDate;
+
+        $hasFilters = $searchTitle || $filterLinked || $filterEuDate;
+
+        $ignoreIdList = $this->repoDataSourceIgnore->getAllBySource($sourceId)->pluck('link_id')->toArray();
+
+        $bindings['SourceId'] = $dataSource->id;
+        $bindings['DataSource'] = $dataSource;
+        $bindings['SearchTitle'] = $searchTitle ?? '';
+        $bindings['FilterLinked'] = $filterLinked ?? '';
+        $bindings['FilterEuDate'] = $filterEuDate ?? '';
+        $bindings['IgnoreIdList'] = $ignoreIdList;
+        $bindings['ItemList'] = $hasFilters
+            ? $this->repoDataSourceParsed->getBySourceFiltered($sourceId, $searchTitle, $filterLinked, $filterEuDate)
+            : null;
+
+        return view('staff.data-sources.parsed.list', $bindings);
+    }
+
+    public function viewParsed($sourceId, $linkId)
+    {
+        $dataSource = $this->repoDataSource->find($sourceId);
+        if (!$dataSource) abort(404);
+
+        $dsParsedItem = $this->repoDataSourceParsed->getBySourceAndLinkId($sourceId, $linkId);
+        if (!$dsParsedItem) abort(404);
+
+        $pageTitle = $dsParsedItem->title;
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::dataSourcesListParsedSubpage($pageTitle, $dataSource))->bindings;
+
+        $ignoreIdList = $this->repoDataSourceIgnore->getAllBySource($sourceId)->pluck('link_id')->toArray();
+
+        $rawItem = $this->repoDataSourceRaw->findBySourceIdAndLinkId($sourceId, $linkId);
+
+        $bindings['DSParsedItem'] = $dsParsedItem;
+        $bindings['IgnoreIdList'] = $ignoreIdList;
+        $bindings['RawItem'] = $rawItem;
+        $bindings['SourceDataRaw'] = $rawItem ? json_decode($rawItem->source_data_json, true) : null;
+        $bindings['HistoryEntries'] = $this->repoImportLog->getBySourceIdAndLinkId($sourceId, $linkId);
+
+        return view('staff.data-sources.parsed.view', $bindings);
     }
 
     public function nintendoCoUkUnlinkedItems()
@@ -101,29 +161,21 @@ class DataSourceParsedController extends Controller
         if ($request->isMethod('post')) {
 
             $title = $dsParsedItem->title;
+            $consoleId = $dsParsedItem->console_id;
 
             // Perform common title replacements
             $title = str_replace('®', '', $title);
             $title = str_replace('™', '', $title);
             $title = str_replace(' – ', ': ', $title);
 
-            // Check title hash is unique
+            // Check title hash is unique for this console
             $titleLowercase = strtolower($title);
             $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
-            $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
+            $hashExists = $this->repoGameTitleHash->titleHashExistsForConsole($hashedTitle, $consoleId);
 
-            // Switch 2 duplicate title check
-            if ($dsParsedItem->console->id == Console::ID_SWITCH_2 && $hashExists) {
-                // Generate new title hash
-                $title .= ' (Switch 2)';
-                $titleLowercase = strtolower($title);
-                $hashedTitle = $this->gameTitleHashGenerator->generateHash($title);
-                $hashExists = $this->repoGameTitleHash->titleHashExists($hashedTitle);
-            }
-
-            // Check for duplicates
+            // Check for duplicates on this console
             if ($hashExists) {
-                $customErrors[] = 'Title already exists for another record!';
+                $customErrors[] = 'Title already exists for another game on this console!';
                 $okToProceed = false;
             }
 
@@ -148,7 +200,7 @@ class DataSourceParsedController extends Controller
                 $gameId = $game->id;
 
                 // Add title hash
-                $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId);
+                $gameTitleHash = $this->repoGameTitleHash->create($titleLowercase, $hashedTitle, $gameId, $consoleId);
 
                 // Update eShop data
                 $game = $game->fresh();

@@ -76,7 +76,7 @@ class ReviewSite extends Model implements Auditable
     public function isYoutubeChannel()
     {
         $youtubeBaseLink = 'https://youtube.com/';
-        if (substr($this->website_url, 0, strlen('https://youtube.com/')) == $youtubeBaseLink) {
+        if (str_starts_with($this->website_url, $youtubeBaseLink)) {
             return true;
         } else {
             return false;

@@ -17,12 +17,38 @@
 
         <div class="col-md-10">
 
+            {% if FormMode == 'edit' %}
+            <fieldset class="rounded p-3 mb-4" style="background-color: #fde8e8;">
+                <legend class="fs-5 fw-semibold">Game status</legend>
+                <div class="row mb-3">
+                    <label for="game_status" class="col-md-3 col-form-label">Status</label>
+                    <div class="col-md-6">
+                        <select id="game_status" class="form-select" name="game_status">
+                            {% for value, label in GameStatusList %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            {% endif %}
+
             <fieldset class="rounded p-3 mb-4" style="background-color: #fffbeb;">
                 <legend class="fs-5 fw-semibold">Main</legend>
                 <div class="row mb-3">
+                    <label for="console_id" class="col-md-3 col-form-label">Console</label>
+                    <div class="col-md-6">
+                        <select id="console_id" class="form-select" name="console_id" size="2" required autofocus>
+                            {% for item in ConsoleList %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <label for="title" class="col-md-3 col-form-label">Title</label>
                     <div class="col-md-6">
-                        <input id="title" type="text" class="form-control" name="title" maxlength="255" required autofocus>
+                        <input id="title" type="text" class="form-control" name="title" maxlength="255" required>
                     </div>
                     <div class="col-md-3">
                         <div id="js-game-title-pass" style="display: none;">
@@ -45,16 +71,6 @@
                     <label for="link_title" class="col-md-3 col-form-label">Link title</label>
                     <div class="col-md-6">
                         <input id="link_title" type="text" class="form-control" name="link_title" maxlength="100" required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="console_id" class="col-md-3 col-form-label">Console</label>
-                    <div class="col-md-6">
-                        <select id="console_id" class="form-select" name="console_id" size="2">
-                            {% for item in ConsoleList %}
-                                <option value="{{ item.id }}">{{ item.name }}</option>
-                            {% endfor %}
-                        </select>
                     </div>
                 </div>
                 {{ categorySelect.renderB5Horizontal(
@@ -290,26 +306,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="row mb-3" id="grp_tags_verification">
-                    <label for="tags_verification" class="col-md-3 col-form-label">Tags verification</label>
-                    <div class="col-md-6">
-                        <select id="tags_verification" class="form-select" name="tags_verification">
-                            <option value="0">Unverified</option>
-                            <option value="1">Verified</option>
-                            <option value="2">Needs review</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-3" id="grp_taxonomy_needs_review">
-                    <label for="taxonomy_needs_review" class="col-md-3 col-form-label">Taxonomy needs review</label>
-                    <div class="col-md-6">
-                        <select id="taxonomy_needs_review" class="form-select" name="taxonomy_needs_review">
-                            <option value="0">Normal</option>
-                            <option value="1">Needs review</option>
-                        </select>
-                        <div class="form-text">Deprecated</div>
-                    </div>
-                </div>
             </fieldset>
             <fieldset id="fs_eshop_assets" class="border rounded p-3 mb-4">
                 <legend class="fs-5 fw-semibold">eShop assets</legend>
@@ -323,18 +319,6 @@
                     <label for="image_header" class="col-md-3 col-form-label">Image header</label>
                     <div class="col-md-6">
                         <input id="image_header" type="text" class="form-control" name="image_header">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="boxart_square_url" class="col-md-3 col-form-label">Boxart square URL (Legacy)</label>
-                    <div class="col-md-6">
-                        <input id="boxart_square_url" type="text" class="form-control" name="boxart_square_url">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="boxart_header_image" class="col-md-3 col-form-label">Boxart header image (Legacy)</label>
-                    <div class="col-md-6">
-                        <input id="boxart_header_image" type="text" class="form-control" name="boxart_header_image">
                     </div>
                 </div>
             </fieldset>

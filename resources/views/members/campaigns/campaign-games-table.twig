@@ -2,7 +2,7 @@
     <table class="table data-sortable">
         <thead>
             <tr>
-                <th class="text-right">#</th>
+                <th class="text-end">#</th>
                 <th>Title</th>
                 <th class="text-center">Release date (EU)</th>
                 <th class="text-center">Review count</th>
@@ -14,7 +14,7 @@
         <tbody>
             {% for item in GameList %}
                 <tr>
-                    <td class="text-right">
+                    <td class="text-end">
                         {{ item.id }}
                     </td>
                     <td>
@@ -31,16 +31,16 @@
                     </td>
                     <td class="text-center">
                         {% if item.id in ReviewedGameIdList %}
-                            <div class="label label-success h6">Reviewed</div>
+                            <span class="badge bg-success">Reviewed</span>
                         {% else %}
                             <a href="{{ route('members.quick-reviews.add', {'gameId': item.id}) }}">Add review</a>
                         {% endif %}
                     </td>
                     <td class="text-center">
                         {% if item.review_count < 3 %}
-                            <div class="label label-danger h6">Incomplete</div>
+                            <span class="badge bg-danger">Incomplete</span>
                         {% else %}
-                            <div class="label label-success h6">Success</div>
+                            <span class="badge bg-success">Success</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
     <p>No games found!</p>
 {% endif %}
 
-{% include 'ui/layouts/assets/table-sorting-b3.twig' %}
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
 <script>
     $(document).ready(function() {
         $('.data-sortable').DataTable({

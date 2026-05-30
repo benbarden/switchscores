@@ -1,0 +1,39 @@
+{% extends 'theme/wos/base.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+        {% if CollectionList %}
+            <table class="table">
+                {% for item in CollectionList %}
+                    {% set gamesCount = item.games.count %}
+                    {% if gamesCount > 0 %}
+                        <tr>
+                            <td>
+                                <a href="{{ route('browse.byCollection.page', {'collection': item.link_title}) }}">{{ item.name }}</a>
+                            </td>
+                            <td class="text-right">
+                                <span class="h4">{{ gamesCount }}</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No collections found!</p>
+        {% endif %}
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+        {{ heading.renderChunky('Search games', 'h4') }}
+        {% include 'ui/components/search/form-mini.twig' %}
+
+        {{ heading.renderChunky('Browse by', 'h4') }}
+        {% include 'ui/components/navigation/nav-right-browse-merged.twig' %}
+
+    </div>
+</div>
+
+{% endblock page_body %}

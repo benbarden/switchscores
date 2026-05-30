@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /games/search
+# Temporarily removed to allow Google to see 410 responses and de-index these URLs
+# Disallow: /members/intent/

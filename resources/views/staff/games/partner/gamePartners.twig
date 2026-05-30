@@ -45,7 +45,7 @@
                             <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.developer}) }}">
                                 {{ item.developer.name }}
                             </a>
-                            {{ gamelowquality.standard(GameData) }}
+                            {{ gamelowquality.b5(GameData) }}
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-developer-{{ item.id }}" class="lnk-remove-developer">Unassign</a>
@@ -142,7 +142,7 @@
                             <a href="{{ route('staff.games-companies.show', {'gamesCompany': item.publisher}) }}">
                                 {{ item.publisher.name }}
                             </a>
-                            {{ gamelowquality.standard(GameData) }}
+                            {{ gamelowquality.b5(GameData) }}
                         </td>
                         <td class="text-center">
                             <a href="javascript:void(0);" id="lnk-remove-publisher-{{ item.id }}" class="lnk-remove-publisher">Unassign</a>

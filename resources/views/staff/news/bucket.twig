@@ -6,6 +6,10 @@
 
 {% block page_inner %}
 
+    {% if session('success') %}
+        <div class="alert alert-success">{{ session('success') }}</div>
+    {% endif %}
+
     {% set title = bucket_label %}
 
     <div class="card mb-3">
@@ -46,18 +50,33 @@
                                 <th>Notes</th>
                                 <th class="text-center">Release date</th>
                                 <th class="text-center">Queued</th>
+                                {% if bucket == 'unranked-steam-gem' %}<th></th>{% endif %}
                             </tr>
                             </thead>
                             <tbody>
                             {% for row in ready %}
                                 {% set g = row.game %}
                                 <tr>
-                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td><a href="{{ game_url(g) }}" target="_blank">{{ g.title }}</a></td>
                                     <td class="text-center">{{ g.rating_avg is not null ? g.rating_avg|number_format(1) : '—' }}</td>
                                     <td class="text-center">{{ g.review_count }}</td>
                                     <td>{{ row.notes }}</td>
                                     <td class="text-center">{{ g.eu_release_date ? g.eu_release_date|format('Y-m-d') : '' }}</td>
                                     <td class="text-center">{{ row.queued_at ? row.queued_at.format('Y-m-d') : '' }}</td>
+                                    {% if bucket == 'unranked-steam-gem' %}
+                                    <td>
+                                        <form method="POST" action="{{ route('staff.news.steam-gems.exclude', {'gameId': g.id}) }}" class="d-flex gap-1">
+                                            {{ csrf_field()|raw }}
+                                            <select name="reason" class="form-select form-select-sm" required>
+                                                <option value="">Reason...</option>
+                                                <option value="too-well-known">Too well known</option>
+                                                <option value="low-quality">Low quality content</option>
+                                                <option value="not-a-good-fit">Not a good fit</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger text-nowrap">Exclude permanently</button>
+                                        </form>
+                                    </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -81,7 +100,7 @@
                             {% for row in used %}
                                 {% set g = row.game %}
                                 <tr>
-                                    <td><a href="{{ route('game.show', { id: g.id, linkTitle: g.link_title }) }}" target="_blank">{{ g.title }}</a></td>
+                                    <td><a href="{{ game_url(g) }}" target="_blank">{{ g.title }}</a></td>
                                     <td>{{ row.used_at ? row.used_at.format('Y-m-d H:i') : '' }}</td>
                                     <td>{{ row.notes }}</td>
                                 </tr>

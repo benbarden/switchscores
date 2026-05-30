@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,700" rel="stylesheet">
 
     <link href="{{ asset('css/app.css') }}?v=220828" rel="stylesheet">
-    <link href="{{ asset('css/design.css') }}?v=251229" rel="stylesheet">
+    <link href="{{ asset('css/design.css') }}?v=260517" rel="stylesheet">
     <link href="{{ asset('css/ratings.css') }}?v=220828" rel="stylesheet">
 
     <!-- Bootstrap -->
@@ -35,7 +35,7 @@
     {% if MetaDescription %}
         <meta name="description" content="{{ MetaDescription|raw }}" />
     {% endif %}
-    {% if GameData.boxart_header_image %}
+    {% if GameData.image_header %}
         <meta name="twitter:card" content="summary_large_image" />
     {% else %}
         <meta name="twitter:card" content="summary" />

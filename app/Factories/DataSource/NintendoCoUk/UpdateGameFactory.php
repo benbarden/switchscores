@@ -20,6 +20,8 @@ class UpdateGameFactory
         $serviceUpdateGame->updateDemo();
         // Temporarily stop doing dev/pub updates so we can phase out the old fields on the games table.
         //$serviceUpdateGame->updatePublishers();
-        $game->save();
+        if ($game->isDirty()) {
+            $game->save();
+        }
     }
 }

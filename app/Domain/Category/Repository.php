@@ -87,7 +87,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('game_rank', 'asc')
             ->orderBy('title', 'asc');
@@ -106,7 +106,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereIn('review_count', [1, 2])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('rating_avg', 'desc');
 
@@ -123,7 +123,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->orderBy('review_count', 'desc')
             ->orderBy('title', 'asc');
@@ -142,7 +142,7 @@ class Repository
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNull('game_rank')
-            ->where('format_digital', '=', Game::FORMAT_DELISTED)
+            ->delisted()
             ->orderBy('title', 'asc')
             ->orderBy('eu_release_date', 'asc');
 
@@ -159,7 +159,7 @@ class Repository
         $games = Game::where('console_id', $consoleId)
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 1)
             ->orderBy('title', 'asc')
             ->orderBy('eu_release_date', 'asc');
@@ -179,44 +179,44 @@ class Repository
             ->where('console_id', $consoleId);
 
         $total = (clone $games)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $ranked = (clone $games)
             ->where('review_count', '>=', 3)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $reviewedButUnranked = (clone $games)
             ->whereIn('review_count', [1, 2])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $noReviews = (clone $games)
             ->whereIn('review_count', [0])
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->count();
 
         $lowQuality = (clone $games)
             ->where('is_low_quality', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->count();
 
         $delisted = (clone $games)
-            ->where('format_digital', Game::FORMAT_DELISTED)
+            ->delisted()
             ->count();
 
         // Newest release
         $newest = (clone $games)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1)
             ->orderBy('eu_release_date', 'desc')
@@ -233,11 +233,79 @@ class Repository
         ];
     }
 
+    public function rankedByCategoryMerged($categoryId, $consoleId = null, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->whereNotNull('game_rank')
+            ->active()
+            ->where('is_low_quality', 0)
+            ->orderBy('game_rank', 'asc')
+            ->orderBy('title', 'asc');
+
+        if ($consoleId) {
+            $games->where('console_id', $consoleId);
+        }
+
+        if ($limit) {
+            $games->limit($limit);
+        }
+
+        return $games->get();
+    }
+
+    public function hiddenGemsByCategoryMerged($categoryId, $consoleId = null, $limit = null)
+    {
+        $games = Game::where('category_id', $categoryId)
+            ->where('eu_is_released', 1)
+            ->whereIn('review_count', [1, 2])
+            ->active()
+            ->where('is_low_quality', 0)
+            ->orderBy('rating_avg', 'desc');
+
+        if ($consoleId) {
+            $games->where('console_id', $consoleId);
+        }
+
+        if ($limit) {
+            $games->limit($limit);
+        }
+
+        return $games->get();
+    }
+
+    public function getSnapshotStatsMerged(Category $category, $consoleId = null): array
+    {
+        $games = Game::where('category_id', $category->id);
+
+        if ($consoleId) {
+            $games->where('console_id', $consoleId);
+        }
+
+        $total = (clone $games)->active()->where('is_low_quality', 0)->where('eu_is_released', 1)->count();
+        $ranked = (clone $games)->where('review_count', '>=', 3)->active()->where('is_low_quality', 0)->where('eu_is_released', 1)->count();
+        $reviewedButUnranked = (clone $games)->whereIn('review_count', [1, 2])->active()->where('is_low_quality', 0)->where('eu_is_released', 1)->count();
+        $noReviews = (clone $games)->where('review_count', 0)->active()->where('is_low_quality', 0)->where('eu_is_released', 1)->count();
+        $lowQuality = (clone $games)->where('is_low_quality', 1)->active()->count();
+        $delisted = (clone $games)->delisted()->count();
+        $newest = (clone $games)->active()->where('is_low_quality', 0)->where('eu_is_released', 1)->orderBy('eu_release_date', 'desc')->value('eu_release_date');
+
+        return [
+            'total'               => $total,
+            'ranked'              => $ranked,
+            'reviewedButUnranked' => $reviewedButUnranked,
+            'noReviews'           => $noReviews,
+            'lowQuality'          => $lowQuality,
+            'delisted'            => $delisted,
+            'newest'              => $newest,
+        ];
+    }
+
     public function listByCategory($consoleId, $categoryId, $page, $perPage, $filter, $sort)
     {
         $query = Game::where('category_id', $categoryId)
             ->where('console_id', $consoleId)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1);
 
@@ -292,6 +360,62 @@ class Repository
             ->skip(($page - 1) * $perPage)
             ->take($perPage)
             ->get();
+
+        return ['items' => $items, 'page' => $page, 'pages' => $pages, 'total' => $total];
+    }
+
+    public function listByCategoryMerged($categoryId, $page, $perPage, $filter, $sort, $consoleId = null)
+    {
+        $query = Game::where('category_id', $categoryId)
+            ->active()
+            ->where('is_low_quality', 0)
+            ->where('eu_is_released', 1);
+
+        if ($consoleId) {
+            $query->where('console_id', $consoleId);
+        }
+
+        switch ($filter) {
+            case 'ranked':
+                $query->where('review_count', '>=', 3);
+                break;
+            case 'hidden':
+                $query->whereIn('review_count', [1, 2]);
+                break;
+            case 'noreviews':
+                $query->where('review_count', 0);
+                break;
+        }
+
+        switch ($sort) {
+            case 'title_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'rating_desc':
+                $query->orderBy('rating_avg', 'desc');
+                break;
+            case 'rating_asc':
+                $query->orderBy('rating_avg', 'asc');
+                break;
+            case 'release_desc':
+                $query->orderBy('eu_release_date', 'desc');
+                break;
+            case 'release_asc':
+                $query->orderBy('eu_release_date', 'asc');
+                break;
+        }
+
+        $total = $query->count();
+        $pages = max((int) ceil($total / $perPage), 1);
+
+        if ($page > $pages) {
+            $page = $pages;
+        }
+
+        $items = $query->skip(($page - 1) * $perPage)->take($perPage)->get();
 
         return ['items' => $items, 'page' => $page, 'pages' => $pages, 'total' => $total];
     }

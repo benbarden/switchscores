@@ -8,7 +8,7 @@ class QuickReview extends Model
 {
     const STATUS_PENDING = 0;
     const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 9;
+    const STATUS_REJECTED = 2;
 
     /**
      * @var string
@@ -43,8 +43,8 @@ class QuickReview extends Model
             case self::STATUS_ACTIVE:
                 $statusDesc = 'Active';
                 break;
-            case self::STATUS_INACTIVE:
-                $statusDesc = 'Inactive';
+            case self::STATUS_REJECTED:
+                $statusDesc = 'Rejected';
                 break;
             default:
                 $statusDesc = 'Unknown';

@@ -157,21 +157,9 @@ class GameBuilder
         return $this;
     }
 
-    public function setBoxartSquareUrl($boxartSquareUrl): GameBuilder
-    {
-        $this->game->boxart_square_url = $boxartSquareUrl;
-        return $this;
-    }
-
     public function setEshopEuropeFsId($eshopEuropeFsId): GameBuilder
     {
         $this->game->eshop_europe_fs_id = $eshopEuropeFsId;
-        return $this;
-    }
-
-    public function setBoxartHeaderImage($boxartHeaderImage): GameBuilder
-    {
-        $this->game->boxart_header_image = $boxartHeaderImage;
         return $this;
     }
 
@@ -259,18 +247,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setTagsVerification($tagsVerification): GameBuilder
-    {
-        $this->game->tags_verification = $tagsVerification;
-        return $this;
-    }
-
-    public function setTaxonomyNeedsReview($taxonomyNeedsReview): GameBuilder
-    {
-        $this->game->taxonomy_needs_review = $taxonomyNeedsReview;
-        return $this;
-    }
-
     public function setPackshotSquareUrlOverride($squareUrlOverride): GameBuilder
     {
         $this->game->packshot_square_url_override = $squareUrlOverride;
@@ -292,6 +268,12 @@ class GameBuilder
     public function setAddedBatchDateToToday(): GameBuilder
     {
         $this->game->added_batch_date = today();
+        return $this;
+    }
+
+    public function setGameStatus($gameStatus): GameBuilder
+    {
+        $this->game->game_status = $gameStatus;
         return $this;
     }
 }

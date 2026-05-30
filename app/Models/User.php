@@ -38,6 +38,8 @@ class User extends Authenticatable
         'is_staff' => 'boolean',
         'is_developer' => 'boolean',
         'user_roles' => 'array',
+        'email_verified_at' => 'datetime',
+        'verification_email_sent_at' => 'datetime',
     ];
 
     /**
@@ -112,6 +114,14 @@ class User extends Authenticatable
     public function gamesCollection()
     {
         return $this->hasMany('App\Models\UserGamesCollection', 'user_id', 'id');
+    }
+
+    /**
+     * Check if the user's email is verified.
+     */
+    public function isEmailVerified(): bool
+    {
+        return $this->email_verified_at !== null;
     }
 
     // Roles

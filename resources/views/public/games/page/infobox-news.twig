@@ -1,4 +1,4 @@
-{% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
+{% set GameShowUrl = game_url(GameData) %}
 
 {% set boxartUrl = ImageHelper.imageSquareUrl(GameData) %}
 {% if boxartUrl %}

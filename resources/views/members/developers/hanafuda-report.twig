@@ -105,6 +105,8 @@
             <p>
                 Code snippets for copying into Hanafuda Report.
             </p>
+            {% include 'members/developers/hanafuda-report/code-snippet.twig' with {'GameList': UpcomingAll, 'ConsoleName': 'All consoles'} %}
+            <hr>
             {% include 'members/developers/hanafuda-report/code-snippet.twig' with {'GameList': UpcomingS1, 'ConsoleName': 'Switch 1'} %}
             {% include 'members/developers/hanafuda-report/code-snippet.twig' with {'GameList': UpcomingS2, 'ConsoleName': 'Switch 2'} %}
         </div>

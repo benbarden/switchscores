@@ -92,6 +92,22 @@ Artisan commands in `app/Console/Commands/` organized by feature:
 
 ## Key Patterns
 
+**See `docs/coding-standards.md` for full coding standards.**
+
+### Repository Pattern
+
+Keep Eloquent queries out of Controllers. Put them in Repository classes under `App\Domain\`:
+```php
+// Good - in Repository
+public function getStatus404(): Collection
+{
+    return Game::query()->where('last_crawl_status', 404)->active()->get();
+}
+
+// Bad - in Controller
+$games = Game::where('last_crawl_status', 404)->get();
+```
+
 ### Dependency Injection
 
 Use constructor injection over `new` instantiation:

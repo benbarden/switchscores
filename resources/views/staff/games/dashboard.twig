@@ -19,10 +19,24 @@
             <tbody>
             <tr>
                 <td>
+                    <a href="{{ route('staff.games.weekly-updates.index')}}">Weekly updates</a>
+                </td>
+                <td class="text-end">
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <a href="{{ route('staff.games.release-hub.show')}}">Release hub</a>
                 </td>
                 <td class="text-end">
                     <a href="{{ route('staff.games.release-hub.show')}}" class="h4"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                </td>
+                <td class="text-end">
                 </td>
             </tr>
             <tr>
@@ -36,7 +50,7 @@
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Watchlists') }}
+        {{ heading.renderSlick('Missing data') }}
 
         <table class="table">
             <tbody>
@@ -79,6 +93,14 @@
                     <a href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}" class="h4">{{ MissingVideoTypeCount }}</a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    Missing players
+                </td>
+                <td class="text-end">
+                    <span class="h4">{{ MissingPlayersCount }}</span>
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -94,15 +116,6 @@
                 ) }}
                 {{ rowstat.renderB5(
                     'Category: Needs review', null, CategoryNeedsReview
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Unverified', null, TagsUnverified
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Verified', null, TagsVerified
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Needs review', null, TagsNeedsReview
                 ) }}
             </tbody>
         </table>
@@ -171,22 +184,32 @@
 
     <div class="col-md-4">
 
-        {{ heading.renderSlick('Game stats') }}
+        {% include 'staff/games/partials/game-status-stats.twig' %}
+
+        {{ heading.renderSlick('Crawl lifecycle') }}
 
         <table class="table">
             <tbody>
             {{ rowstat.renderB5(
-                'Total games', null, TotalGameCount
+                'Not yet crawled', null, CrawlNotYetCrawled
             ) }}
             {{ rowstat.renderB5(
-                'Released games', null, ReleasedGameCount
+                '200 - OK', null, CrawlStatus200
             ) }}
             {{ rowstat.renderB5(
-                'Upcoming games', null, UpcomingGameCount
+                '404 - Not found', route('staff.games.list.showList', {'listType': 'crawl-status-404'}), CrawlStatus404
+            ) }}
+            {{ rowstat.renderB5(
+                '410 - Gone', route('staff.games.list.showList', {'listType': 'crawl-status-410'}), CrawlStatus410
+            ) }}
+            {{ rowstat.renderB5(
+                '3xx - Redirect', route('staff.games.list.showList', {'listType': 'crawl-status-redirect'}), CrawlStatusRedirect
+            ) }}
+            {{ rowstat.renderB5(
+                '5xx - Server error', route('staff.games.list.showList', {'listType': 'crawl-status-error'}), CrawlStatusError
             ) }}
             </tbody>
         </table>
-
 
         {{ heading.renderSlick('Affiliates') }}
 

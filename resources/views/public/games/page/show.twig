@@ -87,7 +87,7 @@
                         <i class="fa fa-tag" aria-hidden="true"></i>
                         <strong>Tags -</strong>
                         {% for item in GameTags %}
-                            <a href="{{ route('console.byTag.page', {'console': GameData.console, 'tag': item.tag.link_title}) }}">
+                            <a href="{{ route('browse.byTag.page', {'tag': item.tag.link_title}) }}">
                                 <nobr>{{ item.tag.tag_name }}</nobr>
                             </a>
                             {% if not loop.last %},{% endif %}
@@ -99,7 +99,7 @@
                 {{ affiliate.buyButtons(GameData, Amazon) }}
 
                 {#
-                {% if not GameData.isDigitalDelisted() and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
+                {% if not GameData.isDelisted() and ((FullAmazonUsLink) or (FullAmazonUkLink) or (DSNintendoCoUk is not null) or (GameData.nintendo_store_url_override)) %}
                     <h2>Buy this game</h2>
                     {% if FullAmazonUkLink %}
                         <a href="{{ FullAmazonUkLink }}" class="btn btn-primary btn-md" target="_blank">Buy at Amazon UK</a>
@@ -120,7 +120,9 @@
                 #}
 
                 {% include 'public/games/page/reviews-critic.twig' with {'GameReviews': GameReviews} %}
-                {% include 'public/games/page/reviews-member.twig' with {'ReviewList': GameQuickReviewList} %}
+                {% include 'public/games/page/reviews-steam.twig' %}
+                {% include 'public/games/page/reviews-member.twig' with {'ReviewList': GameQuickReviewList, 'GameData': GameData} %}
+                {% include 'public/games/page/member-collection.twig' with {'GameData': GameData} %}
                 {% include 'public/games/page/news.twig' with {'NewsList': GameNews} %}
 
             </div>
@@ -137,7 +139,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.byCategory.list', {'console': GameData.console, 'category': GameData.category.link_title}) }}"
+                    <a href="{{ route('browse.byCategory.list', {'category': GameData.category.link_title}) }}"
                        class="view-all-link">
                         View all in {{ GameData.category.name }} →
                     </a>
@@ -155,7 +157,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.byCollection.page', {'console': GameData.console, 'collection': GameData.gameCollection.link_title}) }}"
+                    <a href="{{ route('browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}"
                        class="view-all-link">
                         View all in {{ CollectionName }} →
                     </a>
@@ -173,7 +175,7 @@
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('console.bySeries.page', {'console': GameData.console, 'series': GameData.series.link_title}) }}"
+                    <a href="{{ route('browse.bySeries.page', {'series': GameData.series.link_title}) }}"
                        class="view-all-link">
                         View all in {{ SeriesName }} →
                     </a>
@@ -187,6 +189,19 @@
 
         {{ heading.renderChunky('Game details', 'h2') }}
         {% include 'public/games/page/game-details.twig' with {'GameData': GameData, 'GameDevelopers': GameDevelopers, 'GamePublishers': GamePublishers, 'GameTags': GameTags, 'NewsInfoBox': 'N'} %}
+
+        {% if OtherConsoleGame %}
+            {{ heading.renderChunky('Also on ' ~ OtherConsoleGame.console.name, 'h2') }}
+            <a href="{{ game_url(OtherConsoleGame) }}">
+                {% set otherBoxart = ImageHelper.imageSquareUrl(OtherConsoleGame) %}
+                {% if otherBoxart %}
+                    <img src="{{ otherBoxart }}" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                {% else %}
+                    <img src="/img/placeholder/no-image-found-square.png" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                {% endif %}
+                <span style="margin-left: 10px;">{{ OtherConsoleGame.title }}</span>
+            </a>
+        {% endif %}
 
         {% if GameData.game_rank or GameData.gameRankYear.game_rank or GameData.gameRankYearMonth.game_rank %}
             {% if GameData.console_id %}
@@ -202,7 +217,7 @@
             } only %}
         {% endif %}
 
-        {% set GameShowUrl = route('game.show', {'id': GameData.id, 'linkTitle': GameData.link_title}) %}
+        {% set GameShowUrl = game_url(GameData) %}
 
     </div>
 

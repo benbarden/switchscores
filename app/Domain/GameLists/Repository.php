@@ -298,7 +298,7 @@ class Repository extends AbstractRepository
     {
         $games = Game::where('category_id', $categoryId)
             ->where('eu_is_released', 1)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('eu_release_date', 'desc');
 
         if ($limit) {
@@ -501,7 +501,7 @@ class Repository extends AbstractRepository
         $gameList = Game::whereNull('eshop_europe_fs_id')
             ->whereNull('nintendo_store_url_override')
             ->whereNotNull('eu_release_date')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('id', 'desc');
         if ($limit) {
             $gameList = $gameList->limit($limit);
@@ -590,6 +590,32 @@ class Repository extends AbstractRepository
             ->whereDate('added_batch_date', $batchDate)
             ->whereDate('eu_release_date', '<=', $batchDate)
             ->orderBy('eu_release_date')
+            ->get();
+    }
+
+    public function crawlPriorityQueue($limit = 15)
+    {
+        return Game::where('crawl_priority', true)
+            ->active()
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function nextToCrawl($limit = 15)
+    {
+        return Game::active()
+            ->where(function ($query) {
+                $query->whereNotNull('nintendo_store_url_override')
+                      ->orWhereExists(function ($q) {
+                          $q->select(DB::raw(1))
+                            ->from('data_source_parsed')
+                            ->whereColumn('data_source_parsed.game_id', 'games.id')
+                            ->whereNotNull('data_source_parsed.url');
+                      });
+            })
+            ->orderBy('last_crawled_at', 'asc')
+            ->limit($limit)
             ->get();
     }
 }

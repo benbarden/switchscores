@@ -9,7 +9,7 @@ class Repository
 {
     public function totalUnranked()
     {
-        return Game::whereNull('game_rank')->where('format_digital', '<>', Game::FORMAT_DELISTED)->count();
+        return Game::whereNull('game_rank')->active()->count();
     }
 
     public function getForMemberDashboard()
@@ -17,7 +17,7 @@ class Repository
         return Game::where('eu_is_released', 1)
             ->where('is_low_quality', '0')
             ->where('review_count', '2')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->where('rating_avg', '>', '7.0')
             ->inRandomOrder()
             ->limit(1)
@@ -34,7 +34,7 @@ class Repository
             $gameList = $gameList->whereNotIn('games.id', $gameIdsReviewedBySite);
         }
 
-        $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
+        $gameList = $gameList->active()
             ->orderBy('rating_avg', 'desc')
             ->orderBy('eu_release_date', 'desc')
             ->orderBy('title', 'asc');
@@ -51,7 +51,7 @@ class Repository
         $gameList = Game::where('eu_is_released', 1)
             ->where('is_low_quality', '0')
             ->where('review_count', '=', $reviewCount)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            ->active();
 
         return $gameList->count();
     }
@@ -67,7 +67,7 @@ class Repository
             $gameList = $gameList->whereNotIn('games.id', $gameIdsReviewedBySite);
         }
 
-        $gameList = $gameList->where('format_digital', '<>', Game::FORMAT_DELISTED)
+        $gameList = $gameList->active()
             ->orderBy('rating_avg', 'desc')
             ->orderBy('eu_release_date', 'desc')
             ->orderBy('title', 'asc');
@@ -85,7 +85,7 @@ class Repository
             ->where('is_low_quality', '0')
             ->where('games.release_year', '=', $year)
             ->where('review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            ->active();
 
         return $gameList->count();
     }
@@ -95,7 +95,7 @@ class Repository
         $gameList = Game::where('eu_is_released', 1)
             ->where('is_low_quality', '1')
             ->where('review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('games.eu_release_date', 'desc')
             ->orderBy('games.title', 'asc');
 
@@ -107,7 +107,7 @@ class Repository
         $gameList = Game::where('eu_is_released', 1)
             ->where('is_low_quality', '1')
             ->where('review_count', '<', '3')
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED);
+            ->active();
 
         return $gameList->count();
     }

@@ -1,0 +1,103 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<form method="get" action="" class="row g-2 align-items-end mb-3">
+    <div class="col-auto">
+        <label for="searchTitle" class="form-label mb-0">Title:</label>
+        <input type="text" id="searchTitle" name="searchTitle" class="form-control" value="{{ SearchTitle }}" placeholder="Search by title..." autofocus>
+    </div>
+    <div class="col-auto">
+        <label for="filterLinked" class="form-label mb-0">Linked:</label>
+        <select id="filterLinked" name="filterLinked" class="form-select">
+            <option value="">All</option>
+            <option value="linked" {% if FilterLinked == 'linked' %}selected{% endif %}>Linked</option>
+            <option value="unlinked" {% if FilterLinked == 'unlinked' %}selected{% endif %}>Unlinked</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="filterEuDate" class="form-label mb-0">EU date:</label>
+        <select id="filterEuDate" name="filterEuDate" class="form-select">
+            <option value="">All</option>
+            <option value="with" {% if FilterEuDate == 'with' %}selected{% endif %}>With date</option>
+            <option value="without" {% if FilterEuDate == 'without' %}selected{% endif %}>Without date</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+<hr>
+
+{% if ItemList is null %}
+    <p class="text-muted">Use a search or filter to view items.</p>
+{% elseif ItemList.count > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+
+                <th class="text-start">Title</th>
+                <th class="text-center">EU release date</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">Status</th>
+                <th class="text-start">Linked game</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in ItemList %}
+            <tr>
+                <td class="text-end"><a href="{{ route('staff.data-sources.detail', {'sourceId': item.source_id, 'linkId': item.link_id}) }}">{{ item.id }}</a></td>
+                <td class="text-start" style="max-width: 400px;">{{ item.title }}</td>
+                <td class="text-center">{{ item.release_date_eu ?? '-' }}</td>
+                <td class="text-center">{{ item.console ? item.console.name : '-' }}</td>
+                <td class="text-center">
+                    {% if item.game_id %}
+                        <span class="badge bg-success">Linked</span>
+                    {% elseif item.link_id in IgnoreIdList %}
+                        <span class="badge bg-secondary">Ignored</span>
+                    {% else %}
+                        <span class="badge bg-danger">Unlinked</span>
+                    {% endif %}
+                </td>
+                <td class="text-start">
+                    {% if item.game_id and item.game %}
+                        {{ gamelink.title(item.game, 'staff') }}
+                    {% elseif item.game_id %}
+                        <span class="text-muted">ID: {{ item.game_id }}</span>
+                    {% endif %}
+                </td>
+                <td class="text-center"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+    <script>
+        $(document).ready(function() {
+            $('.data-sortable').DataTable({
+                "order": [{{ jsInitialSort|raw }}],
+                "pageLength": 25,
+                "dom": "lrtip",
+                "columns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "orderable": false },
+                    { "orderable": false },
+                    { "orderable": false }
+                ]
+            });
+        });
+    </script>
+{% else %}
+    <p>No items found.</p>
+{% endif %}
+
+{% endblock page_inner %}

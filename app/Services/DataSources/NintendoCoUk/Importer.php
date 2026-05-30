@@ -84,6 +84,11 @@ class Importer
         return $this->importedItemCount;
     }
 
+    public function getNumFound()
+    {
+        return $this->responseData['response']['numFound'] ?? null;
+    }
+
     public function loadLocalData($file)
     {
         $json = file_get_contents(dirname(__FILE__).'/../../../storage/eshop/'.$file);
@@ -116,7 +121,8 @@ class Importer
         if ($systemType == 'switch2') {
             $systemQuery = '"nintendoswitch2"';
         } else {
-            $systemQuery = 'nintendoswitch*'." AND product_code_txt:*";
+            // Exclude Switch 2 games from Switch 1 query to prevent duplicates
+            $systemQuery = '(nintendoswitch* AND -system_type:"nintendoswitch2")'." AND product_code_txt:*";
         }
 
         // Build query string
@@ -164,7 +170,15 @@ class Importer
         }
     }
 
-    public function importToDb($sourceId)
+    /**
+     * Upsert raw records from the last loaded response.
+     *
+     * Returns an array with:
+     *   'new_ids'      => IDs of newly inserted records (need parsing)
+     *   'changed_ids'  => IDs of records whose content hash changed (need parsing)
+     *   'relisted_ids' => IDs of records that were is_delisted=1 but reappeared
+     */
+    public function importToDb($sourceId): array
     {
         if (!$this->responseData) {
             throw new \Exception('Nothing to import!');
@@ -173,7 +187,10 @@ class Importer
         $sourceItem = null;
         $rawSourceData = $this->responseData['response']['docs'];
 
-        $totalItemCount = count($rawSourceData);
+        $newIds      = [];
+        $changedIds  = [];
+        $relistedIds = [];
+        $now = now();
 
         try {
 
@@ -191,18 +208,90 @@ class Importer
                     $consoleId = Console::ID_SWITCH_1;
                 }
 
-                $dataSourceRaw = new DataSourceRaw();
-                $dataSourceRaw->source_id = $sourceId;
-                $dataSourceRaw->console_id = $consoleId;
-                $dataSourceRaw->title = $sourceItem['title'];
-                $dataSourceRaw->source_data_json = json_encode($sourceItem);
-                $dataSourceRaw->save();
+                $linkId      = $sourceItem['fs_id'] ?? null;
+                $jsonString  = json_encode($sourceItem);
+                $contentHash = md5($this->hashableFields($sourceItem));
 
+                $existing = $linkId
+                    ? DataSourceRaw::where('source_id', $sourceId)->where('link_id', $linkId)->first()
+                    : null;
+
+                if (!$existing) {
+                    $record = new DataSourceRaw();
+                    $record->source_id        = $sourceId;
+                    $record->console_id       = $consoleId;
+                    $record->link_id          = $linkId;
+                    $record->title            = $sourceItem['title'];
+                    $record->source_data_json = $jsonString;
+                    $record->content_hash     = $contentHash;
+                    $record->last_seen_at     = $now;
+                    $record->is_delisted      = 0;
+                    $record->save();
+                    $newIds[] = $record->id;
+                } else {
+                    $changed = false;
+
+                    if ($existing->is_delisted) {
+                        $relistedIds[] = $existing->id;
+                        $existing->is_delisted = 0;
+                        $changed = true;
+                    }
+
+                    if ($existing->content_hash !== $contentHash) {
+                        $existing->console_id       = $consoleId;
+                        $existing->title            = $sourceItem['title'];
+                        $existing->source_data_json = $jsonString;
+                        $existing->content_hash     = $contentHash;
+                        $changedIds[] = $existing->id;
+                        $changed = true;
+                    }
+
+                    if ($changed) {
+                        $existing->last_seen_at = $now;
+                        $existing->save();
+                    } else {
+                        // Only last_seen_at changes — use a raw update to avoid touching updated_at
+                        \Illuminate\Support\Facades\DB::table('data_source_raw')
+                            ->where('id', $existing->id)
+                            ->update(['last_seen_at' => $now]);
+                    }
+                }
             }
+
         } catch (\Exception $e) {
             throw new \Exception('Error importing data! Message: '.$e->getMessage().'; Record: '.var_export($sourceItem, true));
         }
 
-        $this->importedItemCount = $totalItemCount;
+        $this->importedItemCount = count($rawSourceData);
+
+        return [
+            'new_ids'      => $newIds,
+            'changed_ids'  => $changedIds,
+            'relisted_ids' => $relistedIds,
+        ];
+    }
+
+    /**
+     * Extract only the meaningful fields for hashing.
+     * Excludes volatile Solr metadata (_version_, score, etc.) that changes every run.
+     */
+    private function hashableFields(array $item): string
+    {
+        $keys = [
+            'fs_id', 'title', 'system_type', 'url',
+            'price_regular_f', 'price_lowest_f', 'price_discount_percentage_f',
+            'pretty_date_s', 'publisher',
+            'players_from', 'players_to',
+            'pretty_game_categories_txt',
+            'image_url_sq_s', 'image_url_h2x1_s',
+            'physical_version_b', 'dlc_shown_b', 'demo_availability',
+        ];
+
+        $subset = [];
+        foreach ($keys as $key) {
+            $subset[$key] = $item[$key] ?? null;
+        }
+
+        return json_encode($subset);
     }
 }

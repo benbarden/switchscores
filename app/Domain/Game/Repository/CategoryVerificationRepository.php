@@ -13,7 +13,7 @@ class CategoryVerificationRepository
         return Game::query()
             ->where('category_verification', Game::VERIF_UNVERIFIED)
             ->where('is_low_quality', 0)
-            ->where('format_digital', '<>', Game::FORMAT_DELISTED)
+            ->active()
             ->orderBy('id', 'asc')
             ->limit($limit)
             ->get();

@@ -59,18 +59,63 @@ h3 {
 }
 
 
-/* Top navbar */
-.navbar {
+/* Primary navbar */
+.navbar-primary {
     background: #256ae5;
     color: #ffffff;
 }
 
-.navbar .nav-item.dropdown .dropdown-item {
+.navbar-primary .nav-item.dropdown .dropdown-item {
     font-size: 80%;
 }
 
-li.nav-item a.nav-link, li.nav-item a.nav-link {
+.navbar-primary li.nav-item a.nav-link {
     color: #ffffff !important;
+}
+
+/* Secondary navbar */
+.navbar-secondary {
+    background: #e8f0fc;
+    border-bottom: 1px solid #ccdcf5;
+}
+
+.navbar-secondary .navbar-text {
+    color: #1a4db3;
+    font-size: 90%;
+}
+
+.navbar-secondary li.nav-item a.nav-link {
+    color: #256ae5 !important;
+    font-size: 90%;
+}
+
+.navbar-secondary li.nav-item a.nav-link:hover {
+    color: #1a4db3 !important;
+}
+
+/* Secondary nav horizontal scroll on mobile */
+@media (max-width: 991.98px) {
+    .navbar-secondary .container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    .navbar-secondary .container::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    .navbar-secondary .navbar-nav {
+        flex-direction: row !important;
+        flex-wrap: nowrap;
+    }
+    .navbar-secondary .nav-item {
+        white-space: nowrap;
+    }
+    .navbar-secondary .nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
 }
 
 /* Breadcrumbs */
@@ -187,5 +232,35 @@ nav ol.breadcrumb {
 .rating-v2 .suffix {
     color: #999;
     font-size: 16px;
+}
+
+/* Play status buttons - collection form */
+.play-status-btn {
+    border: 2px solid var(--status-color);
+    background-color: color-mix(in srgb, var(--status-color) 15%, white);
+    color: #333;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.play-status-btn i {
+    color: var(--status-color);
+    margin-right: 0.4rem;
+}
+
+.play-status-btn:hover {
+    background-color: color-mix(in srgb, var(--status-color) 30%, white);
+    border-color: var(--status-color);
+    color: #333;
+}
+
+.btn-check:checked + .play-status-btn {
+    background-color: var(--status-color);
+    border-color: var(--status-color);
+    color: #fff;
+}
+
+.btn-check:checked + .play-status-btn i {
+    color: #fff;
 }
 

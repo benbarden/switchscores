@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V2;
 
+use App\Models\Console;
 use App\Models\Game;
 
 use App\Domain\Game\Repository as GameRepository;
@@ -68,7 +69,7 @@ class GameController
 
     private function parseGameData(Game $game)
     {
-        $gameUrl = route('game.show', ['id' => $game->id, 'linkTitle' => $game->link_title]);
+        $gameUrl = $this->buildGameUrl($game);
         $gameData = [
             'id' => $game->id,
             'title' => $game->title,
@@ -177,5 +178,20 @@ class GameController
         }
 
         return $gameData;
+    }
+
+    private function buildGameUrl(Game $game): string
+    {
+        if ($game->console_id === Console::ID_SWITCH_2) {
+            return route('game.show.switch2', [
+                'id' => $game->id,
+                'linkTitle' => $game->link_title
+            ]);
+        }
+
+        return route('game.show', [
+            'id' => $game->id,
+            'linkTitle' => $game->link_title
+        ]);
     }
 }

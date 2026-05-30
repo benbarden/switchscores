@@ -21,11 +21,18 @@
         </p>
         <p>
             <strong>Explore:</strong>
+            <a href="{{ route('console.landing', {'console': consoleSwitch1}) }}">Switch 1</a> |
+            <a href="{{ route('console.landing', {'console': consoleSwitch2}) }}">Switch 2</a> |
             <a href="{{ route('console.topRated.landing', {'console': consoleSwitch1}) }}">Best Switch 1 games</a> |
             <a href="{{ route('console.topRated.landing', {'console': consoleSwitch2}) }}">Best Switch 2 games</a> |
-            <a href="{{ route('console.landing', {'console': consoleSwitch1}) }}">Switch 1 library</a> |
-            <a href="{{ route('console.landing', {'console': consoleSwitch2}) }}">Switch 2 library</a> |
             <a href="{{ route('news.landing') }}">Latest news</a>
+        </p>
+        <p>
+            <strong>Browse by:</strong>
+            <a href="{{ route('browse.byCategory.landing') }}">Category</a> |
+            <a href="{{ route('browse.bySeries.landing') }}">Series</a> |
+            <a href="{{ route('browse.byCollection.landing') }}">Collection</a> |
+            <a href="{{ route('browse.byTag.landing') }}">Tag</a>
         </p>
     </div>
 
