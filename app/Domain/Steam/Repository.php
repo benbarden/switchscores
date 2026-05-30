@@ -1,0 +1,181 @@
+<?php
+
+namespace App\Domain\Steam;
+
+use App\Enums\SteamStatus;
+use App\Models\Game;
+use App\Models\SteamReviewData;
+use Illuminate\Support\Facades\DB;
+
+class Repository
+{
+    public function countByStatus(SteamStatus $status): int
+    {
+        return Game::where('steam_status', $status->value)
+            ->where('is_low_quality', 0)
+            ->active()
+            ->count();
+    }
+
+    public function getLinkedGames(int $limit = 100)
+    {
+        return Game::where('steam_status', SteamStatus::LINKED->value)
+            ->active()
+            ->leftJoin('steam_review_data', 'games.id', '=', 'steam_review_data.game_id')
+            ->orderByRaw('steam_review_data.last_synced_at IS NOT NULL, steam_review_data.last_synced_at ASC')
+            ->limit($limit)
+            ->get(['games.id', 'games.title', 'games.steam_id']);
+    }
+
+    public function getReviewDataForGame(int $gameId): ?SteamReviewData
+    {
+        return SteamReviewData::where('game_id', $gameId)->first();
+    }
+
+    public function upsertReviewData(int $gameId, string $steamId, array $summary): bool
+    {
+        $incoming = [
+            'review_score'      => $summary['review_score'] ?? null,
+            'review_score_desc' => $summary['review_score_desc'] ?? null,
+            'total_positive'    => $summary['total_positive'] ?? 0,
+            'total_negative'    => $summary['total_negative'] ?? 0,
+            'total_reviews'     => $summary['total_reviews'] ?? 0,
+        ];
+
+        $existing = SteamReviewData::where('game_id', $gameId)->first();
+
+        $changed = !$existing
+            || (int) $existing->review_score      !== (int) $incoming['review_score']
+            || $existing->review_score_desc        !== $incoming['review_score_desc']
+            || (int) $existing->total_positive    !== (int) $incoming['total_positive']
+            || (int) $existing->total_negative    !== (int) $incoming['total_negative']
+            || (int) $existing->total_reviews     !== (int) $incoming['total_reviews'];
+
+        SteamReviewData::updateOrCreate(
+            ['game_id' => $gameId],
+            array_merge($incoming, ['steam_id' => $steamId, 'last_synced_at' => now()])
+        );
+
+        return $changed;
+    }
+
+    public function getUnrankedNotChecked(?int $limit = null)
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active()
+            ->orderBy('review_count', 'asc')
+            ->orderBy('eu_release_date', 'asc');
+
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    public function countUnrankedNotChecked(): int
+    {
+        return Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active()
+            ->count();
+    }
+
+    public function getUnrankedStatsByCategory(): array
+    {
+        $rows = DB::select("
+            SELECT
+                category_id,
+                SUM(CASE WHEN steam_status = 'not_checked' THEN 1 ELSE 0 END)  AS not_checked,
+                SUM(CASE WHEN steam_status = 'linked' THEN 1 ELSE 0 END)       AS linked,
+                SUM(CASE WHEN steam_status = 'not_on_steam' THEN 1 ELSE 0 END) AS not_on_steam
+            FROM games
+            WHERE is_low_quality = 0
+              AND game_rank IS NULL
+              AND game_status = 'active'
+              AND title NOT LIKE 'Arcade Archives%'
+              AND title NOT LIKE 'ACA NeoGeo%'
+            GROUP BY category_id
+        ");
+
+        $indexed = [];
+        foreach ($rows as $row) {
+            $indexed[(int) $row->category_id] = [
+                'not_checked'  => (int) $row->not_checked,
+                'linked'       => (int) $row->linked,
+                'not_on_steam' => (int) $row->not_on_steam,
+            ];
+        }
+        return $indexed;
+    }
+
+    public function getUnrankedNotCheckedFiltered(?int $categoryId, ?int $year, int $limit = 100)
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active()
+            ->orderBy('review_count', 'asc')
+            ->orderBy('eu_release_date', 'asc');
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($year) {
+            $query->whereYear('eu_release_date', $year);
+        }
+
+        return $query->limit($limit)->get();
+    }
+
+    public function countUnrankedNotCheckedFiltered(?int $categoryId, ?int $year): int
+    {
+        $query = Game::where('steam_status', SteamStatus::NOT_CHECKED->value)
+            ->where('is_low_quality', 0)
+            ->whereNull('game_rank')
+            ->where('title', 'not like', 'Arcade Archives%')
+            ->where('title', 'not like', 'ACA NeoGeo%')
+            ->active();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($year) {
+            $query->whereYear('eu_release_date', $year);
+        }
+
+        return $query->count();
+    }
+
+    public function getByStatus(SteamStatus $status, ?int $limit = null, bool $oldestFirst = false)
+    {
+        $dateOrder = $oldestFirst ? 'asc' : 'desc';
+
+        $query = Game::where('steam_status', $status->value)
+            ->where('is_low_quality', 0)
+            ->active()
+            ->orderBy('eu_release_date', $dateOrder)
+            ->orderBy('title', 'asc');
+
+        if ($status === SteamStatus::LINKED) {
+            $query = $query->with('steamReviewData');
+        }
+
+        if ($limit) {
+            $query = $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+}

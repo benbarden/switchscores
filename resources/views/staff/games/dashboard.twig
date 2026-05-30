@@ -19,7 +19,7 @@
             <tbody>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                    <a href="{{ route('staff.games.weekly-updates.index')}}">Weekly updates</a>
                 </td>
                 <td class="text-end">
                 </td>
@@ -30,6 +30,13 @@
                 </td>
                 <td class="text-end">
                     <a href="{{ route('staff.games.release-hub.show')}}" class="h4"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                </td>
+                <td class="text-end">
                 </td>
             </tr>
             <tr>
@@ -109,15 +116,6 @@
                 ) }}
                 {{ rowstat.renderB5(
                     'Category: Needs review', null, CategoryNeedsReview
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Unverified', null, TagsUnverified
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Verified', null, TagsVerified
-                ) }}
-                {{ rowstat.renderB5(
-                    'Tags: Needs review', null, TagsNeedsReview
                 ) }}
             </tbody>
         </table>

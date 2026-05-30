@@ -1,0 +1,106 @@
+{% extends 'theme/wos/base.twig' %}
+{% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/game/rating.twig' as gamerating %}
+
+{% block page_body %}
+
+    <div class="category-list-page">
+
+        <div class="filter-bar">
+            <a class="filter-pill {{ ConsoleSlug is null ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?filter={{ filter }}&sort={{ sort }}">
+                All consoles
+            </a>
+            <a class="filter-pill {{ ConsoleSlug == 'switch-1' ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?console=switch-1&filter={{ filter }}&sort={{ sort }}">
+                Switch 1
+            </a>
+            <a class="filter-pill {{ ConsoleSlug == 'switch-2' ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?console=switch-2&filter={{ filter }}&sort={{ sort }}">
+                Switch 2
+            </a>
+        </div>
+
+        <div class="list-controls">
+            <div class="game-count">
+                {{ Games.total }} games found
+            </div>
+            <div class="sort-control">
+                <form method="get">
+                    {% if ConsoleSlug %}
+                        <input type="hidden" name="console" value="{{ ConsoleSlug }}">
+                    {% endif %}
+                    <input type="hidden" name="filter" value="{{ filter }}">
+                    <label for="sort" class="sr-only">Sort</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()">
+                        <option value="title_asc"    {{ sort == 'title_asc'    ? 'selected' }}>Title (A–Z)</option>
+                        <option value="title_desc"   {{ sort == 'title_desc'   ? 'selected' }}>Title (Z–A)</option>
+                        <option value="rating_desc"  {{ sort == 'rating_desc'  ? 'selected' }}>Rating (High → Low)</option>
+                        <option value="rating_asc"   {{ sort == 'rating_asc'   ? 'selected' }}>Rating (Low → High)</option>
+                        <option value="release_desc" {{ sort == 'release_desc' ? 'selected' }}>Newest first</option>
+                        <option value="release_asc"  {{ sort == 'release_asc'  ? 'selected' }}>Oldest first</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <a class="filter-pill {{ filter == 'ranked' ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?filter=ranked&sort={{ sort }}{{ ConsoleSlug ? '&console=' ~ ConsoleSlug }}">
+                Ranked only
+            </a>
+            <a class="filter-pill {{ filter == 'hidden' ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?filter=hidden&sort={{ sort }}{{ ConsoleSlug ? '&console=' ~ ConsoleSlug }}">
+                Hidden gems
+            </a>
+            <a class="filter-pill {{ filter == 'noreviews' ? 'active' }}"
+               href="{{ route('browse.bySeries.list', {'series': GameSeries.link_title}) }}?filter=noreviews&sort={{ sort }}{{ ConsoleSlug ? '&console=' ~ ConsoleSlug }}">
+                No reviews
+            </a>
+        </div>
+
+        <div class="game-grid">
+            {% for game in Games.items %}
+                <div class="game-card">
+                    <a href="{{ game_url(game) }}" class="card-link">
+                        <div class="game-card-console">
+                            {% if game.console_id == 1 %}<span class="console-label console-label-s1">Switch 1</span>
+                            {% elseif game.console_id == 2 %}<span class="console-label console-label-s2">Switch 2</span>{% endif %}
+                        </div>
+                        <div class="game-card-image">
+                            {{ packshots.squareImageOnly(game) }}
+                        </div>
+                        <div class="game-card-title">{{ game.title }}</div>
+                        {% if game.rating_avg %}
+                            <div class="game-card-rating">
+                                {{ gamerating.ratingStandard(game.rating_avg, 'h5') }}
+                            </div>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if Games.pages > 1 %}
+            <div class="pagination">
+                {% if Games.page > 1 %}
+                    <a class="page-link" href="?page={{ Games.page - 1 }}&filter={{ filter }}&sort={{ sort }}{{ ConsoleSlug ? '&console=' ~ ConsoleSlug }}">← Previous</a>
+                {% endif %}
+                <span class="page-info">Page {{ Games.page }} of {{ Games.pages }}</span>
+                {% if Games.page < Games.pages %}
+                    <a class="page-link" href="?page={{ Games.page + 1 }}&filter={{ filter }}&sort={{ sort }}{{ ConsoleSlug ? '&console=' ~ ConsoleSlug }}">Next →</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="view-all-container">
+            <a href="{{ route('browse.bySeries.page', {'series': GameSeries.link_title})
+                ~ (ConsoleSlug ? '?console=' ~ ConsoleSlug : '') }}"
+               class="view-all-link">
+                ← Back to the {{ GameSeries.series }} homepage
+            </a>
+        </div>
+
+    </div>
+
+{% endblock page_body %}

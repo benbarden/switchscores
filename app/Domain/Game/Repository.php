@@ -20,6 +20,14 @@ class Repository extends AbstractRepository
         $this->clearCache($cacheKey);
     }
 
+    public function findByTitleAndConsole(string $title, int $consoleId): ?Game
+    {
+        return Game::where('console_id', $consoleId)
+            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->with('category')
+            ->first();
+    }
+
     public function markAsReleased(Game $game)
     {
         $dateNow = new \DateTime('now');
@@ -188,6 +196,14 @@ class Repository extends AbstractRepository
     }
 
     /**
+     * Get all games matching a title (may exist on multiple consoles)
+     */
+    public function getAllByTitle($title): \Illuminate\Support\Collection
+    {
+        return Game::where('title', $title)->get();
+    }
+
+    /**
      * Check if a title exists for a specific console
      */
     public function titleExistsForConsole($title, $consoleId, $excludeGameId = null): bool
@@ -205,6 +221,11 @@ class Repository extends AbstractRepository
     public function getByTitleAndConsole($title, $consoleId)
     {
         return Game::where('title', $title)->where('console_id', $consoleId)->first();
+    }
+
+    public function updateEshopOrder(int $gameId, int $order): void
+    {
+        Game::where('id', $gameId)->update(['eshop_europe_order' => $order]);
     }
 
     /**

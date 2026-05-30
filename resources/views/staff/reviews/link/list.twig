@@ -10,7 +10,7 @@
     <div class="col-12 col-sm-9">
         <div class="float-end">
             <label for="admin-nav-site-filter">Filter by site:</label>
-            <select id="admin-nav-site-filter" name="admin-nav-site-filter" class="form-control">
+            <select id="admin-nav-site-filter" name="admin-nav-site-filter" class="form-select">
                 <option value="">All reviews</option>
                 {% for item in ReviewSites %}
                     <option value="{{ item.id }}">{% if item.status == '9' %}[INACTIVE]{% endif %} {{ item.name }}</option>

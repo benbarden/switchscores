@@ -12,7 +12,10 @@
             <tr>
                 <th class="text-end">#</th>
                 <th>Game series</th>
+                <th>Category hints</th>
                 <th class="text-center">Game count</th>
+                <th class="text-center">Intro desc</th>
+                <th class="text-center">Meta desc</th>
                 <th class="text-center">View</th>
                 <th class="text-center">Options</th>
             </tr>
@@ -26,8 +29,23 @@
                     <td>
                         {{ item.series }}
                     </td>
+                    <td>
+                        {% if item.category_hints and item.category_hints|length > 0 %}
+                            {% for hint in item.category_hints %}
+                                <span class="badge {% if item.category_hints|length == 1 %}bg-success{% else %}bg-warning text-dark{% endif %} me-1">{{ hint }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
                     <td class="text-center">
                         {{ item.games().count }}
+                    </td>
+                    <td class="text-center">
+                        {% if item.intro_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.meta_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.games.list.showList', { 'listType': 'by-series', 'param1': item }) }}">View games</a>
@@ -53,6 +71,9 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
+                null,
+                null,
                 null,
                 null,
                 null,

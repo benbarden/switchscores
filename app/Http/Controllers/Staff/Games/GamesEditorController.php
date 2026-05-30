@@ -22,6 +22,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\FormatOptions as GameFormatOptions;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\GameCrawlLifecycle\Repository as GameCrawlLifecycleRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
@@ -67,6 +68,7 @@ class GamesEditorController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private GameRepository $repoGame,
+        private GameCrawlLifecycleRepository $repoGameCrawlLifecycle,
         private GameFormatOptions $formatOptions,
         private GameCollectionRepository $repoGameCollection,
         private GameDeveloperRepository $repoGameDeveloper,
@@ -409,6 +411,8 @@ class GamesEditorController extends Controller
             // Data source cleanup
             $this->repoDataSourceParsed->clearGameIdFromNintendoCoUkItems($gameId);
             $this->repoDataSourceParsed->removeSwitchEshopItems($gameId);
+            // Crawl lifecycle cleanup
+            $this->repoGameCrawlLifecycle->deleteByGameId($gameId);
             // Ready to delete the game
             $this->repoGame->delete($gameId);
 

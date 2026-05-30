@@ -63,6 +63,35 @@ final class PublicBreadcrumbs
         ]);
     }
 
+    public static function browseCategoryLanding(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by category'),
+        ]);
+    }
+
+    public static function browseCategoryPage(string $title, ?Category $parentCategory = null): BreadcrumbNav
+    {
+        return new BreadcrumbNav(array_values(array_filter([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by category', route('browse.byCategory.landing')),
+            $parentCategory ? new BreadcrumbItem($parentCategory->name, route('browse.byCategory.page', ['category' => $parentCategory->link_title])) : null,
+            new BreadcrumbItem($title),
+        ])));
+    }
+
+    public static function browseCategoryList(string $title, Category $category, ?Category $parentCategory = null): BreadcrumbNav
+    {
+        return new BreadcrumbNav(array_values(array_filter([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by category', route('browse.byCategory.landing')),
+            $parentCategory ? new BreadcrumbItem($parentCategory->name, route('browse.byCategory.page', ['category' => $parentCategory->link_title])) : null,
+            new BreadcrumbItem($category->name, route('browse.byCategory.page', ['category' => $category->link_title])),
+            new BreadcrumbItem($title),
+        ])));
+    }
+
     public static function consoleCategoryPage(string $title, Console $console, ?Category $parentCategory = null): BreadcrumbNav
     {
         return new BreadcrumbNav(array_values(array_filter([
@@ -103,6 +132,87 @@ final class PublicBreadcrumbs
             new BreadcrumbItem($console->name, route('console.landing', ['console' => $console])),
             new BreadcrumbItem('By collection', route('console.byCollection.landing', ['console' => $console])),
             new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function browseCollectionLanding(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by collection'),
+        ]);
+    }
+
+    public static function browseCollectionPage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by collection', route('browse.byCollection.landing')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function browseCollectionList(string $collectionName, string $collectionSlug): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by collection', route('browse.byCollection.landing')),
+            new BreadcrumbItem($collectionName, route('browse.byCollection.page', ['collection' => $collectionSlug])),
+            new BreadcrumbItem('List'),
+        ]);
+    }
+
+    public static function browseSeriesLanding(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by series'),
+        ]);
+    }
+
+    public static function browseSeriesPage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by series', route('browse.bySeries.landing')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function browseSeriesList(string $seriesName, string $seriesSlug): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by series', route('browse.bySeries.landing')),
+            new BreadcrumbItem($seriesName, route('browse.bySeries.page', ['series' => $seriesSlug])),
+            new BreadcrumbItem('List'),
+        ]);
+    }
+
+    public static function browseTagLanding(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by tag'),
+        ]);
+    }
+
+    public static function browseTagPage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by tag', route('browse.byTag.landing')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
+    public static function browseTagList(string $tagName, string $tagSlug): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Browse by tag', route('browse.byTag.landing')),
+            new BreadcrumbItem($tagName, route('browse.byTag.page', ['tag' => $tagSlug])),
+            new BreadcrumbItem('List'),
         ]);
     }
 

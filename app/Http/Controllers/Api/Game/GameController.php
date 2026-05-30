@@ -33,6 +33,13 @@ class GameController
 
         $games = $this->repoGame->partialTitleSearch($title);
 
+        // Add display_title with console prefix for disambiguation
+        $games = $games->map(function ($game) {
+            $consolePrefix = $game->console_id === Console::ID_SWITCH_2 ? '[Switch 2]' : '[Switch 1]';
+            $game->display_title = $consolePrefix . ' ' . $game->title;
+            return $game;
+        });
+
         return response()->json(['games' => $games], 200);
     }
 

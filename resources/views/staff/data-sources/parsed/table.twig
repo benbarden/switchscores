@@ -17,7 +17,7 @@
         {% for item in ItemList %}
             <tr>
                 <td class="text-center">
-                    {{ item.link_id }}
+                    <a href="{{ route('staff.data-sources.detail', {'sourceId': item.source_id, 'linkId': item.link_id}) }}">{{ item.link_id }}</a>
                 </td>
                 <td class="text-left">
                     {{ item.title }}

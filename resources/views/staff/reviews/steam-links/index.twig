@@ -1,0 +1,306 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+
+<ul class="nav nav-tabs mb-3" id="steamTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">
+            Summary
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="not-checked-tab" data-bs-toggle="tab" data-bs-target="#not-checked" type="button" role="tab">
+            Not checked (newest)
+            <span class="badge bg-secondary ms-1">{{ CountNotChecked }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="not-checked-oldest-tab" data-bs-toggle="tab" data-bs-target="#not-checked-oldest" type="button" role="tab">
+            Not checked (oldest)
+            <span class="badge bg-secondary ms-1">{{ CountNotChecked }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="not-checked-unranked-tab" data-bs-toggle="tab" data-bs-target="#not-checked-unranked" type="button" role="tab">
+            Unranked
+            <span class="badge bg-warning ms-1">{{ CountNotCheckedUnranked }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked" type="button" role="tab">
+            Linked
+            <span class="badge bg-success ms-1">{{ CountLinked }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="not-on-steam-tab" data-bs-toggle="tab" data-bs-target="#not-on-steam" type="button" role="tab">
+            Not on Steam
+            <span class="badge bg-secondary ms-1">{{ CountNotOnSteam }}</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="steamTabsContent">
+
+    {# ---- SUMMARY ---- #}
+    <div class="tab-pane fade" id="summary" role="tabpanel">
+        <p class="text-muted">Unranked games by category showing checking progress. Click a category name to open the Unranked tab filtered to that category.</p>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th class="text-center">Not checked</th>
+                    <th class="text-center">Linked</th>
+                    <th class="text-center">Not on Steam</th>
+                    <th style="min-width: 150px;">Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in CategoryList %}
+                    {% set parentStats = CategoryStats[cat.id] ?? {not_checked: 0, linked: 0, not_on_steam: 0} %}
+                    {% set parentTotal = parentStats.not_checked + parentStats.linked + parentStats.not_on_steam %}
+                    {% set parentDone = parentStats.linked + parentStats.not_on_steam %}
+                    {% set parentPct = parentTotal > 0 ? ((parentDone / parentTotal) * 100)|round : 0 %}
+                    <tr class="table-light fw-semibold">
+                        <td>
+                            <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked&category_id={{ cat.id }}" target="_blank">{{ cat.name }}</a>
+                        </td>
+                        <td class="text-center">{{ parentStats.not_checked > 0 ? parentStats.not_checked : '—' }}</td>
+                        <td class="text-center">{{ parentStats.linked > 0 ? parentStats.linked : '—' }}</td>
+                        <td class="text-center">{{ parentStats.not_on_steam > 0 ? parentStats.not_on_steam : '—' }}</td>
+                        <td>
+                            {% if parentTotal > 0 %}
+                                <div class="progress" style="height: 16px;" title="{{ parentDone }}/{{ parentTotal }} checked">
+                                    <div class="progress-bar bg-success" style="width: {{ parentPct }}%">
+                                        {% if parentPct >= 20 %}{{ parentPct }}%{% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% for child in cat.children %}
+                        {% set stats = CategoryStats[child.id] ?? {not_checked: 0, linked: 0, not_on_steam: 0} %}
+                        {% set total = stats.not_checked + stats.linked + stats.not_on_steam %}
+                        {% set done = stats.linked + stats.not_on_steam %}
+                        {% set pct = total > 0 ? ((done / total) * 100)|round : 0 %}
+                        <tr>
+                            <td class="ps-4">
+                                <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked&category_id={{ child.id }}" target="_blank">{{ child.name }}</a>
+                            </td>
+                            <td class="text-center">{{ stats.not_checked > 0 ? stats.not_checked : '—' }}</td>
+                            <td class="text-center">{{ stats.linked > 0 ? stats.linked : '—' }}</td>
+                            <td class="text-center">{{ stats.not_on_steam > 0 ? stats.not_on_steam : '—' }}</td>
+                            <td>
+                                {% if total > 0 %}
+                                    <div class="progress" style="height: 16px;" title="{{ done }}/{{ total }} checked">
+                                        <div class="progress-bar bg-success" style="width: {{ pct }}%">
+                                            {% if pct >= 20 %}{{ pct }}%{% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ---- NOT CHECKED (NEWEST) ---- #}
+    <div class="tab-pane fade" id="not-checked" role="tabpanel">
+        <p class="text-muted">Games with no Steam status set, newest first. Low quality titles are excluded.</p>
+        {% if GamesNotChecked|length < CountNotChecked %}
+            <div class="alert alert-info">Showing {{ GamesNotChecked|length }} of {{ CountNotChecked }} games. Work through these and reload to see the next batch.</div>
+        {% endif %}
+        {% if GamesNotChecked|length > 0 %}
+            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotChecked, 'RedirectTab': 'not-checked'} %}
+        {% else %}
+            <p>All done! No games left to check.</p>
+        {% endif %}
+    </div>
+
+    {# ---- NOT CHECKED (OLDEST) ---- #}
+    <div class="tab-pane fade" id="not-checked-oldest" role="tabpanel">
+        <p class="text-muted">Games with no Steam status set, oldest first. Low quality titles are excluded.</p>
+        {% if GamesNotCheckedOldest|length < CountNotChecked %}
+            <div class="alert alert-info">Showing {{ GamesNotCheckedOldest|length }} of {{ CountNotChecked }} games. Work through these and reload to see the next batch.</div>
+        {% endif %}
+        {% if GamesNotCheckedOldest|length > 0 %}
+            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedOldest, 'RedirectTab': 'not-checked-oldest'} %}
+        {% else %}
+            <p>All done! No games left to check.</p>
+        {% endif %}
+    </div>
+
+    {# ---- NOT CHECKED (UNRANKED) ---- #}
+    <div class="tab-pane fade" id="not-checked-unranked" role="tabpanel">
+        <form method="GET" action="{{ route('staff.reviews.steam-links.index') }}" class="row g-2 align-items-end mb-3">
+            <input type="hidden" name="tab" value="not-checked-unranked">
+            <div class="col-auto">
+                <label class="form-label mb-1">Category</label>
+                <select name="category_id" class="form-select form-select-sm">
+                    <option value="">Any category</option>
+                    {% for cat in CategoryList %}
+                        <option value="{{ cat.id }}" {% if SelectedCategoryId == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% for child in cat.children %}
+                            <option value="{{ child.id }}" {% if SelectedCategoryId == child.id %}selected{% endif %}>&nbsp;&nbsp;&nbsp;&nbsp;{{ child.name }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="form-label mb-1">Year</label>
+                <select name="year" class="form-select form-select-sm">
+                    <option value="">Any year</option>
+                    {% for y in YearList %}
+                        <option value="{{ y }}" {% if SelectedYear == y %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                {% if SelectedCategoryId or SelectedYear %}
+                    <a href="{{ route('staff.reviews.steam-links.index') }}?tab=not-checked-unranked" class="btn btn-sm btn-outline-secondary ms-1">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+
+        <p class="text-muted">
+            Unranked games with no Steam status set, sorted by review count then release date. Low quality titles are excluded.
+            {% if SelectedCategoryId or SelectedYear %}
+                <strong>Filters active.</strong>
+            {% endif %}
+        </p>
+        {% if GamesNotCheckedUnranked|length < CountNotCheckedUnranked %}
+            <div class="alert alert-info">Showing {{ GamesNotCheckedUnranked|length }} of {{ CountNotCheckedUnranked }} games. Work through these and reload to see the next batch.</div>
+        {% endif %}
+        {% if GamesNotCheckedUnranked|length > 0 %}
+            {% include 'staff/reviews/steam-links/not-checked-table.twig' with {'GameList': GamesNotCheckedUnranked, 'RedirectTab': 'not-checked-unranked', 'FilterCategoryId': SelectedCategoryId, 'FilterYear': SelectedYear} %}
+        {% else %}
+            <p>No unranked games left to check.</p>
+        {% endif %}
+    </div>
+
+    {# ---- LINKED ---- #}
+    <div class="tab-pane fade" id="linked" role="tabpanel">
+        <p class="text-muted">Games confirmed to have a Steam equivalent.</p>
+        {% if GamesLinked|length > 0 %}
+            <table class="table table-sm data-sortable">
+                <thead>
+                    <tr>
+                        <th class="text-end">#</th>
+                        <th style="min-width: 400px;">Title</th>
+                        <th>Release date</th>
+                        <th class="text-center">Steam Store</th>
+                        <th style="min-width: 100px;">Steam reviews</th>
+                        <th style="min-width: 130px;">Steam App ID</th>
+                        <th class="text-center">Reset</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in GamesLinked %}
+                        <tr>
+                            <td class="text-end">{{ item.id }}</td>
+                            <td style="min-width: 400px; word-break: break-word;">{{ gamelink.title(item, 'staff') }}</td>
+                            <td>{{ item.eu_release_date }}</td>
+                            <td class="text-center">
+                                <a href="https://store.steampowered.com/app/{{ item.steam_id }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    Steam <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </td>
+                            <td>
+                                {% if item.steamReviewData %}
+                                    {{ item.steamReviewData.review_score_desc }}
+                                    <small class="text-muted">({{ item.steamReviewData.total_reviews|number_format }})</small>
+                                {% else %}
+                                    <span class="text-muted">Not synced</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route('staff.reviews.steam-links.link', {'gameId': item.id}) }}" class="d-flex gap-1">
+                                    {{ csrf_field()|raw }}
+                                    <input type="hidden" name="redirect_tab" value="linked">
+                                    <input type="text" name="steam_id" value="{{ item.steam_id }}" class="form-control form-control-sm" maxlength="20" required>
+                                    <button type="submit" class="btn btn-sm btn-primary text-nowrap">Update</button>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <form method="POST" action="{{ route('staff.reviews.steam-links.reset', {'gameId': item.id}) }}">
+                                    {{ csrf_field()|raw }}
+                                    <input type="hidden" name="redirect_tab" value="linked">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Reset</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No games linked yet.</p>
+        {% endif %}
+    </div>
+
+    {# ---- NOT ON STEAM ---- #}
+    <div class="tab-pane fade" id="not-on-steam" role="tabpanel">
+        <p class="text-muted">Games confirmed as not available on Steam (e.g. Nintendo exclusives).</p>
+        {% if GamesNotOnSteam|length > 0 %}
+            <table class="table table-sm data-sortable">
+                <thead>
+                    <tr>
+                        <th class="text-end">#</th>
+                        <th>Title</th>
+                        <th>Release date</th>
+                        <th>Reviews</th>
+                        <th class="text-center">Reset</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in GamesNotOnSteam %}
+                        <tr>
+                            <td class="text-end">{{ item.id }}</td>
+                            <td>{{ gamelink.title(item, 'staff') }}</td>
+                            <td>{{ item.eu_release_date }}</td>
+                            <td class="text-center">{{ item.review_count }}</td>
+                            <td class="text-center">
+                                <form method="POST" action="{{ route('staff.reviews.steam-links.reset', {'gameId': item.id}) }}">
+                                    {{ csrf_field()|raw }}
+                                    <input type="hidden" name="redirect_tab" value="not-on-steam">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Reset</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No games marked as not on Steam yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        // Activate tab from ?tab= query param
+        var params = new URLSearchParams(window.location.search);
+        var activeTab = params.get('tab') || 'summary';
+        var tabEl = document.getElementById(activeTab + '-tab');
+        if (tabEl) {
+            bootstrap.Tab.getOrCreateInstance(tabEl).show();
+        }
+
+        $('.data-sortable').DataTable({
+            "pageLength": 50,
+            "order": [[2, 'desc']]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

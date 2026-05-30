@@ -19,6 +19,8 @@ use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
+use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
+use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchListController;
 
 // *************** Staff: GAMES *************** //
 Route::group([
@@ -129,5 +131,48 @@ Route::group([
     Route::match(['get', 'post'], 'tag/{gameId}/edit',
         [GamesTagController::class, 'edit']
     )->name('tag.edit');
+
+    // ---- Weekly updates ----
+    Route::controller(WeeklyBatchController::class)->group(function () {
+        Route::get('weekly-updates', 'index')->name('weekly-updates.index');
+        Route::get('weekly-updates/create', 'create')->name('weekly-updates.create');
+        Route::post('weekly-updates/store', 'store')->name('weekly-updates.store');
+        Route::get('weekly-updates/{batchId}', 'show')->name('weekly-updates.show');
+    });
+
+    Route::controller(WeeklyBatchListController::class)
+        ->prefix('weekly-updates/{batchId}/{console}/{listType}')
+        ->name('weekly-updates.list.')
+        ->group(function () {
+            Route::get('raw', 'raw')->name('raw');
+            Route::post('raw/save-page', 'savePage')->name('raw.save-page');
+            Route::post('raw/remove-page', 'removePage')->name('raw.remove-page');
+            Route::get('urls', 'urls')->name('urls');
+            Route::post('urls/save', 'saveUrls')->name('urls.save');
+
+            Route::get('fetch', 'fetch')->name('fetch');
+            Route::post('fetch/item/{itemId}', 'fetchItem')->name('fetch.item');
+            Route::post('fetch/lq-decisions', 'saveLqDecisions')->name('fetch.lq-decisions');
+            Route::post('item/{itemId}/action', 'itemAction')->name('item.action');
+
+            Route::get('publishers', 'publishers')->name('publishers');
+            Route::post('publishers/create', 'createPublisher')->name('publishers.create');
+            Route::post('publishers/mark-lq', 'markPublisherLq')->name('publishers.mark-lq');
+
+            Route::get('prices', 'prices')->name('prices');
+            Route::post('prices/save', 'savePrices')->name('prices.save');
+
+            Route::get('packshots', 'packshots')->name('packshots');
+            Route::post('packshots/save', 'savePackshots')->name('packshots.save');
+
+            Route::get('categories', 'categories')->name('categories');
+            Route::post('categories/save-item/{itemId}', 'saveItemCategory')->name('categories.save-item');
+            Route::post('categories/accept/{itemId}', 'acceptCategory')->name('categories.accept');
+            Route::post('categories/reset', 'resetCategories')->name('categories.reset');
+
+            Route::get('confirm', 'confirm')->name('confirm');
+            Route::post('confirm/save-publisher/{itemId}', 'saveItemPublisher')->name('confirm.save-publisher');
+            Route::post('import', 'import')->name('import');
+        });
 
 });

@@ -1,0 +1,48 @@
+{% import 'ui/components/links/game.twig' as gamelink %}
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th class="text-end">#</th>
+            <th style="max-width: 400px;">Title</th>
+            <th>Release date</th>
+            <th>Reviews</th>
+            <th class="text-center">Search</th>
+            <th class="text-center" style="min-width: 220px;">Steam App ID</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in GameList %}
+            <tr>
+                <td class="text-end">{{ item.id }}</td>
+                <td style="max-width: 400px; word-break: break-word;">{{ gamelink.title(item, 'staff') }}</td>
+                <td>{{ item.eu_release_date }}</td>
+                <td class="text-center">{{ item.review_count }}</td>
+                <td class="text-center">
+                    <a href="https://store.steampowered.com/search/?term={{ item.title|url_encode }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                        Search <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <form method="POST" action="{{ route('staff.reviews.steam-links.link', {'gameId': item.id}) }}" class="d-flex gap-1">
+                        {{ csrf_field()|raw }}
+                        <input type="hidden" name="redirect_tab" value="{{ RedirectTab }}">
+                        {% if FilterCategoryId %}<input type="hidden" name="filter_category_id" value="{{ FilterCategoryId }}">{% endif %}
+                        {% if FilterYear %}<input type="hidden" name="filter_year" value="{{ FilterYear }}">{% endif %}
+                        <input type="text" name="steam_id" class="form-control form-control-sm" placeholder="e.g. 1091500" maxlength="20" required>
+                        <button type="submit" class="btn btn-sm btn-primary text-nowrap">Link</button>
+                    </form>
+                </td>
+                <td class="text-center">
+                    <form method="POST" action="{{ route('staff.reviews.steam-links.notOnSteam', {'gameId': item.id}) }}">
+                        {{ csrf_field()|raw }}
+                        <input type="hidden" name="redirect_tab" value="{{ RedirectTab }}">
+                        {% if FilterCategoryId %}<input type="hidden" name="filter_category_id" value="{{ FilterCategoryId }}">{% endif %}
+                        {% if FilterYear %}<input type="hidden" name="filter_year" value="{{ FilterYear }}">{% endif %}
+                        <button type="submit" class="btn btn-sm btn-outline-secondary text-nowrap">Not on Steam</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

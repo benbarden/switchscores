@@ -67,7 +67,7 @@
             {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
                 <tr>
                     <td>
-                        <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                        <a href="{{ route('staff.games.weekly-updates.index')}}">Weekly updates</a>
                     </td>
                     <td class="text-end">
                     </td>
@@ -78,6 +78,13 @@
                     </td>
                     <td class="text-end">
                         <a href="{{ route('staff.games.release-hub.show')}}" class="h4"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                    </td>
+                    <td class="text-end">
                     </td>
                 </tr>
             {% endif %}

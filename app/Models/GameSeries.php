@@ -15,7 +15,11 @@ class GameSeries extends Model
      * @var array
      */
     protected $fillable = [
-        'series', 'link_title', 'landing_image'
+        'series', 'link_title', 'landing_image', 'category_hints', 'intro_description', 'meta_description',
+    ];
+
+    protected $casts = [
+        'category_hints' => 'array',
     ];
 
     public function games()

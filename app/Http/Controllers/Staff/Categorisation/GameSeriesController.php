@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
+use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
 class GameSeriesController extends Controller
@@ -29,7 +30,8 @@ class GameSeriesController extends Controller
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
-        private GameSeriesRepository $repoGameSeries
+        private GameSeriesRepository $repoGameSeries,
+        private CategoryRepository $repoCategory
     )
     {
     }
@@ -79,7 +81,10 @@ class GameSeriesController extends Controller
             }
 
             // All ok
-            $this->repoGameSeries->create($request->name, $request->link_title);
+            $seriesData = $this->repoGameSeries->create($request->name, $request->link_title, $request->intro_description, $request->meta_description);
+
+            $hints = array_values(array_filter((array) $request->input('category_hints', [])));
+            $this->repoGameSeries->editCategoryHints($seriesData, $hints);
 
             return redirect(route('staff.categorisation.game-series.list'));
 
@@ -90,6 +95,20 @@ class GameSeriesController extends Controller
         }
 
         $bindings['FormMode'] = 'add';
+
+        $allCategories  = $this->repoCategory->getAll();
+        $topLevel       = $allCategories->whereNull('parent_id')->sortBy('name');
+        $categoryGroups = [];
+        foreach ($topLevel as $parent) {
+            $children = $allCategories->where('parent_id', $parent->id)->sortBy('name');
+            $categoryGroups[] = [
+                'parent'   => $parent->name,
+                'children' => $children->values(),
+            ];
+        }
+
+        $bindings['CategoryGroups'] = $categoryGroups;
+        $bindings['SeriesData']     = null;
 
         return view('staff.categorisation.game-series.add', $bindings);
     }
@@ -110,7 +129,10 @@ class GameSeriesController extends Controller
 
             $this->validate($request, $this->validationRules);
 
-            $this->repoGameSeries->edit($seriesData, $request->name, $request->link_title);
+            $this->repoGameSeries->edit($seriesData, $request->name, $request->link_title, $request->intro_description, $request->meta_description);
+
+            $hints = array_values(array_filter((array) $request->input('category_hints', [])));
+            $this->repoGameSeries->editCategoryHints($seriesData, $hints);
 
             return redirect(route('staff.categorisation.game-series.list'));
 
@@ -120,8 +142,20 @@ class GameSeriesController extends Controller
 
         }
 
-        $bindings['SeriesData'] = $seriesData;
-        $bindings['SeriesId'] = $seriesId;
+        $allCategories  = $this->repoCategory->getAll();
+        $topLevel       = $allCategories->whereNull('parent_id')->sortBy('name');
+        $categoryGroups = [];
+        foreach ($topLevel as $parent) {
+            $children = $allCategories->where('parent_id', $parent->id)->sortBy('name');
+            $categoryGroups[] = [
+                'parent'   => $parent->name,
+                'children' => $children->values(),
+            ];
+        }
+
+        $bindings['CategoryGroups'] = $categoryGroups;
+        $bindings['SeriesData']     = $seriesData;
+        $bindings['SeriesId']       = $seriesId;
 
         return view('staff.categorisation.game-series.edit', $bindings);
     }

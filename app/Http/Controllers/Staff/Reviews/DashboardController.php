@@ -13,7 +13,9 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\Stats as ReviewDraftStats;
 use App\Domain\Unranked\Repository as UnrankedRepository;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
+use App\Domain\Steam\Repository as SteamRepository;
 
+use App\Enums\SteamStatus;
 use App\Models\QuickReview;
 
 class DashboardController extends Controller
@@ -25,7 +27,8 @@ class DashboardController extends Controller
         private QuickReviewRepository $repoQuickReview,
         private ReviewDraftStats $statsReviewDraft,
         private UnrankedRepository $repoUnranked,
-        private ReviewLinkStats $statsReviewLink
+        private ReviewLinkStats $statsReviewLink,
+        private SteamRepository $repoSteam
     )
     {
     }
@@ -58,6 +61,12 @@ class DashboardController extends Controller
         $bindings['AllowedYears'] = $allowedYears;
 
         $bindings['ProcessStatusStats'] = $this->statsReviewDraft->getProcessStatusStats();
+
+        // Steam coverage
+        $bindings['SteamCountLinked']           = $this->repoSteam->countByStatus(SteamStatus::LINKED);
+        $bindings['SteamCountNotOnSteam']       = $this->repoSteam->countByStatus(SteamStatus::NOT_ON_STEAM);
+        $bindings['SteamCountNotChecked']       = $this->repoSteam->countByStatus(SteamStatus::NOT_CHECKED);
+        $bindings['SteamCountUnrankedNotChecked'] = $this->repoSteam->countUnrankedNotChecked();
 
         return view('staff.reviews.dashboard', $bindings);
     }

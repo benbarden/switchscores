@@ -99,6 +99,11 @@ class EditorController extends Controller
 
         $bindings['NewsCategoryList'] = $this->repoNewsCategory->getAll();
 
+        $bindings['IsSteamGemPost'] = DB::table('news_post_games')
+            ->where('news_post_id', $newsId)
+            ->where('bucket', \App\Enums\FeatureQueueBucket::UNRANKED_STEAM_GEM->value)
+            ->exists();
+
         return view('staff.news.editor.edit', $bindings);
     }
 

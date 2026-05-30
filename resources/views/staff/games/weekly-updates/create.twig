@@ -1,0 +1,15 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<form method="post" action="{{ route('staff.games.weekly-updates.store') }}" style="max-width: 400px;">
+    {{ csrf_field()|raw }}
+    <div class="mb-3">
+        <label for="batch_date" class="form-label">Batch date (Friday)</label>
+        <input type="date" id="batch_date" name="batch_date" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create batch</button>
+    <a href="{{ route('staff.games.weekly-updates.index') }}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+{% endblock page_inner %}

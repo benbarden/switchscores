@@ -19,6 +19,7 @@ use App\Domain\GameTag\Repository as GameTagRepository;
 use App\Domain\News\Repository as NewsRepository;
 use App\Domain\QuickReview\Repository as QuickReviewRepository;
 use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
+use App\Domain\Steam\Repository as SteamRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Models\Console;
 
@@ -38,6 +39,7 @@ class GameShowController extends Controller
         private NewsRepository $repoNews,
         private QuickReviewRepository $repoQuickReview,
         private ReviewLinkRepository $repoReviewLink,
+        private SteamRepository $repoSteam,
         private UserGamesCollectionRepository $repoUserGamesCollection,
     )
     {
@@ -200,6 +202,7 @@ class GameShowController extends Controller
         $bindings['GameData'] = $gameData;
         $bindings['GameReviews'] = $this->repoReviewLink->byGame($gameId);
         $bindings['GameQuickReviewList'] = $this->repoQuickReview->byGameActive($gameId);
+        $bindings['SteamReviewData'] = $this->repoSteam->getReviewDataForGame($gameId);
         $bindings['GameDevelopers'] = $this->repoGameDeveloper->byGame($gameId);
         $bindings['GamePublishers'] = $this->repoGamePublisher->byGame($gameId);
         $bindings['GameTags'] = $this->repoGameTag->getGameTags($gameId);

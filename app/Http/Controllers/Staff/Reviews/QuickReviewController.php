@@ -50,68 +50,39 @@ class QuickReviewController extends Controller
         return view('staff.reviews.quick-reviews.list', $bindings);
     }
 
-    public function edit($reviewId)
+    public function approve($reviewId)
     {
-        $pageTitle = 'Edit quick review';
-        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsQuickReviewsSubpage($pageTitle))->bindings;
-
-        $request = request();
-
         $reviewData = $this->repoQuickReview->find($reviewId);
         if (!$reviewData) abort(404);
 
-        $statusList = $this->repoQuickReview->getStatusList();
+        $this->repoQuickReview->editStatus($reviewData, QuickReview::STATUS_ACTIVE);
 
-        if ($request->isMethod('post')) {
+        $userId = $reviewData->user_id;
+        $gameId = $reviewData->game_id;
+        $game = $this->repoGame->find($gameId);
 
-            $itemStatus = $request->item_status;
+        $this->reviewLinkStats->updateStats($game);
 
-            $statusFound = false;
-            foreach ($statusList as $statusListItem) {
-                if ($statusListItem['id'] == $itemStatus) {
-                    $statusFound = true;
-                    break;
-                }
-            }
-            if (!$statusFound) {
-                throw new \Exception('Unknown status: '.$itemStatus);
-            }
+        $user = $this->repoUser->find($userId);
+        UserFactory::addPointsForQuickReview($user);
+        UserPointTransactionDirectorFactory::addForQuickReview($userId, $gameId);
 
-            $this->repoQuickReview->editStatus($reviewData, $itemStatus);
+        return redirect(route('staff.reviews.quick-reviews.list'));
+    }
 
-            $userId = $reviewData->user_id;
-            $gameId = $reviewData->game_id;
-            $game = $this->repoGame->find($gameId);
+    public function reject($reviewId)
+    {
+        $reviewData = $this->repoQuickReview->find($reviewId);
+        if (!$reviewData) abort(404);
 
-            // Update game review stats
-            $this->reviewLinkStats->updateStats($game);
+        $this->repoQuickReview->editStatus($reviewData, QuickReview::STATUS_REJECTED);
 
-            if ($itemStatus == QuickReview::STATUS_ACTIVE) {
+        $gameId = $reviewData->game_id;
+        $game = $this->repoGame->find($gameId);
 
-                // Credit points
-                $user = $this->repoUser->find($userId);
-                UserFactory::addPointsForQuickReview($user);
+        $this->reviewLinkStats->updateStats($game);
 
-                // Store the transaction
-                UserPointTransactionDirectorFactory::addForQuickReview($userId, $gameId);
-
-            }
-
-            // All done; send us back
-            return redirect(route('staff.reviews.quick-reviews.list'));
-
-        } else {
-
-            $bindings['FormMode'] = 'edit';
-
-        }
-
-        $bindings['ReviewData'] = $reviewData;
-        $bindings['ReviewId'] = $reviewId;
-
-        $bindings['StatusList'] = $statusList;
-
-        return view('staff.reviews.quick-reviews.edit', $bindings);
+        return redirect(route('staff.reviews.quick-reviews.list'));
     }
 
     public function delete($reviewId)

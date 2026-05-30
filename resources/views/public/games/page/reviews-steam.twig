@@ -1,0 +1,46 @@
+{% if SteamReviewData is defined and SteamReviewData %}
+    <h2>Steam user reviews</h2>
+    {% if SteamReviewData.review_score >= 7 %}
+        {% set steamRowClass = 'success' %}
+    {% elseif SteamReviewData.review_score >= 5 %}
+        {% set steamRowClass = 'warning' %}
+    {% elseif SteamReviewData.review_score %}
+        {% set steamRowClass = 'danger' %}
+    {% else %}
+        {% set steamRowClass = '' %}
+    {% endif %}
+    <table class="table table-condensed table-responsive game-page-review-table">
+        <tbody>
+            <tr class="review-header {{ steamRowClass }}">
+                <td>
+                    {% if SteamReviewData.review_score_desc %}
+                        <strong>{{ SteamReviewData.review_score_desc }}</strong>
+                    {% else %}
+                        No summary available
+                    {% endif %}
+                    {% if SteamReviewData.total_reviews > 0 %}
+                        &mdash;
+                        {{ SteamReviewData.positivePercent() }}% of
+                        {{ SteamReviewData.total_reviews|number_format }}
+                        user review{% if SteamReviewData.total_reviews != 1 %}s{% endif %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="https://store.steampowered.com/app/{{ SteamReviewData.steam_id }}#app_reviews_hash"
+                       target="_blank"
+                       title="View Steam reviews (opens in new tab)">
+                        Steam reviews
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr class="review-description">
+                <td colspan="2">
+                    <small class="text-muted">
+                        Steam reviews are from the PC version and are not included in the Switch Scores ranking.
+                    </small>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}

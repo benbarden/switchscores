@@ -4,6 +4,13 @@
 
 {% set formSubmitAction = route('staff.news.edit', {'newsId': NewsId}) %}
 
+{% if IsSteamGemPost %}
+    <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <span>The games in this post were removed from the Steam gems queue when this draft was created. If you delete this draft, they will be returned to the queue.</span>
+        <a href="{{ route('staff.news.delete', {'newsId': NewsId}) }}" class="btn btn-sm btn-danger ms-3 text-nowrap">Reset and delete draft</a>
+    </div>
+{% endif %}
+
 {% include 'staff/news/editor/form-news.twig' with {'formSubmitAction': formSubmitAction} %}
 {% include 'staff/news/editor/scripts.twig' %}
 

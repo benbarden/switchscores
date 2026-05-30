@@ -53,10 +53,6 @@ class DashboardController extends Controller
         $bindings['CategoryVerified'] = $this->repoGameStatsLegacy->totalCategoryVerified();
         $bindings['CategoryUnverified'] = $this->repoGameStatsLegacy->totalCategoryUnverified();
         $bindings['CategoryNeedsReview'] = $this->repoGameStatsLegacy->totalCategoryNeedsReview();
-        $bindings['TagsVerified'] = $this->repoGameStatsLegacy->totalTagsVerified();
-        $bindings['TagsUnverified'] = $this->repoGameStatsLegacy->totalTagsUnverified();
-        $bindings['TagsNeedsReview'] = $this->repoGameStatsLegacy->totalTagsNeedsReview();
-
         // Affiliates
         $bindings['AmazonUSUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('us');
         $bindings['AmazonUSLinkedCount'] = $this->repoGameAffiliate->countLinked('us');

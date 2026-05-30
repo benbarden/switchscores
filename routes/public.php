@@ -38,6 +38,28 @@ Route::controller('PublicSite\Console\TopRatedController')->group(function () {
     Route::get('/c/{console:slug?}/top-rated/all-time/page/{page}', 'allTimePage')->name('console.topRated.allTime.page');
     Route::get('/c/{console:slug?}/top-rated/by-year/{year}', 'byYear')->name('console.topRated.byYear');
 });
+// Browse (merged console view - POC)
+Route::controller('PublicSite\Browse\BrowseByCategoryController')->group(function () {
+    Route::get('/browse/category', 'landing')->name('browse.byCategory.landing');
+    Route::get('/browse/category/{category}', 'page')->name('browse.byCategory.page');
+    Route::get('/browse/category/{category}/list', 'list')->name('browse.byCategory.list');
+});
+Route::controller('PublicSite\Browse\BrowseByTagController')->group(function () {
+    Route::get('/browse/tag', 'landing')->name('browse.byTag.landing');
+    Route::get('/browse/tag/{tag}', 'page')->name('browse.byTag.page');
+    Route::get('/browse/tag/{tag}/list', 'list')->name('browse.byTag.list');
+});
+Route::controller('PublicSite\Browse\BrowseBySeriesController')->group(function () {
+    Route::get('/browse/series', 'landing')->name('browse.bySeries.landing');
+    Route::get('/browse/series/{series}', 'page')->name('browse.bySeries.page');
+    Route::get('/browse/series/{series}/list', 'list')->name('browse.bySeries.list');
+});
+Route::controller('PublicSite\Browse\BrowseByCollectionController')->group(function () {
+    Route::get('/browse/collection', 'landing')->name('browse.byCollection.landing');
+    Route::get('/browse/collection/{collection}', 'page')->name('browse.byCollection.page');
+    Route::get('/browse/collection/{collection}/list', 'list')->name('browse.byCollection.list');
+});
+
 Route::controller('PublicSite\Console\BrowseByCategoryController')->group(function () {
     Route::get('/c/{console:slug?}/category', 'landing')->name('console.byCategory.landing');
     Route::get('/c/{console:slug?}/category/{category}', 'page')->name('console.byCategory.page');

@@ -9,6 +9,17 @@
     <tbody>
     <tr>
         <td>Nintendo.co.uk</td>
+        <td>Parsed item</td>
+        <td>
+            {% if DataSourceNintendoCoUk %}
+                <a href="{{ route('staff.data-sources.detail', {'sourceId': DataSourceNintendoCoUk.source_id, 'linkId': DataSourceNintendoCoUk.link_id}) }}">View parsed item</a>
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>Nintendo.co.uk</td>
         <td>Publishers</td>
         <td>{{ DataSourceNintendoCoUk.publishers }}</td>
     </tr>

@@ -247,18 +247,6 @@ class GameBuilder
         return $this;
     }
 
-    public function setTagsVerification($tagsVerification): GameBuilder
-    {
-        $this->game->tags_verification = $tagsVerification;
-        return $this;
-    }
-
-    public function setTaxonomyNeedsReview($taxonomyNeedsReview): GameBuilder
-    {
-        $this->game->taxonomy_needs_review = $taxonomyNeedsReview;
-        return $this;
-    }
-
     public function setPackshotSquareUrlOverride($squareUrlOverride): GameBuilder
     {
         $this->game->packshot_square_url_override = $squareUrlOverride;

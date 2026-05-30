@@ -15,7 +15,8 @@
                 <th class="text-left">Tag name</th>
                 <th class="text-left">Tag category</th>
                 <th class="text-center">Games with tag</th>
-                <th class="text-center">Taxonomy reviewed</th>
+                <th class="text-center">Intro desc</th>
+                <th class="text-center">Meta desc</th>
                 <th class="text-center">Options</th>
             </tr>
         </thead>
@@ -26,7 +27,7 @@
                         {{ item.id }}
                     </td>
                     <td class="text-left">
-                        <a href="{{ route('console.byTag.page', {'console': 'switch-1', 'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
+                        <a href="{{ route('browse.byTag.page', {'tag': item.link_title}) }}" target="_blank">{{ item.tag_name }}</a>
                     </td>
                     <td class="text-left">
                         {% if item.category.id is not null %}
@@ -39,13 +40,10 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        {% if item.taxonomy_reviewed == 0 %}
-                            <span class="badge bg-info">Not reviewed</span>
-                        {% elseif item.taxonomy_reviewed == 1 %}
-                            <span class="badge bg-success">Reviewed</span>
-                        {% elseif item.taxonomy_reviewed == 2 %}
-                            <span class="badge bg-danger">Deprecated</span>
-                        {% endif %}
+                        {% if item.intro_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.meta_description %}{% include 'ui/components/icons/icon-check-green.twig' %}{% else %}{% include 'ui/components/icons/icon-cross-red.twig' %}{% endif %}
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.categorisation.tag.edit', {'tagId': item.id}) }}">Edit</a>
@@ -68,6 +66,7 @@
             "order": [0, 'desc'],
             "pageLength": 25,
             "columns": [
+                null,
                 null,
                 null,
                 null,
