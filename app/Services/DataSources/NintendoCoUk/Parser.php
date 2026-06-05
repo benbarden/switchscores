@@ -3,6 +3,7 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
+use App\Models\Console;
 use App\Models\DataSourceParsed;
 use App\Models\DataSourceRaw;
 use Illuminate\Log\Logger;
@@ -227,30 +228,28 @@ class Parser
         $priceDiscounted = null;
         $priceDiscountPc = null;
 
-        if (array_key_exists('price_regular_f', $this->rawJsonData)) {
-            $rawPriceRegularF = $this->rawJsonData['price_regular_f'];
-        } else {
-            $rawPriceRegularF = null;
-        }
-        if (array_key_exists('price_lowest_f', $this->rawJsonData)) {
-            $rawPriceLowestF = $this->rawJsonData['price_lowest_f'];
-        } else {
-            $rawPriceLowestF = null;
-        }
-        if (array_key_exists('price_discount_percentage_f', $this->rawJsonData)) {
-            $rawPriceDiscountPercentageF = $this->rawJsonData['price_discount_percentage_f'];
-        } else {
-            $rawPriceDiscountPercentageF = '0.0';
-        }
+        $rawPriceRegularF = array_key_exists('price_regular_f', $this->rawJsonData) ? $this->rawJsonData['price_regular_f'] : null;
+        $rawPriceSortingF = array_key_exists('price_sorting_f', $this->rawJsonData) ? $this->rawJsonData['price_sorting_f'] : null;
+        $rawPriceLowestF = array_key_exists('price_lowest_f', $this->rawJsonData) ? $this->rawJsonData['price_lowest_f'] : null;
+        $rawPriceDiscountPercentageF = array_key_exists('price_discount_percentage_f', $this->rawJsonData) ? $this->rawJsonData['price_discount_percentage_f'] : '0.0';
 
         // Store discount percentage
         if ($rawPriceDiscountPercentageF != '0.0') {
             $priceDiscountPc = $rawPriceDiscountPercentageF;
         }
 
-        // Store standard price
-        if (!is_null($rawPriceRegularF)) {
-            $priceStandard = number_format($rawPriceRegularF, 2);
+        // For Switch 2, use price_sorting_f as the standard price — it reflects the base edition
+        // price, whereas price_regular_f can be the deluxe/bundle price.
+        // Fall back to price_regular_f if price_sorting_f is absent or zero.
+        // Switch 1 always uses price_regular_f unchanged.
+        $isSwitch2 = $this->dataSourceParsed->console_id === Console::ID_SWITCH_2;
+        if ($isSwitch2 && $rawPriceSortingF > 0) {
+            $rawStandardPrice = $rawPriceSortingF;
+        } else {
+            $rawStandardPrice = $rawPriceRegularF;
+        }
+        if (!is_null($rawStandardPrice)) {
+            $priceStandard = number_format($rawStandardPrice, 2);
         }
 
         // Handle discounts
