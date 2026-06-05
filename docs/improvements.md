@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 132**
+**Next ID: 133**
 
 ---
 
@@ -100,6 +100,7 @@ This document tracks potential improvements, features, and enhancements for the 
 |---|------|------------|-------|------------|
 | 130 | Weekly update tool | High | Replaces manual Claude Code session process | Full pipeline: raw paste → parse → URL collection → Nintendo page fetch → LQ review → packshot collection → category review → import. See `docs/tasks/130-weekly-update-tool.md`. |
 | 131 | LQ decision tracking for publishers and keywords | Medium | Build on top of #130 weekly update tool | Track every LQ-related decision made during the weekly update pipeline. When a game is marked LQ, kept despite a flag, or a keyword warning overridden, record the decision against the publisher and keyword. Over time: surface publishers with escalating LQ counts (emerging shovelware), show keyword hit rates (e.g. "SIMULATOR: flagged 12×, kept 2, marked LQ 10"), and flag new publishers with no history. Helps spot LQ culprits before they accumulate many games. Likely a new `weekly_batch_lq_decisions` table + staff report page. |
+| 132 | Flag Switch 1 games with price_regular_f / price_sorting_f mismatch | High | Ongoing monitoring needed | Switch 1 games are not covered by the price_sorting_f fix (Switch 2 only). Some S1 games with deluxe editions have price_regular_f inflated to the deluxe price while price_sorting_f holds the correct standard price (e.g. Dark Auction id 17079). Need a SQL query or cron to identify S1 games in data_source_parsed where price_regular_f != price_sorting_f, then flag them with `price-check-deluxe` for manual review. Should run periodically so new games are caught. |
 
 ---
 

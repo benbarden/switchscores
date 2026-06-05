@@ -128,7 +128,9 @@
 
     {% set activeItems     = Items|filter(i => i.item_status not in ['out_of_range', 'already_in_db']) %}
     {% set inDbItems       = Items|filter(i => i.item_status == 'already_in_db') %}
-    {% set outOfRangeItems = Items|filter(i => i.item_status == 'out_of_range') %}
+    {% set outOfRangeItems      = Items|filter(i => i.item_status == 'out_of_range') %}
+    {% set outOfRangeNotInDb    = outOfRangeItems|filter(i => not i.game_id) %}
+    {% set outOfRangeInDb       = outOfRangeItems|filter(i => i.game_id) %}
 
     {% if activeItems|length > 0 %}
     <table class="table table-sm table-bordered table-striped">
@@ -236,9 +238,34 @@
     </table>
     {% endif %}
 
-    {# ---- Out of range ---- #}
-    {% if outOfRangeItems|length > 0 %}
-    <h3 class="mt-4">Out of range ({{ outOfRangeItems|length }})</h3>
+    {# ---- Out of range: NOT in DB (needs attention) ---- #}
+    {% if outOfRangeNotInDb|length > 0 %}
+    <div class="alert alert-warning mt-4">
+        <strong>⚠ {{ outOfRangeNotInDb|length }} out-of-range game(s) not found in DB</strong> — these may have been missed in a previous week.
+    </div>
+    <table class="table table-sm table-bordered table-warning" style="max-width: 700px;">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 6%;">Page</th>
+                <th>Title</th>
+                <th class="text-center" style="width: 14%;">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in outOfRangeNotInDb %}
+            <tr>
+                <td class="text-center">{{ item.page_number }}</td>
+                <td>{{ item.title_raw }}</td>
+                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {# ---- Out of range: already in DB (safe to ignore) ---- #}
+    {% if outOfRangeInDb|length > 0 %}
+    <h3 class="mt-4">Out of range — already in DB ({{ outOfRangeInDb|length }})</h3>
     <table class="table table-sm table-bordered text-muted" style="max-width: 700px;">
         <thead class="table-dark">
             <tr>
@@ -248,7 +275,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for item in outOfRangeItems %}
+        {% for item in outOfRangeInDb %}
             <tr>
                 <td class="text-center">{{ item.page_number }}</td>
                 <td>{{ item.title_raw }}</td>

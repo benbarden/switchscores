@@ -72,7 +72,7 @@ class ParseService
         $this->repoItem->deleteForListPage($batchId, $console, $listType, $pageNumber);
 
         $rawEntries  = $this->parser->parse($rawPage->raw_content);
-        $summary     = ['in_range' => 0, 'out_of_range' => 0, 'already_in_db' => 0, 'total_parsed' => count($rawEntries)];
+        $summary     = ['in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0, 'already_in_db' => 0, 'total_parsed' => count($rawEntries)];
 
         foreach ($rawEntries as $sortOrder => $entry) {
             $titleRaw        = $entry['title_raw'];
@@ -81,6 +81,7 @@ class ParseService
 
             // Date range filter
             if (!$releaseDate || $releaseDate < $dateFrom || $releaseDate > $dateTo) {
+                $outOfRangeGame = $this->repoGame->getByTitleAndConsole($title, $consoleId);
                 $this->repoItem->create([
                     'batch_id'    => $batchId,
                     'console'     => $console,
@@ -97,8 +98,12 @@ class ParseService
                     'nintendo_genres'   => $entry['nintendo_genres'],
                     'description'       => $entry['description'],
                     'item_status' => 'out_of_range',
+                    'game_id'     => $outOfRangeGame ? $outOfRangeGame->id : null,
                 ]);
                 $summary['out_of_range']++;
+                if (!$outOfRangeGame) {
+                    $summary['out_of_range_not_in_db']++;
+                }
                 continue;
             }
 

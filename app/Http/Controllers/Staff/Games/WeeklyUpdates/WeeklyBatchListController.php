@@ -152,6 +152,9 @@ class WeeklyBatchListController extends Controller
         );
 
         $message = "Page {$pageNumber} saved and parsed: {$summary['in_range']} in range, {$summary['already_in_db']} already in DB, {$summary['out_of_range']} out of range.";
+        if ($summary['out_of_range_not_in_db'] > 0) {
+            $message .= " ⚠ {$summary['out_of_range_not_in_db']} out-of-range game(s) not found in DB — check below.";
+        }
 
         return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))
             ->with('success', $message);
