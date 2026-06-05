@@ -62,7 +62,7 @@ class UpdateGames extends Command
 
             $itemTitle = $dsItem->title;
             $gameId = $dsItem->game_id;
-            $game = $this->repoGame->find($gameId);
+            $game = $this->repoGame->findWithoutCache($gameId);
 
             if (!$game) {
                 $logger->error($itemTitle.' - invalid game_id: '.$gameId.' - skipping');

@@ -57,6 +57,11 @@ class Repository extends AbstractRepository
         });
     }
 
+    public function findWithoutCache($id)
+    {
+        return Game::find($id);
+    }
+
     public function searchByTitle($keywords)
     {
         return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();
