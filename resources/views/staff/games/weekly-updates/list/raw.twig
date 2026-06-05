@@ -238,8 +238,9 @@
     </table>
     {% endif %}
 
+    {# ---- Out of range sections: only meaningful on "new" list ---- #}
     {# ---- Out of range: NOT in DB (needs attention) ---- #}
-    {% if outOfRangeNotInDb|length > 0 %}
+    {% if ListType == 'new' and outOfRangeNotInDb|length > 0 %}
     <div class="alert alert-warning mt-4">
         <strong>⚠ {{ outOfRangeNotInDb|length }} out-of-range game(s) not found in DB</strong> — these may have been missed in a previous week.
     </div>
@@ -271,7 +272,7 @@
     {% endif %}
 
     {# ---- Out of range: already in DB (safe to ignore) ---- #}
-    {% if outOfRangeInDb|length > 0 %}
+    {% if ListType == 'new' and outOfRangeInDb|length > 0 %}
     <h3 class="mt-4">Out of range — already in DB ({{ outOfRangeInDb|length }})</h3>
     <table class="table table-sm table-bordered text-muted" style="max-width: 700px;">
         <thead class="table-dark">
