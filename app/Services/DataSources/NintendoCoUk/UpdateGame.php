@@ -49,6 +49,8 @@ class UpdateGame
 
         if (is_null($priceStandard)) return false;
         if ($priceStandard < 0) return false;
+        // Switch 2 games can return 0.00 from the API even when they have a real price; don't overwrite an existing price with zero
+        if ($priceStandard == 0 && $this->game->price_eshop > 0) return false;
 
         if ($this->game->price_eshop != $priceStandard) {
             $this->game->price_eshop = $priceStandard;
