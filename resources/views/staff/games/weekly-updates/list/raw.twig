@@ -243,12 +243,13 @@
     <div class="alert alert-warning mt-4">
         <strong>⚠ {{ outOfRangeNotInDb|length }} out-of-range game(s) not found in DB</strong> — these may have been missed in a previous week.
     </div>
-    <table class="table table-sm table-bordered table-warning" style="max-width: 700px;">
+    <table class="table table-sm table-bordered table-warning" style="max-width: 800px;">
         <thead class="table-dark">
             <tr>
                 <th class="text-center" style="width: 6%;">Page</th>
                 <th>Title</th>
                 <th class="text-center" style="width: 14%;">Date</th>
+                <th style="width: 10%;"></th>
             </tr>
         </thead>
         <tbody>
@@ -257,6 +258,12 @@
                 <td class="text-center">{{ item.page_number }}</td>
                 <td>{{ item.title_raw }}</td>
                 <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+                <td class="text-center">
+                    <form method="post" action="{{ route('staff.games.weekly-updates.list.raw.activate-out-of-range', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-sm btn-primary" onclick="return confirm('Add {{ item.title_raw|e }} to this batch?')">Add to batch</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

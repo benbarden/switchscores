@@ -155,6 +155,7 @@ Route::group([
             Route::get('raw', 'raw')->name('raw');
             Route::post('raw/save-page', 'savePage')->name('raw.save-page');
             Route::post('raw/remove-page', 'removePage')->name('raw.remove-page');
+            Route::post('raw/item/{itemId}/activate', 'activateOutOfRange')->name('raw.activate-out-of-range');
             Route::get('urls', 'urls')->name('urls');
             Route::post('urls/save', 'saveUrls')->name('urls.save');
 

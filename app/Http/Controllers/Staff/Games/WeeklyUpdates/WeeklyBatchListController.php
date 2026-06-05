@@ -542,6 +542,20 @@ class WeeklyBatchListController extends Controller
             ->with('success', 'LQ decisions saved.');
     }
 
+    public function activateOutOfRange($batchId, $console, $listType, $itemId)
+    {
+        $item = $this->repoItem->find((int) $itemId);
+
+        if (!$item || $item->batch_id != $batchId) abort(404);
+        if ($item->item_status !== \App\Models\WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
+        if ($item->game_id) abort(422); // already in DB — shouldn't be activated
+
+        $item->item_status = \App\Models\WeeklyBatchItem::STATUS_PENDING;
+        $item->save();
+
+        return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'));
+    }
+
     public function itemAction($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
     {
         $item = $this->repoItem->find((int) $itemId);
@@ -757,6 +771,11 @@ class WeeklyBatchListController extends Controller
         $readyItems    = $this->repoItem->getReadyForImport($batchId, $console, $listType);
         $importedItems = $this->repoItem->getByStatus($batchId, $console, $listType, WeeklyBatchItem::STATUS_IMPORTED);
         $counts        = $this->repoItem->getStatusCounts($batchId, $console, $listType);
+
+        [$dateFrom, $dateTo] = $this->parseService->getDateRange($batch->batch_date->toDateString(), $listType);
+        $hasOutOfRangeReadyItems = $readyItems->contains(function ($item) use ($dateFrom, $dateTo) {
+            return $item->release_date && ($item->release_date < $dateFrom || $item->release_date > $dateTo);
+        });
         $rawPageCount  = $this->repoRawPage->countForList($batchId, $console, $listType);
 
         // Build Release Hub link for this batch
@@ -819,6 +838,7 @@ class WeeklyBatchListController extends Controller
         $bindings['MissingPublishers']      = $missingPublishers;
         $bindings['LqReminderPublishers']   = $lqReminderPublishers;
         $bindings['ReleaseHubUrl']          = $releaseHubUrl;
+        $bindings['HasOutOfRangeReadyItems'] = $hasOutOfRangeReadyItems;
         $bindings['Stages']                 = $this->getStages($batchId, $console, $listType, $rawPageCount, $counts);
         $bindings['CurrentStage']           = 'confirm';
 
