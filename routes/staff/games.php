@@ -17,6 +17,7 @@ use App\Http\Controllers\Staff\Games\FeaturedGameController;
 use App\Http\Controllers\Staff\Games\GamesTitleHashController;
 use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
+use App\Http\Controllers\Staff\Games\GameFlagController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
@@ -131,6 +132,13 @@ Route::group([
     Route::match(['get', 'post'], 'tag/{gameId}/edit',
         [GamesTagController::class, 'edit']
     )->name('tag.edit');
+
+    // ---- Flags ----
+    Route::controller(GameFlagController::class)->group(function () {
+        Route::get('flags', 'index')->name('flag.index');
+        Route::match(['get', 'post'], '{gameId}/flag/edit', 'edit')->name('flag.edit');
+        Route::post('{gameId}/flag/{flagId}/remove', 'remove')->name('flag.remove');
+    });
 
     // ---- Weekly updates ----
     Route::controller(WeeklyBatchController::class)->group(function () {

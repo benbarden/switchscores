@@ -18,6 +18,7 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\TagCategory\Repository as TagCategoryRepository;
 use App\Domain\Game\Repository\GameCrawlRepository;
 use App\Domain\Game\Repository\GameStatsRepository;
+use App\Domain\GameFlag\Repository as GameFlagRepository;
 
 use App\Models\Category;
 use App\Models\Game;
@@ -42,6 +43,7 @@ class GamesListController extends Controller
         private TagCategoryRepository $repoTagCategory,
         private GameCrawlRepository $repoGameCrawl,
         private GameStatsRepository $repoGameStats,
+        private GameFlagRepository $repoGameFlag,
     )
     {
     }
@@ -287,6 +289,15 @@ class GamesListController extends Controller
                 'fetch' => fn() => $this->repoGameStats->getSoftDeleted(),
             ],
 
+            'by-flag' => [
+                'title' => null,
+                'sort'  => "[1, 'asc']",
+                'fetch' => function ($flag) {
+                    return $this->repoGameFlag->getGamesByFlag($flag);
+                },
+                'dynamicTitle' => true,
+            ],
+
         ];
     }
 
@@ -336,6 +347,10 @@ class GamesListController extends Controller
                 [$tagCategoryId] = array_pad($args, 1, null);
                 $tagCategoryName = $this->repoTagCategory->find($tagCategoryId)?->name ?? '(Unknown tag category)';
                 return 'No tag from: ' . $tagCategoryName;
+
+            case 'by-flag':
+                [$flag] = array_pad($args, 1, null);
+                return 'Flag: ' . ($flag ?? '(unknown)');
 
             default:
                 return '(Untitled list)';

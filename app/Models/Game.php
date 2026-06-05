@@ -119,6 +119,11 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\Models\GamePublisher', 'game_id', 'id');
     }
 
+    public function gameFlags()
+    {
+        return $this->hasMany('App\Models\GameFlag', 'game_id', 'id');
+    }
+
     public function crawlLifecycle()
     {
         return $this->hasMany('App\Models\GameCrawlLifecycle', 'game_id', 'id');

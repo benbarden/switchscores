@@ -14,6 +14,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
+use App\Domain\GameFlag\Repository as GameFlagRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
@@ -47,6 +48,7 @@ class GamesDetailController extends Controller
         private QuickReviewRepository $repoQuickReview,
         private DownloadPackshotHelper $downloadPackshotHelper,
         private GscPageSnapshotRepository $repoGscPageSnapshot,
+        private GameFlagRepository $repoGameFlag,
     )
     {
     }
@@ -120,6 +122,9 @@ class GamesDetailController extends Controller
 
         // Import rules
         $bindings['ImportRulesEshop'] = $this->repoGameImportRuleEshop->getByGameId($gameId);
+
+        // Flags
+        $bindings['GameFlags'] = $this->repoGameFlag->getByGameId($gameId);
 
         // Checks
         $checks = [

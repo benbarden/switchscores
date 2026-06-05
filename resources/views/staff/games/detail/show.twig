@@ -40,6 +40,15 @@
         <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.players') }}?gameid={{ GameId }}">Review here</a>.
     </div>
 {% endif %}
+{% if GameFlags|length > 0 %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Flags:</strong>
+        {% for flag in GameFlags %}
+            <span class="badge bg-secondary me-1">{{ flag.flag }}</span>{% if flag.notes %} <small>{{ flag.notes }}</small>{% endif %}
+        {% endfor %}
+        &mdash; <a href="{{ route('staff.games.flag.edit', {'gameId': GameId}) }}">Manage</a>
+    </div>
+{% endif %}
 
 <div class="row">
 
@@ -164,6 +173,7 @@
                 <li><a href="#tabs-crawl-lifecycle">Crawl lifecycle</a></li>
                 <li><a href="#tabs-reviews">Reviews</a></li>
                 <li><a href="#tabs-title-hashes">Title hashes</a></li>
+                <li><a href="#tabs-flags">Flags{% if GameFlags|length > 0 %} ({{ GameFlags|length }}){% endif %}</a></li>
             </ul>
 
             <div id="tabs-gsc-snapshot">
@@ -294,6 +304,13 @@
 
                 <h2>Title hashes</h2>
                 {% include 'staff/games/title-hash/table.twig' with {'TitleHashList': GameTitleHashes} %}
+
+            </div>
+
+            <div id="tabs-flags">
+
+                <h2>Flags</h2>
+                {% include 'staff/games/detail/tab-flags.twig' %}
 
             </div>
 

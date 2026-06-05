@@ -72,6 +72,7 @@ class UpdateGames extends Command
             $gameImportRule = $repoGameImportRuleEshop->getByGameId($gameId);
 
             UpdateGameFactory::doUpdate($game, $dsItem, $gameImportRule);
+            $this->repoGame->clearCacheCoreData($gameId);
 
         }
 

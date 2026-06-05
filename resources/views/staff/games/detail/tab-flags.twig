@@ -1,0 +1,17 @@
+{% if GameFlags|length > 0 %}
+    <a class="btn outline btn-primary btn-sm mb-3" style="color: #fff;" href="{{ route('staff.games.flag.edit', {'gameId': GameId}) }}">Manage flags</a>
+    <table class="table table-condensed table-sm">
+        <tbody>
+        {% for flag in GameFlags %}
+            <tr>
+                <td><code>{{ flag.flag }}</code></td>
+                <td>{{ flag.notes ?? '' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    No flags set.
+    <br><br>
+    <a class="btn outline btn-primary btn-sm" style="color: #fff;" href="{{ route('staff.games.flag.edit', {'gameId': GameId}) }}">Add a flag</a>
+{% endif %}

@@ -1,0 +1,74 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="mb-4">
+    <a href="{{ route('staff.games.detail', {'gameId': GameId}) }}" class="btn btn-secondary btn-sm">
+        &larr; Back to game detail
+    </a>
+</div>
+
+<h2>{{ GameData.title }}</h2>
+
+<h3 class="mt-4">Current flags</h3>
+
+{% if GameFlags|length > 0 %}
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Notes</th>
+                <th>Added</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for flag in GameFlags %}
+            <tr>
+                <td><code>{{ flag.flag }}</code></td>
+                <td>{{ flag.notes ?? '-' }}</td>
+                <td>{{ flag.created_at|date('Y-m-d') }}</td>
+                <td>
+                    <form method="post" action="{{ route('staff.games.flag.remove', {'gameId': GameId, 'flagId': flag.id}) }}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Remove flag \'{{ flag.flag }}\'?')">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-muted">No flags set for this game.</p>
+{% endif %}
+
+<h3 class="mt-4">Add flag</h3>
+
+{% include 'ui/components/alerts/form-errors.twig' %}
+
+<form method="post" action="{{ route('staff.games.flag.edit', {'gameId': GameId}) }}">
+    {{ csrf_field() }}
+    <div class="row mb-3">
+        <label for="flag" class="col-md-3 col-form-label">Flag <span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="flag" name="flag" maxlength="100" required>
+            <div class="form-text">e.g. <code>price-check-zero</code>, <code>price-check-deluxe</code></div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="notes" class="col-md-3 col-form-label">Notes</label>
+        <div class="col-md-6">
+            <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 offset-md-3">
+            <button type="submit" class="btn btn-primary">Add flag</button>
+        </div>
+    </div>
+</form>
+
+{% endblock page_inner %}

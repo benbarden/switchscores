@@ -1,0 +1,32 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if FlagList|length > 0 %}
+    <div class="col-md-6">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Games</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in FlagList %}
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'by-flag', 'param1': item.flag}) }}">
+                        <code>{{ item.flag }}</code>
+                    </a>
+                </td>
+                <td>{{ item.game_count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% else %}
+    <p class="text-muted">No flags have been set on any games.</p>
+{% endif %}
+
+{% endblock page_inner %}
