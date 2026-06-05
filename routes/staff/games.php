@@ -21,6 +21,7 @@ use App\Http\Controllers\Staff\Games\GameFlagController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
+use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchExclusionController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchListController;
 
 // *************** Staff: GAMES *************** //
@@ -138,6 +139,12 @@ Route::group([
         Route::get('flags', 'index')->name('flag.index');
         Route::match(['get', 'post'], '{gameId}/flag/edit', 'edit')->name('flag.edit');
         Route::post('{gameId}/flag/{flagId}/remove', 'remove')->name('flag.remove');
+    });
+
+    // ---- Weekly update exclusions ----
+    Route::controller(WeeklyBatchExclusionController::class)->group(function () {
+        Route::get('weekly-updates/exclusions', 'index')->name('weekly-updates.exclusions.index');
+        Route::post('weekly-updates/exclusions/{exclusionId}/remove', 'remove')->name('weekly-updates.exclusions.remove');
     });
 
     // ---- Weekly updates ----

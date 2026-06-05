@@ -1,0 +1,51 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="mb-3">
+    <a href="{{ route('staff.games.weekly-updates.index') }}" class="btn btn-secondary btn-sm">&larr; Back to weekly updates</a>
+</div>
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+
+<p class="text-muted">Games in this list are automatically set to <strong>excluded</strong> when they appear in future weekly batches. Remove an entry to allow the game to be processed normally again.</p>
+
+{% if Exclusions|length > 0 %}
+<div class="col-md-8">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Console</th>
+                <th>Added</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for exclusion in Exclusions %}
+            <tr>
+                <td>{{ exclusion.title }}</td>
+                <td>{{ exclusion.console }}</td>
+                <td>{{ exclusion.created_at|date('d M Y') }}</td>
+                <td>
+                    <form method="post" action="{{ route('staff.games.weekly-updates.exclusions.remove', {'exclusionId': exclusion.id}) }}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Remove exclusion for \'{{ exclusion.title }}\'?')">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ Exclusions.links()|raw }}
+</div>
+{% else %}
+    <p class="text-muted">No exclusions set.</p>
+{% endif %}
+
+{% endblock page_inner %}

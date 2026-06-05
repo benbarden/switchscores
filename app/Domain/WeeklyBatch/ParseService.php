@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Console;
 use App\Models\WeeklyBatchItem;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\WeeklyBatchExclusion\Repository as WeeklyBatchExclusionRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\WeeklyBatchRawPage\Repository as WeeklyBatchRawPageRepository;
 
@@ -43,6 +44,7 @@ class ParseService
         private RawTextParser $parser,
         private TitleNormaliser $titleNormaliser,
         private GameRepository $repoGame,
+        private WeeklyBatchExclusionRepository $repoExclusion,
         private WeeklyBatchItemRepository $repoItem,
         private WeeklyBatchRawPageRepository $repoRawPage
     ) {
@@ -72,12 +74,35 @@ class ParseService
         $this->repoItem->deleteForListPage($batchId, $console, $listType, $pageNumber);
 
         $rawEntries  = $this->parser->parse($rawPage->raw_content);
-        $summary     = ['in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0, 'already_in_db' => 0, 'total_parsed' => count($rawEntries)];
+        $summary     = ['in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0, 'already_in_db' => 0, 'pre_excluded' => 0, 'total_parsed' => count($rawEntries)];
 
         foreach ($rawEntries as $sortOrder => $entry) {
             $titleRaw        = $entry['title_raw'];
             $title           = $this->titleNormaliser->normalise($titleRaw);
             $releaseDate     = $entry['release_date'];
+
+            // Persistent exclusion check — skip games excluded in a previous batch
+            if ($this->repoExclusion->isExcluded($title, $console)) {
+                $this->repoItem->create([
+                    'batch_id'    => $batchId,
+                    'console'     => $console,
+                    'list_type'   => $listType,
+                    'page_number' => $pageNumber,
+                    'sort_order'  => $sortOrder,
+                    'title'       => $title,
+                    'title_raw'   => $titleRaw,
+                    'release_date' => $releaseDate,
+                    'price_gbp'   => $entry['price_gbp'],
+                    'price_raw'   => $entry['price_raw'],
+                    'price_flag'  => $entry['price_flag'] ? 1 : 0,
+                    'price_flag_reason' => $entry['price_flag_reason'],
+                    'nintendo_genres'   => $entry['nintendo_genres'],
+                    'description'       => $entry['description'],
+                    'item_status' => WeeklyBatchItem::STATUS_EXCLUDED,
+                ]);
+                $summary['pre_excluded']++;
+                continue;
+            }
 
             // Date range filter
             if (!$releaseDate || $releaseDate < $dateFrom || $releaseDate > $dateTo) {

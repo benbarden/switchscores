@@ -14,6 +14,7 @@ use App\Domain\WeeklyBatch\CategorySuggester;
 use App\Domain\WeeklyBatch\ParseService;
 use App\Domain\WeeklyBatch\GameImporter;
 use App\Domain\WeeklyBatch\NintendoPageFetcher;
+use App\Domain\WeeklyBatchExclusion\Repository as WeeklyBatchExclusionRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\WeeklyBatchRawPage\Repository as WeeklyBatchRawPageRepository;
 use App\Models\WeeklyBatchItem;
@@ -31,7 +32,8 @@ class WeeklyBatchListController extends Controller
         private CategoryRepository $repoCategory,
         private GamesCompanyRepository $repoGamesCompany,
         private GameRepository $repoGame,
-        private GameImporter $gameImporter
+        private GameImporter $gameImporter,
+        private WeeklyBatchExclusionRepository $repoExclusion
     ) {
     }
 
@@ -496,6 +498,10 @@ class WeeklyBatchListController extends Controller
 
             $this->repoItem->markFetchComplete($item, $data, $result['lq_confirmed']);
 
+            if ($result['lq_confirmed']) {
+                $this->repoExclusion->add($item->title, $item->console);
+            }
+
             return response()->json([
                 'status'       => 'done',
                 'item_status'  => $item->fresh()->item_status,
@@ -530,12 +536,18 @@ class WeeklyBatchListController extends Controller
             if (!$item || $item->batch_id != $batchId) continue;
             if ($item->item_status !== WeeklyBatchItem::STATUS_LQ_REVIEW) continue;
 
-            match ($decision) {
-                'low_quality' => $this->repoItem->markLowQuality($item),
-                'bundle'      => $this->repoItem->markBundle($item),
-                'keep'        => $this->repoItem->keepDespiteLqFlag($item),
-                default       => null,
-            };
+            if (in_array($decision, ['low_quality', 'bundle'])) {
+                match ($decision) {
+                    'low_quality' => $this->repoItem->markLowQuality($item),
+                    'bundle'      => $this->repoItem->markBundle($item),
+                };
+                $this->repoExclusion->add($item->title, $item->console);
+            } else {
+                match ($decision) {
+                    'keep'  => $this->repoItem->keepDespiteLqFlag($item),
+                    default => null,
+                };
+            }
         }
 
         return redirect()->route('staff.games.weekly-updates.list.fetch', compact('batchId', 'console', 'listType'))
@@ -569,14 +581,20 @@ class WeeklyBatchListController extends Controller
 
         $reparse = $action === 'reparse';
 
-        match($action) {
-            'low_quality' => $this->repoItem->markLowQuality($item),
-            'bundle'      => $this->repoItem->markBundle($item),
-            'excluded'    => $this->repoItem->excludeItem($item),
-            'reset'       => $this->repoItem->resetItem($item),
-            'reparse'     => $this->parseService->reparseItem($item),
-            default       => null,
-        };
+        if (in_array($action, ['excluded', 'bundle', 'low_quality'])) {
+            match($action) {
+                'excluded'    => $this->repoItem->excludeItem($item),
+                'bundle'      => $this->repoItem->markBundle($item),
+                'low_quality' => $this->repoItem->markLowQuality($item),
+            };
+            $this->repoExclusion->add($item->title, $item->console);
+        } else {
+            match($action) {
+                'reset'   => $this->repoItem->resetItem($item),
+                'reparse' => $this->parseService->reparseItem($item),
+                default   => null,
+            };
+        }
 
         if (!$reparse && $request->ajax()) {
             $item->refresh();
