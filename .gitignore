@@ -16,6 +16,7 @@
 /vagrant-tmp/*
 /vendor
 .env
+.env.*
 .DS_Store
 .phpunit.result.cache
 db.sql
