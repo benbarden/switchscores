@@ -8,10 +8,15 @@ use Tests\TestCase;
 
 class ParsePriceTest extends TestCase
 {
-    public function makeParser($data)
+    public function makeParser($data, $consoleId = null)
     {
         $jsonData = json_encode($data);
-        $dsRaw = new DataSourceRaw(['source_id' => 1, 'title' => 'Test', 'source_data_json' => $jsonData]);
+        $dsRaw = new DataSourceRaw([
+            'source_id' => 1,
+            'title' => 'Test',
+            'source_data_json' => $jsonData,
+            'console_id' => $consoleId,
+        ]);
         $parser = new Parser();
         $parser->setDataSourceRaw($dsRaw);
         return $parser;
@@ -58,6 +63,33 @@ class ParsePriceTest extends TestCase
         $data = ['price_lowest_f' => '12.59', 'price_discount_percentage_f' => '30.0', 'price_regular_f' => '17.99', 'price_discounted_f' => '12.59'];
         $parser = $this->makeParser($data);
         $expected = ['17.99', '12.59', '30.0'];
+
+        $this->assertEquals($expected, $parser->parsePrice($data));
+    }
+
+    public function testParsePriceSwitch2UsesSortingFAsStandardPrice()
+    {
+        $data = ['price_regular_f' => '79.99', 'price_sorting_f' => '49.99'];
+        $parser = $this->makeParser($data, \App\Models\Console::ID_SWITCH_2);
+        $expected = ['49.99', null, null];
+
+        $this->assertEquals($expected, $parser->parsePrice($data));
+    }
+
+    public function testParsePriceSwitch2SentinelSortingFYieldsNoPrice()
+    {
+        $data = ['price_regular_f' => '59.99', 'price_sorting_f' => '999999'];
+        $parser = $this->makeParser($data, \App\Models\Console::ID_SWITCH_2);
+        $expected = [null, null, null];
+
+        $this->assertEquals($expected, $parser->parsePrice($data));
+    }
+
+    public function testParsePriceSwitch2SentinelSortingFAndNoRegularPrice()
+    {
+        $data = ['price_sorting_f' => '999999'];
+        $parser = $this->makeParser($data, \App\Models\Console::ID_SWITCH_2);
+        $expected = [null, null, null];
 
         $this->assertEquals($expected, $parser->parsePrice($data));
     }

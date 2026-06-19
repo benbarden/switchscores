@@ -11,6 +11,12 @@ use Illuminate\Log\Logger;
 class Parser
 {
     /**
+     * price_sorting_f sentinel value the API uses to sort priceless items last —
+     * not a real price.
+     */
+    private const PRICE_SORTING_SENTINEL = 999999;
+
+    /**
      * @var \App\Models\DataSourceParsed
      */
     private $dataSourceParsed;
@@ -26,6 +32,12 @@ class Parser
     private $rawJsonData;
 
     private ?array $oldFieldValues = null;
+
+    /**
+     * Set by parsePrice() when price_sorting_f held the "no price" sentinel —
+     * tells parseItem() to clear price_standard rather than leave a stale value.
+     */
+    private bool $priceHasNoPriceSentinel = false;
 
     public function __construct()
     {
@@ -134,7 +146,11 @@ class Parser
         // Price
         $priceData = $this->parsePrice();
         list($priceStandard, $priceDiscounted, $priceDiscountPc) = $priceData;
-        if (!is_null($priceStandard)) {
+        if ($this->priceHasNoPriceSentinel) {
+            // Explicit "no price" signal from the API — clear any stale price rather
+            // than leaving it untouched, unlike the usual skip-if-null/absent behaviour.
+            $this->dataSourceParsed->price_standard = null;
+        } elseif (!is_null($priceStandard)) {
             $this->dataSourceParsed->price_standard = $priceStandard;
         }
         if (!is_null($priceDiscounted)) {
@@ -241,9 +257,16 @@ class Parser
         // For Switch 2, use price_sorting_f as the standard price — it reflects the base edition
         // price, whereas price_regular_f can be the deluxe/bundle price.
         // Fall back to price_regular_f if price_sorting_f is absent or zero.
+        // If price_sorting_f is the API's "no price" sentinel (999999, used to sort priceless
+        // items last), treat the game as having no price at all rather than falling back —
+        // price_regular_f on these items is the deluxe/bundle price, not a real standard price.
         // Switch 1 always uses price_regular_f unchanged.
         $isSwitch2 = $this->dataSourceParsed->console_id === Console::ID_SWITCH_2;
-        if ($isSwitch2 && $rawPriceSortingF > 0) {
+        $hasNoPriceSentinel = $isSwitch2 && (float) $rawPriceSortingF === (float) self::PRICE_SORTING_SENTINEL;
+        $this->priceHasNoPriceSentinel = $hasNoPriceSentinel;
+        if ($hasNoPriceSentinel) {
+            $rawStandardPrice = null;
+        } elseif ($isSwitch2 && $rawPriceSortingF > 0) {
             $rawStandardPrice = $rawPriceSortingF;
         } else {
             $rawStandardPrice = $rawPriceRegularF;
