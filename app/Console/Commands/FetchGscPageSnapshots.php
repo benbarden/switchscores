@@ -47,6 +47,12 @@ class FetchGscPageSnapshots extends Command
 
         $this->store($pages, $snapshotDate, $windowDays);
 
+        // Categories (newer /browse/category URLs)
+        $rows = $fetcher->fetch('/browse/category', $windowDays, 100);
+        $pages = $builder->build($rows);
+
+        $this->store($pages, $snapshotDate, $windowDays);
+
         // Games
         $rows = $fetcher->fetch('/games/', $windowDays, 1000);
         $pages = $builder->build($rows, isGames: true);

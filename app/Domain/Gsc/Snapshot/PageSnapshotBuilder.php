@@ -74,7 +74,7 @@ class PageSnapshotBuilder
             return 'game';
         }
 
-        if (str_contains($url, '/c/')) {
+        if (str_contains($url, '/c/') || str_contains($url, '/browse/category')) {
             return 'category';
         }
 
