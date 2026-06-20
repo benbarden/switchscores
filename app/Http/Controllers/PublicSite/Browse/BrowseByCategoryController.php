@@ -58,6 +58,7 @@ class BrowseByCategoryController extends Controller
 
         $bindings['Category']    = $category;
         $bindings['ConsoleSlug'] = $consoleSlug;
+        $bindings['CanonicalUrl'] = route('browse.byCategory.page', ['category' => $category->link_title]);
 
         $bindings['Stats']      = $this->repoCategory->getSnapshotStatsMerged($category, $consoleId);
         $bindings['TopRated']   = $this->repoCategory->rankedByCategoryMerged($categoryId, $consoleId, 12);
