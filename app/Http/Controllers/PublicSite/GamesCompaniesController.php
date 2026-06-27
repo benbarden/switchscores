@@ -26,9 +26,10 @@ class GamesCompaniesController extends Controller
     private $validationRules = [
         'contact_name' => 'required',
         'contact_role' => 'required',
-        'contact_email' => 'required',
+        'contact_email' => 'required|unique:games_company_signups,contact_email',
         'new_company_name' => 'required',
         'new_company_type' => 'required',
+        'new_company_url' => 'nullable|url|regex:/^https?:\/\//',
     ];
 
     public function __construct(
