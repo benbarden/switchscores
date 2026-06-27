@@ -239,6 +239,18 @@ class TitleNormaliserTest extends TestCase
         $this->assertEquals('Rica Mode', $this->normaliser->normalise('Rica Mode♡'));
     }
 
+    // ---- Star symbol as separator ----
+
+    public function testStarSymbolAdjacentBecomesSpace()
+    {
+        $this->assertEquals('Wantama Life', $this->normaliser->normalise('Wantama☆Life'));
+    }
+
+    public function testStarSymbolSpacedCollapsesToSingleSpace()
+    {
+        $this->assertEquals('Wantama Life', $this->normaliser->normalise('Wantama ☆ Life'));
+    }
+
     // ---- Integral sign as separator ----
 
     public function testIntegralSignAsSeparator()

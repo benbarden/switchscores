@@ -37,6 +37,13 @@ class TitleNormaliser
         $title = preg_replace('/[♡♥]/u', '', $title);
         $title = trim($title);
 
+        // Star symbols as word separators (e.g. "Wantama☆Life" → "Wantama Life")
+        if (preg_match('/[☆★]/u', $title)) {
+            $title = preg_replace('/[☆★]/u', ' ', $title);
+            $title = preg_replace('/\s{2,}/', ' ', $title);
+            $title = trim($title);
+        }
+
         // Mathematical integral sign used as separator: "A ∫ B" → "A: B"
         $title = preg_replace('/\s+∫\s+/u', ': ', $title);
 
