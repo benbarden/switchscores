@@ -19,17 +19,7 @@
             <em>* denotes a required field</em>
         </p>
 
-        {% if errors.any %}
-            <h2>Errors</h2>
-            <p>
-                The following errors occurred with your submission:
-            </p>
-            <div class="alert alert-danger">
-                {% for error in errors.all %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+        {% include 'ui/components/alerts/form-errors.twig' %}
 
         <form class="form-horizontal" role="form" method="post" action="{{ route('partners.games-companies.signupPage') }}">
             {{ csrf_field() }}
