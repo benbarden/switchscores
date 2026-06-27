@@ -107,7 +107,9 @@ class GamesCompaniesController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $this->validate($request, $this->validationRules);
+            $this->validate($request, $this->validationRules, [
+                'contact_email.unique' => 'This email address has already been used.',
+            ]);
 
             $builder = new Builder();
             $director = new Director($builder);

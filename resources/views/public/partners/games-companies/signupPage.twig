@@ -83,9 +83,9 @@
                 <div class="col-md-4">
                     <select id="new_company_type" name="new_company_type" class="form-control">
                         <option value=""></option>
-                        <option value="Developer">Developer</option>
-                        <option value="Publisher">Publisher</option>
-                        <option value="Both">Both</option>
+                        <option value="Developer" {{ old('new_company_type') == 'Developer' ? 'selected' : '' }}>Developer</option>
+                        <option value="Publisher" {{ old('new_company_type') == 'Publisher' ? 'selected' : '' }}>Publisher</option>
+                        <option value="Both" {{ old('new_company_type') == 'Both' ? 'selected' : '' }}>Both</option>
                     </select>
                 </div>
                 <div class="col-md-4">
