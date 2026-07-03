@@ -88,5 +88,7 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
 Route::prefix('members')->middleware(['reject.bots.intent', 'auth'])->name('members.')->group(function () {
     Route::get('/intent/verify-prompt', 'Members\IntentController@verifyPrompt')->name('intent.verify-prompt');
     Route::get('/intent/execute/{action}/{gameId}', 'Members\IntentController@execute')->name('intent.execute');
+    // Reached via a GET form-button on public (sessionless, cached) pages - no crawlable
+    // href, so bots don't discover these; the reject.bots.intent middleware 410s any that do.
     Route::get('/intent/{action}/{gameId}', 'Members\IntentController@handle')->name('intent.handle');
 });

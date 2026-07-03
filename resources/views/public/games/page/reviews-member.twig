@@ -9,8 +9,10 @@
         No member reviews yet.
     </p>
 {% endif %}
-<p>
-    <a href="{{ route('members.intent.handle', {'action': 'quick-review', 'gameId': GameData.id}) }}" class="btn btn-primary" rel="nofollow">
-        <i class="fa fa-star" aria-hidden="true"></i> Write a review
-    </a>
-</p>
+<div>
+    <form method="get" action="{{ route('members.intent.handle', {'action': 'quick-review', 'gameId': GameData.id}) }}">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-star" aria-hidden="true"></i> Write a review
+        </button>
+    </form>
+</div>
