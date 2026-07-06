@@ -1,0 +1,76 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    <a href="{{ route('staff.contact.index') }}">&laquo; Back to submissions</a>
+</p>
+
+{% include 'ui/components/alerts/form-errors.twig' %}
+
+<h4>Add to blocklist</h4>
+<form action="{{ route('staff.contact.blocklist.add') }}" method="POST" class="row g-2 align-items-end mb-4">
+    {{ csrf_field() }}
+    <div class="col-md-4">
+        <label for="value" class="form-label">Email or domain</label>
+        <input id="value" type="text" name="value" class="form-control" value="{{ old('value') }}" maxlength="150" required>
+    </div>
+    <div class="col-md-3">
+        <label for="type" class="form-label">Type</label>
+        <select id="type" name="type" class="form-select">
+            {% for value, label in BlockTypeOptions %}
+                <option value="{{ value }}" {{ old('type') == value ? 'selected' : '' }}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="note" class="form-label">Note (optional)</label>
+        <input id="note" type="text" name="note" class="form-control" value="{{ old('note') }}" maxlength="1000">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+</form>
+
+<h4>Blocked entries</h4>
+{% if BlocklistEntries|length > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Note</th>
+                <th class="text-center">Added</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in BlocklistEntries %}
+                <tr>
+                    <td class="text-end">{{ entry.id }}</td>
+                    <td>{{ entry.value }}</td>
+                    <td>
+                        {% if entry.type == 'domain' %}
+                            <span class="badge bg-warning text-dark">Domain</span>
+                        {% else %}
+                            <span class="badge bg-info">Email</span>
+                        {% endif %}
+                    </td>
+                    <td><small>{{ entry.note }}</small></td>
+                    <td class="text-center"><small>{{ entry.created_at|date('Y-m-d') }}</small></td>
+                    <td class="text-center">
+                        <form action="{{ route('staff.contact.blocklist.delete', {'entryId': entry.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this blocklist entry?')">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No blocklist entries yet.</p>
+{% endif %}
+
+{% endblock page_inner %}

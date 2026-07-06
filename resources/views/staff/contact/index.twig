@@ -1,0 +1,72 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    Messages received through the public <a href="{{ route('contact.show') }}">contact form</a>.
+    Blocked submissions are stored but the sender is silently ignored.
+    <a href="{{ route('staff.contact.blocklist') }}" class="btn btn-sm btn-outline-secondary float-end">Manage blocklist</a>
+</p>
+
+{% if SubmissionList|length > 0 %}
+    <table class="table data-sortable">
+        <thead>
+            <tr>
+                <th class="text-end">#</th>
+                <th>From</th>
+                <th>Reason</th>
+                <th>Message</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in SubmissionList %}
+                <tr{% if item.status == 'blocked' %} class="table-secondary"{% endif %}>
+                    <td class="text-end">{{ item.id }}</td>
+                    <td>
+                        <strong>{{ item.name }}</strong>
+                        <br>
+                        <small><a href="mailto:{{ item.email }}">{{ item.email }}</a></small>
+                    </td>
+                    <td>{{ RequestTypeOptions[item.request_type]|default(item.request_type) }}</td>
+                    <td>
+                        <small>{{ item.message|slice(0, 140) }}{% if item.message|length > 140 %}&hellip;{% endif %}</small>
+                    </td>
+                    <td class="text-center">
+                        {% if item.status == 'new' %}
+                            <span class="badge bg-success">New</span>
+                        {% elseif item.status == 'blocked' %}
+                            <span class="badge bg-secondary">Blocked</span>
+                        {% else %}
+                            <span class="badge bg-light text-dark">Archived</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <small>{{ item.created_at|date('Y-m-d') }}</small>
+                    </td>
+                    <td class="text-center" style="white-space: nowrap;">
+                        <a href="{{ route('staff.contact.show', {'submissionId': item.id}) }}" class="btn btn-sm btn-primary">View</a>
+                        <form action="{{ route('staff.contact.block-sender', {'submissionId': item.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Block this sender ({{ item.email }})?')">Block sender</button>
+                        </form>
+                        <form action="{{ route('staff.contact.block-domain', {'submissionId': item.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Block the whole domain for {{ item.email }}?')">Block domain</button>
+                        </form>
+                        <form action="{{ route('staff.contact.archive', {'submissionId': item.id}) }}" method="POST" class="d-inline">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Archive</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No contact submissions yet.</p>
+{% endif %}
+
+{% endblock page_inner %}

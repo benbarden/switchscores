@@ -42,4 +42,14 @@ return [
         //'redirect' => route('auth.login.twitter.callback'),
     ],
 
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret' => env('TURNSTILE_SECRET'),
+    ],
+
+    // Where contact form notifications are sent.
+    'contact' => [
+        'notify_address' => env('CONTACT_NOTIFY_ADDRESS', 'ben@switchscores.com'),
+    ],
+
 ];

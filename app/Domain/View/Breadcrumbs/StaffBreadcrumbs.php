@@ -482,6 +482,24 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    // *** CONTACT SUBMISSIONS *** //
+    public static function contactList(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Contact submissions'),
+        ]);
+    }
+
+    public static function contactSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Contact submissions', route('staff.contact.index')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     // *** OWNER: USERS *** //
     public static function usersList(): BreadcrumbNav
     {

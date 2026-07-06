@@ -1,0 +1,69 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    <a href="{{ route('staff.contact.index') }}">&laquo; Back to submissions</a>
+</p>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th style="width: 160px;">Name</th>
+            <td>{{ Submission.name }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td><a href="mailto:{{ Submission.email }}">{{ Submission.email }}</a></td>
+        </tr>
+        <tr>
+            <th>Reason</th>
+            <td>{{ RequestTypeOptions[Submission.request_type]|default(Submission.request_type) }}</td>
+        </tr>
+        <tr>
+            <th>Message</th>
+            <td>{{ Submission.message|nl2br }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                {% if Submission.status == 'new' %}
+                    <span class="badge bg-success">New</span>
+                {% elseif Submission.status == 'blocked' %}
+                    <span class="badge bg-secondary">Blocked</span>
+                {% else %}
+                    <span class="badge bg-light text-dark">Archived</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Received</th>
+            <td>{{ Submission.created_at }}</td>
+        </tr>
+        <tr>
+            <th>IP</th>
+            <td>{{ Submission.ip }}</td>
+        </tr>
+        <tr>
+            <th>User agent</th>
+            <td><small>{{ Submission.user_agent }}</small></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="mt-3">
+    <form action="{{ route('staff.contact.block-sender', {'submissionId': Submission.id}) }}" method="POST" class="d-inline">
+        {{ csrf_field() }}
+        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Block this sender ({{ Submission.email }})?')">Block sender</button>
+    </form>
+    <form action="{{ route('staff.contact.block-domain', {'submissionId': Submission.id}) }}" method="POST" class="d-inline">
+        {{ csrf_field() }}
+        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Block the whole domain ({{ BlockDomain }})?')">Block domain ({{ BlockDomain }})</button>
+    </form>
+    <form action="{{ route('staff.contact.archive', {'submissionId': Submission.id}) }}" method="POST" class="d-inline">
+        {{ csrf_field() }}
+        <button type="submit" class="btn btn-outline-secondary">Archive</button>
+    </form>
+</div>
+
+{% endblock page_inner %}

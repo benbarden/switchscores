@@ -56,6 +56,14 @@
                         <a href="{{ route('staff.games-company-signups.index') }}" class="h4">{{ TotalGamesCompanySignups }}</a>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('staff.contact.index') }}">Contact submissions</a>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ route('staff.contact.index') }}" class="h4">{{ NewContactSubmissionCount }}</a>
+                    </td>
+                </tr>
             {% endif %}
             </tbody>
         </table>

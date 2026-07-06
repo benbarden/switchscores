@@ -15,6 +15,7 @@ use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
+use App\Domain\Contact\Repository as ContactRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 
@@ -33,6 +34,7 @@ class IndexController extends Controller
         private UserRepository $repoUser,
         private GamePublisherDbQueries $dbGamePublisher,
         private GamesCompanyRepository $repoGamesCompany,
+        private ContactRepository $repoContact,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
     )
@@ -52,6 +54,7 @@ class IndexController extends Controller
         $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
         $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
         $bindings['TotalGamesCompanySignups'] = $this->repoGamesCompany->countTotal();
+        $bindings['NewContactSubmissionCount'] = $this->repoContact->countNewSubmissions();
 
         // Games to add
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();

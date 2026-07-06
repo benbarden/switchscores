@@ -13,6 +13,12 @@ Route::controller('PublicSite\AboutController')->group(function () {
 
 Route::get('/privacy', 'PublicSite\PrivacyController@show')->name('privacy');
 
+// Contact form (uses publicForms middleware for session/CSRF, not page caching)
+Route::middleware('publicForms')->group(function () {
+    Route::match(['get', 'post'], '/contact', 'PublicSite\ContactController@show')->name('contact.show');
+    Route::get('/contact/success', 'PublicSite\ContactController@success')->name('contact.success');
+});
+
 // Help
 Route::get('/help', 'PublicSite\HelpController@landing')->name('help.landing');
 Route::get('/help/low-quality-filter', 'PublicSite\HelpController@lowQualityFilter')->name('help.low-quality-filter');

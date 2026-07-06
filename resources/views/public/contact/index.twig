@@ -1,0 +1,96 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% block page_body %}
+
+<div class="row wos-content-page">
+
+    <div class="col-xs-12 col-sm-12 col-md-8">
+        <p>
+            Use this form to get in touch. So your message reaches the right place, please
+            pick the option that best describes why you're contacting us.
+        </p>
+
+        <div class="alert alert-warning">
+            <strong>Please note:</strong> we do <strong>not</strong> accept guest posts,
+            paid or sponsored links, or SEO / backlink services. Messages of this kind are
+            filtered and won't get a reply.
+        </div>
+
+        <p>
+            <em>* denotes a required field</em>
+        </p>
+
+        {% include 'ui/components/alerts/form-errors.twig' %}
+
+        <form class="form-horizontal" role="form" method="post" action="{{ route('contact.show') }}">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="name" class="col-md-3 control-label">Your name *</label>
+                <div class="col-md-6">
+                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" maxlength="100" required autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="col-md-3 control-label">Your email *</label>
+                <div class="col-md-6">
+                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" maxlength="150" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="request_type" class="col-md-3 control-label">Reason for contact *</label>
+                <div class="col-md-6">
+                    <select id="request_type" name="request_type" class="form-control" required>
+                        <option value=""></option>
+                        {% for value, label in RequestTypeOptions %}
+                            <option value="{{ value }}" {{ old('request_type') == value ? 'selected' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">
+                        Corrections and data fixes are always welcome. Partnership and business
+                        enquiries are read, but we don't accept sponsored content or link requests.
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="message" class="col-md-3 control-label">Message *</label>
+                <div class="col-md-6">
+                    <textarea id="message" class="form-control" name="message" rows="6" maxlength="5000" required>{{ old('message') }}</textarea>
+                </div>
+            </div>
+
+            {# Honeypot - hidden from real users, must stay empty #}
+            <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                <label for="website">Leave this field blank</label>
+                <input id="website" type="text" name="website" tabindex="-1" autocomplete="off" value="">
+            </div>
+
+            {% if TurnstileSiteKey %}
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="cf-turnstile" data-sitekey="{{ TurnstileSiteKey }}"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <div class="col-md-6 col-md-offset-3">
+                    <button type="submit" class="btn btn-primary pull-left">
+                        Send message
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+{% if TurnstileSiteKey %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
+
+{% endblock page_body %}

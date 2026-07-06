@@ -37,6 +37,20 @@ Route::group(['middleware' => ['auth.staff']], function() {
     Route::match(['get', 'post'], '/staff/invite-code/generate-codes', 'Staff\InviteCodeController@generateCodes')->name('staff.invite-code.generate-codes');
 });
 
+// *************** Staff: CONTACT SUBMISSIONS *************** //
+Route::group(['middleware' => ['auth.staff']], function() {
+
+    Route::get('/staff/contact', 'Staff\ContactController@index')->name('staff.contact.index');
+    Route::get('/staff/contact/show/{submissionId}', 'Staff\ContactController@show')->name('staff.contact.show');
+    Route::post('/staff/contact/archive/{submissionId}', 'Staff\ContactController@archive')->name('staff.contact.archive');
+    Route::post('/staff/contact/block-sender/{submissionId}', 'Staff\ContactController@blockSender')->name('staff.contact.block-sender');
+    Route::post('/staff/contact/block-domain/{submissionId}', 'Staff\ContactController@blockDomain')->name('staff.contact.block-domain');
+
+    Route::get('/staff/contact/blocklist', 'Staff\ContactBlocklistController@index')->name('staff.contact.blocklist');
+    Route::post('/staff/contact/blocklist/add', 'Staff\ContactBlocklistController@add')->name('staff.contact.blocklist.add');
+    Route::post('/staff/contact/blocklist/delete/{entryId}', 'Staff\ContactBlocklistController@delete')->name('staff.contact.blocklist.delete');
+});
+
 // *************** Staff: UNVERIFIED MEMBERS *************** //
 Route::group(['middleware' => ['auth.staff']], function() {
 
