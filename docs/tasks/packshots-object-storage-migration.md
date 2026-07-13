@@ -79,11 +79,25 @@ Verified:
 spins). MinIO S3 API moved to host 9100 (`"9100:9000"`); `PACKSHOTS_URL` uses `:9100`.
 Documented in `infra-red/docs/minio.md`.
 
-### Milestone 2 — DigitalOcean Spaces (needs Ben / external) ⏳ TODO
+### Milestone 2 — DigitalOcean Spaces (needs Ben / external) ⏳ IN PROGRESS
 
-- [ ] Create DO Spaces bucket (public-read) + CDN endpoint
-- [ ] Generate a read-only credential for localdev (prod unmutable from localdev)
-- [ ] Migrate lowest switch-2 IDs (~a dozen); populate `game_images` (`location=spaces`)
+- [x] Create DO Spaces bucket + CDN. Bucket `switchscores-packshots`, region London (`lon1`),
+      Standard storage, CDN enabled. $5/mo (account base).
+- [x] Create a **limited** access key scoped to this bucket (read/write/delete only — NOT
+      full account access, which could create/delete other buckets). Lives in prod `.env`.
+- [ ] Set prod `.env` and `config:clear`. Confirmed non-secret values:
+      ```
+      PACKSHOTS_REGION=lon1
+      PACKSHOTS_BUCKET=switchscores-packshots
+      PACKSHOTS_ENDPOINT=https://lon1.digitaloceanspaces.com        # region host, NO bucket
+      PACKSHOTS_URL=https://switchscores-packshots.lon1.cdn.digitaloceanspaces.com  # CDN, bucket in host, no path suffix
+      PACKSHOTS_USE_PATH_STYLE=false                                # Spaces = virtual-hosted (MinIO = path-style/true)
+      ```
+      Gotcha: DO shows the origin endpoint *with* the bucket subdomain; strip it — with
+      `use_path_style=false` the SDK adds the bucket from `PACKSHOTS_BUCKET`, else it doubles.
+- [ ] Small-scale test: migrate lowest switch-2 IDs via the staff page; confirm CDN serves them
+- [ ] Later: read-only credential for localdev (when localdev reads prod Spaces) — not needed
+      yet (localdev still runs entirely against MinIO)
 - [ ] Prove display / replace / delete / orphan detection / staff dashboard
 - [ ] Prove #7/#8: localdev with zero local images still renders (reads prod Spaces),
       then a MinIO override deviates one game only, prod untouched
@@ -93,18 +107,53 @@ Documented in `infra-red/docs/minio.md`.
 - [ ] Confirm the low-quality image re-download job (#70) is complete first
 - [ ] Idempotent, resumable script copies all `public/img/ps-*` → Spaces, populates `game_images`
 
+### Ingestion repoint + default location (required before server move) ⏳ TODO
+
+New-game ingestion (`Services/DataSources/NintendoCoUk/Images.php` + the crawl re-download
+in `GameCrawlBatch`/`GameCrawlUrl`) currently writes images to local `public/img/ps-*` and
+creates **no** `game_images` row — so new games display via the legacy fallback. Activating
+`PACKSHOTS_*` does NOT change this: the only code that writes to the `packshots` disk is
+`ImageStorageMigrator` (the staff button). New games stay on local disk until this is built.
+
+The slim new server must never accumulate local image disk, so before the server move:
+- [ ] Add a config default, e.g. `PACKSHOTS_DEFAULT_LOCATION=legacy|spaces` (in a small
+      `config/packshots.php` or `config/filesystems.php`).
+- [ ] Ingestion save code reads it: `legacy` → save to `public/img` (as now, no row);
+      `spaces` → upload to the `packshots` disk + create a `game_images` row `location=spaces`.
+- [ ] Update the delete/replace path (`Services/Game/Images.php` `deleteSquare`/`deleteHeader`,
+      currently local `unlink()` only) to delete from Spaces when the game is on `spaces` (req #5).
+- [ ] Keep the default `legacy` through the bulk backfill (so new games and backfill don't
+      race), then **flip to `spaces`** once backfill is done and proven.
+
 ### Phase 2 — cutover ⏳ TODO
 
 - [ ] Once counts match: drop legacy fallback from resolver
 - [ ] Later delete `public/img/ps-*` → reclaims ~5 GB, unlocks smaller droplet
 - [ ] Move override concept / drop legacy `games.image_*` columns
 
-## Future: Game images dashboard
+## Game images dashboard + migration tool ✅ DONE (2026-07-13)
 
-The `/staff/games/image-migration` page should eventually live *under* a broader **Game
-images dashboard** that also shows image stats (req #6): missing-image counts, orphan
-list (bucket vs DB diff), total bucket size, and a quality view once `game_images` gains
-dimension/quality columns. The migration page becomes one tab/section of that dashboard.
+**Dashboard** `/staff/games/images` (`staff.games.images.dashboard`), two sections:
+- **Game image stats:** games with images, games without images, orphaned images
+  (deferred — shows "scan pending"; needs a bucket+disk listing, req #5).
+- **Migration to CDN:** big tiles = in legacy / in Spaces / % migrated, an overall progress
+  bar, and per-console breakdown bars.
+
+**Migration tool** — two separate subpages, each reached by its own dashboard button:
+- **To be migrated** `/staff/games/images/migration` (`images.migration.show`): unmigrated games
+  (have images, no `spaces` row), oldest-id first, console filter, 50/page paginated. Per-row
+  "Move to Spaces" + a **"Migrate next 50"** batch button (`migrateBatch`, respects the filter).
+- **Recently migrated** `/staff/games/images/migration/recent` (`images.migration.recent`):
+  `spaces` games newest first, paginated 50/page, each with a "Move back" (revert) button.
+
+Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
+
+**Notes / follow-ups:**
+- `migrateBatch` runs synchronously (50 games × 2 uploads per request). If it times out on
+  prod, move it to a queued job (the progress bar already gives the readout to watch).
+- Orphaned-images tile + total bucket size are the remaining req #6 dashboard pieces.
+- Quality view once `game_images` gains dimension/quality columns.
+- Possible follow-up: cache the count queries (full-ish scans of `games`) if the page is slow.
 
 ## Known follow-ups (not blocking Milestone 1)
 

@@ -1,0 +1,100 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{% block page_inner %}
+
+{{ heading.renderSlick('Game image stats') }}
+
+<div class="row text-center mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="display-4 fw-bold">{{ TotalWithImages|number_format }}</div>
+                <div class="text-muted text-uppercase small">Games with images</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="display-4 fw-bold">{{ TotalWithoutImages|number_format }}</div>
+                <div class="text-muted text-uppercase small">Games without images</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                {% if OrphanedImages is null %}
+                    <div class="display-4 fw-bold text-muted">&mdash;</div>
+                    <div class="text-muted text-uppercase small">Orphaned images</div>
+                    <div class="text-muted small">scan pending</div>
+                {% else %}
+                    <div class="display-4 fw-bold">{{ OrphanedImages|number_format }}</div>
+                    <div class="text-muted text-uppercase small">Orphaned images</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ heading.renderSlick('Migration to object storage') }}
+
+<div class="row text-center mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="display-4 fw-bold">{{ TotalLegacy|number_format }}</div>
+                <div class="text-muted text-uppercase small">In legacy storage</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="display-4 fw-bold text-success">{{ TotalInSpaces|number_format }}</div>
+                <div class="text-muted text-uppercase small">In object storage</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="display-4 fw-bold">{{ PercentInSpaces }}%</div>
+                <div class="text-muted text-uppercase small">Migrated</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="progress mb-4" style="height: 24px;">
+    <div class="progress-bar bg-success" role="progressbar"
+         style="width: {{ PercentInSpaces }}%"
+         aria-valuenow="{{ PercentInSpaces }}" aria-valuemin="0" aria-valuemax="100">
+        {{ PercentInSpaces }}%
+    </div>
+</div>
+
+{{ heading.renderSlick('By console') }}
+
+{% for row in ConsoleBreakdown %}
+    <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <span>{{ row.name }}</span>
+            <span class="text-muted small">{{ row.spaces|number_format }} / {{ row.total|number_format }} ({{ row.percent }}%)</span>
+        </div>
+        <div class="progress" style="height: 20px;">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: {{ row.percent }}%"
+                 aria-valuenow="{{ row.percent }}" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<div class="mt-4 d-flex gap-2">
+    <a href="{{ route('staff.games.images.migration.show') }}" class="btn btn-primary">To be migrated</a>
+    <a href="{{ route('staff.games.images.migration.recent') }}" class="btn btn-outline-secondary">Recently migrated</a>
+</div>
+
+{% endblock %}

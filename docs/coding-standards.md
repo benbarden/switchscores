@@ -140,6 +140,25 @@ When calling model methods in Twig, use parentheses:
 {% if game.isDelisted %}
 ```
 
+## Migrations — foreign key column types
+
+Core tables were created with `increments('id')` (unsigned INT), NOT `id()` (unsigned BIGINT).
+When adding a foreign key that references them, use `$table->unsignedInteger('col')` — NOT
+`unsignedBigInteger()` or `foreignId()`.
+
+- Applies to FKs referencing `games.id` and `categories.id`.
+- Using BIGINT causes `SQLSTATE[HY000] 3780` "Referencing column and referenced column are
+  incompatible" at migration time (hit twice historically).
+
+## Twig badge macros
+
+- **Console badge** — `ui/components/game/console-badge.twig`: `consolebadge.standard(item)`
+  ("Switch 1"/"Switch 2"), `consolebadge.short(item)` ("S1"/"S2"). Works with Eloquent
+  models (`console.id`) and raw DB rows (`console_id`).
+- **Low-quality badge** — staff/Bootstrap 5 pages use `gamelowquality.b5(item)`; public/
+  Bootstrap 3 pages use `gamelowquality.standard(item)`. Using `.standard()` on a staff page
+  renders unstyled text — a common mistake.
+
 ## UK Spelling
 
 Use UK spelling in user-facing text:

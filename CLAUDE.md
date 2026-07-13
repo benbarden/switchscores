@@ -146,3 +146,5 @@ Test suites configured in `phpunit.xml`:
 - **Schema style:** for a constrained-value column, use a `varchar` with an index, NOT a DB `enum` (see `game_flags.flag`). Define the allowed values as model constants.
 - **Localdev mirrors prod:** stand up local services with the same stack prod uses (Docker containers matching the deploy config), not ad-hoc dev servers. e.g. a MinIO container to mirror DigitalOcean Spaces.
 - **Confirm before token-expensive operations** (spawning agents, broad/unbounded searches). Prefer cheap tools (Read/Grep/Glob) first.
+- **Do NOT use the memory system.** Never create, update, or rely on files under `memory/`/`MEMORY.md`. Durable facts, conventions, and task/build notes go in `docs/` (and this CLAUDE.md), never in memory files.
+- **Prod (old server) has NO git — manual file-copy deploy.** Never suggest git commands for prod. Deploy = copy changed files across, then `composer install` (never `composer update`) + clear caches. Composer lock must resolve for PHP 8.1 (platform pinned to 8.1.2 in composer.json); localdev container is PHP 8.3. This is the legacy server being migrated away from via the `server-setup` work.

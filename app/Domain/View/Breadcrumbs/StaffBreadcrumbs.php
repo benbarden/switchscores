@@ -45,6 +45,25 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function gamesImagesDashboard(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Game images'),
+        ]);
+    }
+
+    public static function gamesImagesSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Game images', route('staff.games.images.dashboard')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     public static function gamesDetailSubpage(string $title, Game $game): BreadcrumbNav
     {
         return new BreadcrumbNav([

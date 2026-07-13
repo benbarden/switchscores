@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
@@ -9,30 +10,59 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\Game\ImageStorageMigrator;
 use App\Domain\Game\Repository as GameRepository;
+use App\Domain\Game\Repository\GameImageRepository;
 use App\Models\Console;
 
 class ImageMigrationController extends Controller
 {
-    const POC_LIMIT = 20;
+    const PER_PAGE = 50;
+    const BATCH_SIZE = 50;
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private GameRepository $repoGame,
+        private GameImageRepository $repoGameImage,
         private ImageStorageMigrator $migrator,
     )
     {
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        $pageTitle = 'Image storage migration';
-        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
+        $pageTitle = 'To be migrated';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesImagesSubpage($pageTitle))->bindings;
 
-        $bindings['Games'] = $this->repoGame->getByConsoleLowestIdsWithImages(Console::ID_SWITCH_2, self::POC_LIMIT);
-        $bindings['PocLimit'] = self::POC_LIMIT;
+        $consoleId = $this->consoleFilter($request);
+
+        $bindings['Unmigrated'] = $this->repoGameImage->paginateUnmigrated($consoleId, self::PER_PAGE);
+        $bindings['ConsoleFilter'] = $consoleId;
+        $bindings['ConsoleOptions'] = [
+            Console::ID_SWITCH_1 => Console::DESC_SWITCH_1,
+            Console::ID_SWITCH_2 => Console::DESC_SWITCH_2,
+        ];
+        $bindings['BatchSize'] = self::BATCH_SIZE;
         $bindings['PackshotsConfigured'] = $this->packshotsConfigured();
 
-        return view('staff.games.image-migration', $bindings);
+        return view('staff.games.images.to-migrate', $bindings);
+    }
+
+    public function recent()
+    {
+        $pageTitle = 'Recently migrated';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesImagesSubpage($pageTitle))->bindings;
+
+        $bindings['RecentlyMigrated'] = $this->repoGameImage->paginateRecentlyMigrated(self::PER_PAGE);
+        $bindings['PackshotsConfigured'] = $this->packshotsConfigured();
+
+        return view('staff.games.images.recent', $bindings);
+    }
+
+    /** Read + validate the console query filter (null = all). */
+    private function consoleFilter(Request $request): ?int
+    {
+        $consoleId = (int) $request->query('console');
+
+        return in_array($consoleId, [Console::ID_SWITCH_1, Console::ID_SWITCH_2], true) ? $consoleId : null;
     }
 
     /**
@@ -61,7 +91,7 @@ class ImageMigrationController extends Controller
         $this->migrator->migrate($game);
         $this->repoGame->clearCacheCoreData($gameId);
 
-        return back()->with('success', "\"{$game->title}\" packshots moved to Spaces.");
+        return back()->with('success', "\"{$game->title}\" packshots moved to object storage.");
     }
 
     public function revert($gameId)
@@ -79,5 +109,27 @@ class ImageMigrationController extends Controller
         $this->repoGame->clearCacheCoreData($gameId);
 
         return back()->with('success', "\"{$game->title}\" packshots moved back to legacy.");
+    }
+
+    /** Migrate the next batch of oldest unmigrated games (respects the console filter). */
+    public function migrateBatch(Request $request)
+    {
+        if (!$this->packshotsConfigured()) {
+            return back()->with('error', 'Packshots storage is not configured (PACKSHOTS_* env). Migration is disabled here.');
+        }
+
+        $consoleId = $this->consoleFilter($request);
+        $games = $this->repoGameImage->nextUnmigratedBatch($consoleId, self::BATCH_SIZE);
+
+        if ($games->isEmpty()) {
+            return back()->with('error', 'No unmigrated games left for this filter.');
+        }
+
+        foreach ($games as $game) {
+            $this->migrator->migrate($game);
+            $this->repoGame->clearCacheCoreData($game->id);
+        }
+
+        return back()->with('success', $games->count() . ' games migrated to object storage.');
     }
 }

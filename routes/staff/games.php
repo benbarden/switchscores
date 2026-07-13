@@ -19,6 +19,7 @@ use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
 use App\Http\Controllers\Staff\Games\GameFlagController;
 use App\Http\Controllers\Staff\Games\ImageMigrationController;
+use App\Http\Controllers\Staff\Games\GameImagesDashboardController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
@@ -38,11 +39,16 @@ Route::group([
         Route::get('stats', 'stats')->name('stats');
     });
 
-    // ---- Image storage migration (packshots -> Spaces POC) ----
+    // ---- Game images (packshot storage dashboard + migration) ----
+    Route::controller(GameImagesDashboardController::class)->group(function () {
+        Route::get('images', 'show')->name('images.dashboard');
+    });
     Route::controller(ImageMigrationController::class)->group(function () {
-        Route::get('image-migration', 'show')->name('image-migration.show');
-        Route::post('image-migration/{gameId}/migrate', 'migrate')->name('image-migration.migrate');
-        Route::post('image-migration/{gameId}/revert', 'revert')->name('image-migration.revert');
+        Route::get('images/migration', 'show')->name('images.migration.show');
+        Route::get('images/migration/recent', 'recent')->name('images.migration.recent');
+        Route::post('images/migration/migrate-batch', 'migrateBatch')->name('images.migration.migrateBatch');
+        Route::post('images/migration/{gameId}/migrate', 'migrate')->name('images.migration.migrate');
+        Route::post('images/migration/{gameId}/revert', 'revert')->name('images.migration.revert');
     });
 
     // ---- Release hub ----
