@@ -18,6 +18,7 @@ use App\Http\Controllers\Staff\Games\GamesTitleHashController;
 use App\Http\Controllers\Staff\Games\GamesPartnerController;
 use App\Http\Controllers\Staff\Games\GamesTagController;
 use App\Http\Controllers\Staff\Games\GameFlagController;
+use App\Http\Controllers\Staff\Games\ImageMigrationController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
@@ -35,6 +36,13 @@ Route::group([
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'show')->name('dashboard');
         Route::get('stats', 'stats')->name('stats');
+    });
+
+    // ---- Image storage migration (packshots -> Spaces POC) ----
+    Route::controller(ImageMigrationController::class)->group(function () {
+        Route::get('image-migration', 'show')->name('image-migration.show');
+        Route::post('image-migration/{gameId}/migrate', 'migrate')->name('image-migration.migrate');
+        Route::post('image-migration/{gameId}/revert', 'revert')->name('image-migration.revert');
     });
 
     // ---- Release hub ----

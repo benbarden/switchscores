@@ -69,6 +69,11 @@ class Game extends Model implements Auditable
         return $this->hasOne('App\Models\Console', 'id', 'console_id');
     }
 
+    public function images()
+    {
+        return $this->hasOne('App\Models\GameImage', 'game_id', 'id');
+    }
+
     public function category()
     {
         return $this->hasOne('App\Models\Category', 'id', 'category_id');

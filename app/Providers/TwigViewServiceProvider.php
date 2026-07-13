@@ -7,14 +7,19 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 use App\Models\Console;
+use App\Domain\Game\ImageResolver;
 use App\Support\Links;
 
 class TwigViewServiceProvider extends ServiceProvider
 {
-    public function boot(Environment $twig)
+    public function boot(Environment $twig, ImageResolver $imageResolver)
     {
         $twig->addFunction(new TwigFunction('eshop_url', function (?string $region, ?string $path) {
             return Links::eshopUrl($region, $path);
+        }));
+
+        $twig->addFunction(new TwigFunction('packshot_url', function ($game, string $type) use ($imageResolver) {
+            return $imageResolver->url($game, $type);
         }));
 
         $twig->addFunction(new TwigFunction('game_url', function ($game) {

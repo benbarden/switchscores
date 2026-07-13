@@ -139,3 +139,10 @@ Test suites configured in `phpunit.xml`:
 - Bootstrap (migrating from 3 to 5)
 - Laravel Mix for asset compilation
 - jQuery for interactivity
+
+## Working Preferences & Conventions
+
+- **No em-dashes** in any drafted prose (site copy, commit messages, docs). Use hyphens (-).
+- **Schema style:** for a constrained-value column, use a `varchar` with an index, NOT a DB `enum` (see `game_flags.flag`). Define the allowed values as model constants.
+- **Localdev mirrors prod:** stand up local services with the same stack prod uses (Docker containers matching the deploy config), not ad-hoc dev servers. e.g. a MinIO container to mirror DigitalOcean Spaces.
+- **Confirm before token-expensive operations** (spawning agents, broad/unbounded searches). Prefer cheap tools (Read/Grep/Glob) first.

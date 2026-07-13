@@ -16,6 +16,7 @@
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^4.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "owen-it/laravel-auditing": "^13.0.0",
         "php-http/message": "^1.16",
         "php-http/message-factory": "^1.1",

@@ -147,6 +147,8 @@ This document tracks potential improvements, features, and enhancements for the 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
 | 2 | Bulk add tag to games with search string (e.g. Solitaire) | Medium | No bulk tag UI - needs new controller/view | Explore using Claude for mass tagging instead of building UI |
+| 133 | Check if the legacy staff nav is still needed | Low | `theme/wos/staff/nav-top/` still exists alongside `theme/staff-b5/nav-top/` | Staff appears fully migrated to Bootstrap 5. Confirm nothing renders the old `wos` staff nav, then delete it. New nav links currently only added to the B5 version. |
+| 134 | Staff-specific error/404 page template | Low | Related to #32 (public 404). Needs an auth-aware error view | Hitting the public 404/error layout while logged in as staff is jarring. Show a staff-flavoured error page (staff layout + links back into admin) when an authenticated staff user hits an error. |
 | 13 | Slow queries: stats on Browse by date page | Medium | Heavy stats queries - needs caching/indexes | From pre-Cloudflare logging. May be less urgent now. Could add Redis caching for big queries. Review needed. |
 | 16 | Ones to watch: show a list in admin and public | Medium | `one_to_watch` field exists - need views | Manual flag on games. Placement TBD - Members, homepage, or /switch-1/ landing pages. Includes #21. |
 | 20 | Move Stats dashboard to Staff dashboard | Low | Stats dashboard exists; reuse queries in staff view | Consolidation - not much on stats dashboard currently. |

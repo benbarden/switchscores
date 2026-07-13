@@ -50,8 +50,42 @@ services:
     networks:
       - app-network
 
+  # Localdev S3, mirrors DigitalOcean Spaces (see images-migration-proposal.md).
+  # Holds only per-game packshot overrides; the prod CDN serves everything else.
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      # Host 9100 -> container 9000 (S3 API). Host 9000 is avoided because PhpStorm/
+      # Xdebug listens there by default and silently swallows the connection.
+      - "9100:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - app-network
+
+  # One-shot: create the packshots bucket and make it public-read (mirrors Spaces).
+  minio-createbucket:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://minio:9000 minio minio123) do echo 'waiting for minio...'; sleep 2; done;
+      /usr/bin/mc mb -p local/switchscores-packshots;
+      /usr/bin/mc anonymous set download local/switchscores-packshots;
+      exit 0;
+      "
+    networks:
+      - app-network
+
 networks:
   app-network:
 
 volumes:
   db_data:
+  minio_data:

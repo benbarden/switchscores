@@ -62,6 +62,19 @@ class Repository extends AbstractRepository
         return Game::find($id);
     }
 
+    /**
+     * Lowest-id games for a console, with the images relation eager-loaded (no N+1).
+     * Used by the staff image-storage migration page.
+     */
+    public function getByConsoleLowestIdsWithImages(int $consoleId, int $limit)
+    {
+        return Game::where('console_id', $consoleId)
+            ->with('images')
+            ->orderBy('id')
+            ->limit($limit)
+            ->get();
+    }
+
     public function searchByTitle($keywords)
     {
         return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();

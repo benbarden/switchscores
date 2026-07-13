@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V2\User;
 
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
-use App\Services\Game\Images as GameImages;
+use App\Domain\Game\ImageResolver;
 use App\Models\Game;
 use Illuminate\Http\Request;
 
@@ -44,11 +44,7 @@ class CollectionController
 
         foreach ($games as $game) {
             $inCollection = $collectionGameIds->contains($game->id);
-            if ($game->image_square) {
-                $squareImageUrl = GameImages::PATH_IMAGE_SQUARE.$game->image_square;
-            } else {
-                $squareImageUrl = null;
-            }
+            $squareImageUrl = app(ImageResolver::class)->url($game, ImageResolver::TYPE_SQUARE) ?: null;
             $gameResults[] = [
                 'id' => $game->id,
                 'title' => $game->title,

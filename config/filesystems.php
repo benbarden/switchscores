@@ -63,6 +63,24 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        // Packshot images (header + square). S3-compatible.
+        //   Prod     -> DigitalOcean Spaces (endpoint + CDN url).
+        //   Localdev -> MinIO (path-style, endpoint http://minio:9000); PACKSHOTS_URL
+        //               points at the prod Spaces CDN so localdev links to prod images
+        //               with no download, and MinIO holds only per-game overrides.
+        'packshots' => [
+            'driver' => 's3',
+            'key' => env('PACKSHOTS_KEY'),
+            'secret' => env('PACKSHOTS_SECRET'),
+            'region' => env('PACKSHOTS_REGION', 'us-east-1'),
+            'bucket' => env('PACKSHOTS_BUCKET'),
+            'endpoint' => env('PACKSHOTS_ENDPOINT'),
+            'url' => env('PACKSHOTS_URL'),
+            'use_path_style_endpoint' => env('PACKSHOTS_USE_PATH_STYLE', false),
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
 ];

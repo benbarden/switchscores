@@ -4,8 +4,7 @@
 namespace App\Helpers;
 
 use App\Domain\Game\Repository as GameRepository;
-
-use App\Services\Game\Images as GameImages;
+use App\Domain\Game\ImageResolver;
 
 class ImageHelper
 {
@@ -50,17 +49,11 @@ class ImageHelper
                 break;
         }
 
-        if ($game->image_square) {
-            $boxartPath = GameImages::PATH_IMAGE_SQUARE;
-            $boxartUrl = $game->image_square;
-        } else {
-            $boxartPath = null;
-            $boxartUrl = null;
-        }
+        $boxartUrl = self::imageSquareUrl($game);
 
         $htmlOutput = '';
 
-        if (!is_null($boxartPath) && !is_null($boxartUrl)) {
+        if ($boxartUrl) {
 
             if ($isReleased == 1) {
                 $opacityStyle = '';
@@ -83,23 +76,11 @@ class ImageHelper
 
     static function imageHeaderUrl($game)
     {
-        if ($game->image_header) {
-            $imageUrl = GameImages::PATH_IMAGE_HEADER.$game->image_header;
-        } else {
-            $imageUrl = '';
-        }
-
-        return $imageUrl;
+        return app(ImageResolver::class)->url($game, ImageResolver::TYPE_HEADER);
     }
 
     static function imageSquareUrl($game)
     {
-        if ($game->image_square) {
-            $imageUrl = GameImages::PATH_IMAGE_SQUARE.$game->image_square;
-        } else {
-            $imageUrl = '';
-        }
-
-        return $imageUrl;
+        return app(ImageResolver::class)->url($game, ImageResolver::TYPE_SQUARE);
     }
 }

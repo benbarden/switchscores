@@ -1,15 +1,7 @@
 {% macro header(game) %}
-    {% if game.image_header %}
-        {{ '/img/ps-header/' ~ game.image_header }}
-    {% else %}
-        ''
-    {% endif %}
+    {{ packshot_url(game, 'header') }}
 {% endmacro %}
 
 {% macro square(game) %}
-    {% if game.image_square %}
-        {{ '/img/ps-square/' ~ game.image_square }}
-    {% else %}
-        ''
-    {% endif %}
+    {{ packshot_url(game, 'square') }}
 {% endmacro %}
