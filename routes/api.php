@@ -46,16 +46,28 @@ Route::get('/game/find-by-title', 'Api\Game\GameController@findByTitle');
 // Partner
 Route::get('/partner/games-company/search', 'Api\Partner\GamesCompanyController@findByName');
 
-/* LP */
-// Game ids
-Route::get('/game/list', 'Api\Game\GameController@getList');
-// Game details
-Route::get('/game/{id}', 'Api\Game\GameController@getDetails');
-// Game details from linkid
-Route::get('/game/linkid/{id}', 'Api\Game\GameController@getDetailsByLinkId');
+/* LP - legacy V1 (unauthenticated). Logged as V1 so we can see when it's hit.
+   See docs/api-v1-deprecation-plan.md. */
+Route::group(['middleware' => 'log.api:'. \App\Models\ApiRequestLog::VERSION_V1], function() {
 
-// Game reviews
-Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviews');
+    // Retired. Previously returned the entire games table (~2.4 MB, all games)
+    // in a single uncached response. Kept as 410 Gone (declared before the
+    // greedy /game/{id} route below) during the phase-out window.
+    Route::get('/game/list', function() {
+        return response()->json([
+            'message' => 'This endpoint has been retired. See /members/developers/api/methods.'
+        ], 410);
+    });
+
+    // Game details
+    Route::get('/game/{id}', 'Api\Game\GameController@getDetails');
+    // Game details from linkid
+    Route::get('/game/linkid/{id}', 'Api\Game\GameController@getDetailsByLinkId');
+
+    // Game reviews
+    Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviews');
+
+});
 
 /* Admin */
 Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');

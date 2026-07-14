@@ -111,5 +111,6 @@ class Kernel extends HttpKernel
         'check.user.role' => \App\Http\Middleware\CheckUserRole::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'reject.bots.intent' => \App\Http\Middleware\RejectBotsOnIntentRoutes::class,
+        'log.api' => \App\Http\Middleware\LogApiRequest::class,
     ];
 }
