@@ -132,6 +132,17 @@ The slim new server must never accumulate local image disk, so before the server
 
 ### Phase 2 — cutover ⏳ TODO
 
+- [ ] **BLOCKER: raw-row list pages can never resolve to object storage.** `ImageResolver::gameImage()`
+      returns null for anything that isn't an Eloquent `Game`, so any list built with
+      `DB::table('games')` falls through to `legacyUrl()` unconditionally — no matter what
+      `game_images` says. Known Milestone 1 simplification (see the resolver docblock), and
+      harmless while legacy files exist. It becomes broken images the moment the legacy delete
+      below runs. `with('images')` does NOT fix these — there is no Eloquent builder to add it to;
+      they need converting to Eloquent, or joining `game_images`.
+      Known raw-row producers: `GameLists\DbQueries::onSaleHighestDiscounts()`, `onSaleGoodRanks()`,
+      `onSaleUnranked()`, `getByTagWithDates()`; `GameLists\Repository::getAll()` (deprecated) and
+      `getApiIdList()` (API, no packshots — fine). The on-sale tables and tag pages are real public
+      traffic. Audit for others before cutover: `grep -rn "DB::table('games')" app/`
 - [ ] Once counts match: drop legacy fallback from resolver
 - [ ] Later delete `public/img/ps-*` → reclaims ~5 GB, unlocks smaller droplet
 - [ ] Move override concept / drop legacy `games.image_*` columns
@@ -162,8 +173,12 @@ Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
 
 ## Known follow-ups (not blocking Milestone 1)
 
-- **N+1:** resolver reads the `images` relation; list/grid pages lazy-load it. Harmless now
-  (zero rows), but add `with('images')` to list repositories before Phase 1 bulk migration.
+- ~~**N+1:** resolver reads the `images` relation; list/grid pages lazy-load it.~~ **Done 2026-07-15:**
+  `with('images')` added to the 23 display-facing methods in `GameLists\Repository`. Deliberately NOT
+  added to maintenance queries (crawl queues, no-price/no-tag/no-category triage, eshop crosschecks)
+  or to `allGames()`, which loads all ~17k games and would pull 17k image rows with them. New display
+  list methods need it adding by hand — the eager-load can't be enforced from the resolver end.
+  This only covers Eloquent queries; see the raw-row blocker under Phase 2.
 - **og:image in `news-image.twig`** does `url('/') ~ boxartUrl` — fine for relative legacy
   paths, but will double-prefix once the resolver returns absolute CDN URLs. Fix at Phase 2.
 

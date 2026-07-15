@@ -42,7 +42,7 @@ class Repository extends AbstractRepository
 
     public function recentlyReleased($consoleId, $includeLowQuality = false, $limit = 100)
     {
-        $games = Game::where('console_id', $consoleId)->where('eu_is_released', 1);
+        $games = Game::with('images')->where('console_id', $consoleId)->where('eu_is_released', 1);
 
         if (!$includeLowQuality) {
             $games = $games->where('is_low_quality', 0);
@@ -70,7 +70,7 @@ class Repository extends AbstractRepository
 
     public function recentlyAdded($limit = 100)
     {
-        return Game::orderBy('id', 'desc')->limit($limit)->get();
+        return Game::with('images')->orderBy('id', 'desc')->limit($limit)->get();
     }
 
     /**
@@ -80,7 +80,7 @@ class Repository extends AbstractRepository
      */
     public function upcoming($consoleId, $limit = null)
     {
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->where('eu_is_released', 0)
             ->where('is_low_quality', 0)
             ->whereNotNull('games.eu_release_date')
@@ -103,7 +103,7 @@ class Repository extends AbstractRepository
      */
     public function upcomingAll($limit = null)
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::with('images')->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('eshop_europe_order', 'asc')
@@ -119,7 +119,7 @@ class Repository extends AbstractRepository
 
     public function upcomingNextDays($consoleId, $days, $limit = null)
     {
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
@@ -137,7 +137,7 @@ class Repository extends AbstractRepository
 
     public function upcomingBetweenDays($consoleId, $startDays, $endDays, $limit = null)
     {
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $startDays)
@@ -156,7 +156,7 @@ class Repository extends AbstractRepository
 
     public function upcomingBeyondDays($consoleId, $days, $limit = null)
     {
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->where('eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date >= DATE_ADD(NOW(), INTERVAL ? DAY)', $days)
@@ -194,12 +194,12 @@ class Repository extends AbstractRepository
 
     public function byIdList($idList)
     {
-        return Game::whereIn('id', $idList)->get();
+        return Game::with('images')->whereIn('id', $idList)->get();
     }
 
     public function byCollection($consoleId, $collectionId, $limit = null)
     {
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->where('collection_id', $collectionId)
             ->where('eu_is_released', 1)
             ->orderBy('title', 'asc');
@@ -213,7 +213,7 @@ class Repository extends AbstractRepository
 
     public function byCollectionAndCategory($collectionId, $categoryId)
     {
-        $games = Game::where('collection_id', $collectionId)
+        $games = Game::with('images')->where('collection_id', $collectionId)
             ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->orderBy('title', 'asc');
@@ -223,7 +223,7 @@ class Repository extends AbstractRepository
 
     public function byCollectionAndSeries($collectionId, $seriesId)
     {
-        $games = Game::where('collection_id', $collectionId)
+        $games = Game::with('images')->where('collection_id', $collectionId)
             ->where('series_id', $seriesId)
             ->where('eu_is_released', 1)
             ->orderBy('title', 'asc');
@@ -233,12 +233,12 @@ class Repository extends AbstractRepository
 
     public function bySeries(GameSeries $gameSeries)
     {
-        return Game::where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
+        return Game::with('images')->where('series_id', $gameSeries->id)->orderBy('title', 'asc')->get();
     }
 
     public function bySeriesWithImages(GameSeries $gameSeries, $limit = null)
     {
-        $games = Game::where('series_id', $gameSeries->id)
+        $games = Game::with('images')->where('series_id', $gameSeries->id)
             ->whereNotNull('image_header')
             ->whereNotNull('image_square')
             ->orderBy('rating_avg', 'desc');
@@ -252,7 +252,7 @@ class Repository extends AbstractRepository
 
     public function recentWithGoodRanksByConsole($consoleId, $minimumRating = 7, $dateInterval = 30, $limit = 15)
     {
-        $games = Game::where('games.eu_is_released', 1)
+        $games = Game::with('images')->where('games.eu_is_released', 1)
             ->where('games.console_id', $consoleId)
             ->whereRaw('games.eu_release_date between date_sub(NOW(), INTERVAL ? DAY) and now()', $dateInterval)
             ->whereNotNull('games.game_rank')
@@ -296,7 +296,7 @@ class Repository extends AbstractRepository
 
     public function recentlyReleasedByCategory($categoryId, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::with('images')->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->active()
             ->orderBy('eu_release_date', 'desc');
@@ -344,7 +344,7 @@ class Repository extends AbstractRepository
     public function gamesForReleaseHub($consoleId, $startDate, $endDate, $sortDir)
     {
         if (!in_array($sortDir, ['asc', 'desc'])) $sortDir = 'asc';
-        $games = Game::where('console_id', $consoleId)
+        $games = Game::with('images')->where('console_id', $consoleId)
             ->whereBetween('games.eu_release_date', [$startDate, $endDate])
             ->orderBy('eu_release_date', $sortDir)
             ->orderBy('eshop_europe_order', 'asc')
@@ -421,7 +421,7 @@ class Repository extends AbstractRepository
     {
         $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
 
-        return Game::where('category_id', $categoryId)
+        return Game::with('images')->where('category_id', $categoryId)
             ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
@@ -439,7 +439,7 @@ class Repository extends AbstractRepository
     {
         $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
 
-        return Game::where('series_id', $seriesId)
+        return Game::with('images')->where('series_id', $seriesId)
             ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
@@ -457,7 +457,7 @@ class Repository extends AbstractRepository
     {
         $sampleSize = max($limit * 3, 12); // gives variety, tweak if needed
 
-        return Game::where('collection_id', $collectionId)
+        return Game::with('images')->where('collection_id', $collectionId)
             ->where('console_id', $consoleId)
             ->where('id', '<>', $excludeGameId)
             ->where('eu_is_released', 1)
@@ -543,7 +543,7 @@ class Repository extends AbstractRepository
 
         $cacheKey = $this->buildCacheKey("by-year-week-$year-$week-low-quality-$isLowQuality");
         return $this->rememberCache($cacheKey, CacheDuration::ONE_DAY, function() use ($year, $week, $isLowQuality) {
-            $gameList = Game::where('eu_is_released', 1);
+            $gameList = Game::with('images')->where('eu_is_released', 1);
             $gameList = $gameList->where(DB::raw('YEARWEEK(eu_release_date)'), $year.$week);
 
             if ($isLowQuality == true) {
@@ -564,7 +564,7 @@ class Repository extends AbstractRepository
 
     public function upcomingSwitchWeekly($consoleId, $daysLimit)
     {
-        return Game::where('games.console_id', $consoleId)
+        return Game::with('images')->where('games.console_id', $consoleId)
             ->where('games.eu_is_released', 0)
             ->whereNotNull('games.eu_release_date')
             ->whereRaw('eu_release_date < DATE_ADD(NOW(), INTERVAL ? DAY)', $daysLimit)
@@ -576,6 +576,7 @@ class Repository extends AbstractRepository
     public function upcomingByBatch($consoleId, $batchDate)
     {
         return Game::query()
+            ->with('images')
             ->where('console_id', $consoleId)
             ->whereDate('added_batch_date', $batchDate)
             ->whereDate('eu_release_date', '>', $batchDate)
@@ -586,6 +587,7 @@ class Repository extends AbstractRepository
     public function releasedByBatch($consoleId, $batchDate)
     {
         return Game::query()
+            ->with('images')
             ->where('console_id', $consoleId)
             ->whereDate('added_batch_date', $batchDate)
             ->whereDate('eu_release_date', '<=', $batchDate)
