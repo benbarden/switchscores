@@ -59,9 +59,14 @@ class ImageMigrationController extends Controller
     }
 
     /** Read + validate the console query filter (null = all). */
+    /**
+     * The console filter arrives as a query string on the GET page, but in the body of the
+     * POST batch form — so this must read both. Using query() here silently unfiltered the
+     * batch, which then migrated oldest-first across all consoles.
+     */
     private function consoleFilter(Request $request): ?int
     {
-        $consoleId = (int) $request->query('console');
+        $consoleId = (int) $request->input('console');
 
         return in_array($consoleId, [Console::ID_SWITCH_1, Console::ID_SWITCH_2], true) ? $consoleId : null;
     }
