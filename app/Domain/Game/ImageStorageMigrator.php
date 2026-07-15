@@ -2,6 +2,7 @@
 
 namespace App\Domain\Game;
 
+use App\Exceptions\Game\MissingLegacyImage;
 use App\Models\Game;
 use App\Models\GameImage;
 use Illuminate\Support\Facades\Storage;
@@ -30,8 +31,13 @@ class ImageStorageMigrator
     {
     }
 
+    /**
+     * @throws MissingLegacyImage if the DB names a packshot whose file isn't on disk.
+     */
     public function migrate(Game $game): void
     {
+        $this->assertLegacyFilesPresent($game);
+
         $squareFilename = $this->copyToSpaces($game, ImageResolver::TYPE_SQUARE, $game->image_square);
         $headerFilename = $this->copyToSpaces($game, ImageResolver::TYPE_HEADER, $game->image_header);
 
@@ -62,9 +68,42 @@ class ImageStorageMigrator
     }
 
     /**
+     * Refuse to migrate a game whose DB names a packshot that isn't on disk.
+     *
+     * Without this the copy just returns null, the row still records location = spaces,
+     * and the resolver falls back to the legacy file — so the page looks correct and the
+     * image was never actually migrated. That stays invisible until the Phase 2 legacy
+     * delete turns it into a broken image. Checked up front so a part-copied game can't
+     * be recorded as migrated.
+     *
+     * A game with no filename recorded at all is legitimate — it simply has no packshot.
+     *
+     * @throws MissingLegacyImage
+     */
+    private function assertLegacyFilesPresent(Game $game): void
+    {
+        $legacyFilenames = [
+            ImageResolver::TYPE_SQUARE => $game->image_square,
+            ImageResolver::TYPE_HEADER => $game->image_header,
+        ];
+
+        foreach ($legacyFilenames as $type => $legacyFilename) {
+            if (!$legacyFilename) {
+                continue;
+            }
+
+            if (!file_exists(public_path(self::LEGACY_DIRS[$type] . '/' . $legacyFilename))) {
+                throw new MissingLegacyImage(
+                    "Game {$game->id} ({$game->link_title}): {$type} image \"{$legacyFilename}\" is not on disk."
+                );
+            }
+        }
+    }
+
+    /**
      * Copy one legacy packshot onto the packshots disk. Returns the stored filename
-     * (prefix stripped, per the {gameId}-{slug}.ext convention) or null if there was
-     * no legacy file to copy.
+     * (per the {gameId}-{slug}.ext convention) or null if there was no legacy file
+     * to copy.
      */
     private function copyToSpaces(Game $game, string $type, ?string $legacyFilename): ?string
     {
@@ -77,7 +116,7 @@ class ImageStorageMigrator
             return null;
         }
 
-        $filename = $this->targetFilename($legacyFilename);
+        $filename = $this->targetFilename($game, $legacyFilename);
         $key = $this->resolver->storageKey($game, $type, $filename);
 
         Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($sourcePath));
@@ -95,11 +134,22 @@ class ImageStorageMigrator
     }
 
     /**
-     * Strip the legacy type prefix (sq- / hdr-); the bucket key already encodes type,
-     * leaving the agreed {gameId}-{slug}.ext filename.
+     * Build the agreed {gameId}-{slug}.ext name from the game record, taking only the
+     * extension from the legacy filename. Derived rather than rewritten, so the bucket
+     * gets one consistent convention regardless of which legacy naming era a file came
+     * from (sq-/hdr- prefixes, game-id vs link-id, dated vs undated).
+     *
+     * The bucket key already encodes type, so no prefix is needed. The dated suffix
+     * (hdr-{id}-{title}-{YYMMDD}) is dropped: it only existed to bust Cloudflare's
+     * 1-year cache on the legacy path, and ImageResolver::spacesUrl() cache-busts with
+     * ?v={updated_at} instead.
      */
-    private function targetFilename(string $legacyFilename): string
+    private function targetFilename(Game $game, string $legacyFilename): string
     {
-        return preg_replace('/^(sq|hdr)-/', '', $legacyFilename);
+        $extension = pathinfo($legacyFilename, PATHINFO_EXTENSION);
+
+        return $extension
+            ? "{$game->id}-{$game->link_title}.{$extension}"
+            : "{$game->id}-{$game->link_title}";
     }
 }

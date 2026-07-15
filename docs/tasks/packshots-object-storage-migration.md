@@ -104,7 +104,12 @@ Documented in `infra-red/docs/minio.md`.
 
 ### Phase 1 — bulk migrate ⏳ TODO
 
-- [ ] Confirm the low-quality image re-download job (#70) is complete first
+- [x] Confirm the low-quality image re-download job (#70) is complete first — **done 2026-07-15.**
+      It rode along with the full game-page scrape (dead-link check), completed Mar/Apr 2026.
+      NOTE: filename dates are NOT a completeness signal. The re-download only renamed files it
+      actually replaced; games whose saved image already matched the remote Content-Length were
+      left alone and kept their old undated name. So undated = "didn't need re-downloading", not
+      "not processed" — a filename-pattern query can't distinguish the two and will mislead.
 - [ ] Idempotent, resumable script copies all `public/img/ps-*` → Spaces, populates `game_images`
 
 ### Ingestion repoint + default location (required before server move) ⏳ TODO
@@ -164,6 +169,6 @@ Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
 
 ## Open items
 
-- Confirm the low-quality image re-download job (#70) is complete.
+- ~~Confirm the low-quality image re-download job (#70) is complete.~~ Confirmed 2026-07-15 — see Phase 1.
 - Estimate outbound transfer vs the 1 TiB/mo CDN allowance.
 - Decide whether MinIO lives in the switchscores compose only, or a shared infra localdev compose.

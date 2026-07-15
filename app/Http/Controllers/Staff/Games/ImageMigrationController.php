@@ -11,6 +11,7 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\Game\ImageStorageMigrator;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\Repository\GameImageRepository;
+use App\Exceptions\Game\MissingLegacyImage;
 use App\Models\Console;
 
 class ImageMigrationController extends Controller
@@ -88,7 +89,12 @@ class ImageMigrationController extends Controller
             return back()->with('error', "Game {$gameId} not found.");
         }
 
-        $this->migrator->migrate($game);
+        try {
+            $this->migrator->migrate($game);
+        } catch (MissingLegacyImage $e) {
+            return back()->with('error', "Not migrated — {$e->getMessage()}");
+        }
+
         $this->repoGame->clearCacheCoreData($gameId);
 
         return back()->with('success', "\"{$game->title}\" packshots moved to object storage.");
@@ -125,11 +131,29 @@ class ImageMigrationController extends Controller
             return back()->with('error', 'No unmigrated games left for this filter.');
         }
 
+        $migrated = 0;
+        $skipped = [];
+
         foreach ($games as $game) {
-            $this->migrator->migrate($game);
+            try {
+                $this->migrator->migrate($game);
+            } catch (MissingLegacyImage $e) {
+                $skipped[] = $game->id;
+                continue;
+            }
+
             $this->repoGame->clearCacheCoreData($game->id);
+            $migrated++;
         }
 
-        return back()->with('success', $games->count() . ' games migrated to object storage.');
+        if ($skipped) {
+            // Skipped games stay unmigrated, so they resurface at the head of every
+            // later batch until their files are fixed or their DB rows corrected.
+            return back()->with('error', "{$migrated} games migrated to object storage. "
+                . count($skipped) . ' skipped — the DB names a packshot that is not on disk (game ids: '
+                . implode(', ', $skipped) . '). These will reappear in every batch until fixed.');
+        }
+
+        return back()->with('success', "{$migrated} games migrated to object storage.");
     }
 }
