@@ -24,10 +24,13 @@
 {% endmacro %}
 
 {# Renders Open Graph metadata #}
+{# og:image must be absolute. resolveImage returns an absolute CDN URL for games whose
+   packshots are in object storage, and a relative path for legacy ones, so only prefix
+   the relative case — prefixing both produced "https://www.switchscores.comhttps://..." #}
 {% macro meta(item) %}
     {% import _self as self %}
     {% set boxartUrl = self.resolveImage(item)|trim %}
     {% if boxartUrl %}
-        <meta property="og:image" content="{{ (url('/') ~ boxartUrl)|trim }}">
+        <meta property="og:image" content="{{ (boxartUrl starts with 'http' ? boxartUrl : url('/') ~ boxartUrl)|trim }}">
     {% endif %}
 {% endmacro %}

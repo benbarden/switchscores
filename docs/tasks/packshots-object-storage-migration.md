@@ -179,8 +179,15 @@ Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
   or to `allGames()`, which loads all ~17k games and would pull 17k image rows with them. New display
   list methods need it adding by hand — the eager-load can't be enforced from the resolver end.
   This only covers Eloquent queries; see the raw-row blocker under Phase 2.
-- **og:image in `news-image.twig`** does `url('/') ~ boxartUrl` — fine for relative legacy
-  paths, but will double-prefix once the resolver returns absolute CDN URLs. Fix at Phase 2.
+- ~~**og:image in `news-image.twig`** does `url('/') ~ boxartUrl` — fine for relative legacy
+  paths, but will double-prefix once the resolver returns absolute CDN URLs. Fix at Phase 2.~~
+  **Fixed 2026-07-15 — and "Phase 2" was the wrong call.** This did not wait for the cutover: it
+  broke as soon as the *first* game was migrated, and was live on prod emitting
+  `content="https://www.switchscores.comhttps://switchscores-packshots..."` on every migrated
+  game page — i.e. broken social share previews. Now prefixes only when the URL is relative
+  (`boxartUrl starts with 'http'`). **Lesson: anything that assumes the resolver returns a
+  relative path breaks at first migration, not at cutover.** Audit for other `url('/') ~` or
+  `asset()` wrapping around packshot URLs on that basis.
 
 ## Open items
 
