@@ -17,7 +17,10 @@ use App\Models\Console;
 class ImageMigrationController extends Controller
 {
     const PER_PAGE = 50;
-    const BATCH_SIZE = 50;
+
+    // ~0.06s per game against Spaces, so 250 is ~15s — clear of the 30s timeout ceiling.
+    // The bottleneck is clicking, not compute: at 50 the Switch 1 backlog was 335 clicks.
+    const BATCH_SIZE = 250;
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
