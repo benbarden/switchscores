@@ -144,7 +144,22 @@ The slim new server must never accumulate local image disk, so before the server
       `getApiIdList()` (API, no packshots — fine). The on-sale tables and tag pages are real public
       traffic. Audit for others before cutover: `grep -rn "DB::table('games')" app/`
 - [ ] Once counts match: drop legacy fallback from resolver
-- [ ] Later delete `public/img/ps-*` → reclaims ~5 GB, unlocks smaller droplet
+- [ ] **Delete legacy images ONE BY ONE, verified — do NOT bulk-wipe `public/img/ps-*`** (decided 2026-07-15).
+      Reclaims the same ~5 GB, just slower. Rationale: a bulk delete assumes `game_images` is a complete
+      and accurate account of what's on disk, and we already know it isn't — see the missing-header games
+      below. Anything the DB doesn't know about would be destroyed silently, with no way to tell afterwards
+      whether it mattered.
+      Method: for each game with `location = spaces`, confirm the object actually exists in Spaces, then
+      delete that game's local file. **Whatever remains in `public/img/ps-*` afterwards is by definition an
+      orphan** — a file no game row points at. Expect some: images are deleted with their game, but leftovers
+      are likely from earlier eras. Review the remainder before deleting; some may match the missing-header
+      games (i.e. the file exists under a name the DB no longer references), which would make them a fix
+      rather than a deletion.
+- [ ] **Games with genuinely missing header images** — decide what to do (2026-07-15: at least one known).
+      Surfaced by the migrate guard, which refuses them and reports the id; they resurface at the head of
+      every batch until resolved. Two options per game: re-crawl to fetch the image, or null the
+      `games.image_header` column so the DB stops naming a file that doesn't exist (a game with no packshot
+      is legitimate and migrates cleanly). Handle once the bulk run is otherwise clear.
 - [ ] Move override concept / drop legacy `games.image_*` columns
 
 ## Game images dashboard + migration tool ✅ DONE (2026-07-13)
