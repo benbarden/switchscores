@@ -186,8 +186,11 @@ Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
   `content="https://www.switchscores.comhttps://switchscores-packshots..."` on every migrated
   game page — i.e. broken social share previews. Now prefixes only when the URL is relative
   (`boxartUrl starts with 'http'`). **Lesson: anything that assumes the resolver returns a
-  relative path breaks at first migration, not at cutover.** Audit for other `url('/') ~` or
-  `asset()` wrapping around packshot URLs on that basis.
+  relative path breaks at first migration, not at cutover.**
+  **There are TWO og:image emitters, and the doc previously named only one:**
+  `theme/wos/base.twig:53` (the `GameData` branch — this is the one game pages use, and the one
+  that was live-broken) and `ui/components/news/news-image.twig` (the `NewsItem` branch). Both
+  fixed. Full audit done: those are the only two, and nothing wraps a packshot URL in `asset()`.
 
 ## Open items
 

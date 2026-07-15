@@ -50,7 +50,8 @@
     {% if GameData %}
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
         {% if boxartUrl %}
-            <meta property="og:image" content="{{ url('/') }}{{ boxartUrl }}" />
+            {# Absolute already for packshots in object storage; only prefix the legacy relative path #}
+            <meta property="og:image" content="{{ boxartUrl starts with 'http' ? boxartUrl : url('/') ~ boxartUrl }}" />
         {% endif %}
     {% elseif NewsItem %}
         {% if NewsItem.game %}
