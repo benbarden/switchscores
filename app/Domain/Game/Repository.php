@@ -228,6 +228,19 @@ class Repository extends AbstractRepository
         return Game::where('title', $title)->where('console_id', $consoleId)->first();
     }
 
+    /**
+     * Get a game by its European eShop NSUID (the data-nsuid on store listings).
+     * A stable per-platform ID — more reliable than title matching.
+     */
+    public function getByEshopEuropeNsuid(string $nsuid, $consoleId = null)
+    {
+        $query = Game::where('eshop_europe_nsuid', $nsuid);
+        if ($consoleId !== null) {
+            $query->where('console_id', $consoleId);
+        }
+        return $query->first();
+    }
+
     public function updateEshopOrder(int $gameId, int $order): void
     {
         Game::where('id', $gameId)->update(['eshop_europe_order' => $order]);

@@ -42,6 +42,7 @@ class ParseService
 
     public function __construct(
         private RawTextParser $parser,
+        private HtmlListParser $htmlParser,
         private TitleNormaliser $titleNormaliser,
         private GameRepository $repoGame,
         private WeeklyBatchExclusionRepository $repoExclusion,
@@ -73,31 +74,56 @@ class ParseService
         // Delete any previously parsed items for this page (re-parse replaces them)
         $this->repoItem->deleteForListPage($batchId, $console, $listType, $pageNumber);
 
-        $rawEntries  = $this->parser->parse($rawPage->raw_content);
-        $summary     = ['in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0, 'already_in_db' => 0, 'pre_excluded' => 0, 'total_parsed' => count($rawEntries)];
+        // Prefer the rich HTML (store paste) when present; fall back to plain text.
+        $useHtml = $rawPage->raw_html && $this->htmlParser->looksLikeHtml($rawPage->raw_html);
+        if ($useHtml) {
+            $rawEntries    = $this->htmlParser->parse($rawPage->raw_html);
+            $expectedCount = $this->htmlParser->countGameBlocks($rawPage->raw_html);
+        } else {
+            $rawEntries    = $this->parser->parse($rawPage->raw_content);
+            $expectedCount = $this->parser->countGameBlocks($rawPage->raw_content);
+        }
+
+        $summary = [
+            'in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0,
+            'already_in_db' => 0, 'pre_excluded' => 0,
+            'total_parsed' => count($rawEntries),
+            'expected_blocks' => $expectedCount,
+            'dropped' => max(0, $expectedCount - count($rawEntries)),
+            'source' => $useHtml ? 'html' : 'text',
+        ];
 
         foreach ($rawEntries as $sortOrder => $entry) {
             $titleRaw        = $entry['title_raw'];
             $title           = $this->titleNormaliser->normalise($titleRaw);
             $releaseDate     = $entry['release_date'];
+            $nsuid           = $entry['nsuid'] ?? null;
+
+            // Fields common to every item, regardless of status. HTML paste supplies
+            // nsuid/nintendo_url/packshot_url; the text parser leaves them null.
+            $baseData = [
+                'batch_id'    => $batchId,
+                'console'     => $console,
+                'list_type'   => $listType,
+                'page_number' => $pageNumber,
+                'sort_order'  => $sortOrder,
+                'title'       => $title,
+                'title_raw'   => $titleRaw,
+                'nsuid'       => $nsuid,
+                'release_date' => $releaseDate,
+                'price_gbp'   => $entry['price_gbp'],
+                'price_raw'   => $entry['price_raw'],
+                'price_flag'  => $entry['price_flag'] ? 1 : 0,
+                'price_flag_reason' => $entry['price_flag_reason'],
+                'nintendo_genres'   => $entry['nintendo_genres'],
+                'description'       => $entry['description'],
+                'nintendo_url'      => $entry['nintendo_url'] ?? null,
+                'packshot_url'      => $entry['packshot_url'] ?? null,
+            ];
 
             // Persistent exclusion check — skip games excluded in a previous batch
             if ($this->repoExclusion->isExcluded($title, $console)) {
-                $this->repoItem->create([
-                    'batch_id'    => $batchId,
-                    'console'     => $console,
-                    'list_type'   => $listType,
-                    'page_number' => $pageNumber,
-                    'sort_order'  => $sortOrder,
-                    'title'       => $title,
-                    'title_raw'   => $titleRaw,
-                    'release_date' => $releaseDate,
-                    'price_gbp'   => $entry['price_gbp'],
-                    'price_raw'   => $entry['price_raw'],
-                    'price_flag'  => $entry['price_flag'] ? 1 : 0,
-                    'price_flag_reason' => $entry['price_flag_reason'],
-                    'nintendo_genres'   => $entry['nintendo_genres'],
-                    'description'       => $entry['description'],
+                $this->repoItem->create($baseData + [
                     'item_status' => WeeklyBatchItem::STATUS_EXCLUDED,
                 ]);
                 $summary['pre_excluded']++;
@@ -106,22 +132,8 @@ class ParseService
 
             // Date range filter
             if (!$releaseDate || $releaseDate < $dateFrom || $releaseDate > $dateTo) {
-                $outOfRangeGame = $this->repoGame->getByTitleAndConsole($title, $consoleId);
-                $this->repoItem->create([
-                    'batch_id'    => $batchId,
-                    'console'     => $console,
-                    'list_type'   => $listType,
-                    'page_number' => $pageNumber,
-                    'sort_order'  => $sortOrder,
-                    'title'       => $title,
-                    'title_raw'   => $titleRaw,
-                    'release_date' => $releaseDate,
-                    'price_gbp'   => $entry['price_gbp'],
-                    'price_raw'   => $entry['price_raw'],
-                    'price_flag'  => $entry['price_flag'] ? 1 : 0,
-                    'price_flag_reason' => $entry['price_flag_reason'],
-                    'nintendo_genres'   => $entry['nintendo_genres'],
-                    'description'       => $entry['description'],
+                $outOfRangeGame = $this->matchGame($nsuid, $title, $consoleId);
+                $this->repoItem->create($baseData + [
                     'item_status' => 'out_of_range',
                     'game_id'     => $outOfRangeGame ? $outOfRangeGame->id : null,
                 ]);
@@ -133,23 +145,9 @@ class ParseService
             }
 
             // DB duplicate check
-            $existingGame = $this->repoGame->getByTitleAndConsole($title, $consoleId);
+            $existingGame = $this->matchGame($nsuid, $title, $consoleId);
             if ($existingGame) {
-                $this->repoItem->create([
-                    'batch_id'    => $batchId,
-                    'console'     => $console,
-                    'list_type'   => $listType,
-                    'page_number' => $pageNumber,
-                    'sort_order'  => $sortOrder,
-                    'title'       => $title,
-                    'title_raw'   => $titleRaw,
-                    'release_date' => $releaseDate,
-                    'price_gbp'   => $entry['price_gbp'],
-                    'price_raw'   => $entry['price_raw'],
-                    'price_flag'  => $entry['price_flag'] ? 1 : 0,
-                    'price_flag_reason' => $entry['price_flag_reason'],
-                    'nintendo_genres'   => $entry['nintendo_genres'],
-                    'description'       => $entry['description'],
+                $this->repoItem->create($baseData + [
                     'item_status' => 'already_in_db',
                     'game_id'     => $existingGame->id,
                 ]);
@@ -168,30 +166,25 @@ class ParseService
                 $lqFlagReason = 'Auto-LQ title prefix: '.$title;
             } elseif ($isBundle) {
                 $itemStatus = WeeklyBatchItem::STATUS_BUNDLE;
+            } elseif (!empty($baseData['nintendo_url'])) {
+                // HTML paste already gave us the store URL — skip the manual URL step
+                // and send the item straight to fetch (mirrors Repository::updateUrl).
+                $itemStatus = WeeklyBatchItem::STATUS_FETCH_PENDING;
             } else {
                 $itemStatus = WeeklyBatchItem::STATUS_PENDING;
             }
 
-            $item = $this->repoItem->create([
-                'batch_id'    => $batchId,
-                'console'     => $console,
-                'list_type'   => $listType,
-                'page_number' => $pageNumber,
-                'sort_order'  => $sortOrder,
-                'title'       => $title,
-                'title_raw'   => $titleRaw,
-                'release_date' => $releaseDate,
-                'price_gbp'   => $entry['price_gbp'],
-                'price_raw'   => $entry['price_raw'],
-                'price_flag'  => $entry['price_flag'] ? 1 : 0,
-                'price_flag_reason' => $entry['price_flag_reason'],
-                'nintendo_genres'   => $entry['nintendo_genres'],
-                'description'       => $entry['description'],
+            $activeData = $baseData + [
                 'collection'  => $collection,
                 'item_status' => $itemStatus,
                 'lq_flag'     => $lqFlagReason ? 1 : 0,
                 'lq_flag_reason' => $lqFlagReason,
-            ]);
+            ];
+            if ($itemStatus === WeeklyBatchItem::STATUS_FETCH_PENDING) {
+                $activeData['fetch_status'] = WeeklyBatchItem::FETCH_STATUS_PENDING;
+            }
+
+            $item = $this->repoItem->create($activeData);
 
             if ($snapshot->has($titleRaw)) {
                 $this->repoItem->restoreSnapshot($item, $snapshot->get($titleRaw));
@@ -247,6 +240,22 @@ class ParseService
         $item->lq_flag        = $lqReason ? 1 : 0;
         $item->lq_flag_reason = $lqReason;
         $item->save();
+    }
+
+    /**
+     * Find an existing game for an item. Prefers the stable NSUID (when the HTML
+     * paste supplied one and a game has been backfilled with it); falls back to
+     * title + console matching.
+     */
+    private function matchGame(?string $nsuid, string $title, int $consoleId)
+    {
+        if ($nsuid) {
+            $byNsuid = $this->repoGame->getByEshopEuropeNsuid($nsuid, $consoleId);
+            if ($byNsuid) {
+                return $byNsuid;
+            }
+        }
+        return $this->repoGame->getByTitleAndConsole($title, $consoleId);
     }
 
     private function matchCollection(string $title): ?string

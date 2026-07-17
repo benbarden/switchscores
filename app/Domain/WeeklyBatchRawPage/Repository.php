@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Repository
 {
-    public function saveOrReplace(int $batchId, string $console, string $listType, int $pageNumber, string $rawContent): WeeklyBatchRawPage
+    public function saveOrReplace(int $batchId, string $console, string $listType, int $pageNumber, string $rawContent, ?string $rawHtml = null): WeeklyBatchRawPage
     {
         $page = WeeklyBatchRawPage::where('batch_id', $batchId)
             ->where('console', $console)
@@ -24,6 +24,7 @@ class Repository
         }
 
         $page->raw_content = $rawContent;
+        $page->raw_html    = $rawHtml ?: null; // rich HTML when pasted from the store; null falls back to text
         $page->parsed_at   = null; // reset on replace
         $page->save();
         return $page;

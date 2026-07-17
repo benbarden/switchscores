@@ -21,6 +21,10 @@ use App\Models\WeeklyBatchItem;
 
 class WeeklyBatchListController extends Controller
 {
+    // Nintendo store lists paginate at this many games per page. A parsed page with a
+    // different total is flagged on the Raw screen (may mean a partial paste, or the last page).
+    private const NINTENDO_PAGE_SIZE = 24;
+
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private WeeklyBatchRepository $repoBatch,
@@ -104,6 +108,7 @@ class WeeklyBatchListController extends Controller
         $pageCounts = [];
         foreach ($items->groupBy('page_number') as $pageNum => $pageItems) {
             $pageCounts[$pageNum] = [
+                'total'         => $pageItems->count(),
                 'in_range'      => $pageItems->whereNotIn('item_status', $skippedStatuses)->count(),
                 'imported'      => $pageItems->where('item_status', WeeklyBatchItem::STATUS_IMPORTED)->count(),
                 'already_in_db' => $pageItems->where('item_status', WeeklyBatchItem::STATUS_ALREADY_IN_DB)->count(),
@@ -119,6 +124,7 @@ class WeeklyBatchListController extends Controller
         $bindings['Items']          = $items;
         $bindings['Counts']         = $counts;
         $bindings['PageCounts']     = $pageCounts;
+        $bindings['ExpectedPageSize'] = self::NINTENDO_PAGE_SIZE;
         $bindings['NextPageNumber'] = $this->repoRawPage->getNextPageNumber($batchId, $console, $listType);
         $bindings['DateFrom']       = $dateFrom;
         $bindings['DateTo']         = $dateTo;
@@ -133,6 +139,7 @@ class WeeklyBatchListController extends Controller
         $batch = $this->getBatch($batchId);
 
         $rawContent = request('raw_content', '');
+        $rawHtml    = request('raw_html', '');
         $pageNumber = (int) request('page_number', 1);
 
         if (trim($rawContent) === '') {
@@ -146,16 +153,26 @@ class WeeklyBatchListController extends Controller
                 ->with('error', "Page {$pageNumber} cannot be replaced — some items have already been imported.");
         }
 
-        $this->repoRawPage->saveOrReplace($batchId, $console, $listType, $pageNumber, $rawContent);
+        $this->repoRawPage->saveOrReplace($batchId, $console, $listType, $pageNumber, $rawContent, $rawHtml);
 
         $summary = $this->parseService->parsePage(
             $batchId, $console, $listType, $pageNumber,
             $batch->batch_date->toDateString()
         );
 
-        $message = "Page {$pageNumber} saved and parsed: {$summary['in_range']} in range, {$summary['already_in_db']} already in DB, {$summary['out_of_range']} out of range.";
+        $source  = ($summary['source'] ?? 'text') === 'html' ? 'rich HTML' : 'plain text';
+        $message = "Page {$pageNumber} saved and parsed from {$source}: {$summary['in_range']} in range, {$summary['already_in_db']} already in DB, {$summary['out_of_range']} out of range.";
         if ($summary['out_of_range_not_in_db'] > 0) {
             $message .= " ⚠ {$summary['out_of_range_not_in_db']} out-of-range game(s) not found in DB — check below.";
+        }
+
+        // Safety check: the parser should recognise every game block on the page.
+        // A mismatch means some games were silently dropped (e.g. an unrecognised meta-line format).
+        if ($summary['dropped'] > 0) {
+            $message .= " ⚠ Parsed {$summary['total_parsed']} of {$summary['expected_blocks']} games detected on the page"
+                . " — {$summary['dropped']} could not be parsed and were skipped. Check the raw text for format issues.";
+            return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))
+                ->with('warning', $message);
         }
 
         return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))

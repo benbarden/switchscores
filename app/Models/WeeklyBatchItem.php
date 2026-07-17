@@ -54,7 +54,7 @@ class WeeklyBatchItem extends Model
 
     protected $fillable = [
         'batch_id', 'console', 'list_type', 'page_number', 'sort_order',
-        'title', 'title_raw', 'release_date', 'price_gbp', 'price_raw',
+        'title', 'title_raw', 'nsuid', 'release_date', 'price_gbp', 'price_raw',
         'nintendo_genres', 'description',
         'nintendo_url', 'packshot_url',
         'publisher_raw', 'publisher_normalised', 'players',
@@ -96,5 +96,31 @@ class WeeklyBatchItem extends Model
     public function isImported(): bool
     {
         return $this->item_status === self::STATUS_IMPORTED;
+    }
+
+    /**
+     * Decide an item's status immediately after a successful fetch.
+     *
+     * Fetch only runs for STATUS_FETCH_PENDING items, so this is always a fresh
+     * fetch — LQ review is driven by the flag alone, not by whether a packshot
+     * exists (the HTML paste pre-fills packshot_url, so it can't be a "not yet
+     * reviewed" proxy). A pre-filled packshot lets a clean item skip the packshot
+     * stage straight to category.
+     */
+    public static function postFetchStatus(bool $confirmedLq, bool $lqFlag, bool $hasPackshot, bool $hasCategory): string
+    {
+        if ($confirmedLq) {
+            return self::STATUS_LOW_QUALITY;
+        }
+        if ($lqFlag) {
+            return self::STATUS_LQ_REVIEW;
+        }
+        if ($hasPackshot && $hasCategory) {
+            return self::STATUS_READY;
+        }
+        if ($hasPackshot) {
+            return self::STATUS_CATEGORY_PENDING;
+        }
+        return self::STATUS_PACKSHOT_PENDING;
     }
 }

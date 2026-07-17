@@ -26,9 +26,12 @@ class RawTextParser
         '/^Switch \d (New|Upcoming)/i',
     ];
 
-    // Meta line pattern: "Nintendo Switch [2] • DD/MM/YYYY • Genres"
+    // Meta line pattern: "Nintendo Switch[...] • DD/MM/YYYY[ • Genres]"
+    // The console portion varies: "Nintendo Switch", "Nintendo Switch 2",
+    // "Nintendo Switch, Nintendo Switch 2", etc. Match anything from "Nintendo Switch"
+    // up to the "• date" separator. The genres segment is optional — some games list none.
     // Uses \S for the separator (bullet char) to avoid UTF-8 encoding issues with literal • in const strings
-    private const META_PATTERN = '/^Nintendo Switch(?:\s+2)?\s+\S\s+(\d{2}\/\d{2}\/\d{4})\s+\S\s+(.+)$/u';
+    private const META_PATTERN = '/^Nintendo Switch.*?\s\S\s+(\d{2}\/\d{2}\/\d{4})(?:\s+\S\s+(.+))?$/u';
 
     // Price patterns
     private const PRICE_PATTERN = '/^(?:Starting from:\s*)?£([\d.]+)/';
@@ -52,7 +55,7 @@ class RawTextParser
                 // Meta line found at $i. Title is the nearest non-empty line(s) before it.
                 $title = $this->findTitleBefore($lines, $i);
                 $dateRaw  = $metaMatches[1]; // DD/MM/YYYY
-                $genresRaw = trim($metaMatches[2]);
+                $genresRaw = isset($metaMatches[2]) ? trim($metaMatches[2]) : '';
 
                 // Skip blank lines after meta, then get price
                 $j = $i + 1;
@@ -82,6 +85,32 @@ class RawTextParser
         }
 
         return $entries;
+    }
+
+    /**
+     * Independently estimate how many game blocks the raw text contains, without
+     * relying on the meta-line format (which varies and may not parse).
+     *
+     * Nintendo listings repeat each game's title on two consecutive lines, so we
+     * count consecutive duplicate non-empty lines. Used as a safety check: if this
+     * count exceeds the number of parsed entries, some games were silently dropped.
+     */
+    public function countGameBlocks(string $rawContent): int
+    {
+        $lines = explode("\n", str_replace("\r\n", "\n", $rawContent));
+        $lines = array_map('trim', $lines);
+        $lines = array_values(array_filter($lines, fn($line) => !$this->shouldSkipLine($line)));
+
+        $count = 0;
+        $total = count($lines);
+        for ($i = 0; $i < $total - 1; $i++) {
+            if ($lines[$i] !== '' && $lines[$i] === $lines[$i + 1]) {
+                $count++;
+                $i++; // skip the paired line so a title isn't counted twice
+            }
+        }
+
+        return $count;
     }
 
     private function findTitleBefore(array $lines, int $metaIndex): string

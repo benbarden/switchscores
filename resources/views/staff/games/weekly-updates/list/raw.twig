@@ -10,6 +10,9 @@
 {% if session('error') %}
     <div class="alert alert-danger">{{ session('error') }}</div>
 {% endif %}
+{% if session('warning') %}
+    <div class="alert alert-warning">{{ session('warning') }}</div>
+{% endif %}
 
 <div class="row mb-3">
     <div class="col">
@@ -32,6 +35,7 @@
             <tr>
                 <th>Page</th>
                 <th>Status</th>
+                <th class="text-center">Total</th>
                 <th class="text-center">In range</th>
                 <th class="text-center">Imported</th>
                 <th class="text-center">Already in DB</th>
@@ -49,6 +53,14 @@
                         <span class="badge bg-success">Parsed</span>
                     {% else %}
                         <span class="badge bg-secondary">Not parsed</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% set total = pc['total'] ?? 0 %}
+                    {% if page.isParsed() and total != ExpectedPageSize %}
+                        <span class="badge bg-warning text-dark" title="Nintendo pages normally have {{ ExpectedPageSize }} games. A different total may mean a partial paste — fine if this is the last page.">{{ total }} ⚠</span>
+                    {% else %}
+                        <span class="fw-semibold">{{ total }}</span>
                     {% endif %}
                 </td>
                 <td class="text-center">{{ pc['in_range'] ?? '—' }}</td>
@@ -84,6 +96,8 @@
     <div class="mb-3" style="max-width: 700px;">
         <label class="form-label">Paste Nintendo listing data for page {{ NextPageNumber }}</label>
         <textarea name="raw_content" class="form-control font-monospace" rows="20" placeholder="Paste raw Nintendo listing data here..."></textarea>
+        <input type="hidden" name="raw_html" value="">
+        <div class="form-text raw-html-status" data-default="Tip: copy the game tiles directly from the Nintendo store to also capture URLs, packshots and NSUIDs.">Tip: copy the game tiles directly from the Nintendo store to also capture URLs, packshots and NSUIDs.</div>
     </div>
 
     <button type="submit" class="btn btn-primary">Save and parse page {{ NextPageNumber }}</button>
@@ -101,6 +115,8 @@
             <input type="hidden" name="page_number" value="{{ page.page_number }}">
             <div class="mb-2" style="max-width: 700px;">
                 <textarea name="raw_content" class="form-control font-monospace" rows="8" placeholder="Paste replacement content for page {{ page.page_number }}..."></textarea>
+                <input type="hidden" name="raw_html" value="">
+                <div class="form-text raw-html-status" data-default="Paste from the Nintendo store to capture URLs, packshots and NSUIDs.">Paste from the Nintendo store to capture URLs, packshots and NSUIDs.</div>
             </div>
             <button type="submit" class="btn btn-sm btn-warning">Replace page {{ page.page_number }}</button>
         </form>
@@ -317,6 +333,51 @@
         'pending':       '<span class="badge bg-primary">To process</span>',
         'fetch_pending': '<span class="badge bg-primary">To process</span>',
     };
+
+    // ---- Rich-HTML paste capture ----
+    // When staff paste game tiles copied from the Nintendo store, the clipboard
+    // carries a text/html representation with store URLs, packshot URLs and NSUIDs.
+    // A plain textarea keeps only the plain text, so we grab the HTML on paste and
+    // stash it in a hidden field. The visible textarea still shows readable text.
+    document.querySelectorAll('form textarea[name="raw_content"]').forEach(function (textarea) {
+        var form   = textarea.closest('form');
+        var hidden = form.querySelector('input[name="raw_html"]');
+        var status = form.querySelector('.raw-html-status');
+        if (!hidden) return;
+
+        var justPasted = false;
+
+        function countRows(html) {
+            return (html.match(/data-nsuid/g) || []).length;
+        }
+
+        textarea.addEventListener('paste', function (e) {
+            var html = (e.clipboardData || window.clipboardData).getData('text/html');
+            if (html && html.indexOf('data-nsuid') !== -1) {
+                hidden.value = html;
+                justPasted = true;
+                if (status) {
+                    var n = countRows(html);
+                    status.textContent = '✓ Captured rich HTML — ' + n + ' game' + (n === 1 ? '' : 's') + ' with URLs, packshots and NSUIDs.';
+                    status.classList.add('text-success');
+                }
+            } else {
+                // Pasted content isn't store HTML — fall back to plain-text parsing.
+                hidden.value = '';
+                if (status) { status.textContent = status.dataset.default; status.classList.remove('text-success'); }
+            }
+        });
+
+        // If the box is edited by hand after a paste, the captured HTML no longer
+        // matches what's visible, so discard it and parse the plain text instead.
+        textarea.addEventListener('input', function () {
+            if (justPasted) { justPasted = false; return; }
+            if (hidden.value) {
+                hidden.value = '';
+                if (status) { status.textContent = status.dataset.default; status.classList.remove('text-success'); }
+            }
+        });
+    });
 
     document.querySelectorAll('.item-action-select').forEach(function (select) {
         select.addEventListener('change', function () {

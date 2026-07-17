@@ -206,18 +206,12 @@ class Repository
         $item->fill($data);
         $item->fetch_status = WeeklyBatchItem::FETCH_STATUS_FETCHED;
 
-        if ($confirmedLq) {
-            $item->item_status = WeeklyBatchItem::STATUS_LOW_QUALITY;
-        } elseif ($item->lq_flag && !$item->packshot_url) {
-            // lq_flag set and no packshot yet — user hasn't reviewed this item
-            $item->item_status = WeeklyBatchItem::STATUS_LQ_REVIEW;
-        } elseif ($item->packshot_url && $item->category) {
-            $item->item_status = WeeklyBatchItem::STATUS_READY;
-        } elseif ($item->packshot_url) {
-            $item->item_status = WeeklyBatchItem::STATUS_CATEGORY_PENDING;
-        } else {
-            $item->item_status = WeeklyBatchItem::STATUS_PACKSHOT_PENDING;
-        }
+        $item->item_status = WeeklyBatchItem::postFetchStatus(
+            $confirmedLq,
+            (bool) $item->lq_flag,
+            (bool) $item->packshot_url,
+            (bool) $item->category
+        );
 
         $item->save();
     }
@@ -261,7 +255,14 @@ class Repository
 
     public function keepDespiteLqFlag(WeeklyBatchItem $item): void
     {
-        $item->item_status = WeeklyBatchItem::STATUS_PACKSHOT_PENDING;
+        // Kept despite the LQ flag — treat as clean. If the packshot is already known
+        // (HTML paste), skip the packshot stage straight to category.
+        $item->item_status = WeeklyBatchItem::postFetchStatus(
+            false,
+            false,
+            (bool) $item->packshot_url,
+            (bool) $item->category
+        );
         $item->save();
     }
 

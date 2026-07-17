@@ -546,8 +546,79 @@ Key files:
   - suggestion_accepted tracked at save: 1 = accepted as suggested, 0 = changed
   - Migration: add suggestion_accepted tinyint nullable to weekly_batch_items (run in VM)
 
+## Raw parsing: plain text and HTML paste
+
+The Raw step accepts two formats, chosen automatically per page.
+
+### Plain-text parser (`RawTextParser`)
+
+Parses the plain-text listing pasted from the store. Meta line format varies more than
+first assumed - fixes made:
+
+- Genres are optional. A meta line can be just `Nintendo Switch 2 • DD/MM/YYYY` (no
+  `• Genres`). The regex used to require genres and silently dropped those games
+  (e.g. Outlaws, Heave Ho 2, Disney Speedstorm).
+- Console prefix varies: `Nintendo Switch`, `Nintendo Switch 2`, or dual-console
+  `Nintendo Switch, Nintendo Switch 2` (e.g. STARBITES). The regex now matches any
+  prefix up to the `• date`.
+- **Count check:** `countGameBlocks()` counts games independently (Nintendo repeats each
+  title on two consecutive lines). If parsed < expected, `savePage` shows an amber
+  warning that N games were skipped - so silent drops can't go unnoticed again.
+
+### HTML parser (`HtmlListParser`) - preferred when available
+
+When staff copy the game tiles directly from the Nintendo store, the clipboard carries a
+`text/html` representation. A JS paste handler on the Raw textarea (`raw.twig`) captures
+it into a hidden `raw_html` field; the visible textarea still shows readable plain text.
+Editing the box by hand discards the captured HTML (falls back to text).
+
+Each game is a self-contained `<li data-nsuid="...">`, so game boundaries are
+unambiguous - the "dropped game" class of bug can't occur. `ParseService::parsePage`
+uses `HtmlListParser` when `raw_html` is present and looks like store HTML, else falls
+back to `RawTextParser`. The parse summary carries `source` = `html` | `text`, surfaced
+in the success message.
+
+Fields captured per tile (Symfony DomCrawler + CSS selectors):
+
+| Field | Source |
+|---|---|
+| Title (exact, untruncated) | `data-nt-item-title-master` |
+| NSUID | `data-nsuid` |
+| Store URL | `<a href>` |
+| Square packshot | `<img src>` (`1x1_..._image500w.jpg`) |
+| Console / date / genres | `.page-data` (console = text before first bullet, so dual-console reads whole) |
+| Price (original/sale/starting-from) | `.original-price`, `.discount`, `[data-price-from-label]` |
+| Description | `p.visible-lg` |
+| Demo available | `.plm-priority-labels__label--demo` |
+| Download-only | `[data-component="red-cap"]` |
+
+This pre-fills `nintendo_url` and `packshot_url` at parse time, largely collapsing the
+manual URLs step. Upcoming games often have no `.price-small` element (price TBA) -
+handled as `price_gbp=null` + "price missing" flag, same as the text parser.
+
+### NSUID matching
+
+- `weekly_batch_items.nsuid` stores the tile NSUID.
+- `games.eshop_europe_nsuid` (nullable, indexed) added to hold the same ID on real games
+  (companion to `eshop_us_nsuid`).
+- `ParseService::matchGame()` matches an item to an existing game by NSUID first (via
+  `GameRepository::getByEshopEuropeNsuid`), falling back to title + console. NSUID
+  matching only bites once games are backfilled with their NSUID (see To Do).
+
+Migrations: `2026_07_17_000001` (raw_html), `_000002` (item nsuid), `_000003` (games
+eshop_europe_nsuid). Tests: `HtmlListParserTest`, `RawTextParserTest` (fixtures under
+`tests/Unit/Domain/WeeklyBatch/fixtures/`).
+
 ### To Do
 
+- **Backfill `games.eshop_europe_nsuid`** — build a paste-to-backfill flow so existing
+  games can be matched/repopulated by NSUID (Ben's idea: laborious but valuable). Until
+  then, NSUID matching in `matchGame()` is inert for existing games and it falls back to
+  title matching.
+- **Higher-res packshots** — the captured image is `image500w` (square). Test whether a
+  larger variant (e.g. rewriting the width) exists before wiring it into the packshot step.
+- **Soften "price missing" for Upcoming** — most upcoming tiles have no price; consider a
+  gentler label so it doesn't read as an error.
 - **Publisher aliases** — support alternative names for publishers (e.g. "CGI Lab Games" → "CGI Lab"). Needs: `games_company_aliases` table (`company_id`, `alias_name`), lookup in Publishers step and NintendoPageFetcher, UI on company page to manage aliases. Workaround: rename in the publisher name input before clicking Create.
 - **Duplicate detection resilience** — if an existing game's title uses ` - ` as a separator and the TitleNormaliser converts it to `: `, the duplicate check fails and a new game is created instead. Fix: normalise the lookup title before comparing, or run a fuzzy match (strip punctuation/case). Workaround: manually delete the new duplicate, rename the old game to the corrected title, and set eshop_europe_order manually.
 - Stage 7: Confirm and import

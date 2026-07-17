@@ -37,6 +37,7 @@ class Game extends Model implements Auditable
         'title', 'link_title', 'console_id', 'price_eshop', 'players', 'rating_avg', 'review_count',
         'amazon_uk_link', 'amazon_us_link', 'game_rank', 'video_url',
         'eshop_europe_fs_id',
+        'eshop_europe_nsuid',
         'eshop_us_nsuid',
         'series_id', 'category_id', 'collection_id',
         'category_verification',

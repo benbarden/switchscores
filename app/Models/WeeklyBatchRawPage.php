@@ -9,7 +9,7 @@ class WeeklyBatchRawPage extends Model
     protected $table = 'weekly_batch_raw_pages';
 
     protected $fillable = [
-        'batch_id', 'console', 'list_type', 'page_number', 'raw_content', 'parsed_at',
+        'batch_id', 'console', 'list_type', 'page_number', 'raw_content', 'raw_html', 'parsed_at',
     ];
 
     protected $casts = [
