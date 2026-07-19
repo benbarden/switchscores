@@ -74,6 +74,14 @@ class Repository
         return ReviewDraft::whereNull('process_status')->whereNull('parse_status')->orderBy('id', 'asc')->get();
     }
 
+    public function getRecentByFeedLink($feedLinkId, $limit = 50)
+    {
+        return ReviewDraft::where('feed_link_id', $feedLinkId)
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
     public function getReadyForProcessing()
     {
         return ReviewDraft::whereNotNull('game_id')

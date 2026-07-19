@@ -1,0 +1,312 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <h2>{{ FeedLinkData.site.name }}</h2>
+        <p>
+            <a href="{{ FeedLinkData.feed_url }}" target="_blank">{{ FeedLinkData.feed_url }}</a>
+            &nbsp;|&nbsp;
+            <a href="{{ route('staff.reviews.feedLinks.edit', {'linkId': LinkId}) }}">Edit this feed link</a>
+        </p>
+    </div>
+</div>
+
+{% if LoadError %}
+    <div class="alert alert-danger">
+        Could not load titles: {{ LoadError }}
+    </div>
+{% endif %}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="btn-group" role="group">
+            <a href="{{ route('staff.reviews.feedLinks.testTitleRule', {'linkId': LinkId}) }}"
+               class="btn btn-sm {% if Source == 'drafts' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                Recent drafts (max {{ DraftLimit }})
+            </a>
+            <a href="{{ route('staff.reviews.feedLinks.testTitleRule', {'linkId': LinkId}) }}?source=live"
+               class="btn btn-sm {% if Source == 'live' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                Fetch feed live
+            </a>
+        </div>
+        <span class="ms-2"><small>{{ TitleCount }} title(s) loaded</small></span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <label for="title_match_rule_pattern" class="col-md-2 col-form-label">Match rule pattern</label>
+    <div class="col-md-8">
+        <input id="title_match_rule_pattern" type="text" class="form-control"
+               value="{{ FeedLinkData.title_match_rule_pattern }}">
+        <small id="prepared-pattern" class="text-muted"></small>
+    </div>
+    <div class="col-md-2">
+        <button id="suggest-rule" type="button" class="btn btn-sm btn-outline-secondary">Suggest a rule</button>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <label for="title_match_rule_index" class="col-md-2 col-form-label">Match rule index</label>
+    <div class="col-md-2">
+        <input id="title_match_rule_index" type="number" class="form-control"
+               value="{{ FeedLinkData.title_match_rule_index }}">
+    </div>
+    <div class="col-md-8">
+        <button id="save-rule" type="button" class="btn btn-sm btn-primary" disabled>Save to feed link</button>
+        <span id="dirty-state" class="ms-2"><small class="text-muted">Matches the saved rule.</small></span>
+    </div>
+</div>
+
+<div id="rule-messages"></div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div id="summary"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 35%;">Item title</th>
+                    <th scope="col" style="width: 25%;">Parsed title</th>
+                    <th scope="col" style="width: 25%;">Game</th>
+                    <th scope="col" style="width: 15%;">Result</th>
+                </tr>
+                </thead>
+                <tbody id="results-body">
+                <tr><td colspan="4" class="text-muted">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var previewUrl = "{{ route('staff.reviews.feedLinks.testTitleRule.preview', {'linkId': LinkId}) }}";
+    var saveUrl = "{{ route('staff.reviews.feedLinks.testTitleRule.save', {'linkId': LinkId}) }}";
+    var source = "{{ Source }}";
+    var csrfToken = "{{ csrf_token() }}";
+    var latestSuggestion = null;
+    var latestMatchRate = null;
+    var patternIsValid = false;
+
+    // What is currently persisted, so the page can show whether the box has drifted from it.
+    var savedPattern = {{ FeedLinkData.title_match_rule_pattern|json_encode|raw }};
+    var savedIndex = {{ FeedLinkData.title_match_rule_index|json_encode|raw }};
+
+    var patternInput = document.getElementById('title_match_rule_pattern');
+    var indexInput = document.getElementById('title_match_rule_index');
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) return '';
+        return String(value)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Bootstrap 5.1 here (see theme/staff-b5/base.twig) - text-bg-* is 5.2+ and would
+    // render as white text on no background.
+    function badgeClass(status) {
+        if (status === 'Matched a game') return 'bg-success';
+        if (status === 'Parsed, but no game found') return 'bg-warning text-dark';
+        if (status === 'Rule matched, but the capture index does not exist') return 'bg-warning text-dark';
+        return 'bg-danger';
+    }
+
+    function shortStatus(status) {
+        if (status === 'Matched a game') return 'Matched';
+        if (status === 'Parsed, but no game found') return 'No game';
+        if (status === 'Rule matched, but the capture index does not exist') return 'Bad index';
+        return 'No match';
+    }
+
+    function renderMessages(data) {
+        var html = '';
+        if (data.ok === false) {
+            html += '<div class="alert alert-danger">' + escapeHtml(data.error) + '</div>';
+        }
+        (data.warnings || []).forEach(function (warning) {
+            html += '<div class="alert alert-warning">' + escapeHtml(warning) + '</div>';
+        });
+        document.getElementById('rule-messages').innerHTML = html;
+        document.getElementById('prepared-pattern').textContent = data.prepared ? 'Runs as: ' + data.prepared : '';
+    }
+
+    function renderSummary(data) {
+        if (data.ok === false) {
+            document.getElementById('summary').innerHTML = '';
+            return;
+        }
+        var s = data.summary;
+        var rateClass = data.match_rate >= 80 ? 'bg-success'
+            : (data.match_rate >= 50 ? 'bg-warning text-dark' : 'bg-danger');
+
+        var html = '<div class="d-flex flex-wrap align-items-center gap-2">'
+            + '<span class="badge ' + rateClass + ' fs-6">' + data.match_rate + '% matched</span>'
+            + '<span class="text-muted"><small>' + data.total + ' title'
+            + (data.total === 1 ? '' : 's') + ' tested</small></span>';
+
+        Object.keys(s).forEach(function (key) {
+            if (s[key] > 0) {
+                html += '<span class="badge ' + badgeClass(key) + '">'
+                    + shortStatus(key) + ': ' + s[key] + '</span>';
+            }
+        });
+
+        html += '</div>';
+        document.getElementById('summary').innerHTML = html;
+    }
+
+    function renderResults(data) {
+        var body = document.getElementById('results-body');
+        if (data.ok === false || !data.results) {
+            body.innerHTML = '<tr><td colspan="4">No results.</td></tr>';
+            return;
+        }
+        if (data.results.length === 0) {
+            body.innerHTML = '<tr><td colspan="4">No titles to test.</td></tr>';
+            return;
+        }
+        var rows = '';
+        data.results.forEach(function (item) {
+            rows += '<tr>'
+                + '<td><small>' + escapeHtml(item.item_title) + '</small></td>'
+                + '<td>' + (item.parsed_title
+                    ? '<code>' + escapeHtml(item.parsed_title) + '</code>'
+                    : '<span class="text-muted">&mdash;</span>') + '</td>'
+                + '<td>' + (item.game_id
+                    ? '<small>' + escapeHtml(item.game_title)
+                        + ' <span class="text-muted">(' + item.game_id + ')</span></small>'
+                    : '<span class="text-muted">&mdash;</span>') + '</td>'
+                + '<td><span class="badge ' + badgeClass(item.status) + '" title="'
+                    + escapeHtml(item.status) + '">' + shortStatus(item.status) + '</span></td>'
+                + '</tr>';
+        });
+        body.innerHTML = rows;
+    }
+
+    function runPreview() {
+        var body = new URLSearchParams();
+        body.append('title_match_rule_pattern', patternInput.value);
+        body.append('title_match_rule_index', indexInput.value);
+        body.append('source', source);
+        body.append('_token', csrfToken);
+
+        fetch(previewUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-TOKEN': csrfToken},
+            body: body.toString()
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            latestSuggestion = data.suggestion || null;
+            patternIsValid = data.ok !== false;
+            latestMatchRate = data.ok === false ? null : data.match_rate;
+            renderMessages(data);
+            renderSummary(data);
+            renderResults(data);
+            refreshDirtyState();
+        })
+        .catch(function (error) {
+            document.getElementById('rule-messages').innerHTML =
+                '<div class="alert alert-danger">Preview failed: ' + escapeHtml(error.message) + '</div>';
+        });
+    }
+
+    function isDirty() {
+        return patternInput.value !== (savedPattern === null ? '' : savedPattern)
+            || String(indexInput.value) !== String(savedIndex === null ? '' : savedIndex);
+    }
+
+    function refreshDirtyState() {
+        var el = document.getElementById('dirty-state');
+        var button = document.getElementById('save-rule');
+
+        if (!isDirty()) {
+            el.innerHTML = '<small class="text-muted">Matches the saved rule.</small>';
+            button.disabled = true;
+            return;
+        }
+
+        if (!patternIsValid) {
+            el.innerHTML = '<small class="text-danger">Unsaved changes - rule is not valid.</small>';
+            button.disabled = true;
+            return;
+        }
+
+        el.innerHTML = '<small class="text-warning-emphasis">Unsaved changes.</small>';
+        button.disabled = false;
+    }
+
+    function saveRule() {
+        // A rule that compiles but matches nothing would quietly stop the feed parsing,
+        // so make that case an explicit decision rather than a silent one.
+        if (latestMatchRate === 0 &&
+            !confirm('This rule matches 0% of the sample titles. Save it anyway?')) {
+            return;
+        }
+
+        var body = new URLSearchParams();
+        body.append('title_match_rule_pattern', patternInput.value);
+        body.append('title_match_rule_index', indexInput.value);
+        body.append('_token', csrfToken);
+
+        fetch(saveUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-TOKEN': csrfToken},
+            body: body.toString()
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            if (data.ok === false) {
+                document.getElementById('rule-messages').innerHTML =
+                    '<div class="alert alert-danger">' + escapeHtml(data.error) + '</div>';
+                return;
+            }
+            savedPattern = data.saved_pattern;
+            savedIndex = data.saved_index;
+            refreshDirtyState();
+            document.getElementById('rule-messages').innerHTML =
+                '<div class="alert alert-success">Saved to the feed link. Previous rule was: <code>'
+                + escapeHtml(data.previous_pattern) + '</code> at index '
+                + escapeHtml(data.previous_index) + '</div>';
+        })
+        .catch(function (error) {
+            document.getElementById('rule-messages').innerHTML =
+                '<div class="alert alert-danger">Save failed: ' + escapeHtml(error.message) + '</div>';
+        });
+    }
+
+    document.getElementById('save-rule').addEventListener('click', saveRule);
+
+    var debounceTimer = null;
+    function queuePreview() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runPreview, 400);
+    }
+
+    patternInput.addEventListener('input', function () { refreshDirtyState(); queuePreview(); });
+    indexInput.addEventListener('input', function () { refreshDirtyState(); queuePreview(); });
+
+    document.getElementById('suggest-rule').addEventListener('click', function () {
+        if (latestSuggestion && latestSuggestion.pattern) {
+            patternInput.value = latestSuggestion.pattern;
+            indexInput.value = latestSuggestion.index;
+            runPreview();
+        } else {
+            document.getElementById('rule-messages').innerHTML =
+                '<div class="alert alert-info">Could not suggest a rule - the sample titles have '
+                + 'nothing in common at the start or end.</div>';
+        }
+    });
+
+    runPreview();
+</script>
+
+{% endblock page_inner %}

@@ -16,6 +16,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/feed-links', 'Staff\Reviews\FeedLinksController@index')->name('staff.reviews.feedLinks.index');
     Route::match(['get', 'post'], '/staff/reviews/feed-links/add', 'Staff\Reviews\FeedLinksController@add')->name('staff.reviews.feedLinks.add');
     Route::match(['get', 'post'], '/staff/reviews/feed-links/edit/{linkId}', 'Staff\Reviews\FeedLinksController@edit')->name('staff.reviews.feedLinks.edit');
+    Route::get('/staff/reviews/feed-links/test-title-rule/{linkId}', 'Staff\Reviews\FeedLinkTitleRuleController@show')->name('staff.reviews.feedLinks.testTitleRule');
+    Route::post('/staff/reviews/feed-links/test-title-rule/{linkId}/preview', 'Staff\Reviews\FeedLinkTitleRuleController@preview')->name('staff.reviews.feedLinks.testTitleRule.preview');
+    Route::post('/staff/reviews/feed-links/test-title-rule/{linkId}/save', 'Staff\Reviews\FeedLinkTitleRuleController@save')->name('staff.reviews.feedLinks.testTitleRule.save');
 
     // Review links
     Route::match(['get', 'post'], '/staff/reviews/link/add', 'Staff\Reviews\ReviewLinkController@add')->name('staff.reviews.link.add');

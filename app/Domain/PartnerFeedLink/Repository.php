@@ -26,6 +26,18 @@ class Repository
         return PartnerFeedLink::find($id);
     }
 
+    /**
+     * Targeted update of just the title match rule, used by the rule tester. Deliberately
+     * not edit(): that fills every field and clears last_run_status, which would be wrong
+     * for a change that only affects title parsing.
+     */
+    public function updateTitleRule(PartnerFeedLink $partnerFeedLink, $pattern, $index)
+    {
+        $partnerFeedLink->title_match_rule_pattern = $pattern;
+        $partnerFeedLink->title_match_rule_index = $index;
+        $partnerFeedLink->save();
+    }
+
     public function firstBySite($siteId)
     {
         return PartnerFeedLink::where('site_id', $siteId)->first();

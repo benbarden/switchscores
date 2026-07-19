@@ -2,6 +2,11 @@
 
 {% block page_inner %}
 
+<p>
+    <a href="{{ route('staff.reviews.feedLinks.testTitleRule', {'linkId': LinkId}) }}"
+       class="btn btn-sm btn-outline-secondary">Test title rule</a>
+</p>
+
 {% set formSubmitAction = route('staff.reviews.feedLinks.edit', {'linkId': LinkId, 'feedLink': FeedLinkData}) %}
 {% include 'staff/reviews/feed-links/form.twig' with {'formSubmitAction': formSubmitAction} %}
 
