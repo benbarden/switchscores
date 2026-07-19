@@ -48,18 +48,33 @@ class ParseTitle
 
         $siteName = $reviewDraft->site->name;
 
-        $partnerFeed = $reviewDraft->site->feedLinks;
-        $partnerFeedCount = count($partnerFeed);
-        if ($partnerFeedCount == 0) {
-            $this->logError('No feed found for partner: '.$siteName);
-            return;
-        } elseif ($partnerFeedCount > 1) {
-            $this->logError('Expected 1 feed but got '.$partnerFeedCount.' for partner: '.$siteName);
-            return;
+        // Prefer the feed link the draft actually came from. A site can have several
+        // feeds (e.g. Switch 1 and Switch 2 category feeds) with different match rules,
+        // so only the originating feed's rule can be trusted.
+        $partnerFeedLink = $reviewDraft->feedLink;
+
+        if (!$partnerFeedLink) {
+
+            // Older drafts (and any created before feed_link_id was recorded) fall back
+            // to the site's feed, which is only safe when there is exactly one.
+            $partnerFeed = $reviewDraft->site->feedLinks;
+            $partnerFeedCount = count($partnerFeed);
+            if ($partnerFeedCount == 0) {
+                $this->logError('No feed found for partner: '.$siteName);
+                return;
+            } elseif ($partnerFeedCount > 1) {
+                $this->logError(
+                    'Draft has no feed_link_id and partner has '.$partnerFeedCount.
+                    ' feeds, so the match rule is ambiguous: '.$siteName.' (draft '.$reviewDraft->id.')'
+                );
+                return;
+            }
+
+            $partnerFeedLink = $partnerFeed[0];
         }
 
-        $matchRulePattern = $partnerFeed[0]['title_match_rule_pattern'];
-        $matchRuleIndex = $partnerFeed[0]['title_match_rule_index'];
+        $matchRulePattern = $partnerFeedLink['title_match_rule_pattern'];
+        $matchRuleIndex = $partnerFeedLink['title_match_rule_index'];
 
         try {
 
@@ -100,6 +115,7 @@ class ParseTitle
             } else {
                 $parseStatus = ReviewDraft::PARSE_STATUS_COULD_NOT_LOCATE;
                 $this->logInfo($parseStatus);
+                $reviewDraft->parse_status = $parseStatus;
             }
 
             $reviewDraft->save();

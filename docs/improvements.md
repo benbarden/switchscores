@@ -190,7 +190,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 99 | GH30: member profiles | High | No profile model; requires full implementation | Worth doing once more members. Can be lightweight initially. |
 | 102 | Onboarding: dismissable notice banner for logged in users | Medium | Need notification model + dismissal | Nice but low priority without new signups. |
 | 103 | Upload / edit avatar | High | No avatar field; requires full implementation | Useful as members grow. |
-| 105 | Record user id of submitted review links | Low | Add migration + populate records | Tiny, low value. Keep for now. |
+| 105 | Review provenance: record source + user for drafts and links | Medium | Fix mislabelled source, populate user ids, reconcile review_type | Rescoped 2026-07-19 - bigger than the original title. Prerequisite for feed health. Plan: `docs/tasks/105-review-provenance.md` |
 
 ---
 

@@ -43,6 +43,12 @@ class Builder
         return $this;
     }
 
+    public function setFeedLinkId($feedLinkId): Builder
+    {
+        $this->reviewDraft->feed_link_id = $feedLinkId;
+        return $this;
+    }
+
     public function setUserId($userId): Builder
     {
         $this->reviewDraft->user_id = $userId;

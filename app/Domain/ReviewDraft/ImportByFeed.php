@@ -310,6 +310,7 @@ class ImportByFeed
 
         $reviewDraft = [
             'site_id' => $this->reviewSite->id,
+            'feed_link_id' => $this->partnerFeedLink->id,
             'item_title' => $itemTitle,
             'item_url' => $itemUrl,
             'item_date' => $itemDate,

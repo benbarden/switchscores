@@ -611,6 +611,18 @@ eshop_europe_nsuid). Tests: `HtmlListParserTest`, `RawTextParserTest` (fixtures 
 
 ### To Do
 
+- **Audit games missed by the old parser (run against PROD)** — before the meta-line
+  fixes, the plain-text parser silently dropped genres-less and dual-console rows, so
+  some games in past batches were never created as items (and never imported). Quantify
+  and recover: for each stored `weekly_batch_raw_pages` row, extract the game titles via
+  the duplicate-consecutive-line signal (see `RawTextParser::countGameBlocks`) and diff
+  against the stored `weekly_batch_items` for that page; the difference is the missed
+  titles. Then check each against the `games` table (an upcoming miss may have been
+  caught later when it moved to a "new releases" list). Localdev sample showed ~9
+  shortfall concentrated on Switch 2 Upcoming pages (batches 2/5/6/7/8), of which only
+  ~3 were cleanly recoverable by re-parsing — the rest are likely "Coming soon" rows
+  with no date (unparseable by the text parser, but real). Must be re-run on the full
+  prod DB for a true figure. Note: HTML paste captures these going forward regardless.
 - **Backfill `games.eshop_europe_nsuid`** — build a paste-to-backfill flow so existing
   games can be matched/repopulated by NSUID (Ben's idea: laborious but valuable). Until
   then, NSUID matching in `matchGame()` is inert for existing games and it falls back to

@@ -55,6 +55,9 @@ class Director
         if (array_key_exists('site_id', $params)) {
             $this->builder->setSiteId($params['site_id']);
         }
+        if (array_key_exists('feed_link_id', $params)) {
+            $this->builder->setFeedLinkId($params['feed_link_id']);
+        }
         if (array_key_exists('user_id', $params)) {
             $this->builder->setUserId($params['user_id']);
         }

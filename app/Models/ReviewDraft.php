@@ -37,13 +37,18 @@ class ReviewDraft extends Model
      * @var array
      */
     protected $fillable = [
-        'source', 'site_id', 'user_id', 'game_id', 'item_url', 'item_title', 'parsed_title',
+        'source', 'site_id', 'feed_link_id', 'user_id', 'game_id', 'item_url', 'item_title', 'parsed_title',
         'item_date', 'item_rating', 'parse_status', 'process_status', 'review_link_id'
     ];
 
     public function site()
     {
         return $this->hasOne('App\Models\ReviewSite', 'id', 'site_id');
+    }
+
+    public function feedLink()
+    {
+        return $this->hasOne('App\Models\PartnerFeedLink', 'id', 'feed_link_id');
     }
 
     public function user()
