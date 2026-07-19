@@ -35,6 +35,35 @@ health can show "last successful fetch" as a real value.
 Also worth deciding here: what to do with feeds that are permanently blocked (ask the partner to
 allowlist the crawler by UA or IP, or mark the feed Broken).
 
+## There are two matching paths, and the match rate only measures one
+
+A draft can acquire a `game_id` in two independent ways:
+
+1. **At import time, on the raw title.** `ImportByFeed::processItem()` calls
+   `repoGame->getAllByTitle($itemTitle)` and assigns the game when exactly one matches. No match
+   rule involved.
+2. **At parse time, via the match rule.** `ParseTitle` applies
+   `title_match_rule_pattern` / `_index` through `MatchRule`, then looks the parsed title up in
+   `GameTitleHash`.
+
+`TitleMatchRate` measures **only path 2**, so the stored rate can be misleading in both
+directions: a feed with no rule can be perfectly healthy, and a feed with a broken rule may still
+be partly rescued at import.
+
+**Live example - Video Chums (feed 29, site 11).** No `title_match_rule_pattern` at all, yet 980
+of its 1,013 drafts (97%) have a `game_id` and **zero** have a `parsed_title`. Its feed titles are
+bare game names, so path 1 matches them directly and `ParseTitle` bails at "No match rule
+pattern". It is the only live feed currently in this state.
+
+**Implication for the dashboard:** the headline health number probably wants to be
+**"% of recent drafts that ended up with a `game_id`"**, which covers both paths, with the
+rule-specific match rate shown alongside it to explain *why* a feed is failing. Showing only the
+rule rate will keep raising questions about feeds that are working fine.
+
+Interim handling (2026-07-19): the feed links table distinguishes "No rule" (grey badge, may be
+matching at import) from "—" (no drafts to sample), and `PartnerUpdateTitleMatchRates` logs the
+two cases separately.
+
 ## Carried in from step 1 / step 2 planning (2026-07-19)
 
 - **Match-rate trend detection.** Spotting a feed whose match rule suddenly starts failing across

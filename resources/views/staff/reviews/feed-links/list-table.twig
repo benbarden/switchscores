@@ -34,7 +34,13 @@
                 </td>
                 <td class="text-center">
                     {% if item.title_match_rate is null %}
-                        <span class="text-muted">&mdash;</span>
+                        {% if item.title_match_rule_pattern is null %}
+                            {# No rule is not necessarily a fault: some feeds carry bare game
+                               titles and match at import time instead. #}
+                            <span class="badge bg-secondary" title="No match rule set. This feed may be matching on raw titles at import.">No rule</span>
+                        {% else %}
+                            <span class="text-muted" title="No drafts to sample">&mdash;</span>
+                        {% endif %}
                     {% else %}
                         {% if item.title_match_rate >= 80 %}
                             {% set rateClass = 'bg-success' %}

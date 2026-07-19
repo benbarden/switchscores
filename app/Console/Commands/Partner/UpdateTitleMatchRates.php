@@ -45,12 +45,17 @@ class UpdateTitleMatchRates extends Command
 
             $rate = $titleMatchRate->update($partnerFeedLink);
 
-            $logger->info(sprintf(
-                'Feed %s (%s): %s',
-                $partnerFeedLink->id,
-                $feedLink->name,
-                $rate === null ? 'no rate (no rule or no drafts)' : $rate.'%'
-            ));
+            if ($rate === null) {
+                // These are different problems and must not be reported as one: a feed with no
+                // rule may be matching fine at import time on raw titles, whereas a feed with
+                // no drafts is not importing at all.
+                $reason = !$partnerFeedLink->title_match_rule_pattern
+                    ? 'no match rule set (may be matching on raw titles at import)'
+                    : 'no drafts to sample';
+                $logger->info(sprintf('Feed %s (%s): %s', $partnerFeedLink->id, $feedLink->name, $reason));
+            } else {
+                $logger->info(sprintf('Feed %s (%s): %s%%', $partnerFeedLink->id, $feedLink->name, $rate));
+            }
         }
 
         return 0;
