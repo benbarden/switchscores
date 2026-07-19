@@ -2,6 +2,39 @@
 
 Scoping notes. Not started.
 
+## Do this first: `was_last_run_successful` never records a load failure
+
+**A feed that cannot be fetched keeps its last successful status forever.** Any dashboard built
+on `was_last_run_successful` inherits the lie, so fix this before building anything on top of it.
+
+`ImportByFeed::runImport()` calls `Loader::loadByUrl()` *before* `processItems()`, and
+`processItems()`'s catch block is the only place that sets `was_last_run_successful = 0` and
+writes `last_run_status`. A fetch failure therefore throws straight past it, out of `runImport()`,
+and is only logged by the caller:
+
+```php
+// ImportActiveFeeds::handle()
+try {
+    $this->importByFeed->runImport();
+} catch (\Exception $e) {
+    $logger->error($e->getMessage());   // logged, never persisted
+}
+```
+
+**Live example - feed 31, Génération Nintendo.** Reads `was_last_run_successful: 1`,
+`last_run_status: 'Imported: 0 - Skipped: 129'`, but that record is stale from before ~Nov 2025.
+The site is now behind a Cloudflare JavaScript challenge: every user agent gets HTTP 403,
+including a full Chrome UA, so it is not a user-agent problem and cannot be spoofed - it needs a
+real browser engine. `last_review_date` stuck at 2025-11-07 was the only visible symptom, and the
+feed had been dead for roughly eight months while reporting success.
+
+Fix: record the failure against the feed link wherever it is thrown - catch around the whole of
+`runImport()`, or move the status write up so it covers loading as well as processing. Then feed
+health can show "last successful fetch" as a real value.
+
+Also worth deciding here: what to do with feeds that are permanently blocked (ask the partner to
+allowlist the crawler by UA or IP, or mark the feed Broken).
+
 ## Carried in from step 1 / step 2 planning (2026-07-19)
 
 - **Match-rate trend detection.** Spotting a feed whose match rule suddenly starts failing across

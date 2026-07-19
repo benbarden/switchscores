@@ -6,8 +6,7 @@
             <th>Site</th>
             <th class="text-center">Link</th>
             <th class="text-center">Status</th>
-            <th class="text-center">Data type</th>
-            <th class="text-center">Item node</th>
+            <th class="text-center">Match rate</th>
             <th class="text-center">Historic</th>
             <th class="text-center">Last post</th>
             <th class="text-center">Last run</th>
@@ -33,8 +32,23 @@
                 <td class="text-center">
                     {{ item.getFeedStatusDesc() }}
                 </td>
-                <td class="text-center">{{ item.getDataTypeDesc() }}</td>
-                <td class="text-center">{{ item.getItemNodeDesc() }}</td>
+                <td class="text-center">
+                    {% if item.title_match_rate is null %}
+                        <span class="text-muted">&mdash;</span>
+                    {% else %}
+                        {% if item.title_match_rate >= 80 %}
+                            {% set rateClass = 'bg-success' %}
+                        {% elseif item.title_match_rate >= 50 %}
+                            {% set rateClass = 'bg-warning text-dark' %}
+                        {% else %}
+                            {% set rateClass = 'bg-danger' %}
+                        {% endif %}
+                        <span class="badge {{ rateClass }}">{{ item.title_match_rate }}%</span>
+                        {% if item.title_match_rate_at %}
+                            <br><small class="text-muted">{{ item.title_match_rate_at|date('d M Y') }}</small>
+                        {% endif %}
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     {% if item.allowHistoric() %}
                         Yes

@@ -43,6 +43,7 @@ class PartnerFeedLink extends Model
     protected $fillable = [
         'feed_status', 'site_id', 'feed_url', 'feed_url_prefix', 'data_type', 'item_node',
         'title_match_rule_pattern', 'title_match_rule_index', 'allow_historic_content',
+        'title_match_rate', 'title_match_rate_at',
         'was_last_run_successful', 'last_run_status'
     ];
 

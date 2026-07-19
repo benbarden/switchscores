@@ -12,6 +12,7 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
 use App\Domain\PartnerFeedLink\TestTitleRule;
+use App\Domain\PartnerFeedLink\TitleMatchRate;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\ReviewDraft\ImportByFeed;
 
@@ -30,7 +31,9 @@ class FeedLinkTitleRuleController extends Controller
     const SOURCE_DRAFTS = 'drafts';
     const SOURCE_LIVE = 'live';
 
-    const DRAFT_LIMIT = 30;
+    // Shared with the stored rate, so the number on the feed links table always means the
+    // same thing as the number on this page.
+    const DRAFT_LIMIT = TitleMatchRate::SAMPLE_SIZE;
 
     public function __construct(
         private StaffPageBuilder $pageBuilder,
@@ -162,12 +165,17 @@ class FeedLinkTitleRuleController extends Controller
 
         $this->repoPartnerFeedLink->updateTitleRule($feedLink, $pattern, (int) $index);
 
+        // Keep the rate shown on the feed links table in step with the rule just saved,
+        // rather than waiting for the next scheduled run.
+        $rate = (new TitleMatchRate())->update($feedLink);
+
         return response()->json([
             'ok' => true,
             'saved_pattern' => $pattern,
             'saved_index' => (int) $index,
             'previous_pattern' => $previousPattern,
             'previous_index' => $previousIndex,
+            'match_rate' => $rate,
         ]);
     }
 
