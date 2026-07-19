@@ -23,6 +23,12 @@ class TestTitleRule
     const STATUS_RULE_NO_MATCH = 'Rule did not match the title';
     const STATUS_INDEX_MISSING = 'Rule matched, but the capture index does not exist';
 
+    /**
+     * Shortest combined prefix + suffix that suggestRule() treats as a real separator rather
+     * than a coincidental shared character.
+     */
+    const MIN_SUGGESTION_FIXED_LENGTH = 3;
+
     private $matchRulePattern;
 
     private $matchRuleIndex;
@@ -195,7 +201,11 @@ class TestTitleRule
         $prefix = $this->longestCommonPrefix($titles);
         $suffix = $this->longestCommonSuffix($titles, strlen($prefix));
 
-        if ($prefix === '' && $suffix === '') {
+        // Any two titles are likely to share a letter or two by chance ("Alpha" and "Beta"
+        // share a trailing "a"), which would produce a valid but meaningless rule such as
+        // (.*)a. Only suggest something when the fixed part is substantial enough to be a real
+        // separator rather than a coincidence.
+        if (strlen($prefix) + strlen($suffix) < self::MIN_SUGGESTION_FIXED_LENGTH) {
             return ['pattern' => null, 'index' => 1];
         }
 

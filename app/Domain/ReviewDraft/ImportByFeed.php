@@ -139,7 +139,18 @@ class ImportByFeed
         $itemTitle = str_replace(']]>', '', $itemTitle);
         $itemTitle = str_replace("\r", '', $itemTitle);
         $itemTitle = str_replace("\n", '', $itemTitle);
-        return $itemTitle;
+
+        // Invisible characters silently break title match rules: the rules run without the /u
+        // modifier, so \s does not match a multibyte non-breaking space and the trailing
+        // character stops the anchored pattern matching at all. Normalise them here rather
+        // than making every rule account for them.
+        $itemTitle = str_replace(
+            ["\xc2\xa0", "\xe2\x80\x8b", "\xef\xbb\xbf"],  // nbsp, zero-width space, BOM
+            [' ', '', ''],
+            $itemTitle
+        );
+
+        return trim($itemTitle);
     }
 
     public function cleanUpUrl($url)
@@ -180,7 +191,9 @@ class ImportByFeed
     {
         if ($this->partnerFeedLink->isParseAsObjects()) {
 
-            $itemTitle = (string) $item->title;
+            // Object mode used to skip cleanUpTitle entirely. SimpleXML already resolves CDATA,
+            // but the whitespace and invisible-character normalisation still applies.
+            $itemTitle = $this->cleanUpTitle((string) $item->title);
             $itemUrl = $item->link;
 
             $pubDate = $item->pubDate;
