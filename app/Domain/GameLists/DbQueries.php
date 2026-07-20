@@ -4,6 +4,7 @@
 namespace App\Domain\GameLists;
 
 
+use App\Domain\Game\PackshotJoin;
 use App\Enums\GameStatus;
 use App\Models\Game;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,7 @@ class DbQueries
             ->where('games.price_eshop_discount_pc', '>=', '50')
             ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.price_eshop_discount_pc', 'desc');
+        PackshotJoin::apply($games);
         if ($limit) {
             $games = $games->limit($limit);
         }
@@ -71,6 +73,7 @@ class DbQueries
             ->whereNotNull('games.price_eshop_discounted')
             ->where('games.price_eshop_discount_pc', '>=', '25.0')
             ->orderBy('games.rating_avg', 'desc');
+        PackshotJoin::apply($games);
         if ($limit) {
             $games = $games->limit($limit);
         }
@@ -93,6 +96,7 @@ class DbQueries
             ->where('games.format_digital', Game::FORMAT_AVAILABLE)
             ->whereNotNull('games.price_eshop_discounted')
             ->orderBy('games.price_eshop_discount_pc', 'desc');
+        PackshotJoin::apply($games);
         if ($limit) {
             $games = $games->limit($limit);
         }

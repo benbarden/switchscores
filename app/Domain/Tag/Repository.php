@@ -5,6 +5,7 @@ namespace App\Domain\Tag;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Domain\Game\PackshotJoin;
 use App\Enums\GameStatus;
 use App\Models\Tag;
 use App\Models\Game;
@@ -178,6 +179,8 @@ class Repository
             ->orderBy('games.game_rank', 'asc')
             ->orderBy('games.title', 'asc');
 
+        PackshotJoin::apply($games);
+
         if ($consoleId) {
             $games->where('games.console_id', $consoleId);
         }
@@ -199,6 +202,8 @@ class Repository
             ->where('games.game_status', GameStatus::ACTIVE->value)
             ->where('games.is_low_quality', 0)
             ->orderBy('games.rating_avg', 'desc');
+
+        PackshotJoin::apply($games);
 
         if ($consoleId) {
             $games->where('games.console_id', $consoleId);

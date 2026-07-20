@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Storage;
  * With no `game_images` rows populated yet, every lookup falls through to legacy,
  * so the site renders identically. The §3 existence-based MinIO-override fallback
  * chain layers in later without changing this contract.
+ *
+ * Works for Eloquent `Game` models and for raw `DB::table('games')` rows whose query applied
+ * `PackshotJoin` - the latter was added so public list pages (on-sale tabs, tag pages) can serve
+ * object storage rather than being permanently pinned to the legacy path.
  */
 class ImageResolver
 {
@@ -110,14 +114,17 @@ class ImageResolver
 
     /**
      * Return the GameImage row for a game without triggering an N+1 lazy load.
-     * Only Eloquent models carry the relation; raw rows fall through to legacy.
+     *
+     * Eloquent models carry the `images` relation. Raw rows (stdClass) have no relation, but
+     * resolve correctly when the query applied PackshotJoin - see that class for why. A raw row
+     * without the join still falls through to legacy, which is the pre-existing behaviour.
      */
     private function gameImage($game): ?GameImage
     {
-        if (!$game instanceof Game) {
-            return null;
+        if ($game instanceof Game) {
+            return $game->images;
         }
 
-        return $game->images;
+        return PackshotJoin::hydrate($game);
     }
 }

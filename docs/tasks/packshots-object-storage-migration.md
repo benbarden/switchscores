@@ -132,17 +132,37 @@ The slim new server must never accumulate local image disk, so before the server
 
 ### Phase 2 — cutover ⏳ TODO
 
-- [ ] **BLOCKER: raw-row list pages can never resolve to object storage.** `ImageResolver::gameImage()`
-      returns null for anything that isn't an Eloquent `Game`, so any list built with
-      `DB::table('games')` falls through to `legacyUrl()` unconditionally — no matter what
-      `game_images` says. Known Milestone 1 simplification (see the resolver docblock), and
-      harmless while legacy files exist. It becomes broken images the moment the legacy delete
-      below runs. `with('images')` does NOT fix these — there is no Eloquent builder to add it to;
-      they need converting to Eloquent, or joining `game_images`.
-      Known raw-row producers: `GameLists\DbQueries::onSaleHighestDiscounts()`, `onSaleGoodRanks()`,
-      `onSaleUnranked()`, `getByTagWithDates()`; `GameLists\Repository::getAll()` (deprecated) and
-      `getApiIdList()` (API, no packshots — fine). The on-sale tables and tag pages are real public
-      traffic. Audit for others before cutover: `grep -rn "DB::table('games')" app/`
+- [x] ~~**BLOCKER: raw-row list pages can never resolve to object storage.**~~ **FIXED 2026-07-20.**
+      `ImageResolver::gameImage()` returned null for anything that wasn't an Eloquent `Game`, so any
+      list built with `DB::table('games')` fell through to `legacyUrl()` unconditionally — no matter
+      what `game_images` said. Harmless while legacy files exist; broken images the moment ingestion
+      writes only to object storage, or the legacy delete below runs.
+
+      **Fix: `App\Domain\Game\PackshotJoin`.** `apply($query)` left-joins `game_images` and selects
+      its columns under `packshot_*` aliases; `hydrate($row)` rebuilds a `GameImage` from them via
+      `newFromBuilder()` (so the datetime casts survive — `spacesUrl()` calls `->timestamp` on them).
+      `ImageResolver::gameImage()` now falls back to `PackshotJoin::hydrate()` for raw rows. One
+      shared helper rather than five patched queries, so the read and write sides cannot drift.
+      Aliases are prefixed because `Tag\Repository` selects `games.id AS game_id`, which a bare
+      `game_id` alias would have silently overwritten. `game_images` is unique on `game_id`, so the
+      left join cannot duplicate rows (verified: tag 123 returns 783 of 789 candidates, filtered not
+      inflated).
+
+      **The audit in this doc was wrong in two places — corrected:**
+      - `getByTagWithDates()` is listed as a risk but **has no callers at all** (dead code).
+      - The live tag-page risk is `Tag\Repository::rankedByTagMerged()` and `hiddenGemsByTagMerged()`,
+        which were **not listed**.
+      - `onSaleHighestDiscounts()` **is** affected: `list-games-on-sale.twig` includes
+        `on-sale/table-ranked.twig` three times, once per tab, and that partial renders packshots.
+        (Briefly mis-assessed as image-free by grepping the wrapper view instead of following its
+        includes — the wrapper has no image markup of its own.)
+
+      **Five live methods, all now joined:** `GameLists\DbQueries::onSaleHighestDiscounts()`,
+      `onSaleGoodRanks()`, `onSaleUnranked()`; `Tag\Repository::rankedByTagMerged()`,
+      `hiddenGemsByTagMerged()`. `GameLists\Repository::getAll()` (deprecated) and `getApiIdList()`
+      (API, no packshots) remain fine. Tests: `tests/Unit/Domain/Game/PackshotJoinTest.php` (7),
+      verified failing against the old resolver first. Re-audit before cutover with
+      `grep -rn "DB::table('games')" app/`.
 - [ ] Once counts match: drop legacy fallback from resolver
 - [ ] **Delete legacy images ONE BY ONE, verified — do NOT bulk-wipe `public/img/ps-*`** (decided 2026-07-15).
       Reclaims the same ~5 GB, just slower. Rationale: a bulk delete assumes `game_images` is a complete
