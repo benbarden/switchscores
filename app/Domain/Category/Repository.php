@@ -235,7 +235,8 @@ class Repository
 
     public function rankedByCategoryMerged($categoryId, $consoleId = null, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::with('images')
+            ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereNotNull('game_rank')
             ->active()
@@ -256,7 +257,8 @@ class Repository
 
     public function hiddenGemsByCategoryMerged($categoryId, $consoleId = null, $limit = null)
     {
-        $games = Game::where('category_id', $categoryId)
+        $games = Game::with('images')
+            ->where('category_id', $categoryId)
             ->where('eu_is_released', 1)
             ->whereIn('review_count', [1, 2])
             ->active()
@@ -366,7 +368,8 @@ class Repository
 
     public function listByCategoryMerged($categoryId, $page, $perPage, $filter, $sort, $consoleId = null)
     {
-        $query = Game::where('category_id', $categoryId)
+        $query = Game::with('images')
+            ->where('category_id', $categoryId)
             ->active()
             ->where('is_low_quality', 0)
             ->where('eu_is_released', 1);
