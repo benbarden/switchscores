@@ -17,16 +17,10 @@ class DownloadByDataSource
 
     public function download()
     {
+        // PackshotWriter persists the result according to the configured storage location.
         $serviceImages = new Images($this->game);
         $serviceImages->setDSParsedItem($this->dsItem);
         $serviceImages->downloadSquare();
         $serviceImages->downloadHeader();
-        if ($serviceImages->squareDownloaded()) {
-            $this->game->image_square = $serviceImages->getSquareFilename();
-        }
-        if ($serviceImages->headerDownloaded()) {
-            $this->game->image_header = $serviceImages->getHeaderFilename();
-        }
-        $this->game->save();
     }
 }

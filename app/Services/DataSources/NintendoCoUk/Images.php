@@ -2,6 +2,8 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
+use App\Domain\Game\ImageResolver;
+use App\Domain\Game\PackshotWriter;
 use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Services\Game\Images as GameImages;
@@ -79,16 +81,10 @@ class Images
     {
         $remoteFile = $this->dsParsedItem->image_square;
         if ($remoteFile) {
-            $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
             $destFilename = $this->generateDestFilename($remoteFile, 'sq-');
-            if (!file_exists($destPath . $destFilename)) {
-                $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
-            } else {
-                // Already downloaded
-                $isDownloaded = true;
-            }
-            if ($isDownloaded) {
-                $this->squareFilename = $destFilename;
+            $stored = $this->downloadAndStore($remoteFile, ImageResolver::TYPE_SQUARE, $destFilename);
+            if ($stored) {
+                $this->squareFilename = $stored;
                 $this->squareDownloaded = true;
             }
         }
@@ -98,16 +94,10 @@ class Images
     {
         $remoteFile = $this->dsParsedItem->image_header;
         if ($remoteFile) {
-            $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
             $destFilename = $this->generateDestFilename($remoteFile, 'hdr-');
-            if (!file_exists($destPath.$destFilename)) {
-                $isDownloaded = $this->downloadFile($remoteFile, $destPath, $destFilename);
-            } else {
-                // Already downloaded
-                $isDownloaded = true;
-            }
-            if ($isDownloaded) {
-                $this->headerFilename = $destFilename;
+            $stored = $this->downloadAndStore($remoteFile, ImageResolver::TYPE_HEADER, $destFilename);
+            if ($stored) {
+                $this->headerFilename = $stored;
                 $this->headerDownloaded = true;
             }
         }
@@ -115,36 +105,45 @@ class Images
 
     public function downloadRemoteHeader($imageUrl, $gameId)
     {
-        $destPath = public_path().GameImages::PATH_IMAGE_HEADER;
-        $prefix = 'hdr-';
-
-        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $gameId);
-        return $this->downloadRemote($imageUrl, $destPath, $destFilename);
+        $destFilename = $this->generateDestFilename($imageUrl, 'hdr-', $gameId);
+        return $this->downloadAndStore($imageUrl, ImageResolver::TYPE_HEADER, $destFilename);
     }
 
     public function downloadRemoteSquare($imageUrl, $gameId)
     {
-        $destPath = public_path().GameImages::PATH_IMAGE_SQUARE;
-        $prefix = 'sq-';
-
-        $destFilename = $this->generateDestFilename($imageUrl, $prefix, $gameId);
-        return $this->downloadRemote($imageUrl, $destPath, $destFilename);
+        $destFilename = $this->generateDestFilename($imageUrl, 'sq-', $gameId);
+        return $this->downloadAndStore($imageUrl, ImageResolver::TYPE_SQUARE, $destFilename);
     }
 
-    public function downloadRemote($imageUrl, $destPath, $destFilename)
+    /**
+     * Download a packshot to a temp file, then hand it to PackshotWriter to place.
+     *
+     * The service no longer decides where images live - the writer does, from
+     * config('packshots.default_location'). It also owns persistence (the legacy column or
+     * the game_images row), so callers must not set games.image_* themselves: under `spaces`
+     * that would resurrect the legacy column and make the resolver serve a file that isn't
+     * there.
+     *
+     * @return string the stored filename
+     */
+    private function downloadAndStore($imageUrl, string $type, string $legacyFilename)
     {
-        if (!file_exists($destPath.$destFilename)) {
-            $isDownloaded = $this->downloadFile($imageUrl, $destPath, $destFilename);
-        } else {
-            // Already downloaded
-            $isDownloaded = true;
+        $writer = app(PackshotWriter::class);
+
+        // Legacy short-circuit, preserved: an identical file already on disk is not re-fetched.
+        // Only meaningful for legacy, where the filename fully determines the path. Under
+        // `spaces` the equivalent check is the eligibility test in DownloadPackshotHelper.
+        if ($writer->defaultLocation() === PackshotWriter::LOCATION_LEGACY) {
+            $destPath = public_path() . PackshotWriter::LEGACY_PATHS[$type];
+            if (file_exists($destPath . $legacyFilename)) {
+                $writer->recordExistingLegacy($this->game, $type, $legacyFilename);
+                return $legacyFilename;
+            }
         }
 
-        if (!$isDownloaded) {
-            throw new \Exception('Could not download file: ' . $imageUrl);
-        }
+        $tempPath = $this->downloadToTemp($imageUrl, $legacyFilename);
 
-        return $destFilename;
+        return $writer->store($this->game, $type, $tempPath, $legacyFilename);
     }
 
     /**
@@ -206,7 +205,15 @@ class Images
         return $destFilename;
     }
 
-    public function downloadFile($remoteUrl, $destPath, $destFilename)
+    /**
+     * Fetch a remote image into storage/tmp and return its full path.
+     *
+     * Stops at the temp file deliberately - placing it is PackshotWriter's job. This used to
+     * rename() straight into public/img, which hard-coded local disk as the only destination.
+     *
+     * @return string full path to the downloaded temp file
+     */
+    public function downloadToTemp($remoteUrl, $destFilename)
     {
         if (!$remoteUrl) {
             throw new \Exception('Remote URL cannot be blank');
@@ -227,23 +234,16 @@ class Images
             $imageData = file_get_contents($remoteUrl);
             file_put_contents($storagePath.$destFilename, $imageData);
 
-            // Move it to the right place
-            rename($storagePath.$destFilename, $destPath.$destFilename);
-
         } catch (\ErrorException $e) {
             $errorData = [
                 'origRemoteUrl' => $origRemoteUrl,
                 'remoteUrl' => $remoteUrl,
                 'storagePath' => $storagePath,
-                'destPath' => $destPath,
                 'destFilename' => $destFilename,
-                'moveFrom' => $storagePath.$destFilename,
-                'moveTo' => $destPath.$destFilename,
             ];
             throw new \Exception('Error saving file: '.$e->getMessage().'; Error data: '.var_export($errorData, true));
         }
 
-        // Success!
-        return true;
+        return $storagePath.$destFilename;
     }
 }

@@ -30,12 +30,12 @@ class SquareImageDownloader
         }
 
         try {
+            // PackshotWriter persists the result according to the configured storage location,
+            // so games.image_square is not assigned here.
             $imageService = new Images($game);
             $filename = $imageService->downloadRemoteSquare($imageUrl, $game->id);
 
             if ($filename) {
-                $game->image_square = $filename;
-                $game->save();
                 $this->gameRepository->clearCacheCoreData($game->id);
                 return true;
             }

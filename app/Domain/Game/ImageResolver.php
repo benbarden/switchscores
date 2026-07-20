@@ -113,6 +113,31 @@ class ImageResolver
     }
 
     /**
+     * Build the stored filename for a packshot on the `packshots` disk: {gameId}-{slug}.ext,
+     * taking only the extension from the source file.
+     *
+     * Lives here next to storageKey() because both describe the bucket's layout, and every
+     * writer must agree on them: ImageStorageMigrator (backfill) and PackshotWriter (ingestion)
+     * both call this, so a file arriving by either route gets the same name. If they diverged,
+     * re-downloading a migrated game would write a second object beside the first instead of
+     * replacing it, and the old one would leak.
+     *
+     * Derived from the game record rather than the source name, so the bucket gets one
+     * convention regardless of legacy naming era (sq-/hdr- prefixes, game-id vs link-id,
+     * dated vs undated). The bucket key already encodes type, so no prefix is needed. The
+     * dated suffix is dropped: it only existed to bust Cloudflare's 1-year cache on the legacy
+     * path, and spacesUrl() cache-busts with ?v={updated_at} instead.
+     */
+    public function targetFilename($game, string $sourceFilename): string
+    {
+        $extension = pathinfo($sourceFilename, PATHINFO_EXTENSION);
+
+        return $extension
+            ? "{$game->id}-{$game->link_title}.{$extension}"
+            : "{$game->id}-{$game->link_title}";
+    }
+
+    /**
      * Return the GameImage row for a game without triggering an N+1 lazy load.
      *
      * Eloquent models carry the `images` relation. Raw rows (stdClass) have no relation, but

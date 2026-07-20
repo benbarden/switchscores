@@ -29,24 +29,17 @@ class DownloadByOverrideUrl
         $squareUrl = trim($squareUrl);
         $headerUrl = trim($headerUrl);
 
+        // PackshotWriter persists the result (legacy column or game_images row) according to
+        // the configured location, so nothing is assigned to games.image_* here. Setting those
+        // columns under `spaces` would point the resolver's legacy fallback at a file that was
+        // never written locally.
         $serviceImages = new Images($this->game);
         if ($squareUrl) {
-            $imageSquare = $serviceImages->downloadRemoteSquare($squareUrl, $gameId);
-        } else {
-            $imageSquare = null;
+            $serviceImages->downloadRemoteSquare($squareUrl, $gameId);
         }
         if ($headerUrl) {
-            $imageHeader = $serviceImages->downloadRemoteHeader($headerUrl, $gameId);
-        } else {
-            $imageHeader = null;
+            $serviceImages->downloadRemoteHeader($headerUrl, $gameId);
         }
-        if ($imageSquare) {
-            $this->game->image_square = $imageSquare;
-        }
-        if ($imageHeader) {
-            $this->game->image_header = $imageHeader;
-        }
-        $this->game->save();
 
         // Clear cache
         $this->repoGame->clearCacheCoreData($gameId);

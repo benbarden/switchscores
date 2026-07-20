@@ -112,23 +112,71 @@ Documented in `infra-red/docs/minio.md`.
       "not processed" — a filename-pattern query can't distinguish the two and will mislead.
 - [ ] Idempotent, resumable script copies all `public/img/ps-*` → Spaces, populates `game_images`
 
-### Ingestion repoint + default location (required before server move) ⏳ TODO
+### Ingestion repoint + default location (required before server move) ✅ BUILT 2026-07-20 (not yet flipped)
 
-New-game ingestion (`Services/DataSources/NintendoCoUk/Images.php` + the crawl re-download
-in `GameCrawlBatch`/`GameCrawlUrl`) currently writes images to local `public/img/ps-*` and
-creates **no** `game_images` row — so new games display via the legacy fallback. Activating
-`PACKSHOTS_*` does NOT change this: the only code that writes to the `packshots` disk is
-`ImageStorageMigrator` (the staff button). New games stay on local disk until this is built.
+New-game ingestion wrote images to local `public/img/ps-*` and created **no** `game_images` row,
+so new games displayed via the legacy fallback. Activating `PACKSHOTS_*` did not change that: the
+only code writing to the `packshots` disk was `ImageStorageMigrator` (the staff button).
 
-The slim new server must never accumulate local image disk, so before the server move:
-- [ ] Add a config default, e.g. `PACKSHOTS_DEFAULT_LOCATION=legacy|spaces` (in a small
-      `config/packshots.php` or `config/filesystems.php`).
-- [ ] Ingestion save code reads it: `legacy` → save to `public/img` (as now, no row);
-      `spaces` → upload to the `packshots` disk + create a `game_images` row `location=spaces`.
-- [ ] Update the delete/replace path (`Services/Game/Images.php` `deleteSquare`/`deleteHeader`,
-      currently local `unlink()` only) to delete from Spaces when the game is on `spaces` (req #5).
-- [ ] Keep the default `legacy` through the bulk backfill (so new games and backfill don't
-      race), then **flip to `spaces`** once backfill is done and proven.
+- [x] `config/packshots.php` + `PACKSHOTS_DEFAULT_LOCATION=legacy|spaces`, defaulting to `legacy`.
+- [x] **`App\Domain\Game\PackshotWriter`** — the single write seam. Ingestion downloads to
+      `storage/tmp` and hands the temp file over; the writer places it (`legacy` → move to
+      `public/img`, set `games.image_*`, no row; `spaces` → `put()` to the disk + upsert the
+      `game_images` row) and owns persistence. Same one-shared-helper shape as `PackshotJoin`.
+- [x] Delete path made storage-aware (`Services/Game/Images.php`, req #5).
+- [ ] **Flip to `spaces`** — a prod `.env` change, safe now the backfill is at 100%.
+
+**Five write paths, not one.** The doc previously named only `Services/DataSources/NintendoCoUk/Images.php`
+and the crawl commands. The full set, all now routed through the writer:
+`DownloadByOverrideUrl` (the live scraper path), `GameImport\SquareImageDownloader`,
+`GameImport\HeaderImageScraper`, `GameCrawlBatch::downloadHeaderImage`,
+`GameCrawlUrl::downloadHeaderImage`, plus the dormant `DownloadByDataSource` /
+`DownloadImageFactory`. The two crawl commands never used the Images service at all — they built
+filenames and `file_put_contents()`ed to `public/img` directly, so they would have kept writing
+locally however carefully the service was repointed.
+
+**Callers must no longer set `games.image_*` themselves.** The writer owns persistence. Under
+`spaces` a caller assignment would repopulate the legacy column and point the resolver's fallback
+at a file that was never written locally — a broken image appearing only when the object storage
+lookup misses. Removed from all five paths.
+
+**`targetFilename()` moved to `ImageResolver`** (was private on `ImageStorageMigrator`), so
+ingestion and backfill derive the same object name. If they diverged, re-downloading a migrated
+game would write a second object beside the first and leak the original.
+
+**`*_updated_at` is load-bearing, not bookkeeping.** A re-download keeps the same filename, so the
+object URL is unchanged and Cloudflare would serve the old image forever. `spacesUrl()` appends
+`?v={updated_at}`, so bumping it is the only thing that makes a replaced packshot appear — which
+is the entire point of the override-URL flow.
+
+**Per-type upsert.** `game_images` has one row per game, and the backfill writes both filenames
+together because it always has both legacy files in hand. Ingestion does not — it can fetch a
+header without a square — so the writer updates one type at a time. Writing both would null the
+packshot that wasn't downloaded.
+
+#### The trap: `isEligibleForDownload()` was legacy-only
+
+Not in the original checklist, and the thing that would actually have bitten. `DownloadPackshotHelper::isEligibleForDownload()`
+decided "does this game still need packshots?" from `games.image_*` plus `file_exists()` under
+`public/img`. **Both are legacy-only signals.** A game in object storage has null columns and no
+local file, so from the moment `PACKSHOTS_DEFAULT_LOCATION=spaces` every such game looks
+permanently eligible: each run re-scrapes Nintendo and re-uploads identical images, indefinitely,
+with no error to notice.
+
+Now asked through `ImageResolver::url()`, which answers for whichever location the game is
+actually in. The on-disk check is retained for legacy games only (the column can name a file
+that isn't there — how the missing-header games were found); spaces games are trusted from the
+row rather than paying a HEAD per game per run.
+
+Covered by `tests/Unit/Domain/DataSource/PackshotEligibilityTest.php`, **verified failing against
+the old logic first**.
+
+#### Verified on localdev (MinIO)
+
+Fast suite 397 → 411. End-to-end against the real MinIO container (not `Storage::fake`):
+object lands at `switch-1/header/{id}-{slug}.jpg`, bytes match, temp file cleaned up, row records
+`location=spaces` with `header_updated_at`, legacy column untouched, resolved URL carries `?v=`,
+and the game is not re-eligible for download.
 
 ### Phase 2 — cutover ⏳ TODO
 

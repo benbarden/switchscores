@@ -2,10 +2,12 @@
 
 namespace App\Domain\DataSource\NintendoCoUk;
 
+use App\Domain\Game\ImageResolver;
 use App\Domain\GameLists\Repository as RepoGameLists;
 use App\Domain\Scraper\NintendoCoUkPackshot;
 use App\Services\DataSources\NintendoCoUk\Images;
 use App\Models\Game;
+use App\Models\GameImage;
 
 class DownloadPackshotHelper
 {
@@ -158,41 +160,57 @@ class DownloadPackshotHelper
             $hasStoreOverride = true;
         }
 
-        $imgSquare = $game->image_square;
-        $imgHeader = $game->image_header;
-
         if (!$hasValidDSItem && !$hasStoreOverride) {
             //$this->logger->info('No viable method to download images, so game is not eligible');
             $isEligible = false;
             return $isEligible;
         }
 
-        if (!$imgSquare) {
-            //$this->logger->info('Eligible for image download: image_square is blank');
+        // "Does this game already have its packshots?" is asked through ImageResolver, which
+        // answers for whichever location the game is actually stored in.
+        //
+        // This used to read games.image_* and then file_exists() under public/img. Both are
+        // legacy-only signals: a game whose packshots live in object storage has null columns
+        // and no local file, so it looked permanently eligible. Every run would re-scrape
+        // Nintendo and re-upload the same images, silently and forever, from the moment
+        // PACKSHOTS_DEFAULT_LOCATION was flipped to `spaces`.
+        //
+        // The resolver returns '' when nothing resolves in either location, which is exactly
+        // the question - and it keeps the legacy existence check for legacy games, because
+        // legacyUrl() only returns a URL when the column is populated.
+        $resolver = app(ImageResolver::class);
+
+        if (!$resolver->url($game, ImageResolver::TYPE_SQUARE)) {
+            //$this->logger->info('Eligible for image download: no square packshot resolves');
             $isEligible = true;
             return $isEligible;
         }
 
-        if (!$imgHeader) {
-            //$this->logger->info('Eligible for image download: image_header is blank');
+        if (!$resolver->url($game, ImageResolver::TYPE_HEADER)) {
+            //$this->logger->info('Eligible for image download: no header packshot resolves');
             $isEligible = true;
             return $isEligible;
         }
 
-        $gameImages = new Images($game);
+        // Legacy games additionally need the file to actually be on disk - the column can name
+        // a file that isn't there. Games on object storage are trusted from the game_images row;
+        // a HEAD per game per run would be a remote call in a hot loop.
+        if (!$game->images || $game->images->location !== GameImage::LOCATION_SPACES) {
+            $gameImages = new Images($game);
 
-        $imgSquareFullPath = $gameImages->generateCurrentPathSquare($game);
-        if (!file_exists($imgSquareFullPath)) {
-            //$this->logger->info('Eligible for download: square image not found on file system ['.$imgSquareFullPath.']');
-            $isEligible = true;
-            return $isEligible;
-        }
+            $imgSquareFullPath = $gameImages->generateCurrentPathSquare($game);
+            if (!file_exists($imgSquareFullPath)) {
+                //$this->logger->info('Eligible for download: square image not found on file system ['.$imgSquareFullPath.']');
+                $isEligible = true;
+                return $isEligible;
+            }
 
-        $imgHeaderFullPath = $gameImages->generateCurrentPathHeader($game);
-        if (!file_exists($imgHeaderFullPath)) {
-            //$this->logger->info('Eligible for download: header image not found on file system ['.$imgHeaderFullPath.']');
-            $isEligible = true;
-            return $isEligible;
+            $imgHeaderFullPath = $gameImages->generateCurrentPathHeader($game);
+            if (!file_exists($imgHeaderFullPath)) {
+                //$this->logger->info('Eligible for download: header image not found on file system ['.$imgHeaderFullPath.']');
+                $isEligible = true;
+                return $isEligible;
+            }
         }
 
         return $isEligible;

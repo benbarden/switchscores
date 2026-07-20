@@ -43,12 +43,12 @@ class HeaderImageScraper
             }
 
             // Download the header image
+            // PackshotWriter persists the result according to the configured storage location,
+            // so games.image_header is not assigned here.
             $imageService = new Images($game);
             $filename = $imageService->downloadRemoteHeader($headerUrl, $game->id);
 
             if ($filename) {
-                $game->image_header = $filename;
-                $game->save();
                 $this->gameRepository->clearCacheCoreData($game->id);
                 return true;
             }

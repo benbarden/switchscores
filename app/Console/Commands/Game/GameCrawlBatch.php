@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 
+use App\Domain\Game\ImageResolver;
+use App\Domain\Game\PackshotWriter;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
 use App\Models\GameCrawlLifecycle;
@@ -590,17 +592,22 @@ class GameCrawlBatch extends Command
      */
     private function downloadHeaderImage($game, string $remoteUrl, int $remoteSize, $logger): void
     {
+        $writer = app(PackshotWriter::class);
+        $isLegacy = $writer->defaultLocation() === PackshotWriter::LOCATION_LEGACY;
+
         $destPath = public_path() . GameImages::PATH_IMAGE_HEADER;
 
         // Store old filename for cleanup
         $oldFilename = $game->image_header;
         $oldFilePath = $oldFilename ? $destPath . $oldFilename : null;
 
-        // Generate new filename with date suffix (YYMMDD)
+        // Generate new filename with date suffix (YYMMDD). The date only matters on the legacy
+        // path, where it busts Cloudflare's 1-year cache; under `spaces` the writer derives
+        // {gameId}-{slug}.ext and cache-busts with ?v={updated_at}, taking only the extension
+        // from here.
         $fileExt = pathinfo(parse_url($remoteUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
         $dateSuffix = date('ymd');
         $newFilename = 'hdr-' . $game->id . '-' . $game->link_title . '-' . $dateSuffix . '.' . $fileExt;
-        $newFilePath = $destPath . $newFilename;
 
         // Download the image
         $imageData = file_get_contents($remoteUrl);
@@ -608,12 +615,11 @@ class GameCrawlBatch extends Command
             throw new \Exception("Failed to download image from: {$remoteUrl}");
         }
 
-        // Save new image
-        file_put_contents($newFilePath, $imageData);
+        // Stage it, then let PackshotWriter place it and persist the result.
+        $tempPath = storage_path('/tmp/') . $newFilename;
+        file_put_contents($tempPath, $imageData);
 
-        // Update game record
-        $game->image_header = $newFilename;
-        $game->save();
+        $storedFilename = $writer->store($game, ImageResolver::TYPE_HEADER, $tempPath, $newFilename);
 
         // Save header image data to game_scraped_data
         $this->saveHeaderImageData($game, $remoteUrl, $remoteSize);
@@ -621,12 +627,14 @@ class GameCrawlBatch extends Command
         // Clear cache since we updated game data
         $this->repoGame->clearCacheCoreData($game->id);
 
-        // Delete old image if it exists and is different from new
-        if ($oldFilePath && $oldFilename !== $newFilename && file_exists($oldFilePath)) {
+        // Delete the superseded local file - only under `legacy`, where we just replaced it.
+        // Under `spaces` any local file is a pre-migration leftover, and removing it here would
+        // be an unverified Phase 2 delete by the back door.
+        if ($isLegacy && $oldFilePath && $oldFilename !== $storedFilename && file_exists($oldFilePath)) {
             unlink($oldFilePath);
             $logger->info("Deleted old header image: {$oldFilename}");
         }
 
-        $logger->info("Header image updated for game {$game->id}: {$newFilename}");
+        $logger->info("Header image updated for game {$game->id}: {$storedFilename}");
     }
 }

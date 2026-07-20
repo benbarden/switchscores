@@ -116,7 +116,7 @@ class ImageStorageMigrator
             return null;
         }
 
-        $filename = $this->targetFilename($game, $legacyFilename);
+        $filename = $this->resolver->targetFilename($game, $legacyFilename);
         $key = $this->resolver->storageKey($game, $type, $filename);
 
         Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($sourcePath));
@@ -133,23 +133,4 @@ class ImageStorageMigrator
         Storage::disk(ImageResolver::DISK)->delete($this->resolver->storageKey($game, $type, $filename));
     }
 
-    /**
-     * Build the agreed {gameId}-{slug}.ext name from the game record, taking only the
-     * extension from the legacy filename. Derived rather than rewritten, so the bucket
-     * gets one consistent convention regardless of which legacy naming era a file came
-     * from (sq-/hdr- prefixes, game-id vs link-id, dated vs undated).
-     *
-     * The bucket key already encodes type, so no prefix is needed. The dated suffix
-     * (hdr-{id}-{title}-{YYMMDD}) is dropped: it only existed to bust Cloudflare's
-     * 1-year cache on the legacy path, and ImageResolver::spacesUrl() cache-busts with
-     * ?v={updated_at} instead.
-     */
-    private function targetFilename(Game $game, string $legacyFilename): string
-    {
-        $extension = pathinfo($legacyFilename, PATHINFO_EXTENSION);
-
-        return $extension
-            ? "{$game->id}-{$game->link_title}.{$extension}"
-            : "{$game->id}-{$game->link_title}";
-    }
 }
