@@ -120,6 +120,13 @@ class Differences
             $params = [$sourceId];
         }
 
+        // Only report differences the importer would actually act on. These conditions mirror
+        // the guards in UpdateGame::updatePrice(): a parsed price that is null, negative, or
+        // zero-against-an-existing-price is deliberately NOT applied, so reporting it as a
+        // difference is a false positive. Before this was added, every one of the 40 price
+        // alerts was the zero-price guard and none was a real difference - an alert that is
+        // 100% noise teaches you to ignore the alert.
+        // Keep in step with UpdateGame::updatePrice() if those guards change.
         return DB::select('
             SELECT '.$selectSql.'
             FROM games g
@@ -127,6 +134,9 @@ class Differences
             LEFT JOIN '.$importRulesTable.' gir ON g.id = gir.game_id
             WHERE dsp.source_id = ?
             AND (gir.'.$ignoreField.' IS NULL OR gir.'.$ignoreField.' = 0)
+            AND '.$dspField.' IS NOT NULL
+            AND '.$dspField.' >= 0
+            AND NOT ('.$dspField.' = 0 AND '.$gameField.' > 0)
             AND '.$gameField.' != '.$dspField.'
             '.$gameSql.'
         ', $params);
