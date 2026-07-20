@@ -55,9 +55,7 @@ class DashboardController extends Controller
 
         $dsDifferences = new Differences();
         $nintendoCoUkPublishers = $dsDifferences->getPublishersNintendoCoUk();
-        $nintendoCoUkGenres = $dsDifferences->getGenresNintendoCoUk();
         $bindings['PublishersNintendoCoUkDifferenceCount'] = count($nintendoCoUkPublishers);
-        $bindings['GenresNintendoCoUkDifferenceCount'] = count($nintendoCoUkGenres);
 
         // Stats: Nintendo.co.uk
         $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
