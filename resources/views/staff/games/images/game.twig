@@ -1,0 +1,136 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/links/game.twig' as gamelink %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{% block page_inner %}
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+{% if not PackshotsConfigured %}
+    <div class="alert alert-warning">
+        <strong>Packshots storage is not configured.</strong> The <code>PACKSHOTS_*</code>
+        environment variables are not set, so object storage cannot be checked and
+        migrate/revert are disabled.
+    </div>
+{% endif %}
+
+{{ heading.renderSlick('Packshots: ' ~ GameData.title) }}
+
+<div class="mb-4 d-flex align-items-center gap-3 flex-wrap">
+    <span>{{ gamelink.title(GameData, 'staff') }}</span>
+    <span>{{ consolebadge.short(GameData) }}</span>
+    <span class="text-muted">Game ID {{ GameData.id }}</span>
+    <span class="badge {{ IsInSpaces ? 'bg-success' : 'bg-secondary' }}">
+        {{ IsInSpaces ? 'Object storage' : 'Legacy' }}
+    </span>
+    <a href="{{ route('staff.games.detail', {'gameId': GameData.id}) }}" class="btn btn-sm btn-outline-secondary">Game detail</a>
+</div>
+
+{% if IsInSpaces %}
+    <form method="POST" action="{{ route('staff.games.images.migration.revert', {'gameId': GameData.id}) }}" class="mb-4">
+        {{ csrf_field()|raw }}
+        <button type="submit" class="btn btn-sm btn-outline-danger"{% if not PackshotsConfigured %} disabled{% endif %}>
+            Move back to legacy
+        </button>
+        <span class="text-muted ms-2">
+            Deletes the objects and sets location back to legacy. Lossless while the local files
+            still exist - but destructive once the Phase 2 legacy delete has run for this game.
+        </span>
+    </form>
+{% else %}
+    <form method="POST" action="{{ route('staff.games.images.migration.migrate', {'gameId': GameData.id}) }}" class="mb-4">
+        {{ csrf_field()|raw }}
+        <button type="submit" class="btn btn-sm btn-primary"{% if not PackshotsConfigured %} disabled{% endif %}>
+            Migrate to object storage
+        </button>
+    </form>
+{% endif %}
+
+<div class="row">
+    {% for packshot in Packshots %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header"><strong>{{ packshot.label }}</strong></div>
+
+                <div class="card-body text-center" style="background: #f4f4f4;">
+                    {% if packshot.resolvedUrl %}
+                        <img src="{{ packshot.resolvedUrl }}" alt="{{ packshot.label }}"
+                             style="max-width: 100%; height: auto;">
+                    {% else %}
+                        <p class="text-muted my-4">No image resolves for this type.</p>
+                    {% endif %}
+                </div>
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item">
+                        <div class="text-muted small">Resolved URL (what the site serves)</div>
+                        {% if packshot.resolvedUrl %}
+                            <div style="word-break: break-all;"><code>{{ packshot.resolvedUrl }}</code></div>
+                            {% if '?v=' in packshot.resolvedUrl %}
+                                <span class="badge bg-success">Object storage</span>
+                                <span class="text-muted small">cache-busted</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Legacy path</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">&mdash; nothing resolves</span>
+                        {% endif %}
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="text-muted small">Object storage (<code>game_images</code>)</div>
+                        {% if packshot.spacesFilename %}
+                            <div><code>{{ packshot.spacesFilename }}</code></div>
+                            <div class="text-muted small" style="word-break: break-all;">{{ packshot.spacesKey }}</div>
+                            {% if packshot.spacesExists is null %}
+                                <span class="badge bg-warning text-dark">Not checked</span>
+                            {% elseif packshot.spacesExists %}
+                                <span class="badge bg-success">Object exists</span>
+                            {% else %}
+                                <span class="badge bg-danger">Object MISSING</span>
+                                <div class="small text-danger">
+                                    The row names an object that is not in the bucket. Do not delete
+                                    the local file for this game.
+                                </div>
+                            {% endif %}
+                            {% if packshot.updatedAt %}
+                                <div class="text-muted small">Updated {{ packshot.updatedAt|date('Y-m-d H:i:s') }}</div>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">&mdash; no filename recorded</span>
+                        {% endif %}
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="text-muted small">Legacy (<code>games.image_{{ packshot.type }}</code>)</div>
+                        {% if packshot.legacyFilename %}
+                            <div><code>{{ packshot.legacyFilename }}</code></div>
+                            {% if packshot.legacyExists %}
+                                <span class="badge bg-success">File on disk</span>
+                            {% else %}
+                                <span class="badge bg-danger">File MISSING</span>
+                                <div class="small text-danger">
+                                    The column names a file that is not on disk. Either re-download,
+                                    or null the column so nothing points at a dead filename.
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">&mdash; column is null</span>
+                        {% endif %}
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

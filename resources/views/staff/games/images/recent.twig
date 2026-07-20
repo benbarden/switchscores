@@ -51,6 +51,7 @@
                                 {{ csrf_field()|raw }}
                                 <button type="submit" class="btn btn-sm btn-outline-secondary"{% if not PackshotsConfigured %} disabled{% endif %}>Move back</button>
                             </form>
+                            <a href="{{ route('staff.games.images.game', {'gameId': game.id}) }}" class="small">Inspect</a>
                         </td>
                     </tr>
                 {% endif %}

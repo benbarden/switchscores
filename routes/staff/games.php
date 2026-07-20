@@ -42,6 +42,9 @@ Route::group([
     // ---- Game images (packshot storage dashboard + migration) ----
     Route::controller(GameImagesDashboardController::class)->group(function () {
         Route::get('images', 'show')->name('images.dashboard');
+        // Under images/game/ rather than images/{gameId}, so it can never shadow the
+        // images/migration routes below regardless of registration order.
+        Route::get('images/game/{gameId}', 'game')->name('images.game');
     });
     Route::controller(ImageMigrationController::class)->group(function () {
         Route::get('images/migration', 'show')->name('images.migration.show');
