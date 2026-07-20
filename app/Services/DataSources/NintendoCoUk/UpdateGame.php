@@ -47,14 +47,32 @@ class UpdateGame
         $priceDiscounted = $this->dsParsedItem->price_discounted;
         $priceDiscountPc = $this->dsParsedItem->price_discount_pc;
 
-        if (is_null($priceStandard)) return false;
-        if ($priceStandard < 0) return false;
-        // Switch 2 games can return 0.00 from the API even when they have a real price; don't overwrite an existing price with zero
-        if ($priceStandard == 0 && $this->game->price_eshop > 0) return false;
-
-        if ($this->game->price_eshop != $priceStandard) {
-            $this->game->price_eshop = $priceStandard;
+        // These guards reject an untrustworthy standard price. They used to `return false`,
+        // which also skipped the discount fields below, so a game whose API price was missing
+        // or zero kept an ended sale's discount indefinitely. Rejecting the standard price now
+        // clears the discount instead of leaving it: if the payload's price can't be trusted,
+        // its discount can't either, and a stale discount is worse than none.
+        $standardPriceIsUsable = true;
+        if (is_null($priceStandard)) {
+            $standardPriceIsUsable = false;
+        } elseif ($priceStandard < 0) {
+            $standardPriceIsUsable = false;
+        } elseif ($priceStandard == 0 && $this->game->price_eshop > 0) {
+            // Switch 2 games can return 0.00 from the API even when they have a real price;
+            // don't overwrite an existing price with zero
+            $standardPriceIsUsable = false;
         }
+
+        if ($standardPriceIsUsable) {
+            if ($this->game->price_eshop != $priceStandard) {
+                $this->game->price_eshop = $priceStandard;
+            }
+        } else {
+            // Don't trust this payload's discount either — clear rather than carry it forward.
+            $priceDiscounted = null;
+            $priceDiscountPc = null;
+        }
+
         if ($this->game->price_eshop_discounted != $priceDiscounted) {
             $this->game->price_eshop_discounted = $priceDiscounted;
         }

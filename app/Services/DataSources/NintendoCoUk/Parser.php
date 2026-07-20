@@ -153,12 +153,14 @@ class Parser
         } elseif (!is_null($priceStandard)) {
             $this->dataSourceParsed->price_standard = $priceStandard;
         }
-        if (!is_null($priceDiscounted)) {
-            $this->dataSourceParsed->price_discounted = $priceDiscounted;
-        }
-        if (!is_null($priceDiscountPc)) {
-            $this->dataSourceParsed->price_discount_pc = $priceDiscountPc;
-        }
+        // Discount fields are always written, never skipped-when-null. parsePrice() gives a
+        // definitive answer for these: a null means the API positively reports no discount
+        // (price_discount_percentage_f of 0), not "field absent, leave alone". Skipping the
+        // write meant a discount was set when a sale started and never cleared when it ended,
+        // so ended sales persisted indefinitely - the game kept showing a discount the eShop
+        // no longer offered. Same clear-don't-skip reasoning as the no-price sentinel above.
+        $this->dataSourceParsed->price_discounted = $priceDiscounted;
+        $this->dataSourceParsed->price_discount_pc = $priceDiscountPc;
 
         // Release date
         $parsedReleaseDate = $this->parseReleaseDate();
@@ -261,11 +263,34 @@ class Parser
         // items last), treat the game as having no price at all rather than falling back —
         // price_regular_f on these items is the deluxe/bundle price, not a real standard price.
         // Switch 1 always uses price_regular_f unchanged.
+        //
+        // While a Switch 2 game is ON SALE, price_sorting_f becomes the SALE price — it is the
+        // field Nintendo sorts search results by, so it tracks what you'd actually pay. Using it
+        // as the standard price during a sale therefore records the sale price as the RRP, and
+        // the game ends up showing "30% off £4.71 → £4.71" with the real £6.73 lost.
+        // So when a discount is present we keep the standard price we already hold: it was
+        // captured while the game was NOT on sale, which makes it observed data rather than
+        // inferred. A regular price rarely changes mid-sale, and once the sale ends
+        // price_sorting_f reverts to the full price and normal updating resumes — so this
+        // self-corrects without a backfill.
         $isSwitch2 = $this->dataSourceParsed->console_id === Console::ID_SWITCH_2;
         $hasNoPriceSentinel = $isSwitch2 && (float) $rawPriceSortingF === (float) self::PRICE_SORTING_SENTINEL;
         $this->priceHasNoPriceSentinel = $hasNoPriceSentinel;
+        $hasDiscount = !is_null($priceDiscountPc) && $rawPriceLowestF > 0;
+        $existingStandardPrice = $this->dataSourceParsed->price_standard;
+
         if ($hasNoPriceSentinel) {
             $rawStandardPrice = null;
+        } elseif ($isSwitch2 && $hasDiscount && $existingStandardPrice > 0) {
+            // Preserve the known not-on-sale price.
+            $rawStandardPrice = $existingStandardPrice;
+        } elseif ($isSwitch2 && $hasDiscount && $priceDiscountPc < 100) {
+            // No price on record — a game first seen while already on sale (launch discounts are
+            // common). Nothing observed to preserve, so derive the RRP from the sale price and
+            // the discount percentage. Inferred, not read: expect the odd penny of drift
+            // (e.g. 49.98 where the real RRP is 49.99). A 100% discount is excluded: it makes
+            // the derivation a divide-by-zero and tells us nothing about the RRP anyway.
+            $rawStandardPrice = $rawPriceLowestF / (1 - ($priceDiscountPc / 100));
         } elseif ($isSwitch2 && $rawPriceSortingF > 0) {
             $rawStandardPrice = $rawPriceSortingF;
         } else {
