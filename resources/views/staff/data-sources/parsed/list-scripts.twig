@@ -2,8 +2,6 @@
 
     var sourceId = '{{ SourceId }}';
 
-    $('#tabs').tabs();
-
     $(document).ready(function() {
         $('.data-sortable').DataTable({
             "order": [{{ jsInitialSort|raw }}],

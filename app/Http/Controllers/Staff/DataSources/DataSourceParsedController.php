@@ -114,8 +114,9 @@ class DataSourceParsedController extends Controller
 
         $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
 
+        // Items with no EU release date are unannounced ("TBD" in the source payload) and are no
+        // longer imported, so there is no second tab for them - see Parser::parseReleaseDate().
         $bindings['ItemsWithEUDate'] = $this->repoDataSourceParsed->getNintendoCoUkUnlinkedWithEUDate($ignoreIdList);
-        $bindings['ItemsNoEUDate'] = $this->repoDataSourceParsed->getNintendoCoUkUnlinkedNoEUDate($ignoreIdList);
         $bindings['ListRef'] = 'unlinked';
 
         return view('staff.data-sources.parsed.list-unlinked', $bindings);

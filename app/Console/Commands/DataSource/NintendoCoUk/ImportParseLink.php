@@ -171,11 +171,26 @@ class ImportParseLink extends Command
 
             $this->parser->setLogger($logger);
             $parsedItemCount = 0;
+            $skippedUnannouncedCount = 0;
             $rawItemsToParse = $this->repoDataSourceRaw->getByIds($parseIds);
 
             foreach ($rawItemsToParse as $rawItem) {
                 $this->parser->setDataSourceRaw($rawItem);
                 $parsedItem = $this->parser->parseItem();
+
+                // Unannounced titles carry the literal string "TBD" as their release date, which
+                // parseReleaseDate() cannot parse, so release_date_eu lands null. They have no
+                // usable date and no real price (price_sorting_f is the 999999 sentinel), so
+                // there is nothing to import yet. Skipping them keeps them out of the unlinked
+                // queue until Nintendo announces a date.
+                //
+                // Only skipped when the record is ALSO unlinked: a record already attached to a
+                // game keeps being parsed, so an existing game is never dropped by this rule.
+                if (is_null($parsedItem->release_date_eu) && is_null($parsedItem->game_id)) {
+                    $skippedUnannouncedCount++;
+                    continue;
+                }
+
                 $parsedItem->save();
 
                 if (in_array($rawItem->id, $allNewIds)) {
@@ -192,6 +207,9 @@ class ImportParseLink extends Command
             }
 
             $logger->info('Parsing complete. Parsed '.$parsedItemCount.' item(s).');
+            if ($skippedUnannouncedCount > 0) {
+                $logger->info('Skipped '.$skippedUnannouncedCount.' unannounced item(s) with no release date.');
+            }
 
             // Link games
             $logger->info('Updating game links...');
