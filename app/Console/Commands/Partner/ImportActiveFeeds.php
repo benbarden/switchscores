@@ -49,7 +49,9 @@ class ImportActiveFeeds extends Command
 
         $repoPartnerFeedLink = new PartnerFeedLinkRepository;
 
-        $partnerFeedLinks = $repoPartnerFeedLink->getActive();
+        // Plain models, not getActive(): that method's review_sites join overwrites ->id with
+        // the site id, and ImportByFeed stamps feed_link_id from ->id.
+        $partnerFeedLinks = $repoPartnerFeedLink->getActiveForImport();
         if (!$partnerFeedLinks) {
             $logger->error('No feeds to import!');
             return 0;

@@ -53,6 +53,19 @@ class Repository
         return $feedLinks;
     }
 
+    /**
+     * Active feed links as plain models, for jobs that stamp feed_link_id from the model.
+     *
+     * getActive() joins review_sites (for the feed links table's site name and ordering), but
+     * that join lets review_sites.id overwrite the model's own id, so ->id becomes the site id
+     * rather than the feed link id. Any caller that reads ->id as the feed link id - the
+     * importer does - must use this instead, or drafts get stamped with the site id.
+     */
+    public function getActiveForImport()
+    {
+        return PartnerFeedLink::where('feed_status', PartnerFeedLink::FEED_STATUS_LIVE)->get();
+    }
+
     public function getInactive()
     {
         $feedLinks = PartnerFeedLink::join('review_sites', 'partner_feed_links.site_id', '=', 'review_sites.id')
