@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 
+use App\Domain\Game\HeaderImageSize;
 use App\Domain\Game\ImageResolver;
 use App\Domain\Game\PackshotWriter;
 use App\Domain\Game\Repository as GameRepository;
@@ -523,13 +524,10 @@ class GameCrawlBatch extends Command
                 return null;
             }
 
-            // Check local file
-            $localPath = public_path() . GameImages::PATH_IMAGE_HEADER . $game->image_header;
-            $localSize = null;
-
-            if ($game->image_header && file_exists($localPath)) {
-                $localSize = filesize($localPath);
-            }
+            // Size of the header we already hold, asked location-aware. Reading the legacy file
+            // path directly here meant a game stored in object storage never matched and was
+            // re-downloaded on every crawl.
+            $localSize = app(HeaderImageSize::class)->current($game);
 
             // Compare sizes
             if ($localSize === $remoteSize) {
