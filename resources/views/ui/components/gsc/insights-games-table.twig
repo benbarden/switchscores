@@ -9,6 +9,9 @@
             <thead>
             <tr>
                 <th>Game</th>
+                {% if not isGameDetail %}
+                    <th class="text-center">History</th>
+                {% endif %}
                 <th class="text-center">Status</th>
                 {% if isGameDetail %}
                     <th class="text-center">Snapshot date</th>
@@ -36,6 +39,11 @@
                             {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
                         {% endif %}
                     </td>
+                    {% if not isGameDetail %}
+                        <td class="text-center">
+                            <a href="{{ route('staff.insights.page', {'url': row.page_url}) }}">View</a>
+                        </td>
+                    {% endif %}
                     <td class="text-center">
                         {% if row.game.title %}
                             {% if row.game.is_low_quality == 1 %}

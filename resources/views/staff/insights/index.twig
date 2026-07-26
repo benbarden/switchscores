@@ -38,6 +38,7 @@
                 <thead>
                 <tr>
                     <th>Page</th>
+                    <th class="text-center">History</th>
                     <th class="text-end">Impressions</th>
                     <th class="text-end">Clicks</th>
                     <th class="text-end">Avg position</th>
@@ -50,6 +51,9 @@
                             <a href="{{ row.page_url }}" target="_blank" rel="noopener">
                                 {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
                             </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.insights.page', {'url': row.page_url}) }}">View</a>
                         </td>
                         <td class="text-end">{{ row.impressions|number_format }}</td>
                         <td class="text-end">{{ row.clicks|number_format }}</td>
@@ -77,6 +81,7 @@
                 <thead>
                 <tr>
                     <th>Page</th>
+                    <th class="text-center">History</th>
                     <th class="text-end">Impressions</th>
                     <th class="text-end">Clicks</th>
                     <th class="text-end">Avg position</th>
@@ -89,6 +94,9 @@
                             <a href="{{ row.page_url }}" target="_blank" rel="noopener">
                                 {{ row.page_url|replace({'https://www.switchscores.com': ''}) }}
                             </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('staff.insights.page', {'url': row.page_url}) }}">View</a>
                         </td>
                         <td class="text-end">{{ row.impressions|number_format }}</td>
                         <td class="text-end">{{ row.clicks|number_format }}</td>

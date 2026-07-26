@@ -2,11 +2,36 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 133**
+**Next ID: 135**
 
 ---
 
 ## Session Log
+
+### 2026-07-26: Insights - Per-URL History Page
+
+**New feature:** `/staff/insights/page?url=...` - full snapshot history for a single page URL.
+
+The history was always being stored (`gsc_page_snapshots` had 220 daily snapshots going back to 2025-12-13, cron at `scripts/switchscores-cron:32`), but the UI only ever showed the latest via `max('snapshot_date')`. This surfaces it.
+
+- Chart of impressions, clicks and avg position over every snapshot (Chart.js 2.8, avg position on a reversed right-hand axis so up = better).
+- Latest snapshot compared against 7 and 28 snapshots back. Comparisons are counted in snapshots, not days, because the cron can miss a day - the actual comparison date is shown on each row so it can't mislead.
+- Full snapshot table with query counts and top queries, using the standard staff DataTables idiom (`table data-sortable` + `ui/layouts/assets/table-sorting-b5.twig`), 25 per page, sorted by date descending. Top queries column is non-orderable. Null avg position renders blank rather than a dash so DataTables' numeric type detection still applies to that column.
+- "History" link added to all three tables on the insights index. Suppressed on the game detail page, which already lists that game's snapshots.
+
+**Prominent caveat on the page:** each snapshot is a trailing 28-day window ending two days before it was taken, so consecutive snapshots overlap by 27 days. It is a trend line, not daily traffic. See #134 for the fix.
+
+**Files changed:**
+- `app/Domain/Gsc/Snapshot/Repository/GscPageSnapshotRepository.php` - `getSnapshotsByUrl()`
+- `app/Http/Controllers/Staff/InsightsController.php` - `page()`, `buildChanges()`
+- `app/Domain/View/Breadcrumbs/StaffBreadcrumbs.php` - `insightsPage()`
+- `routes/staff/general.php` - `staff.insights.page`
+- `resources/views/staff/insights/page.twig` (new)
+- `resources/views/staff/insights/index.twig`, `resources/views/ui/components/gsc/insights-games-table.twig` - History links
+
+**Related:** #133 (date picker on the index), #134 (daily `date`-dimension fetch + backfill).
+
+---
 
 ### 2026-04-03: Cross-Console Game Links
 
@@ -101,6 +126,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | 130 | Weekly update tool | High | Replaces manual Claude Code session process | Full pipeline: raw paste → parse → URL collection → Nintendo page fetch → LQ review → packshot collection → category review → import. See `docs/tasks/130-weekly-update-tool.md`. |
 | 131 | LQ decision tracking for publishers and keywords | Medium | Build on top of #130 weekly update tool | Track every LQ-related decision made during the weekly update pipeline. When a game is marked LQ, kept despite a flag, or a keyword warning overridden, record the decision against the publisher and keyword. Over time: surface publishers with escalating LQ counts (emerging shovelware), show keyword hit rates (e.g. "SIMULATOR: flagged 12×, kept 2, marked LQ 10"), and flag new publishers with no history. Helps spot LQ culprits before they accumulate many games. Likely a new `weekly_batch_lq_decisions` table + staff report page. |
 | 132 | Flag Switch 1 games with price_regular_f / price_sorting_f mismatch | High | Ongoing monitoring needed | Switch 1 games are not covered by the price_sorting_f fix (Switch 2 only). Some S1 games with deluxe editions have price_regular_f inflated to the deluxe price while price_sorting_f holds the correct standard price (e.g. Dark Auction id 17079). Need a SQL query or cron to identify S1 games in data_source_parsed where price_regular_f != price_sorting_f, then flag them with `price-check-deluxe` for manual review. Should run periodically so new games are caught. |
+| 134 | GSC: fetch daily figures with the `date` dimension, and backfill | Medium | Unblocks true per-day insights; makes #133 honest | Today `SnapshotFetcher` requests a single trailing window (`startDate = now-30`, `endDate = now-2`), so every stored row is a rolling ~28-day aggregate and no real daily figure exists. Adding `date` to `dimensions` returns exact per-day rows in one call. Store daily as the primitive and compute any window (7/28/90) in SQL. Two bonuses: GSC retains ~16 months, so history can be backfilled well before the 2025-12-13 collection start; and genuine day-over-day comparison becomes possible. Watch for: row explosion (`['date','page','query']` multiplies rows by ~28, and the games call already uses `rowLimit: 1000`) - either paginate with `startRow` or split into a `['date','page']` daily series plus a separate lower-frequency call that keeps the query dimension for `top_queries`. Also GSC revises the last ~3 days upward, so the fetcher must re-pull a trailing few days, not just append. Separately, `snapshot_date` currently stores the cron run date, not the date the data covers - worth renaming or storing the window end date alongside. |
 
 ---
 
@@ -109,6 +135,7 @@ This document tracks potential improvements, features, and enhancements for the 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
 | 132 | Steam-backed news content (editorial auto-generation) | Medium | Builds on #90 Steam infrastructure + existing feature queue system | New `unranked-steam-gem` bucket: selects games with 0–2 Switch Scores reviews + Steam `review_score >= 8`. Extends `features:enqueue` to use Steam priority signal. Auto-generates `/news` draft on cadence via existing `generateBucketDraft()`. Staff dashboard link to trigger. See `docs/tasks/132-steam-backed-news-content.md`. |
+| 133 | Insights: date picker to view an earlier snapshot | Low | Depends on #134 to be genuinely useful | Let `/staff/insights` show the tables for any past `snapshot_date` rather than only the latest (the repo currently hard-codes `max('snapshot_date')`). The data is already there - 220 daily snapshots since 2025-12-13. Caveat that makes this low value on its own: with the current rolling-window fetch, going back one day shows the same 28-day window shifted by one, overlapping the previous by 27 days, not that day's traffic. If built before #134, the UI must say "28 days ending X" and never "traffic on X". Note you cannot recover daily figures by differencing consecutive snapshots - the delta is (day added) minus (day dropped 30 days back), which is one equation with two unknowns. |
 | 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
 | 129 | Remove Genres from Differences section | Low | Genres never map cleanly | Remove Genres diff link from DS dashboard, remove associated controller/query logic and route. Genres from API are reference only, not for copying over. |
 | 5 | Change category to allow drill-down by tag | Medium | `gamesByCategoryAndTag()` exists but no UI | Categories collapsed into tags (e.g. Picross under Puzzle). 1 category per game, multiple tags. Show only tags with games in that category. Useful for discovery. |

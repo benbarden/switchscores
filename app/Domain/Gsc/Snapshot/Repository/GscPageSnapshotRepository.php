@@ -62,6 +62,19 @@ class GscPageSnapshotRepository
         ];
     }
 
+    /**
+     * Full snapshot history for a single page URL, oldest first.
+     */
+    public function getSnapshotsByUrl(
+        string $pageUrl,
+        int $windowDays = 28
+    ): Collection {
+        return GscPageSnapshot::where('page_url', $pageUrl)
+            ->where('window_days', $windowDays)
+            ->orderBy('snapshot_date', 'asc')
+            ->get();
+    }
+
     public function getSnapshotsByGame(int $gameId, int $limit = null): Collection
     {
         $data = GscPageSnapshot::query();

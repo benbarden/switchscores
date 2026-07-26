@@ -1,0 +1,287 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <p>
+            <a href="{{ PageUrl }}" target="_blank" rel="noopener">{{ ShortUrl }}</a>
+        </p>
+
+        <div class="alert alert-warning">
+            <strong>Read these as trailing windows, not daily figures.</strong>
+            Every snapshot covers the {{ WindowDays }} days ending two days before it was taken,
+            so consecutive snapshots overlap by {{ WindowDays - 1 }} days and move slowly by design.
+            A rise or fall here is a trend, not a single day's traffic.
+        </div>
+
+    </div>
+
+</div>
+
+<hr>
+
+{# -------------------------------------------------- #}
+{# Latest snapshot + change #}
+{# -------------------------------------------------- #}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>Latest snapshot</h2>
+
+        <p class="text-muted">
+            Taken {{ LatestSnapshot.snapshot_date|date('j M Y') }}
+            ({{ WindowDays }} days ending {{ WindowEndDate|date('j M Y') }}).
+        </p>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Compared to</th>
+                <th class="text-end">Impressions</th>
+                <th class="text-end">Clicks</th>
+                <th class="text-end">Avg position</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Latest</strong></td>
+                <td class="text-end">{{ LatestSnapshot.impressions|number_format }}</td>
+                <td class="text-end">{{ LatestSnapshot.clicks|number_format }}</td>
+                <td class="text-end">
+                    {{ LatestSnapshot.avg_position is not null ? LatestSnapshot.avg_position : '–' }}
+                </td>
+            </tr>
+            {% for change in ChangeSet %}
+                <tr>
+                    <td class="text-muted">
+                        {{ change.label }} ({{ change.snapshot_date|date('j M Y') }})
+                    </td>
+                    <td class="text-end">
+                        {{ change.impressions > 0 ? '+' : '' }}{{ change.impressions|number_format }}
+                    </td>
+                    <td class="text-end">
+                        {{ change.clicks > 0 ? '+' : '' }}{{ change.clicks|number_format }}
+                    </td>
+                    <td class="text-end">
+                        {% if change.avg_position is not null %}
+                            {{ change.avg_position > 0 ? '+' : '' }}{{ change.avg_position }}
+                        {% else %}
+                            –
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="text-muted">
+            A negative avg position change is an improvement (closer to the top of page 1).
+        </p>
+
+    </div>
+
+</div>
+
+<hr>
+
+{# -------------------------------------------------- #}
+{# Chart #}
+{# -------------------------------------------------- #}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>History</h2>
+
+        <script src="/js/chartjs/Chart.min.js?v=2.8.0"></script>
+        <style>
+            canvas {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
+        </style>
+
+        <div style="width: 100%;">
+            <canvas id="insights-page-history" height="120" style="background: #f7f7f7;"></canvas>
+        </div>
+
+        <script>
+
+            var ctx = document.getElementById('insights-page-history');
+            var historyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [
+                        {% for item in ChartDataSet %}
+                        '{{ item.snapshot_date|date('Y-m-d') }}'{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    ],
+                    datasets: [
+                        {
+                            label: 'Impressions',
+                            yAxisID: 'counts',
+                            data: [
+                                {% for item in ChartDataSet %}
+                                {{ item.impressions }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            ],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: true
+                        },
+                        {
+                            label: 'Clicks',
+                            yAxisID: 'counts',
+                            data: [
+                                {% for item in ChartDataSet %}
+                                {{ item.clicks }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            ],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: true
+                        },
+                        {
+                            label: 'Avg position',
+                            yAxisID: 'position',
+                            data: [
+                                {% for item in ChartDataSet %}
+                                {{ item.avg_position is not null ? item.avg_position : 'null' }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            ],
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            backgroundColor: 'rgba(255, 159, 64, 0)',
+                            borderWidth: 2,
+                            borderDash: [4, 4],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                maxTicksLimit: 12,
+                                maxRotation: 0
+                            }
+                        }],
+                        yAxes: [
+                            {
+                                id: 'counts',
+                                position: 'left',
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Impressions / clicks'
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            },
+                            {
+                                id: 'position',
+                                position: 'right',
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Avg position'
+                                },
+                                ticks: {
+                                    reverse: true,
+                                    beginAtZero: true
+                                },
+                                gridLines: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+
+        </script>
+
+    </div>
+
+</div>
+
+<hr>
+
+{# -------------------------------------------------- #}
+{# Snapshot table #}
+{# -------------------------------------------------- #}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h2>All snapshots</h2>
+
+        <p class="text-muted">
+            {{ SnapshotList|length|number_format }} snapshots.
+        </p>
+
+        <table class="table data-sortable">
+            <thead>
+            <tr>
+                <th>Snapshot date</th>
+                <th class="text-end">Impressions</th>
+                <th class="text-end">Clicks</th>
+                <th class="text-end">Avg position</th>
+                <th class="text-end">Queries</th>
+                <th>Top queries</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in SnapshotList %}
+                <tr>
+                    <td>{{ row.snapshot_date|date('Y-m-d') }}</td>
+                    <td class="text-end">{{ row.impressions|number_format }}</td>
+                    <td class="text-end">{{ row.clicks|number_format }}</td>
+                    <td class="text-end">
+                        {{ row.avg_position is not null ? row.avg_position : '' }}
+                    </td>
+                    <td class="text-end">{{ row.query_count|number_format }}</td>
+                    <td class="text-muted">
+                        {{ row.top_queries ? row.top_queries|join(', ') : '' }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [0, 'desc'],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 5 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

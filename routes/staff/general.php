@@ -22,6 +22,7 @@ Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(functi
 Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(function () {
 
         Route::get('/insights', [InsightsController::class, 'index'])->name('insights.index');
+        Route::get('/insights/page', [InsightsController::class, 'page'])->name('insights.page');
 
 });
 

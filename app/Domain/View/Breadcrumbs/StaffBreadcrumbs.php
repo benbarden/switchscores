@@ -456,6 +456,15 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function insightsPage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Insights', route('staff.insights.index')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     // *** TOOLS HUB *** //
     public static function toolsHub(): BreadcrumbNav
     {
